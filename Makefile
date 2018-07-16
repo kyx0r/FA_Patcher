@@ -21,7 +21,7 @@ LINKER_FLAGS = -static-libgcc -static-libstdc++
 BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
  
 #OBJ_NAME specifies the name of our exectuable 
-OBJ_NAME = FaPatcher.exe 
+OBJ_NAME = ./bin/FaPatcher.exe 
 
 #This is the target that compiles our executable 
 all : 

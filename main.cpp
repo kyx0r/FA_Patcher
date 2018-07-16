@@ -103,7 +103,11 @@ int main (void)
 	
 	init_Ext();
 	
-	system("g++"); 
+//	system("g++"); 
+	
+	
+	
+	
 /* 	vector<char*> A = Parse("ForgedAlliance_ext.exe");
 	printf("TEXT PARSED USING Parse():\n");
 	for(int i=0,m=A.size();i<m;++i)printf("%s%s",A[i],i==m-1?"\n":" , "); */

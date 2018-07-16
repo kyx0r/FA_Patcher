@@ -53,6 +53,24 @@ for(s=strtok(s,d); s; s=strtok(0,d))
 return V;
 }
 
+bool gpp_Compile()
+{
+	if(!boost::filesystem::exists("\build"))
+	{
+		boost::filesystem::create_directory("build");
+	}
+	if(!boost::filesystem::exists("\hooks"))
+	{
+		boost::filesystem::create_directory("hooks");
+	}
+	if(!boost::filesystem::exists("\sections"))
+	{
+		boost::filesystem::create_directory("sections");
+	}
+	
+	system("make ext_sector");
+}
+
 bool init_Ext()
 {
 	char PE_header_values[10][15] = {"\x07\x00\x1F\x49\x4A\x4A\x00\x00","\x00\xC5\xE8\x00\x00\x10\x00\x00",
@@ -102,6 +120,8 @@ int main (void)
 	boost::filesystem::copy_file("ForgedAlliance_base.exe", "ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 	
 	init_Ext();
+	
+	gpp_Compile();
 	
 //	system("g++"); 
 	

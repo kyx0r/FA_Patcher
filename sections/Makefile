@@ -1,6 +1,6 @@
 #OBJS specifies which files to compile as part of the project 
 OBJS = ./*cpp
-HEADS = ./*.h
+#HEADS = ./*.h prevent precompiled header for now...
 
 #CC specifies which compiler we're using 
 CC = g++
@@ -18,14 +18,15 @@ COMPILER_FLAGS = -fleading-underscore
 endif
 
 #LINKER_FLAGS specifies the libraries we're linking against 
-LINKER_FLAGS = -I. -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -c
+LINKER_FLAGS = -I. -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -c -Wall -Wextra -masm=intel
 
 #BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
  
 #OBJ_NAME specifies the name of our exectuable 
-OBJ_NAME = ext_sector.o
+OBJ_NAME = ../build/ext_sector.o
 
 #This is the target that compiles our executable 
 
 all : 
 	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) -o $(OBJ_NAME)
+	

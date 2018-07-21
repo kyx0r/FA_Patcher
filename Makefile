@@ -24,7 +24,7 @@ BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_6
 OBJ_NAME = FaPatcher.exe 
 
 ext_sector:
-	$(MAKE) -C ./sections
+	$(MAKE) all -C ./sections
 
 #This is the target that compiles our executable 
 all : 

@@ -53,6 +53,38 @@ for(s=strtok(s,d); s; s=strtok(0,d))
 return V;
 }
 
+bool check_syscall()
+{
+	if (system(NULL))
+	{
+		cout << "Command processor exists \n";
+		cout << " " "\n";
+		return true;
+	}
+	else
+	{
+		cout << "Command processor doesn't exists \n";
+		return false;
+	}
+}  
+
+bool gpp_link()
+{
+	//here convert the binary to MS PE format.
+	if(system("make gpp_lick"))
+	{
+		printf("Link error. \"%s\"\n");
+		return false;
+	}
+	cout<<"Ripping binary from elf \n";
+	if(system("make rip_out_binary"))
+	{
+		printf("Ripping binary  error. \"%s\"\n");
+		return false;
+	}
+	return true;
+}
+
 bool gpp_Compile()
 {
 	if(!boost::filesystem::exists("\build"))
@@ -68,7 +100,15 @@ bool gpp_Compile()
 		boost::filesystem::create_directory("sections");
 	}
 	
+	if(!check_syscall())
+	{
+		printf("\No system calls present. Exiting patcher. \"%s\".\n");
+		cin.get();
+		exit(1);
+	}
+	
 	system("make ext_sector");
+	gpp_link();
 }
 
 bool init_Ext()

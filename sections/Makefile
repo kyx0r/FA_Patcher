@@ -1,3 +1,9 @@
+ifeq ($(OS),Windows_NT)
+    detected_OS := Windows
+else
+    detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+endif
+
 #OBJS specifies which files to compile as part of the project 
 OBJS = ./*cpp
 #HEADS = ./*.h prevent precompiled header for now...

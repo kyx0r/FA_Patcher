@@ -9,7 +9,7 @@ const char* sSTAYONWATSUR = "STAYONWATSUR";
 // ForgedAlliance.exe addresses.
 
 typedef void __Logf(const char* fmt, ...);
-__Logf* Logf = (Logf*)_Logf;
+__Logf* Logf = (__Logf*)_Logf;
 
  extern "C" 
 {

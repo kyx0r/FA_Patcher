@@ -16,32 +16,40 @@
 
 using namespace std;
 
-inline char*ReadTextFile(const char*f){
-FILE*F = fopen(f,"rb");
-if(!F)printf("\nCan't find \"%s\".\n",f),exit(1);
-unsigned n;
-fseek(F,0,SEEK_END), n = ftell(F),rewind(F);
-char*s = new char[n+1];
-fread(s,1,n,F),fclose(F),s[n]=0;
-return s;
+inline char*ReadBinaryFile(const char*f)
+{
+	FILE*F = fopen(f,"rb");
+	if(!F)
+	{
+		printf("\nCan't find \"%s\".\n",f);
+		exit(1);
+	}
+	unsigned n;
+	fseek(F,0,SEEK_END);
+	n = ftell(F);
+	rewind(F);
+	char*s = new char[n+1];
+	fread(s,1,n,F);
+	fclose(F);
+	s[n]=0;
+	return s;
 }
 
-inline unsigned WriteBinaryFile(const char*f,const char*s, const int a, const char*m="r+wb"){
-FILE*F = fopen(f,m);
-//auto current_position = fseek(F, 0, SEEK_CUR); 
-fseek(F, a, SEEK_SET);
-cout<<"Patch in: "<<hex<<a<<endl;
-//fseek(F, a, SEEK_SET);
-if(!F)
+inline unsigned WriteBinaryFile(const char*f,const char*s, const int a, int bytes, const char*m="r+wb")
 {
-	printf("\nCan't open \"%s\".\n",f);
-	cin.get();
-	exit(1);
-}
-unsigned n = fwrite(s,sizeof(char),8,F); //hardcoded for 8 bytes.
-fclose(F);
-cout<<"Number of instructions written: "<<n<<endl;
-return n;
+	FILE*F = fopen(f,m);
+	fseek(F, a, SEEK_SET);
+	cout<<"Patch in: "<<hex<<a<<endl;
+	if(!F)
+	{
+		printf("\nCan't open \"%s\".\n",f);
+		cin.get();
+		exit(1);
+	}
+	unsigned n = fwrite(s,sizeof(char),bytes,F);
+	fclose(F);
+	cout<<"Number of instructions written: "<<n<<endl;
+	return n;
 }
 
 inline vector<char*> Parse(char*s,const char*d=" ,\t\n\f\r"){
@@ -107,8 +115,39 @@ bool gpp_Compile()
 		exit(1);
 	}
 	
+	const int verisign_offset = 0xBDD000;
+	char verisign_size = 0x1500;
+	int section_size = 1500;
+	cout<<"Patching the verisign code \n";
+	WriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8);
+	
 	system("make ext_sector");
 	gpp_link();
+	boost::filesystem::path p("\hooks");
+	boost::filesystem::directory_iterator end_itr;
+	cout<<""<<endl;
+	cout<<"Available hooks : \n";
+	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+    {
+        if (boost::filesystem::is_regular_file(itr->path())) 
+		{
+            string current_file = itr->path().string();
+            //cout << current_file << endl;
+			size_t pos = current_file.find("hook_");
+			if (pos!=string::npos)
+			{
+				string end = current_file.substr (pos);
+				string Final_Filename;
+				Final_Filename.append(end);
+				cout<<Final_Filename<<endl;
+			}
+        }
+	}
+	//FILE*ext_F = fopen("build\ext_sector.bin", "rb");
+	
+	char *ext_F = ReadBinaryFile("build/ext_sector.bin");
+	
+	WriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, section_size);
 }
 
 bool init_Ext()
@@ -139,7 +178,7 @@ bool init_Ext()
 
 	for(int i=0; i<=sizeof(PE_header_address)/sizeof(PE_header_address[0]); i++)
 	{	
-		WriteBinaryFile("ForgedAlliance_exxt.exe", PE_header_values[i], PE_header_address[i]);
+		WriteBinaryFile("ForgedAlliance_exxt.exe", PE_header_values[i], PE_header_address[i], 8); //hardcoded for 8 bytes.
 	}
 	
 	//const int PE_header_values [] = {0x136, 0x181, 0x188, 0x1B9, 0x1C8, 0x318};

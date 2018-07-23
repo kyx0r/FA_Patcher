@@ -42,10 +42,10 @@ _hooks:
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) -C ./hooks
 	
 gpp_link:
-	ld -T linker.ld -static -m  $(obj_type) build/ext_sector.o -o build/ext_sector.exe.tmp
+	ld -T linker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
 	
 rip_out_binary:
-	objcopy -O binary -R .eh_fram build/ext_sector.exe.tmp build/ext_sector.bin
+	objcopy -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
 
 #This is the target that compiles our executable 
 all : 

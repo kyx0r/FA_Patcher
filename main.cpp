@@ -84,7 +84,7 @@ inline vector<char*> Parse(char*s,const char*d=" ,\t\n\f\r")
 	return V;
 }
 
-int get_file_size(std::string filename) // path to file
+int get_file_size(string filename) // path to file
 {
 	FILE *p_file = NULL;
 	p_file = fopen(filename.c_str(),"rb");
@@ -92,6 +92,34 @@ int get_file_size(std::string filename) // path to file
 	int size = ftell(p_file);
 	fclose(p_file);
 	return size;
+}
+
+int get_bytes(string name)
+{
+	FILE *p_file = NULL;
+	p_file = fopen(name.c_str(),"rb");
+	int ch = EOF;
+	int count=0;
+	do
+	{
+		size_t i = 0;
+		ch = fgetc(p_file);
+		if (EOF == ch)
+		{ 
+			if (ferror(p_file))
+			{
+				perror("fgetc() failed");
+			}
+			else
+			{
+				cout<<"Unexpected end of a file"<<endl;
+			}
+			exit(EXIT_FAILURE);
+		}
+		count++;
+	} 
+	while (0 != ch);
+	return count;
 }
 
 bool check_syscall()
@@ -108,23 +136,6 @@ bool check_syscall()
 		return false;
 	}
 }  
-
-bool gpp_link()
-{
-	//here convert the binary to MS PE format.
-	if(system("make gpp_link"))
-	{
-		printf("Link error. \"%s\"\n");
-		return false;
-	}
-	cout<<"Ripping binary from elf \n";
-	if(system("make rip_out_binary"))
-	{
-		printf("Ripping binary  error. \"%s\"\n");
-		return false;
-	}
-	return true;
-}
 
 char* appendCharToCharArray(char* array, char a)
 {
@@ -151,7 +162,61 @@ struct HexTo {
     }
 };
 
-void Apply_Hook(string dir_hook, string hook_name, string alone_Filename, const char *s)
+bool gpp_link(string filename)
+{
+	char *h = "make gpp_link PRIME_NAME=";
+	for(int i=0; i<=filename.length(); i++)
+	{	
+		h = appendCharToCharArray(h, filename[i]);
+	}
+	string filename_tmp = filename.append(".tmp");
+	char* h_ = " TMP_NAME=";
+	for(int i=0; i<=filename_tmp.length(); i++)
+	{	
+		h_ = appendCharToCharArray(h_, filename_tmp[i]);
+	}
+	for(int i=0; i<=strlen(h_); i++)
+	{	
+		h = appendCharToCharArray(h, h_[i]);
+	}
+	cout<<""<<endl;
+	
+	//here convert the binary to MS PE format.
+	if(system(h))
+	{
+		printf("Link error. \"%s\"\n");
+		return false;
+	}
+	cout<<"Ripping binary from elf \n";
+	
+	//h = "make rip_out_binary";
+	strcpy(h,"make rip_out_binary");
+	for(int i=0; i<=strlen(h_); i++)
+	{	
+		h = appendCharToCharArray(h, h_[i]);
+	}
+	string filename_prime = " PRIME_NAME=";
+	for(int i=0; i<=filename_prime.length(); i++)
+	{	
+		h = appendCharToCharArray(h, filename_prime[i]);
+	}
+	filename_prime = filename.append(".bin");
+	for(int i=0; i<=filename_prime.length(); i++)
+	{	
+		h = appendCharToCharArray(h, filename_prime[i]);
+	}
+	
+	cout<<h<<endl;
+	
+	if(system(h))
+	{
+		printf("Ripping binary  error. \"%s\"\n");
+		return false;
+	}
+	return true;
+}
+
+int Compile_Hook(string dir_hook, string hook_name)
 {
 	string ss = ReadTextFile(dir_hook.c_str());
 	size_t pos = ss.find("ROffset =");
@@ -171,11 +236,9 @@ void Apply_Hook(string dir_hook, string hook_name, string alone_Filename, const 
 					h = appendCharToCharArray(h, hook_name[i]);
 				}
 				system(h);
-				char *hook_F = ReadBinaryFile(alone_Filename.insert(0,"build/").append(".o").c_str());
-				int hook_size = get_file_size(alone_Filename.insert(0,"build/").append(".o").c_str());
 				string strNew = *beg;
 				int offset = boost::lexical_cast<HexTo<int>>(strNew);
-				WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, hook_size);
+				return offset;
 			}
 		}
 	}
@@ -185,6 +248,72 @@ void Apply_Hook(string dir_hook, string hook_name, string alone_Filename, const 
 		cin.get();
 		exit(1);
 	}
+}
+
+void Apply_Hook(string alone_Filename, int offset)
+{
+	char *hook_F = ReadBinaryFile(alone_Filename.c_str());
+	//int hook_size = get_file_size(alone_Filename.c_str());
+	int hook_size = get_bytes(alone_Filename);
+	//cout<<get_bytes(alone_Filename)<<endl;
+	cout<<"Apply hook : "<<alone_Filename <<endl;
+	WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, hook_size-3); //inline asm leaves 2 nops + 00 null on counter.
+}
+
+void Parse_build(int offset)
+{
+	boost::filesystem::path p("./build");
+	boost::filesystem::directory_iterator end_itr;
+	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+    {
+		if (boost::filesystem::is_regular_file(itr->path())) 
+		{
+            string current_file = itr->path().string();
+			if(boost::filesystem::extension(current_file).compare(".o")==0)
+			{
+				if(!gpp_link(current_file))
+				{
+					exit(1);
+				}
+			}
+			if(boost::filesystem::extension(current_file).compare(".bin")==0)
+			{
+				if(current_file.find("hook_")!=string::npos)
+				{
+					Apply_Hook(current_file, offset);
+					break;
+				}
+			}
+		}
+	}
+}
+
+void Parse_hooks()
+{
+	boost::filesystem::path p("\hooks");
+	boost::filesystem::directory_iterator end_itr;
+	cout<<""<<endl;
+	cout<<"Available hooks : \n";
+	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+    {
+		if (boost::filesystem::is_regular_file(itr->path())) 
+		{
+            string current_file = itr->path().string();
+			size_t pos = current_file.find("hook_");
+			if (pos!=string::npos)
+			{
+				string end = current_file.substr (pos);
+				string Final_Filename;
+				Final_Filename.append(end);
+				string alone_Filename = Final_Filename;
+				cout<<Final_Filename<<endl;
+				Final_Filename.append(".o");
+				Final_Filename.insert(0,"../build/");
+				int offset = Compile_Hook(current_file,Final_Filename);
+				Parse_build(offset);
+			}
+        }
+	}	
 }
 
 bool gpp_Compile()
@@ -215,35 +344,10 @@ bool gpp_Compile()
 	WriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8);
 	
 	system("make ext_sector");
-	gpp_link();
-	boost::filesystem::path p("\hooks");
-	boost::filesystem::directory_iterator end_itr;
-	cout<<""<<endl;
-	cout<<"Available hooks : \n";
-	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
-    {
-		if (boost::filesystem::is_regular_file(itr->path())) 
-		{
-            string current_file = itr->path().string();
-            //cout << current_file << endl;
-			size_t pos = current_file.find("hook_");
-			if (pos!=string::npos)
-			{
-				string end = current_file.substr (pos);
-				string Final_Filename;
-				Final_Filename.append(end);
-				string alone_Filename = Final_Filename;
-				cout<<Final_Filename<<endl;
-				Final_Filename.append(".o");
-				Final_Filename.insert(0,"../build/");
-				Apply_Hook(current_file,Final_Filename,alone_Filename, "ForgedAlliance_exxt.exe");
-			}
-        }
-	}
-	//FILE*ext_F = fopen("build\ext_sector.bin", "rb");
+	Parse_hooks();
 	
-	char *ext_F = ReadBinaryFile("build/ext_sector.bin");
-	int section_size = get_file_size("build/ext_sector.bin");
+	char *ext_F = ReadBinaryFile("build/ext_sector.o.tmp.bin");
+	int section_size = get_file_size("build/ext_sector.o.tmp.bin");
 	
 	WriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, section_size);
 }

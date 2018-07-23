@@ -13,7 +13,8 @@
 
 #include <boost/thread/thread.hpp>
 #include <boost/filesystem.hpp>
-#include<boost/tokenizer.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -138,6 +139,18 @@ char* appendCharToCharArray(char* array, char a)
     return ret;
 }
 
+//this awesomeness taken from here:
+//https://stackoverflow.com/questions/1070497/c-convert-hex-string-to-signed-integer
+template <typename ElemT>
+struct HexTo {
+    ElemT value;
+    operator ElemT() const {return value;}
+    friend std::istream& operator>>(std::istream& in, HexTo& out) {
+        in >> std::hex >> out.value;
+        return in;
+    }
+};
+
 void Apply_Hook(string dir_hook, string hook_name, string alone_Filename, const char *s)
 {
 	string ss = ReadTextFile(dir_hook.c_str());
@@ -160,7 +173,9 @@ void Apply_Hook(string dir_hook, string hook_name, string alone_Filename, const 
 				system(h);
 				char *hook_F = ReadBinaryFile(alone_Filename.insert(0,"build/").append(".o").c_str());
 				int hook_size = get_file_size(alone_Filename.insert(0,"build/").append(".o").c_str());
-				WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, stoi(*beg), hook_size);
+				string strNew = *beg;
+				int offset = boost::lexical_cast<HexTo<int>>(strNew);
+				WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, hook_size);
 			}
 		}
 	}

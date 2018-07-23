@@ -38,10 +38,10 @@ OBJ_NAME = FaPatcher.exe
 ext_sector:
 	$(MAKE) all -C ./sections
 	
-hooks:
-	$(MAKE) all -C ./hooks
+_hooks: 
+	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) -C ./hooks
 	
-gpp_lick:
+gpp_link:
 	ld -T linker.ld -static -m  $(obj_type) build/ext_sector.o -o build/ext_sector.exe.tmp
 	
 rip_out_binary:

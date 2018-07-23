@@ -13,12 +13,33 @@
 
 #include <boost/thread/thread.hpp>
 #include <boost/filesystem.hpp>
+#include<boost/tokenizer.hpp>
 
 using namespace std;
 
 inline char*ReadBinaryFile(const char*f)
 {
 	FILE*F = fopen(f,"rb");
+	if(!F)
+	{
+		printf("\nCan't find \"%s\".\n",f);
+		exit(1);
+	}
+	unsigned n;
+	fseek(F,0,SEEK_END);
+	n = ftell(F);
+	rewind(F);
+	char*s = new char[n+1];
+	fread(s,1,n,F);
+	fclose(F);
+	s[n]=0;
+	return s;
+}
+
+string ReadTextFile(string f)
+{
+	const char *f_char = f.c_str();
+	FILE*F = fopen(f_char,"rb");
 	if(!F)
 	{
 		printf("\nCan't find \"%s\".\n",f);
@@ -52,13 +73,24 @@ inline unsigned WriteBinaryFile(const char*f,const char*s, const int a, int byte
 	return n;
 }
 
-inline vector<char*> Parse(char*s,const char*d=" ,\t\n\f\r"){
-std::vector<char*>V;
-for(s=strtok(s,d); s; s=strtok(0,d))
+inline vector<char*> Parse(char*s,const char*d=" ,\t\n\f\r")
 {
-	V.push_back(s);
+	std::vector<char*>V;
+	for(s=strtok(s,d); s; s=strtok(0,d))
+	{
+		V.push_back(s);
+	}
+	return V;
 }
-return V;
+
+int get_file_size(std::string filename) // path to file
+{
+	FILE *p_file = NULL;
+	p_file = fopen(filename.c_str(),"rb");
+	fseek(p_file,0,SEEK_END);
+	int size = ftell(p_file);
+	fclose(p_file);
+	return size;
 }
 
 bool check_syscall()
@@ -79,7 +111,7 @@ bool check_syscall()
 bool gpp_link()
 {
 	//here convert the binary to MS PE format.
-	if(system("make gpp_lick"))
+	if(system("make gpp_link"))
 	{
 		printf("Link error. \"%s\"\n");
 		return false;
@@ -91,6 +123,53 @@ bool gpp_link()
 		return false;
 	}
 	return true;
+}
+
+char* appendCharToCharArray(char* array, char a)
+{
+    size_t len = strlen(array);
+
+    char* ret = new char[len+2];
+
+    strcpy(ret, array);    
+    ret[len] = a;
+    ret[len+1] = '\0';
+
+    return ret;
+}
+
+void Apply_Hook(string dir_hook, string hook_name, string alone_Filename, const char *s)
+{
+	string ss = ReadTextFile(dir_hook.c_str());
+	size_t pos = ss.find("ROffset =");
+	if (pos!=string::npos)
+	{
+		boost::tokenizer<> tok(ss);
+		int count = 0;
+		for(boost::tokenizer<>::iterator beg=tok.begin(); beg!=tok.end();++beg)
+		{
+			count++;
+			if(count == 4)
+			{
+				cout << "ROffset = " <<*beg<< "\n";
+				char *h = "make _hooks OBJ_NAME_=";
+				for(int i=0; i<=hook_name.length(); i++)
+				{	
+					h = appendCharToCharArray(h, hook_name[i]);
+				}
+				system(h);
+				char *hook_F = ReadBinaryFile(alone_Filename.insert(0,"build/").append(".o").c_str());
+				int hook_size = get_file_size(alone_Filename.insert(0,"build/").append(".o").c_str());
+				WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, stoi(*beg), hook_size);
+			}
+		}
+	}
+	else
+	{
+		printf("\Could not find ROffset \"%s\".\n");
+		cin.get();
+		exit(1);
+	}
 }
 
 bool gpp_Compile()
@@ -117,7 +196,6 @@ bool gpp_Compile()
 	
 	const int verisign_offset = 0xBDD000;
 	char verisign_size = 0x1500;
-	int section_size = 1500;
 	cout<<"Patching the verisign code \n";
 	WriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8);
 	
@@ -129,7 +207,7 @@ bool gpp_Compile()
 	cout<<"Available hooks : \n";
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
     {
-        if (boost::filesystem::is_regular_file(itr->path())) 
+		if (boost::filesystem::is_regular_file(itr->path())) 
 		{
             string current_file = itr->path().string();
             //cout << current_file << endl;
@@ -139,13 +217,18 @@ bool gpp_Compile()
 				string end = current_file.substr (pos);
 				string Final_Filename;
 				Final_Filename.append(end);
+				string alone_Filename = Final_Filename;
 				cout<<Final_Filename<<endl;
+				Final_Filename.append(".o");
+				Final_Filename.insert(0,"../build/");
+				Apply_Hook(current_file,Final_Filename,alone_Filename, "ForgedAlliance_exxt.exe");
 			}
         }
 	}
 	//FILE*ext_F = fopen("build\ext_sector.bin", "rb");
 	
 	char *ext_F = ReadBinaryFile("build/ext_sector.bin");
+	int section_size = get_file_size("build/ext_sector.bin");
 	
 	WriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, section_size);
 }
@@ -181,7 +264,6 @@ bool init_Ext()
 		WriteBinaryFile("ForgedAlliance_exxt.exe", PE_header_values[i], PE_header_address[i], 8); //hardcoded for 8 bytes.
 	}
 	
-	//const int PE_header_values [] = {0x136, 0x181, 0x188, 0x1B9, 0x1C8, 0x318};
 	return true;
 }
 

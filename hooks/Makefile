@@ -33,6 +33,6 @@ LINKER_FLAGS = -I. -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -c -
 
 #This is the target that compiles our executable 
 
-all : $(OBJ_NAME)
+all :
 	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) -o $(OBJ_NAME)
 	

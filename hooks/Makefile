@@ -5,7 +5,7 @@ else
 endif
 
 #OBJS specifies which files to compile as part of the project 
-OBJS = ./*cpp
+#OBJS = ./*cpp
 #HEADS = ./*.h prevent precompiled header for now...
 
 #CC specifies which compiler we're using 

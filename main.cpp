@@ -119,6 +119,7 @@ int get_bytes(string name)
 		count++;
 	} 
 	while (0 != ch);
+	fclose(p_file);
 	return count;
 }
 
@@ -179,17 +180,16 @@ bool gpp_link(string filename)
 	{	
 		h = appendCharToCharArray(h, h_[i]);
 	}
-	cout<<""<<endl;
 	
+	cout<<"GENERATING .TMP FILES ------------------------------->"<<endl;
 	//here convert the binary to MS PE format.
 	if(system(h))
 	{
 		printf("Link error. \"%s\"\n");
 		return false;
 	}
-	cout<<"Ripping binary from elf \n";
+	cout<<"\n";
 	
-	//h = "make rip_out_binary";
 	strcpy(h,"make rip_out_binary");
 	for(int i=0; i<=strlen(h_); i++)
 	{	
@@ -206,17 +206,77 @@ bool gpp_link(string filename)
 		h = appendCharToCharArray(h, filename_prime[i]);
 	}
 	
-	cout<<h<<endl;
+	cout<<"GENERATING .BIN FILES --------------------------->"<<endl;
 	
 	if(system(h))
 	{
 		printf("Ripping binary  error. \"%s\"\n");
 		return false;
 	}
+	cout<<"\n";
 	return true;
 }
 
-int Compile_Hook(string dir_hook, string hook_name)
+void Apply_Hook(string alone_Filename, int offset)
+{
+	char *hook_F = ReadBinaryFile(alone_Filename.c_str());
+	//int hook_size = get_file_size(alone_Filename.c_str());
+	int hook_size = get_bytes(alone_Filename);
+	//cout<<get_bytes(alone_Filename)<<endl;
+	cout<<"APPLY HOOK : "<<alone_Filename <<endl;
+	WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, hook_size-3); //inline asm leaves 2 nops + 00 null on counter.
+	cout<<"\n";
+}
+
+string rem_extension(string str)
+{
+	size_t pos = str.find(".");
+	if (pos!=string::npos)
+	{
+		string ext = str.substr(pos);
+		str.erase( str.size() - ext.length());
+		return str;
+	}
+	else
+	{
+		cout<<"No extension in passed string"<<str<<endl;
+		return str;
+	}
+}
+
+void Parse_build(int offset, string alone_Filename)
+{
+	boost::filesystem::path p("./build");
+	boost::filesystem::directory_iterator end_itr;
+	alone_Filename = rem_extension(alone_Filename);
+	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+    {
+		if (boost::filesystem::is_regular_file(itr->path())) 
+		{
+            string current_file = itr->path().string();
+			if(boost::filesystem::extension(current_file).compare(".o")==0)
+			{
+				if(current_file.find(alone_Filename)!=string::npos)
+				{
+					if(!gpp_link(current_file))
+					{
+						exit(1);
+					}
+				}	
+			}
+			if(boost::filesystem::extension(current_file).compare(".bin")==0)
+			{
+				if(current_file.find(alone_Filename)!=string::npos)
+				{
+					Apply_Hook(current_file, offset);
+					break;
+				}
+			}
+		}
+	}
+}
+
+int Compile_Hook(string dir_hook, string hook_name, string alone_Filename)
 {
 	string ss = ReadTextFile(dir_hook.c_str());
 	size_t pos = ss.find("ROffset =");
@@ -235,10 +295,20 @@ int Compile_Hook(string dir_hook, string hook_name)
 				{	
 					h = appendCharToCharArray(h, hook_name[i]);
 				}
+				string _h = alone_Filename;
+				_h = _h.insert(0, " OBJS=");
+				for(int i=0; i<=_h.length(); i++)
+				{	
+					h = appendCharToCharArray(h, _h[i]);
+				}
+				cout<<"BUILDING .O FILES --------------------------------->";
+				cout<<"\n";
 				system(h);
+				cout<<"\n";
 				string strNew = *beg;
 				int offset = boost::lexical_cast<HexTo<int>>(strNew);
-				return offset;
+				Parse_build(offset, alone_Filename);
+				return 1;
 			}
 		}
 	}
@@ -247,44 +317,6 @@ int Compile_Hook(string dir_hook, string hook_name)
 		printf("\Could not find ROffset \"%s\".\n");
 		cin.get();
 		exit(1);
-	}
-}
-
-void Apply_Hook(string alone_Filename, int offset)
-{
-	char *hook_F = ReadBinaryFile(alone_Filename.c_str());
-	//int hook_size = get_file_size(alone_Filename.c_str());
-	int hook_size = get_bytes(alone_Filename);
-	//cout<<get_bytes(alone_Filename)<<endl;
-	cout<<"Apply hook : "<<alone_Filename <<endl;
-	WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, hook_size-3); //inline asm leaves 2 nops + 00 null on counter.
-}
-
-void Parse_build(int offset)
-{
-	boost::filesystem::path p("./build");
-	boost::filesystem::directory_iterator end_itr;
-	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
-    {
-		if (boost::filesystem::is_regular_file(itr->path())) 
-		{
-            string current_file = itr->path().string();
-			if(boost::filesystem::extension(current_file).compare(".o")==0)
-			{
-				if(!gpp_link(current_file))
-				{
-					exit(1);
-				}
-			}
-			if(boost::filesystem::extension(current_file).compare(".bin")==0)
-			{
-				if(current_file.find("hook_")!=string::npos)
-				{
-					Apply_Hook(current_file, offset);
-					break;
-				}
-			}
-		}
 	}
 }
 
@@ -309,8 +341,8 @@ void Parse_hooks()
 				cout<<Final_Filename<<endl;
 				Final_Filename.append(".o");
 				Final_Filename.insert(0,"../build/");
-				int offset = Compile_Hook(current_file,Final_Filename);
-				Parse_build(offset);
+				Compile_Hook(current_file,Final_Filename,alone_Filename);
+				//Parse_build(offset);
 			}
         }
 	}	
@@ -349,6 +381,7 @@ bool gpp_Compile()
 	char *ext_F = ReadBinaryFile("build/ext_sector.o.tmp.bin");
 	int section_size = get_file_size("build/ext_sector.o.tmp.bin");
 	
+	cout<<"APPLY .EXT SECTION \n";
 	WriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, section_size);
 }
 
@@ -388,10 +421,6 @@ bool init_Ext()
 
 int main (void)
 {
-	//pFile = fopen ( "ForgedAlliance_ext.exe" , "wb" );
-	//fputs ( "This is an apple." , pFile );
-	//fseek ( pFile , SEEK_SET , SEEK_SET );
-	//fputs ( " sam" , pFile );
 	if (!boost::filesystem::exists("ForgedAlliance_base.exe"))
 	{
 		cout<<"ForgedAlliance_base.exe not found! Rename the file if needed\n";

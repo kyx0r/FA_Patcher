@@ -39,7 +39,7 @@ ext_sector:
 	$(MAKE) all -C ./sections
 	
 _hooks: 
-	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) -C ./hooks
+	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) OBJS=$(OBJS) -C ./hooks
 	
 gpp_link:
 	ld -T linker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)

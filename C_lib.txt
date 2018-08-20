@@ -1,0 +1,83 @@
+
+
+//Hey ! I know what you are thinking!
+//Dont worry those functions are here for reference and never hurt nobody. 
+
+inline char*ReadBinaryFile(const string&f)
+{
+	FILE*F = fopen(f.c_str(),"rb");
+	if(!F)
+	{
+		printf("\nCan't find \"%s\".\n",f);
+		exit(1);
+	}
+	unsigned n;
+	fseek(F,0,SEEK_END);
+	n = ftell(F);
+	rewind(F);
+	char*s = new char[n+1];
+	fread(s,1,n,F);
+	fclose(F);
+	s[n]=0;
+	return s;
+}
+
+string ReadTextFile(string f)
+{
+	const char *f_char = f.c_str();
+	FILE*F = fopen(f_char,"rb");
+	if(!F)
+	{
+		printf("\nCan't find \"%s\".\n",f);
+		exit(1);
+	}
+	unsigned n;
+	fseek(F,0,SEEK_END);
+	n = ftell(F);
+	rewind(F);
+	char*s = new char[n+1];
+	fread(s,1,n,F);
+	fclose(F);
+	s[n]=0;
+	return s;
+}
+
+inline unsigned WriteBinaryFile(const char*f,const char*s, const int a, int bytes, const char*m="r+wb")
+{
+	FILE*F = fopen(f,m);
+	fseek(F, a, SEEK_SET);
+	cout<<"Patch in: "<<hex<<a<<endl;
+	if(!F)
+	{
+		printf("\nCan't open \"%s\".\n",f);
+		cin.get();
+		exit(1);
+	}
+	unsigned n = fwrite(s,sizeof(char),bytes,F);
+	fclose(F);
+	cout<<"Number of instructions written: "<<n<<endl;
+	return n;
+}
+
+inline vector<char*> Parse(char*s,const char*d=" ,\t\n\f\r")
+{
+	std::vector<char*>V;
+	for(s=strtok(s,d); s; s=strtok(0,d))
+	{
+		V.push_back(s);
+	}
+	return V;
+}
+
+char* appendCharToCharArray(char* array, char a)
+{
+    size_t len = strlen(array);
+
+    char* ret = new char[len+2];
+
+    strcpy(ret, array);    
+    ret[len] = a;
+    ret[len+1] = '\0';
+
+    return ret;
+}

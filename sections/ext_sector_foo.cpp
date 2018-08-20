@@ -23,25 +23,6 @@ __Logf* Logf = (__Logf*)_Logf;
 	extern Sim* 		g_Sim; */
 };
 
-/* 			"push ecx"
-			"push edx"
-			"push %1"
-			"push %2"
-			"call %0"
-			"add esp, 8"
-			"pop edx"
-			"pop ecx" */
-
-/* void __Logf(const char* fmt, ...)
-{
-	const char* aExtS = "EXT: %s";
-     __asm__ volatile (
-			"mov eax %1"
-			"call %0"
-			: 
-			: "m" (Logf), "m"(fmt), "m"(aExtS)); 	
-} */
-
 void print_hello_world()
 {	
 	Logf("Hello World!");

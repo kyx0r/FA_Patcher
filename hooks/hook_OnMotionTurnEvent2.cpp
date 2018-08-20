@@ -6,7 +6,10 @@
 
 __asm__ volatile 
 (
-"jmp 0x006B9567 \n"
+	"jmp 0x006B9567 \n"
+	".byte 0x0 \n"
+	".byte 0x0 \n"
+	".byte 0x0 \n"
 );
 
 

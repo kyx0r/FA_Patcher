@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <assert.h>
+#include <fstream>
 //#include <filesystem>
 
 #include <boost/thread/thread.hpp>
@@ -18,91 +19,57 @@
 
 using namespace std;
 
-inline char*ReadBinaryFile(const char*f)
+int get_file_size(const string &filename) 
 {
-	FILE*F = fopen(f,"rb");
-	if(!F)
-	{
-		printf("\nCan't find \"%s\".\n",f);
-		exit(1);
-	}
-	unsigned n;
-	fseek(F,0,SEEK_END);
-	n = ftell(F);
-	rewind(F);
-	char*s = new char[n+1];
-	fread(s,1,n,F);
-	fclose(F);
-	s[n]=0;
-	return s;
+	ifstream file( filename.c_str(), ios::binary | ios::ate);
+	return file.tellg();
 }
 
-string ReadTextFile(string f)
+inline char*fReadBinaryFile(const string&f)
 {
-	const char *f_char = f.c_str();
-	FILE*F = fopen(f_char,"rb");
-	if(!F)
+	streampos size;
+	char * memblock;
+	ifstream input (f.c_str(), ios::in|ios::binary|ios::ate);
+	if (input.is_open())
 	{
-		printf("\nCan't find \"%s\".\n",f);
-		exit(1);
+		size = input.tellg();
+		memblock = new char [size];
+		input.seekg (0, ios::beg);
+		input.read (memblock, size);
+		input.close();
 	}
-	unsigned n;
-	fseek(F,0,SEEK_END);
-	n = ftell(F);
-	rewind(F);
-	char*s = new char[n+1];
-	fread(s,1,n,F);
-	fclose(F);
-	s[n]=0;
-	return s;
-}
-
-inline unsigned WriteBinaryFile(const char*f,const char*s, const int a, int bytes, const char*m="r+wb")
-{
-	FILE*F = fopen(f,m);
-	fseek(F, a, SEEK_SET);
-	cout<<"Patch in: "<<hex<<a<<endl;
-	if(!F)
-	{
-		printf("\nCan't open \"%s\".\n",f);
+	else
+	{		
+		cout << "Unable to open file";
 		cin.get();
 		exit(1);
 	}
-	unsigned n = fwrite(s,sizeof(char),bytes,F);
-	fclose(F);
-	cout<<"Number of instructions written: "<<n<<endl;
-	return n;
+	return memblock;	
 }
 
-inline vector<char*> Parse(char*s,const char*d=" ,\t\n\f\r")
+inline unsigned fWriteBinaryFile(const string& f,const char* HexValue, int offset, int Bytes_to_write)
 {
-	std::vector<char*>V;
-	for(s=strtok(s,d); s; s=strtok(0,d))
+	fstream output (f.c_str(), fstream::out |fstream::in |fstream::binary);
+	if(output.fail() || !output)
 	{
-		V.push_back(s);
+		cerr << "Error opening the file: " << strerror(errno);
+		return -1;
 	}
-	return V;
-}
-
-int get_file_size(string filename) // path to file
-{
-	FILE *p_file = NULL;
-	p_file = fopen(filename.c_str(),"rb");
-	fseek(p_file,0,SEEK_END);
-	int size = ftell(p_file);
-	fclose(p_file);
-	return size;
+	output.seekg(fstream::beg+offset);
+	output.write(HexValue, Bytes_to_write);
+	output.close();
+	return 1;
 }
 
 int get_bytes(string name)
 {
-	FILE *p_file = NULL;
+	FILE *p_file = nullptr;
 	p_file = fopen(name.c_str(),"rb");
 	int ch = EOF;
-	int count=0;
+	int count_bytes=0;
+	int null_count=0;
 	do
 	{
-		size_t i = 0;
 		ch = fgetc(p_file);
 		if (EOF == ch)
 		{ 
@@ -112,20 +79,35 @@ int get_bytes(string name)
 			}
 			else
 			{
-				cout<<"Unexpected end of a file"<<endl;
+				cout<<"Unexpected end of a file"<<name<<endl;
 			}
+			cin.get();
 			exit(EXIT_FAILURE);
 		}
-		count++;
+		count_bytes++;
+		if(ch==0)
+		{
+			count_bytes--;
+			null_count++;
+		}
+		else
+		{
+			count_bytes+=null_count;
+			null_count=0;
+		}
+		//cout<<count_bytes<<endl;
+		//cout<<null_count<<endl;
 	} 
-	while (0 != ch);
+	while (count_bytes-null_count>0); 
+	//we need to determine the end of assembly, but nullcheck is not perfect
+	//so we check for a sequence of nulls to make sure its truly the end. Because some assembly opcodes have nulls in them. 
 	fclose(p_file);
-	return count;
+	return count_bytes;
 }
 
-bool check_syscall()
+bool check_system()
 {
-	if (system(NULL))
+	if (system(nullptr))
 	{
 		cout << "Command processor exists \n";
 		cout << " " "\n";
@@ -133,23 +115,10 @@ bool check_syscall()
 	}
 	else
 	{
-		cout << "Command processor doesn't exists \n";
+		cout << "Command processor doesn't exist \n";
 		return false;
 	}
 }  
-
-char* appendCharToCharArray(char* array, char a)
-{
-    size_t len = strlen(array);
-
-    char* ret = new char[len+2];
-
-    strcpy(ret, array);    
-    ret[len] = a;
-    ret[len+1] = '\0';
-
-    return ret;
-}
 
 //this awesomeness taken from here:
 //https://stackoverflow.com/questions/1070497/c-convert-hex-string-to-signed-integer
@@ -165,50 +134,32 @@ struct HexTo {
 
 bool gpp_link(string filename)
 {
-	char *h = "make gpp_link PRIME_NAME=";
-	for(int i=0; i<=filename.length(); i++)
-	{	
-		h = appendCharToCharArray(h, filename[i]);
-	}
+	string command = "make gpp_link PRIME_NAME=";
+	command.append(filename);
 	string filename_tmp = filename.append(".tmp");
-	char* h_ = " TMP_NAME=";
-	for(int i=0; i<=filename_tmp.length(); i++)
-	{	
-		h_ = appendCharToCharArray(h_, filename_tmp[i]);
-	}
-	for(int i=0; i<=strlen(h_); i++)
-	{	
-		h = appendCharToCharArray(h, h_[i]);
-	}
+	string tmp_Prefix = " TMP_NAME=";
+	tmp_Prefix.append(filename_tmp);
+	command.append(tmp_Prefix);
 	
 	cout<<"GENERATING .TMP FILES ------------------------------->"<<endl;
 	//here convert the binary to MS PE format.
-	if(system(h))
+	if(system(&command[0]))
 	{
 		printf("Link error. \"%s\"\n");
 		return false;
 	}
 	cout<<"\n";
 	
-	strcpy(h,"make rip_out_binary");
-	for(int i=0; i<=strlen(h_); i++)
-	{	
-		h = appendCharToCharArray(h, h_[i]);
-	}
+	command = "make rip_out_binary";
+	command.append(tmp_Prefix);
 	string filename_prime = " PRIME_NAME=";
-	for(int i=0; i<=filename_prime.length(); i++)
-	{	
-		h = appendCharToCharArray(h, filename_prime[i]);
-	}
+	command.append(filename_prime);
 	filename_prime = filename.append(".bin");
-	for(int i=0; i<=filename_prime.length(); i++)
-	{	
-		h = appendCharToCharArray(h, filename_prime[i]);
-	}
+	command.append(filename_prime);
 	
 	cout<<"GENERATING .BIN FILES --------------------------->"<<endl;
 	
-	if(system(h))
+	if(system(&command[0]))
 	{
 		printf("Ripping binary  error. \"%s\"\n");
 		return false;
@@ -219,12 +170,10 @@ bool gpp_link(string filename)
 
 void Apply_Hook(string alone_Filename, int offset)
 {
-	char *hook_F = ReadBinaryFile(alone_Filename.c_str());
-	//int hook_size = get_file_size(alone_Filename.c_str());
-	int hook_size = get_bytes(alone_Filename);
-	//cout<<get_bytes(alone_Filename)<<endl;
-	cout<<"APPLY HOOK : "<<alone_Filename <<endl;
-	WriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, hook_size-3); //inline asm leaves 2 nops + 00 null on counter.
+	char *hook_F = fReadBinaryFile(alone_Filename);
+	int Bytes_to_write = get_bytes(alone_Filename);
+	cout<<"APPLY HOOK : "<<alone_Filename <<"    Number of instructions: "<<Bytes_to_write<<endl;
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, Bytes_to_write);
 	cout<<"\n";
 }
 
@@ -276,48 +225,53 @@ void Parse_build(int offset, string alone_Filename)
 	}
 }
 
+void build_O(string dir_hook, string hook_name, string alone_Filename)
+{
+	cout<<"BUILDING .O FILES --------------------------------->";
+	string command = "make _hooks OBJ_NAME_=";
+	command.append(hook_name);
+	alone_Filename.insert(0, " OBJS=");
+	command.append(alone_Filename);
+	cout<<"\n";
+	system(&command[0]);
+	cout<<"\n";	
+}
+
 int Compile_Hook(string dir_hook, string hook_name, string alone_Filename)
 {
-	string ss = ReadTextFile(dir_hook.c_str());
-	size_t pos = ss.find("ROffset =");
-	if (pos!=string::npos)
+	fstream hook(dir_hook);
+	string line;
+	if(hook.is_open())
 	{
-		boost::tokenizer<> tok(ss);
-		int count = 0;
-		for(boost::tokenizer<>::iterator beg=tok.begin(); beg!=tok.end();++beg)
+		while(getline(hook,line))
 		{
-			count++;
-			if(count == 4)
+			if(line.find("ROffset = ")!=string::npos)
 			{
-				cout << "ROffset = " <<*beg<< "\n";
-				char *h = "make _hooks OBJ_NAME_=";
-				for(int i=0; i<=hook_name.length(); i++)
-				{	
-					h = appendCharToCharArray(h, hook_name[i]);
-				}
-				string _h = alone_Filename;
-				_h = _h.insert(0, " OBJS=");
-				for(int i=0; i<=_h.length(); i++)
-				{	
-					h = appendCharToCharArray(h, _h[i]);
-				}
-				cout<<"BUILDING .O FILES --------------------------------->";
-				cout<<"\n";
-				system(h);
-				cout<<"\n";
-				string strNew = *beg;
-				int offset = boost::lexical_cast<HexTo<int>>(strNew);
+				char* tok = strtok(&line[0], "0x");
+				line.erase(0,strlen(tok)+1);
+				line.insert(0,"0");
+				cout<<"ROffset = "<<line<<endl;
+				int offset = boost::lexical_cast<HexTo<int>>(line);
+				build_O(dir_hook, hook_name, alone_Filename);
 				Parse_build(offset, alone_Filename);
-				return 1;
+				break;
+			}
+			else
+			{
+				cout<<"Could not find ROffset in the hook : "<<dir_hook<<endl;
+				cin.get();
+				exit(1);
 			}
 		}
+		hook.close();
 	}
 	else
 	{
-		printf("\Could not find ROffset \"%s\".\n");
+		cout<<"Unable to open the hook file : "<<dir_hook<<endl;
 		cin.get();
 		exit(1);
 	}
+	return 1;
 }
 
 void Parse_hooks()
@@ -342,47 +296,35 @@ void Parse_hooks()
 				Final_Filename.append(".o");
 				Final_Filename.insert(0,"../build/");
 				Compile_Hook(current_file,Final_Filename,alone_Filename);
-				//Parse_build(offset);
 			}
         }
 	}	
 }
 
 bool gpp_Compile()
-{
-	if(!boost::filesystem::exists("\build"))
+{	
+	if(!check_system())
 	{
-		boost::filesystem::create_directory("build");
-	}
-	if(!boost::filesystem::exists("\hooks"))
-	{
-		boost::filesystem::create_directory("hooks");
-	}
-	if(!boost::filesystem::exists("\sections"))
-	{
-		boost::filesystem::create_directory("sections");
-	}
-	
-	if(!check_syscall())
-	{
-		printf("\No system calls present. Exiting patcher. \"%s\".\n");
+		printf("\No system present. Exiting patcher. \"%s\".\n");
 		cin.get();
 		exit(1);
 	}
 	
+	system("make directories");
+	
 	const int verisign_offset = 0xBDD000;
 	char verisign_size = 0x1500;
 	cout<<"Patching the verisign code \n";
-	WriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8);
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8);
 	
 	system("make ext_sector");
+	gpp_link("build/ext_sector.o");
 	Parse_hooks();
 	
-	char *ext_F = ReadBinaryFile("build/ext_sector.o.tmp.bin");
-	int section_size = get_file_size("build/ext_sector.o.tmp.bin");
+	char *ext_F = fReadBinaryFile("build/ext_sector.o.tmp.bin");
 	
 	cout<<"APPLY .EXT SECTION \n";
-	WriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, section_size);
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/ext_sector.o.tmp.bin"));
 }
 
 bool init_Ext()
@@ -394,26 +336,12 @@ bool init_Ext()
 	"\x00\x00\x00\x00\x00\x00\x00\x00","\x00\x00\x00\x00\x20\x00\x00\x60"};
 	
 	
-	/* unsigned char PE_header_values[] = {0x07, 0xC5, 0xAC24, 0xF0E300ECB80400, 0x00, 0xB0, 0xE8, 0x00}; 
-	size_t count = sizeof(PE_header_values);  */
-	
-	//char test[][10] = {"asdasdff","gggg"};
-	//cout<<sizeof(test[0][10])<<endl;
-	
-/* 	string PE_header_values [10] = {"\x07","\xC5","\xAC\x24","\xF0\xE3\x00\xEC\xB8\x04\x00","\x00\x00\x00\x00\x00\x00\x00\x00",
-	"\x2E\x65\x78\x74\x00\x00\x00\x00","\x00\x15\x00\x00\x00\xB0\xE8\x00","\x00\x15\x00\x00\x00\xD0\xBD\x00","\x00\x00\x00\x00\x00\x00\x00\x00","\x00\x00\x00\x00\x20\x00\x00\x60"}; 
-	
-	
-	vector <string> _arr(PE_header_values, PE_header_values+10); */
-	
-	//PE_header_values.push_back("\x06");
-	
 	const int PE_header_address [] = {0x136, 0x180, 0x188, 0x1B9, 0x1C8, 0x318, 0x320, 0x328, 0x330, 0x338};
 	
 
 	for(int i=0; i<=sizeof(PE_header_address)/sizeof(PE_header_address[0]); i++)
 	{	
-		WriteBinaryFile("ForgedAlliance_exxt.exe", PE_header_values[i], PE_header_address[i], 8); //hardcoded for 8 bytes.
+		fWriteBinaryFile("ForgedAlliance_exxt.exe", PE_header_values[i], PE_header_address[i], 8);
 	}
 	
 	return true;
@@ -424,6 +352,8 @@ int main (void)
 	if (!boost::filesystem::exists("ForgedAlliance_base.exe"))
 	{
 		cout<<"ForgedAlliance_base.exe not found! Rename the file if needed\n";
+		cin.get();
+		exit(1);
 	}
 		
 	boost::filesystem::copy_file("ForgedAlliance_base.exe", "ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
@@ -431,21 +361,6 @@ int main (void)
 	init_Ext();
 	
 	gpp_Compile();
-	
-//	system("g++"); 
-	
-	
-	
-	
-/* 	vector<char*> A = Parse("ForgedAlliance_ext.exe");
-	printf("TEXT PARSED USING Parse():\n");
-	for(int i=0,m=A.size();i<m;++i)printf("%s%s",A[i],i==m-1?"\n":" , "); */
-	
-/*  	for(;;)
-	{
-	char *s = ReadTextFile("ForgedAlliance_ext.exe");
-	cout<<s<<endl;
-	} */
 	
 	cin.get(); 
 

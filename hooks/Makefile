@@ -24,7 +24,11 @@ COMPILER_FLAGS = -fleading-underscore
 endif
 
 #LINKER_FLAGS specifies the libraries we're linking against 
-LINKER_FLAGS = -I. -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -c -Wall -Wextra -masm=intel
+#-ffunction-sections -fdata-sections
+
+#-ffreestanding = freestanding enviroment
+
+LINKER_FLAGS = -I. -m32 -O0 -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables -c -w -Wextra -masm=intel -ffunction-sections -fdata-sections -Wl,--gc-sections
 
 #BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
  

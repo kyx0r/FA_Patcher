@@ -35,6 +35,9 @@ BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_6
 #OBJ_NAME specifies the name of our exectuable 
 OBJ_NAME = FaPatcher.exe 
 
+directories:
+	mkdir -p ./build 
+
 ext_sector:
 	$(MAKE) all -C ./sections
 	
@@ -45,8 +48,9 @@ gpp_link:
 	ld -T linker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
 	
 rip_out_binary:
-	objcopy -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
+	objcopy --strip-all -O binary -R .eh_fram --remove-section .comment $(TMP_NAME) $(PRIME_NAME)
 
 #This is the target that compiles our executable 
 all : 
 	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) -o $(OBJ_NAME)
+	./FaPatcher

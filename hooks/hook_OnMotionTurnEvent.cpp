@@ -5,24 +5,13 @@
 
 //int by_pass_address asm("address") = 0x006B8FE0;
 
-//int by_pass_address = 0x006B8FE0;
-
-__asm__ volatile 
+__asm__
 (
-	".byte 0xE9 \n"
-	".byte 0x22 \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
+	".equ by_pass_address,0x006B8FE0-0x006B8FB9 \n"
 );
 
-/* int src = 1;
-int dst;   
-
-asm ("mov %1, %0\n\t"
-    "add $1, %0"
-    : "=r" (dst) 
-    : "r" (src)); */
+__asm__ __volatile__ 
+(
+	"jmp . + by_pass_address \n"
+	".align 128, 0x0 \n"
+);

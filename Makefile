@@ -22,10 +22,12 @@ endif
 #LIBRARY_PATHS specifies the additional library paths we'll need 
 LIBRARY_PATHS = -L ./lib
 
+align_size = 0x100
+
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
 # -Wl,-subsystem,windows gets rid of the console window 
-COMPILER_FLAGS = -w 
+COMPILER_FLAGS = -w -Dalign_size
 
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++
@@ -34,6 +36,11 @@ BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_6
  
 #OBJ_NAME specifies the name of our exectuable 
 OBJ_NAME = FaPatcher.exe 
+
+#-oformat -Ttext=0x006B8FB9
+
+align:
+	echo align_size = $(align_size)';' > Env.ld
 
 directories:
 	mkdir -p ./build 
@@ -44,11 +51,15 @@ ext_sector:
 _hooks: 
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) OBJS=$(OBJS) -C ./hooks
 	
-gpp_link:
-	ld -T linker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
+ext_gpp_link:
+	ld -T ./linker/sectionLinker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
+
+hook_gpp_link:
+	echo align_size = $(align_size)';' > Env.ld
+	ld -T ./linker/hookLinker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
 	
 rip_out_binary:
-	objcopy --strip-all -O binary -R .eh_fram --remove-section .comment $(TMP_NAME) $(PRIME_NAME)
+	objcopy --strip-all -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
 
 #This is the target that compiles our executable 
 all : 

@@ -30,13 +30,17 @@ endif
 
 LINKER_FLAGS = -I. -m32 -O0 -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables -c -w -Wextra -masm=intel -ffunction-sections -fdata-sections -Wl,--gc-sections
 
+#-nostartfiles similar to -c but has linker enabled
+
+ASSEMBLER_FLAGS = -c -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables
+
 #BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
  
-#OBJ_NAME specifies the name of our exectuable 
-#OBJ_NAME = ../build/ext_sector.o
-
-#This is the target that compiles our executable 
-
 all :
 	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) -o $(OBJ_NAME)
 	
+genAssembly:
+	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) -S $(OBJ_NAME)
+	
+assemble:
+	$(CC) ./*s $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(ASSEMBLER_FLAGS) $(BOOST) -o $(OBJ_NAME)	

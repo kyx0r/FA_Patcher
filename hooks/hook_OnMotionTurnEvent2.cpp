@@ -4,12 +4,15 @@
 
 #include <stdlib.h>
 
-__asm__ volatile 
+__asm__
 (
-	"jmp 0x006B9567 \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
+	".equ by_pass_address,0x006B9567-0x006B953F \n"
+);
+
+__asm__ __volatile__ 
+(
+	"jmp . + by_pass_address \n"
+	".align 128, 0x0 \n"
 );
 
 

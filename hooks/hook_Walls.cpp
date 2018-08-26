@@ -9,8 +9,7 @@ __asm__ volatile
 	"nop \n"
 	"nop \n"
 	"nop \n"
-	".byte 0x0 \n"
-	".byte 0x0 \n"
+	".align 128, 0x0 \n"
 ); 
 
  

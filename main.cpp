@@ -80,6 +80,7 @@ int get_bytes(string name)
 			else
 			{
 				cout<<"Unexpected end of a file"<<name<<endl;
+				return -1;
 			}
 			cin.get();
 			exit(EXIT_FAILURE);
@@ -95,8 +96,8 @@ int get_bytes(string name)
 			count_bytes+=null_count;
 			null_count=0;
 		}
-		//cout<<count_bytes<<endl;
-		//cout<<null_count<<endl;
+		//cout<<"coutn_bytes:"<<count_bytes<<endl;
+		//cout<<"null_count:"<<null_count<<endl;
 	} 
 	while (count_bytes-null_count>0); 
 	//we need to determine the end of assembly, but nullcheck is not perfect
@@ -120,6 +121,22 @@ bool check_system()
 	}
 }  
 
+string rem_extension(string str)
+{
+	size_t pos = str.find_last_of(".");
+	if (pos!=string::npos)
+	{
+		string ext = str.substr(pos);
+		str.erase( str.size() - ext.length());
+		return str;
+	}
+	else
+	{
+		cout<<"No extension in passed string"<<str<<endl;
+		return str;
+	}
+}
+
 //this awesomeness taken from here:
 //https://stackoverflow.com/questions/1070497/c-convert-hex-string-to-signed-integer
 template <typename ElemT>
@@ -132,10 +149,10 @@ struct HexTo {
     }
 };
 
-bool gpp_link(string filename)
+bool gpp_link(string filename, string command)
 {
-	string command = "make gpp_link PRIME_NAME=";
 	command.append(filename);
+	filename = rem_extension(filename);
 	string filename_tmp = filename.append(".tmp");
 	string tmp_Prefix = " TMP_NAME=";
 	tmp_Prefix.append(filename_tmp);
@@ -146,6 +163,8 @@ bool gpp_link(string filename)
 	if(system(&command[0]))
 	{
 		printf("Link error. \"%s\"\n");
+		cin.get();
+		exit(1);
 		return false;
 	}
 	cout<<"\n";
@@ -154,6 +173,7 @@ bool gpp_link(string filename)
 	command.append(tmp_Prefix);
 	string filename_prime = " PRIME_NAME=";
 	command.append(filename_prime);
+	filename = rem_extension(filename);
 	filename_prime = filename.append(".bin");
 	command.append(filename_prime);
 	
@@ -162,35 +182,35 @@ bool gpp_link(string filename)
 	if(system(&command[0]))
 	{
 		printf("Ripping binary  error. \"%s\"\n");
+		cin.get();
+		exit(1);
 		return false;
 	}
 	cout<<"\n";
 	return true;
 }
 
-void Apply_Hook(string alone_Filename, int offset)
+void align(int align_sizeL ,string filename, string command)
 {
-	char *hook_F = fReadBinaryFile(alone_Filename);
-	int Bytes_to_write = get_bytes(alone_Filename);
-	cout<<"APPLY HOOK : "<<alone_Filename <<"    Number of instructions: "<<Bytes_to_write<<endl;
-	fWriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, Bytes_to_write);
-	cout<<"\n";
+	filename = rem_extension(filename);
+	filename.append(".o");
+	gpp_link(filename, "make hook_gpp_link align_size=" + to_string(align_sizeL) + " PRIME_NAME=");
 }
 
-string rem_extension(string str)
+void Apply_Hook(string current_file, int offset)
 {
-	size_t pos = str.find(".");
-	if (pos!=string::npos)
+	int align_sizeL = boost::lexical_cast<HexTo<int>>(align_size);
+	char *hook_F = fReadBinaryFile(current_file);
+	int Bytes_to_write = get_bytes(current_file);
+	while(Bytes_to_write < 0) //in case the hook is bigger then supposable allocate more memory. 
 	{
-		string ext = str.substr(pos);
-		str.erase( str.size() - ext.length());
-		return str;
+		align_sizeL = align_sizeL * 2;
+		align(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
+		Bytes_to_write = get_bytes(current_file);	
 	}
-	else
-	{
-		cout<<"No extension in passed string"<<str<<endl;
-		return str;
-	}
+	cout<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<endl;
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, Bytes_to_write);
+	cout<<"\n";
 }
 
 void Parse_build(int offset, string alone_Filename)
@@ -207,8 +227,10 @@ void Parse_build(int offset, string alone_Filename)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
 				{
-					if(!gpp_link(current_file))
+					if(!gpp_link(current_file, "make hook_gpp_link PRIME_NAME="))
 					{
+						cout<<"gpp_link error"<<endl;
+						cin.get();
 						exit(1);
 					}
 				}	
@@ -225,11 +247,11 @@ void Parse_build(int offset, string alone_Filename)
 	}
 }
 
-void build_O(string dir_hook, string hook_name, string alone_Filename)
+void build_O(string current_file, string Final_Filename, string alone_Filename)
 {
 	cout<<"BUILDING .O FILES --------------------------------->";
 	string command = "make _hooks OBJ_NAME_=";
-	command.append(hook_name);
+	command.append(Final_Filename);
 	alone_Filename.insert(0, " OBJS=");
 	command.append(alone_Filename);
 	cout<<"\n";
@@ -237,9 +259,9 @@ void build_O(string dir_hook, string hook_name, string alone_Filename)
 	cout<<"\n";	
 }
 
-int Compile_Hook(string dir_hook, string hook_name, string alone_Filename)
+int Compile_Hook(string current_file, string Final_Filename, string alone_Filename)
 {
-	fstream hook(dir_hook);
+	fstream hook(current_file);
 	string line;
 	if(hook.is_open())
 	{
@@ -252,13 +274,13 @@ int Compile_Hook(string dir_hook, string hook_name, string alone_Filename)
 				line.insert(0,"0");
 				cout<<"ROffset = "<<line<<endl;
 				int offset = boost::lexical_cast<HexTo<int>>(line);
-				build_O(dir_hook, hook_name, alone_Filename);
+				build_O(current_file, Final_Filename, alone_Filename);
 				Parse_build(offset, alone_Filename);
 				break;
 			}
 			else
 			{
-				cout<<"Could not find ROffset in the hook : "<<dir_hook<<endl;
+				cout<<"Could not find ROffset in the hook : "<<current_file<<endl;
 				cin.get();
 				exit(1);
 			}
@@ -267,7 +289,7 @@ int Compile_Hook(string dir_hook, string hook_name, string alone_Filename)
 	}
 	else
 	{
-		cout<<"Unable to open the hook file : "<<dir_hook<<endl;
+		cout<<"Unable to open the hook file : "<<current_file<<endl;
 		cin.get();
 		exit(1);
 	}
@@ -293,6 +315,7 @@ void Parse_hooks()
 				Final_Filename.append(end);
 				string alone_Filename = Final_Filename;
 				cout<<Final_Filename<<endl;
+				Final_Filename = rem_extension(Final_Filename);
 				Final_Filename.append(".o");
 				Final_Filename.insert(0,"../build/");
 				Compile_Hook(current_file,Final_Filename,alone_Filename);
@@ -318,10 +341,10 @@ bool gpp_Compile()
 	fWriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8);
 	
 	system("make ext_sector");
-	gpp_link("build/ext_sector.o");
+	gpp_link("build/ext_sector.o", "make ext_gpp_link PRIME_NAME=");
 	Parse_hooks();
 	
-	char *ext_F = fReadBinaryFile("build/ext_sector.o.tmp.bin");
+	char *ext_F = fReadBinaryFile("build/ext_sector.bin");
 	
 	cout<<"APPLY .EXT SECTION \n";
 	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/ext_sector.o.tmp.bin"));

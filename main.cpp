@@ -61,7 +61,7 @@ inline unsigned fWriteBinaryFile(const string& f,const char* HexValue, int offse
 	return 1;
 }
 
-int get_bytes(string name)
+int get_bytes(string name, bool errorRet = true)
 {
 	FILE *p_file = nullptr;
 	p_file = fopen(name.c_str(),"rb");
@@ -80,7 +80,14 @@ int get_bytes(string name)
 			else
 			{
 				cout<<"Unexpected end of a file"<<name<<endl;
-				return -1;
+				if(errorRet)
+				{	
+					return false;
+				}
+				else if(!errorRet)
+				{
+					return count_bytes;
+				}
 			}
 			cin.get();
 			exit(EXIT_FAILURE);
@@ -199,12 +206,12 @@ void align(int align_sizeL ,string filename, string command)
 
 void Apply_Hook(string current_file, int offset)
 {
-	int align_sizeL = boost::lexical_cast<HexTo<int>>(align_size);
+	int align_sizeL;
 	char *hook_F = fReadBinaryFile(current_file);
 	int Bytes_to_write = get_bytes(current_file);
-	while(Bytes_to_write < 0) //in case the hook is bigger then supposable allocate more memory. 
+	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory. 
 	{
-		align_sizeL = align_sizeL * 2;
+		align_sizeL = get_bytes(current_file, Bytes_to_write) * 2;
 		align(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
 		Bytes_to_write = get_bytes(current_file);	
 	}
@@ -218,11 +225,12 @@ void Parse_build(int offset, string alone_Filename)
 	boost::filesystem::path p("./build");
 	boost::filesystem::directory_iterator end_itr;
 	alone_Filename = rem_extension(alone_Filename);
+	string current_file;
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
     {
 		if (boost::filesystem::is_regular_file(itr->path())) 
 		{
-            string current_file = itr->path().string();
+            current_file = itr->path().string();
 			if(boost::filesystem::extension(current_file).compare(".o")==0)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
@@ -233,8 +241,16 @@ void Parse_build(int offset, string alone_Filename)
 						cin.get();
 						exit(1);
 					}
+					break;
 				}	
 			}
+		}
+	}
+	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+    {
+		if (boost::filesystem::is_regular_file(itr->path())) 
+		{
+            current_file = itr->path().string();
 			if(boost::filesystem::extension(current_file).compare(".bin")==0)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
@@ -300,8 +316,9 @@ void Parse_hooks()
 {
 	boost::filesystem::path p("\hooks");
 	boost::filesystem::directory_iterator end_itr;
-	cout<<""<<endl;
+	cout<<"\n";
 	cout<<"Available hooks : \n";
+	cout<<"\n";
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
     {
 		if (boost::filesystem::is_regular_file(itr->path())) 

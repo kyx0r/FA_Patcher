@@ -1,1 +1,1 @@
-align_size = 0x100;
+align_size = 1092';' 

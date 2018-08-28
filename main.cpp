@@ -364,7 +364,7 @@ bool gpp_Compile()
 	char *ext_F = fReadBinaryFile("build/ext_sector.bin");
 	
 	cout<<"APPLY .EXT SECTION \n";
-	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/ext_sector.o.tmp.bin"));
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/ext_sector.bin"));
 }
 
 bool init_Ext()
@@ -379,7 +379,7 @@ bool init_Ext()
 	const int PE_header_address [] = {0x136, 0x180, 0x188, 0x1B9, 0x1C8, 0x318, 0x320, 0x328, 0x330, 0x338};
 	
 
-	for(int i=0; i<=sizeof(PE_header_address)/sizeof(PE_header_address[0]); i++)
+	for(int i=0; i<=sizeof(PE_header_address)/sizeof(PE_header_address[0])-1; i++)
 	{	
 		fWriteBinaryFile("ForgedAlliance_exxt.exe", PE_header_values[i], PE_header_address[i], 8);
 	}

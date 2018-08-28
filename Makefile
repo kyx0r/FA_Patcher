@@ -15,8 +15,16 @@ CC = g++
 
 ifeq ($(detected_OS),Windows)
 	obj_type = i386pe
+	mkdir = mkdir $(subst /,\,$(1)) > nul 2>&1 || (exit 0)
+	rm = $(wordlist 2,65535,$(foreach FILE,$(subst /,\,$(1)),& del $(FILE) > nul 2>&1)) || (exit 0)
+	rmdir = rmdir $(subst /,\,$(1)) > nul 2>&1 || (exit 0)
+	echo = echo $(1)
 else
 	obj_type = elf_i386
+	mkdir = mkdir -p $(1)
+	rm = rm $(1) > /dev/null 2>&1 || true
+	rmdir = rmdir $(1) > /dev/null 2>&1 || true
+	echo = echo "$(1)"	
 endif
 
 #LIBRARY_PATHS specifies the additional library paths we'll need 
@@ -38,12 +46,12 @@ BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_6
 OBJ_NAME = FaPatcher.exe 
 
 #-oformat -Ttext=0x006B8FB9
-
+#echo align_size = $(align_size)';' > Env.ld
 align:
 	echo align_size = $(align_size)';' > Env.ld
 
 directories:
-	mkdir -p ./build 
+	$(call mkdir, /build)
 
 ext_sector:
 	$(MAKE) all -C ./sections
@@ -55,7 +63,7 @@ ext_gpp_link:
 	ld -T ./linker/sectionLinker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
 
 hook_gpp_link:
-	echo align_size = $(align_size)';' > Env.ld
+	$(call echo, align_size = $(align_size)';' > Env.ld)
 	ld -T ./linker/hookLinker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
 	
 rip_out_binary:

@@ -3,3 +3,5 @@ ForgedAlliance_exxt.exe
 /autoCompile
 /lib
 /build
+nul
+Env.ld

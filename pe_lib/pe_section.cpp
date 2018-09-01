@@ -69,6 +69,12 @@ section& section::discardable(bool discardable)
 	return set_flag(image_scn_mem_discardable, discardable);
 }
 
+//Sets "code" attribute of section
+section& section::code(bool code)
+{
+	return set_flag(image_scn_cnt_code, code);
+}
+
 //Returns true if section is readable
 bool section::readable() const
 {
@@ -95,6 +101,11 @@ bool section::shared() const
 bool section::discardable() const
 {
 	return (header_.Characteristics & image_scn_mem_discardable) != 0;
+}
+
+bool section::code() const
+{
+	return (header_.Characteristics & image_scn_cnt_code) != 0;
 }
 
 //Returns true if section has no RAW data

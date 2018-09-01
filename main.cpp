@@ -386,7 +386,7 @@ bool init_Ext(string filename)
 		pe_base image(pe_factory::create_pe(pe_file));
 		
 		section new_section;
-		new_section.readable(true).writeable(true).executable(true);
+		new_section.readable(true).writeable(true).executable(true).code(true);
 		new_section.set_name(".exxt"); 
 		new_section.set_raw_data("Dummy info"); 
 

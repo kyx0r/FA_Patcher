@@ -17,7 +17,10 @@
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "pe_lib/pe_bliss.h"
+
 using namespace std;
+using namespace pe_bliss;
 
 int get_file_size(const string &filename) 
 {
@@ -53,7 +56,8 @@ inline unsigned fWriteBinaryFile(const string& f,const char* HexValue, int offse
 	if(output.fail() || !output)
 	{
 		cerr << "Error opening the file: " << strerror(errno);
-		return -1;
+		cin.get();
+		exit(1);
 	}
 	output.seekg(fstream::beg+offset);
 	output.write(HexValue, Bytes_to_write);
@@ -352,10 +356,11 @@ bool gpp_Compile()
 	
 	system("make directories");
 	
-	const int verisign_offset = 0xBDD000;
-	char verisign_size = 0x1500;
+//	const int verisign_offset = 0xBDD000; 
+	const int verisign_offset = 0xBDF000; //.exxt
+/* 	char verisign_size = 0x100000;
 	cout<<"Patching the verisign code \n";
-	fWriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8);
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8); */
 	
 	system("make ext_sector");
 	gpp_link("build/ext_sector.o", "make ext_gpp_link PRIME_NAME=");
@@ -367,21 +372,50 @@ bool gpp_Compile()
 	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/ext_sector.bin"));
 }
 
-bool init_Ext()
+bool init_Ext(string filename)
 {
-	char PE_header_values[10][15] = {"\x07\x00\x1F\x49\x4A\x4A\x00\x00","\x00\xC5\xE8\x00\x00\x10\x00\x00",
-	"\xAC\x24\xBE\x00\x02\x00\x00\x00","\xF0\xE3\x00\xEC\xB8\x04\x00",
-	"\x00\x00\x00\x00\x00\x00\x00\x00","\x2E\x65\x78\x74\x00\x00\x00\x00",
-	"\x00\x15\x00\x00\x00\xB0\xE8\x00","\x00\x15\x00\x00\x00\xD0\xBD\x00",
-	"\x00\x00\x00\x00\x00\x00\x00\x00","\x00\x00\x00\x00\x20\x00\x00\x60"};
+	ifstream pe_file(filename, ios::in | ios::binary);
+	if(!pe_file)
+	{
+		cout << "Cannot open " << filename <<endl;
+		return false;
+	}
 	
-	
-	const int PE_header_address [] = {0x136, 0x180, 0x188, 0x1B9, 0x1C8, 0x318, 0x320, 0x328, 0x330, 0x338};
-	
+	try
+	{
+		pe_base image(pe_factory::create_pe(pe_file));
+		
+		section new_section;
+		new_section.readable(true).writeable(true).executable(true);
+		new_section.set_name(".exxt"); 
+		new_section.set_raw_data("Dummy info"); 
 
-	for(int i=0; i<=sizeof(PE_header_address)/sizeof(PE_header_address[0])-1; i++)
-	{	
-		fWriteBinaryFile("ForgedAlliance_exxt.exe", PE_header_values[i], PE_header_address[i], 8);
+		section& added_section = image.add_section(new_section);
+
+		image.set_section_virtual_size(added_section, 0x1000000);
+		
+		string out_file_name = "ForgedAlliance_exxt.exe";
+		string::size_type slash_pos;
+		if((slash_pos = out_file_name.find_last_of("/\\")) != string::npos)
+		{
+			out_file_name = out_file_name.substr(slash_pos + 1);
+		}
+		
+		ofstream new_pe_file(out_file_name.c_str(), ios::out | ios::binary | ios::trunc);
+		if(!new_pe_file)
+		{
+			cout << "Cannot create " << out_file_name <<endl;
+			return false;
+		}
+		
+		rebuild_pe(image, new_pe_file);
+
+		cout << "PE was rebuilt and saved to " << out_file_name <<endl;
+	}
+	catch(const pe_exception& e)
+	{
+		cout << "Error: " << e.what() <<endl;
+		return false;
 	}
 	
 	return true;
@@ -395,10 +429,12 @@ int main (void)
 		cin.get();
 		exit(1);
 	}
-		
-	boost::filesystem::copy_file("ForgedAlliance_base.exe", "ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 	
-	init_Ext();
+	if(!init_Ext("ForgedAlliance_base.exe"))
+	{
+		cin.get();
+		exit(1);
+	}
 	
 	gpp_Compile();
 	

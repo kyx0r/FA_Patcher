@@ -7,7 +7,7 @@ align_size = 0x1000; /* squeeeeeze */
 SECTIONS
 {
 	/* '.' is the location counter. It counts locations. */
-	. = 0x128B000;
+	. = 0x128D000;
 
 	/* Code */
 	.text BLOCK(align_size):

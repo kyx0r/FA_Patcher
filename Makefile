@@ -4,15 +4,6 @@ else
     detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 endif
 
-#OBJS specifies which files to compile as part of the project 
-OBJS = ./*cpp
-#HEADS = ./*.h
-
-#CC specifies which compiler we're using 
-CC = g++
-#INCLUDE_PATHS specifies the additional include paths we'll need 
-#INCLUDE_PATHS = -I ./SDL2-2.0.8/i686-w64-mingw32/include/
-
 ifeq ($(detected_OS),Windows)
 	obj_type = i386pe
 	mkdir = mkdir $(subst /,\,$(1)) > nul 2>&1 || (exit 0)
@@ -26,6 +17,10 @@ else
 	rmdir = rmdir $(1) > /dev/null 2>&1 || true
 	echo = echo "$(1)"	
 endif
+
+OBJS = ./*cpp
+#HEADS = ./*.h
+CC = g++
 
 #LIBRARY_PATHS specifies the additional library paths we'll need 
 LIBRARY_PATHS = -L ./lib
@@ -41,22 +36,28 @@ COMPILER_FLAGS = -w -Dalign_size
 LINKER_FLAGS = -static-libgcc -static-libstdc++
 
 BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
+
+PELIB = -lpebliss
  
 #OBJ_NAME specifies the name of our exectuable 
 OBJ_NAME = FaPatcher.exe 
 
 #-oformat -Ttext=0x006B8FB9
 #echo align_size = $(align_size)';' > Env.ld
+
 align:
 	echo align_size = $(align_size)';' > Env.ld
-
+	
+peLib:
+	$(MAKE) all -C ./pe_lib
+	
 directories:
 	$(call mkdir, /build)
 
 ext_sector:
 	$(MAKE) all -C ./sections
 	
-_hooks: 
+_hooks:
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) OBJS=$(OBJS) -C ./hooks
 	
 ext_gpp_link:
@@ -70,6 +71,6 @@ rip_out_binary:
 	objcopy --strip-all -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
 
 #This is the target that compiles our executable 
-all : 
-	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) -o $(OBJ_NAME)
+all : peLib
+	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) $(PELIB) -o $(OBJ_NAME)
 	./FaPatcher

@@ -1,8 +1,8 @@
-ForgedAlliance_base.exe
-ForgedAlliance_exxt.exe
+*.exe
 /autoCompile
 /lib
 /build
 nul
 Env.ld
 .o
+nop

@@ -6,9 +6,9 @@ endif
 
 ifeq ($(detected_OS),Windows)
 	obj_type = i386pe
-	mkdir = mkdir $(subst /,\,$(1)) > nul 2>&1 || (exit 0)
-	rm = $(wordlist 2,65535,$(foreach FILE,$(subst /,\,$(1)),& del $(FILE) > nul 2>&1)) || (exit 0)
-	rmdir = rmdir $(subst /,\,$(1)) > nul 2>&1 || (exit 0)
+	mkdir = mkdir $(subst /,\,$(1)) > nop 2>&1 || (exit 0)
+	rm = $(wordlist 2,65535,$(foreach FILE,$(subst /,\,$(1)),& del $(FILE) > nop 2>&1)) || (exit 0)
+	rmdir = rmdir $(subst /,\,$(1)) > nop 2>&1 || (exit 0)
 	echo = echo $(1)
 else
 	obj_type = elf_i386

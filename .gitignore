@@ -1,8 +1,6 @@
 *.exe
-/autoCompile
 /lib
 /build
-nul
 Env.ld
-.o
+*.o
 nop

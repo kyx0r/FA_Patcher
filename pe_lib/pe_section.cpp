@@ -163,6 +163,11 @@ void section::map_virtual(uint32_t section_alignment) const
 	}
 }
 
+void section::resize_raw_data(uint32_t factor) const
+{
+	raw_data_.resize(factor);
+}
+
 //Unmaps virtual section data
 void section::unmap_virtual() const
 {

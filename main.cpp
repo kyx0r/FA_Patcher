@@ -368,8 +368,42 @@ bool gpp_Compile()
 	
 	char *ext_F = fReadBinaryFile("build/ext_sector.bin");
 	
-	cout<<"APPLY .EXT SECTION \n";
+	cout<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/ext_sector.bin")<<endl;
 	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/ext_sector.bin"));
+}
+
+bool Create_Section(istream& pe_file, const string& name, int raw_size = 1, int virtual_size = 0x1000)
+{
+	pe_base image(pe_factory::create_pe(pe_file));
+		
+	section new_section;
+	new_section.readable(true).writeable(true).executable(true).code(true);
+	new_section.set_name(name); 
+	new_section.resize_raw_data(raw_size);
+	//new_section.set_size_of_raw_data(raw_size);
+	//cout<<new_section.get_size_of_raw_data()<<endl;
+		
+	section& added_section = image.add_section(new_section);
+	image.set_section_virtual_size(added_section, virtual_size);
+		
+	string out_file_name = "ForgedAlliance_exxt.exe";
+	string::size_type slash_pos;
+	if((slash_pos = out_file_name.find_last_of("/\\")) != string::npos)
+	{
+			out_file_name = out_file_name.substr(slash_pos + 1);
+	}
+		
+	ofstream new_pe_file(out_file_name.c_str(), ios::out | ios::binary | ios::trunc);
+	if(!new_pe_file)
+	{
+		cout << "Cannot create " << out_file_name <<endl;
+		return false;
+	}
+	rebuild_pe(image, new_pe_file);
+		
+	cout << "PE was rebuilt and saved to " << out_file_name <<endl; 	
+	
+	return true;
 }
 
 bool init_Ext(string filename)
@@ -383,34 +417,7 @@ bool init_Ext(string filename)
 	
 	try
 	{
-		pe_base image(pe_factory::create_pe(pe_file));
-		
-		section new_section;
-		new_section.readable(true).writeable(true).executable(true).code(true);
-		new_section.set_name(".exxt"); 
-		new_section.set_raw_data("Dummy info"); 
-
-		section& added_section = image.add_section(new_section);
-
-		image.set_section_virtual_size(added_section, 0x1000000);
-		
-		string out_file_name = "ForgedAlliance_exxt.exe";
-		string::size_type slash_pos;
-		if((slash_pos = out_file_name.find_last_of("/\\")) != string::npos)
-		{
-			out_file_name = out_file_name.substr(slash_pos + 1);
-		}
-		
-		ofstream new_pe_file(out_file_name.c_str(), ios::out | ios::binary | ios::trunc);
-		if(!new_pe_file)
-		{
-			cout << "Cannot create " << out_file_name <<endl;
-			return false;
-		}
-		
-		rebuild_pe(image, new_pe_file);
-
-		cout << "PE was rebuilt and saved to " << out_file_name <<endl;
+		Create_Section(pe_file, ".exxt", 5242880,0x500000);
 	}
 	catch(const pe_exception& e)
 	{
@@ -437,6 +444,8 @@ int main (void)
 	}
 	
 	gpp_Compile();
+	
+	boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 	
 	cin.get(); 
 

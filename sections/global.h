@@ -43,7 +43,7 @@
 
 	const int lua_gettop = 0x90C590; //(lua_state*)
 
-	const int _stricmp = 0xAA549E; //int (const char*, const char*)
+	const int __stricmp = 0xAA549E; //int (const char*, const char*)
 
 	//const int Logf = 0x937CB0;
 	const int _Logf = 0x937CB0;

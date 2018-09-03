@@ -2,64 +2,35 @@
 #include "moho.h"
 #include "global.h"
 #include <stdlib.h>
+/* #include <iostream>
+#include <cstring>
+#include <limits>
+#include <time.h>
+#include <stdio.h>
+#include <vector>
+#include <boost/thread/thread.hpp> */
 
 // New unit categories.
 const char* sCQUEMOV = "CQUEMOV";
 const char* sSTAYONWATSUR = "STAYONWATSUR";
 // ForgedAlliance.exe addresses.
 
-typedef void __Logf(const char* fmt, ...);
-__Logf* Logf = (__Logf*)_Logf;
+/* typedef void __Logf(const char* fmt, ...);
+__Logf* Logf = (__Logf*)_Logf; */ //relative call
 
- extern "C" 
-{
-	//void Logf(const char* fmt, ...);
-
-/* 	int stricmp(const char* a, const char* b);
-
-	void lua_pushbool(lua_state *L, int b);
-
-	extern CWldSession* g_CWldSession;
-	extern Sim* 		g_Sim; */
-};
+//asm(".text 0x128D000");
 
 void print_hello_world()
 {	
-	Logf("Hello World!");
+	((int (*)(const char* fmt, ...))_Logf)("Hello World!"); 
 }
 
-/* extern "C" bool ext_ValidateFocusArmyRequest(int army)
-{
-	//UserArmy* userArmy = ((UserArmy**)g_CWldSession->armies.objects_start)[army];
 
-	return true;
-} */
-
-/* extern "C" int cxx_AddCommandSourceId(lua_state* lua, const char* playerName, int sourceId)
+/* void Thread__()
 {
-	Sim* sim = g_Sim;
-	for(int i=0; i < sim->armies.size(); i++)
-	{
-		//SimArmy* army = (SimArmy*)sim->armies[i];
-		if(stricmp(army->nickname.data(), playerName) == 0)
-		{
-			army->mValidCommandSources.add(sourceId);
-			lua_pushbool(lua, true);
-			return 1;
-		}
-	}
-	lua_pushbool(lua, false);
-	return 1;
+	hw HW;
+	boost::thread worker(boost::bind(&hw::print_hello_world, &HW));
+	worker.join();
 }
-extern "C" int cxx_SetCommandSourceId(lua_state* lua, int armyId, int sourceId, bool set_or_unset)
-{
-	Sim* sim = g_Sim;
-	SimArmy* army = (SimArmy*)sim->armies[armyId];
 
-	if(set_or_unset)
-		army->mValidCommandSources.add(sourceId);
-	else
-		army->mValidCommandSources.remove(sourceId);
-	lua_pushbool(lua, true);
-	return 1;
-} */ 
+int main(){} */

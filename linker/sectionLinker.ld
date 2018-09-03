@@ -1,7 +1,13 @@
 /* Entry point; at the very start of the binary */
 /*ENTRY(_ext_lua_LoadSavedGameHook)*/
 
-align_size = 0x100; /* squeeeeeze */
+MEMORY 
+{
+	rom (rwx)  : ORIGIN = 0x128D000, LENGTH = 0x500000
+}
+
+
+align_size = 0x1000; /* squeeeeeze */
 
 /* Binary sections */
 SECTIONS
@@ -12,15 +18,14 @@ SECTIONS
 	/* Code */
 	.text BLOCK(align_size):
 	{
-		*(.ext)
+		*(.exxt)
 		*(.text)
-	}
+	} > rom
 
-	/* Read-only data. */
-	.rdata BLOCK(align_size):
+	.rdata 0x01672161:
 	{
-		*(.rdata)
-	}
+		KEEP(*(.rdata))
+	} > rom
 
 	/* Read-write data (initialized) */
 	/*.data BLOCK(align_size) :

@@ -32,7 +32,7 @@ LINKER_FLAGS = -I. -m32 -O0 -ffreestanding -fpermissive -fno-exceptions -fno-asy
 
 #-nostartfiles similar to -c but has linker enabled
 
-ASSEMBLER_FLAGS =  -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables
+ASSEMBLER_FLAGS =  -c -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables
 
 #BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
  

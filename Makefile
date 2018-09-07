@@ -55,12 +55,14 @@ directories:
 	$(call mkdir, /build)
 
 ext_sector:
-	$(MAKE) all -C ./sections
+	$(MAKE) all_individual -C ./sections
+	$(MAKE) link -C ./sections
 	
 _hooks:
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) OBJS=$(OBJS) -C ./hooks
 	
 ext_gpp_link:
+	$(call echo, align_size = $(align_size)';' > Env.ld)
 	ld -T ./linker/sectionLinker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
 
 hook_gpp_link:

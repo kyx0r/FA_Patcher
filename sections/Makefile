@@ -5,8 +5,14 @@ else
 endif
 
 #OBJS specifies which files to compile as part of the project 
-OBJS = ./*cpp
-#HEADS = ./global.h
+SRCS=$(wildcard *.cpp)
+
+OBJS=$(SRCS:.cpp=.o)
+LINK_OBJS:= $(addprefix ../build/,$(OBJS))
+
+PROGS = $(patsubst %.cpp,../build/%.o,$(SRCS))
+
+#HEADS = funcDef.h
 
 #CC specifies which compiler we're using 
 CC = g++
@@ -27,15 +33,19 @@ endif
 
 #STD = -static-libgcc -static-libstdc++ 
 
-LINKER_FLAGS = -I. -c -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -Wall -Wextra -masm=intel
+LINKER_FLAGS = -I. -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -Wall -Wextra -masm=intel
 
 #BOOST = -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
  
-#OBJ_NAME specifies the name of our exectuable 
-OBJ_NAME = ../build/ext_sector.o
-
+OUTPUT = ../build/ext_sector.o 
+ 
 #This is the target that compiles our executable 
+all_individual : $(PROGS)
+../build/%.o: %.cpp
+	$(CC) -c $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(STD) $(LINKER_FLAGS) $(BOOST) -o $@ $<
 
-all : 
-	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(STD) $(LINKER_FLAGS) $(BOOST) -o $(OBJ_NAME)
+all :
+	$(CC) $(HEADS) -c $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(STD) $(LINKER_FLAGS) $(BOOST) -o $(OUTPUT) ext_sector.cpp
 	
+link:
+	ld --image-base 0x128D000 -o ../build/exxt_sector.o $(LINK_OBJS)

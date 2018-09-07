@@ -162,6 +162,7 @@ struct HexTo {
 
 bool gpp_link(string filename, string command)
 {
+	command.append(" PRIME_NAME=");
 	command.append(filename);
 	filename = rem_extension(filename);
 	string filename_tmp = filename.append(".tmp");
@@ -201,11 +202,11 @@ bool gpp_link(string filename, string command)
 	return true;
 }
 
-void align(int align_sizeL ,string filename, string command)
+void align_hook(int align_sizeL ,string filename, string command)
 {
 	filename = rem_extension(filename);
 	filename.append(".o");
-	gpp_link(filename, "make hook_gpp_link align_size=" + to_string(align_sizeL) + " PRIME_NAME=");
+	gpp_link(filename, "make hook_gpp_link align_size=" + to_string(align_sizeL));
 }
 
 void Apply_Hook(string current_file, int offset)
@@ -216,7 +217,7 @@ void Apply_Hook(string current_file, int offset)
 	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory. 
 	{
 		align_sizeL = get_bytes(current_file, Bytes_to_write) * 2;
-		align(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
+		align_hook(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
 		Bytes_to_write = get_bytes(current_file);	
 	}
 	cout<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<endl;
@@ -239,7 +240,7 @@ void Parse_build(int offset, string alone_Filename)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
 				{
-					if(!gpp_link(current_file, "make hook_gpp_link PRIME_NAME="))
+					if(!gpp_link(current_file, "make hook_gpp_link"))
 					{
 						cout<<"gpp_link error"<<endl;
 						cin.get();
@@ -345,6 +346,80 @@ void Parse_hooks()
 	}	
 }
 
+struct image_section_header
+{
+	vector <string> Name;
+	vector <uint32_t> VirtualSize;
+	vector <uint32_t> VirtualAddress;
+	vector <uint32_t> SizeOfRawData;
+};
+
+image_section_header populate_image_section_header(const string &filename)
+{
+	image_section_header header;
+	ifstream pe_file(filename, ios::in | ios::binary);
+	if(!pe_file)
+	{
+		cout << "Cannot open " << filename <<endl;
+		cin.get();
+		exit(1);
+	}	
+	
+	try
+	{
+		pe_base image(pe_factory::create_pe(pe_file));
+		//cout << "Reading PE sections..." << hex << showbase << endl << endl;
+		const section_list sections(image.get_image_sections());
+		for(section_list::const_iterator it = sections.begin(); it != sections.end(); ++it)
+		{
+			const section& s = *it; 
+/* 			std::cout << "Section [" << s.get_name() << "]" << std::endl 
+				<< "Size of raw data: " << s.get_size_of_raw_data() << std::endl 
+				<< "Virtual address: " << s.get_virtual_address() << std::endl 
+				<< "Virtual size: " << s.get_virtual_size() << std::endl 
+				<< std::endl; */
+			header.Name.push_back(s.get_name());
+			header.VirtualSize.push_back(s.get_virtual_size());
+			header.VirtualAddress.push_back(s.get_virtual_address()); 
+			header.SizeOfRawData.push_back(s.get_size_of_raw_data()); 
+		}
+	}
+	catch(const pe_exception& e)
+	{
+		std::cout << "Error: " << e.what() << std::endl;
+		cin.get();
+		exit(1);
+	}
+	
+	return header;
+}
+
+void Apply_Ext()
+{
+	//	const int verisign_offset = 0xBDD000; //.ext
+	const int verisign_offset = 0xBDF000; //.exxt
+	uint32_t align_Rdata = 0;
+	string make_ext_gpp_link = "make ext_gpp_link";
+	system("make ext_sector");
+	
+	image_section_header header = populate_image_section_header("build/exxt_sector.o");
+	
+	for(int i=0; i<header.Name.size(); i++)
+	{
+		if(header.Name[i].compare(".rdata") == 0)
+		{
+			align_Rdata = header.VirtualAddress[i];
+			make_ext_gpp_link.append(" align_size=" + to_string(align_Rdata));
+		}
+	}
+
+	gpp_link("build/exxt_sector.o", make_ext_gpp_link);
+	char *ext_F = fReadBinaryFile("build/exxt_sector.bin");
+	
+	cout<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/exxt_sector.bin")<<endl;
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/exxt_sector.bin"));
+}
+
 bool gpp_Compile()
 {	
 	if(!check_system())
@@ -355,21 +430,8 @@ bool gpp_Compile()
 	}
 	
 	system("make directories");
-	
-//	const int verisign_offset = 0xBDD000; 
-	const int verisign_offset = 0xBDF000; //.exxt
-/* 	char verisign_size = 0x100000;
-	cout<<"Patching the verisign code \n";
-	fWriteBinaryFile("ForgedAlliance_exxt.exe", &verisign_size, verisign_offset, 8); */
-	
-	system("make ext_sector");
-	gpp_link("build/ext_sector.o", "make ext_gpp_link PRIME_NAME=");
+	Apply_Ext();
 	Parse_hooks();
-	
-	char *ext_F = fReadBinaryFile("build/ext_sector.bin");
-	
-	cout<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/ext_sector.bin")<<endl;
-	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/ext_sector.bin"));
 }
 
 bool Create_Section(istream& pe_file, const string& name, int raw_size = 1, int virtual_size = 0x1000)
@@ -397,6 +459,8 @@ bool Create_Section(istream& pe_file, const string& name, int raw_size = 1, int 
 	if(!new_pe_file)
 	{
 		cout << "Cannot create " << out_file_name <<endl;
+		cin.get();
+		exit(1);
 		return false;
 	}
 	rebuild_pe(image, new_pe_file);
@@ -412,6 +476,8 @@ bool init_Ext(string filename)
 	if(!pe_file)
 	{
 		cout << "Cannot open " << filename <<endl;
+		cin.get();
+		exit(1);
 		return false;
 	}
 	
@@ -422,6 +488,8 @@ bool init_Ext(string filename)
 	catch(const pe_exception& e)
 	{
 		cout << "Error: " << e.what() <<endl;
+		cin.get();
+		exit(1);
 		return false;
 	}
 	

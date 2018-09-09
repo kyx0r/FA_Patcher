@@ -398,18 +398,38 @@ void Apply_Ext()
 {
 	//	const int verisign_offset = 0xBDD000; //.ext
 	const int verisign_offset = 0xBDF000; //.exxt
-	uint32_t align_Rdata = 0;
+	uint32_t align_data = 0;
+	uint32_t align_rdata = 0;
+	uint32_t align_bss = 0;
+	uint32_t align_idata = 0;
 	string make_ext_gpp_link = "make ext_gpp_link";
 	system("make ext_sector");
 	
 	image_section_header header = populate_image_section_header("build/exxt_sector.o");
 	
+	//There might be a better way of doing this, but for now all I got. 
+	//This should be very realiable still, cause locations will be the same as original binary. 
 	for(int i=0; i<header.Name.size(); i++)
 	{
+		if(header.Name[i].compare(".data") == 0)
+		{
+			align_data = header.VirtualAddress[i];
+			make_ext_gpp_link.append(" align_data=" + to_string(align_data));
+		}
 		if(header.Name[i].compare(".rdata") == 0)
 		{
-			align_Rdata = header.VirtualAddress[i];
-			make_ext_gpp_link.append(" align_size=" + to_string(align_Rdata));
+			align_rdata = header.VirtualAddress[i]-align_data;
+			make_ext_gpp_link.append(" align_rdata=" + to_string(align_rdata));
+		}
+		if(header.Name[i].compare(".bss") == 0)
+		{
+			align_bss = header.VirtualAddress[i]-align_rdata;
+			make_ext_gpp_link.append(" align_bss=" + to_string(align_bss));
+		}
+		if(header.Name[i].compare(".idata") == 0)
+		{
+			align_idata = header.VirtualAddress[i]-align_bss;
+			make_ext_gpp_link.append(" align_idata=" + to_string(align_idata));
 		}
 	}
 

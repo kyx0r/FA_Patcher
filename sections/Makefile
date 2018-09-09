@@ -33,7 +33,7 @@ endif
 
 #STD = -static-libgcc -static-libstdc++ 
 
-LINKER_FLAGS = -I. -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -Wall -Wextra -masm=intel
+LINKER_FLAGS = -I. -m32 -O0 -fno-exceptions -fno-asynchronous-unwind-tables -Wall -w -fpermissive -Wextra -masm=intel
 
 #BOOST = -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
  

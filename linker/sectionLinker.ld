@@ -15,27 +15,29 @@ SECTIONS
 	. = 0x128D000;
 
 	/* Code */
-	.text BLOCK(align_size):
+	.text BLOCK(align_data):
 	{
 		*(.exxt)
 		*(.text)
 	} > rom
 
-	.rdata BLOCK(align_size):
+	.data BLOCK(align_data):
+	{
+		*(.data)
+	} > rom
+	
+	.rdata BLOCK(align_rdata):
 	{
 		KEEP(*(.rdata))
 	} > rom
 
-	/* Read-write data (initialized) */
-/* 	.data BLOCK(align_size) :
-	{`
-		*(.data)
-	} Haven't made sector for this, so no globals, for now */
-
-	/* Read-write data (uninitialized) and stack */
-	/*.bss BLOCK(align_size) :
+	.bss BLOCK(align_bss):
 	{
-		*(COMMON) 
 		*(.bss)
-	} nor this */
+	} > rom
+	
+	.idata BLOCK(align_idata):
+	{
+		*(.idata)
+	} > rom
 }

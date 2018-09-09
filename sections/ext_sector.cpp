@@ -1,7 +1,8 @@
 
 #include "moho.h"
-#include "funcDef.h"
+#include "funcDefs.h"
 #include <stdlib.h>
+#include "global_func_table.h"
 /* #include <iostream>
 #include <cstring>
 #include <limits>
@@ -15,11 +16,13 @@ const char* sCQUEMOV = "CQUEMOV";
 const char* sSTAYONWATSUR = "STAYONWATSUR";
 // ForgedAlliance.exe addresses.
 
-funcDef fd;
+funcDefs fd;
+GFT Gft;
 
 void print_hello_world()
 {	
 	fd.Logf("Hello World!");
+	Gft.IssueMove(0x1233545,1244);
 }
 
 

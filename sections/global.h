@@ -5,7 +5,7 @@ class global
 	
 	//LuaPlus
 	const int LuaState__CastState = 0x90A510; // LuaState* (lua_state*)
-	const int LuaState__Error = 0x90C1D0; // (LuaState*, fmt, args...)
+	const int _LuaState__Error = 0x90C1D0; // (LuaState*, fmt, args...)
 	const int _CastState_LuaState_LuaPlus__SAPAV12_PAUlua_State___Z = 0x90A510;
 	const int __0LuaObject_LuaPlus__QAE_ABVLuaStackObject_1__Z = 0x908A70;
 	const int __1LuaObject_LuaPlus__QAE_XZ = 0x9075D0;
@@ -30,6 +30,9 @@ class global
 
 	const int Moho__NET_MakeNATTraversal_ = 0x7BC5F0; //(LuaObject* rvo, LuaState*)
 	const int LuaObject_PushStack = 0x907D80; //(LuaStackObject* rvo, LuaState*)
+	const int _Eval_Lua_Object = 0x6EEE40;
+	const int _LuaPlus_LuaState_PushNil = 0x0090CD00;
+	const int _LuaPlus_LuaObject_PushStack = 0x00907D80;
 
 	// Returned object is probably an iterator of sorts_
 	// It is 0x10 bytes. 
@@ -46,12 +49,18 @@ class global
 
 	const int __ftol2_sse = 0xA89CC0;
 
-	const int lua_gettop = 0x90C590; //(lua_state*)
+	const int _lua_gettop = 0x90C590; //(lua_state*)
 
 	const int __stricmp = 0xAA549E; //int (const char*, const char*)
 
 	//const int Logf = 0x937CB0;
 	const int _Logf = 0x937CB0;
+	const int _Validate_IssueCommand = 0x006EECF0; 
+	const int _Goto_Exception_Handler_Ntdll = 0x00A82542;
+	const int _Get_Lua_Coordinates_State = 0x006EEF60;
+	const int _Push_Coordinates = 0x005E27D0;
+	const int _Moho_UNIT_IssueCommand = 0x006F12C0;
+	const int _Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData = 0x0057ABB0;
 
 	// Globals
 

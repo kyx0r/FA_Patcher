@@ -26,6 +26,10 @@ CC = g++
 LIBRARY_PATHS = -L ./lib
 
 align_size = 0x100
+align_data = 0x1000
+align_rdata = 0x1000
+align_bss = 0x1000
+align_idata = 0x1000
 
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
@@ -62,7 +66,10 @@ _hooks:
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) OBJS=$(OBJS) -C ./hooks
 	
 ext_gpp_link:
-	$(call echo, align_size = $(align_size)';' > Env.ld)
+	$(call echo, align_data = $(align_data)';' > Env.ld)
+	$(call echo, align_rdata = $(align_rdata)';' >> Env.ld)
+	$(call echo, align_bss = $(align_bss)';' >> Env.ld)
+	$(call echo, align_idata = $(align_idata)';' >> Env.ld)
 	ld -T ./linker/sectionLinker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
 
 hook_gpp_link:

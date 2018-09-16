@@ -1,10 +1,11 @@
 // emit reversed functions for later use. 
 #include "typeDefs.h"
+#include "moho.h"
 
 class GFT
 {
 	public:
-	int IssueMove(int *a1, double a2);
+	int IssueMove(struct lua_State **a1);
 	bool nanTest(float *a1);
 	_DWORD* LuaPlus_LuaObject_LuaObject(_DWORD *_this);
 	_DWORD* Moho_SSTICommandIssueData_SSTICommandIssueData(_DWORD* _this, int a2);

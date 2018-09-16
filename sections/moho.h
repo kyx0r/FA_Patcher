@@ -58,6 +58,7 @@ struct list // probably not from visual c++, but made by gpg
 	void* objects_end; 
 };
 
+#pragma once
 typedef int SOCKET;
 // GPGCore
 
@@ -76,13 +77,13 @@ struct gpg_mutex
 	int vooodoo;
 };
 // LuaPlus
-struct lua_state
+struct lua_State
 {
 	int dummy;
 };
 struct LuaState
 {
-	lua_state* _lua_state;
+	lua_State* _lua_State;
 	void* unknown1;
 	void* unknown2;
 	void* unknown3;
@@ -120,6 +121,15 @@ struct LuaObject
 };
 
 // Moho
+struct Moho__SSTICommandIssueData
+{
+	int unknown;
+};
+
+struct Moho__CUnitCommand
+{
+	int unknown;
+};
 
 struct linked_list
 {

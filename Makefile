@@ -57,6 +57,7 @@ peLib:
 	
 directories:
 	$(call mkdir, /build)
+	$(call mkdir, /preprocessor)
 
 ext_sector:
 	$(MAKE) all_individual -C ./sections
@@ -64,6 +65,9 @@ ext_sector:
 	
 _hooks:
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) OBJS=$(OBJS) -C ./hooks
+	
+_fast_hooks:
+	$(MAKE) fast_compile -C ./hooks
 	
 ext_gpp_link:
 	$(call echo, align_data = $(align_data)';' > Env.ld)

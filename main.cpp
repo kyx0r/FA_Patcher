@@ -19,6 +19,9 @@
 
 #include "pe_lib/pe_bliss.h"
 
+static bool fast_Compile_Hooks = false; //rely on internal makefile system
+static bool indiv_Compile_Hooks = true;
+
 using namespace std;
 using namespace pe_bliss;
 
@@ -65,55 +68,49 @@ inline unsigned fWriteBinaryFile(const string& f,const char* HexValue, int offse
 	return 1;
 }
 
-int get_bytes(string name, bool errorRet = true)
+int get_bytes(string filename, bool errorRet = true)
 {
-	FILE *p_file = nullptr;
-	p_file = fopen(name.c_str(),"rb");
-	int ch = EOF;
+	char ch;
 	int count_bytes=0;
 	int null_count=0;
+	ifstream in(filename, ios::in | ios::binary);
+	if(!in)
+	{
+		cout << "Cannot open " << filename <<endl;
+		cin.get();
+		exit(1);
+	}
 	do
 	{
-		ch = fgetc(p_file);
-		if (EOF == ch)
-		{ 
-			if (ferror(p_file))
+		if(in.get(ch))
+		{
+			count_bytes++;
+			if(ch==0)
 			{
-				perror("fgetc() failed");
+				count_bytes--;
+				null_count++;
 			}
 			else
 			{
-				cout<<"Unexpected end of a file"<<name<<endl;
-				if(errorRet)
-				{	
-					return false;
-				}
-				else if(!errorRet)
-				{
-					return count_bytes;
-				}
+				count_bytes+=null_count;
+				null_count=0;
 			}
-			cin.get();
-			exit(EXIT_FAILURE);
-		}
-		count_bytes++;
-		if(ch==0)
-		{
-			count_bytes--;
-			null_count++;
 		}
 		else
 		{
-			count_bytes+=null_count;
-			null_count=0;
+			cout<<"Unexpected end of a file"<<filename<<endl;
+			if(errorRet)
+			{	
+				return false;
+			}
+			else if(!errorRet)
+			{
+				return count_bytes;
+			}			
 		}
-		//cout<<"coutn_bytes:"<<count_bytes<<endl;
-		//cout<<"null_count:"<<null_count<<endl;
-	} 
-	while (count_bytes-null_count>0); 
-	//we need to determine the end of assembly, but nullcheck is not perfect
-	//so we check for a sequence of nulls to make sure its truly the end. Because some assembly opcodes have nulls in them. 
-	fclose(p_file);
+	}
+	while(count_bytes-null_count>0);
+	in.close();
 	return count_bytes;
 }
 
@@ -177,7 +174,6 @@ bool gpp_link(string filename, string command)
 		printf("Link error. \"%s\"\n");
 		cin.get();
 		exit(1);
-		return false;
 	}
 	cout<<"\n";
 	
@@ -196,7 +192,6 @@ bool gpp_link(string filename, string command)
 		printf("Ripping binary  error. \"%s\"\n");
 		cin.get();
 		exit(1);
-		return false;
 	}
 	cout<<"\n";
 	return true;
@@ -209,7 +204,7 @@ void align_hook(int align_sizeL ,string filename, string command)
 	gpp_link(filename, "make hook_gpp_link align_size=" + to_string(align_sizeL));
 }
 
-void Apply_Hook(string current_file, int offset)
+void apply_Hook(string current_file, int offset)
 {
 	int align_sizeL;
 	char *hook_F = fReadBinaryFile(current_file);
@@ -225,7 +220,7 @@ void Apply_Hook(string current_file, int offset)
 	cout<<"\n";
 }
 
-void Parse_build(int offset, string alone_Filename)
+void parse_build(int offset, string alone_Filename)
 {
 	boost::filesystem::path p("./build");
 	boost::filesystem::directory_iterator end_itr;
@@ -260,7 +255,7 @@ void Parse_build(int offset, string alone_Filename)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
 				{
-					Apply_Hook(current_file, offset);
+					apply_Hook(current_file, offset);
 					break;
 				}
 			}
@@ -280,44 +275,60 @@ void build_O(string current_file, string Final_Filename, string alone_Filename)
 	cout<<"\n";	
 }
 
-int Compile_Hook(string current_file, string Final_Filename, string alone_Filename)
+int parse_offset(string filename, string expr = "0x")
 {
-	fstream hook(current_file);
+	fstream file(filename);
 	string line;
-	if(hook.is_open())
+	int offset;
+	char *tok;
+	size_t pos;
+	if(file.is_open())
 	{
-		while(getline(hook,line))
+		while(getline(file,line))
 		{
-			if(line.find("ROffset = ")!=string::npos)
+			pos = line.find(expr);
+			if(pos!=string::npos)
 			{
-				char* tok = strtok(&line[0], "0x");
+				line = line.substr(pos);
+				tok = strtok(&line[0], "0x");
 				line.erase(0,strlen(tok)+1);
 				line.insert(0,"0");
-				cout<<"ROffset = "<<line<<endl;
-				int offset = boost::lexical_cast<HexTo<int>>(line);
-				build_O(current_file, Final_Filename, alone_Filename);
-				Parse_build(offset, alone_Filename);
-				break;
-			}
-			else
-			{
-				cout<<"Could not find ROffset in the hook : "<<current_file<<endl;
-				cin.get();
-				exit(1);
+				offset = boost::lexical_cast<HexTo<int>>(line);
+				file.close();
+				return offset;
 			}
 		}
-		hook.close();
-	}
-	else
-	{
-		cout<<"Unable to open the hook file : "<<current_file<<endl;
+		cout<<"Could not find : "<<expr<<" in the file : "<<filename<<endl;
 		cin.get();
 		exit(1);
 	}
+	else
+	{
+		cout<<"Unable to open the file : "<<filename<<endl;
+		cin.get();
+		exit(1);
+	}
+	return 1;	
+}
+
+int compile_Hook(string current_file, string Final_Filename, string alone_Filename)
+{
+	int offset = parse_offset(current_file, "ROffset = ");
+	cout<<"ROffset = "<<hex<<offset<<endl;
+	if(fast_Compile_Hooks)
+	{
+		system("make _fast_hooks");
+		fast_Compile_Hooks = false;
+	}
+	else if (indiv_Compile_Hooks)
+	{	
+		build_O(current_file, Final_Filename, alone_Filename);
+	}
+	parse_build(offset, alone_Filename);
 	return 1;
 }
 
-void Parse_hooks()
+void parse_hooks()
 {
 	boost::filesystem::path p("\hooks");
 	boost::filesystem::directory_iterator end_itr;
@@ -340,7 +351,7 @@ void Parse_hooks()
 				Final_Filename = rem_extension(Final_Filename);
 				Final_Filename.append(".o");
 				Final_Filename.insert(0,"../build/");
-				Compile_Hook(current_file,Final_Filename,alone_Filename);
+				compile_Hook(current_file,Final_Filename,alone_Filename);
 			}
         }
 	}	
@@ -394,7 +405,87 @@ image_section_header populate_image_section_header(const string &filename)
 	return header;
 }
 
-void Apply_Ext()
+struct function_table
+{
+	uint32_t section_alignment;
+	vector <string> Name;
+	vector <uint32_t> FunctionVirtualAddress;
+};
+
+int get_line_count(fstream& file)
+{
+	file.unsetf(ios_base::skipws);
+	return count(istream_iterator<char>(file),istream_iterator<char>(),'\n');
+}
+
+int write_def_table(function_table &table)
+{
+	ofstream outfile ("preprocessor/define.h");
+	
+	for(int i=0; i<table.Name.size(); i++)
+	{
+		outfile<<"#define "<<table.Name[i]<<" 0x"<<hex<<table.FunctionVirtualAddress[i]<<endl;
+	}
+	outfile.close();
+}
+
+function_table linker_map_parser(string filename)
+{
+	function_table table;
+	string line;
+	string word;
+	int offset;
+	int pos;
+	
+	ifstream map_file(filename);
+	bool text_sec_found = false;
+	if(!map_file)
+	{
+		cout << "Cannot open map_file : " << filename <<endl;
+		cin.get();
+		exit(1);
+	}
+	table.section_alignment = parse_offset(filename, "__section_alignment__ = "); 	
+	while(getline(map_file,line))
+	{
+		if(line.find("*(.text.*)")!=string::npos)
+		{break;}
+		if(line.find("0x")==string::npos)
+		{continue;}
+		if(line.find(".text")!=string::npos)
+		{text_sec_found = true; continue;}
+	
+		if(text_sec_found == true)
+		{
+			if(line.find("../build/")==string::npos)
+			{
+				line.resize(line.find("("));
+				pos = line.find("::");
+				if(pos!=string::npos)
+				{
+					line.replace(pos,2,"__");
+				}
+				stringstream ss(line);
+				while(ss>>word)
+				{
+					if(word.find("0x")!=string::npos)
+					{
+						offset = boost::lexical_cast<HexTo<int>>(word);
+						table.FunctionVirtualAddress.push_back(offset-table.section_alignment);
+					}
+					else
+					{
+						table.Name.push_back(word);
+					}
+				}
+			}
+		}
+	}	
+	map_file.close();
+	return table;
+}
+
+void apply_Ext()
 {
 	//	const int verisign_offset = 0xBDD000; //.ext
 	const int verisign_offset = 0xBDF000; //.exxt
@@ -438,6 +529,10 @@ void Apply_Ext()
 	
 	cout<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/exxt_sector.bin")<<endl;
 	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/exxt_sector.bin"));
+	
+	cout<<"Parsing linker map file..."<<endl;
+	function_table table = linker_map_parser("build/mapfile.map");
+	write_def_table(table);
 }
 
 bool gpp_Compile()
@@ -450,11 +545,11 @@ bool gpp_Compile()
 	}
 	
 	system("make directories");
-	Apply_Ext();
-	Parse_hooks();
+	apply_Ext();
+	parse_hooks();
 }
 
-bool Create_Section(istream& pe_file, const string& name, int raw_size = 1, int virtual_size = 0x1000)
+bool create_Section(istream& pe_file, const string& name, int raw_size = 1, int virtual_size = 0x1000)
 {
 	pe_base image(pe_factory::create_pe(pe_file));
 		
@@ -472,7 +567,7 @@ bool Create_Section(istream& pe_file, const string& name, int raw_size = 1, int 
 	string::size_type slash_pos;
 	if((slash_pos = out_file_name.find_last_of("/\\")) != string::npos)
 	{
-			out_file_name = out_file_name.substr(slash_pos + 1);
+		out_file_name = out_file_name.substr(slash_pos + 1);
 	}
 		
 	ofstream new_pe_file(out_file_name.c_str(), ios::out | ios::binary | ios::trunc);
@@ -503,7 +598,7 @@ bool init_Ext(string filename)
 	
 	try
 	{
-		Create_Section(pe_file, ".exxt", 5242880,0x500000);
+		create_Section(pe_file, ".exxt", 5242880,0x500000);
 	}
 	catch(const pe_exception& e)
 	{
@@ -530,8 +625,8 @@ int main (void)
 		cin.get();
 		exit(1);
 	}
-	
-	gpp_Compile();
+
+ 	gpp_Compile(); 
 	
 	boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 	

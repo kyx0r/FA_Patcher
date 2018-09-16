@@ -4,9 +4,11 @@ else
     detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 endif
 
-#OBJS specifies which files to compile as part of the project 
-#OBJS = ./*cpp
-#HEADS = ./*.h prevent precompiled header for now...
+SRCS=$(wildcard *.cpp)
+
+FASTOBJS=$(SRCS:.cpp=.o)
+
+PROGS = $(patsubst %.cpp,../build/%.o,$(SRCS))
 
 #CC specifies which compiler we're using 
 CC = g++
@@ -35,6 +37,10 @@ LINKER_FLAGS = -I. -m32 -O0 -ffreestanding -fpermissive -fno-exceptions -fno-asy
 ASSEMBLER_FLAGS =  -c -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables
 
 #BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
+
+fast_compile: $(PROGS)
+../build/%.o: %.cpp
+	$(CC) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $@ $<
  
 all :
 	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) -o $(OBJ_NAME)

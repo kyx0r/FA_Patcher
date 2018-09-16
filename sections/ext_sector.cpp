@@ -12,19 +12,23 @@
 #include <boost/thread/thread.hpp> */
 
 // New unit categories.
-const char* sCQUEMOV = "CQUEMOV";
-const char* sSTAYONWATSUR = "STAYONWATSUR";
+//const char* sCQUEMOV = "CQUEMOV";
+//const char* sSTAYONWATSUR = "STAYONWATSUR";
 // ForgedAlliance.exe addresses.
 
 funcDefs fd;
 GFT Gft;
+register int eax asm("eax");
 
 void print_hello_world()
 {	
 	fd.Logf("Hello World!");
-	Gft.IssueMove(0x1233545,1244);
 }
 
+int dec_IssueMove()
+{
+	return Gft.IssueMove(eax);
+}
 
 /* void Thread__()
 {

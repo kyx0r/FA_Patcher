@@ -48,4 +48,4 @@ all :
 	$(CC) $(HEADS) -c $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(STD) $(LINKER_FLAGS) $(BOOST) -o $(OUTPUT) ext_sector.cpp
 	
 link:
-	ld --image-base 0x128D000 -o ../build/exxt_sector.o $(LINK_OBJS)
+	ld --image-base 0x128D000 -Map ../build/mapfile.map -o ../build/exxt_sector.o $(LINK_OBJS)

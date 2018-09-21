@@ -1,8 +1,4 @@
-	
-class global
-{	
-	public:
-	
+	#pragma once
 	//LuaPlus
 	const int LuaState__CastState = 0x90A510; // LuaState* (lua_state*)
 	const int _LuaState__Error = 0x90C1D0; // (LuaState*, fmt, args...)
@@ -97,7 +93,6 @@ class global
 		extern _cxx_AddCommandSourceId
 		extern _cxx_SetCommandSourceId
 		extern _sCQUEMOV
-		extern _sSTAYONWATSUR */
-};		
+		extern _sSTAYONWATSUR */		
 		
 		

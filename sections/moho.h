@@ -3,7 +3,7 @@
 */
 
 // Nothing here is concrete.
-
+#pragma once
 typedef unsigned int uint;
 
 struct string
@@ -58,7 +58,6 @@ struct list // probably not from visual c++, but made by gpg
 	void* objects_end; 
 };
 
-#pragma once
 typedef int SOCKET;
 // GPGCore
 

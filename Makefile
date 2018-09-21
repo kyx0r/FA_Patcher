@@ -34,7 +34,7 @@ align_idata = 0x1000
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
 # -Wl,-subsystem,windows gets rid of the console window 
-COMPILER_FLAGS = -w -Dalign_size
+COMPILER_FLAGS = -w -Dalign_size -O1
 
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++

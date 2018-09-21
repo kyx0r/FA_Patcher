@@ -81,3 +81,53 @@ char* appendCharToCharArray(char* array, char a)
 
     return ret;
 }
+
+/* 	__asm__
+	(
+	"push ebp \n"
+	"mov ebp,esp \n"
+	"and esp,0xFFFFFFF8 \n"
+	"mov eax,dword ptr [fs:0] \n"
+	"push 0xFFFFFFFF \n"
+	"push 0x00BB5873 \n"
+	"push eax \n"
+	"mov dword ptr [fs:0],esp \n"
+	"mov eax,dword ptr [ebx] \n"
+	"sub esp,0xF0 \n"
+	"push esi \n"
+	"mov esi,dword ptr [0x10B83A4] \n"
+	"push edi \n"	
+	"push eax \n"
+	"je gg \n"	
+	"push eax \n"	
+	"push 2 \n"	
+	"push esi \n"	
+	"push 0x00E0A220 \n"	
+	"push ebx \n"	
+	"call 0x90C1D0 \n"	
+	"add esp,0x14 \n"
+	"gg: \n"	
+	); */
+	
+	/* 	__asm__
+	(
+	"lea ecx,[esp+0x18] \n"
+	"mov edx,ecx \n"
+	"lea eax,[esp+0x30] \n"
+	"mov dword ptr [esp+0x1C],ecx \n"
+	"mov dword ptr [esp+0x18],edx \n"
+	"mov ecx,eax \n"
+	"lea edx,[esp+40] \n"
+	"mov dword ptr [esp+0x20],eax \n"
+	"mov dword ptr [esp+0x24],ecx \n"
+	"mov dword ptr [esp+0x28],edx \n"
+	"mov dword ptr [esp+0x2C],eax \n"
+	"sub esp, 0x8 \n"
+	"lea ecx,[esp+0x18] \n"
+	"sub esp, 0x4 \n"
+	"lea edx,[esp+0x74] \n"
+	"mov dword ptr [esp+0x138],0 \n"
+	"sub esp, 0x4 \n"
+	"mov dword ptr [esp+0x20],ebx \n"
+	"mov dword ptr [esp+0x24],1 \n"
+	); */

@@ -630,7 +630,9 @@ int main (void)
 	
 	boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 	
-	cin.get(); 
+	cout<<"Done."<<endl;
+	
+	//cin.get(); 
 
 	return 0;
 	

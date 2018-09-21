@@ -10,10 +10,10 @@ GFT gft;
 
 //-----	(006F26D0)	--------------------------------------------------------
 int GFT::IssueMove(struct lua_State **a1)
-{
+{	
     int v2; //	esi
     struct lua_State *v3; //	eax
-    uint32 *v4; //	eax
+    _DWORD *v4; //	eax
     bool v5; //	al
     bool v6; //	zf
     int v7; //	eax
@@ -28,15 +28,15 @@ int GFT::IssueMove(struct lua_State **a1)
     int v17; //	[esp-8h]	[ebp-138h]
     struct lua_State *v18; //	[esp-4h]	[ebp-134h]
     bool v19; //	[esp+Fh]	[ebp-121h]
-    signed int *v20; //	[esp+10h]	[ebp-120h]
-    int v21; //	[esp+14h]	[ebp-11Ch]
-    int v22; //	[esp+18h]	[ebp-118h]
+    volatile signed int *v20; //	[esp+10h]	[ebp-120h] 
+    volatile int v21; //	[esp+14h]	[ebp-11Ch]
+    volatile int v22; //	[esp+18h]	[ebp-118h]
     int *v23; //	[esp+1Ch]	[ebp-114h]
-    char *v24; //	[esp+20h]	[ebp-110h]
-    char *v25; //	[esp+24h]	[ebp-10Ch]
-    int *v26; //	[esp+28h]	[ebp-108h]
-    char *v27; //	[esp+2Ch]	[ebp-104h]
-    char v28; //	[esp+30h]	[ebp-100h]
+    volatile char *v24; //	[esp+20h]	[ebp-110h]
+    volatile char *v25; //	[esp+24h]	[ebp-10Ch]
+    volatile int *v26; //	[esp+28h]	[ebp-108h]
+    volatile char *v27; //	[esp+2Ch]	[ebp-104h]
+    volatile char v28; //	[esp+30h]	[ebp-100h]
     int v29; //	[esp+40h]	[ebp-F0h]
     int v30; //	[esp+44h]	[ebp-ECh]
     int v31; //	[esp+48h]	[ebp-E8h]
@@ -52,14 +52,19 @@ int GFT::IssueMove(struct lua_State **a1)
     int v41; //	[esp+70h]	[ebp-C0h]
     int v42; //	[esp+7Ch]	[ebp-B4h]
     char v43; //	[esp+90h]	[ebp-A0h]
-    int v44; //	[esp+12Ch]	[ebp-4h]
+    volatile int v44; //	[esp+12Ch]	[ebp-4h]
     uint32 *v45;
+	register int esp asm("esp");
+	register int ecx asm("ecx");
+	register int edx asm("edx");
+	register int ebx asm("ebx");
+	register int esi asm("esi");
 	
     v2 = dword_10B83A4;
     v3 = (struct lua_State *)Fd.lua_gettop(*a1);
     if (v3 != (struct lua_State *)2)
         Fd.LuaState__Error((struct LuaState*)a1, (char*)"%s\n	expected	%d	args,	but	got	%d", v2, 2, v3);
-     v23 = &v22;
+    v23 = &v22;
     v22 = (int)&v22;
     v24 = &v28;
     v25 = &v28;
@@ -68,7 +73,7 @@ int GFT::IssueMove(struct lua_State **a1)
     v44 = 0;
     v20 = (signed int *)a1;
     v21 = 1;
-    v4 = Fd.Eval_Lua_Object(&v39, (struct LuaStackObject*)&v20, (struct LuaState*)a1, (int)"IssueMove"); //unit table param from lua
+    v4 = Fd.Eval_Lua_Object(&v39, (const struct LuaStackObject*)&v20, (struct LuaState*)a1, (int)"IssueMove"); //unit table param from lua
     LOBYTE(v44) = 1;
     v5 = Fd.Validate_IssueCommand((int) v4, (int)&v22, 1);
     LOBYTE(v44) = 0;

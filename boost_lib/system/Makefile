@@ -9,7 +9,7 @@ heads = ../boost/system/*.hpp
 
 LIBNAME = system
 LIBPATH = ../../lib
-CXXFLAGS = -O0 -m32 -Wall -g -march=i686  -fno-inline -fPIC -DPIC -I.. -DBOOST_ALL_NO_LIB=1 -DBOOST_SYSTEM_DYN_LINK=1 
+CXXFLAGS = -O0 -Wall -g -fno-inline -fPIC -DPIC -I.. -DBOOST_ALL_NO_LIB=1 -DBOOST_SYSTEM_DYN_LINK=1 
 
 all: $(LIBPATH)/lib$(LIBNAME).a
 

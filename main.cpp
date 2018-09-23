@@ -12,9 +12,9 @@
 #include <fstream>
 //#include <filesystem>
 
-#include <boost/thread/thread.hpp>
+//#include <boost/thread/thread.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/tokenizer.hpp>
+//#include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "pe_lib/pe_bliss.h"
@@ -544,7 +544,9 @@ bool gpp_Compile()
 		exit(1);
 	}
 	
-	system("make directories");
+	//system("make directories");
+	if(!boost::filesystem::exists("/build"))
+	{boost::filesystem::create_directory("build");}
 	apply_Ext();
 	parse_hooks();
 }

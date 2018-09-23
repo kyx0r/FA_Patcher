@@ -25,6 +25,8 @@ CC = g++
 #LIBRARY_PATHS specifies the additional library paths we'll need 
 LIBRARY_PATHS = -L ./lib
 
+INCLUDE_PATHS = -I ./boost_lib
+
 align_size = 0x100
 align_data = 0x1000
 align_rdata = 0x1000
@@ -39,7 +41,7 @@ COMPILER_FLAGS = -w -Dalign_size -O1
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++
 
-BOOST = -lboost_filesystem-mgw63-mt-d-x32-1_67 -lboost_thread-mgw63-mt-d-x32-1_67 -lboost_regex-mgw63-mt-d-x32-1_67 -lboost_system-mgw63-mt-d-x32-1_67
+BOOST = -lfilesystem -lsystem
 
 PELIB = -lpebliss
  
@@ -54,6 +56,16 @@ align:
 	
 peLib:
 	$(MAKE) all -C ./pe_lib
+	
+boostLib:
+	$(MAKE) all -C ./boost_lib/filesystem
+	$(MAKE) all -C ./boost_lib/system
+	
+cleanall:
+	$(MAKE) clean -C ./boost_lib/filesystem
+	$(MAKE) clean -C ./boost_lib/system
+	$(MAKE) clean -C ./pe_lib
+	rm -Rf ./build
 	
 directories:
 	$(call mkdir, /build)
@@ -84,6 +96,6 @@ rip_out_binary:
 	objcopy --strip-all -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
 
 #This is the target that compiles our executable 
-all : peLib
+all : peLib boostLib
 	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) $(PELIB) -o $(OBJ_NAME)
-	./FaPatcher
+	echo ./FaPatcher built successfully.

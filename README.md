@@ -10,26 +10,33 @@ Thanks for that, so I don't have to reinvent the wheel. Though it kinda is what 
 
 Source code is kept here to be able to modify and adjust the library. 
 
-# Current Dependencies
+# Current External Dependencies
 
 This project currently uses the following deps:
 
-Boost C++ libraries.
+-None
 
 # Dependencies for Windows
 
 The dependencies used if you are compiling on Windows
 is contained here on the repository.
 
-First thing you need is minGw package.
+One thing you need is minGw package. 
+Follow instuctions, after should be good to go.
 https://sourceforge.net/projects/mingw/?source=directory
-
-Then build Boost libraries for mingw/gcc
-Guide: https://gist.github.com/sim642/29caef3cc8afaa273ce6
 
 # Dependencies for Unix-based systems
 
-TODO. 
+-GNU C compiler and GNU C++ compiler (32 bit compiler)
 
+Tested on 64 bit linux machine, patcher compiles well.
 
+(for every distro has its own install procedure, if not installed by default) 
 
+# Notes
+
+Mingw linker has some flags that I use and they are not present in linker on linux.
+
+So hooks need to be retargeted with different build flags, and object files formats. 
+
+Some day I will implement full linux support. As of now, only the patcher can compile.

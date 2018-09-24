@@ -1,4 +1,5 @@
 
+#include "patcher/rang.hpp"
 
 #include <iostream>
 //#include <string>
@@ -10,7 +11,6 @@
 
 #include <assert.h>
 #include <fstream>
-//#include <filesystem>
 
 //#include <boost/thread/thread.hpp>
 #include <boost/filesystem.hpp>
@@ -24,6 +24,7 @@ static bool indiv_Compile_Hooks = true;
 
 using namespace std;
 using namespace pe_bliss;
+using namespace rang;
 
 int get_file_size(const string &filename) 
 {
@@ -46,7 +47,7 @@ inline char*fReadBinaryFile(const string&f)
 	}
 	else
 	{		
-		cout << "Unable to open file";
+		cout <<fg::red<< "Unable to open file"<<f<<endl;
 		cin.get();
 		exit(1);
 	}
@@ -58,7 +59,7 @@ inline unsigned fWriteBinaryFile(const string& f,const char* HexValue, int offse
 	fstream output (f.c_str(), fstream::out |fstream::in |fstream::binary);
 	if(output.fail() || !output)
 	{
-		cerr << "Error opening the file: " << strerror(errno);
+		cerr <<fg::red<< "Error opening the file: " << strerror(errno);
 		cin.get();
 		exit(1);
 	}
@@ -76,7 +77,7 @@ int get_bytes(string filename, bool errorRet = true)
 	ifstream in(filename, ios::in | ios::binary);
 	if(!in)
 	{
-		cout << "Cannot open " << filename <<endl;
+		cout <<fg::red<< "Cannot open " << filename <<endl;
 		cin.get();
 		exit(1);
 	}
@@ -98,7 +99,7 @@ int get_bytes(string filename, bool errorRet = true)
 		}
 		else
 		{
-			cout<<"Unexpected end of a file"<<filename<<endl;
+			cout<<fg::yellow<<"Unexpected end of a file"<<filename<<fg::reset<<endl;
 			if(errorRet)
 			{	
 				return false;
@@ -118,13 +119,13 @@ bool check_system()
 {
 	if (system(nullptr))
 	{
-		cout << "Command processor exists \n";
+		cout <<fg::green<< "Command processor exists "<<fg::reset<<endl;
 		cout << " " "\n";
 		return true;
 	}
 	else
 	{
-		cout << "Command processor doesn't exist \n";
+		cout <<fg::red<< "Command processor doesn't exist \n";
 		return false;
 	}
 }  
@@ -140,7 +141,7 @@ string rem_extension(string str)
 	}
 	else
 	{
-		cout<<"No extension in passed string"<<str<<endl;
+		cout<<fg::yellow<<"No extension in passed string"<<str<<fg::reset<<endl;
 		return str;
 	}
 }
@@ -167,11 +168,11 @@ bool gpp_link(string filename, string command)
 	tmp_Prefix.append(filename_tmp);
 	command.append(tmp_Prefix);
 	
-	cout<<"GENERATING .TMP FILES ------------------------------->"<<endl;
+	cout<<fg::cyan<<"GENERATING .TMP FILES ------------------------------->"<<fg::reset<<endl;
 	//here convert the binary to MS PE format.
 	if(system(&command[0]))
 	{
-		printf("Link error. \"%s\"\n");
+		cout<<fg::red<<"Link error."<<endl;
 		cin.get();
 		exit(1);
 	}
@@ -185,11 +186,11 @@ bool gpp_link(string filename, string command)
 	filename_prime = filename.append(".bin");
 	command.append(filename_prime);
 	
-	cout<<"GENERATING .BIN FILES --------------------------->"<<endl;
+	cout<<fg::cyan<<"GENERATING .BIN FILES --------------------------->"<<fg::reset<<endl;
 	
 	if(system(&command[0]))
 	{
-		printf("Ripping binary  error. \"%s\"\n");
+		cout<<fg::red<<"Ripping binary error"<<endl;
 		cin.get();
 		exit(1);
 	}
@@ -215,7 +216,7 @@ void apply_Hook(string current_file, int offset)
 		align_hook(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
 		Bytes_to_write = get_bytes(current_file);	
 	}
-	cout<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<endl;
+	cout<<fg::magenta<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<fg::reset<<endl;
 	fWriteBinaryFile("ForgedAlliance_exxt.exe", hook_F, offset, Bytes_to_write);
 	cout<<"\n";
 }
@@ -237,7 +238,7 @@ void parse_build(int offset, string alone_Filename)
 				{
 					if(!gpp_link(current_file, "make hook_gpp_link"))
 					{
-						cout<<"gpp_link error"<<endl;
+						cout<<fg::red<<"gpp_link failed."<<endl;
 						cin.get();
 						exit(1);
 					}
@@ -265,7 +266,7 @@ void parse_build(int offset, string alone_Filename)
 
 void build_O(string current_file, string Final_Filename, string alone_Filename)
 {
-	cout<<"BUILDING .O FILES --------------------------------->";
+	cout<<fg::cyan<<"BUILDING .O FILES --------------------------------->"<<fg::reset<<endl;
 	string command = "make _hooks OBJ_NAME_=";
 	command.append(Final_Filename);
 	alone_Filename.insert(0, " OBJS=");
@@ -298,13 +299,13 @@ int parse_offset(string filename, string expr = "0x")
 				return offset;
 			}
 		}
-		cout<<"Could not find : "<<expr<<" in the file : "<<filename<<endl;
+		cout<<fg::red<<"Could not find : "<<expr<<" in the file : "<<filename<<endl;
 		cin.get();
 		exit(1);
 	}
 	else
 	{
-		cout<<"Unable to open the file : "<<filename<<endl;
+		cout<<fg::red<<"Unable to open the file : "<<filename<<endl;
 		cin.get();
 		exit(1);
 	}
@@ -314,7 +315,7 @@ int parse_offset(string filename, string expr = "0x")
 int compile_Hook(string current_file, string Final_Filename, string alone_Filename)
 {
 	int offset = parse_offset(current_file, "ROffset = ");
-	cout<<"ROffset = "<<hex<<offset<<endl;
+	cout<<hex<<"ROffset = "<<offset<<dec<<endl;
 	if(fast_Compile_Hooks)
 	{
 		system("make _fast_hooks");
@@ -333,7 +334,7 @@ void parse_hooks()
 	boost::filesystem::path p("\hooks");
 	boost::filesystem::directory_iterator end_itr;
 	cout<<"\n";
-	cout<<"Available hooks : \n";
+	cout<<fg::cyan<<"Available hooks : "<<fg::reset<<endl;
 	cout<<"\n";
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
     {
@@ -347,7 +348,7 @@ void parse_hooks()
 				string Final_Filename;
 				Final_Filename.append(end);
 				string alone_Filename = Final_Filename;
-				cout<<Final_Filename<<endl;
+				cout<<style::bold<<Final_Filename<<style::reset<<endl;
 				Final_Filename = rem_extension(Final_Filename);
 				Final_Filename.append(".o");
 				Final_Filename.insert(0,"../build/");
@@ -371,7 +372,7 @@ image_section_header populate_image_section_header(const string &filename)
 	ifstream pe_file(filename, ios::in | ios::binary);
 	if(!pe_file)
 	{
-		cout << "Cannot open " << filename <<endl;
+		cout <<fg::red<< "Cannot open " << filename <<endl;
 		cin.get();
 		exit(1);
 	}	
@@ -397,7 +398,7 @@ image_section_header populate_image_section_header(const string &filename)
 	}
 	catch(const pe_exception& e)
 	{
-		std::cout << "Error: " << e.what() << std::endl;
+		std::cout <<fg::red<< "Error: " << e.what() << std::endl;
 		cin.get();
 		exit(1);
 	}
@@ -441,7 +442,7 @@ function_table linker_map_parser(string filename)
 	bool text_sec_found = false;
 	if(!map_file)
 	{
-		cout << "Cannot open map_file : " << filename <<endl;
+		cout <<fg::red<< "Cannot open map_file : " << filename <<endl;
 		cin.get();
 		exit(1);
 	}
@@ -527,10 +528,10 @@ void apply_Ext()
 	gpp_link("build/exxt_sector.o", make_ext_gpp_link);
 	char *ext_F = fReadBinaryFile("build/exxt_sector.bin");
 	
-	cout<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/exxt_sector.bin")<<endl;
+	cout<<fg::magenta<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/exxt_sector.bin")<<fg::reset<<endl;
 	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/exxt_sector.bin"));
 	
-	cout<<"Parsing linker map file..."<<endl;
+	cout<<fg::cyan<<"Parsing linker map file..."<<fg::reset<<endl;
 	function_table table = linker_map_parser("build/mapfile.map");
 	write_def_table(table);
 }
@@ -539,7 +540,7 @@ bool gpp_Compile()
 {	
 	if(!check_system())
 	{
-		printf("\No system present. Exiting patcher. \"%s\".\n");
+		cout<<fg::red<<"No system present. Exiting patcher."<<endl;
 		cin.get();
 		exit(1);
 	}
@@ -575,14 +576,14 @@ bool create_Section(istream& pe_file, const string& name, int raw_size = 1, int 
 	ofstream new_pe_file(out_file_name.c_str(), ios::out | ios::binary | ios::trunc);
 	if(!new_pe_file)
 	{
-		cout << "Cannot create " << out_file_name <<endl;
+		cout <<fg::red<< "Cannot create " << out_file_name <<endl;
 		cin.get();
 		exit(1);
 		return false;
 	}
 	rebuild_pe(image, new_pe_file);
 		
-	cout << "PE was rebuilt and saved to " << out_file_name <<endl; 	
+	cout <<fg::green<<"PE was rebuilt and saved to " << out_file_name <<fg::reset<<endl; 	
 	
 	return true;
 }
@@ -592,7 +593,7 @@ bool init_Ext(string filename)
 	ifstream pe_file(filename, ios::in | ios::binary);
 	if(!pe_file)
 	{
-		cout << "Cannot open " << filename <<endl;
+		cout <<fg::red<< "Cannot open " << filename <<endl;
 		cin.get();
 		exit(1);
 		return false;
@@ -604,7 +605,7 @@ bool init_Ext(string filename)
 	}
 	catch(const pe_exception& e)
 	{
-		cout << "Error: " << e.what() <<endl;
+		cout <<fg::red<< "Error: " << e.what() <<endl;
 		cin.get();
 		exit(1);
 		return false;
@@ -617,7 +618,7 @@ int main (void)
 {
 	if (!boost::filesystem::exists("ForgedAlliance_base.exe"))
 	{
-		cout<<"ForgedAlliance_base.exe not found! Rename the file if needed\n";
+		cout<<fg::red<<"ForgedAlliance_base.exe not found! Rename the file if needed\n";
 		cin.get();
 		exit(1);
 	}
@@ -634,7 +635,7 @@ int main (void)
 	
 	cout<<"Done."<<endl;
 	
-	//cin.get(); 
+	cin.get(); 
 
 	return 0;
 	

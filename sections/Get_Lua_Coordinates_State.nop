@@ -1,0 +1,88 @@
+#include "include/global_func_table.h"
+#include "include/funcDefs.h"
+
+funcDefs FD1; 
+
+//----- (006EEF60) --------------------------------------------------------
+//int __usercall sub_6EEF60@<eax>(int a1@<edi>, double a2@<st0>, int *a3, int a4, int *a5, signed int a6)
+//----- (102C99F0) --------------------------------------------------------
+int GFT::Get_Lua_Coordinates_State(int a1, struct LuaState *a2, int a3, struct lua_State **a4, int a5)
+{
+  int v5; // eax
+  int v6; // edi
+  int v7; // ecx
+  LuaPlus::LuaObject *v9; // eax
+  const char *v10; // eax
+  int v11; // ebx
+  int v12; // ebx
+  int v13; // edi
+  int v14; // eax
+  float v15; // ST1C_4
+  float v16; // ST20_4
+  double v17; // st7
+  int v18; // [esp+14h] [ebp-38h]
+  int v19; // [esp+18h] [ebp-34h]
+  int v20; // [esp+1Ch] [ebp-30h]
+  int v21; // [esp+20h] [ebp-2Ch]
+  int v22; // [esp+24h] [ebp-28h]
+  int v23; // [esp+28h] [ebp-24h]
+  char v24; // [esp+2Ch] [ebp-20h]
+  int v25; // [esp+48h] [ebp-4h]
+
+  if ( LuaPlus::LuaStackObject::IsNil((LuaPlus::LuaStackObject *)&a4) )
+  {
+    *(_DWORD *)a1 = 0;
+    *(_DWORD *)(a1 + 4) = 0;
+    *(_DWORD *)(a1 + 8) = 0;
+  }
+  else
+  {
+    LuaPlus::LuaObject::LuaObject((LuaPlus::LuaObject *)&v24, (const struct LuaPlus::LuaStackObject *)&a4);
+    v25 = 0;
+    v5 = sub_101D0420((const struct LuaPlus::LuaObject *)&v24);
+    v25 = -1;
+    v6 = v5;
+    LuaPlus::LuaObject::~LuaObject((LuaPlus::LuaObject *)&v24);
+    if ( v6 )
+    {
+      sub_10167D10(v7, v6, a1);
+      return a1;
+    }
+    if ( lua_type(*a4, a5) != 5 || LuaPlus::LuaStackObject::GetCount((LuaPlus::LuaStackObject *)&a4) != 3 )
+    {
+      v9 = (LuaPlus::LuaObject *)LuaPlus::LuaObject::LuaObject(
+                                   (LuaPlus::LuaObject *)&v24,
+                                   (const struct LuaPlus::LuaStackObject *)&a4);
+      v25 = 1;
+      v10 = LuaPlus::LuaObject::TypeName(v9);
+      LuaPlus::LuaState::Error(a2, "Invalid target set in %s; expected an entity or a Vec3 but got a %s", a3, v10);
+      v25 = -1;
+      LuaPlus::LuaObject::~LuaObject((LuaPlus::LuaObject *)&v24);
+    }
+    lua_rawgeti(*a4, a5, 3);
+    v11 = (int)a4;
+    v23 = lua_gettop(*a4);
+    v22 = v11;
+    lua_rawgeti(*a4, a5, 2);
+    v12 = (int)a4;
+    v21 = lua_gettop(*a4);
+    v20 = v12;
+    lua_rawgeti(*a4, a5, 1);
+    v13 = (int)a4;
+    v14 = lua_gettop(*a4);
+    v18 = v13;
+    v19 = v14;
+    v15 = LuaPlus::LuaStackObject::GetNumber((LuaPlus::LuaStackObject *)&v18);
+    v16 = LuaPlus::LuaStackObject::GetNumber((LuaPlus::LuaStackObject *)&v20);
+    v17 = LuaPlus::LuaStackObject::GetNumber((LuaPlus::LuaStackObject *)&v22);
+    *(_DWORD *)a1 = 2;
+    *(float *)(a1 + 12) = v15;
+    *(float *)(a1 + 16) = v16;
+    *(_DWORD *)(a1 + 4) = 0;
+    *(_DWORD *)(a1 + 8) = 0;
+    *(float *)(a1 + 20) = v17;
+  }
+  *(_BYTE *)(a1 + 28) = 0;
+  *(_DWORD *)(a1 + 24) = -1;
+  return a1;
+}

@@ -4,4 +4,10 @@
 #define GFT__Moho_SSTICommandIssueData_SSTICommandIssueData 0x128d290
 #define print_hello_world 0x128d370
 #define dec_IssueMove 0x128d390
-#define GFT__nanTest 0x128d3b0
+#define GFT__Push_Coordinates 0x128d3b0
+#define GFT__nanTest 0x128d440
+#define GFT__cmp_pointers 0x128d470
+#define GFT__sub_57FE30 0x128d590
+#define GFT__sub_582EB0 0x128d730
+#define GFT__sub_57DDD0 0x128d790
+#define GFT__Validate_IssueCommand 0x128d8c0

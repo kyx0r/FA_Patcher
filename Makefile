@@ -18,7 +18,7 @@ else
 	echo = echo "$(1)"	
 endif
 
-OBJS = ./*cpp
+OBJS = main.cpp ./patcher/*cpp
 #HEADS = ./*.h
 CC = g++
 
@@ -66,6 +66,9 @@ cleanall:
 	$(MAKE) clean -C ./boost_lib/system
 	$(MAKE) clean -C ./pe_lib
 	rm -Rf ./build
+
+cleanbuild:
+	rm -Rf ./build
 	
 directories:
 	$(call mkdir, /build)
@@ -98,4 +101,4 @@ rip_out_binary:
 #This is the target that compiles our executable 
 all : peLib boostLib
 	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) $(PELIB) -o $(OBJ_NAME)
-	echo ./FaPatcher built successfully.
+	@echo ./FaPatcher built successfully.

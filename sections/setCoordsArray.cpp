@@ -1,5 +1,5 @@
-#include "global_func_table.h"
-#include "funcDefs.h"
+#include "include/global_func_table.h"
+#include "include/funcDefs.h"
 
 //----- (009072A0) --------------------------------------------------------
 _DWORD* GFT::LuaPlus_LuaObject_LuaObject(_DWORD *_this)
@@ -49,7 +49,7 @@ int GFT::sub_5796A0(_DWORD *a1)
   if ( a1[2] != a1[5] )
   {
 	funcDefs Fd; 
-    Fd.Goto_Exception_Handler_Ntdll(a1[2]);
+    Fd.j_shi_delete_0(a1[2]);
     v1 = (_DWORD *)a1[5];
     a1[2] = v1;
     a1[4] = *v1;

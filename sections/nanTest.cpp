@@ -1,4 +1,4 @@
-#include "global_func_table.h"
+#include "include/global_func_table.h"
 #include <math.h>
 
 bool GFT::nanTest(float *a1)

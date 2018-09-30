@@ -29,6 +29,7 @@
 	const int _Eval_Lua_Object = 0x6EEE40;
 	const int _LuaPlus_LuaState_PushNil = 0x0090CD00;
 	const int _LuaPlus_LuaObject_PushStack = 0x00907D80;
+	const int _lua_getglobaluserdata = 0x00924050;
 
 	// Returned object is probably an iterator of sorts_
 	// It is 0x10 bytes. 
@@ -52,7 +53,8 @@
 	//const int Logf = 0x937CB0;
 	const int _Logf = 0x937CB0;
 	const int _Validate_IssueCommand = 0x006EECF0; 
-	const int _Goto_Exception_Handler_Ntdll = 0x00A82542;
+	const int _j_shi_delete_0 = 0x00A82542;
+	const int _j_shi_new_0 = 0x00A82130;
 	const int _Get_Lua_Coordinates_State = 0x006EEF60;
 	const int _Push_Coordinates = 0x005E27D0;
 	const int _Moho_UNIT_IssueCommand = 0x006F12C0;
@@ -85,14 +87,9 @@
 	const int _CheckCategory_sub_func = 0x004059E0;
 	const int _GetCatCmpResult = 0x0067B050;
 	const int _exit_STAYONWATSUR_check = 0x0062ADEE;
-	const int _exit_STAYONWATSUR_NoMatch = 0x0062ADEC;
+	const int _exit_STAYONWATSUR_NoMatch = 0x0062ADEC;	
 		
-		// Imports
-/* 		extern _print_hello_world
-		extern _ext_ValidateFocusArmyRequest
-		extern _cxx_AddCommandSourceId
-		extern _cxx_SetCommandSourceId
-		extern _sCQUEMOV
-		extern _sSTAYONWATSUR */		
-		
+	//extern functions:
+	//MSVCR80.dll	
+	const int _memmove_s = 0x00A824E7;
 		

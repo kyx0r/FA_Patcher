@@ -11,7 +11,7 @@ struct image_section_header
 	vector <uint32_t> SizeOfRawData;
 };
 
-class BinSection : public FileIO, public Utils
+class BinSection : public Utils
 {
 	public:
 	bool create_Section(istream& pe_file, string out_file_name, const string& section_name, int raw_size = 1, int virtual_size = 0x1000);

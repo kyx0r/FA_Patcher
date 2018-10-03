@@ -1,8 +1,6 @@
 
 #include "binSection.hpp"
 
-FileIO io;
-
 image_section_header BinSection::populate_image_section_header(const string &filename)
 {
 	image_section_header header;
@@ -120,9 +118,9 @@ void BinSection::apply_Ext(const int verisign_offset)
 	}
 
 	gpp_link("build/exxt_sector.o", make_ext_gpp_link);
-	ext_F = io.fReadBinaryFile("build/exxt_sector.bin");
+	ext_F = fReadBinaryFile("build/exxt_sector.bin");
 	
-	cout<<fg::magenta<<"APPLY .EXT SECTION   Number of instructions: "<<io.get_file_size("build/exxt_sector.bin")<<fg::reset<<endl;
-	io.fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, io.get_file_size("build/exxt_sector.bin"));
+	cout<<fg::magenta<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/exxt_sector.bin")<<fg::reset<<endl;
+	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/exxt_sector.bin"));
 }
 

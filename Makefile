@@ -19,7 +19,7 @@ else
 endif
 
 OBJS = main.cpp ./patcher/*cpp
-#HEADS = ./*.h
+#HEADS = ./patcher/*.hpp
 CC = g++
 
 #LIBRARY_PATHS specifies the additional library paths we'll need 

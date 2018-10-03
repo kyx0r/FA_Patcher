@@ -4,7 +4,7 @@
 #include "fileIO.hpp"
 #include "utils.hpp"
 
-class Hooks : public FileIO, public Utils
+class Hooks : public Utils
 {
 	public:
 	Hooks(bool hook_format = false, string filename = "");

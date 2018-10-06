@@ -30,19 +30,17 @@ void Hooks::align_hook(int align_sizeL ,string filename, string command)
 	gpp_link(filename, "make hook_gpp_link align_size=" + to_string(align_sizeL));
 }
 
-void Hooks::apply_Hook(string current_file, int offset)
+void Hooks::apply_Hook(string current_file, int offset, FileIO& f_out)
 {
-	FileIO f_in(current_file, ios::out | ios::in | ios::binary | ios::ate);
-	FileIO f_out(filename_out, ios::out | ios::binary);
-	FileIO f_b(current_file, ios::in | ios::binary);
+	FileIO f_in(current_file, ios::in | ios::binary | ios::ate);
 	vector<char> hook_F = f_in.fReadBinaryFile();
-	Bytes_to_write = f_b.get_bytes();
+	Bytes_to_write = f_in.get_bytes();
 	
 	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory. 
 	{
-		align_sizeL = f_b.get_bytes("", Bytes_to_write) * 2;
+		align_sizeL = f_in.get_bytes("", Bytes_to_write) * 2;
 		align_hook(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
-		Bytes_to_write = f_b.get_bytes("", Bytes_to_write);	
+		Bytes_to_write = f_in.get_bytes("", Bytes_to_write);	
 	}
 	
 	cout<<fg::magenta<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<fg::reset<<endl;
@@ -55,6 +53,7 @@ void Hooks::parse_build(int offset, string alone_Filename)
 	boost::filesystem::path p("./build");
 	boost::filesystem::directory_iterator end_itr;
 	alone_Filename = rem_extension(alone_Filename);
+	FileIO f_out(filename_out, ios::out |ios::in |ios::binary);
 	string current_file;
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
     {
@@ -85,7 +84,7 @@ void Hooks::parse_build(int offset, string alone_Filename)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
 				{
-					apply_Hook(current_file, offset);
+					apply_Hook(current_file, offset, f_out);
 					break;
 				}
 			}

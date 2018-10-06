@@ -76,8 +76,6 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 	align_bss = 0;
 	align_idata = 0;
 	
-	FileIO exxt("build/exxt_sector.bin", ios::in|ios::binary|ios::ate);
-	
 	if(system("make ext_sector"))
 	{
 		cout<<fg::red<<"Error when calling ext_sector "<<endl;
@@ -114,6 +112,8 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 	}
 
 	gpp_link("build/exxt_sector.o", make_ext_gpp_link);
+	
+	FileIO exxt("build/exxt_sector.bin", ios::in|ios::binary|ios::ate);
 	
 	size = exxt.get_file_size();
 	

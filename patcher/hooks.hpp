@@ -19,7 +19,7 @@ class Hooks : public Utils
 	int compile_Hook(string current_file, string Final_Filename, string alone_Filename);
 	void build_O(string current_file, string Final_Filename, string alone_Filename);
 	void parse_build(int offset, string alone_Filename);
-	void apply_Hook(string current_file, int offset);
+	void apply_Hook(string current_file, int offset, FileIO& f_out);
 	void align_hook(int align_sizeL ,string filename, string command);
 	
 	int align_sizeL;

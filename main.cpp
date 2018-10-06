@@ -34,7 +34,7 @@ int main (void)
 	FileIO file_in(target_in, ios::in | ios::binary);
 	
 	section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
-	FileIO file_out(target_out, ios::out | ios::binary);
+	FileIO file_out(target_out, ios::out |ios::in |ios::binary);
 	section.apply_Ext(0xBDF000,file_out);
 	function_table table = util.linker_map_parser("build/mapfile.map");
 	util.write_def_table(table);

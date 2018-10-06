@@ -130,6 +130,7 @@ unsigned FileIO::fWriteBinaryFile(vector<char> HexValue, int offset, int Bytes_t
 
 int FileIO::parse_binary_end(fstream& _file, const string& filename, bool errorRet, int count_bytes, int null_count)
 {
+	_file.seekg(ios::beg);
 	do
 	{
 		if(_file.get(ch))

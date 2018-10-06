@@ -15,7 +15,7 @@ class BinSection : public Utils
 {
 	public:
 	bool create_Section(istream& pe_file, string out_file_name, const string& section_name, int raw_size = 1, int virtual_size = 0x1000);
-	void apply_Ext(const int verisign_offset);
+	void apply_Ext(const int verisign_offset, FileIO& fa);
 	
 	private:	
 	image_section_header populate_image_section_header(const string &filename);
@@ -25,6 +25,6 @@ class BinSection : public Utils
 	uint32_t align_rdata = 0;
 	uint32_t align_bss = 0;
 	uint32_t align_idata = 0;
-	char *ext_F;
+	int size;
 	
 };

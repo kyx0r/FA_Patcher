@@ -22,4 +22,7 @@ class Hooks : public Utils
 	void apply_Hook(string current_file, int offset);
 	void align_hook(int align_sizeL ,string filename, string command);
 	
+	int align_sizeL;
+	int Bytes_to_write;
+	
 };

@@ -32,17 +32,21 @@ void Hooks::align_hook(int align_sizeL ,string filename, string command)
 
 void Hooks::apply_Hook(string current_file, int offset)
 {
-	int align_sizeL;
-	char *hook_F = fReadBinaryFile(current_file);
-	int Bytes_to_write = get_bytes(current_file);
+	FileIO f_in(current_file, ios::out | ios::in | ios::binary | ios::ate);
+	FileIO f_out(filename_out, ios::out | ios::binary);
+	FileIO f_b(current_file, ios::in | ios::binary);
+	vector<char> hook_F = f_in.fReadBinaryFile();
+	Bytes_to_write = f_b.get_bytes();
+	
 	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory. 
 	{
-		align_sizeL = get_bytes(current_file, Bytes_to_write) * 2;
+		align_sizeL = f_b.get_bytes("", Bytes_to_write) * 2;
 		align_hook(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
-		Bytes_to_write = get_bytes(current_file);	
+		Bytes_to_write = f_b.get_bytes("", Bytes_to_write);	
 	}
+	
 	cout<<fg::magenta<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<fg::reset<<endl;
-	fWriteBinaryFile(filename_out, hook_F, offset, Bytes_to_write);
+	f_out.fWriteBinaryFile(hook_F, offset, Bytes_to_write);
 	cout<<"\n";
 }
 

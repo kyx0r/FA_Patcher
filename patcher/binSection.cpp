@@ -4,17 +4,10 @@
 image_section_header BinSection::populate_image_section_header(const string &filename)
 {
 	image_section_header header;
-	ifstream pe_file(filename, ios::in | ios::binary);
-	if(!pe_file)
-	{
-		cout <<fg::red<< "Cannot open " << filename <<endl;
-		cin.get();
-		exit(1);
-	}	
-	
+	FileIO pe_file(filename, ios::in | ios::binary);
 	try
 	{
-		pe_base image(pe_factory::create_pe(pe_file));
+		pe_base image(pe_factory::create_pe(pe_file._file));
 		//cout << "Reading PE sections..." << hex << showbase << endl << endl;
 		const section_list sections(image.get_image_sections());
 		for(section_list::const_iterator it = sections.begin(); it != sections.end(); ++it)
@@ -74,7 +67,7 @@ bool BinSection::create_Section(istream& pe_file, string out_file_name, const st
 	return true;
 }
 
-void BinSection::apply_Ext(const int verisign_offset)
+void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 {
 	//	const int verisign_offset = 0xBDD000; //.ext
 	//const int verisign_offset = 0xBDF000; //.exxt
@@ -82,6 +75,9 @@ void BinSection::apply_Ext(const int verisign_offset)
 	align_rdata = 0;
 	align_bss = 0;
 	align_idata = 0;
+	
+	FileIO exxt("build/exxt_sector.bin", ios::in|ios::binary|ios::ate);
+	
 	if(system("make ext_sector"))
 	{
 		cout<<fg::red<<"Error when calling ext_sector "<<endl;
@@ -118,9 +114,11 @@ void BinSection::apply_Ext(const int verisign_offset)
 	}
 
 	gpp_link("build/exxt_sector.o", make_ext_gpp_link);
-	ext_F = fReadBinaryFile("build/exxt_sector.bin");
 	
-	cout<<fg::magenta<<"APPLY .EXT SECTION   Number of instructions: "<<get_file_size("build/exxt_sector.bin")<<fg::reset<<endl;
-	fWriteBinaryFile("ForgedAlliance_exxt.exe", ext_F, verisign_offset, get_file_size("build/exxt_sector.bin"));
+	size = exxt.get_file_size();
+	
+	cout<<fg::magenta<<"APPLY .EXT SECTION   Number of instructions: "<<size<<fg::reset<<endl;
+	
+	fa.fWriteBinaryFile(exxt.fReadBinaryFile(), verisign_offset, size);
 }
 

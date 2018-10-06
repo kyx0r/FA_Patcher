@@ -16,6 +16,10 @@
 
 using namespace std;
 
+//Note!!! Both are acceptable for FileIO class.
+/* FileIO* file = new FileIO(target_in, ios::in | ios::binary | ios::ate); //object is on the heap
+FileIO file(target_in, ios::in | ios::binary | ios::ate); //object is on the stack */
+
 int main (void)
 {	
 	
@@ -27,17 +31,11 @@ int main (void)
 	Utils util;
 	Hooks hook(false, target_out);
 	
-	ifstream pe_file(target_in, ios::in | ios::binary);
-	if(!pe_file)
-	{
-		cout <<fg::red<< "Cannot open " <<endl;
-		cin.get();
-		exit(1);
-		return false;
-	}
+	FileIO file_in(target_in, ios::in | ios::binary);
 	
-	section.create_Section(pe_file, target_out, ".exxt", 5242880,0x500000);
-	section.apply_Ext(0xBDF000);
+	section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
+	FileIO file_out(target_out, ios::out | ios::binary);
+	section.apply_Ext(0xBDF000,file_out);
 	function_table table = util.linker_map_parser("build/mapfile.map");
 	util.write_def_table(table);
 	hook.parse_hooks();

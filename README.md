@@ -16,6 +16,10 @@ https://www.boost.org/
 Rang library, for pretty console colors:
 https://github.com/agauniyal/rang
 
+# How To Build
+
+- Cd into project directory and target make all
+
 # Current External Dependencies
 
 This project currently uses the following deps:

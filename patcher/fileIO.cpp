@@ -1,14 +1,16 @@
 
-#include "FileIO.hpp"
+#include "fileIO.hpp"
 
 FileIO::FileIO(string filename, ios_base::openmode mode)
 : _file(filename, mode)
 {
 	if(!filename.empty())
 	{
+		this->filename = filename;
 		if(!_file)
 		{
 			cout <<fg::red<< "Cannot open "<<filename<<endl;
+			cout <<fg::red<<"Usage: 1st arg: string filename, 2nd arg: optional ios flag, ie ios::in."<<endl;
 			cin.get();
 			exit(1);
 		}	
@@ -20,73 +22,18 @@ FileIO::~FileIO()
 	_file.close();
 }
 
-void FileIO::errexit(string filename)
+int FileIO::get_file_size() 
 {
-	cout<<fg::red<<"Unable to open file "<<filename<<endl;
-	cout<<fg::red<<"Usage: string filename or call class constructor instead, and this function with no input filename!"<<endl;
-	cin.get();
-	exit(1);	
+	return _file.tellg();
 }
 
-int FileIO::get_file_size(string filename) 
+vector<char> FileIO::fReadBinaryFile()
 {
-	if(!filename.empty())
-	{
-		ifstream _file(filename, ios::binary | ios::ate);
-		if(_file.is_open())
-		{
-			return _file.tellg();
-		}
-		else
-		{
-			cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-			errexit(filename);
-		}
-	}
-	if(_file.is_open())
-	{
-		return _file.tellg();
-	}
-	else
-	{
-		cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-		errexit(filename);
-	}
-}
-
-vector<char> FileIO::fReadBinaryFile(string filename)
-{
-	if(!filename.empty())
-	{
-		ifstream _file(filename, ios::in|ios::binary|ios::ate);
-		if(_file.is_open())
-		{
-			size = _file.tellg();
-			vector<char> memblock(size);
-			_file.seekg(0, ios::beg);
-			_file.read(memblock.data(), size);
-			_file.close();
-			return memblock;
-		}
-		else
-		{
-			cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-			errexit(filename);
-		}
-	}
-	if(_file.is_open())
-	{
-		size = _file.tellg();
-		vector<char> memblock(size);
-		_file.seekg(0, ios::beg);
-		_file.read(memblock.data(), size);
-		return memblock;	
-	}
-	else
-	{
-		cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-		errexit(filename);
-	}
+	size = _file.tellg();
+	vector<char> memblock(size);
+	_file.seekg(0, ios::beg);
+	_file.read(memblock.data(), size);
+	return memblock;	
 }
 
 template <class T>
@@ -95,40 +42,15 @@ void clean_vector(vector<T> vect)
 	vect = vector<T>();
 }
 
-unsigned FileIO::fWriteBinaryFile(vector<char> HexValue, int offset, int Bytes_to_write, string filename)
+unsigned FileIO::fWriteBinaryFile(vector<char> HexValue, int offset, int Bytes_to_write)
 {
-	if(!filename.empty())
-	{
-		fstream _file(filename, fstream::out |fstream::in |fstream::binary);
-		if(_file.is_open())
-		{
-			_file.seekg(fstream::beg+offset);
-			_file.write(HexValue.data(), Bytes_to_write);
-			_file.close();
-			clean_vector(HexValue);	
-			return 1;
-		}
-		else
-		{
-			cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-			errexit(filename);			
-		}
-	}
-	if(_file.is_open())
-	{
-		_file.seekg(fstream::beg+offset);
-		_file.write(HexValue.data(), Bytes_to_write);
-		clean_vector(HexValue);
-		return 1;
-	}
-	else
-	{
-		cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-		errexit(filename);	
-	}
+	_file.seekg(fstream::beg+offset);
+	_file.write(HexValue.data(), Bytes_to_write);
+	clean_vector(HexValue);
+	return 1;	
 }
 
-int FileIO::parse_binary_end(fstream& _file, const string& filename, bool errorRet, int count_bytes, int null_count)
+int FileIO::parse_binary_end(bool errorRet, int count_bytes, int null_count)
 {
 	_file.seekg(ios::beg);
 	do
@@ -164,30 +86,9 @@ int FileIO::parse_binary_end(fstream& _file, const string& filename, bool errorR
 	return count_bytes;	
 }
 
-int FileIO::get_bytes(string filename, bool errorRet)
+int FileIO::get_bytes(bool errorRet)
 {
-	if(!filename.empty())
-	{
-		fstream _file(filename, ios::in | ios::binary);
-		if(_file.is_open())
-		{
-			return parse_binary_end(_file, filename, errorRet);
-		}
-		else
-		{
-			cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-			errexit(filename);				
-		}
-	}
-	if(_file.is_open())
-	{
-		return parse_binary_end(_file, filename, errorRet);
-	}
-	else
-	{
-		cout<<fg::red<<"Incorrect arguments in function "<<__func__<<endl;
-		errexit(filename);	
-	}
+	return parse_binary_end(errorRet);	
 }
 
 string FileIO::rem_extension(string str)
@@ -206,8 +107,8 @@ string FileIO::rem_extension(string str)
 	}
 }
 
-int FileIO::get_line_count(fstream& file)
+int FileIO::get_line_count()
 {
-	file.unsetf(ios_base::skipws);
-	return count(istream_iterator<char>(file),istream_iterator<char>(),'\n');
+	_file.unsetf(ios_base::skipws);
+	return count(istream_iterator<char>(_file),istream_iterator<char>(),'\n');
 }

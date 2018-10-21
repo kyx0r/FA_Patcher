@@ -10,13 +10,23 @@ struct function_table
 	vector <uint32_t> FunctionVirtualAddress;
 };
 
+struct x64dbg_parser_struct
+{
+	vector <string> GccInstruction = {"__asm__", "("};
+};
+
 class Utils : public FileIO
 {
 	public:
-	int parse_offset(string filename, string expr = "0x");
+	int parse_offset(FileIO& file, string expr = "0x");
 	bool gpp_link(string filename, string command);
 	function_table linker_map_parser(string filename);
 	int write_def_table(function_table &table);
+	int write_gcc_asm(string dbg_inline_file, x64dbg_parser_struct &table);
+	x64dbg_parser_struct x64dbg_to_gcc_inline(string dbg_inline_file, int align_calls=0x1000);
+	string cut_on_first_null(string line);
+	string add_quotations(string line);
+	size_t inc_search(string target, string searched, size_t pos = 0);
 	
 	template <typename ElemT>
 	struct HexTo {
@@ -32,6 +42,7 @@ class Utils : public FileIO
 	
 	string line;
 	string word;
+	string _word;
 	int offset;
 	size_t pos;
 	char *tok;

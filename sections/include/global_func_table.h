@@ -5,7 +5,7 @@
 class GFT
 {
 	public:
-	int IssueMove(struct lua_State **a1);
+	int IssueMove();
 	
 	//nantest.cpp----------------------------------------------------
 	bool nanTest(float *a1);

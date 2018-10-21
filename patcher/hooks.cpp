@@ -38,9 +38,9 @@ void Hooks::apply_Hook(string current_file, int offset, FileIO& f_out)
 	
 	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory. 
 	{
-		align_sizeL = f_in.get_bytes("", Bytes_to_write) * 2;
+		align_sizeL = f_in.get_bytes(Bytes_to_write) * 2;
 		align_hook(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
-		Bytes_to_write = f_in.get_bytes("", Bytes_to_write);	
+		Bytes_to_write = f_in.get_bytes(Bytes_to_write);	
 	}
 	
 	cout<<fg::magenta<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<fg::reset<<endl;
@@ -111,7 +111,8 @@ void Hooks::build_O(string current_file, string Final_Filename, string alone_Fil
 
 int Hooks::compile_Hook(string current_file, string Final_Filename, string alone_Filename)
 {
-	int offset = parse_offset(current_file, "ROffset = ");
+	FileIO hook(current_file);
+	int offset = parse_offset(hook, "ROffset = ");
 	cout<<hex<<"ROffset = "<<offset<<dec<<endl;
 	if(fast_Compile_Hooks)
 	{

@@ -37,7 +37,10 @@ class funcDefs
 	typedef int __Moho_UNIT_IssueCommand(int a1, int a2, Moho__SSTICommandIssueData *a3, char a4);
 	__Moho_UNIT_IssueCommand *Moho_UNIT_IssueCommand = (__Moho_UNIT_IssueCommand*)(_Moho_UNIT_IssueCommand);
 	
-	typedef int __Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData(Moho__SSTICommandIssueData* a1);
+	typedef int __Moho_SSTICommandIssueData_SSTICommandIssueData(_DWORD *_this, int a2);
+	__Moho_SSTICommandIssueData_SSTICommandIssueData *Moho_SSTICommandIssueData_SSTICommandIssueData = (__Moho_SSTICommandIssueData_SSTICommandIssueData*)(_Moho_SSTICommandIssueData_SSTICommandIssueData);
+	
+	typedef int __attribute__((stdcall)) __Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData(int a1);
 	__Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData *Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData = 
 	(__Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData*)(_Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData);
 	
@@ -72,6 +75,21 @@ class funcDefs
                 "call %[func]\n\t"
                 : "=a" (result)
                 : [func] "m" (_Push_Coordinates), [r] "r" (r), [a2] "r" (a2)
+                : "memory"
+        );
+        return result;		
+	}
+	
+	volatile bool __Validate_IssueCommandw(int a1, int a2, int a3)
+	{
+        int result;
+        __asm volatile(
+				"push %[a3] \n\t" 
+				"push %[a2] \n\t" 
+				"mov edi, %[a1] \n\t"
+                "call %[func]\n\t"
+                : "=a" (result)
+                : [func] "m" (_Validate_IssueCommand), [a1] "r" (a1), [a2] "r" (a2), [a3] "r" (a3)
                 : "memory"
         );
         return result;		

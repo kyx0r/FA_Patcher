@@ -3,6 +3,8 @@
 
 Patcher::Patcher(const string& filename)
 {
+	cin.ignore(numeric_limits<streamsize>::max(),'\n');
+	
 	if (!boost::filesystem::exists(filename))
 	{
 		cout<<fg::red<<filename<<"not found! Rename the file if needed\n";

@@ -27,7 +27,7 @@ void print_hello_world()
 
 int dec_IssueMove()
 {
-	return Gft.IssueMove(eax);
+	return Gft.IssueMove();
 }
 
 /* void Thread__()

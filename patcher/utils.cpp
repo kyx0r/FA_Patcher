@@ -1,39 +1,27 @@
 
 #include "utils.hpp"
 
-int Utils::parse_offset(string filename, string expr)
+int Utils::parse_offset(FileIO& file, string expr)
 {
-	fstream file(filename);
 	line.clear();
 	offset = 0;
 	pos = 0;
-	if(file.is_open())
+	while(getline(file._file,line))
 	{
-		while(getline(file,line))
+		pos = line.find(expr);
+		if(pos!=string::npos)
 		{
-			pos = line.find(expr);
-			if(pos!=string::npos)
-			{
-				line = line.substr(pos);
-				tok = strtok(&line[0], "0x");
-				line.erase(0,strlen(tok)+1);
-				line.insert(0,"0");
-				offset = boost::lexical_cast<HexTo<int>>(line);
-				file.close();
-				return offset;
-			}
+			line = line.substr(pos);
+			tok = strtok(&line[0], "0x");
+			line.erase(0,strlen(tok)+1);
+			line.insert(0,"0");
+			offset = boost::lexical_cast<HexTo<int>>(line);
+			return offset;
 		}
-		cout<<fg::red<<"Could not find : "<<expr<<" in the file : "<<filename<<endl;
-		cin.get();
-		exit(1);
 	}
-	else
-	{
-		cout<<fg::red<<"Unable to open the file : "<<filename<<endl;
-		cin.get();
-		exit(1);
-	}
-	return 1;	
+	cout<<fg::red<<"Could not find : "<<expr<<" in the file : "<<file.filename<<endl;
+	cin.get();
+	exit(1);
 }
 
 bool Utils::gpp_link(string filename, string command)
@@ -94,16 +82,10 @@ function_table Utils::linker_map_parser(string filename)
 	offset = 0;
 	pos = 0;
 	
-	ifstream map_file(filename);
 	text_sec_found = false;
-	if(map_file.fail()||!map_file)
-	{
-		cout <<fg::red<< "Cannot open map_file : " << filename <<endl;
-		cin.get();
-		exit(1);
-	}
-	table.section_alignment = parse_offset(filename, "__section_alignment__ = "); 	
-	while(getline(map_file,line))
+	FileIO map_file(filename);
+	table.section_alignment = parse_offset(map_file, "__section_alignment__ = "); 	
+	while(getline(map_file._file,line))
 	{
 		if(line.find("*(.text.*)")!=string::npos)
 		{break;}
@@ -146,7 +128,124 @@ function_table Utils::linker_map_parser(string filename)
 			}
 		}
 	}	
-	map_file.close();
 	return table;
 }
+
+string Utils::cut_on_first_null(string line)
+{
+	try
+	{
+		line.resize(line.find(" "));
+	}catch(const length_error &e)
+	{
+		cout<<fg::yellow<<__func__<<" Skipping instruction without operand. "<<line<<fg::reset<<endl;
+	}	
+	return line;
+}
+
+string Utils::add_quotations(string line)
+{
+	line.insert(0,"\"");
+	line.append(" \\n \" ");
+	return line;
+}
+
+int Utils::write_gcc_asm(string dbg_inline_file, x64dbg_parser_struct &table)
+{
+	dbg_inline_file = rem_extension(dbg_inline_file);
+	dbg_inline_file.append(".gas");
+	ofstream outfile (dbg_inline_file);
+	
+	for(int i=0; i<table.GccInstruction.size(); i++)
+	{
+		outfile<<table.GccInstruction[i]<<endl;
+	}
+	outfile.close();
+}
+
+size_t Utils::inc_search(string target, string searched, size_t pos)
+{
+	return target.find_first_of(searched, pos);
+}
+
+x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int align_calls)
+{
+	if(!boost::filesystem::exists(dbg_inline_file))
+	{
+		ofstream outfile (dbg_inline_file);
+		cout<<fg::yellow<<"File "<<dbg_inline_file<<" created."<<endl;
+		cout<<"Nothing to be parsed."<<endl;
+		cin.get();
+		exit(1);
+	}
+	
+	x64dbg_parser_struct parser_struct;
+	line.clear();
+	FileIO dbg_inline_file_obj(dbg_inline_file, ios::in);
+	for(int i=0; getline(dbg_inline_file_obj._file,line); i++)
+	{
+		const auto orig_size = line.size();
+		word = cut_on_first_null(line);
+		try
+		{
+			line.erase(0,line.find(".")+1);
+			if (line.size() != orig_size)
+			{
+				line.insert(0,"0x");
+				if(word.compare("call")==0 || word.find_first_of("j") != string::npos)
+				{					
+					offset = boost::lexical_cast<HexTo<int>>(line);
+					line = to_string(offset+align_calls);
+					if(word.compare("call")==0)
+					{
+						parser_struct.GccInstruction.push_back(");");
+						parser_struct.GccInstruction.push_back("__asm__ (");
+					}
+				}
+				word.append(" ");
+				word.append(line);
+				parser_struct.GccInstruction.push_back("	"+add_quotations(word));
+				continue;
+			}
+		}catch(const out_of_range &e)
+		{
+			cout<<fg::yellow<<__func__<< "Skipping, no named hex address "<<line<<fg::reset<<endl;
+		}
+		
+		pos = line.find_first_of("0123456789ABCDEF");
+		for(int i=0; pos<=line.length(); i++)
+		{
+			pos = inc_search(line,"0123456789ABCDEF",pos+i);
+			if (string::npos != pos)
+			{
+				_word = line; 
+				_word.erase(pos);
+				_word = _word.back();
+				if(string::npos == _word.find_first_of("abcdefghijklmnopqrstuvwxyz"))
+				{
+					line.insert(pos,"0x");
+					break;
+				}
+			}
+		}
+		pos = line.find_first_of("[");
+		if (string::npos != pos)
+		{
+			if(line.find("fs:")!=string::npos)
+			{
+				line.insert(pos+1, line.substr(pos-3,3));
+			}
+			line.erase(pos-3,3);
+		}
+		
+		parser_struct.GccInstruction.push_back("	"+add_quotations(line));
+	}
+	
+	parser_struct.GccInstruction.push_back(");");
+	return parser_struct;
+}
+
+
+
+
 

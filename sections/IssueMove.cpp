@@ -9,132 +9,247 @@ funcDefs Fd;
 GFT gft; 
 
 //-----	(006F26D0)	--------------------------------------------------------
-int GFT::IssueMove(struct lua_State **a1)
+int GFT::IssueMove()
 {	
-    int v2; //	esi
-    struct lua_State *v3; //	eax
-    _DWORD *v4; //	eax
-    bool v5; //	al
-    bool v6; //	zf
-    int v7; //	eax
-    int v8; //	edi
-    uint32 *v9; //	eax
-    struct Moho__SSTICommandIssueData *v10; //	esi
-    int v11; //	eax
-    int v12; //	xmm0_4
-    struct lua_State *v13; //	eax
-    volatile int v14; //	eax
-    struct Moho__CUnitCommand *v15; //	esi
-    volatile int v17; //	[esp-8h]	[ebp-138h]
-    struct lua_State *v18; //	[esp-4h]	[ebp-134h]
-    bool v19; //	[esp+Fh]	[ebp-121h]
-    volatile signed int *v20; //	[esp+10h]	[ebp-120h] 
-    volatile int v21; //	[esp+14h]	[ebp-11Ch]
-    volatile int v22; //	[esp+18h]	[ebp-118h]
-    int *v23; //	[esp+1Ch]	[ebp-114h]
-    volatile char *v24; //	[esp+20h]	[ebp-110h]
-    volatile char *v25; //	[esp+24h]	[ebp-10Ch]
-    volatile int *v26; //	[esp+28h]	[ebp-108h]
-    volatile char *v27; //	[esp+2Ch]	[ebp-104h]
-    volatile char v28; //	[esp+30h]	[ebp-100h]
-    int v29; //	[esp+40h]	[ebp-F0h]
-    int v30; //	[esp+44h]	[ebp-ECh]
-    int v31; //	[esp+48h]	[ebp-E8h]
-    int v32; //	[esp+4Ch]	[ebp-E4h]
-    int v33; //	[esp+50h]	[ebp-E0h]
-    int v34; //	[esp+54h]	[ebp-DCh]
-    int v35; //	[esp+58h]	[ebp-D8h]
-    int v36; //	[esp+5Ch]	[ebp-D4h]
-    int v37; //	[esp+60h]	[ebp-D0h]
-    int v38; //	[esp+64h]	[ebp-CCh]
-    volatile int v39; //	[esp+68h]	[ebp-C8h]
-    uint32 *v40; //	[esp+6Ch]	[ebp-C4h]
-    int v41; //	[esp+70h]	[ebp-C0h]
-    int v42; //	[esp+7Ch]	[ebp-B4h]
-    char v43; //	[esp+90h]	[ebp-A0h]
-    volatile int v44; //	[esp+12Ch]	[ebp-4h]
+	register int eax asm("eax");
 	register int esp asm("esp");
 	register int ecx asm("ecx");
 	register int edx asm("edx");
 	register int ebx asm("ebx");
 	register int esi asm("esi");
-	
-    v2 = dword_10B83A4;
-    v3 = (struct lua_State *)Fd.lua_gettop(*a1);
-    if (v3 != (struct lua_State *)2)
-        Fd.LuaState__Error((struct LuaState*)a1, (char*)"%s\n	expected	%d	args,	but	got	%d", v2, 2, v3);
-    v23 = &v22;
-    v22 = (int)&v22;
-    v24 = &v28;
-    v25 = &v28;
-    v26 = &v29;
-    v27 = &v28;
-    v44 = 0;
-    v20 = (signed int *)a1;
-    v21 = 1;
-    v4 = Fd.Eval_Lua_Object(&v39, (const struct LuaStackObject*)&v20, (struct LuaState*)a1, (int)"IssueMove"); //unit table param from lua
-    //LOBYTE(v44) = 1;
-    v5 = gft.Validate_IssueCommand((int) v4, (int)&v22, 1);
-    //LOBYTE(v44) = 0;
-    //v19 = v5;
-    if (v41 != v42)
-        Fd.j_shi_delete_0(v41);
-    v6 = v5 == 0;
-	//*(_DWORD *)(v39 - 4) = v40;
-    //*v40 = v39;
-    if (v6)
-        goto LABEL_21;
-    v20 = &v17;
-    v7 = Fd.__Get_Lua_Coordinates_Statew(&v39,(struct LuaState*)a1,(int)"IssueMove",a1,2);
-    Fd.__Push_Coordinatesw((int)&v29, v7);
-    v8 = v29;
-    v36 = v31;
-    v35 = v30;
-    //v9 = v40;
-    //v37 = v32;
-   // v34 = v29;
-   // v38 = v33;
-    if (edx!=0) 
-	{
-		//This never supposed to happen.
-		Fd.LuaState__Error((struct LuaState*)a1, (char*)"IssueMove: Floats for coordinates are not found!");
-/*         if ((_DWORD ** ) * v40 != & v40) {
-            do
-                v9 = (_DWORD*)(*v9 + 4);
-            while ((_DWORD **) * v9 != & v40);
-        }
-        *v9 = v41; */
-    }
-     if (!(unsigned __int8) gft.nanTest((float*)& v36) || !v8)
-        Fd.LuaState__Error((struct LuaState*)a1, "IssueMove:	Passed	in	an	invalid	target	point.");
-     v10 = (struct Moho__SSTICommandIssueData*) Moho_SSTICommandIssueData_SSTICommandIssueData((uint32)&v43,2);
-    LOBYTE(v44) = 2;
-    v11 = v30;
-    v12 = v31;
-    *((_DWORD *)v10 + 4) = v8;
-    *((_DWORD *)v10 + 5) = v11;
-    v13 = *a1;
-    *((_DWORD *)v10 + 6) = v12;
-    *((_DWORD *)v10 + 7) = v32;
-    v18 = v13;
-    *((_DWORD *)v10 + 8) = v33;
-    v14 = Fd.lua_getglobaluserdata(v18);
-    v15 = Fd.Moho_UNIT_IssueCommandw((int)&v22, v14, v10, 0);
-    LOBYTE(v44) = 0;
-    Fd.Moho_SSTICommandIssueData_Destructor_SSTICommandIssueData((struct Moho__SSTICommandIssueData*)&v43);
-    if (!v15) 
-	{
-        LABEL_21: 
-		Fd.LuaPlus_LuaState_PushNil(*a1);
-        Fd.lua_gettop(*a1);
-        if (v24 != v27)
-            Fd.j_shi_delete_0(v24);
-        *(_DWORD *)(v22 + 1) = (int) v23;
-        *v23 = v22;
-    }
-    else {
-        Fd.LuaPlus_LuaObject_PushStack((_DWORD * )(v15 + 32), v20, a1);
-        gft.sub_5796A0(v22);
-    }   
-    return 1; 
+	register int edi asm("edi");
+__asm__
+( 
+	"pop ebx \n "
+	"pop esi \n " 	
+	"pop edi \n " 
+	"push ebp \n " 
+	"mov ebp,esp \n " 
+	"and esp,0xFFFFFFF8 \n " 
+	"mov eax,dword ptr [fs:0x0] \n " 
+	"push 0xFFFFFFFF \n " 
+	"push 0xBB5873 \n " 
+	"push eax \n " 
+	"mov dword ptr [fs:0x0],esp \n " 
+	"mov eax,dword ptr [ebx] \n " 
+	"sub esp,0x11C \n " 
+	"push esi \n " 
+	"mov esi,dword ptr [0x10B83A4] \n " 
+	"push edi \n " 
+);
+	Fd.lua_gettop(eax);
+__asm__ (
+	"add esp,0x4 \n " 
+	"cmp eax,0x2 \n " 
+	"je label1 \n " 
+);
+	Fd.LuaState__Error(ebx, (char*)"%s\n	expected	%d	args,	but	got	%d", esi, 2, eax);
+__asm__ (
+	"add esp,0x14 \n " 
+	"label1: \n"
+	"lea ecx,dword ptr [esp+0x18] \n " 
+	"mov edx,ecx \n " 
+	"lea eax,dword ptr [esp+0x30] \n " 
+	"mov dword ptr [esp+0x1C],ecx \n " 
+	"mov dword ptr [esp+0x18],edx \n " 
+	"mov ecx,eax \n " 
+	"lea edx,dword ptr [esp+0x40] \n " 
+	"mov dword ptr [esp+0x20],eax \n " 
+	"mov dword ptr [esp+0x24],ecx \n " 
+	"mov dword ptr [esp+0x28],edx \n " 
+	"mov dword ptr [esp+0x2C],eax \n " 
+	"push 0xE2ED00 \n " 
+	"push ebx \n " 
+	"lea ecx,dword ptr [esp+0x18] \n " 
+	"push ecx \n " 
+	"lea edx,dword ptr [esp+0x74] \n " 
+	"mov dword ptr [esp+0x138],0 \n " 
+	"push edx \n " 
+	"mov dword ptr [esp+0x20],ebx \n " 
+	"mov dword ptr [esp+0x24],1 \n " 
+	"call 7274048 \n " 
+);
+__asm__ (
+	"lea ecx,dword ptr [esp+0x28] \n " 
+	"push 0x1 \n " 
+	"push ecx \n " 
+	"mov edi,eax \n " 
+	"mov byte ptr [esp+0x144],1 \n " 
+	"call 7273712 \n " 
+);
+	//Fd.Validate_IssueCommand(edi, ecx, 1);
+__asm__ (
+	"mov byte ptr [esp+0x144],0 \n " 
+	"mov byte ptr [esp+0x27],al \n " 
+	"mov eax,dword ptr [esp+0x88] \n " 
+	"add esp,0x18 \n " 
+	"cmp eax,dword ptr [esp+0x7C] \n " 
+	"je label3 \n " 
+);
+	Fd.j_shi_delete_0(eax);
+__asm__ (
+	"add esp,0x4 \n " 
+	"label3: \n"
+	"cmp byte ptr [esp+0xF],0 \n " 
+	"mov edx,dword ptr [esp+0x68] \n " 
+	"mov eax,dword ptr [esp+0x6C] \n " 
+	"mov dword ptr [edx+0x4],eax \n " 
+	"mov ecx,dword ptr [esp+0x6C] \n " 
+	"mov edx,dword ptr [esp+0x68] \n " 
+	"mov dword ptr [ecx],edx \n " 
+	"je label2 \n " 
+	"sub esp,0x8 \n " 
+	"mov eax,esp \n " 
+	"mov dword ptr [esp+0x18],esp \n " 
+	"push 0xE2ED00 \n " 
+	"push ebx \n " 
+	"lea edi,dword ptr [esp+0x78] \n " 
+	"mov dword ptr [eax],ebx \n " 
+	"mov dword ptr [eax+0x4],2 \n " 
+);
+	//Fd.Get_Lua_Coordinates_State(,(int)"IssueMove",ebx,2);
+__asm__ (
+	"call 7274336 \n " 
+	"mov ecx,eax \n " 
+	"add esp,0x10 \n " 
+	"lea eax,dword ptr [esp+0x40] \n " 
+);
+__asm__ (
+	"call 6174672 \n " 
+	"mov eax,dword ptr [esp+0x44] \n " 
+	"movss xmm0,dword ptr [esp+0x48] \n " 
+	"mov edi,dword ptr [esp+0x40] \n " 
+	"movss dword ptr [esp+0x5C],xmm0 \n " 
+	"movss xmm0,dword ptr [esp+0x4C] \n " 
+	"mov dword ptr [esp+0x58],eax \n " 
+	"mov eax,dword ptr [esp+0x6C] \n " 
+	"test eax,eax \n " 
+	"movss dword ptr [esp+0x60],xmm0 \n " 
+	"movss xmm0,dword ptr [esp+0x50] \n " 
+	"mov dword ptr [esp+0x54],edi \n " 
+	"movss dword ptr [esp+0x64],xmm0 \n " 
+	"je label4 \n " 
+	"lea ecx,dword ptr [esp+0x6C] \n " 
+	"cmp dword ptr [eax],ecx \n " 
+	"je label5 \n " 
+	"lea ecx,dword ptr [ecx] \n " 
+	"label6:"
+	"mov eax,dword ptr [eax] \n " 
+	"add eax,0x4 \n " 
+	"lea edx,dword ptr [esp+0x6C] \n " 
+	"cmp dword ptr [eax],edx \n " 
+	"jne label6 \n " 
+	"label5:"	
+	"mov ecx,dword ptr [esp+0x70] \n " 
+	"mov dword ptr [eax],ecx \n " 
+	"label4:"
+	"lea esi,dword ptr [esp+0x5C] \n " 
+);
+__asm__ (
+	"call 5662704 \n " 
+	"test al,al \n " 
+	"je label7 \n " 
+	"test edi,edi \n " 
+	"jne label8 \n " 
+	"label7:"
+	"push 0xE2ED0C \n " 
+	"push ebx \n " 
+);
+__asm__ (
+	"call 9490896 \n " 
+	"add esp,0x8 \n " 
+	"label8:"
+	"lea edx,dword ptr [esp+0x90] \n " 
+	"push edx \n " 
+	"mov ecx,0x2 \n " 
+);
+__asm__ (
+	"call 5584208 \n " 
+	"mov esi,eax \n " 
+	"mov byte ptr [esp+0x12C],2 \n " 
+	"mov eax,dword ptr [esp+0x44] \n " 
+	"movss xmm0,dword ptr [esp+0x48] \n " 
+	"mov dword ptr [esi+0x10],edi \n " 
+	"mov dword ptr [esi+0x14],eax \n " 
+	"mov eax,dword ptr [ebx] \n " 
+	"movss dword ptr [esi+0x18],xmm0 \n " 
+	"movss xmm0,dword ptr [esp+0x4C] \n " 
+	"movss dword ptr [esi+0x1C],xmm0 \n " 
+	"movss xmm0,dword ptr [esp+0x50] \n " 
+	"push eax \n " 
+	"movss dword ptr [esi+0x20],xmm0 \n " 
+);
+__asm__ (
+	"call 9588816 \n " 
+	"add esp,0x4 \n " 
+	"push 0x0 \n " 
+	"push esi \n " 
+	"push eax \n " 
+	"lea edx,dword ptr [esp+0x24] \n " 
+);
+__asm__ (
+	"call 7283392 \n " 
+	"add esp,0xC \n " 
+	"lea ecx,dword ptr [esp+0x90] \n " 
+	"push ecx \n " 
+	"mov esi,eax \n " 
+	"mov byte ptr [esp+0x130],0 \n " 
+);
+__asm__ (
+	"call 5749680 \n " 
+	"test esi,esi \n " 
+	"je label2 \n " 
+	"push ebx \n " 
+	"lea edx,dword ptr [esp+0x14] \n " 
+	"push edx \n " 
+	"lea ecx,dword ptr [esi+0x20] \n " 
+);
+__asm__ (
+	"call 9473408 \n " 
+	"lea esi,dword ptr [esp+0x18] \n " 
+);
+__asm__ (
+	"call 5744288 \n " 
+	"jmp label9 \n " 
+	"label2:"
+	"mov eax,dword ptr [ebx] \n " 
+	"push eax \n " 
+);
+__asm__ (
+	"call 9493760 \n " 
+	"mov ecx,dword ptr [ebx] \n " 
+	"add esp,0x4 \n " 
+	"push ecx \n " 
+);
+__asm__ (
+	"call 9491856 \n " 
+	"mov eax,dword ptr [esp+0x24] \n " 
+	"add esp,0x4 \n " 
+	"cmp eax,dword ptr [esp+0x2C] \n " 
+	"je label10 \n " 
+	"push eax \n " 
+);
+__asm__ (
+	"call 11023682 \n " 
+	"add esp,0x4 \n " 
+	"label10:"
+	"mov edx,dword ptr [esp+0x18] \n " 
+	"mov eax,dword ptr [esp+0x1C] \n " 
+	"mov dword ptr [edx+0x4],eax \n " 
+	"mov ecx,dword ptr [esp+0x1C] \n " 
+	"mov edx,dword ptr [esp+0x18] \n " 
+	"mov dword ptr [ecx],edx \n " 
+	"label9:"
+	);
+__asm__ (	
+	"mov ecx,dword ptr [esp+0x124] \n " 
+	"pop edi \n " 
+	"mov eax,0x1 \n " 
+	"mov dword ptr [fs:0x0],ecx \n " 
+	"pop esi \n " 
+	"mov esp,ebp \n " 
+	"pop ebp \n " 
+	"ret \n " 
+	);
+
 }

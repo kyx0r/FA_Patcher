@@ -88,6 +88,7 @@
 	const int _GetCatCmpResult = 0x0067B050;
 	const int _exit_STAYONWATSUR_check = 0x0062ADEE;
 	const int _exit_STAYONWATSUR_NoMatch = 0x0062ADEC;	
+	const int _Moho_SSTICommandIssueData_SSTICommandIssueData = 0x00552550;
 		
 	//extern functions:
 	//MSVCR80.dll	

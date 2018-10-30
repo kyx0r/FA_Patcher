@@ -29,7 +29,7 @@ class Patcher
 {
 	public:
 	
-	Patcher(const string& filename);
+	Patcher(const string& filename_in, const string& filename_out);
 	
 	private:
 	bool check_system();

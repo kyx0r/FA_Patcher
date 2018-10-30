@@ -36,17 +36,11 @@ vector<char> FileIO::fReadBinaryFile()
 	return memblock;	
 }
 
-template <class T>
-void clean_vector(vector<T> vect)
-{
-	vect = vector<T>();
-}
-
 unsigned FileIO::fWriteBinaryFile(vector<char> HexValue, int offset, int Bytes_to_write)
 {
-	_file.seekg(fstream::beg+offset);
+	_file.seekg(offset);
 	_file.write(HexValue.data(), Bytes_to_write);
-	clean_vector(HexValue);
+	HexValue = vector<char>();
 	return 1;	
 }
 

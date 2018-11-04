@@ -2,7 +2,7 @@
 #pragma once
 #include "patcher.hpp"
 
-class FileIO
+class FileIO 
 {
 	public:
 	fstream _file;

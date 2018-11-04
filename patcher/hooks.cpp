@@ -14,8 +14,7 @@ Hooks::Hooks(bool hook_format, string filename)
 	if(filename.empty())
 	{
 		cout<<fg::red<<"No output filename passed in to Hooks::Hooks() constructor."<<endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 	}
 	else
 	{
@@ -27,7 +26,7 @@ void Hooks::align_hook(int align_sizeL ,string filename, string command)
 {
 	filename = rem_extension(filename);
 	filename.append(".o");
-	gpp_link(filename, "make hook_gpp_link align_size=" + to_string(align_sizeL));
+	gpp_link(filename, make+" hook_gpp_link align_size=" + to_string(align_sizeL));
 }
 
 void Hooks::apply_Hook(string current_file, int offset, FileIO& f_out)
@@ -39,7 +38,7 @@ void Hooks::apply_Hook(string current_file, int offset, FileIO& f_out)
 	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory. 
 	{
 		align_sizeL = f_in.get_bytes(Bytes_to_write) * 2;
-		align_hook(align_sizeL, current_file, "make hook_gpp_link PRIME_NAME=");
+		align_hook(align_sizeL, current_file, make+" hook_gpp_link PRIME_NAME=");
 		Bytes_to_write = f_in.get_bytes(Bytes_to_write);	
 	}
 	
@@ -64,11 +63,10 @@ void Hooks::parse_build(int offset, string alone_Filename)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
 				{
-					if(!gpp_link(current_file, "make hook_gpp_link"))
+					if(!gpp_link(current_file, make+" hook_gpp_link"))
 					{
 						cout<<fg::red<<"gpp_link failed."<<endl;
-						cin.get();
-						exit(1);
+						debug_pause();
 					}
 					break;
 				}	
@@ -95,7 +93,7 @@ void Hooks::parse_build(int offset, string alone_Filename)
 void Hooks::build_O(string current_file, string Final_Filename, string alone_Filename)
 {
 	cout<<fg::cyan<<"BUILDING .O FILES --------------------------------->"<<fg::reset<<endl;
-	string command = "make _hooks OBJ_NAME_=";
+	string command = make+" _hooks OBJ_NAME_=";
 	command.append(Final_Filename);
 	alone_Filename.insert(0, " OBJS=");
 	command.append(alone_Filename);
@@ -103,8 +101,7 @@ void Hooks::build_O(string current_file, string Final_Filename, string alone_Fil
 	if(system(&command[0]))
 	{
 		cout<<fg::red<<"Error when calling "<<command<<endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 	}
 	cout<<"\n";	
 }
@@ -116,11 +113,10 @@ int Hooks::compile_Hook(string current_file, string Final_Filename, string alone
 	cout<<hex<<"ROffset = "<<offset<<dec<<endl;
 	if(fast_Compile_Hooks)
 	{
-		if(system("make _fast_hooks"))
+		if(system(&_fast_hooks[0]))
 		{
 			cout<<fg::red<<"Error when calling '_fast_hooks' "<<endl;
-			cin.get();
-			exit(1);
+			debug_pause();
 		}
 		fast_Compile_Hooks = false;
 	}

@@ -27,8 +27,7 @@ image_section_header BinSection::populate_image_section_header(const string &fil
 	catch(const pe_exception& e)
 	{
 		std::cout <<fg::red<< "Error: " << e.what() << std::endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 	}
 	
 	return header;
@@ -56,8 +55,7 @@ bool BinSection::create_Section(istream& pe_file, string out_file_name, const st
 	if(!new_pe_file)
 	{
 		cout <<fg::red<< "Cannot create " << out_file_name <<endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 		return false;
 	}
 	rebuild_pe(image, new_pe_file);
@@ -76,7 +74,7 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 	align_bss = 0;
 	align_idata = 0;
 	
-	if(system("make ext_sector"))
+	if(system(&ext_sector[0]))
 	{
 		cout<<fg::red<<"Error when calling ext_sector "<<endl;
 		cin.get();

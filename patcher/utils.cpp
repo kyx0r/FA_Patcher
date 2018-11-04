@@ -20,8 +20,7 @@ int Utils::parse_offset(FileIO& file, string expr)
 		}
 	}
 	cout<<fg::red<<"Could not find : "<<expr<<" in the file : "<<file.filename<<endl;
-	cin.get();
-	exit(1);
+	debug_pause();
 }
 
 bool Utils::gpp_link(string filename, string command)
@@ -39,12 +38,11 @@ bool Utils::gpp_link(string filename, string command)
 	if(system(&command[0]))
 	{
 		cout<<fg::red<<"Link error."<<endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 	}
 	cout<<"\n";
 	
-	command = "make rip_out_binary";
+	command = make+" rip_out_binary";
 	command.append(tmp_Prefix);
 	string filename_prime = " PRIME_NAME=";
 	command.append(filename_prime);
@@ -57,8 +55,7 @@ bool Utils::gpp_link(string filename, string command)
 	if(system(&command[0]))
 	{
 		cout<<fg::red<<"Ripping binary error"<<endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 	}
 	cout<<"\n";
 	return true;
@@ -175,8 +172,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 		ofstream outfile (dbg_inline_file);
 		cout<<fg::yellow<<"File "<<dbg_inline_file<<" created."<<endl;
 		cout<<"Nothing to be parsed."<<endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 	}
 	
 	x64dbg_parser_struct parser_struct;

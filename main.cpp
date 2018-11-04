@@ -26,7 +26,6 @@ int main (void)
 	string target_in = "ForgedAlliance_base.exe";
 	string target_out = "ForgedAlliance_exxt.exe";
 	
-	start:
 	Patcher patch(target_in, target_out);
 	BinSection section;
 	Utils util;
@@ -68,8 +67,7 @@ int main (void)
 	}
 	
 	cout<<"Done."<<endl;	
-	
-	goto start;
+	debug_pause();
 
 	return 0;
 }

@@ -11,8 +11,7 @@ FileIO::FileIO(string filename, ios_base::openmode mode)
 		{
 			cout <<fg::red<< "Cannot open "<<filename<<endl;
 			cout <<fg::red<<"Usage: 1st arg: string filename, 2nd arg: optional ios flag, ie ios::in."<<endl;
-			cin.get();
-			exit(1);
+			debug_pause();
 		}	
 	}
 }

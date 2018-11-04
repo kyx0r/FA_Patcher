@@ -25,6 +25,10 @@ using namespace std;
 using namespace pe_bliss;
 using namespace rang;
 
+static string make = "mingw32-make";
+
+void debug_pause();
+
 class Patcher
 {
 	public:
@@ -33,6 +37,7 @@ class Patcher
 	
 	private:
 	bool check_system();
+	bool check_make();
 	
 
 };

@@ -20,7 +20,8 @@ class BinSection : public Utils
 	private:	
 	image_section_header populate_image_section_header(const string &filename);
 	
-	string make_ext_gpp_link = "make ext_gpp_link";
+	string make_ext_gpp_link = make+" ext_gpp_link";
+	string ext_sector = make+" ext_sector";
 	uint32_t align_data = 0;
 	uint32_t align_rdata = 0;
 	uint32_t align_bss = 0;

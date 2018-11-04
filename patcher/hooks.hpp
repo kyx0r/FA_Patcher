@@ -24,5 +24,6 @@ class Hooks : public Utils
 	
 	int align_sizeL;
 	int Bytes_to_write;
+	string _fast_hooks = make+" _fast_hooks";
 	
 };

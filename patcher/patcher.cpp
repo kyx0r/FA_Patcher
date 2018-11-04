@@ -31,8 +31,10 @@ bool Patcher::check_system()
 {
 	if (system(nullptr))
 	{
+		#ifdef DEBUG
 		cout <<fg::green<< "Command processor exists "<<fg::reset<<endl;
 		cout << " " "\n";
+		#endif
 		return true;
 	}
 	else
@@ -55,14 +57,18 @@ bool Patcher::check_make()
 {
 	if (!system("make"))
 	{
+		#ifdef DEBUG
 		cout <<fg::green<< "Detected make"<<fg::reset<<endl;
 		cout << " " "\n";
+		#endif
 		return true;
 	}
 	else if(!system("mingw32-make"))
 	{
+		#ifdef DEBUG
 		cout <<fg::green<< "Detected mingw32-make"<<fg::reset<<endl;
 		cout << " " "\n";
+		#endif
 		return true;
 	}
 	else

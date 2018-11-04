@@ -14,6 +14,7 @@ Hooks::Hooks(bool hook_format, string filename)
 	if(filename.empty())
 	{
 		cout<<fg::red<<"No output filename passed in to Hooks::Hooks() constructor."<<endl;
+		cout<<"In function "<<__func__<<endl;
 		debug_pause();
 	}
 	else
@@ -42,9 +43,15 @@ void Hooks::apply_Hook(string current_file, int offset, FileIO& f_out)
 		Bytes_to_write = f_in.get_bytes(Bytes_to_write);	
 	}
 	
+	#ifdef DEBUG
 	cout<<fg::magenta<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<fg::reset<<endl;
+	#endif
+	
 	f_out.fWriteBinaryFile(hook_F, offset, Bytes_to_write);
+	
+	#ifdef DEBUG
 	cout<<"\n";
+	#endif
 }
 
 void Hooks::parse_build(int offset, string alone_Filename)
@@ -66,6 +73,7 @@ void Hooks::parse_build(int offset, string alone_Filename)
 					if(!gpp_link(current_file, make+" hook_gpp_link"))
 					{
 						cout<<fg::red<<"gpp_link failed."<<endl;
+						cout<<"In function "<<__func__<<endl;
 						debug_pause();
 					}
 					break;
@@ -92,30 +100,42 @@ void Hooks::parse_build(int offset, string alone_Filename)
 
 void Hooks::build_O(string current_file, string Final_Filename, string alone_Filename)
 {
+	#ifdef DEBUG
 	cout<<fg::cyan<<"BUILDING .O FILES --------------------------------->"<<fg::reset<<endl;
+	cout<<"\n";	
+	#endif
+	
 	string command = make+" _hooks OBJ_NAME_=";
 	command.append(Final_Filename);
 	alone_Filename.insert(0, " OBJS=");
 	command.append(alone_Filename);
-	cout<<"\n";
 	if(system(&command[0]))
 	{
 		cout<<fg::red<<"Error when calling "<<command<<endl;
+		cout<<"In function "<<__func__<<endl;
 		debug_pause();
 	}
+	
+	#ifdef DEBUG
 	cout<<"\n";	
+	#endif
 }
 
 int Hooks::compile_Hook(string current_file, string Final_Filename, string alone_Filename)
 {
 	FileIO hook(current_file);
 	int offset = parse_offset(hook, "ROffset = ");
+	
+	#ifdef DEBUG
 	cout<<hex<<"ROffset = "<<offset<<dec<<endl;
+	#endif
+	
 	if(fast_Compile_Hooks)
 	{
 		if(system(&_fast_hooks[0]))
 		{
 			cout<<fg::red<<"Error when calling '_fast_hooks' "<<endl;
+			cout<<"In function "<<__func__<<endl;
 			debug_pause();
 		}
 		fast_Compile_Hooks = false;
@@ -132,9 +152,13 @@ void Hooks::parse_hooks()
 {
 	boost::filesystem::path p("\hooks");
 	boost::filesystem::directory_iterator end_itr;
+	
+	#ifdef DEBUG
 	cout<<"\n";
 	cout<<fg::cyan<<"Available hooks : "<<fg::reset<<endl;
 	cout<<"\n";
+	#endif
+	
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
     {
 		if (boost::filesystem::is_regular_file(itr->path())) 
@@ -147,7 +171,9 @@ void Hooks::parse_hooks()
 				string Final_Filename;
 				Final_Filename.append(end);
 				string alone_Filename = Final_Filename;
+				#ifdef DEBUG
 				cout<<style::bold<<Final_Filename<<style::reset<<endl;
+				#endif
 				Final_Filename = rem_extension(Final_Filename);
 				Final_Filename.append(".o");
 				Final_Filename.insert(0,"../build/");

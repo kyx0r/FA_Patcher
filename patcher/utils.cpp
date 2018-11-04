@@ -33,14 +33,21 @@ bool Utils::gpp_link(string filename, string command)
 	tmp_Prefix.append(filename_tmp);
 	command.append(tmp_Prefix);
 	
+	#ifdef DEBUG
 	cout<<fg::cyan<<"GENERATING .TMP FILES ------------------------------->"<<fg::reset<<endl;
+	#endif
+	
 	//here convert the binary to MS PE format.
 	if(system(&command[0]))
 	{
 		cout<<fg::red<<"Link error."<<endl;
+		cout<<"In function "<<__func__<<endl;
 		debug_pause();
 	}
+	
+	#ifdef DEBUG
 	cout<<"\n";
+	#endif
 	
 	command = make+" rip_out_binary";
 	command.append(tmp_Prefix);
@@ -50,14 +57,19 @@ bool Utils::gpp_link(string filename, string command)
 	filename_prime = filename.append(".bin");
 	command.append(filename_prime);
 	
+	#ifdef DEBUG
 	cout<<fg::cyan<<"GENERATING .BIN FILES --------------------------->"<<fg::reset<<endl;
+	#endif
 	
 	if(system(&command[0]))
 	{
 		cout<<fg::red<<"Ripping binary error"<<endl;
+		cout<<"In function "<<__func__<<endl;
 		debug_pause();
 	}
+	#ifdef DEBUG
 	cout<<"\n";
+	#endif
 	return true;
 }
 

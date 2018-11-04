@@ -50,5 +50,6 @@ all_individual : $(PROGS)
 all :
 	$(CC) $(HEADS) -c $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(STD) $(LINKER_FLAGS) $(BOOST) -o $(OUTPUT) ext_sector.cpp
 	
+# --image-base. only windows ld supports this. It marks the starting virtual address of the file built. 	
 link:
 	ld --image-base 0x128D000 -Map ../build/mapfile.map -o ../build/exxt_sector.o $(LINK_OBJS)

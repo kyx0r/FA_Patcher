@@ -8,16 +8,21 @@ image_section_header BinSection::populate_image_section_header(const string &fil
 	try
 	{
 		pe_base image(pe_factory::create_pe(pe_file._file));
-		//cout << "Reading PE sections..." << hex << showbase << endl << endl;
+		#ifdef DEBUG
+		cout << "Reading PE sections..." << hex << showbase << endl << endl;
+		#endif
 		const section_list sections(image.get_image_sections());
 		for(section_list::const_iterator it = sections.begin(); it != sections.end(); ++it)
 		{
 			const section& s = *it; 
-/* 			std::cout << "Section [" << s.get_name() << "]" << std::endl 
-				<< "Size of raw data: " << s.get_size_of_raw_data() << std::endl 
-				<< "Virtual address: " << s.get_virtual_address() << std::endl 
-				<< "Virtual size: " << s.get_virtual_size() << std::endl 
-				<< std::endl; */
+			#ifdef DEBUG
+ 			cout << "Section [" << s.get_name() << "]" <<endl 
+				<< "Size of raw data: " << s.get_size_of_raw_data() <<endl 
+				<< "Virtual address: " << s.get_virtual_address() <<endl 
+				<< "Virtual size: " << s.get_virtual_size() <<endl 
+				<<endl; 
+			cout<<"End of PE sections dump..."<<dec<<endl;
+			#endif
 			header.Name.push_back(s.get_name());
 			header.VirtualSize.push_back(s.get_virtual_size());
 			header.VirtualAddress.push_back(s.get_virtual_address()); 
@@ -27,6 +32,7 @@ image_section_header BinSection::populate_image_section_header(const string &fil
 	catch(const pe_exception& e)
 	{
 		std::cout <<fg::red<< "Error: " << e.what() << std::endl;
+		cout<<"In function "<<__func__<<endl;
 		debug_pause();
 	}
 	
@@ -55,12 +61,14 @@ bool BinSection::create_Section(istream& pe_file, string out_file_name, const st
 	if(!new_pe_file)
 	{
 		cout <<fg::red<< "Cannot create " << out_file_name <<endl;
+		cout<<"In function "<<__func__<<endl;
 		debug_pause();
-		return false;
 	}
 	rebuild_pe(image, new_pe_file);
 		
+	#ifdef DEBUG	
 	cout <<fg::green<<"PE was rebuilt and saved to " << out_file_name <<fg::reset<<endl; 	
+	#endif
 	
 	return true;
 }
@@ -77,6 +85,7 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 	if(system(&ext_sector[0]))
 	{
 		cout<<fg::red<<"Error when calling ext_sector "<<endl;
+		cout<<"In function "<<__func__<<endl;
 		cin.get();
 		exit(1);
 	}
@@ -108,6 +117,10 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 			make_ext_gpp_link.append(" align_idata=" + to_string(align_idata));
 		}
 	}
+	
+	#ifdef DEBUG
+	cout<<__func__<<": "<<make_ext_gpp_link<<endl;
+	#endif
 
 	gpp_link("build/exxt_sector.o", make_ext_gpp_link);
 	
@@ -115,7 +128,9 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 	
 	size = exxt.get_file_size();
 	
+	#ifdef DEBUG
 	cout<<fg::magenta<<"APPLY .EXT SECTION   Number of instructions: "<<size<<fg::reset<<endl;
+	#endif
 	
 	fa.fWriteBinaryFile(exxt.fReadBinaryFile(), verisign_offset, size);
 }

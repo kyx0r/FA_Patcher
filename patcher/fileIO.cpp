@@ -10,6 +10,7 @@ FileIO::FileIO(string filename, ios_base::openmode mode)
 		if(!_file)
 		{
 			cout <<fg::red<< "Cannot open "<<filename<<endl;
+			cout<<"In function "<<__func__<<endl;
 			cout <<fg::red<<"Usage: 1st arg: string filename, 2nd arg: optional ios flag, ie ios::in."<<endl;
 			debug_pause();
 		}	

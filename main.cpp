@@ -40,6 +40,7 @@ int main (void)
 		section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
 		FileIO file_out(target_out, ios::out |ios::in |ios::binary);
 		section.apply_Ext(0xBDF000,file_out);
+		cout<<"what? "<<endl;
 		function_table table = util.linker_map_parser("build/mapfile.map");
 		util.write_def_table(table);
 		Hooks hook(false, target_out);
@@ -51,8 +52,10 @@ int main (void)
 		Hooks hook(false, target_out);
 		hook.parse_hooks();
 	}
-		
-	boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);	
+	
+	//tests only. 	
+	//boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
+	
 	if(reply.compare("cdbg")==0)
 	{
 		reply.empty();

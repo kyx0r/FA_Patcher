@@ -21,8 +21,8 @@ class Utils : public FileIO
 	int parse_offset(FileIO& file, string expr = "0x");
 	bool gpp_link(string filename, string command);
 	function_table linker_map_parser(string filename);
-	int write_def_table(function_table &table);
-	int write_gcc_asm(string dbg_inline_file, x64dbg_parser_struct &table);
+	void write_def_table(function_table &table);
+	void write_gcc_asm(string dbg_inline_file, x64dbg_parser_struct &table);
 	x64dbg_parser_struct x64dbg_to_gcc_inline(string dbg_inline_file, int align_calls=0x1000);
 	string cut_on_first_null(string line);
 	string add_quotations(string line);

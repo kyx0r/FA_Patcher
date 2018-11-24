@@ -1,6 +1,8 @@
 
 #include "patcher.hpp"
 
+string make;
+
 Patcher::Patcher(const string& filename_in, const string& filename_out)
 {
 	if (!boost::filesystem::exists(filename_in))
@@ -44,7 +46,7 @@ bool Patcher::check_system()
 	}
 }  
 
-void debug_pause()
+int debug_pause()
 {
 	cout<<"Press any key to continue..."<<endl;
 	cin.clear();
@@ -61,6 +63,7 @@ bool Patcher::check_make()
 		cout <<fg::green<< "Detected make"<<fg::reset<<endl;
 		cout << " " "\n";
 		#endif
+		make = "make";
 		return true;
 	}
 	else if(!system("mingw32-make"))
@@ -69,6 +72,7 @@ bool Patcher::check_make()
 		cout <<fg::green<< "Detected mingw32-make"<<fg::reset<<endl;
 		cout << " " "\n";
 		#endif
+		make = "mingw32-make";
 		return true;
 	}
 	else

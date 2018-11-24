@@ -94,7 +94,8 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 	
 	//There might be a better way of doing this, but for now all I got. 
 	//This should be very realiable still, cause locations will be the same as original binary. 
-	for(int i=0; i<header.Name.size(); i++)
+	size_t _size = header.Name.size(); 
+	for(unsigned int i=0; i<_size; i++)
 	{
 		if(header.Name[i].compare(".data") == 0)
 		{

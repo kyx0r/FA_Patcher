@@ -18,7 +18,7 @@ else
 	echo = echo "$(1)"	
 endif
 
-OBJS = main.cpp ./patcher/*cpp
+OBJS = ./*cpp
 #HEADS = ./patcher/*.hpp
 CC = g++
 
@@ -36,7 +36,7 @@ align_idata = 0x1000
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
 # -Wl,-subsystem,windows gets rid of the console window 
-COMPILER_FLAGS = -w -Dalign_size -O1
+COMPILER_FLAGS = -w -Dalign_size -O3 -s
 
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++
@@ -44,6 +44,8 @@ LINKER_FLAGS = -static-libgcc -static-libstdc++
 BOOST = -lfilesystem -lsystem
 
 PELIB = -lpebliss
+
+BINPATCHER = -lpatcher
  
 #OBJ_NAME specifies the name of our exectuable 
 OBJ_NAME = FaPatcher.exe 
@@ -61,10 +63,14 @@ boostLib:
 	$(MAKE) all -C ./boost_lib/filesystem
 	$(MAKE) all -C ./boost_lib/system
 	
+patcherLib:
+	$(MAKE) all -C ./patcher	
+	
 cleanall:
 	$(MAKE) clean -C ./boost_lib/filesystem
 	$(MAKE) clean -C ./boost_lib/system
 	$(MAKE) clean -C ./pe_lib
+	$(MAKE) clean -C ./patcher
 	rm -Rf ./build
 
 cleanbuild:
@@ -99,6 +105,6 @@ rip_out_binary:
 	objcopy --strip-all -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
 
 #This is the target that compiles our executable 
-all : peLib boostLib
-	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BOOST) $(PELIB) -o $(OBJ_NAME)
+all : peLib boostLib patcherLib
+	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BINPATCHER) $(BOOST) $(PELIB) -o $(OBJ_NAME)
 	@echo ./FaPatcher built successfully.

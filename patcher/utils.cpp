@@ -73,12 +73,18 @@ bool Utils::gpp_link(string filename, string command)
 	return true;
 }
 
-int Utils::write_def_table(function_table &table)
+void Utils::write_def_table(function_table &table)
 {
 	ofstream outfile ("preprocessor/define.h");
-	
-	for(int i=0; i<table.Name.size(); i++)
+	#ifdef DEBUG
+	cout<<"Writing define table:\n";	
+	#endif
+	size_t _size = table.Name.size();
+	for(unsigned int i=0; i<_size; i++)
 	{
+		#ifdef DEBUG
+		cout<<"#define "<<table.Name[i]<<" 0x"<<hex<<table.FunctionVirtualAddress[i]<<endl;
+		#endif
 		outfile<<"#define "<<table.Name[i]<<" 0x"<<hex<<table.FunctionVirtualAddress[i]<<endl;
 	}
 	outfile.close();
@@ -126,9 +132,17 @@ function_table Utils::linker_map_parser(string filename)
 				{
 					if(word.find("0x")!=string::npos)
 					{
-						offset = boost::lexical_cast<HexTo<int>>(word);
+						try
+						{
+							offset = boost::lexical_cast<HexTo<int>>(word);
+						}catch(bad_cast &bc)
+						{
+							cout<<fg::red<<"error: bad_cast"<<fg::reset<<endl;
+							debug_pause();
+						}
 						table.FunctionVirtualAddress.push_back(offset-table.section_alignment);
 					}
+					
 					else
 					{
 						table.Name.push_back(word);
@@ -159,13 +173,14 @@ string Utils::add_quotations(string line)
 	return line;
 }
 
-int Utils::write_gcc_asm(string dbg_inline_file, x64dbg_parser_struct &table)
+void Utils::write_gcc_asm(string dbg_inline_file, x64dbg_parser_struct &table)
 {
 	dbg_inline_file = rem_extension(dbg_inline_file);
 	dbg_inline_file.append(".gas");
 	ofstream outfile (dbg_inline_file);
 	
-	for(int i=0; i<table.GccInstruction.size(); i++)
+	size_t _size = table.GccInstruction.size();
+	for(unsigned int i=0; i<_size; i++)
 	{
 		outfile<<table.GccInstruction[i]<<endl;
 	}

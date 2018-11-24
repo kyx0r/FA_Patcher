@@ -25,12 +25,11 @@ using namespace std;
 using namespace pe_bliss;
 using namespace rang;
 
-//You may have to change this if its under a different name.
-static string make = "mingw32-make";
+extern string make;
 //Is debugging enabled?
 //#define DEBUG
 
-void debug_pause();
+int debug_pause();
 
 class Patcher
 {

@@ -11,40 +11,46 @@
 #include <boost/spirit/home/x3/support/utility/utf8.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template <typename Encoding, typename Attribute = typename Encoding::char_type>
-    struct literal_char : char_parser<literal_char<Encoding, Attribute>>
-    {
-        typedef typename Encoding::char_type char_type;
-        typedef Encoding encoding;
-        typedef Attribute attribute_type;
-        static bool const has_attribute =
-            !is_same<unused_type, attribute_type>::value;
+namespace spirit
+{
+namespace x3
+{
+template <typename Encoding, typename Attribute = typename Encoding::char_type>
+struct literal_char : char_parser<literal_char<Encoding, Attribute>>
+{
+	typedef typename Encoding::char_type char_type;
+	typedef Encoding encoding;
+	typedef Attribute attribute_type;
+	static bool const has_attribute =
+	    !is_same<unused_type, attribute_type>::value;
 
-        template <typename Char>
-        literal_char(Char ch)
-          : ch(static_cast<char_type>(ch)) {}
+	template <typename Char>
+	literal_char(Char ch)
+		: ch(static_cast<char_type>(ch)) {}
 
-        template <typename Char, typename Context>
-        bool test(Char ch_, Context const& context) const
-        {
-            return ((sizeof(Char) <= sizeof(char_type)) || encoding::ischar(ch_))
-                && (get_case_compare<encoding>(context)(ch, char_type(ch_)) == 0);
-        }
-        
-        char_type ch;
-    };
+	template <typename Char, typename Context>
+	bool test(Char ch_, Context const& context) const
+	{
+		return ((sizeof(Char) <= sizeof(char_type)) || encoding::ischar(ch_))
+		       && (get_case_compare<encoding>(context)(ch, char_type(ch_)) == 0);
+	}
 
-    template <typename Encoding, typename Attribute>
-    struct get_info<literal_char<Encoding, Attribute>>
-    {
-        typedef std::string result_type;
-        std::string operator()(literal_char<Encoding, Attribute> const& p) const
-        {
-            return '\'' + to_utf8(Encoding::toucs4(p.ch)) + '\'';
-        }
-    };
-}}}
+	char_type ch;
+};
+
+template <typename Encoding, typename Attribute>
+struct get_info<literal_char<Encoding, Attribute>>
+{
+	typedef std::string result_type;
+	std::string operator()(literal_char<Encoding, Attribute> const& p) const
+	{
+		return '\'' + to_utf8(Encoding::toucs4(p.ch)) + '\'';
+	}
+};
+}
+}
+}
 
 #endif

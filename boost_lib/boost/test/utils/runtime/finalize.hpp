@@ -24,28 +24,33 @@
 
 #include <boost/test/detail/suppress_warnings.hpp>
 
-namespace boost {
-namespace runtime {
+namespace boost
+{
+namespace runtime
+{
 
 inline void
 finalize_arguments( parameters_store const& params, runtime::arguments_store& args )
 {
-    BOOST_TEST_FOREACH( parameters_store::storage_type::value_type const&, v, params.all() ) {
-        basic_param_ptr param = v.second;
+	BOOST_TEST_FOREACH( parameters_store::storage_type::value_type const&, v, params.all() )
+	{
+		basic_param_ptr param = v.second;
 
-        if( !args.has( param->p_name ) ) {
-            if( param->p_has_default_value )
-                param->produce_default( args );
+		if( !args.has( param->p_name ) )
+		{
+			if( param->p_has_default_value )
+				param->produce_default( args );
 
-            if( !args.has( param->p_name ) ) {
-                BOOST_TEST_I_ASSRT( param->p_optional,
-                    missing_req_arg( param->p_name ) << "Missing argument for required parameter " << param->p_name << "." );
-            }
-        }
+			if( !args.has( param->p_name ) )
+			{
+				BOOST_TEST_I_ASSRT( param->p_optional,
+				                    missing_req_arg( param->p_name ) << "Missing argument for required parameter " << param->p_name << "." );
+			}
+		}
 
-        if( args.has( param->p_name ) && !!param->p_callback )
-            param->p_callback( param->p_name );
-    }
+		if( args.has( param->p_name ) && !!param->p_callback )
+			param->p_callback( param->p_name );
+	}
 }
 
 } // namespace runtime

@@ -8,16 +8,16 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct one_char_except_not_used {};
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct one_char_except_not_used {};
+}
+}
+}
 }
 
 #endif

@@ -18,10 +18,12 @@
 #include <boost/random/linear_feedback_shift.hpp>
 #include <boost/random/xor_combine.hpp>
 
-namespace boost {
-namespace random {
+namespace boost
+{
+namespace random
+{
 
-/** 
+/**
  * The specialization taus88 was suggested in
  *
  *  @blockquote
@@ -31,10 +33,10 @@ namespace random {
  *  @endblockquote
  */
 typedef xor_combine_engine<
-    xor_combine_engine<
-        linear_feedback_shift_engine<uint32_t, 32, 31, 13, 12>, 0,
-        linear_feedback_shift_engine<uint32_t, 32, 29, 2, 4>, 0>, 0,
-    linear_feedback_shift_engine<uint32_t, 32, 28, 3, 17>, 0> taus88;
+xor_combine_engine<
+linear_feedback_shift_engine<uint32_t, 32, 31, 13, 12>, 0,
+                             linear_feedback_shift_engine<uint32_t, 32, 29, 2, 4>, 0>, 0,
+                             linear_feedback_shift_engine<uint32_t, 32, 28, 3, 17>, 0> taus88;
 
 } // namespace random
 

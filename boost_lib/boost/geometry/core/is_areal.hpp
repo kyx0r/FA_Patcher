@@ -22,7 +22,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -53,7 +55,8 @@ struct is_areal : core_dispatch::is_areal<typename tag<Geometry>::type>
 {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_IS_AREAL_HPP

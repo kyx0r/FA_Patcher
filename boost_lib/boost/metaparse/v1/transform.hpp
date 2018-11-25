@@ -16,34 +16,34 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class T>
-      struct transform
-      {
-      private:
-        template <class S, class Pos>
-        struct no_error :
-          accept<
-            typename T::template apply<
-              typename get_result<typename P::template apply<S, Pos> >::type
-            >::type,
-            get_remaining<typename P::template apply<S, Pos> >,
-            get_position<typename P::template apply<S, Pos> >
-          >
-        {};
-      public:
-        typedef transform type;
-        
-        template <class S, class Pos>
-        struct apply :
-          unless_error<typename P::template apply<S, Pos>, no_error<S, Pos> >
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class T>
+struct transform
+{
+private:
+	template <class S, class Pos>
+	struct no_error :
+		accept<
+		typename T::template apply<
+		    typename get_result<typename P::template apply<S, Pos> >::type
+		    >::type,
+	get_remaining<typename P::template apply<S, Pos> >,
+	              get_position<typename P::template apply<S, Pos> >
+	>
+	{};
+public:
+	typedef transform type;
+
+	template <class S, class Pos>
+	struct apply :
+		unless_error<typename P::template apply<S, Pos>, no_error<S, Pos> >
+	{};
+};
+}
+}
 }
 
 #endif

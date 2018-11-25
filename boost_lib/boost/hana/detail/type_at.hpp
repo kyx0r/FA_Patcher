@@ -23,35 +23,41 @@ Distributed under the Boost Software License, Version 1.0.
 #   endif
 #endif
 
-BOOST_HANA_NAMESPACE_BEGIN namespace detail {
-    namespace td {
-        template <std::size_t I, typename T>
-        struct elt { using type = T; };
+BOOST_HANA_NAMESPACE_BEGIN namespace detail
+{
+namespace td
+{
+template <std::size_t I, typename T>
+struct elt
+{
+	using type = T;
+};
 
-        template <typename Indices, typename ...T>
-        struct indexer;
+template <typename Indices, typename ...T>
+struct indexer;
 
-        template <std::size_t ...I, typename ...T>
-        struct indexer<std::index_sequence<I...>, T...>
-            : elt<I, T>...
-        { };
+template <std::size_t ...I, typename ...T>
+struct indexer<std::index_sequence<I...>, T...>
+	: elt<I, T>...
+{ };
 
-        template <std::size_t I, typename T>
-        elt<I, T> get_elt(elt<I, T> const&);
-    }
+template <std::size_t I, typename T>
+elt<I, T> get_elt(elt<I, T> const&);
+}
 
-    //! @ingroup group-details
-    //! Classic MPL-style metafunction returning the nth element of a type
-    //! parameter pack.
-    template <std::size_t n, typename ...T>
-    struct type_at {
+//! @ingroup group-details
+//! Classic MPL-style metafunction returning the nth element of a type
+//! parameter pack.
+template <std::size_t n, typename ...T>
+struct type_at
+{
 #if defined(BOOST_HANA_USE_TYPE_PACK_ELEMENT_INTRINSIC)
-        using type = __type_pack_element<n, T...>;
+	using type = __type_pack_element<n, T...>;
 #else
-        using Indexer = td::indexer<std::make_index_sequence<sizeof...(T)>, T...>;
-        using type = typename decltype(td::get_elt<n>(Indexer{}))::type;
+	using Indexer = td::indexer<std::make_index_sequence<sizeof...(T)>, T...>;
+	using type = typename decltype(td::get_elt<n>(Indexer{}))::type;
 #endif
-    };
+};
 } BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_TYPE_AT_HPP

@@ -16,8 +16,10 @@
 #include <boost/compute/functional.hpp>
 #include <boost/compute/algorithm/detail/find_extrema.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns an iterator pointing to the element in range
 /// [\p first, \p last) with the minimum value.
@@ -54,7 +56,7 @@ min_element(InputIterator first,
             Compare compare,
             command_queue &queue = system::default_queue())
 {
-    return detail::find_extrema(first, last, compare, true, queue);
+	return detail::find_extrema(first, last, compare, true, queue);
 }
 
 ///\overload
@@ -64,11 +66,11 @@ min_element(InputIterator first,
             InputIterator last,
             command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    return ::boost::compute::min_element(
-            first, last, ::boost::compute::less<value_type>(), queue
-    );
+	return ::boost::compute::min_element(
+	           first, last, ::boost::compute::less<value_type>(), queue
+	       );
 }
 
 } // end compute namespace

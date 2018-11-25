@@ -50,23 +50,28 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
 
-namespace ds_detail {
+namespace ds_detail
+{
 
 // ************************************************************************** //
 // **************                     seed                     ************** //
 // ************************************************************************** //
 
-struct seed {
-    template<typename DataSet>
-    typename data::result_of::make<DataSet>::type
-    operator->*( DataSet&& ds ) const
-    {
-        return data::make( std::forward<DataSet>( ds ) );
-    }
+struct seed
+{
+	template<typename DataSet>
+	typename data::result_of::make<DataSet>::type
+	operator->*( DataSet&& ds ) const
+	{
+		return data::make( std::forward<DataSet>( ds ) );
+	}
 };
 
 
@@ -78,39 +83,43 @@ struct seed {
 
 #define BOOST_TEST_DATASET_VARIADIC
 template <class T>
-struct parameter_holder {
-    std::shared_ptr<T> value;
+struct parameter_holder
+{
+	std::shared_ptr<T> value;
 
-    parameter_holder(T && value_)
-        : value(std::make_shared<T>(std::move(value_)))
-    {}
+	parameter_holder(T && value_)
+		: value(std::make_shared<T>(std::move(value_)))
+	{}
 
-    operator T const&() const {
-        return *value;
-    }
+	operator T const&() const
+	{
+		return *value;
+	}
 };
 
 template <class T>
 parameter_holder<typename std::remove_reference<T>::type>
-boost_bind_rvalue_holder_helper_impl(T&& value, boost::false_type /* is copy constructible */) {
-    return parameter_holder<typename std::remove_reference<T>::type>(std::forward<T>(value));
+boost_bind_rvalue_holder_helper_impl(T&& value, boost::false_type /* is copy constructible */)
+{
+	return parameter_holder<typename std::remove_reference<T>::type>(std::forward<T>(value));
 }
 
 template <class T>
-T&& boost_bind_rvalue_holder_helper_impl(T&& value, boost::true_type /* is copy constructible */) {
-    return std::forward<T>(value);
+T&& boost_bind_rvalue_holder_helper_impl(T&& value, boost::true_type /* is copy constructible */)
+{
+	return std::forward<T>(value);
 }
 
 template <class T>
 auto boost_bind_rvalue_holder_helper(T&& value)
-  -> decltype(boost_bind_rvalue_holder_helper_impl(
-                  std::forward<T>(value),
-                  typename boost::is_copy_constructible<typename std::remove_reference<T>::type>::type()))
+-> decltype(boost_bind_rvalue_holder_helper_impl(
+                std::forward<T>(value),
+                typename boost::is_copy_constructible<typename std::remove_reference<T>::type>::type()))
 {
-    // need to use boost::is_copy_constructible because std::is_copy_constructible is broken on MSVC12
-    return boost_bind_rvalue_holder_helper_impl(
-              std::forward<T>(value),
-              typename boost::is_copy_constructible<typename std::remove_reference<T>::type>::type());
+	// need to use boost::is_copy_constructible because std::is_copy_constructible is broken on MSVC12
+	return boost_bind_rvalue_holder_helper_impl(
+	           std::forward<T>(value),
+	           typename boost::is_copy_constructible<typename std::remove_reference<T>::type>::type());
 }
 
 #endif
@@ -121,50 +130,51 @@ auto boost_bind_rvalue_holder_helper(T&& value)
 // ************************************************************************** //
 
 template<typename TestCase,typename DataSet>
-class test_case_gen : public test_unit_generator {
+class test_case_gen : public test_unit_generator
+{
 public:
-    // Constructor
+	// Constructor
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    test_case_gen( const_string tc_name, const_string tc_file, std::size_t tc_line, DataSet&& ds )
-    : m_tc_name( ut_detail::normalize_test_case_name( tc_name ) )
-    , m_tc_file( tc_file )
-    , m_tc_line( tc_line )
-    , m_tc_index( 0 )
-    {
-        data::for_each_sample( std::forward<DataSet>( ds ), *this );
-    }
-    test_case_gen( test_case_gen&& gen )
-    : m_tc_name( gen.m_tc_name )
-    , m_tc_file( gen.m_tc_file )
-    , m_tc_line( gen.m_tc_line )
-    , m_tc_index( gen.m_tc_index )
-    , m_test_cases( std::move(gen.m_test_cases) )
-    {}
+	test_case_gen( const_string tc_name, const_string tc_file, std::size_t tc_line, DataSet&& ds )
+		: m_tc_name( ut_detail::normalize_test_case_name( tc_name ) )
+		, m_tc_file( tc_file )
+		, m_tc_line( tc_line )
+		, m_tc_index( 0 )
+	{
+		data::for_each_sample( std::forward<DataSet>( ds ), *this );
+	}
+	test_case_gen( test_case_gen&& gen )
+		: m_tc_name( gen.m_tc_name )
+		, m_tc_file( gen.m_tc_file )
+		, m_tc_line( gen.m_tc_line )
+		, m_tc_index( gen.m_tc_index )
+		, m_test_cases( std::move(gen.m_test_cases) )
+	{}
 #else
-    test_case_gen( const_string tc_name, const_string tc_file, std::size_t tc_line, DataSet const& ds )
-    : m_tc_name( ut_detail::normalize_test_case_name( tc_name ) )
-    , m_tc_file( tc_file )    
-    , m_tc_line( tc_line )
-    , m_tc_index( 0 )
-    {
-        data::for_each_sample( ds, *this );
-    }
+	test_case_gen( const_string tc_name, const_string tc_file, std::size_t tc_line, DataSet const& ds )
+		: m_tc_name( ut_detail::normalize_test_case_name( tc_name ) )
+		, m_tc_file( tc_file )
+		, m_tc_line( tc_line )
+		, m_tc_index( 0 )
+	{
+		data::for_each_sample( ds, *this );
+	}
 #endif
 
-    virtual test_unit* next() const
-    {
-        if( m_test_cases.empty() )
-            return 0;
+	virtual test_unit* next() const
+	{
+		if( m_test_cases.empty() )
+			return 0;
 
-        test_unit* res = m_test_cases.front();
-        m_test_cases.pop_front();
+		test_unit* res = m_test_cases.front();
+		m_test_cases.pop_front();
 
-        return res;
-    }
+		return res;
+	}
 
 #if !defined(BOOST_TEST_DATASET_VARIADIC)
-    // see BOOST_TEST_DATASET_MAX_ARITY to increase the default supported arity
-    // there is also a limit on boost::bind
+	// see BOOST_TEST_DATASET_MAX_ARITY to increase the default supported arity
+	// there is also a limit on boost::bind
 #define TC_MAKE(z,arity,_)                                                              \
     template<BOOST_PP_ENUM_PARAMS(arity, typename Arg)>                                 \
     void    operator()( BOOST_PP_ENUM_BINARY_PARAMS(arity, Arg, const& arg) ) const     \
@@ -174,32 +184,32 @@ public:
            BOOST_PP_ENUM_PARAMS(arity, arg) ) ) );                                      \
     }                                                                                   \
 
-    BOOST_PP_REPEAT_FROM_TO(1, BOOST_TEST_DATASET_MAX_ARITY, TC_MAKE, _)
+	BOOST_PP_REPEAT_FROM_TO(1, BOOST_TEST_DATASET_MAX_ARITY, TC_MAKE, _)
 #else
-    template<typename ...Arg>
-    void    operator()(Arg&& ... arg) const
-    {
-        m_test_cases.push_back(
-            new test_case( genTestCaseName(),
-                           m_tc_file,
-                           m_tc_line,
-                           std::bind( &TestCase::template test_method<Arg...>,
-                                      boost_bind_rvalue_holder_helper(std::forward<Arg>(arg))...)));
-    }
+	template<typename ...Arg>
+	void    operator()(Arg&& ... arg) const
+	{
+		m_test_cases.push_back(
+		    new test_case( genTestCaseName(),
+		                   m_tc_file,
+		                   m_tc_line,
+		                   std::bind( &TestCase::template test_method<Arg...>,
+		                              boost_bind_rvalue_holder_helper(std::forward<Arg>(arg))...)));
+	}
 #endif
 
 private:
-    std::string  genTestCaseName() const
-    {
-        return "_" + utils::string_cast(m_tc_index++);
-    }
+	std::string  genTestCaseName() const
+	{
+		return "_" + utils::string_cast(m_tc_index++);
+	}
 
-    // Data members
-    std::string                     m_tc_name;
-    const_string                    m_tc_file;
-    std::size_t                     m_tc_line;
-    mutable std::size_t             m_tc_index;
-    mutable std::list<test_unit*>   m_test_cases;
+	// Data members
+	std::string                     m_tc_name;
+	const_string                    m_tc_file;
+	std::size_t                     m_tc_line;
+	mutable std::size_t             m_tc_index;
+	mutable std::list<test_unit*>   m_test_cases;
 };
 
 //____________________________________________________________________________//
@@ -209,14 +219,14 @@ template<typename TestCase,typename DataSet>
 test_case_gen<TestCase,DataSet>
 make_test_case_gen( const_string tc_name, const_string tc_file, std::size_t tc_line, DataSet&& ds )
 {
-    return test_case_gen<TestCase,DataSet>( tc_name, tc_file, tc_line, std::forward<DataSet>(ds) );
+	return test_case_gen<TestCase,DataSet>( tc_name, tc_file, tc_line, std::forward<DataSet>(ds) );
 }
 #else
 template<typename TestCase,typename DataSet>
 test_case_gen<TestCase,DataSet>
 make_test_case_gen( const_string tc_name, const_string tc_file, std::size_t tc_line, DataSet const& ds )
 {
-    return test_case_gen<TestCase,DataSet>( tc_name, tc_file, tc_line, ds );
+	return test_case_gen<TestCase,DataSet>( tc_name, tc_file, tc_line, ds );
 }
 #endif
 

@@ -34,9 +34,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace for_each {
+namespace boost
+{
+namespace unit_test
+{
+namespace for_each
+{
 
 // ************************************************************************** //
 // **************                  static_any                  ************** //
@@ -44,7 +47,10 @@ namespace for_each {
 
 struct static_any_base
 {
-    operator bool() const { return false; }
+	operator bool() const
+	{
+		return false;
+	}
 };
 
 //____________________________________________________________________________//
@@ -52,9 +58,9 @@ struct static_any_base
 template<typename Iter>
 struct static_any : static_any_base
 {
-    static_any( Iter const& t ) : m_it( t ) {}
+	static_any( Iter const& t ) : m_it( t ) {}
 
-    mutable Iter m_it;
+	mutable Iter m_it;
 };
 
 //____________________________________________________________________________//
@@ -67,7 +73,7 @@ template<typename Iter>
 inline Iter&
 static_any_cast( static_any_t a, Iter* = 0 )
 {
-    return static_cast<Iter&>( static_cast<static_any<Iter> const&>( a ).m_it );
+	return static_cast<Iter&>( static_cast<static_any<Iter> const&>( a ).m_it );
 }
 
 //____________________________________________________________________________//
@@ -80,7 +86,7 @@ template<typename C>
 inline is_const<C>
 is_const_coll( C& )
 {
-    return is_const<C>();
+	return is_const<C>();
 }
 
 //____________________________________________________________________________//
@@ -93,7 +99,7 @@ template<typename C>
 inline static_any<BOOST_DEDUCED_TYPENAME C::iterator>
 begin( C& t, mpl::false_ )
 {
-    return static_any<BOOST_DEDUCED_TYPENAME C::iterator>( t.begin() );
+	return static_any<BOOST_DEDUCED_TYPENAME C::iterator>( t.begin() );
 }
 
 //____________________________________________________________________________//
@@ -102,7 +108,7 @@ template<typename C>
 inline static_any<BOOST_DEDUCED_TYPENAME C::const_iterator>
 begin( C const& t, mpl::true_ )
 {
-    return static_any<BOOST_DEDUCED_TYPENAME C::const_iterator>( t.begin() );
+	return static_any<BOOST_DEDUCED_TYPENAME C::const_iterator>( t.begin() );
 }
 
 //____________________________________________________________________________//
@@ -115,7 +121,7 @@ template<typename C>
 inline static_any<BOOST_DEDUCED_TYPENAME C::iterator>
 end( C& t, mpl::false_ )
 {
-    return static_any<BOOST_DEDUCED_TYPENAME C::iterator>( t.end() );
+	return static_any<BOOST_DEDUCED_TYPENAME C::iterator>( t.end() );
 }
 
 //____________________________________________________________________________//
@@ -124,7 +130,7 @@ template<typename C>
 inline static_any<BOOST_DEDUCED_TYPENAME C::const_iterator>
 end( C const& t, mpl::true_ )
 {
-    return static_any<BOOST_DEDUCED_TYPENAME C::const_iterator>( t.end() );
+	return static_any<BOOST_DEDUCED_TYPENAME C::const_iterator>( t.end() );
 }
 
 //____________________________________________________________________________//
@@ -137,8 +143,8 @@ template<typename C>
 inline bool
 done( static_any_t cur, static_any_t end, C&, mpl::false_ )
 {
-    return  static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur ) ==
-            static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( end );
+	return  static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur ) ==
+	        static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( end );
 }
 
 //____________________________________________________________________________//
@@ -147,8 +153,8 @@ template<typename C>
 inline bool
 done( static_any_t cur, static_any_t end, C const&, mpl::true_ )
 {
-    return  static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur ) ==
-            static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( end );
+	return  static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur ) ==
+	        static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( end );
 }
 
 //____________________________________________________________________________//
@@ -161,7 +167,7 @@ template<typename C>
 inline void
 next( static_any_t cur, C&, mpl::false_ )
 {
-    ++static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur );
+	++static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur );
 }
 
 //____________________________________________________________________________//
@@ -170,7 +176,7 @@ template<typename C>
 inline void
 next( static_any_t cur, C const&, mpl::true_ )
 {
-    ++static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur );
+	++static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur );
 }
 
 //____________________________________________________________________________//
@@ -183,7 +189,7 @@ template<typename C>
 inline void
 prev( static_any_t cur, C&, mpl::false_ )
 {
-    --static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur );
+	--static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur );
 }
 
 //____________________________________________________________________________//
@@ -192,7 +198,7 @@ template<typename C>
 inline void
 prev( static_any_t cur, C const&, mpl::true_ )
 {
-    --static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur );
+	--static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur );
 }
 
 //____________________________________________________________________________//
@@ -205,7 +211,7 @@ template<class RefType,typename C>
 inline RefType
 deref( static_any_t cur, C&, ::boost::type<RefType>, mpl::false_ )
 {
-    return *static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur );
+	return *static_any_cast<BOOST_DEDUCED_TYPENAME C::iterator>( cur );
 }
 
 //____________________________________________________________________________//
@@ -214,7 +220,7 @@ template<class RefType,typename C>
 inline RefType
 deref( static_any_t cur, C const&, ::boost::type<RefType>, mpl::true_ )
 {
-    return *static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur );
+	return *static_any_cast<BOOST_DEDUCED_TYPENAME C::const_iterator>( cur );
 }
 
 //____________________________________________________________________________//

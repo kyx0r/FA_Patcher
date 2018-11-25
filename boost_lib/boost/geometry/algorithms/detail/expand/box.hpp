@@ -36,33 +36,38 @@
 #include <boost/geometry/algorithms/dispatch/expand.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace expand
+namespace detail
+{
+namespace expand
 {
 
 
 struct box_on_spheroid
 {
-    template <typename BoxOut, typename BoxIn, typename Strategy>
-    static inline void apply(BoxOut& box_out,
-                             BoxIn const& box_in,
-                             Strategy const& strategy)
-    {
-        // normalize both boxes and convert box-in to be of type of box-out
-        BoxOut mbrs[2];
-        detail::envelope::envelope_box_on_spheroid::apply(box_in, mbrs[0], strategy);
-        detail::envelope::envelope_box_on_spheroid::apply(box_out, mbrs[1], strategy);
+	template <typename BoxOut, typename BoxIn, typename Strategy>
+	static inline void apply(BoxOut& box_out,
+	                         BoxIn const& box_in,
+	                         Strategy const& strategy)
+	{
+		// normalize both boxes and convert box-in to be of type of box-out
+		BoxOut mbrs[2];
+		detail::envelope::envelope_box_on_spheroid::apply(box_in, mbrs[0], strategy);
+		detail::envelope::envelope_box_on_spheroid::apply(box_out, mbrs[1], strategy);
 
-        // compute the envelope of the two boxes
-        detail::envelope::envelope_range_of_boxes::apply(mbrs, box_out, strategy);
-    }
+		// compute the envelope of the two boxes
+		detail::envelope::envelope_range_of_boxes::apply(mbrs, box_out, strategy);
+	}
 };
 
 
-}} // namespace detail::expand
+}
+} // namespace detail::expand
 #endif // DOXYGEN_NO_DETAIL
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -75,62 +80,63 @@ template
 <
     typename BoxOut, typename BoxIn,
     typename CSTagOut, typename CSTag
->
-struct expand
-    <
-        BoxOut, BoxIn,
-        box_tag, box_tag,
-        CSTagOut, CSTag
     >
+struct expand
+	<
+	BoxOut, BoxIn,
+	box_tag, box_tag,
+	CSTagOut, CSTag
+	>
 {
-    BOOST_MPL_ASSERT_MSG((false),
-                         NOT_IMPLEMENTED_FOR_THESE_COORDINATE_SYSTEMS,
-                         (types<CSTagOut, CSTag>()));
+	BOOST_MPL_ASSERT_MSG((false),
+	                     NOT_IMPLEMENTED_FOR_THESE_COORDINATE_SYSTEMS,
+	                     (types<CSTagOut, CSTag>()));
 };
 
 template <typename BoxOut, typename BoxIn>
 struct expand
-    <
-        BoxOut, BoxIn,
-        box_tag, box_tag,
-        cartesian_tag, cartesian_tag
-    > : detail::expand::expand_indexed
-        <
-            0, dimension<BoxIn>::value
-        >
+	<
+	BoxOut, BoxIn,
+	box_tag, box_tag,
+	cartesian_tag, cartesian_tag
+	> : detail::expand::expand_indexed
+	<
+	0, dimension<BoxIn>::value
+	>
 {};
 
 template <typename BoxOut, typename BoxIn>
 struct expand
-    <
-        BoxOut, BoxIn,
-        box_tag, box_tag,
-        spherical_equatorial_tag, spherical_equatorial_tag
-    > : detail::expand::box_on_spheroid
+	<
+	BoxOut, BoxIn,
+	box_tag, box_tag,
+	spherical_equatorial_tag, spherical_equatorial_tag
+	> : detail::expand::box_on_spheroid
 {};
 
 template <typename BoxOut, typename BoxIn>
 struct expand
-    <
-        BoxOut, BoxIn,
-        box_tag, box_tag,
-        spherical_polar_tag, spherical_polar_tag
-    > : detail::expand::box_on_spheroid
+	<
+	BoxOut, BoxIn,
+	box_tag, box_tag,
+	spherical_polar_tag, spherical_polar_tag
+	> : detail::expand::box_on_spheroid
 {};
 
 template <typename BoxOut, typename BoxIn>
 struct expand
-    <
-        BoxOut, BoxIn,
-        box_tag, box_tag,
-        geographic_tag, geographic_tag
-    > : detail::expand::box_on_spheroid
+	<
+	BoxOut, BoxIn,
+	box_tag, box_tag,
+	geographic_tag, geographic_tag
+	> : detail::expand::box_on_spheroid
 {};
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_EXPAND_INDEXED_HPP

@@ -16,10 +16,13 @@ Program contracts for (non-public) functions.
 #if     !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
          defined(BOOST_CONTRACT_STATIC_LINK)
-    #include <boost/contract/detail/operation/function.hpp>
+#include <boost/contract/detail/operation/function.hpp>
 #endif
 
-namespace boost { namespace contract {
+namespace boost
+{
+namespace contract
+{
 
 /**
 Program contracts for non-member, private and protected functions.
@@ -38,7 +41,7 @@ void f(...) {
             ...
         })
         .old([&] { // Optional.
-            old_var = BOOST_CONTRACT_OLDOF(old_expr);  
+            old_var = BOOST_CONTRACT_OLDOF(old_expr);
             ...
         })
         .postcondition([&] { // Optional.
@@ -71,19 +74,21 @@ postconditions, and exception guarantees.
         function body code (otherwise this library will generate a run-time
         error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
-inline specify_precondition_old_postcondition_except<> function() {
-    // Must #if also on ..._INVARIANTS here because specify_... is generic.
-    #if     !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
+inline specify_precondition_old_postcondition_except<> function()
+{
+	// Must #if also on ..._INVARIANTS here because specify_... is generic.
+#if     !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
              defined(BOOST_CONTRACT_STATIC_LINK)
-        return specify_precondition_old_postcondition_except<>(
-                new boost::contract::detail::function());
-    #else
-        return specify_precondition_old_postcondition_except<>();
-    #endif
+	return specify_precondition_old_postcondition_except<>(
+	           new boost::contract::detail::function());
+#else
+	return specify_precondition_old_postcondition_except<>();
+#endif
 }
 
-} } // namespace
+}
+} // namespace
 
 #endif // #include guard
 

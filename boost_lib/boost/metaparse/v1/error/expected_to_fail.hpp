@@ -10,19 +10,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        BOOST_METAPARSE_V1_DEFINE_ERROR(
-          expected_to_fail,
-          "Parser expected to fail"
-        );
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+BOOST_METAPARSE_V1_DEFINE_ERROR(
+    expected_to_fail,
+    "Parser expected to fail"
+);
+}
+}
+}
 }
 
 #endif

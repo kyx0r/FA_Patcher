@@ -13,23 +13,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class... Ps>
-      struct first_of
-      {
-        typedef first_of type;
+namespace metaparse
+{
+namespace v1
+{
+template <class... Ps>
+struct first_of
+{
+	typedef first_of type;
 
-        template <class S, class Pos>
-        struct apply : impl::nth_of_c<0, S, Pos, Ps...> {};
-      };
+	template <class S, class Pos>
+	struct apply : impl::nth_of_c<0, S, Pos, Ps...> {};
+};
 
-      template <>
-      struct first_of<> : fail<error::index_out_of_range<0, -1, 0>> {};
-    }
-  }
+template <>
+struct first_of<> : fail<error::index_out_of_range<0, -1, 0>> {};
+}
+}
 }
 
 #endif

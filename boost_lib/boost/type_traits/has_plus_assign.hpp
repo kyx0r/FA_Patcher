@@ -52,47 +52,48 @@
 namespace boost
 {
 
-   namespace binary_op_detail {
+namespace binary_op_detail
+{
 
-      struct dont_care;
+struct dont_care;
 
-      template <class T, class U, class Ret, class = boost::void_t<>>
-      struct has_plus_assign_ret_imp : public boost::false_type {};
+template <class T, class U, class Ret, class = boost::void_t<>>
+struct has_plus_assign_ret_imp : public boost::false_type {};
 
-      template <class T, class U, class Ret>
-      struct has_plus_assign_ret_imp<T, U, Ret, boost::void_t<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())> >
-         : public boost::integral_constant<bool, ::boost::is_convertible<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>()), Ret>::value> {};
+template <class T, class U, class Ret>
+struct has_plus_assign_ret_imp<T, U, Ret, boost::void_t<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())> >
+: public boost::integral_constant<bool, ::boost::is_convertible<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>()), Ret>::value> {};
 
-      template <class T, class U, class = boost::void_t<> >
-      struct has_plus_assign_void_imp : public boost::false_type {};
+template <class T, class U, class = boost::void_t<> >
+struct has_plus_assign_void_imp : public boost::false_type {};
 
-      template <class T, class U>
-      struct has_plus_assign_void_imp<T, U, boost::void_t<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())> >
-         : public boost::integral_constant<bool, ::boost::is_void<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())>::value> {};
+template <class T, class U>
+struct has_plus_assign_void_imp<T, U, boost::void_t<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())> >
+: public boost::integral_constant<bool, ::boost::is_void<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())>::value> {};
 
-      template <class T, class U, class = boost::void_t<>>
-      struct has_plus_assign_dc_imp : public boost::false_type {};
+template <class T, class U, class = boost::void_t<>>
+struct has_plus_assign_dc_imp : public boost::false_type {};
 
-      template <class T, class U>
-      struct has_plus_assign_dc_imp<T, U, boost::void_t<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())> >
-         : public boost::true_type {};
+template <class T, class U>
+struct has_plus_assign_dc_imp<T, U, boost::void_t<decltype(std::declval<typename add_reference<T>::type>() += std::declval<typename add_reference<U>::type>())> >
+: public boost::true_type {};
 
-      template <class T, class U, class Ret>
-      struct has_plus_assign_filter_ret : public boost::binary_op_detail:: has_plus_assign_ret_imp <T, U, Ret> {};
-      template <class T, class U>
-      struct has_plus_assign_filter_ret<T, U, void> : public boost::binary_op_detail:: has_plus_assign_void_imp <T, U> {};
-      template <class T, class U>
-      struct has_plus_assign_filter_ret<T, U, boost::binary_op_detail::dont_care> : public boost::binary_op_detail:: has_plus_assign_dc_imp <T, U> {};
+template <class T, class U, class Ret>
+struct has_plus_assign_filter_ret : public boost::binary_op_detail:: has_plus_assign_ret_imp <T, U, Ret> {};
+template <class T, class U>
+struct has_plus_assign_filter_ret<T, U, void> : public boost::binary_op_detail:: has_plus_assign_void_imp <T, U> {};
+template <class T, class U>
+struct has_plus_assign_filter_ret<T, U, boost::binary_op_detail::dont_care> : public boost::binary_op_detail:: has_plus_assign_dc_imp <T, U> {};
 
-      template <class T, class U, class Ret, bool f>
-      struct has_plus_assign_filter_impossible : public boost::binary_op_detail:: has_plus_assign_filter_ret <T, U, Ret> {};
-      template <class T, class U, class Ret>
-      struct has_plus_assign_filter_impossible<T, U, Ret, true> : public boost::false_type {};
+template <class T, class U, class Ret, bool f>
+struct has_plus_assign_filter_impossible : public boost::binary_op_detail:: has_plus_assign_filter_ret <T, U, Ret> {};
+template <class T, class U, class Ret>
+struct has_plus_assign_filter_impossible<T, U, Ret, true> : public boost::false_type {};
 
-   }
+}
 
-   template <class T, class U = T, class Ret = boost::binary_op_detail::dont_care>
-   struct has_plus_assign : public boost::binary_op_detail:: has_plus_assign_filter_impossible <T, U, Ret, boost::is_arithmetic<typename boost::remove_reference<T>::type>::value && boost::is_pointer<typename remove_reference<U>::type>::value && !boost::is_same<bool, typename boost::remove_cv<typename remove_reference<T>::type>::type>::value> {};
+template <class T, class U = T, class Ret = boost::binary_op_detail::dont_care>
+struct has_plus_assign : public boost::binary_op_detail:: has_plus_assign_filter_impossible <T, U, Ret, boost::is_arithmetic<typename boost::remove_reference<T>::type>::value && boost::is_pointer<typename remove_reference<U>::type>::value && !boost::is_same<bool, typename boost::remove_cv<typename remove_reference<T>::type>::type>::value> {};
 
 }
 

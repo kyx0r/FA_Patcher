@@ -17,10 +17,13 @@ Program contracts for destructors.
 #if     !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
          defined(BOOST_CONTRACT_STATIC_LINK)
-    #include <boost/contract/detail/operation/destructor.hpp>
+#include <boost/contract/detail/operation/destructor.hpp>
 #endif
 
-namespace boost { namespace contract {
+namespace boost
+{
+namespace contract
+{
 
 /**
 Program contracts for destructors.
@@ -60,7 +63,7 @@ public:
 
         ... // Destructor body.
     }
-    
+
     ...
 };
 @endcode
@@ -89,19 +92,21 @@ postconditions and exception guarantees, within classes that have no invariants.
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>
-specify_old_postcondition_except<> destructor(Class* obj) {
-    // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
-    #if     !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
+specify_old_postcondition_except<> destructor(Class* obj)
+{
+	// Must #if also on ..._PRECONDITIONS here because specify_... is generic.
+#if     !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
              defined(BOOST_CONTRACT_STATIC_LINK)
-        return specify_old_postcondition_except<>(
-                new boost::contract::detail::destructor<Class>(obj));
-    #else
-        return specify_old_postcondition_except<>();
-    #endif
+	return specify_old_postcondition_except<>(
+	           new boost::contract::detail::destructor<Class>(obj));
+#else
+	return specify_old_postcondition_except<>();
+#endif
 }
 
-} } // namespace
+}
+} // namespace
 
 #endif // #include guard
 

@@ -38,101 +38,116 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/core/enable_if.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct fusion_sequence_tag;
+namespace fusion
+{
+struct fusion_sequence_tag;
 
-    template <>
-    struct set<> : sequence_base<set<> >
-    {
-        struct category : forward_traversal_tag, associative_tag {};
+template <>
+struct set<> : sequence_base<set<> >
+{
+	struct category : forward_traversal_tag, associative_tag {};
 
-        typedef set_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::false_ is_view;
+	typedef set_tag fusion_tag;
+	typedef fusion_sequence_tag tag; // this gets picked up by MPL
+	typedef mpl::false_ is_view;
 
-        typedef vector<> storage_type;
+	typedef vector<> storage_type;
 
-        typedef storage_type::size size;
+	typedef storage_type::size size;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        set()
-            : data() {}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	set()
+		: data() {}
 
-        template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
-        set(Sequence const& rhs,
-            typename enable_if<traits::is_sequence<Sequence>, detail::enabler_>::type = detail::enabler,
-            typename enable_if<detail::is_same_size<Sequence, storage_type>, detail::enabler_>::type = detail::enabler)
-            : data(rhs) {}
+	template <typename Sequence>
+	BOOST_FUSION_GPU_ENABLED
+	set(Sequence const& rhs,
+	    typename enable_if<traits::is_sequence<Sequence>, detail::enabler_>::type = detail::enabler,
+	    typename enable_if<detail::is_same_size<Sequence, storage_type>, detail::enabler_>::type = detail::enabler)
+		: data(rhs) {}
 
-        template <typename T>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        set&
-        operator=(T const& rhs)
-        {
-            data = rhs;
-            return *this;
-        }
+	template <typename T>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	set&
+	operator=(T const& rhs)
+	{
+		data = rhs;
+		return *this;
+	}
 
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type& get_data() { return data; }
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type const& get_data() const { return data; }
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type& get_data()
+	{
+		return data;
+	}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type const& get_data() const
+	{
+		return data;
+	}
 
-    private:
-        storage_type data;
-    };
+private:
+	storage_type data;
+};
 
-    template <typename ...T>
-    struct set : sequence_base<set<T...> >
-    {
-        struct category : forward_traversal_tag, associative_tag {};
+template <typename ...T>
+struct set : sequence_base<set<T...> >
+{
+	struct category : forward_traversal_tag, associative_tag {};
 
-        typedef set_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::false_ is_view;
+	typedef set_tag fusion_tag;
+	typedef fusion_sequence_tag tag; // this gets picked up by MPL
+	typedef mpl::false_ is_view;
 
-        typedef vector<T...> storage_type;
+	typedef vector<T...> storage_type;
 
-        typedef typename storage_type::size size;
+	typedef typename storage_type::size size;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        set()
-            : data() {}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	set()
+		: data() {}
 
-        template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
-        set(Sequence&& rhs,
-            typename enable_if<traits::is_sequence<Sequence>, detail::enabler_>::type = detail::enabler,
-            typename enable_if<detail::is_same_size<Sequence, storage_type>, detail::enabler_>::type = detail::enabler)
-            : data(std::forward<Sequence>(rhs)) {}
+	template <typename Sequence>
+	BOOST_FUSION_GPU_ENABLED
+	set(Sequence&& rhs,
+	    typename enable_if<traits::is_sequence<Sequence>, detail::enabler_>::type = detail::enabler,
+	    typename enable_if<detail::is_same_size<Sequence, storage_type>, detail::enabler_>::type = detail::enabler)
+		: data(std::forward<Sequence>(rhs)) {}
 
-        template <typename ...U>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        explicit
-        set(U&& ...args)
-            : data(std::forward<U>(args)...) {}
+	template <typename ...U>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	explicit
+	set(U&& ...args)
+		: data(std::forward<U>(args)...) {}
 
-        template <typename U>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        set&
-        operator=(U&& rhs)
-        {
-            data = std::forward<U>(rhs);
-            return *this;
-        }
+	template <typename U>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	set&
+	operator=(U&& rhs)
+	{
+		data = std::forward<U>(rhs);
+		return *this;
+	}
 
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type& get_data() { return data; }
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type const& get_data() const { return data; }
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type& get_data()
+	{
+		return data;
+	}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type const& get_data() const
+	{
+		return data;
+	}
 
-    private:
-        storage_type data;
-    };
+private:
+	storage_type data;
+};
 
-}}
+}
+}
 
 #endif
 #endif

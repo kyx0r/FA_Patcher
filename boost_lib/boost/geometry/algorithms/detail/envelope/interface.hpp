@@ -35,7 +35,9 @@
 #include <boost/geometry/strategies/spherical/envelope_segment.hpp>
 #include <boost/geometry/strategies/geographic/envelope_segment.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace resolve_strategy
@@ -44,30 +46,30 @@ namespace resolve_strategy
 template <typename Geometry>
 struct envelope
 {
-    template <typename Box, typename Strategy>
-    static inline void apply(Geometry const& geometry,
-                             Box& box,
-                             Strategy const& strategy)
-    {
-        dispatch::envelope<Geometry>::apply(geometry, box, strategy);
-    }
+	template <typename Box, typename Strategy>
+	static inline void apply(Geometry const& geometry,
+	                         Box& box,
+	                         Strategy const& strategy)
+	{
+		dispatch::envelope<Geometry>::apply(geometry, box, strategy);
+	}
 
-    template <typename Box>
-    static inline void apply(Geometry const& geometry,
-                             Box& box,
-                             default_strategy)
-    {
-        typedef typename point_type<Geometry>::type point_type;
-        typedef typename coordinate_type<point_type>::type coordinate_type;
+	template <typename Box>
+	static inline void apply(Geometry const& geometry,
+	                         Box& box,
+	                         default_strategy)
+	{
+		typedef typename point_type<Geometry>::type point_type;
+		typedef typename coordinate_type<point_type>::type coordinate_type;
 
-        typedef typename strategy::envelope::services::default_strategy
-            <
-                typename cs_tag<point_type>::type,
-                coordinate_type
-            >::type strategy_type;
+		typedef typename strategy::envelope::services::default_strategy
+		<
+		typename cs_tag<point_type>::type,
+		         coordinate_type
+		         >::type strategy_type;
 
-        dispatch::envelope<Geometry>::apply(geometry, box, strategy_type());
-    }
+		dispatch::envelope<Geometry>::apply(geometry, box, strategy_type());
+	}
 };
 
 } // namespace resolve_strategy
@@ -78,48 +80,48 @@ namespace resolve_variant
 template <typename Geometry>
 struct envelope
 {
-    template <typename Box, typename Strategy>
-    static inline void apply(Geometry const& geometry,
-                             Box& box,
-                             Strategy const& strategy)
-    {
-        concepts::check<Geometry const>();
-        concepts::check<Box>();
+	template <typename Box, typename Strategy>
+	static inline void apply(Geometry const& geometry,
+	                         Box& box,
+	                         Strategy const& strategy)
+	{
+		concepts::check<Geometry const>();
+		concepts::check<Box>();
 
-        resolve_strategy::envelope<Geometry>::apply(geometry, box, strategy);
-    }
+		resolve_strategy::envelope<Geometry>::apply(geometry, box, strategy);
+	}
 };
 
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct envelope<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    template <typename Box, typename Strategy>
-    struct visitor: boost::static_visitor<void>
-    {
-        Box& m_box;
-        Strategy const& m_strategy;
+	template <typename Box, typename Strategy>
+	struct visitor: boost::static_visitor<void>
+	{
+		Box& m_box;
+		Strategy const& m_strategy;
 
-        visitor(Box& box, Strategy const& strategy)
-            : m_box(box)
-            , m_strategy(strategy)
-        {}
+		visitor(Box& box, Strategy const& strategy)
+			: m_box(box)
+			, m_strategy(strategy)
+		{}
 
-        template <typename Geometry>
-        void operator()(Geometry const& geometry) const
-        {
-            envelope<Geometry>::apply(geometry, m_box, m_strategy);
-        }
-    };
+		template <typename Geometry>
+		void operator()(Geometry const& geometry) const
+		{
+			envelope<Geometry>::apply(geometry, m_box, m_strategy);
+		}
+	};
 
-    template <typename Box, typename Strategy>
-    static inline void
-    apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
-          Box& box,
-          Strategy const& strategy)
-    {
-        boost::apply_visitor(visitor<Box, Strategy>(box, strategy), geometry);
-    }
+	template <typename Box, typename Strategy>
+	static inline void
+	apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
+	      Box& box,
+	      Strategy const& strategy)
+	{
+		boost::apply_visitor(visitor<Box, Strategy>(box, strategy), geometry);
+	}
 };
 
 } // namespace resolve_variant
@@ -145,7 +147,7 @@ struct envelope<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 template<typename Geometry, typename Box, typename Strategy>
 inline void envelope(Geometry const& geometry, Box& mbr, Strategy const& strategy)
 {
-    resolve_variant::envelope<Geometry>::apply(geometry, mbr, strategy);
+	resolve_variant::envelope<Geometry>::apply(geometry, mbr, strategy);
 }
 
 /*!
@@ -166,7 +168,7 @@ inline void envelope(Geometry const& geometry, Box& mbr, Strategy const& strateg
 template<typename Geometry, typename Box>
 inline void envelope(Geometry const& geometry, Box& mbr)
 {
-    resolve_variant::envelope<Geometry>::apply(geometry, mbr, default_strategy());
+	resolve_variant::envelope<Geometry>::apply(geometry, mbr, default_strategy());
 }
 
 
@@ -191,9 +193,9 @@ inline void envelope(Geometry const& geometry, Box& mbr)
 template<typename Box, typename Geometry, typename Strategy>
 inline Box return_envelope(Geometry const& geometry, Strategy const& strategy)
 {
-    Box mbr;
-    resolve_variant::envelope<Geometry>::apply(geometry, mbr, strategy);
-    return mbr;
+	Box mbr;
+	resolve_variant::envelope<Geometry>::apply(geometry, mbr, strategy);
+	return mbr;
 }
 
 /*!
@@ -214,11 +216,12 @@ inline Box return_envelope(Geometry const& geometry, Strategy const& strategy)
 template<typename Box, typename Geometry>
 inline Box return_envelope(Geometry const& geometry)
 {
-    Box mbr;
-    resolve_variant::envelope<Geometry>::apply(geometry, mbr, default_strategy());
-    return mbr;
+	Box mbr;
+	resolve_variant::envelope<Geometry>::apply(geometry, mbr, default_strategy());
+	return mbr;
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_ENVELOPE_INTERFACE_HPP

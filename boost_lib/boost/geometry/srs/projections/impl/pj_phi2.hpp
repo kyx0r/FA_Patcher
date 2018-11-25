@@ -41,33 +41,43 @@
 
 #include <boost/geometry/util/math.hpp>
 
-namespace boost { namespace geometry { namespace projections {
-namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
+namespace detail
+{
 
 template <typename T>
 inline T pj_phi2(T const& ts, T const& e)
 {
-    static const T TOL = 1.0e-10;
-    static const int N_ITER = 15;
+	static const T TOL = 1.0e-10;
+	static const int N_ITER = 15;
 
-    T eccnth, Phi, con, dphi;
-    int i;
+	T eccnth, Phi, con, dphi;
+	int i;
 
-    eccnth = .5 * e;
-    Phi = geometry::math::half_pi<T>() - 2. * atan (ts);
-    i = N_ITER;
-    do {
-        con = e * sin (Phi);
-        dphi = geometry::math::half_pi<T>() - 2. * atan (ts * pow((1. - con) /
-           (1. + con), eccnth)) - Phi;
-        Phi += dphi;
-    } while ( geometry::math::abs(dphi) > TOL && --i);
-    if (i <= 0)
-        BOOST_THROW_EXCEPTION( projection_exception(-18) );
-    return Phi;
+	eccnth = .5 * e;
+	Phi = geometry::math::half_pi<T>() - 2. * atan (ts);
+	i = N_ITER;
+	do
+	{
+		con = e * sin (Phi);
+		dphi = geometry::math::half_pi<T>() - 2. * atan (ts * pow((1. - con) /
+		        (1. + con), eccnth)) - Phi;
+		Phi += dphi;
+	}
+	while ( geometry::math::abs(dphi) > TOL && --i);
+	if (i <= 0)
+		BOOST_THROW_EXCEPTION( projection_exception(-18) );
+	return Phi;
 }
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif

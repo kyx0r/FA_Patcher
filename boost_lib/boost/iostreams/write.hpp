@@ -27,138 +27,165 @@
 // Must come last.
 #include <boost/iostreams/detail/config/disable_warnings.hpp>
 
-namespace boost { namespace iostreams {
+namespace boost
+{
+namespace iostreams
+{
 
-namespace detail {
+namespace detail
+{
 
-template<typename T> 
+template<typename T>
 struct write_device_impl;
 
-template<typename T> 
+template<typename T>
 struct write_filter_impl;
 
 } // End namespace detail.
 
 template<typename T>
 bool put(T& t, typename char_type_of<T>::type c)
-{ return detail::write_device_impl<T>::put(detail::unwrap(t), c); }
+{
+	return detail::write_device_impl<T>::put(detail::unwrap(t), c);
+}
 
 template<typename T>
 inline std::streamsize write
-    (T& t, const typename char_type_of<T>::type* s, std::streamsize n)
-{ return detail::write_device_impl<T>::write(detail::unwrap(t), s, n); }
+(T& t, const typename char_type_of<T>::type* s, std::streamsize n)
+{
+	return detail::write_device_impl<T>::write(detail::unwrap(t), s, n);
+}
 
 template<typename T, typename Sink>
 inline std::streamsize
-write( T& t, Sink& snk, const typename char_type_of<T>::type* s, 
+write( T& t, Sink& snk, const typename char_type_of<T>::type* s,
        std::streamsize n )
-{ return detail::write_filter_impl<T>::write(detail::unwrap(t), snk, s, n); }
+{
+	return detail::write_filter_impl<T>::write(detail::unwrap(t), snk, s, n);
+}
 
-namespace detail {
+namespace detail
+{
 
 //------------------Definition of write_device_impl---------------------------//
 
 template<typename T>
 struct write_device_impl
-    : mpl::if_<
-          is_custom<T>,
-          operations<T>,
-          write_device_impl<
-              BOOST_DEDUCED_TYPENAME
-              dispatch<
-                  T, ostream_tag, streambuf_tag, output
-              >::type
-          >
-      >::type
-    { };
+	: mpl::if_<
+	  is_custom<T>,
+	  operations<T>,
+	  write_device_impl<
+	  BOOST_DEDUCED_TYPENAME
+	  dispatch<
+	  T, ostream_tag, streambuf_tag, output
+	  >::type
+	  >
+	  >::type
+{ };
 
 template<>
-struct write_device_impl<ostream_tag> {
-    template<typename T>
-    static bool put(T& t, typename char_type_of<T>::type c)
-    {
-        typedef typename char_type_of<T>::type          char_type;
-        typedef BOOST_IOSTREAMS_CHAR_TRAITS(char_type)  traits_type;
-        return !traits_type::eq_int_type( t.rdbuf()->sputc(c),
-                                          traits_type::eof() );
-    }
+struct write_device_impl<ostream_tag>
+{
+	template<typename T>
+	static bool put(T& t, typename char_type_of<T>::type c)
+	{
+		typedef typename char_type_of<T>::type          char_type;
+		typedef BOOST_IOSTREAMS_CHAR_TRAITS(char_type)  traits_type;
+		return !traits_type::eq_int_type( t.rdbuf()->sputc(c),
+		                                  traits_type::eof() );
+	}
 
-    template<typename T>
-    static std::streamsize write
-        (T& t, const typename char_type_of<T>::type* s, std::streamsize n)
-    { return t.rdbuf()->sputn(s, n); }
+	template<typename T>
+	static std::streamsize write
+	(T& t, const typename char_type_of<T>::type* s, std::streamsize n)
+	{
+		return t.rdbuf()->sputn(s, n);
+	}
 };
 
 template<>
-struct write_device_impl<streambuf_tag> {
-    template<typename T>
-    static bool put(T& t, typename char_type_of<T>::type c)
-    {
-        typedef typename char_type_of<T>::type          char_type;
-        typedef BOOST_IOSTREAMS_CHAR_TRAITS(char_type)  traits_type;
-        return !traits_type::eq_int_type(t.sputc(c), traits_type::eof());
-    }
+struct write_device_impl<streambuf_tag>
+{
+	template<typename T>
+	static bool put(T& t, typename char_type_of<T>::type c)
+	{
+		typedef typename char_type_of<T>::type          char_type;
+		typedef BOOST_IOSTREAMS_CHAR_TRAITS(char_type)  traits_type;
+		return !traits_type::eq_int_type(t.sputc(c), traits_type::eof());
+	}
 
-    template<typename T>
-    static std::streamsize write
-        (T& t, const typename char_type_of<T>::type* s, std::streamsize n)
-    { return t.sputn(s, n); }
+	template<typename T>
+	static std::streamsize write
+	(T& t, const typename char_type_of<T>::type* s, std::streamsize n)
+	{
+		return t.sputn(s, n);
+	}
 };
 
 template<>
-struct write_device_impl<output> {
-    template<typename T>
-    static bool put(T& t, typename char_type_of<T>::type c)
-    { return t.write(&c, 1) == 1; }
+struct write_device_impl<output>
+{
+	template<typename T>
+	static bool put(T& t, typename char_type_of<T>::type c)
+	{
+		return t.write(&c, 1) == 1;
+	}
 
-    template<typename T>
-    static std::streamsize
-    write(T& t, const typename char_type_of<T>::type* s, std::streamsize n)
-    { return t.write(s, n); }
+	template<typename T>
+	static std::streamsize
+	write(T& t, const typename char_type_of<T>::type* s, std::streamsize n)
+	{
+		return t.write(s, n);
+	}
 };
 
 //------------------Definition of write_filter_impl---------------------------//
 
 template<typename T>
 struct write_filter_impl
-    : mpl::if_<
-          is_custom<T>,
-          operations<T>,
-          write_filter_impl<
-              BOOST_DEDUCED_TYPENAME
-              dispatch<
-                  T, multichar_tag, any_tag
-              >::type
-          >
-      >::type
-    { };
+	: mpl::if_<
+	  is_custom<T>,
+	  operations<T>,
+	  write_filter_impl<
+	  BOOST_DEDUCED_TYPENAME
+	  dispatch<
+	  T, multichar_tag, any_tag
+	  >::type
+	  >
+	  >::type
+{ };
 
 template<>
-struct write_filter_impl<multichar_tag> {
-    template<typename T, typename Sink>
-    static std::streamsize
-    write( T& t, Sink& snk, const typename char_type_of<T>::type* s,
-           std::streamsize n )
-    { return t.write(snk, s, n); }
+struct write_filter_impl<multichar_tag>
+{
+	template<typename T, typename Sink>
+	static std::streamsize
+	write( T& t, Sink& snk, const typename char_type_of<T>::type* s,
+	       std::streamsize n )
+	{
+		return t.write(snk, s, n);
+	}
 };
 
 template<>
-struct write_filter_impl<any_tag> {
-    template<typename T, typename Sink>
-    static std::streamsize
-    write( T& t, Sink& snk, const typename char_type_of<T>::type* s,
-           std::streamsize n )
-    {
-        for (std::streamsize off = 0; off < n; ++off)
-            if (!t.put(snk, s[off]))
-                return off;
-        return n;
-    }
+struct write_filter_impl<any_tag>
+{
+	template<typename T, typename Sink>
+	static std::streamsize
+	write( T& t, Sink& snk, const typename char_type_of<T>::type* s,
+	       std::streamsize n )
+	{
+		for (std::streamsize off = 0; off < n; ++off)
+			if (!t.put(snk, s[off]))
+				return off;
+		return n;
+	}
 };
 
 } // End namespace detail.
 
-} } // End namespaces iostreams, boost.
+}
+} // End namespaces iostreams, boost.
 
 #include <boost/iostreams/detail/config/enable_warnings.hpp>
 

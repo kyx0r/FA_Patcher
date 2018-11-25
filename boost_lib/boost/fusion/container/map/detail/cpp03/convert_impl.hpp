@@ -14,41 +14,44 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct map_tag;
+namespace fusion
+{
+struct map_tag;
 
-    namespace extension
-    {
-        template <typename T>
-        struct convert_impl;
+namespace extension
+{
+template <typename T>
+struct convert_impl;
 
-        template <>
-        struct convert_impl<map_tag>
-        {
-            template <typename Sequence>
-            struct apply
-            {
-                typedef typename
-                    detail::as_map<
-                        result_of::size<Sequence>::value
-                      , is_base_of<
-                            associative_tag
-                          , typename traits::category_of<Sequence>::type>::value
-                    >
-                gen;
-                typedef typename gen::
-                    template apply<typename result_of::begin<Sequence>::type>::type
-                type;
+template <>
+struct convert_impl<map_tag>
+{
+	template <typename Sequence>
+	struct apply
+	{
+		typedef typename
+		detail::as_map<
+		result_of::size<Sequence>::value
+		, is_base_of<
+		associative_tag
+		, typename traits::category_of<Sequence>::type>::value
+		>
+		gen;
+		typedef typename gen::
+		template apply<typename result_of::begin<Sequence>::type>::type
+		type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type call(Sequence& seq)
-                {
-                    return gen::call(fusion::begin(seq));
-                }
-            };
-        };
-    }
-}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type call(Sequence& seq)
+		{
+			return gen::call(fusion::begin(seq));
+		}
+	};
+};
+}
+}
+}
 
 #endif

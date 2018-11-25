@@ -13,13 +13,24 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/size_t.hpp>
 
-namespace boost {
-namespace lockfree {
+namespace boost
+{
+namespace lockfree
+{
 
 #ifndef BOOST_DOXYGEN_INVOKED
-namespace tag { struct allocator ; }
-namespace tag { struct fixed_sized; }
-namespace tag { struct capacity; }
+namespace tag
+{
+struct allocator ;
+}
+namespace tag
+{
+struct fixed_sized;
+}
+namespace tag
+{
+struct capacity;
+}
 
 #endif
 
@@ -32,7 +43,7 @@ namespace tag { struct capacity; }
  * */
 template <bool IsFixedSized>
 struct fixed_sized:
-    boost::parameter::template_keyword<tag::fixed_sized, boost::mpl::bool_<IsFixedSized> >
+	boost::parameter::template_keyword<tag::fixed_sized, boost::mpl::bool_<IsFixedSized> >
 {};
 
 /** Sets the \b capacity of a data structure at compile-time.
@@ -41,14 +52,14 @@ struct fixed_sized:
  * */
 template <size_t Size>
 struct capacity:
-    boost::parameter::template_keyword<tag::capacity, boost::mpl::size_t<Size> >
+	boost::parameter::template_keyword<tag::capacity, boost::mpl::size_t<Size> >
 {};
 
 /** Defines the \b allocator type of a data structure.
  * */
 template <class Alloc>
 struct allocator:
-    boost::parameter::template_keyword<tag::allocator, Alloc>
+	boost::parameter::template_keyword<tag::allocator, Alloc>
 {};
 
 }

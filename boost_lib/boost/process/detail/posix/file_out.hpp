@@ -15,51 +15,61 @@
 #include <boost/process/detail/posix/file_descriptor.hpp>
 
 #include <unistd.h>
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 template<int p1, int p2>
 struct file_out : handler_base_ext
 {
-    file_descriptor file;
-    int handle = file.handle();
+	file_descriptor file;
+	int handle = file.handle();
 
-    template<typename T>
-    file_out(T&& t) : file(std::forward<T>(t), file_descriptor::write), handle(file.handle()) {}
-    file_out(FILE * f) : handle(fileno(f)) {}
+	template<typename T>
+	file_out(T&& t) : file(std::forward<T>(t), file_descriptor::write), handle(file.handle()) {}
+	file_out(FILE * f) : handle(fileno(f)) {}
 
 
-    template <typename Executor>
-    void on_exec_setup(Executor &e) const;
+	template <typename Executor>
+	void on_exec_setup(Executor &e) const;
 };
 
 template<>
 template<typename Executor>
 void file_out<1,-1>::on_exec_setup(Executor &e) const
 {
-    if (::dup2(handle, STDOUT_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	if (::dup2(handle, STDOUT_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
 }
 
 template<>
 template<typename Executor>
 void file_out<2,-1>::on_exec_setup(Executor &e) const
 {
-    if (::dup2(handle, STDERR_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	if (::dup2(handle, STDERR_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
 }
 
 template<>
 template<typename Executor>
 void file_out<1,2>::on_exec_setup(Executor &e) const
 {
-    if (::dup2(handle, STDOUT_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	if (::dup2(handle, STDOUT_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
 
-    if (::dup2(handle, STDERR_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	if (::dup2(handle, STDERR_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
 
 }
 
-}}}}
+}
+}
+}
+}
 
 #endif

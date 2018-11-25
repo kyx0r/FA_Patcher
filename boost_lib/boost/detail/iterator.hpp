@@ -28,7 +28,7 @@ using std::distance;
 template< typename T, std::size_t N >
 inline typename std::iterator_traits< T* >::difference_type distance(T (&left)[N], T* right)
 {
-    return std::distance(static_cast< T* >(left), right);
+	return std::distance(static_cast< T* >(left), right);
 }
 #endif
 

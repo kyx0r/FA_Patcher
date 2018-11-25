@@ -12,7 +12,8 @@
 
 #include <boost/type_traits/detail/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 // * convert a type T to const type - add_const<T>
 // this is not required since the result is always
@@ -25,25 +26,25 @@ namespace boost {
 // references with MSVC6.
 #   pragma warning(push)
 #   pragma warning(disable:4181) // warning C4181: qualifier applied to reference type ignored
-#endif 
+#endif
 
-   template <class T> struct add_const
-   {
-      typedef T const type;
-   };
+template <class T> struct add_const
+{
+	typedef T const type;
+};
 
 #if defined(BOOST_MSVC)
 #   pragma warning(pop)
-#endif 
+#endif
 
-   template <class T> struct add_const<T&>
-   {
-      typedef T& type;
-   };
+template <class T> struct add_const<T&>
+{
+	typedef T& type;
+};
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
-   template <class T> using add_const_t = typename add_const<T>::type;
+template <class T> using add_const_t = typename add_const<T>::type;
 
 #endif
 

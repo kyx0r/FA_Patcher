@@ -26,9 +26,12 @@
 
 #include <boost/move/detail/type_traits.hpp>
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 using ::boost::move_detail::enable_if;
 using ::boost::move_detail::enable_if_and;

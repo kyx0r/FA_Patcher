@@ -17,32 +17,36 @@
 #include <boost/compute/context.hpp>
 #include <boost/compute/command_queue.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 context opencv_ocl_get_context()
 {
-    void *ocl_context = cv::ocl::getoclContext();
-    if(!ocl_context){
-        return context();
-    }
+	void *ocl_context = cv::ocl::getoclContext();
+	if(!ocl_context)
+	{
+		return context();
+	}
 
-    return context(*(static_cast<cl_context *>(ocl_context)));
+	return context(*(static_cast<cl_context *>(ocl_context)));
 }
 
 command_queue opencv_ocl_get_command_queue()
 {
-    void *ocl_queue = cv::ocl::getoclCommandQueue();
-    if(!ocl_queue){
-        return command_queue();
-    }
+	void *ocl_queue = cv::ocl::getoclCommandQueue();
+	if(!ocl_queue)
+	{
+		return command_queue();
+	}
 
-    return command_queue(*(static_cast<cl_command_queue *>(ocl_queue)));
+	return command_queue(*(static_cast<cl_command_queue *>(ocl_queue)));
 }
 
 buffer opencv_ocl_get_buffer(const cv::ocl::oclMat &mat)
 {
-    return buffer(reinterpret_cast<cl_mem>(mat.data));
+	return buffer(reinterpret_cast<cl_mem>(mat.data));
 }
 
 } // end compute namespace

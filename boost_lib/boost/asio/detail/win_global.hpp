@@ -21,23 +21,26 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename T>
 struct win_global_impl
 {
-  // Destructor automatically cleans up the global.
-  ~win_global_impl()
-  {
-    delete ptr_;
-  }
+	// Destructor automatically cleans up the global.
+	~win_global_impl()
+	{
+		delete ptr_;
+	}
 
-  static win_global_impl instance_;
-  static static_mutex mutex_;
-  static T* ptr_;
-  static tss_ptr<T> tss_ptr_;
+	static win_global_impl instance_;
+	static static_mutex mutex_;
+	static T* ptr_;
+	static tss_ptr<T> tss_ptr_;
 };
 
 template <typename T>
@@ -55,15 +58,15 @@ tss_ptr<T> win_global_impl<T>::tss_ptr_;
 template <typename T>
 T& win_global()
 {
-  if (static_cast<T*>(win_global_impl<T>::tss_ptr_) == 0)
-  {
-    win_global_impl<T>::mutex_.init();
-    static_mutex::scoped_lock lock(win_global_impl<T>::mutex_);
-    win_global_impl<T>::ptr_ = new T;
-    win_global_impl<T>::tss_ptr_ = win_global_impl<T>::ptr_;
-  }
+	if (static_cast<T*>(win_global_impl<T>::tss_ptr_) == 0)
+	{
+		win_global_impl<T>::mutex_.init();
+		static_mutex::scoped_lock lock(win_global_impl<T>::mutex_);
+		win_global_impl<T>::ptr_ = new T;
+		win_global_impl<T>::tss_ptr_ = win_global_impl<T>::ptr_;
+	}
 
-  return *win_global_impl<T>::tss_ptr_;
+	return *win_global_impl<T>::tss_ptr_;
 }
 
 } // namespace detail

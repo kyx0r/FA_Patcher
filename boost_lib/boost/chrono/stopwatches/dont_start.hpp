@@ -9,24 +9,24 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    /**
-     * Type used to don't start a basic_stopwatch at construction time.
-     */
-    struct dont_start_t
-    {
-    };
+/**
+ * Type used to don't start a basic_stopwatch at construction time.
+ */
+struct dont_start_t
+{
+};
 
-    /**
-     * Instance used to don't start a basic_stopwatch at construction time.
-     */
-    static const dont_start_t dont_start =
+/**
+ * Instance used to don't start a basic_stopwatch at construction time.
+ */
+static const dont_start_t dont_start =
     { };
 
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 #endif

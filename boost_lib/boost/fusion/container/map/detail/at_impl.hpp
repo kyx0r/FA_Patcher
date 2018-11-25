@@ -11,51 +11,54 @@
 #include <boost/fusion/support/detail/access.hpp>
 #include <boost/utility/declval.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct map_tag;
+namespace fusion
+{
+struct map_tag;
 
-    namespace extension
-    {
-        template <typename Tag>
-        struct at_impl;
+namespace extension
+{
+template <typename Tag>
+struct at_impl;
 
-        template <>
-        struct at_impl<map_tag>
-        {
-            template <typename Sequence, typename N>
-            struct apply
-            {
-                typedef mpl::int_<N::value> index;
-                typedef
-                    decltype(boost::declval<Sequence>().get(index()))
-                type;
+template <>
+struct at_impl<map_tag>
+{
+	template <typename Sequence, typename N>
+	struct apply
+	{
+		typedef mpl::int_<N::value> index;
+		typedef
+		decltype(boost::declval<Sequence>().get(index()))
+		type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type
-                call(Sequence& m)
-                {
-                    return m.get(index());
-                }
-            };
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(Sequence& m)
+		{
+			return m.get(index());
+		}
+	};
 
-            template <typename Sequence, typename N>
-            struct apply<Sequence const, N>
-            {
-                typedef mpl::int_<N::value> index;
-                typedef
-                    decltype(boost::declval<Sequence const>().get(index()))
-                type;
+	template <typename Sequence, typename N>
+	struct apply<Sequence const, N>
+	{
+		typedef mpl::int_<N::value> index;
+		typedef
+		decltype(boost::declval<Sequence const>().get(index()))
+		type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type
-                call(Sequence const& m)
-                {
-                    return m.get(index());
-                }
-            };
-        };
-    }
-}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(Sequence const& m)
+		{
+			return m.get(index());
+		}
+	};
+};
+}
+}
+}
 
 #endif

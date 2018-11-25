@@ -13,36 +13,36 @@
 namespace boost
 {
 
-    template<typename SharedMutex>
-    class shared_lock_guard
-    {
-    private:
-        SharedMutex& m;
+template<typename SharedMutex>
+class shared_lock_guard
+{
+private:
+	SharedMutex& m;
 
-    public:
-        typedef SharedMutex mutex_type;
-        BOOST_THREAD_NO_COPYABLE(shared_lock_guard)
-        explicit shared_lock_guard(SharedMutex& m_):
-            m(m_)
-        {
-            m.lock_shared();
-        }
-        shared_lock_guard(SharedMutex& m_,adopt_lock_t):
-            m(m_)
-        {}
-        ~shared_lock_guard()
-        {
-            m.unlock_shared();
-        }
-    };
+public:
+	typedef SharedMutex mutex_type;
+	BOOST_THREAD_NO_COPYABLE(shared_lock_guard)
+	explicit shared_lock_guard(SharedMutex& m_):
+		m(m_)
+	{
+		m.lock_shared();
+	}
+	shared_lock_guard(SharedMutex& m_,adopt_lock_t):
+		m(m_)
+	{}
+	~shared_lock_guard()
+	{
+		m.unlock_shared();
+	}
+};
 
 #ifdef BOOST_THREAD_NO_AUTO_DETECT_MUTEX_TYPES
 
-    template<typename T>
-    struct is_mutex_type<shared_lock_guard<T> >
-    {
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
+template<typename T>
+struct is_mutex_type<shared_lock_guard<T> >
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 
 
 #endif

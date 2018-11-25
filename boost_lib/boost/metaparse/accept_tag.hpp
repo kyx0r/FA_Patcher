@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::accept_tag;
-  }
+namespace metaparse
+{
+using v1::accept_tag;
+}
 }
 
 #endif

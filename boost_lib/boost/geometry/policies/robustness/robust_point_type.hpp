@@ -12,19 +12,22 @@
 #ifndef BOOST_GEOMETRY_POLICIES_ROBUSTNESS_ROBUST_POINT_TYPE_HPP
 #define BOOST_GEOMETRY_POLICIES_ROBUSTNESS_ROBUST_POINT_TYPE_HPP
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 // Meta-function to typedef a robust point type for a policy
 template <typename Point, typename Policy>
 struct robust_point_type
 {
-    // By default, the point itself is the robust type
-    typedef Point type;
+	// By default, the point itself is the robust type
+	typedef Point type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_POLICIES_ROBUSTNESS_ROBUST_POINT_TYPE_HPP

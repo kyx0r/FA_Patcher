@@ -24,33 +24,46 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace tt_detail {
+namespace boost
+{
+namespace test_tools
+{
+namespace tt_detail
+{
 
 // ************************************************************************** //
 // **************        assertion_evaluate indirection        ************** //
 // ************************************************************************** //
 
 template<typename E>
-struct assertion_evaluate_t {
-    assertion_evaluate_t( E const& e ) : m_e( e ) {}
-    operator assertion_result() { return m_e.evaluate( true ); }
+struct assertion_evaluate_t
+{
+	assertion_evaluate_t( E const& e ) : m_e( e ) {}
+	operator assertion_result()
+	{
+		return m_e.evaluate( true );
+	}
 
-    E const& m_e;
+	E const& m_e;
 };
 
 //____________________________________________________________________________//
 
 template<typename E>
 inline assertion_evaluate_t<E>
-assertion_evaluate( E const& e ) { return assertion_evaluate_t<E>( e ); }
+assertion_evaluate( E const& e )
+{
+	return assertion_evaluate_t<E>( e );
+}
 
 //____________________________________________________________________________//
 
 template<typename E, typename T>
 inline assertion_evaluate_t<E>
-operator<<( assertion_evaluate_t<E> const& ae, T const& ) { return ae; }
+operator<<( assertion_evaluate_t<E> const& ae, T const& )
+{
+	return ae;
+}
 
 //____________________________________________________________________________//
 
@@ -60,12 +73,18 @@ operator<<( assertion_evaluate_t<E> const& ae, T const& ) { return ae; }
 
 template<typename T>
 inline unit_test::lazy_ostream const&
-assertion_text( unit_test::lazy_ostream const& /*et*/, T const& m ) { return m; }
+assertion_text( unit_test::lazy_ostream const& /*et*/, T const& m )
+{
+	return m;
+}
 
 //____________________________________________________________________________//
 
 inline unit_test::lazy_ostream const&
-assertion_text( unit_test::lazy_ostream const& et, int ) { return et; }
+assertion_text( unit_test::lazy_ostream const& et, int )
+{
+	return et;
+}
 
 //____________________________________________________________________________//
 
@@ -73,15 +92,22 @@ assertion_text( unit_test::lazy_ostream const& et, int ) { return et; }
 // **************        assertion_evaluate indirection        ************** //
 // ************************************************************************** //
 
-struct assertion_type {
-    operator check_type() { return CHECK_MSG; }
+struct assertion_type
+{
+	operator check_type()
+	{
+		return CHECK_MSG;
+	}
 };
 
 //____________________________________________________________________________//
 
 template<typename T>
 inline assertion_type
-operator<<( assertion_type const& at, T const& ) { return at; }
+operator<<( assertion_type const& at, T const& )
+{
+	return at;
+}
 
 //____________________________________________________________________________//
 

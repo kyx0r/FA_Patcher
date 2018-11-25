@@ -595,7 +595,7 @@ struct image_thunk_data64
 {
 	union
 	{
-		uint64_t ForwarderString;  // PBYTE 
+		uint64_t ForwarderString;  // PBYTE
 		uint64_t Function;         // PDWORD
 		uint64_t Ordinal;
 		uint64_t AddressOfData;    // PIMAGE_IMPORT_BY_NAME
@@ -607,7 +607,7 @@ struct image_thunk_data32
 {
 	union
 	{
-		uint32_t ForwarderString;      // PBYTE 
+		uint32_t ForwarderString;      // PBYTE
 		uint32_t Function;             // PDWORD
 		uint32_t Ordinal;
 		uint32_t AddressOfData;        // PIMAGE_IMPORT_BY_NAME
@@ -623,9 +623,9 @@ struct image_import_descriptor
 	};
 
 	uint32_t TimeDateStamp;                 // 0 if not bound,
-											// -1 if bound, and real date\time stamp
-											//     in IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT (new BIND)
-											// O.W. date/time stamp of DLL bound to (Old BIND)
+	// -1 if bound, and real date\time stamp
+	//     in IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT (new BIND)
+	// O.W. date/time stamp of DLL bound to (Old BIND)
 
 	uint32_t ForwarderChain;                // -1 if no forwarders
 	uint32_t Name;

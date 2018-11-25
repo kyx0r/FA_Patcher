@@ -10,13 +10,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace util
-    {
-      using v1::util::is_whitespace_c;
-    }
-  }
+namespace metaparse
+{
+namespace util
+{
+using v1::util::is_whitespace_c;
+}
+}
 }
 
 #endif

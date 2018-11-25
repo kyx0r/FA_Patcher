@@ -12,13 +12,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      typedef one_of<letter, digit> alphanum;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+typedef one_of<letter, digit> alphanum;
+}
+}
 }
 
 #endif

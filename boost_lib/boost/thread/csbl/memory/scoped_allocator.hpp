@@ -17,18 +17,18 @@
 
 namespace boost
 {
-  namespace csbl
-  {
-    using ::boost::container::uses_allocator;
-  }
+namespace csbl
+{
+using ::boost::container::uses_allocator;
+}
 }
 #else
 namespace boost
 {
-  namespace csbl
-  {
-    using ::std::uses_allocator;
-  }
+namespace csbl
+{
+using ::std::uses_allocator;
+}
 }
 #endif // BOOST_NO_CXX11_POINTER_TRAITS
 

@@ -15,17 +15,22 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
-namespace detail {
+namespace boost
+{
+namespace coroutines
+{
+namespace detail
+{
 
 struct data_t
 {
-    coroutine_context   *   from;
-    void                *   data;
+	coroutine_context   *   from;
+	void                *   data;
 };
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

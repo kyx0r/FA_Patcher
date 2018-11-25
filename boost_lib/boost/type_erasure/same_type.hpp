@@ -11,8 +11,10 @@
 #ifndef BOOST_TYPE_ERASURE_SAME_TYPE_HPP_INCLUDED
 #define BOOST_TYPE_ERASURE_SAME_TYPE_HPP_INCLUDED
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * A built in concept that indicates that two

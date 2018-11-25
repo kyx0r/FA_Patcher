@@ -20,25 +20,25 @@
 #include <boost/signals2/detail/variadic_arg_type.hpp>
 #include <boost/signals2/detail/variadic_slot_invoker.hpp>
 #include <boost/type_traits/function_traits.hpp>
-#include <boost/type_traits/is_void.hpp> 
+#include <boost/type_traits/is_void.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost
 {
-  namespace signals2
-  {
-    namespace detail
-    {
-      template<typename Signature> class variadic_extended_signature;
-      // partial template specialization
-      template<typename R, typename ... Args>
-        class variadic_extended_signature<R (Args...)>
-      {
-      public:
-        typedef boost::function<R (const boost::signals2::connection &, Args...)> function_type;
-      };
-    } // namespace detail
-  } // namespace signals2
+namespace signals2
+{
+namespace detail
+{
+template<typename Signature> class variadic_extended_signature;
+// partial template specialization
+template<typename R, typename ... Args>
+class variadic_extended_signature<R (Args...)>
+{
+public:
+	typedef boost::function<R (const boost::signals2::connection &, Args...)> function_type;
+};
+} // namespace detail
+} // namespace signals2
 } // namespace boost
 
 #include <boost/signals2/detail/signal_template.hpp>

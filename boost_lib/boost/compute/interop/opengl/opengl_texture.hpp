@@ -18,8 +18,10 @@
 #include <boost/compute/type_traits/type_name.hpp>
 #include <boost/compute/utility/extents.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// \class opengl_texture
 ///
@@ -27,98 +29,101 @@ namespace compute {
 class opengl_texture : public image_object
 {
 public:
-    /// Creates a null OpenGL texture object.
-    opengl_texture()
-        : image_object()
-    {
-    }
+	/// Creates a null OpenGL texture object.
+	opengl_texture()
+		: image_object()
+	{
+	}
 
-    /// Creates a new OpenGL texture object for \p mem.
-    explicit opengl_texture(cl_mem mem, bool retain = true)
-        : image_object(mem, retain)
-    {
-    }
+	/// Creates a new OpenGL texture object for \p mem.
+	explicit opengl_texture(cl_mem mem, bool retain = true)
+		: image_object(mem, retain)
+	{
+	}
 
-    /// Creates a new OpenGL texture object in \p context for \p texture
-    /// with \p flags.
-    ///
-    /// \see_opencl_ref{clCreateFromGLTexture}
-    opengl_texture(const context &context,
-                   GLenum texture_target,
-                   GLint miplevel,
-                   GLuint texture,
-                   cl_mem_flags flags = read_write)
-    {
-        cl_int error = 0;
+	/// Creates a new OpenGL texture object in \p context for \p texture
+	/// with \p flags.
+	///
+	/// \see_opencl_ref{clCreateFromGLTexture}
+	opengl_texture(const context &context,
+	               GLenum texture_target,
+	               GLint miplevel,
+	               GLuint texture,
+	               cl_mem_flags flags = read_write)
+	{
+		cl_int error = 0;
 
-        #ifdef BOOST_COMPUTE_CL_VERSION_1_2
-        m_mem = clCreateFromGLTexture(context,
-                                      flags,
-                                      texture_target,
-                                      miplevel,
-                                      texture,
-                                      &error);
-        #else
-        m_mem = clCreateFromGLTexture2D(context,
-                                        flags,
-                                        texture_target,
-                                        miplevel,
-                                        texture,
-                                        &error);
-        #endif
+#ifdef BOOST_COMPUTE_CL_VERSION_1_2
+		m_mem = clCreateFromGLTexture(context,
+		                              flags,
+		                              texture_target,
+		                              miplevel,
+		                              texture,
+		                              &error);
+#else
+		m_mem = clCreateFromGLTexture2D(context,
+		                                flags,
+		                                texture_target,
+		                                miplevel,
+		                                texture,
+		                                &error);
+#endif
 
-        if(!m_mem){
-            BOOST_THROW_EXCEPTION(opencl_error(error));
-        }
-    }
+		if(!m_mem)
+		{
+			BOOST_THROW_EXCEPTION(opencl_error(error));
+		}
+	}
 
-    /// Creates a new OpenGL texture object as a copy of \p other.
-    opengl_texture(const opengl_texture &other)
-        : image_object(other)
-    {
-    }
+	/// Creates a new OpenGL texture object as a copy of \p other.
+	opengl_texture(const opengl_texture &other)
+		: image_object(other)
+	{
+	}
 
-    /// Copies the OpenGL texture object from \p other.
-    opengl_texture& operator=(const opengl_texture &other)
-    {
-        if(this != &other){
-            image_object::operator=(other);
-        }
+	/// Copies the OpenGL texture object from \p other.
+	opengl_texture& operator=(const opengl_texture &other)
+	{
+		if(this != &other)
+		{
+			image_object::operator=(other);
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    /// Destroys the texture object.
-    ~opengl_texture()
-    {
-    }
+	/// Destroys the texture object.
+	~opengl_texture()
+	{
+	}
 
-    /// Returns the size (width, height) of the texture.
-    extents<2> size() const
-    {
-        extents<2> size;
-        size[0] = get_image_info<size_t>(CL_IMAGE_WIDTH);
-        size[1] = get_image_info<size_t>(CL_IMAGE_HEIGHT);
-        return size;
-    }
+	/// Returns the size (width, height) of the texture.
+	extents<2> size() const
+	{
+		extents<2> size;
+		size[0] = get_image_info<size_t>(CL_IMAGE_WIDTH);
+		size[1] = get_image_info<size_t>(CL_IMAGE_HEIGHT);
+		return size;
+	}
 
-    /// Returns the origin of the texture (\c 0, \c 0).
-    extents<2> origin() const
-    {
-        return extents<2>();
-    }
+	/// Returns the origin of the texture (\c 0, \c 0).
+	extents<2> origin() const
+	{
+		return extents<2>();
+	}
 
-    /// Returns information about the texture.
-    ///
-    /// \see_opencl_ref{clGetGLTextureInfo}
-    template<class T>
-    T get_texture_info(cl_gl_texture_info info) const
-    {
-        return detail::get_object_info<T>(clGetGLTextureInfo, m_mem, info);
-    }
+	/// Returns information about the texture.
+	///
+	/// \see_opencl_ref{clGetGLTextureInfo}
+	template<class T>
+	T get_texture_info(cl_gl_texture_info info) const
+	{
+		return detail::get_object_info<T>(clGetGLTextureInfo, m_mem, info);
+	}
 };
 
-namespace detail {
+namespace detail
+{
 
 // set_kernel_arg() specialization for opengl_texture
 template<>

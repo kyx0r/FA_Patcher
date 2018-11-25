@@ -22,30 +22,31 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! The \c ends_with functor
 struct ends_with_fun
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& left, U const& right) const
-    {
-        typedef typename T::const_reverse_iterator left_iterator;
-        typedef typename U::const_reverse_iterator right_iterator;
+	template< typename T, typename U >
+	bool operator() (T const& left, U const& right) const
+	{
+		typedef typename T::const_reverse_iterator left_iterator;
+		typedef typename U::const_reverse_iterator right_iterator;
 
-        left_iterator left_it = left.rbegin(), left_end = left.rend();
-        right_iterator right_it = right.rbegin(), right_end = right.rend();
-        for (; left_it != left_end && right_it != right_end; ++left_it, ++right_it)
-        {
-            if (*left_it != *right_it)
-                break;
-        }
-        return right_it == right_end;
-    }
+		left_iterator left_it = left.rbegin(), left_end = left.rend();
+		right_iterator right_it = right.rbegin(), right_end = right.rend();
+		for (; left_it != left_end && right_it != right_end; ++left_it, ++right_it)
+		{
+			if (*left_it != *right_it)
+				break;
+		}
+		return right_it == right_end;
+	}
 };
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

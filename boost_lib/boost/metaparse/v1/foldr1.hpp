@@ -12,26 +12,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class State, class BackwardOp>
-      struct foldr1
-      {
-        typedef foldr1 type;
-        
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::if_<
-            is_error<typename P::template apply<S, Pos> >,
-            P,
-            foldr<P, State, BackwardOp>
-          >::type::template apply<S, Pos>
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class State, class BackwardOp>
+struct foldr1
+{
+	typedef foldr1 type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::if_<
+		is_error<typename P::template apply<S, Pos> >,
+	P,
+	foldr<P, State, BackwardOp>
+	>::type::template apply<S, Pos>
+	{};
+};
+}
+}
 }
 
 #endif

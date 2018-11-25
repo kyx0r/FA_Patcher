@@ -8,8 +8,10 @@ Distributed under the Boost Software License, Version 1.0.
 #ifndef BOOST_ALIGN_ALIGNMENT_OF_FORWARD_HPP
 #define BOOST_ALIGN_ALIGNMENT_OF_FORWARD_HPP
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 template<class T>
 struct alignment_of;

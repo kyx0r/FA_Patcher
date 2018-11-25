@@ -17,12 +17,16 @@
 #include <boost/geometry/iterators/segment_iterator.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace distance
+namespace detail
+{
+namespace distance
 {
 
 
@@ -30,41 +34,43 @@ namespace detail { namespace distance
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct iterator_selector
 {
-    typedef geometry::segment_iterator<Geometry> iterator_type;
+	typedef geometry::segment_iterator<Geometry> iterator_type;
 
-    static inline iterator_type begin(Geometry& geometry)
-    {
-        return segments_begin(geometry);
-    }
+	static inline iterator_type begin(Geometry& geometry)
+	{
+		return segments_begin(geometry);
+	}
 
-    static inline iterator_type end(Geometry& geometry)
-    {
-        return segments_end(geometry);
-    }
+	static inline iterator_type end(Geometry& geometry)
+	{
+		return segments_end(geometry);
+	}
 };
 
 template <typename MultiPoint>
 struct iterator_selector<MultiPoint, multi_point_tag>
 {
-    typedef geometry::point_iterator<MultiPoint> iterator_type;
+	typedef geometry::point_iterator<MultiPoint> iterator_type;
 
-    static inline iterator_type begin(MultiPoint& multipoint)
-    {
-        return points_begin(multipoint);
-    }
+	static inline iterator_type begin(MultiPoint& multipoint)
+	{
+		return points_begin(multipoint);
+	}
 
-    static inline iterator_type end(MultiPoint& multipoint)
-    {
-        return points_end(multipoint);
-    }
+	static inline iterator_type end(MultiPoint& multipoint)
+	{
+		return points_end(multipoint);
+	}
 };
 
 
-}} // namespace detail::distance
+}
+} // namespace detail::distance
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHS_DETAIL_DISTANCE_ITERATOR_SELECTOR_HPP

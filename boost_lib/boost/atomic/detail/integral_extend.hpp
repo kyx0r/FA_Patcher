@@ -25,77 +25,80 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output zero_extend_impl(Input input, atomics::detail::true_type) BOOST_NOEXCEPT
 {
-    // Note: If we are casting with truncation or to the same-sized output, don't cause signed integer overflow by this chain of conversions
-    return atomics::detail::bitwise_cast< Output >(static_cast< typename atomics::detail::make_unsigned< Output >::type >(
-        static_cast< typename atomics::detail::make_unsigned< Input >::type >(input)));
+	// Note: If we are casting with truncation or to the same-sized output, don't cause signed integer overflow by this chain of conversions
+	return atomics::detail::bitwise_cast< Output >(static_cast< typename atomics::detail::make_unsigned< Output >::type >(
+	            static_cast< typename atomics::detail::make_unsigned< Input >::type >(input)));
 }
 
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output zero_extend_impl(Input input, atomics::detail::false_type) BOOST_NOEXCEPT
 {
-    return static_cast< Output >(static_cast< typename atomics::detail::make_unsigned< Input >::type >(input));
+	return static_cast< Output >(static_cast< typename atomics::detail::make_unsigned< Input >::type >(input));
 }
 
 //! Zero-extends or truncates (wraps) input operand to fit in the output type
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output zero_extend(Input input) BOOST_NOEXCEPT
 {
-    return atomics::detail::zero_extend_impl< Output >(input, atomics::detail::integral_constant< bool, atomics::detail::is_signed< Output >::value >());
+	return atomics::detail::zero_extend_impl< Output >(input, atomics::detail::integral_constant< bool, atomics::detail::is_signed< Output >::value >());
 }
 
 //! Truncates (wraps) input operand to fit in the output type
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output integral_truncate(Input input) BOOST_NOEXCEPT
 {
-    // zero_extend does the truncation
-    return atomics::detail::zero_extend< Output >(input);
+	// zero_extend does the truncation
+	return atomics::detail::zero_extend< Output >(input);
 }
 
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output sign_extend_impl(Input input, atomics::detail::true_type) BOOST_NOEXCEPT
 {
-    return atomics::detail::integral_truncate< Output >(input);
+	return atomics::detail::integral_truncate< Output >(input);
 }
 
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output sign_extend_impl(Input input, atomics::detail::false_type) BOOST_NOEXCEPT
 {
-    return static_cast< Output >(atomics::detail::bitwise_cast< typename atomics::detail::make_signed< Input >::type >(input));
+	return static_cast< Output >(atomics::detail::bitwise_cast< typename atomics::detail::make_signed< Input >::type >(input));
 }
 
 //! Sign-extends or truncates (wraps) input operand to fit in the output type
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output sign_extend(Input input) BOOST_NOEXCEPT
 {
-    return atomics::detail::sign_extend_impl< Output >(input, atomics::detail::integral_constant< bool, sizeof(Output) <= sizeof(Input) >());
+	return atomics::detail::sign_extend_impl< Output >(input, atomics::detail::integral_constant< bool, sizeof(Output) <= sizeof(Input) >());
 }
 
 //! Sign-extends or truncates (wraps) input operand to fit in the output type
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output integral_extend(Input input, atomics::detail::true_type) BOOST_NOEXCEPT
 {
-    return atomics::detail::sign_extend< Output >(input);
+	return atomics::detail::sign_extend< Output >(input);
 }
 
 //! Zero-extends or truncates (wraps) input operand to fit in the output type
 template< typename Output, typename Input >
 BOOST_FORCEINLINE Output integral_extend(Input input, atomics::detail::false_type) BOOST_NOEXCEPT
 {
-    return atomics::detail::zero_extend< Output >(input);
+	return atomics::detail::zero_extend< Output >(input);
 }
 
 //! Sign- or zero-extends or truncates (wraps) input operand to fit in the output type
 template< bool Signed, typename Output, typename Input >
 BOOST_FORCEINLINE Output integral_extend(Input input) BOOST_NOEXCEPT
 {
-    return atomics::detail::integral_extend< Output >(input, atomics::detail::integral_constant< bool, Signed >());
+	return atomics::detail::integral_extend< Output >(input, atomics::detail::integral_constant< bool, Signed >());
 }
 
 } // namespace detail

@@ -33,10 +33,14 @@ namespace boost {
  *   See the parameter documentation of [ShowWindow](https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548.aspx) for more details.
  */
 
-namespace boost { namespace process {
+namespace boost
+{
+namespace process
+{
 
 ///Namespace containing the windows extensions.
-namespace windows {
+namespace windows
+{
 
 ///Hides the window and activates another window.
 constexpr ::boost::process::detail::windows::show_window<::boost::winapi::SW_HIDE_           > hide;
@@ -56,6 +60,8 @@ constexpr ::boost::process::detail::windows::show_window<::boost::winapi::SW_SHO
 ///Adds the [CREATE_NO_WINDOW](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684863(v=vs.85).aspx) flag.
 constexpr ::boost::process::detail::windows::create_no_window_ create_no_window;
 
-}}}
+}
+}
+}
 
 #endif /* BOOST_PROCESS_WINDOWS_HPP_ */

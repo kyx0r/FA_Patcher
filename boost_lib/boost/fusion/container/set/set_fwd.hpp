@@ -32,14 +32,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 // C++11 interface
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace fusion
+namespace boost
 {
-    struct set_tag;
-    struct set_iterator_tag;
+namespace fusion
+{
+struct set_tag;
+struct set_iterator_tag;
 
-    template <typename ...T>
-    struct set;
-}}
+template <typename ...T>
+struct set;
+}
+}
 
 #endif
 #endif

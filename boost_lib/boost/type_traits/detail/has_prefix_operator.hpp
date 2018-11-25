@@ -42,11 +42,14 @@
 
 
 
-namespace boost {
-namespace detail {
+namespace boost
+{
+namespace detail
+{
 
 // This namespace ensures that argument-dependent name lookup does not mess things up.
-namespace BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
+namespace BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)
+{
 
 // 1. a function to have an instance of type T without requiring T to be default
 // constructible
@@ -63,7 +66,10 @@ struct no_operator { };
 // this class allows implicit conversions and makes the following operator
 // definition less-preferred than any other such operators that might be found
 // via argument-dependent name lookup
-struct any { template <class T> any(T const&); };
+struct any
+{
+	template <class T> any(T const&);
+};
 
 // when operator BOOST_TT_TRAIT_OP is not available, this one is used
 no_operator operator BOOST_TT_TRAIT_OP (const any&);
@@ -86,12 +92,13 @@ template <typename T> int operator,(const volatile T&, returns_void_t);
 // - value==true -> operator BOOST_TT_TRAIT_OP returns void
 // - value==false -> operator BOOST_TT_TRAIT_OP does not return void
 template < typename Rhs >
-struct operator_returns_void {
-   // overloads of function returns_void make the difference
-   // yes_type and no_type have different size by construction
-   static ::boost::type_traits::yes_type returns_void(returns_void_t);
-   static ::boost::type_traits::no_type returns_void(int);
-   BOOST_STATIC_CONSTANT(bool, value = (sizeof(::boost::type_traits::yes_type)==sizeof(returns_void((BOOST_TT_TRAIT_OP make<Rhs>(),returns_void_t())))));
+struct operator_returns_void
+{
+	// overloads of function returns_void make the difference
+	// yes_type and no_type have different size by construction
+	static ::boost::type_traits::yes_type returns_void(returns_void_t);
+	static ::boost::type_traits::no_type returns_void(int);
+	BOOST_STATIC_CONSTANT(bool, value = (sizeof(::boost::type_traits::yes_type)==sizeof(returns_void((BOOST_TT_TRAIT_OP make<Rhs>(),returns_void_t())))));
 };
 
 
@@ -104,39 +111,45 @@ template < typename Rhs, typename Ret, bool Returns_void >
 struct operator_returns_Ret;
 
 template < typename Rhs >
-struct operator_returns_Ret < Rhs, dont_care, true > {
-   BOOST_STATIC_CONSTANT(bool, value = true);
+struct operator_returns_Ret < Rhs, dont_care, true >
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 template < typename Rhs >
-struct operator_returns_Ret < Rhs, dont_care, false > {
-   BOOST_STATIC_CONSTANT(bool, value = true);
+struct operator_returns_Ret < Rhs, dont_care, false >
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 template < typename Rhs >
-struct operator_returns_Ret < Rhs, void, true > {
-   BOOST_STATIC_CONSTANT(bool, value = true);
+struct operator_returns_Ret < Rhs, void, true >
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 template < typename Rhs >
-struct operator_returns_Ret < Rhs, void, false > {
-   BOOST_STATIC_CONSTANT(bool, value = false);
+struct operator_returns_Ret < Rhs, void, false >
+{
+	BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 template < typename Rhs, typename Ret >
-struct operator_returns_Ret < Rhs, Ret, true > {
-   BOOST_STATIC_CONSTANT(bool, value = false);
+struct operator_returns_Ret < Rhs, Ret, true >
+{
+	BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 // otherwise checks if it is convertible to Ret using the sizeof trick
 // based on overload resolution
 // condition: Ret!=void and Ret!=dont_care and the operator does not return void
 template < typename Rhs, typename Ret >
-struct operator_returns_Ret < Rhs, Ret, false > {
-   static ::boost::type_traits::yes_type is_convertible_to_Ret(Ret); // this version is preferred for types convertible to Ret
-   static ::boost::type_traits::no_type is_convertible_to_Ret(...); // this version is used otherwise
+struct operator_returns_Ret < Rhs, Ret, false >
+{
+	static ::boost::type_traits::yes_type is_convertible_to_Ret(Ret); // this version is preferred for types convertible to Ret
+	static ::boost::type_traits::no_type is_convertible_to_Ret(...); // this version is used otherwise
 
-   BOOST_STATIC_CONSTANT(bool, value = (sizeof(is_convertible_to_Ret(BOOST_TT_TRAIT_OP make<Rhs>()))==sizeof(::boost::type_traits::yes_type)));
+	BOOST_STATIC_CONSTANT(bool, value = (sizeof(is_convertible_to_Ret(BOOST_TT_TRAIT_OP make<Rhs>()))==sizeof(::boost::type_traits::yes_type)));
 };
 
 
@@ -150,11 +163,12 @@ struct has_operator { };
 no_operator operator,(no_operator, has_operator);
 
 template < typename Rhs >
-struct operator_exists {
-   static ::boost::type_traits::yes_type s_check(has_operator); // this version is preferred when operator exists
-   static ::boost::type_traits::no_type s_check(no_operator); // this version is used otherwise
+struct operator_exists
+{
+	static ::boost::type_traits::yes_type s_check(has_operator); // this version is preferred when operator exists
+	static ::boost::type_traits::no_type s_check(no_operator); // this version is used otherwise
 
-   BOOST_STATIC_CONSTANT(bool, value = (sizeof(s_check(((BOOST_TT_TRAIT_OP make<Rhs>()),make<has_operator>())))==sizeof(::boost::type_traits::yes_type)));
+	BOOST_STATIC_CONSTANT(bool, value = (sizeof(s_check(((BOOST_TT_TRAIT_OP make<Rhs>()),make<has_operator>())))==sizeof(::boost::type_traits::yes_type)));
 };
 
 
@@ -169,29 +183,33 @@ template < typename Rhs, typename Ret, bool Forbidden_if >
 struct trait_impl1;
 
 template < typename Rhs, typename Ret >
-struct trait_impl1 < Rhs, Ret, true > {
-   BOOST_STATIC_CONSTANT(bool, value = false);
+struct trait_impl1 < Rhs, Ret, true >
+{
+	BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 template < typename Rhs, typename Ret >
-struct trait_impl1 < Rhs, Ret, false > {
-   BOOST_STATIC_CONSTANT(bool,
-      value = (operator_exists < Rhs >::value && operator_returns_Ret < Rhs, Ret, operator_returns_void < Rhs >::value >::value));
+struct trait_impl1 < Rhs, Ret, false >
+{
+	BOOST_STATIC_CONSTANT(bool,
+	                      value = (operator_exists < Rhs >::value && operator_returns_Ret < Rhs, Ret, operator_returns_void < Rhs >::value >::value));
 };
 
 // specialization needs to be declared for the special void case
 template < typename Ret >
-struct trait_impl1 < void, Ret, false > {
-   BOOST_STATIC_CONSTANT(bool, value = false);
+struct trait_impl1 < void, Ret, false >
+{
+	BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 // defines some typedef for convenience
 template < typename Rhs, typename Ret >
-struct trait_impl {
-   typedef typename ::boost::remove_reference<Rhs>::type Rhs_noref;
-   typedef typename ::boost::remove_cv<Rhs_noref>::type Rhs_nocv;
-   typedef typename ::boost::remove_cv< typename ::boost::remove_reference< typename ::boost::remove_pointer<Rhs_noref>::type >::type >::type Rhs_noptr;
-   BOOST_STATIC_CONSTANT(bool, value = (trait_impl1 < Rhs_noref, Ret, BOOST_TT_FORBIDDEN_IF >::value));
+struct trait_impl
+{
+	typedef typename ::boost::remove_reference<Rhs>::type Rhs_noref;
+	typedef typename ::boost::remove_cv<Rhs_noref>::type Rhs_nocv;
+	typedef typename ::boost::remove_cv< typename ::boost::remove_reference< typename ::boost::remove_pointer<Rhs_noref>::type >::type >::type Rhs_noptr;
+	BOOST_STATIC_CONSTANT(bool, value = (trait_impl1 < Rhs_noref, Ret, BOOST_TT_FORBIDDEN_IF >::value));
 };
 
 } // namespace impl
@@ -199,7 +217,7 @@ struct trait_impl {
 
 // this is the accessible definition of the trait to end user
 template <class Rhs, class Ret=::boost::detail::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)::dont_care>
-struct BOOST_TT_TRAIT_NAME : public integral_constant<bool, (::boost::detail::BOOST_JOIN(BOOST_TT_TRAIT_NAME, _impl)::trait_impl < Rhs, Ret >::value)>{};
+struct BOOST_TT_TRAIT_NAME : public integral_constant<bool, (::boost::detail::BOOST_JOIN(BOOST_TT_TRAIT_NAME, _impl)::trait_impl < Rhs, Ret >::value)> {};
 
 } // namespace boost
 

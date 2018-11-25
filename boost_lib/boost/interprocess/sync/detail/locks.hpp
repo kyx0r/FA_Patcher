@@ -22,74 +22,108 @@
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/interprocess/detail/workaround.hpp>
 
-namespace boost {
-namespace interprocess {
-namespace ipcdetail {
+namespace boost
+{
+namespace interprocess
+{
+namespace ipcdetail
+{
 
 template<class Lock>
 class internal_mutex_lock
 {
-   typedef void (internal_mutex_lock::*unspecified_bool_type)();
-   public:
+	typedef void (internal_mutex_lock::*unspecified_bool_type)();
+public:
 
-   typedef typename Lock::mutex_type::internal_mutex_type  mutex_type;
+	typedef typename Lock::mutex_type::internal_mutex_type  mutex_type;
 
 
-   internal_mutex_lock(Lock &l)
-      : l_(l)
-   {}
+	internal_mutex_lock(Lock &l)
+		: l_(l)
+	{}
 
-   mutex_type* mutex() const
-   {  return l_ ? &l_.mutex()->internal_mutex() : 0;  }
+	mutex_type* mutex() const
+	{
+		return l_ ? &l_.mutex()->internal_mutex() : 0;
+	}
 
-   void lock()    { l_.lock(); }
+	void lock()
+	{
+		l_.lock();
+	}
 
-   void unlock()  { l_.unlock(); }
+	void unlock()
+	{
+		l_.unlock();
+	}
 
-   operator unspecified_bool_type() const
-   {  return l_ ? &internal_mutex_lock::lock : 0;  }
+	operator unspecified_bool_type() const
+	{
+		return l_ ? &internal_mutex_lock::lock : 0;
+	}
 
-   private:
-   Lock &l_;
+private:
+	Lock &l_;
 };
 
 template <class Lock>
 class lock_inverter
 {
-   Lock &l_;
-   public:
-   lock_inverter(Lock &l)
-      :  l_(l)
-   {}
-   void lock()    {   l_.unlock();   }
-   void unlock()  {   l_.lock();     }
+	Lock &l_;
+public:
+	lock_inverter(Lock &l)
+		:  l_(l)
+	{}
+	void lock()
+	{
+		l_.unlock();
+	}
+	void unlock()
+	{
+		l_.lock();
+	}
 };
 
 template <class Lock>
 class lock_to_sharable
 {
-   Lock &l_;
+	Lock &l_;
 
-   public:
-   explicit lock_to_sharable(Lock &l)
-      :  l_(l)
-   {}
-   void lock()    {  l_.lock_sharable();     }
-   bool try_lock(){  return l_.try_lock_sharable(); }
-   void unlock()  {  l_.unlock_sharable();   }
+public:
+	explicit lock_to_sharable(Lock &l)
+		:  l_(l)
+	{}
+	void lock()
+	{
+		l_.lock_sharable();
+	}
+	bool try_lock()
+	{
+		return l_.try_lock_sharable();
+	}
+	void unlock()
+	{
+		l_.unlock_sharable();
+	}
 };
 
 template <class Lock>
 class lock_to_wait
 {
-   Lock &l_;
+	Lock &l_;
 
-   public:
-   explicit lock_to_wait(Lock &l)
-      :  l_(l)
-   {}
-   void lock()    {  l_.wait();     }
-   bool try_lock(){  return l_.try_wait(); }
+public:
+	explicit lock_to_wait(Lock &l)
+		:  l_(l)
+	{}
+	void lock()
+	{
+		l_.wait();
+	}
+	bool try_lock()
+	{
+		return l_.try_wait();
+	}
 };
 
 }  //namespace ipcdetail

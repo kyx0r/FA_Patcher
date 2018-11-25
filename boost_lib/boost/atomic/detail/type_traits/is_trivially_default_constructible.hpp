@@ -25,9 +25,12 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 #if !defined(BOOST_NO_CXX11_HDR_TYPE_TRAITS)
 using std::is_trivially_default_constructible;

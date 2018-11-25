@@ -15,44 +15,45 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Lift a value into an `Applicative` structure.
-    //! @ingroup group-Applicative
-    //!
-    //! `lift<A>` takes a normal value and embeds it into a structure whose
-    //! shape is represented by the `A` `Applicative`. Note that the value
-    //! may be a function, in which case the created structure may be
-    //! `ap`plied to another `Applicative` structure containing values.
-    //!
-    //!
-    //! Signature
-    //! ---------
-    //! Given an Applicative `A`, the signature is
-    //! @f$ \mathtt{lift}_A : T \to A(T) @f$.
-    //!
-    //! @tparam A
-    //! A tag representing the `Applicative` into which the value is lifted.
-    //!
-    //! @param x
-    //! The value to lift into the applicative.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/lift.cpp
+//! Lift a value into an `Applicative` structure.
+//! @ingroup group-Applicative
+//!
+//! `lift<A>` takes a normal value and embeds it into a structure whose
+//! shape is represented by the `A` `Applicative`. Note that the value
+//! may be a function, in which case the created structure may be
+//! `ap`plied to another `Applicative` structure containing values.
+//!
+//!
+//! Signature
+//! ---------
+//! Given an Applicative `A`, the signature is
+//! @f$ \mathtt{lift}_A : T \to A(T) @f$.
+//!
+//! @tparam A
+//! A tag representing the `Applicative` into which the value is lifted.
+//!
+//! @param x
+//! The value to lift into the applicative.
+//!
+//!
+//! Example
+//! -------
+//! @include example/lift.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    template <typename A>
-    constexpr auto lift = [](auto&& x) {
-        return tag-dispatched;
-    };
+template <typename A>
+constexpr auto lift = [](auto&& x)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename A, typename = void>
-    struct lift_impl : lift_impl<A, when<true>> { };
+template <typename A, typename = void>
+struct lift_impl : lift_impl<A, when<true>> { };
 
-    template <typename A>
-    struct lift_t;
+template <typename A>
+struct lift_t;
 
-    template <typename A>
-    constexpr lift_t<A> lift{};
+template <typename A>
+constexpr lift_t<A> lift{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

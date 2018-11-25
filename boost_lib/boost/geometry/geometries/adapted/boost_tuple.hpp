@@ -25,7 +25,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -38,7 +40,7 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8, typename T9, typename T10>
 struct tag<boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> >
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 
@@ -46,20 +48,20 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8, typename T9, typename T10>
 struct coordinate_type<boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> >
 {
-    typedef T1 type;
+	typedef T1 type;
 };
 
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8, typename T9, typename T10>
 struct dimension<boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> >
-    : boost::mpl::int_
-          <
-              boost::tuples::length
-                  <
-                      boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
-                  >::value
-          >
+	: boost::mpl::int_
+	  <
+	  boost::tuples::length
+	  <
+	  boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
+	  >::value
+	  >
 {};
 
 
@@ -67,23 +69,23 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8, typename T9, typename T10,
           std::size_t Dimension>
 struct access
-    <
-        boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>,
-        Dimension
-    >
+	<
+	boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>,
+	Dimension
+	>
 {
-    static inline T1 get(
-        boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> const& point)
-    {
-        return point.template get<Dimension>();
-    }
+	static inline T1 get(
+	    boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> const& point)
+	{
+		return point.template get<Dimension>();
+	}
 
-    static inline void set(
-        boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>& point,
-        T1 const& value)
-    {
-        point.template get<Dimension>() = value;
-    }
+	static inline void set(
+	    boost::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>& point,
+	    T1 const& value)
+	{
+		point.template get<Dimension>() = value;
+	}
 };
 
 
@@ -91,7 +93,8 @@ struct access
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 // Convenience registration macro to bind boost::tuple to a CS

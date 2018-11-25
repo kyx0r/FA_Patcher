@@ -15,9 +15,12 @@
 #include <boost/compute/algorithm/detail/scan_on_cpu.hpp>
 #include <boost/compute/algorithm/detail/scan_on_gpu.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class OutputIterator, class T, class BinaryOperator>
 inline OutputIterator scan(InputIterator first,
@@ -28,14 +31,16 @@ inline OutputIterator scan(InputIterator first,
                            BinaryOperator op,
                            command_queue &queue)
 {
-    const device &device = queue.get_device();
+	const device &device = queue.get_device();
 
-    if(device.type() & device::cpu){
-        return scan_on_cpu(first, last, result, exclusive, init, op, queue);
-    }
-    else {
-        return scan_on_gpu(first, last, result, exclusive, init, op, queue);
-    }
+	if(device.type() & device::cpu)
+	{
+		return scan_on_cpu(first, last, result, exclusive, init, op, queue);
+	}
+	else
+	{
+		return scan_on_gpu(first, last, result, exclusive, init, op, queue);
+	}
 }
 
 } // end detail namespace

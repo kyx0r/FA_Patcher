@@ -33,11 +33,15 @@
 #include <boost/geometry/algorithms/dispatch/expand.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace expand
+namespace detail
+{
+namespace expand
 {
 
 
@@ -45,49 +49,49 @@ template
 <
     std::size_t Index,
     std::size_t Dimension, std::size_t DimensionCount
->
+    >
 struct indexed_loop
 {
-    template <typename Box, typename Geometry, typename Strategy>
-    static inline void apply(Box& box, Geometry const& source, Strategy const& strategy)
-    {
-        typedef typename select_coordinate_type
-                <
-                    Box,
-                    Geometry
-                >::type coordinate_type;
+	template <typename Box, typename Geometry, typename Strategy>
+	static inline void apply(Box& box, Geometry const& source, Strategy const& strategy)
+	{
+		typedef typename select_coordinate_type
+		<
+		Box,
+		Geometry
+		>::type coordinate_type;
 
-        coordinate_type const coord = get<Index, Dimension>(source);
+		coordinate_type const coord = get<Index, Dimension>(source);
 
-        std::less<coordinate_type> less;
-        std::greater<coordinate_type> greater;
-        
-        if (less(coord, get<min_corner, Dimension>(box)))
-        {
-            set<min_corner, Dimension>(box, coord);
-        }
+		std::less<coordinate_type> less;
+		std::greater<coordinate_type> greater;
 
-        if (greater(coord, get<max_corner, Dimension>(box)))
-        {
-            set<max_corner, Dimension>(box, coord);
-        }
+		if (less(coord, get<min_corner, Dimension>(box)))
+		{
+			set<min_corner, Dimension>(box, coord);
+		}
 
-        indexed_loop
-            <
-                Index, Dimension + 1, DimensionCount
-            >::apply(box, source, strategy);
-    }
+		if (greater(coord, get<max_corner, Dimension>(box)))
+		{
+			set<max_corner, Dimension>(box, coord);
+		}
+
+		indexed_loop
+		<
+		Index, Dimension + 1, DimensionCount
+		>::apply(box, source, strategy);
+	}
 };
 
 
 template <std::size_t Index, std::size_t DimensionCount>
 struct indexed_loop
-    <
-        Index, DimensionCount, DimensionCount
-    >
+	<
+	Index, DimensionCount, DimensionCount
+	>
 {
-    template <typename Box, typename Geometry, typename Strategy>
-    static inline void apply(Box&, Geometry const&, Strategy const&) {}
+	template <typename Box, typename Geometry, typename Strategy>
+	static inline void apply(Box&, Geometry const&, Strategy const&) {}
 };
 
 
@@ -96,28 +100,30 @@ struct indexed_loop
 template <std::size_t Dimension, std::size_t DimensionCount>
 struct expand_indexed
 {
-    template <typename Box, typename Geometry, typename Strategy>
-    static inline void apply(Box& box,
-                             Geometry const& geometry,
-                             Strategy const& strategy)
-    {
-        indexed_loop
-            <
-                0, Dimension, DimensionCount
-            >::apply(box, geometry, strategy);
+	template <typename Box, typename Geometry, typename Strategy>
+	static inline void apply(Box& box,
+	                         Geometry const& geometry,
+	                         Strategy const& strategy)
+	{
+		indexed_loop
+		<
+		0, Dimension, DimensionCount
+		>::apply(box, geometry, strategy);
 
-        indexed_loop
-            <
-                1, Dimension, DimensionCount
-            >::apply(box, geometry, strategy);
-    }
+		indexed_loop
+		<
+		1, Dimension, DimensionCount
+		>::apply(box, geometry, strategy);
+	}
 };
 
 
-}} // namespace detail::expand
+}
+} // namespace detail::expand
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_EXPAND_INDEXED_HPP

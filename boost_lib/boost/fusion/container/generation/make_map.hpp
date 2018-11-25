@@ -20,45 +20,48 @@
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 #include <boost/fusion/support/pair.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace result_of
-    {
-        template <typename ...Key>
-        struct make_map
-        {
-            template <typename ...T>
-            struct apply
-            {
-                typedef map<
-                    fusion::pair<
-                        Key
-                      , typename detail::as_fusion_element<T>::type
-                    >...>
-                type;
-            };
-        };
-    }
+namespace fusion
+{
+namespace result_of
+{
+template <typename ...Key>
+struct make_map
+{
+	template <typename ...T>
+	struct apply
+	{
+		typedef map<
+		fusion::pair<
+		Key
+		, typename detail::as_fusion_element<T>::type
+		>...>
+		type;
+	};
+};
+}
 
-    template <typename ...Key, typename ...T>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline map<
-        fusion::pair<
-            Key
-          , typename detail::as_fusion_element<T>::type
-        >...>
-    make_map(T const&... arg)
-    {
-        typedef map<
-            fusion::pair<
-                Key
-              , typename detail::as_fusion_element<T>::type
-            >...>
-        result_type;
+template <typename ...Key, typename ...T>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline map<
+fusion::pair<
+Key
+, typename detail::as_fusion_element<T>::type
+>...>
+make_map(T const&... arg)
+{
+	typedef map<
+	fusion::pair<
+	Key
+	, typename detail::as_fusion_element<T>::type
+	>...>
+	result_type;
 
-        return result_type(arg...);
-    }
- }}
+	return result_type(arg...);
+}
+}
+}
 
 #endif
 #endif

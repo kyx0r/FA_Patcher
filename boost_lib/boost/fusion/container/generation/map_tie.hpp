@@ -19,30 +19,33 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <boost/fusion/support/pair.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace result_of
-    {
-        template <typename ...Key>
-        struct map_tie
-        {
-            template <typename ...T>
-            struct apply
-            {
-                typedef map<fusion::pair<Key, T&>...> type;
-            };
-        };
-    }
+namespace fusion
+{
+namespace result_of
+{
+template <typename ...Key>
+struct map_tie
+{
+	template <typename ...T>
+	struct apply
+	{
+		typedef map<fusion::pair<Key, T&>...> type;
+	};
+};
+}
 
-    template <typename ...Key, typename ...T>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline map<fusion::pair<Key, T&>...>
-    map_tie(T&... arg)
-    {
-        typedef map<fusion::pair<Key, T&>...> result_type;
-        return result_type(arg...);
-    }
- }}
+template <typename ...Key, typename ...T>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline map<fusion::pair<Key, T&>...>
+map_tie(T&... arg)
+{
+	typedef map<fusion::pair<Key, T&>...> result_type;
+	return result_type(arg...);
+}
+}
+}
 
 #endif
 #endif

@@ -13,43 +13,50 @@
 #include <boost/process/detail/posix/handler.hpp>
 #include <unistd.h>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 
 struct close_fd_ : handler_base_ext
 {
-    close_fd_(int fd) : fd_(fd) {}
+	close_fd_(int fd) : fd_(fd) {}
 
-    template <class PosixExecutor>
-    void on_exec_setup(PosixExecutor& e) const
-    {
-        if (::close(fd_) == -1)
-            e.set_error(::boost::process::detail::get_last_error(), "close() failed");
-    }
+	template <class PosixExecutor>
+	void on_exec_setup(PosixExecutor& e) const
+	{
+		if (::close(fd_) == -1)
+			e.set_error(::boost::process::detail::get_last_error(), "close() failed");
+	}
 
 private:
-    int fd_;
+	int fd_;
 };
 
 template <class Range>
 struct close_fds_ : handler_base_ext
 {
 public:
-    close_fds_(const Range &fds) : fds_(fds) {}
+	close_fds_(const Range &fds) : fds_(fds) {}
 
-    template <class PosixExecutor>
-    void on_exec_setup(PosixExecutor& e) const
-    {
-        for (auto & fd_ : fds_)
-            if (::close(fd_) == -1)
-            {
-                 e.set_error(::boost::process::detail::get_last_error(), "close() failed");
-                 break;
-            }
-    }
+	template <class PosixExecutor>
+	void on_exec_setup(PosixExecutor& e) const
+	{
+		for (auto & fd_ : fds_)
+			if (::close(fd_) == -1)
+			{
+				e.set_error(::boost::process::detail::get_last_error(), "close() failed");
+				break;
+			}
+	}
 
 private:
-    Range fds_;
+	Range fds_;
 };
 
 
@@ -58,35 +65,50 @@ template <class FileDescriptor>
 struct bind_fd_ : handler_base_ext
 {
 public:
-    bind_fd_(int id, const FileDescriptor &fd) : id_(id), fd_(fd) {}
+	bind_fd_(int id, const FileDescriptor &fd) : id_(id), fd_(fd) {}
 
-    template <class PosixExecutor>
-    void on_exec_setup(PosixExecutor& e) const
-    {
-        if (::dup2(fd_, id_) == -1)
-             e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
-    }
+	template <class PosixExecutor>
+	void on_exec_setup(PosixExecutor& e) const
+	{
+		if (::dup2(fd_, id_) == -1)
+			e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	}
 
 private:
-    int id_;
-    FileDescriptor fd_;
+	int id_;
+	FileDescriptor fd_;
 };
 
 
 struct fd_
 {
-    constexpr fd_() {};
-    close_fd_ close(int _fd) const {return close_fd_(_fd);}
-    close_fds_<std::vector<int>> close(const std::initializer_list<int> & vec) const {return std::vector<int>(vec);}
-    template<typename Range>
-    close_fds_<Range> close(const Range & r) const {return r;}
+	constexpr fd_() {};
+	close_fd_ close(int _fd) const
+	{
+		return close_fd_(_fd);
+	}
+	close_fds_<std::vector<int>> close(const std::initializer_list<int> & vec) const
+	{
+		return std::vector<int>(vec);
+	}
+	template<typename Range>
+	close_fds_<Range> close(const Range & r) const
+	{
+		return r;
+	}
 
-    template <class FileDescriptor>
-    bind_fd_<FileDescriptor> bind(int id, const FileDescriptor & fd) const {return {id, fd};}
+	template <class FileDescriptor>
+	bind_fd_<FileDescriptor> bind(int id, const FileDescriptor & fd) const
+	{
+		return {id, fd};
+	}
 
 };
 
 
-}}}}
+}
+}
+}
+}
 
 #endif

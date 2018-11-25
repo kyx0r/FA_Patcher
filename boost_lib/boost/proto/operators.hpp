@@ -26,77 +26,79 @@
 # pragma warning(disable : 4714) // function 'xxx' marked as __forceinline not inlined
 #endif
 
-namespace boost { namespace proto
+namespace boost
 {
-    namespace detail
-    {
-        template<typename MakeExpr, typename Grammar>
-        struct lazy_matches
-          : proto::matches<typename MakeExpr::type, Grammar>
-        {};
+namespace proto
+{
+namespace detail
+{
+template<typename MakeExpr, typename Grammar>
+struct lazy_matches
+	: proto::matches<typename MakeExpr::type, Grammar>
+{};
 
-        template<typename Domain, typename Grammar, typename Trait, typename Tag, typename Arg>
-        struct enable_unary
-          : boost::lazy_enable_if_c<
-                boost::mpl::and_<
-                    Trait
-                  , lazy_matches<result_of::make_expr<Tag, basic_default_domain, Arg>, Grammar>
-                >::value
-              , result_of::make_expr<Tag, Domain, Arg>
-            >
-        {};
+template<typename Domain, typename Grammar, typename Trait, typename Tag, typename Arg>
+struct enable_unary
+	: boost::lazy_enable_if_c<
+	  boost::mpl::and_<
+	  Trait
+	, lazy_matches<result_of::make_expr<Tag, basic_default_domain, Arg>, Grammar>
+	  >::value
+	, result_of::make_expr<Tag, Domain, Arg>
+	  >
+{};
 
-        template<typename Domain, typename Trait, typename Tag, typename Arg>
-        struct enable_unary<Domain, proto::_, Trait, Tag, Arg &>
-          : boost::lazy_enable_if_c<
-                Trait::value
-              , result_of::make_expr<Tag, Domain, Arg &>
-            >
-        {};
+template<typename Domain, typename Trait, typename Tag, typename Arg>
+struct enable_unary<Domain, proto::_, Trait, Tag, Arg &>
+	: boost::lazy_enable_if_c<
+	  Trait::value
+	, result_of::make_expr<Tag, Domain, Arg &>
+	  >
+{};
 
-        template<typename Trait, typename Tag, typename Arg>
-        struct enable_unary<deduce_domain, not_a_grammar, Trait, Tag, Arg &>
-          : enable_unary<
-                typename domain_of<Arg>::type
-              , typename domain_of<Arg>::type::proto_grammar
-              , Trait
-              , Tag
-              , Arg &
-            >
-        {};
+template<typename Trait, typename Tag, typename Arg>
+struct enable_unary<deduce_domain, not_a_grammar, Trait, Tag, Arg &>
+	: enable_unary<
+	  typename domain_of<Arg>::type
+	, typename domain_of<Arg>::type::proto_grammar
+	, Trait
+	, Tag
+	, Arg &
+	  >
+{};
 
-        template<typename Domain, typename Grammar, typename Trait, typename Tag, typename Left, typename Right>
-        struct enable_binary
-          : boost::lazy_enable_if_c<
-                boost::mpl::and_<
-                    Trait
-                  , lazy_matches<result_of::make_expr<Tag, basic_default_domain, Left, Right>, Grammar>
-                >::value
-              , result_of::make_expr<Tag, Domain, Left, Right>
-            >
-        {};
+template<typename Domain, typename Grammar, typename Trait, typename Tag, typename Left, typename Right>
+struct enable_binary
+	: boost::lazy_enable_if_c<
+	  boost::mpl::and_<
+	  Trait
+	, lazy_matches<result_of::make_expr<Tag, basic_default_domain, Left, Right>, Grammar>
+	  >::value
+	, result_of::make_expr<Tag, Domain, Left, Right>
+	  >
+{};
 
-        template<typename Domain, typename Trait, typename Tag, typename Left, typename Right>
-        struct enable_binary<Domain, proto::_, Trait, Tag, Left &, Right &>
-          : boost::lazy_enable_if_c<
-                Trait::value
-              , result_of::make_expr<Tag, Domain, Left &, Right &>
-            >
-        {};
+template<typename Domain, typename Trait, typename Tag, typename Left, typename Right>
+struct enable_binary<Domain, proto::_, Trait, Tag, Left &, Right &>
+	: boost::lazy_enable_if_c<
+	  Trait::value
+	, result_of::make_expr<Tag, Domain, Left &, Right &>
+	  >
+{};
 
-        template<typename Trait, typename Tag, typename Left, typename Right>
-        struct enable_binary<deduce_domain, not_a_grammar, Trait, Tag, Left &, Right &>
-          : enable_binary<
-                typename deduce_domain2<Left, Right>::type
-              , typename deduce_domain2<Left, Right>::type::proto_grammar
-              , Trait
-              , Tag
-              , Left &
-              , Right &
-            >
-        {};
+template<typename Trait, typename Tag, typename Left, typename Right>
+struct enable_binary<deduce_domain, not_a_grammar, Trait, Tag, Left &, Right &>
+	: enable_binary<
+	  typename deduce_domain2<Left, Right>::type
+	, typename deduce_domain2<Left, Right>::type::proto_grammar
+	, Trait
+	, Tag
+	, Left &
+	, Right &
+	  >
+{};
 
-    } // detail
+} // detail
 
 #define BOOST_PROTO_UNARY_OP_IS_POSTFIX_0
 #define BOOST_PROTO_UNARY_OP_IS_POSTFIX_1 , int
@@ -275,66 +277,66 @@ namespace boost { namespace proto
     BOOST_PROTO_DEFINE_BINARY_OPERATOR(^=, boost::proto::tag::bitwise_xor_assign, TRAIT, DOMAIN)    \
     /**/
 
-    // Extensions are a superset of Proto expressions
-    template<typename T>
-    struct is_extension
-      : is_expr<T>
-    {};
+// Extensions are a superset of Proto expressions
+template<typename T>
+struct is_extension
+	: is_expr<T>
+{};
 
-    template<typename T>
-    struct is_extension<T &>
-      : is_expr<T>
-    {};
+template<typename T>
+struct is_extension<T &>
+	: is_expr<T>
+{};
 
-    #define BOOST_PROTO_APPLY_UNARY_(TRAIT, ARG) TRAIT<ARG>
-    #define BOOST_PROTO_APPLY_BINARY_(TRAIT, LEFT, RIGHT) boost::mpl::or_<TRAIT<LEFT>, TRAIT<RIGHT> >
+#define BOOST_PROTO_APPLY_UNARY_(TRAIT, ARG) TRAIT<ARG>
+#define BOOST_PROTO_APPLY_BINARY_(TRAIT, LEFT, RIGHT) boost::mpl::or_<TRAIT<LEFT>, TRAIT<RIGHT> >
 
-    namespace exprns_
-    {
-        // This defines all of Proto's built-in free operator overloads
-        BOOST_PROTO_DEFINE_OPERATORS(is_extension, deduce_domain)
+namespace exprns_
+{
+// This defines all of Proto's built-in free operator overloads
+BOOST_PROTO_DEFINE_OPERATORS(is_extension, deduce_domain)
 
-        // if_else, for the non-overloadable ternary conditional operator ?:
-        template<typename A0, typename A1, typename A2>
-        BOOST_FORCEINLINE
-        typename result_of::make_expr<
-            tag::if_else_
-          , deduce_domain
-          , A0 const &
-          , A1 const &
-          , A2 const &
-        >::type const
-        if_else(A0 const &a0, A1 const &a1, A2 const &a2)
-        {
-            return proto::detail::make_expr_<
-                tag::if_else_
-              , deduce_domain
-              , A0 const &
-              , A1 const &
-              , A2 const &
-            >()(a0, a1, a2);
-        }
-    }
+// if_else, for the non-overloadable ternary conditional operator ?:
+template<typename A0, typename A1, typename A2>
+BOOST_FORCEINLINE
+typename result_of::make_expr<
+tag::if_else_
+, deduce_domain
+, A0 const &
+, A1 const &
+, A2 const &
+>::type const
+if_else(A0 const &a0, A1 const &a1, A2 const &a2)
+{
+	return proto::detail::make_expr_<
+	       tag::if_else_
+	       , deduce_domain
+	       , A0 const &
+	       , A1 const &
+	       , A2 const &
+	       >()(a0, a1, a2);
+}
+}
 
-    using exprns_::if_else;
+using exprns_::if_else;
 
-    #undef BOOST_PROTO_APPLY_UNARY_
-    #undef BOOST_PROTO_APPLY_BINARY_
+#undef BOOST_PROTO_APPLY_UNARY_
+#undef BOOST_PROTO_APPLY_BINARY_
 
-    // Redefine BOOST_PROTO_APPLY_UNARY_ and BOOST_PROTO_APPLY_BINARY_ so that end users
-    // can use BOOST_PROTO_DEFINE_OPERATORS to define Proto operator overloads that work
-    // with their own terminal types.
+// Redefine BOOST_PROTO_APPLY_UNARY_ and BOOST_PROTO_APPLY_BINARY_ so that end users
+// can use BOOST_PROTO_DEFINE_OPERATORS to define Proto operator overloads that work
+// with their own terminal types.
 
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
 
-    #define BOOST_PROTO_APPLY_UNARY_(TRAIT, ARG)                                                    \
+#define BOOST_PROTO_APPLY_UNARY_(TRAIT, ARG)                                                    \
         boost::mpl::and_<                                                                           \
             TRAIT<ARG>                                                                              \
           , boost::mpl::not_<boost::proto::is_extension<ARG> >                                      \
         >                                                                                           \
         /**/
 
-    #define BOOST_PROTO_APPLY_BINARY_(TRAIT, LEFT, RIGHT)                                           \
+#define BOOST_PROTO_APPLY_BINARY_(TRAIT, LEFT, RIGHT)                                           \
         boost::mpl::and_<                                                                           \
             boost::mpl::or_<TRAIT<LEFT>, TRAIT<RIGHT> >                                             \
           , boost::mpl::not_<                                                                       \
@@ -348,14 +350,14 @@ namespace boost { namespace proto
 
 #else
 
-    #define BOOST_PROTO_APPLY_UNARY_(TRAIT, ARG)                                                    \
+#define BOOST_PROTO_APPLY_UNARY_(TRAIT, ARG)                                                    \
         boost::mpl::and_<                                                                           \
             TRAIT<BOOST_PROTO_UNCVREF(ARG) >                                                        \
           , boost::mpl::not_<boost::proto::is_extension<ARG> >                                      \
         >                                                                                           \
         /**/
 
-    #define BOOST_PROTO_APPLY_BINARY_(TRAIT, LEFT, RIGHT)                                           \
+#define BOOST_PROTO_APPLY_BINARY_(TRAIT, LEFT, RIGHT)                                           \
         boost::mpl::and_<                                                                           \
             boost::mpl::or_<TRAIT<BOOST_PROTO_UNCVREF(LEFT) >, TRAIT<BOOST_PROTO_UNCVREF(RIGHT) > > \
           , boost::mpl::not_<                                                                       \
@@ -369,7 +371,8 @@ namespace boost { namespace proto
 
 #endif
 
-}}
+}
+}
 
 #if defined(_MSC_VER)
 # pragma warning(pop)

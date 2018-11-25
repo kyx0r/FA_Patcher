@@ -20,8 +20,8 @@
 #include <boost/accumulators/numeric/functional_fwd.hpp>
 
 #ifndef BOOST_ACCUMULATORS_MAX_FEATURES
-  /// The maximum number of accumulators that may be put in an accumulator_set.
-  /// Defaults to BOOST_MPL_LIMIT_VECTOR_SIZE (which defaults to 20).
+/// The maximum number of accumulators that may be put in an accumulator_set.
+/// Defaults to BOOST_MPL_LIMIT_VECTOR_SIZE (which defaults to 20).
 # define BOOST_ACCUMULATORS_MAX_FEATURES BOOST_MPL_LIMIT_VECTOR_SIZE
 #endif
 
@@ -30,8 +30,8 @@
 #endif
 
 #ifndef BOOST_ACCUMULATORS_MAX_ARGS
-  /// The maximum number of arguments that may be specified to an accumulator_set's
-  /// accumulation function. Defaults to 15.
+/// The maximum number of arguments that may be specified to an accumulator_set's
+/// accumulation function. Defaults to 15.
 # define BOOST_ACCUMULATORS_MAX_ARGS 15
 #endif
 
@@ -52,7 +52,9 @@
 #define BOOST_ACCUMULATORS_GCC_VERSION                                                              \
   (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 
-namespace boost { namespace accumulators
+namespace boost
+{
+namespace accumulators
 {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,10 +62,10 @@ namespace boost { namespace accumulators
 //
 namespace tag
 {
-    struct sample;
-    struct weight;
-    struct accumulator;
-    struct weights;
+struct sample;
+struct weight;
+struct accumulator;
+struct weights;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,23 +73,23 @@ namespace tag
 //
 namespace tag
 {
-    template<typename ValueType, typename Tag>
-    struct value;
+template<typename ValueType, typename Tag>
+struct value;
 
-    template<typename Tag>
-    struct value_tag;
+template<typename Tag>
+struct value_tag;
 
-    template<typename Referent, typename Tag>
-    struct reference;
+template<typename Referent, typename Tag>
+struct reference;
 
-    template<typename Tag>
-    struct reference_tag;
+template<typename Tag>
+struct reference_tag;
 
-    template<typename Type, typename Tag = void, typename AccumulatorSet = void>
-    struct external;
+template<typename Type, typename Tag = void, typename AccumulatorSet = void>
+struct external;
 
-    template<typename Feature>
-    struct droppable;
+template<typename Feature>
+struct droppable;
 }
 
 template<typename Accumulator>
@@ -152,9 +154,9 @@ extract_result(AccumulatorSet const &acc, A1 const &a1);
 ///
 BOOST_PP_REPEAT_FROM_TO(
     2
-  , BOOST_PP_INC(BOOST_ACCUMULATORS_MAX_ARGS)
-  , BOOST_ACCUMULATORS_EXTRACT_RESULT_FWD
-  , _
+    , BOOST_PP_INC(BOOST_ACCUMULATORS_MAX_ARGS)
+    , BOOST_ACCUMULATORS_EXTRACT_RESULT_FWD
+    , _
 )
 
 #ifdef BOOST_ACCUMULATORS_DOXYGEN_INVOKED
@@ -165,26 +167,26 @@ extract_result(AccumulatorSet const &acc, A1 const &a1, A2 const &a2 ...);
 
 namespace impl
 {
-    using namespace numeric::operators;
+using namespace numeric::operators;
 
-    template<typename Accumulator, typename Tag>
-    struct external_impl;
+template<typename Accumulator, typename Tag>
+struct external_impl;
 }
 
 namespace detail
 {
-    template<typename Accumulator>
-    struct feature_tag;
+template<typename Accumulator>
+struct feature_tag;
 
-    template<typename Feature, typename Sample, typename Weight>
-    struct to_accumulator;
+template<typename Feature, typename Sample, typename Weight>
+struct to_accumulator;
 
-    struct accumulator_set_base;
+struct accumulator_set_base;
 
-    template<typename T>
-    struct is_accumulator_set;
+template<typename T>
+struct is_accumulator_set;
 
-    inline void ignore_variable(void const *) {}
+inline void ignore_variable(void const *) {}
 
 #define BOOST_ACCUMULATORS_IGNORE_GLOBAL(X)                             \
     namespace detail                                                    \
@@ -200,7 +202,8 @@ namespace detail
     /**/
 }
 
-}} // namespace boost::accumulators
+}
+} // namespace boost::accumulators
 
 // For defining boost::parameter keywords that can be inherited from to
 // get a nested, class-scoped keyword with the requested alias

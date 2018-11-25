@@ -16,32 +16,38 @@
 #include <boost/geometry/core/point_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace point_iterator
+namespace detail
+{
+namespace point_iterator
 {
 
 
 template <typename Geometry>
 struct value_type
 {
-    typedef typename boost::mpl::if_c
-        <
-            !boost::is_const<Geometry>::type::value,
-            typename geometry::point_type<Geometry>::type,
-            typename geometry::point_type<Geometry>::type const
-        >::type type;
+	typedef typename boost::mpl::if_c
+	<
+	!boost::is_const<Geometry>::type::value,
+	typename geometry::point_type<Geometry>::type,
+	typename geometry::point_type<Geometry>::type const
+	>::type type;
 };
 
 
-}} // namespace detail::point_iterator
+}
+} // namespace detail::point_iterator
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ITERATORS_DETAIL_POINT_ITERATOR_VALUE_TYPE_HPP

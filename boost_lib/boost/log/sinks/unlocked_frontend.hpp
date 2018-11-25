@@ -31,11 +31,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
@@ -64,88 +66,88 @@ namespace sinks {
  */
 template< typename SinkBackendT >
 class unlocked_sink :
-    public aux::make_sink_frontend_base< SinkBackendT >::type
+	public aux::make_sink_frontend_base< SinkBackendT >::type
 {
-    typedef typename aux::make_sink_frontend_base< SinkBackendT >::type base_type;
+	typedef typename aux::make_sink_frontend_base< SinkBackendT >::type base_type;
 
 public:
-    //! Sink implementation type
-    typedef SinkBackendT sink_backend_type;
-    //! \cond
-    BOOST_STATIC_ASSERT_MSG((has_requirement< typename sink_backend_type::frontend_requirements, concurrent_feeding >::value), "Unlocked sink frontend is incompatible with the specified backend: thread synchronization requirements are not met");
-    //! \endcond
+	//! Sink implementation type
+	typedef SinkBackendT sink_backend_type;
+	//! \cond
+	BOOST_STATIC_ASSERT_MSG((has_requirement< typename sink_backend_type::frontend_requirements, concurrent_feeding >::value), "Unlocked sink frontend is incompatible with the specified backend: thread synchronization requirements are not met");
+	//! \endcond
 
-    //! Type of pointer to the backend
-    typedef shared_ptr< sink_backend_type > locked_backend_ptr;
+	//! Type of pointer to the backend
+	typedef shared_ptr< sink_backend_type > locked_backend_ptr;
 
 private:
-    //! Pointer to the backend
-    const shared_ptr< sink_backend_type > m_pBackend;
+	//! Pointer to the backend
+	const shared_ptr< sink_backend_type > m_pBackend;
 
 public:
-    /*!
-     * Default constructor. Constructs the sink backend instance.
-     * Requires the backend to be default-constructible.
-     */
-    unlocked_sink() :
-        base_type(false),
-        m_pBackend(boost::make_shared< sink_backend_type >())
-    {
-    }
-    /*!
-     * Constructor attaches user-constructed backend instance
-     *
-     * \param backend Pointer to the backend instance
-     *
-     * \pre \a backend is not \c NULL.
-     */
-    explicit unlocked_sink(shared_ptr< sink_backend_type > const& backend) :
-        base_type(false),
-        m_pBackend(backend)
-    {
-    }
+	/*!
+	 * Default constructor. Constructs the sink backend instance.
+	 * Requires the backend to be default-constructible.
+	 */
+	unlocked_sink() :
+		base_type(false),
+		m_pBackend(boost::make_shared< sink_backend_type >())
+	{
+	}
+	/*!
+	 * Constructor attaches user-constructed backend instance
+	 *
+	 * \param backend Pointer to the backend instance
+	 *
+	 * \pre \a backend is not \c NULL.
+	 */
+	explicit unlocked_sink(shared_ptr< sink_backend_type > const& backend) :
+		base_type(false),
+		m_pBackend(backend)
+	{
+	}
 
-    /*!
-     * Constructor that passes arbitrary named parameters to the interprocess sink backend constructor.
-     * Refer to the backend documentation for the list of supported parameters.
-     */
+	/*!
+	 * Constructor that passes arbitrary named parameters to the interprocess sink backend constructor.
+	 * Refer to the backend documentation for the list of supported parameters.
+	 */
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_GEN(BOOST_LOG_SINK_CTOR_FORWARD_INTERNAL, ~)
+	BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_GEN(BOOST_LOG_SINK_CTOR_FORWARD_INTERNAL, ~)
 #else
-    template< typename... Args >
-    explicit unlocked_sink(Args&&... args);
+	template< typename... Args >
+	explicit unlocked_sink(Args&&... args);
 #endif
 
-    /*!
-     * Locking accessor to the attached backend.
-     *
-     * \note Does not do any actual locking, provided only for interface consistency
-     *       with other frontends.
-     */
-    locked_backend_ptr locked_backend()
-    {
-        return m_pBackend;
-    }
+	/*!
+	 * Locking accessor to the attached backend.
+	 *
+	 * \note Does not do any actual locking, provided only for interface consistency
+	 *       with other frontends.
+	 */
+	locked_backend_ptr locked_backend()
+	{
+		return m_pBackend;
+	}
 
-    /*!
-     * Passes the log record to the backend
-     */
-    void consume(record_view const& rec)
-    {
-        boost::log::aux::fake_mutex m;
-        base_type::feed_record(rec, m, *m_pBackend);
-    }
+	/*!
+	 * Passes the log record to the backend
+	 */
+	void consume(record_view const& rec)
+	{
+		boost::log::aux::fake_mutex m;
+		base_type::feed_record(rec, m, *m_pBackend);
+	}
 
-    /*!
-     * The method performs flushing of any internal buffers that may hold log records. The method
-     * may take considerable time to complete and may block both the calling thread and threads
-     * attempting to put new records into the sink while this call is in progress.
-     */
-    void flush()
-    {
-        boost::log::aux::fake_mutex m;
-        base_type::flush_backend(m, *m_pBackend);
-    }
+	/*!
+	 * The method performs flushing of any internal buffers that may hold log records. The method
+	 * may take considerable time to complete and may block both the calling thread and threads
+	 * attempting to put new records into the sink while this call is in progress.
+	 */
+	void flush()
+	{
+		boost::log::aux::fake_mutex m;
+		base_type::flush_backend(m, *m_pBackend);
+	}
 };
 
 #undef BOOST_LOG_SINK_CTOR_FORWARD_INTERNAL_1

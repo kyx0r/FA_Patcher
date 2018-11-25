@@ -27,7 +27,9 @@
 #include <boost/geometry/geometries/concepts/point_concept.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -37,46 +39,46 @@ namespace detail
 template <std::size_t Dimension>
 struct cross_product
 {
-    // We define cross product only for 2d (see Wolfram) and 3d.
-    // In Math, it is also well-defined for 7-dimension.
-    // Generalisation of cross product to n-dimension is defined as
-    // wedge product but it is not direct analogue to binary cross product.
-    BOOST_MPL_ASSERT_MSG((false),
-                         NOT_IMPLEMENTED_FOR_THIS_DIMENSION,
-                         (mpl::size_t<Dimension>));
+	// We define cross product only for 2d (see Wolfram) and 3d.
+	// In Math, it is also well-defined for 7-dimension.
+	// Generalisation of cross product to n-dimension is defined as
+	// wedge product but it is not direct analogue to binary cross product.
+	BOOST_MPL_ASSERT_MSG((false),
+	                     NOT_IMPLEMENTED_FOR_THIS_DIMENSION,
+	                     (mpl::size_t<Dimension>));
 };
 
 template <>
 struct cross_product<2>
 {
-    template <typename P1, typename P2, typename ResultP>
-    static inline void apply(P1 const& p1, P2 const& p2, ResultP& result)
-    {
-        assert_dimension<P1, 2>();
-        assert_dimension<P2, 2>();
-        assert_dimension<ResultP, 2>();
+	template <typename P1, typename P2, typename ResultP>
+	static inline void apply(P1 const& p1, P2 const& p2, ResultP& result)
+	{
+		assert_dimension<P1, 2>();
+		assert_dimension<P2, 2>();
+		assert_dimension<ResultP, 2>();
 
-        // For 2-dimensions, analog of the cross product U(x,y) and V(x,y) is
-        // Ux * Vy - Uy * Vx
-        // which is returned as 0-component (or X) of 2d vector, 1-component is undefined.
-        set<0>(result, get<0>(p1) * get<1>(p2) - get<1>(p1) * get<0>(p2));
-    }
+		// For 2-dimensions, analog of the cross product U(x,y) and V(x,y) is
+		// Ux * Vy - Uy * Vx
+		// which is returned as 0-component (or X) of 2d vector, 1-component is undefined.
+		set<0>(result, get<0>(p1) * get<1>(p2) - get<1>(p1) * get<0>(p2));
+	}
 };
 
 template <>
 struct cross_product<3>
 {
-    template <typename P1, typename P2, typename ResultP>
-    static inline void apply(P1 const& p1, P2 const& p2, ResultP& result)
-    {
-        assert_dimension<P1, 3>();
-        assert_dimension<P2, 3>();
-        assert_dimension<ResultP, 3>();
+	template <typename P1, typename P2, typename ResultP>
+	static inline void apply(P1 const& p1, P2 const& p2, ResultP& result)
+	{
+		assert_dimension<P1, 3>();
+		assert_dimension<P2, 3>();
+		assert_dimension<ResultP, 3>();
 
-        set<0>(result, get<1>(p1) * get<2>(p2) - get<2>(p1) * get<1>(p2));
-        set<1>(result, get<2>(p1) * get<0>(p2) - get<0>(p1) * get<2>(p2));
-        set<2>(result, get<0>(p1) * get<1>(p2) - get<1>(p1) * get<0>(p2));
-    }
+		set<0>(result, get<1>(p1) * get<2>(p2) - get<2>(p1) * get<1>(p2));
+		set<1>(result, get<2>(p1) * get<0>(p2) - get<0>(p1) * get<2>(p2));
+		set<2>(result, get<0>(p1) * get<1>(p2) - get<1>(p1) * get<0>(p2));
+	}
 };
 
 } // namespace detail
@@ -94,13 +96,13 @@ struct cross_product<3>
 template <typename ResultP, typename P1, typename P2>
 inline ResultP cross_product(P1 const& p1, P2 const& p2)
 {
-    BOOST_CONCEPT_ASSERT( (concepts::Point<ResultP>) );
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<P1>) );
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<P2>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Point<ResultP>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<P1>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<P2>) );
 
-    ResultP result;
-    detail::cross_product<dimension<ResultP>::value>::apply(p1, p2, result);
-    return result;
+	ResultP result;
+	detail::cross_product<dimension<ResultP>::value>::apply(p1, p2, result);
+	return result;
 }
 
 /*!
@@ -114,15 +116,16 @@ inline ResultP cross_product(P1 const& p1, P2 const& p2)
 template <typename P>
 inline P cross_product(P const& p1, P const& p2)
 {
-    BOOST_CONCEPT_ASSERT((concepts::Point<P>));
-    BOOST_CONCEPT_ASSERT((concepts::ConstPoint<P>));
+	BOOST_CONCEPT_ASSERT((concepts::Point<P>));
+	BOOST_CONCEPT_ASSERT((concepts::ConstPoint<P>));
 
-    P result;
-    detail::cross_product<dimension<P>::value>::apply(p1, p2, result);
-    return result;
+	P result;
+	detail::cross_product<dimension<P>::value>::apply(p1, p2, result);
+	return result;
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ARITHMETIC_CROSS_PRODUCT_HPP

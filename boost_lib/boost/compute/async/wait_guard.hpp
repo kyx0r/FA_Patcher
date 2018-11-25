@@ -13,8 +13,10 @@
 
 #include <boost/noncopyable.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// \class wait_guard
 /// \brief A guard object for synchronizing an operation on the device
@@ -40,21 +42,21 @@ template<class Waitable>
 class wait_guard : boost::noncopyable
 {
 public:
-    /// Creates a new wait_guard object for \p waitable.
-    wait_guard(const Waitable &waitable)
-        : m_waitable(waitable)
-    {
-    }
+	/// Creates a new wait_guard object for \p waitable.
+	wait_guard(const Waitable &waitable)
+		: m_waitable(waitable)
+	{
+	}
 
-    /// Destroys the wait_guard object. The default implementation will call
-    /// \c wait() on the stored waitable object.
-    ~wait_guard()
-    {
-        m_waitable.wait();
-    }
+	/// Destroys the wait_guard object. The default implementation will call
+	/// \c wait() on the stored waitable object.
+	~wait_guard()
+	{
+		m_waitable.wait();
+	}
 
 private:
-    Waitable m_waitable;
+	Waitable m_waitable;
 };
 
 } // end compute namespace

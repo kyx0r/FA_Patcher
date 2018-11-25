@@ -24,7 +24,9 @@
 
 #include <boost/geometry/util/math.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -34,31 +36,31 @@ namespace detail
 template <typename FpPoint, typename IntPoint, typename CalculationType>
 struct robust_policy
 {
-    static bool const enabled = true;
+	static bool const enabled = true;
 
-    typedef typename geometry::coordinate_type<IntPoint>::type output_ct;
+	typedef typename geometry::coordinate_type<IntPoint>::type output_ct;
 
-    robust_policy(FpPoint const& fp_min, IntPoint const& int_min, CalculationType const& the_factor)
-        : m_fp_min(fp_min)
-        , m_int_min(int_min)
-        , m_multiplier(the_factor)
-    {
-    }
+	robust_policy(FpPoint const& fp_min, IntPoint const& int_min, CalculationType const& the_factor)
+		: m_fp_min(fp_min)
+		, m_int_min(int_min)
+		, m_multiplier(the_factor)
+	{
+	}
 
-    template <std::size_t Dimension, typename Value>
-    inline output_ct apply(Value const& value) const
-    {
-        // a + (v-b)*f
-        CalculationType const a = static_cast<CalculationType>(get<Dimension>(m_int_min));
-        CalculationType const b = static_cast<CalculationType>(get<Dimension>(m_fp_min));
-        CalculationType const result = a + (value - b) * m_multiplier;
+	template <std::size_t Dimension, typename Value>
+	inline output_ct apply(Value const& value) const
+	{
+		// a + (v-b)*f
+		CalculationType const a = static_cast<CalculationType>(get<Dimension>(m_int_min));
+		CalculationType const b = static_cast<CalculationType>(get<Dimension>(m_fp_min));
+		CalculationType const result = a + (value - b) * m_multiplier;
 
-        return geometry::math::rounding_cast<output_ct>(result);
-    }
+		return geometry::math::rounding_cast<output_ct>(result);
+	}
 
-    FpPoint m_fp_min;
-    IntPoint m_int_min;
-    CalculationType m_multiplier;
+	FpPoint m_fp_min;
+	IntPoint m_int_min;
+	CalculationType m_multiplier;
 };
 
 } // namespace detail
@@ -71,18 +73,19 @@ struct robust_policy
 template <typename Point, typename FpPoint, typename IntPoint, typename CalculationType>
 struct robust_point_type<Point, detail::robust_policy<FpPoint, IntPoint, CalculationType> >
 {
-    typedef IntPoint type;
+	typedef IntPoint type;
 };
 
 // Meta function for rescaling, if rescaling is done segment_ratio is based on long long
 template <typename Point, typename FpPoint, typename IntPoint, typename CalculationType>
 struct segment_ratio_type<Point, detail::robust_policy<FpPoint, IntPoint, CalculationType> >
 {
-    typedef segment_ratio<boost::long_long_type> type;
+	typedef segment_ratio<boost::long_long_type> type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_POLICIES_ROBUSTNESS_RESCALE_POLICY_HPP

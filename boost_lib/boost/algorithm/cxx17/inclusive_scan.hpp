@@ -19,17 +19,21 @@
 #include <boost/range/end.hpp>
 #include <boost/range/value_type.hpp>
 
-namespace boost { namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 template<class InputIterator, class OutputIterator, class T, class BinaryOperation>
 OutputIterator inclusive_scan(InputIterator first, InputIterator last,
                               OutputIterator result, BinaryOperation bOp, T init)
 {
-    for (; first != last; ++first, (void) ++result) {
-        init = bOp(init, *first);
-        *result = init;
-        }
-    return result;
+	for (; first != last; ++first, (void) ++result)
+	{
+		init = bOp(init, *first);
+		*result = init;
+	}
+	return result;
 }
 
 
@@ -37,24 +41,26 @@ template<class InputIterator, class OutputIterator, class BinaryOperation>
 OutputIterator inclusive_scan(InputIterator first, InputIterator last,
                               OutputIterator result, BinaryOperation bOp)
 {
-    if (first != last) {
-        typename std::iterator_traits<InputIterator>::value_type init = *first;
-        *result++ = init;
-        if (++first != last)
-            return inclusive_scan(first, last, result, bOp, init);
-        }
+	if (first != last)
+	{
+		typename std::iterator_traits<InputIterator>::value_type init = *first;
+		*result++ = init;
+		if (++first != last)
+			return inclusive_scan(first, last, result, bOp, init);
+	}
 
-    return result;
+	return result;
 }
 
 template<class InputIterator, class OutputIterator>
 OutputIterator inclusive_scan(InputIterator first, InputIterator last,
-                   OutputIterator result)
+                              OutputIterator result)
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type VT;
-    return inclusive_scan(first, last, result, std::plus<VT>());
+	typedef typename std::iterator_traits<InputIterator>::value_type VT;
+	return inclusive_scan(first, last, result, std::plus<VT>());
 }
 
-}} // namespace boost and algorithm
+}
+} // namespace boost and algorithm
 
 #endif // BOOST_ALGORITHM_TRANSFORM_REDUCE_HPP

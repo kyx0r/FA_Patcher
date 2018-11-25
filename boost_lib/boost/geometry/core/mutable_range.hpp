@@ -21,7 +21,9 @@
 #include <boost/type_traits/remove_reference.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -36,7 +38,7 @@ namespace traits
 template <typename Range>
 struct rvalue_type
 {
-    typedef typename boost::remove_reference<Range>::type& type;
+	typedef typename boost::remove_reference<Range>::type& type;
 };
 
 
@@ -47,10 +49,10 @@ struct rvalue_type
 template <typename Range>
 struct clear
 {
-    static inline void apply(typename rvalue_type<Range>::type range)
-    {
-        range.clear();
-    }
+	static inline void apply(typename rvalue_type<Range>::type range)
+	{
+		range.clear();
+	}
 };
 
 
@@ -61,16 +63,16 @@ struct clear
 template <typename Range>
 struct push_back
 {
-    typedef typename boost::range_value
-        <
-            typename boost::remove_reference<Range>::type
-        >::type item_type;
+	typedef typename boost::range_value
+	<
+	typename boost::remove_reference<Range>::type
+	>::type item_type;
 
-    static inline void apply(typename rvalue_type<Range>::type range,
-                 item_type const& item)
-    {
-        range.push_back(item);
-    }
+	static inline void apply(typename rvalue_type<Range>::type range,
+	                         item_type const& item)
+	{
+		range.push_back(item);
+	}
 };
 
 
@@ -81,18 +83,19 @@ struct push_back
 template <typename Range>
 struct resize
 {
-    static inline void apply(typename rvalue_type<Range>::type range,
-                std::size_t new_size)
-    {
-        range.resize(new_size);
-    }
+	static inline void apply(typename rvalue_type<Range>::type range,
+	                         std::size_t new_size)
+	{
+		range.resize(new_size);
+	}
 };
 
 
 } // namespace traits
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_MUTABLE_RANGE_HPP

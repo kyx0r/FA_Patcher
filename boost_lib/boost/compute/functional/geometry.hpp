@@ -14,8 +14,10 @@
 #include <boost/compute/type_traits.hpp>
 #include <boost/compute/functional/detail/macros.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 BOOST_COMPUTE_DECLARE_BUILTIN_FUNCTION(cross, T (T, T), class T)
 BOOST_COMPUTE_DECLARE_BUILTIN_FUNCTION(dot, typename scalar_type<T>::type (T, T), class T)

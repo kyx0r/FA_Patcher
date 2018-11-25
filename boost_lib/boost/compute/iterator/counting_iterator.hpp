@@ -21,13 +21,16 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/type_traits/is_device_iterator.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 // forward declaration for counting_iterator<T>
 template<class T> class counting_iterator;
 
-namespace detail {
+namespace detail
+{
 
 // helper class which defines the iterator_facade super-class
 // type for counting_iterator<T>
@@ -35,33 +38,33 @@ template<class T>
 class counting_iterator_base
 {
 public:
-    typedef ::boost::iterator_facade<
-        ::boost::compute::counting_iterator<T>,
-        T,
-        ::std::random_access_iterator_tag
-    > type;
+	typedef ::boost::iterator_facade<
+	::boost::compute::counting_iterator<T>,
+	T,
+	::std::random_access_iterator_tag
+	> type;
 };
 
 template<class T, class IndexExpr>
 struct counting_iterator_index_expr
 {
-    typedef T result_type;
+	typedef T result_type;
 
-    counting_iterator_index_expr(const T init, const IndexExpr &expr)
-        : m_init(init),
-          m_expr(expr)
-    {
-    }
+	counting_iterator_index_expr(const T init, const IndexExpr &expr)
+		: m_init(init),
+		  m_expr(expr)
+	{
+	}
 
-    const T m_init;
-    const IndexExpr m_expr;
+	const T m_init;
+	const IndexExpr m_expr;
 };
 
 template<class T, class IndexExpr>
 inline meta_kernel& operator<<(meta_kernel &kernel,
                                const counting_iterator_index_expr<T, IndexExpr> &expr)
 {
-    return kernel << '(' << expr.m_init << '+' << expr.m_expr << ')';
+	return kernel << '(' << expr.m_init << '+' << expr.m_expr << ')';
 }
 
 } // end detail namespace
@@ -82,80 +85,81 @@ template<class T>
 class counting_iterator : public detail::counting_iterator_base<T>::type
 {
 public:
-    typedef typename detail::counting_iterator_base<T>::type super_type;
-    typedef typename super_type::reference reference;
-    typedef typename super_type::difference_type difference_type;
+	typedef typename detail::counting_iterator_base<T>::type super_type;
+	typedef typename super_type::reference reference;
+	typedef typename super_type::difference_type difference_type;
 
-    counting_iterator(const T &init)
-        : m_init(init)
-    {
-    }
+	counting_iterator(const T &init)
+		: m_init(init)
+	{
+	}
 
-    counting_iterator(const counting_iterator<T> &other)
-        : m_init(other.m_init)
-    {
-    }
+	counting_iterator(const counting_iterator<T> &other)
+		: m_init(other.m_init)
+	{
+	}
 
-    counting_iterator<T>& operator=(const counting_iterator<T> &other)
-    {
-        if(this != &other){
-            m_init = other.m_init;
-        }
+	counting_iterator<T>& operator=(const counting_iterator<T> &other)
+	{
+		if(this != &other)
+		{
+			m_init = other.m_init;
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~counting_iterator()
-    {
-    }
+	~counting_iterator()
+	{
+	}
 
-    size_t get_index() const
-    {
-        return 0;
-    }
+	size_t get_index() const
+	{
+		return 0;
+	}
 
-    template<class Expr>
-    detail::counting_iterator_index_expr<T, Expr>
-    operator[](const Expr &expr) const
-    {
-        return detail::counting_iterator_index_expr<T, Expr>(m_init, expr);
-    }
-
-private:
-    friend class ::boost::iterator_core_access;
-
-    reference dereference() const
-    {
-        return m_init;
-    }
-
-    bool equal(const counting_iterator<T> &other) const
-    {
-        return m_init == other.m_init;
-    }
-
-    void increment()
-    {
-        m_init++;
-    }
-
-    void decrement()
-    {
-        m_init--;
-    }
-
-    void advance(difference_type n)
-    {
-        m_init += static_cast<T>(n);
-    }
-
-    difference_type distance_to(const counting_iterator<T> &other) const
-    {
-        return difference_type(other.m_init) - difference_type(m_init);
-    }
+	template<class Expr>
+	detail::counting_iterator_index_expr<T, Expr>
+	operator[](const Expr &expr) const
+	{
+		return detail::counting_iterator_index_expr<T, Expr>(m_init, expr);
+	}
 
 private:
-    T m_init;
+	friend class ::boost::iterator_core_access;
+
+	reference dereference() const
+	{
+		return m_init;
+	}
+
+	bool equal(const counting_iterator<T> &other) const
+	{
+		return m_init == other.m_init;
+	}
+
+	void increment()
+	{
+		m_init++;
+	}
+
+	void decrement()
+	{
+		m_init--;
+	}
+
+	void advance(difference_type n)
+	{
+		m_init += static_cast<T>(n);
+	}
+
+	difference_type distance_to(const counting_iterator<T> &other) const
+	{
+		return difference_type(other.m_init) - difference_type(m_init);
+	}
+
+private:
+	T m_init;
 };
 
 /// Returns a new counting_iterator starting at \p init.
@@ -172,7 +176,7 @@ private:
 template<class T>
 inline counting_iterator<T> make_counting_iterator(const T &init)
 {
-    return counting_iterator<T>(init);
+	return counting_iterator<T>(init);
 }
 
 /// \internal_ (is_device_iterator specialization for counting_iterator)

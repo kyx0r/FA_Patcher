@@ -18,8 +18,10 @@
 // svm functions require OpenCL 2.0
 #if defined(BOOST_COMPUTE_CL_VERSION_2_0) || defined(BOOST_COMPUTE_DOXYGEN_INVOKED)
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Allocates a shared virtual memory (SVM) buffer.
 //
@@ -34,14 +36,15 @@ inline svm_ptr<T> svm_alloc(const context &context,
                             cl_svm_mem_flags flags = CL_MEM_READ_WRITE,
                             unsigned int alignment = 0)
 {
-    svm_ptr<T> ptr(
-        clSVMAlloc(context.get(), flags, size * sizeof(T), alignment),
-        context
-    );
-    if(!ptr.get()){
-        BOOST_THROW_EXCEPTION(opencl_error(CL_MEM_OBJECT_ALLOCATION_FAILURE));
-    }
-    return ptr;
+	svm_ptr<T> ptr(
+	    clSVMAlloc(context.get(), flags, size * sizeof(T), alignment),
+	    context
+	);
+	if(!ptr.get())
+	{
+		BOOST_THROW_EXCEPTION(opencl_error(CL_MEM_OBJECT_ALLOCATION_FAILURE));
+	}
+	return ptr;
 }
 
 /// Deallocates a shared virtual memory (SVM) buffer.
@@ -54,14 +57,14 @@ inline svm_ptr<T> svm_alloc(const context &context,
 template<class T>
 inline void svm_free(svm_ptr<T> ptr)
 {
-    clSVMFree(ptr.get_context(), ptr.get());
+	clSVMFree(ptr.get_context(), ptr.get());
 }
 
 /// \overload
 template<class T>
 inline void svm_free(const context &context, svm_ptr<T> ptr)
 {
-    clSVMFree(context.get(), ptr.get());
+	clSVMFree(context.get(), ptr.get());
 }
 
 } // end compute namespace

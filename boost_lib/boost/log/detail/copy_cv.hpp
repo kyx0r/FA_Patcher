@@ -22,35 +22,37 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! The type trait copies top level const/volatile qualifiers from \c FromT to \c ToT
 template< typename FromT, typename ToT >
 struct copy_cv
 {
-    typedef ToT type;
+	typedef ToT type;
 };
 
 template< typename FromT, typename ToT >
 struct copy_cv< const FromT, ToT >
 {
-    typedef const ToT type;
+	typedef const ToT type;
 };
 
 template< typename FromT, typename ToT >
 struct copy_cv< volatile FromT, ToT >
 {
-    typedef volatile ToT type;
+	typedef volatile ToT type;
 };
 
 template< typename FromT, typename ToT >
 struct copy_cv< const volatile FromT, ToT >
 {
-    typedef const volatile ToT type;
+	typedef const volatile ToT type;
 };
 
 } // namespace aux

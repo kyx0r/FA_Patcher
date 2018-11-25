@@ -26,23 +26,30 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 class lazy_ostream;
 
 } // namespace unit_test
 
-namespace test_tools {
+namespace test_tools
+{
 
 using unit_test::const_string;
 class assertion_result;
 
 //____________________________________________________________________________//
 
-namespace tt_detail {
+namespace tt_detail
+{
 
-inline bool dummy_cond() { return false; }
+inline bool dummy_cond()
+{
+	return false;
+}
 
 // ************************************************************************** //
 // **************        types of supported assertions         ************** //
@@ -50,22 +57,23 @@ inline bool dummy_cond() { return false; }
 
 //____________________________________________________________________________//
 
-enum check_type {
-    CHECK_PRED,
-    CHECK_MSG,
-    CHECK_EQUAL,
-    CHECK_NE,
-    CHECK_LT,
-    CHECK_LE,
-    CHECK_GT,
-    CHECK_GE,
-    CHECK_CLOSE,
-    CHECK_CLOSE_FRACTION,
-    CHECK_SMALL,
-    CHECK_BITWISE_EQUAL,
-    CHECK_PRED_WITH_ARGS,
-    CHECK_EQUAL_COLL,
-    CHECK_BUILT_ASSERTION
+enum check_type
+{
+	CHECK_PRED,
+	CHECK_MSG,
+	CHECK_EQUAL,
+	CHECK_NE,
+	CHECK_LT,
+	CHECK_LE,
+	CHECK_GT,
+	CHECK_GE,
+	CHECK_CLOSE,
+	CHECK_CLOSE_FRACTION,
+	CHECK_SMALL,
+	CHECK_BITWISE_EQUAL,
+	CHECK_PRED_WITH_ARGS,
+	CHECK_EQUAL_COLL,
+	CHECK_BUILT_ASSERTION
 };
 
 //____________________________________________________________________________//
@@ -74,8 +82,9 @@ enum check_type {
 // **************        levels of supported assertions        ************** //
 // ************************************************************************** //
 
-enum tool_level {
-    WARN, CHECK, REQUIRE, PASS
+enum tool_level
+{
+	WARN, CHECK, REQUIRE, PASS
 };
 
 //____________________________________________________________________________//

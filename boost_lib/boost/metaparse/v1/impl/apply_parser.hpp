@@ -16,47 +16,47 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct apply_parser
-        {
-        private:
-          template <class ListToAppend>
-          struct do_append
-          {
-            template <class Item>
-            struct apply : boost::mpl::push_back<ListToAppend, Item> {};
-          };
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct apply_parser
+{
+private:
+	template <class ListToAppend>
+	struct do_append
+	{
+		template <class Item>
+		struct apply : boost::mpl::push_back<ListToAppend, Item> {};
+	};
 
-          template <class Accum, class S, class Pos, class Parser>
-          struct apply_unchecked :
-            transform<Parser,do_append<typename Accum::type> >::template apply<
-              typename S::type,
-              typename Pos::type
-            >
-          {};
-          
-        public:
-          template <class State, class Parser>
-          struct apply :
-            unless_error<
-              State,
-              apply_unchecked<
-                get_result<State>,
-                get_remaining<State>,
-                get_position<State>,
-                Parser
-              >
-            >
-          {};
-        };
-      }
-    }
-  }
+	template <class Accum, class S, class Pos, class Parser>
+	struct apply_unchecked :
+		transform<Parser,do_append<typename Accum::type> >::template apply<
+		    typename S::type,
+		    typename Pos::type
+		    >
+	{};
+
+public:
+	template <class State, class Parser>
+	struct apply :
+		unless_error<
+		State,
+		apply_unchecked<
+		get_result<State>,
+		get_remaining<State>,
+		get_position<State>,
+		Parser
+		>
+		>
+	{};
+};
+}
+}
+}
 }
 
 #endif

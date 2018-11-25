@@ -23,40 +23,43 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class gcc_hppa_fenced_block
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  enum half_t { half };
-  enum full_t { full };
+	enum half_t { half };
+	enum full_t { full };
 
-  // Constructor for a half fenced block.
-  explicit gcc_hppa_fenced_block(half_t)
-  {
-  }
+	// Constructor for a half fenced block.
+	explicit gcc_hppa_fenced_block(half_t)
+	{
+	}
 
-  // Constructor for a full fenced block.
-  explicit gcc_hppa_fenced_block(full_t)
-  {
-    barrier();
-  }
+	// Constructor for a full fenced block.
+	explicit gcc_hppa_fenced_block(full_t)
+	{
+		barrier();
+	}
 
-  // Destructor.
-  ~gcc_hppa_fenced_block()
-  {
-    barrier();
-  }
+	// Destructor.
+	~gcc_hppa_fenced_block()
+	{
+		barrier();
+	}
 
 private:
-  static void barrier()
-  {
-    // This is just a placeholder and almost certainly not sufficient.
-    __asm__ __volatile__ ("" : : : "memory");
-  }
+	static void barrier()
+	{
+		// This is just a placeholder and almost certainly not sufficient.
+		__asm__ __volatile__ ("" : : : "memory");
+	}
 };
 
 } // namespace detail

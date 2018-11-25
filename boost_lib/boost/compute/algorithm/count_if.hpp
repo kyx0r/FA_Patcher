@@ -20,8 +20,10 @@
 #include <boost/compute/algorithm/detail/serial_count_if.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns the number of elements in the range [\p first, \p last)
 /// for which \p predicate returns \c true.
@@ -34,29 +36,36 @@ inline size_t count_if(InputIterator first,
                        Predicate predicate,
                        command_queue &queue = system::default_queue())
 {
-    const device &device = queue.get_device();
+	const device &device = queue.get_device();
 
-    size_t input_size = detail::iterator_range_size(first, last);
-    if(input_size == 0){
-        return 0;
-    }
+	size_t input_size = detail::iterator_range_size(first, last);
+	if(input_size == 0)
+	{
+		return 0;
+	}
 
-    if(device.type() & device::cpu){
-        if(input_size < 1024){
-            return detail::serial_count_if(first, last, predicate, queue);
-        }
-        else {
-            return detail::count_if_with_threads(first, last, predicate, queue);
-        }
-    }
-    else {
-        if(input_size < 32){
-            return detail::serial_count_if(first, last, predicate, queue);
-        }
-        else {
-            return detail::count_if_with_reduce(first, last, predicate, queue);
-        }
-    }
+	if(device.type() & device::cpu)
+	{
+		if(input_size < 1024)
+		{
+			return detail::serial_count_if(first, last, predicate, queue);
+		}
+		else
+		{
+			return detail::count_if_with_threads(first, last, predicate, queue);
+		}
+	}
+	else
+	{
+		if(input_size < 32)
+		{
+			return detail::serial_count_if(first, last, predicate, queue);
+		}
+		else
+		{
+			return detail::count_if_with_reduce(first, last, predicate, queue);
+		}
+	}
 }
 
 } // end compute namespace

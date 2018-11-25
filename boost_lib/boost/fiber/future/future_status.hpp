@@ -13,15 +13,19 @@
 
 #include <boost/fiber/detail/config.hpp>
 
-namespace boost {
-namespace fibers {
+namespace boost
+{
+namespace fibers
+{
 
-enum class future_status {
-    ready = 1,
-    timeout,
-    deferred
+enum class future_status
+{
+	ready = 1,
+	timeout,
+	deferred
 };
 
-}}
+}
+}
 
 #endif // BOOST_FIBERS_FUTURE_STATUS_HPP

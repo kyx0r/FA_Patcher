@@ -26,8 +26,10 @@
 //!\file
 //!This header provides utilities to define a unique_ptr that plays nicely with managed segments.
 
-namespace boost{
-namespace interprocess{
+namespace boost
+{
+namespace interprocess
+{
 
 //For backwards compatibility
 using ::boost::movelib::unique_ptr;
@@ -38,10 +40,10 @@ using ::boost::movelib::unique_ptr;
 template<class T, class ManagedMemory>
 struct managed_unique_ptr
 {
-   typedef boost::movelib::unique_ptr
-   < T
-   , typename ManagedMemory::template deleter<T>::type
-   > type;
+	typedef boost::movelib::unique_ptr
+	< T
+	, typename ManagedMemory::template deleter<T>::type
+	> type;
 };
 
 //!Returns an instance of a unique pointer constructed
@@ -49,10 +51,10 @@ struct managed_unique_ptr
 //!of type T that has been allocated in the passed managed segment
 template<class T, class ManagedMemory>
 inline typename managed_unique_ptr<T, ManagedMemory>::type
-   make_managed_unique_ptr(T *constructed_object, ManagedMemory &managed_memory)
+make_managed_unique_ptr(T *constructed_object, ManagedMemory &managed_memory)
 {
-   return typename managed_unique_ptr<T, ManagedMemory>::type
-      (constructed_object, managed_memory.template get_deleter<T>());
+	return typename managed_unique_ptr<T, ManagedMemory>::type
+	       (constructed_object, managed_memory.template get_deleter<T>());
 }
 
 }  //namespace interprocess{

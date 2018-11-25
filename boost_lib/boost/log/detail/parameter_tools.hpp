@@ -79,11 +79,13 @@
 #define BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_CALL(class_type, fun)\
     BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_GEN(BOOST_LOG_CTOR_CALL, (class_type, fun))
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 // Yeah, not too cute. The empty_arg_list class should really be public.
 // https://svn.boost.org/trac/boost/ticket/7247
@@ -95,13 +97,13 @@ typedef boost::parameter::aux::empty_arg_list empty_arg_list;
 template< typename ArgT0, typename... ArgsT >
 struct make_arg_list
 {
-    typedef boost::parameter::aux::arg_list< ArgT0, typename make_arg_list< ArgsT... >::type > type;
+	typedef boost::parameter::aux::arg_list< ArgT0, typename make_arg_list< ArgsT... >::type > type;
 };
 
 template< typename ArgT0 >
 struct make_arg_list< ArgT0 >
 {
-    typedef boost::parameter::aux::arg_list< ArgT0 > type;
+	typedef boost::parameter::aux::arg_list< ArgT0 > type;
 };
 
 #else
@@ -110,13 +112,13 @@ struct make_arg_list< ArgT0 >
 template< typename ArgT0, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_DEC(BOOST_LOG_MAX_PARAMETER_ARGS), typename T, = void BOOST_PP_INTERCEPT) >
 struct make_arg_list
 {
-    typedef boost::parameter::aux::arg_list< ArgT0, typename make_arg_list< BOOST_PP_ENUM_PARAMS(BOOST_PP_DEC(BOOST_LOG_MAX_PARAMETER_ARGS), T) >::type > type;
+	typedef boost::parameter::aux::arg_list< ArgT0, typename make_arg_list< BOOST_PP_ENUM_PARAMS(BOOST_PP_DEC(BOOST_LOG_MAX_PARAMETER_ARGS), T) >::type > type;
 };
 
 template< typename ArgT0 >
 struct make_arg_list< ArgT0, BOOST_PP_ENUM_PARAMS(BOOST_PP_DEC(BOOST_LOG_MAX_PARAMETER_ARGS), void BOOST_PP_INTERCEPT) >
 {
-    typedef boost::parameter::aux::arg_list< ArgT0 > type;
+	typedef boost::parameter::aux::arg_list< ArgT0 > type;
 };
 
 #endif
@@ -127,19 +129,19 @@ struct enable_if_named_parameters {};
 template< typename R >
 struct enable_if_named_parameters< empty_arg_list, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 template< typename Keyword, typename Arg, typename R >
 struct enable_if_named_parameters< boost::parameter::aux::tagged_argument< Keyword, Arg >, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 template< typename TaggedArg, typename Next, typename R >
 struct enable_if_named_parameters< boost::parameter::aux::arg_list< TaggedArg, Next >, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 } // namespace aux

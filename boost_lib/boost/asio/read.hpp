@@ -27,8 +27,10 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 /**
  * @defgroup read boost::asio::read
@@ -76,9 +78,9 @@ namespace asio {
  */
 template <typename SyncReadStream, typename MutableBufferSequence>
 std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
-    typename enable_if<
-      is_mutable_buffer_sequence<MutableBufferSequence>::value
-    >::type* = 0);
+                 typename enable_if<
+                 is_mutable_buffer_sequence<MutableBufferSequence>::value
+                 >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -118,10 +120,10 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  */
 template <typename SyncReadStream, typename MutableBufferSequence>
 std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
-    boost::system::error_code& ec,
-    typename enable_if<
-      is_mutable_buffer_sequence<MutableBufferSequence>::value
-    >::type* = 0);
+                 boost::system::error_code& ec,
+                 typename enable_if<
+                 is_mutable_buffer_sequence<MutableBufferSequence>::value
+                 >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -170,12 +172,12 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  * std::vector.
  */
 template <typename SyncReadStream, typename MutableBufferSequence,
-  typename CompletionCondition>
+          typename CompletionCondition>
 std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
-    CompletionCondition completion_condition,
-    typename enable_if<
-      is_mutable_buffer_sequence<MutableBufferSequence>::value
-    >::type* = 0);
+                 CompletionCondition completion_condition,
+                 typename enable_if<
+                 is_mutable_buffer_sequence<MutableBufferSequence>::value
+                 >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -217,12 +219,12 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  * number of bytes successfully transferred prior to the error.
  */
 template <typename SyncReadStream, typename MutableBufferSequence,
-    typename CompletionCondition>
+          typename CompletionCondition>
 std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
-    CompletionCondition completion_condition, boost::system::error_code& ec,
-    typename enable_if<
-      is_mutable_buffer_sequence<MutableBufferSequence>::value
-    >::type* = 0);
+                 CompletionCondition completion_condition, boost::system::error_code& ec,
+                 typename enable_if<
+                 is_mutable_buffer_sequence<MutableBufferSequence>::value
+                 >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -253,10 +255,10 @@ std::size_t read(SyncReadStream& s, const MutableBufferSequence& buffers,
  */
 template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read(SyncReadStream& s,
-    BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
-    typename enable_if<
-      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
-    >::type* = 0);
+                 BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
+                 typename enable_if<
+                 is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
+                 >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -286,11 +288,11 @@ std::size_t read(SyncReadStream& s,
  */
 template <typename SyncReadStream, typename DynamicBuffer>
 std::size_t read(SyncReadStream& s,
-    BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
-    boost::system::error_code& ec,
-    typename enable_if<
-      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
-    >::type* = 0);
+                 BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
+                 boost::system::error_code& ec,
+                 typename enable_if<
+                 is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
+                 >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -329,13 +331,13 @@ std::size_t read(SyncReadStream& s,
  * @throws boost::system::system_error Thrown on failure.
  */
 template <typename SyncReadStream, typename DynamicBuffer,
-    typename CompletionCondition>
+          typename CompletionCondition>
 std::size_t read(SyncReadStream& s,
-    BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
-    CompletionCondition completion_condition,
-    typename enable_if<
-      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
-    >::type* = 0);
+                 BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
+                 CompletionCondition completion_condition,
+                 typename enable_if<
+                 is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
+                 >::type* = 0);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -375,13 +377,13 @@ std::size_t read(SyncReadStream& s,
  * number of bytes successfully transferred prior to the error.
  */
 template <typename SyncReadStream, typename DynamicBuffer,
-    typename CompletionCondition>
+          typename CompletionCondition>
 std::size_t read(SyncReadStream& s,
-    BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
-    CompletionCondition completion_condition, boost::system::error_code& ec,
-    typename enable_if<
-      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
-    >::type* = 0);
+                 BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
+                 CompletionCondition completion_condition, boost::system::error_code& ec,
+                 typename enable_if<
+                 is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
+                 >::type* = 0);
 
 #if !defined(BOOST_ASIO_NO_EXTENSIONS)
 #if !defined(BOOST_ASIO_NO_IOSTREAM)
@@ -443,7 +445,7 @@ std::size_t read(SyncReadStream& s, basic_streambuf<Allocator>& b);
  */
 template <typename SyncReadStream, typename Allocator>
 std::size_t read(SyncReadStream& s, basic_streambuf<Allocator>& b,
-    boost::system::error_code& ec);
+                 boost::system::error_code& ec);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -481,9 +483,9 @@ std::size_t read(SyncReadStream& s, basic_streambuf<Allocator>& b,
  * @throws boost::system::system_error Thrown on failure.
  */
 template <typename SyncReadStream, typename Allocator,
-    typename CompletionCondition>
+          typename CompletionCondition>
 std::size_t read(SyncReadStream& s, basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition);
+                 CompletionCondition completion_condition);
 
 /// Attempt to read a certain amount of data from a stream before returning.
 /**
@@ -522,9 +524,9 @@ std::size_t read(SyncReadStream& s, basic_streambuf<Allocator>& b,
  * number of bytes successfully transferred prior to the error.
  */
 template <typename SyncReadStream, typename Allocator,
-    typename CompletionCondition>
+          typename CompletionCondition>
 std::size_t read(SyncReadStream& s, basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition, boost::system::error_code& ec);
+                 CompletionCondition completion_condition, boost::system::error_code& ec);
 
 #endif // !defined(BOOST_ASIO_NO_IOSTREAM)
 #endif // !defined(BOOST_ASIO_NO_EXTENSIONS)
@@ -599,14 +601,14 @@ std::size_t read(SyncReadStream& s, basic_streambuf<Allocator>& b,
  *     handler); @endcode
  */
 template <typename AsyncReadStream, typename MutableBufferSequence,
-    typename ReadHandler>
+          typename ReadHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-    void (boost::system::error_code, std::size_t))
+                              void (boost::system::error_code, std::size_t))
 async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
-    BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
-    typename enable_if<
-      is_mutable_buffer_sequence<MutableBufferSequence>::value
-    >::type* = 0);
+           BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
+           typename enable_if<
+           is_mutable_buffer_sequence<MutableBufferSequence>::value
+           >::type* = 0);
 
 /// Start an asynchronous operation to read a certain amount of data from a
 /// stream.
@@ -672,15 +674,15 @@ async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
  * std::vector.
  */
 template <typename AsyncReadStream, typename MutableBufferSequence,
-    typename CompletionCondition, typename ReadHandler>
+          typename CompletionCondition, typename ReadHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-    void (boost::system::error_code, std::size_t))
+                              void (boost::system::error_code, std::size_t))
 async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
-    CompletionCondition completion_condition,
-    BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
-    typename enable_if<
-      is_mutable_buffer_sequence<MutableBufferSequence>::value
-    >::type* = 0);
+           CompletionCondition completion_condition,
+           BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
+           typename enable_if<
+           is_mutable_buffer_sequence<MutableBufferSequence>::value
+           >::type* = 0);
 
 /// Start an asynchronous operation to read a certain amount of data from a
 /// stream.
@@ -733,15 +735,15 @@ async_read(AsyncReadStream& s, const MutableBufferSequence& buffers,
  *     handler); @endcode
  */
 template <typename AsyncReadStream,
-    typename DynamicBuffer, typename ReadHandler>
+          typename DynamicBuffer, typename ReadHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-    void (boost::system::error_code, std::size_t))
+                              void (boost::system::error_code, std::size_t))
 async_read(AsyncReadStream& s,
-    BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
-    BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
-    typename enable_if<
-      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
-    >::type* = 0);
+           BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
+           BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
+           typename enable_if<
+           is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
+           >::type* = 0);
 
 /// Start an asynchronous operation to read a certain amount of data from a
 /// stream.
@@ -802,16 +804,16 @@ async_read(AsyncReadStream& s,
  * boost::asio::io_context::post().
  */
 template <typename AsyncReadStream, typename DynamicBuffer,
-    typename CompletionCondition, typename ReadHandler>
+          typename CompletionCondition, typename ReadHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-    void (boost::system::error_code, std::size_t))
+                              void (boost::system::error_code, std::size_t))
 async_read(AsyncReadStream& s,
-    BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
-    CompletionCondition completion_condition,
-    BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
-    typename enable_if<
-      is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
-    >::type* = 0);
+           BOOST_ASIO_MOVE_ARG(DynamicBuffer) buffers,
+           CompletionCondition completion_condition,
+           BOOST_ASIO_MOVE_ARG(ReadHandler) handler,
+           typename enable_if<
+           is_dynamic_buffer<typename decay<DynamicBuffer>::type>::value
+           >::type* = 0);
 
 #if !defined(BOOST_ASIO_NO_EXTENSIONS)
 #if !defined(BOOST_ASIO_NO_IOSTREAM)
@@ -866,9 +868,9 @@ async_read(AsyncReadStream& s,
  */
 template <typename AsyncReadStream, typename Allocator, typename ReadHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-    void (boost::system::error_code, std::size_t))
+                              void (boost::system::error_code, std::size_t))
 async_read(AsyncReadStream& s, basic_streambuf<Allocator>& b,
-    BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
+           BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
 
 /// Start an asynchronous operation to read a certain amount of data from a
 /// stream.
@@ -927,12 +929,12 @@ async_read(AsyncReadStream& s, basic_streambuf<Allocator>& b,
  * boost::asio::io_context::post().
  */
 template <typename AsyncReadStream, typename Allocator,
-    typename CompletionCondition, typename ReadHandler>
+          typename CompletionCondition, typename ReadHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-    void (boost::system::error_code, std::size_t))
+                              void (boost::system::error_code, std::size_t))
 async_read(AsyncReadStream& s, basic_streambuf<Allocator>& b,
-    CompletionCondition completion_condition,
-    BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
+           CompletionCondition completion_condition,
+           BOOST_ASIO_MOVE_ARG(ReadHandler) handler);
 
 #endif // !defined(BOOST_ASIO_NO_IOSTREAM)
 #endif // !defined(BOOST_ASIO_NO_EXTENSIONS)

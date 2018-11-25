@@ -8,14 +8,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class Result, class Remaining, class Pos>
-      struct accept;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class Result, class Remaining, class Pos>
+struct accept;
+}
+}
 }
 
 #endif

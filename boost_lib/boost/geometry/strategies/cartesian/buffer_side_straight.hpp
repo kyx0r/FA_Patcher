@@ -21,10 +21,14 @@
 
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace buffer
+namespace strategy
+{
+namespace buffer
 {
 
 
@@ -47,90 +51,92 @@ class side_straight
 {
 public :
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-    template
-    <
-        typename Point,
-        typename OutputRange,
-        typename DistanceStrategy
-    >
-    static inline result_code apply(
-                Point const& input_p1, Point const& input_p2,
-                buffer_side_selector side,
-                DistanceStrategy const& distance,
-                OutputRange& output_range)
-    {
-        typedef typename coordinate_type<Point>::type coordinate_type;
-        typedef typename geometry::select_most_precise
-        <
-            coordinate_type,
-            double
-        >::type promoted_type;
+	template
+	<
+	    typename Point,
+	    typename OutputRange,
+	    typename DistanceStrategy
+	    >
+	static inline result_code apply(
+	    Point const& input_p1, Point const& input_p2,
+	    buffer_side_selector side,
+	    DistanceStrategy const& distance,
+	    OutputRange& output_range)
+	{
+		typedef typename coordinate_type<Point>::type coordinate_type;
+		typedef typename geometry::select_most_precise
+		<
+		coordinate_type,
+		double
+		>::type promoted_type;
 
-        // Generate a block along (left or right of) the segment
+		// Generate a block along (left or right of) the segment
 
-        // Simulate a vector d (dx,dy)
-        coordinate_type const dx = get<0>(input_p2) - get<0>(input_p1);
-        coordinate_type const dy = get<1>(input_p2) - get<1>(input_p1);
+		// Simulate a vector d (dx,dy)
+		coordinate_type const dx = get<0>(input_p2) - get<0>(input_p1);
+		coordinate_type const dy = get<1>(input_p2) - get<1>(input_p1);
 
-        // For normalization [0,1] (=dot product d.d, sqrt)
-        promoted_type const length = geometry::math::sqrt(dx * dx + dy * dy);
+		// For normalization [0,1] (=dot product d.d, sqrt)
+		promoted_type const length = geometry::math::sqrt(dx * dx + dy * dy);
 
-        if (! boost::math::isfinite(length))
-        {
-            // In case of coordinates differences of e.g. 1e300, length
-            // will overflow and we should not generate output
+		if (! boost::math::isfinite(length))
+		{
+			// In case of coordinates differences of e.g. 1e300, length
+			// will overflow and we should not generate output
 #ifdef BOOST_GEOMETRY_DEBUG_BUFFER_WARN
-            std::cout << "Error in length calculation for points "
-                << geometry::wkt(input_p1) << " " << geometry::wkt(input_p2)
-                << " length: " << length << std::endl;
+			std::cout << "Error in length calculation for points "
+			          << geometry::wkt(input_p1) << " " << geometry::wkt(input_p2)
+			          << " length: " << length << std::endl;
 #endif
-            return result_error_numerical;
-        }
+			return result_error_numerical;
+		}
 
-        if (geometry::math::equals(length, 0))
-        {
-            // Coordinates are simplified and therefore most often not equal.
-            // But if simplify is skipped, or for lines with two
-            // equal points, length is 0 and we cannot generate output.
-            return result_no_output;
-        }
+		if (geometry::math::equals(length, 0))
+		{
+			// Coordinates are simplified and therefore most often not equal.
+			// But if simplify is skipped, or for lines with two
+			// equal points, length is 0 and we cannot generate output.
+			return result_no_output;
+		}
 
-        promoted_type const d = distance.apply(input_p1, input_p2, side);
+		promoted_type const d = distance.apply(input_p1, input_p2, side);
 
-        // Generate the normalized perpendicular p, to the left (ccw)
-        promoted_type const px = -dy / length;
-        promoted_type const py = dx / length;
+		// Generate the normalized perpendicular p, to the left (ccw)
+		promoted_type const px = -dy / length;
+		promoted_type const py = dx / length;
 
-        if (geometry::math::equals(px, 0)
-            && geometry::math::equals(py, 0))
-        {
-            // This basically should not occur - because of the checks above.
-            // There are no unit tests triggering this condition
+		if (geometry::math::equals(px, 0)
+		        && geometry::math::equals(py, 0))
+		{
+			// This basically should not occur - because of the checks above.
+			// There are no unit tests triggering this condition
 #ifdef BOOST_GEOMETRY_DEBUG_BUFFER_WARN
-            std::cout << "Error in perpendicular calculation for points "
-                << geometry::wkt(input_p1) << " " << geometry::wkt(input_p2)
-                << " length: " << length
-                << " distance: " << d
-                << std::endl;
+			std::cout << "Error in perpendicular calculation for points "
+			          << geometry::wkt(input_p1) << " " << geometry::wkt(input_p2)
+			          << " length: " << length
+			          << " distance: " << d
+			          << std::endl;
 #endif
-            return result_no_output;
-        }
+			return result_no_output;
+		}
 
-        output_range.resize(2);
+		output_range.resize(2);
 
-        set<0>(output_range.front(), get<0>(input_p1) + px * d);
-        set<1>(output_range.front(), get<1>(input_p1) + py * d);
-        set<0>(output_range.back(), get<0>(input_p2) + px * d);
-        set<1>(output_range.back(), get<1>(input_p2) + py * d);
+		set<0>(output_range.front(), get<0>(input_p1) + px * d);
+		set<1>(output_range.front(), get<1>(input_p1) + py * d);
+		set<0>(output_range.back(), get<0>(input_p2) + px * d);
+		set<1>(output_range.back(), get<1>(input_p2) + py * d);
 
-        return result_normal;
-    }
+		return result_normal;
+	}
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 };
 
 
-}} // namespace strategy::buffer
+}
+} // namespace strategy::buffer
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_BUFFER_SIDE_STRAIGHT_HPP

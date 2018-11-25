@@ -18,15 +18,15 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    template <typename Method, typename>
-    struct is_default : std::false_type { };
+template <typename Method, typename>
+struct is_default : std::false_type { };
 
-    template <typename Method>
-    struct is_default<Method, decltype((void)
-        static_cast<default_>(*(Method*)0)
-    )>
-        : std::true_type
-    { };
+template <typename Method>
+struct is_default<Method, decltype((void)
+                                   static_cast<default_>(*(Method*)0)
+                                  )>
+: std::true_type
+{ };
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CORE_DEFAULT_HPP

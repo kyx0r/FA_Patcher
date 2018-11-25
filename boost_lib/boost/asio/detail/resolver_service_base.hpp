@@ -29,104 +29,107 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class resolver_service_base
 {
 public:
-  // The implementation type of the resolver. A cancellation token is used to
-  // indicate to the background thread that the operation has been cancelled.
-  typedef socket_ops::shared_cancel_token_type implementation_type;
+	// The implementation type of the resolver. A cancellation token is used to
+	// indicate to the background thread that the operation has been cancelled.
+	typedef socket_ops::shared_cancel_token_type implementation_type;
 
-  // Constructor.
-  BOOST_ASIO_DECL resolver_service_base(boost::asio::io_context& io_context);
+	// Constructor.
+	BOOST_ASIO_DECL resolver_service_base(boost::asio::io_context& io_context);
 
-  // Destructor.
-  BOOST_ASIO_DECL ~resolver_service_base();
+	// Destructor.
+	BOOST_ASIO_DECL ~resolver_service_base();
 
-  // Destroy all user-defined handler objects owned by the service.
-  BOOST_ASIO_DECL void base_shutdown();
+	// Destroy all user-defined handler objects owned by the service.
+	BOOST_ASIO_DECL void base_shutdown();
 
-  // Perform any fork-related housekeeping.
-  BOOST_ASIO_DECL void base_notify_fork(
-      boost::asio::io_context::fork_event fork_ev);
+	// Perform any fork-related housekeeping.
+	BOOST_ASIO_DECL void base_notify_fork(
+	    boost::asio::io_context::fork_event fork_ev);
 
-  // Construct a new resolver implementation.
-  BOOST_ASIO_DECL void construct(implementation_type& impl);
+	// Construct a new resolver implementation.
+	BOOST_ASIO_DECL void construct(implementation_type& impl);
 
-  // Destroy a resolver implementation.
-  BOOST_ASIO_DECL void destroy(implementation_type&);
+	// Destroy a resolver implementation.
+	BOOST_ASIO_DECL void destroy(implementation_type&);
 
-  // Move-construct a new resolver implementation.
-  BOOST_ASIO_DECL void move_construct(implementation_type& impl,
-      implementation_type& other_impl);
+	// Move-construct a new resolver implementation.
+	BOOST_ASIO_DECL void move_construct(implementation_type& impl,
+	                                    implementation_type& other_impl);
 
-  // Move-assign from another resolver implementation.
-  BOOST_ASIO_DECL void move_assign(implementation_type& impl,
-      resolver_service_base& other_service,
-      implementation_type& other_impl);
+	// Move-assign from another resolver implementation.
+	BOOST_ASIO_DECL void move_assign(implementation_type& impl,
+	                                 resolver_service_base& other_service,
+	                                 implementation_type& other_impl);
 
-  // Cancel pending asynchronous operations.
-  BOOST_ASIO_DECL void cancel(implementation_type& impl);
+	// Cancel pending asynchronous operations.
+	BOOST_ASIO_DECL void cancel(implementation_type& impl);
 
 protected:
-  // Helper function to start an asynchronous resolve operation.
-  BOOST_ASIO_DECL void start_resolve_op(resolve_op* op);
+	// Helper function to start an asynchronous resolve operation.
+	BOOST_ASIO_DECL void start_resolve_op(resolve_op* op);
 
 #if !defined(BOOST_ASIO_WINDOWS_RUNTIME)
-  // Helper class to perform exception-safe cleanup of addrinfo objects.
-  class auto_addrinfo
-    : private boost::asio::detail::noncopyable
-  {
-  public:
-    explicit auto_addrinfo(boost::asio::detail::addrinfo_type* ai)
-      : ai_(ai)
-    {
-    }
+	// Helper class to perform exception-safe cleanup of addrinfo objects.
+	class auto_addrinfo
+		: private boost::asio::detail::noncopyable
+	{
+	public:
+		explicit auto_addrinfo(boost::asio::detail::addrinfo_type* ai)
+			: ai_(ai)
+		{
+		}
 
-    ~auto_addrinfo()
-    {
-      if (ai_)
-        socket_ops::freeaddrinfo(ai_);
-    }
+		~auto_addrinfo()
+		{
+			if (ai_)
+				socket_ops::freeaddrinfo(ai_);
+		}
 
-    operator boost::asio::detail::addrinfo_type*()
-    {
-      return ai_;
-    }
+		operator boost::asio::detail::addrinfo_type*()
+		{
+			return ai_;
+		}
 
-  private:
-    boost::asio::detail::addrinfo_type* ai_;
-  };
+	private:
+		boost::asio::detail::addrinfo_type* ai_;
+	};
 #endif // !defined(BOOST_ASIO_WINDOWS_RUNTIME)
 
-  // Helper class to run the work io_context in a thread.
-  class work_io_context_runner;
+	// Helper class to run the work io_context in a thread.
+	class work_io_context_runner;
 
-  // Start the work thread if it's not already running.
-  BOOST_ASIO_DECL void start_work_thread();
+	// Start the work thread if it's not already running.
+	BOOST_ASIO_DECL void start_work_thread();
 
-  // The io_context implementation used to post completions.
-  io_context_impl& io_context_impl_;
+	// The io_context implementation used to post completions.
+	io_context_impl& io_context_impl_;
 
 private:
-  // Mutex to protect access to internal data.
-  boost::asio::detail::mutex mutex_;
+	// Mutex to protect access to internal data.
+	boost::asio::detail::mutex mutex_;
 
-  // Private io_context used for performing asynchronous host resolution.
-  boost::asio::detail::scoped_ptr<boost::asio::io_context> work_io_context_;
+	// Private io_context used for performing asynchronous host resolution.
+	boost::asio::detail::scoped_ptr<boost::asio::io_context> work_io_context_;
 
-  // The work io_context implementation used to post completions.
-  io_context_impl& work_io_context_impl_;
+	// The work io_context implementation used to post completions.
+	io_context_impl& work_io_context_impl_;
 
-  // Work for the private io_context to perform.
-  boost::asio::executor_work_guard<
-      boost::asio::io_context::executor_type> work_;
+	// Work for the private io_context to perform.
+	boost::asio::executor_work_guard<
+	boost::asio::io_context::executor_type> work_;
 
-  // Thread used for running the work io_context's run loop.
-  boost::asio::detail::scoped_ptr<boost::asio::detail::thread> work_thread_;
+	// Thread used for running the work io_context's run loop.
+	boost::asio::detail::scoped_ptr<boost::asio::detail::thread> work_thread_;
 };
 
 } // namespace detail

@@ -47,122 +47,131 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct fahey {};
+namespace par4
+{
+struct fahey {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace fahey
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace fahey
+{
 
-            static const double TOL = 1e-6;
+static const double TOL = 1e-6;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_fahey_spheroid : public base_t_fi<base_fahey_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_fahey_spheroid : public base_t_fi<base_fahey_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_fahey_spheroid(const Parameters& par)
-                    : base_t_fi<base_fahey_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_fahey_spheroid(const Parameters& par)
+		: base_t_fi<base_fahey_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    xy_y = 1.819152 * ( xy_x = tan(0.5 * lp_lat) );
-                    xy_x = 0.819152 * lp_lon * asqrt(1 - xy_x * xy_x);
-                }
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		xy_y = 1.819152 * ( xy_x = tan(0.5 * lp_lat) );
+		xy_x = 0.819152 * lp_lon * asqrt(1 - xy_x * xy_x);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    lp_lat = 2. * atan(xy_y /= 1.819152);
-                    lp_lon = fabs(xy_y = 1. - xy_y * xy_y) < TOL ? 0. :
-                        xy_x / (0.819152 * sqrt(xy_y));
-                }
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		lp_lat = 2. * atan(xy_y /= 1.819152);
+		lp_lon = fabs(xy_y = 1. - xy_y * xy_y) < TOL ? 0. :
+		         xy_x / (0.819152 * sqrt(xy_y));
+	}
 
-                static inline std::string get_name()
-                {
-                    return "fahey_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "fahey_spheroid";
+	}
 
-            };
+};
 
-            // Fahey
-            template <typename Parameters>
-            inline void setup_fahey(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Fahey
+template <typename Parameters>
+inline void setup_fahey(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::fahey
-    #endif // doxygen
+}
+} // namespace detail::fahey
+#endif // doxygen
 
-    /*!
-        \brief Fahey projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_fahey.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct fahey_spheroid : public detail::fahey::base_fahey_spheroid<CalculationType, Parameters>
-    {
-        inline fahey_spheroid(const Parameters& par) : detail::fahey::base_fahey_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::fahey::setup_fahey(this->m_par);
-        }
-    };
+/*!
+    \brief Fahey projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_fahey.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct fahey_spheroid : public detail::fahey::base_fahey_spheroid<CalculationType, Parameters>
+{
+	inline fahey_spheroid(const Parameters& par) : detail::fahey::base_fahey_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::fahey::setup_fahey(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::fahey, fahey_spheroid, fahey_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::fahey, fahey_spheroid, fahey_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class fahey_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<fahey_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class fahey_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<fahey_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void fahey_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("fahey", new fahey_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void fahey_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("fahey", new fahey_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_FAHEY_HPP
 

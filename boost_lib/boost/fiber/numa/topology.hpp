@@ -19,25 +19,32 @@
 # include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace fibers {
-namespace numa {
+namespace boost
+{
+namespace fibers
+{
+namespace numa
+{
 
-struct node {
-    std::uint32_t                   id;
-    std::set< std::uint32_t >       logical_cpus;
-    std::vector< std::uint32_t >    distance;
+struct node
+{
+	std::uint32_t                   id;
+	std::set< std::uint32_t >       logical_cpus;
+	std::vector< std::uint32_t >    distance;
 };
 
 inline
-bool operator<( node const& lhs, node const& rhs) noexcept {
-    return lhs.id < rhs.id;
+bool operator<( node const& lhs, node const& rhs) noexcept
+{
+	return lhs.id < rhs.id;
 }
 
 BOOST_FIBERS_DECL
 std::vector< node > topology();
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 # include BOOST_ABI_SUFFIX

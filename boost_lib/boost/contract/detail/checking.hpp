@@ -13,67 +13,77 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/noncopyable.hpp>
 
-namespace boost { namespace contract { namespace detail {
+namespace boost
+{
+namespace contract
+{
+namespace detail
+{
 
 #ifdef BOOST_MSVC
-    #pragma warning(push)
-    #pragma warning(disable: 4251) // Member w/o DLL spec (mutex_ type).
+#pragma warning(push)
+#pragma warning(disable: 4251) // Member w/o DLL spec (mutex_ type).
 #endif
 
 // RAII facility to disable assertions while checking other assertions.
 class BOOST_CONTRACT_DETAIL_DECLSPEC checking :
-    private boost::noncopyable // Non-copyable resource (might use mutex, etc.).
+	private boost::noncopyable // Non-copyable resource (might use mutex, etc.).
 {
 public:
-    explicit checking() {
-        #ifndef BOOST_CONTRACT_DISABLE_THREADS
-            init_locked();
-        #else
-            init_unlocked();
-        #endif
-    }
+	explicit checking()
+	{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+		init_locked();
+#else
+		init_unlocked();
+#endif
+	}
 
-    ~checking() {
-        #ifndef BOOST_CONTRACT_DISABLE_THREADS
-            done_locked();
-        #else
-            done_unlocked();
-        #endif
-    }
-    
-    static bool already() {
-        #ifndef BOOST_CONTRACT_DISABLE_THREADS
-            return already_locked();
-        #else
-            return already_unlocked();
-        #endif
-    }
+	~checking()
+	{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+		done_locked();
+#else
+		done_unlocked();
+#endif
+	}
+
+	static bool already()
+	{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+		return already_locked();
+#else
+		return already_unlocked();
+#endif
+	}
 
 private:
-    void init_unlocked();
-    void init_locked();
+	void init_unlocked();
+	void init_locked();
 
-    void done_unlocked();
-    void done_locked();
+	void done_unlocked();
+	void done_locked();
 
-    static bool already_unlocked();
-    static bool already_locked();
+	static bool already_unlocked();
+	static bool already_locked();
 
-    struct mutex_tag;
-    typedef static_local_var<mutex_tag, boost::mutex> mutex;
+	struct mutex_tag;
+	typedef static_local_var<mutex_tag, boost::mutex> mutex;
 
-    struct checking_tag;
-    typedef static_local_var_init<checking_tag, bool, bool, false> flag;
+	struct checking_tag;
+	typedef static_local_var_init<checking_tag, bool, bool, false> flag;
 };
 
 #ifdef BOOST_MSVC
-    #pragma warning(pop)
+#pragma warning(pop)
 #endif
 
-} } } // namespace
+}
+}
+} // namespace
 
 #ifdef BOOST_CONTRACT_HEADER_ONLY
-    #include <boost/contract/detail/inlined/detail/checking.hpp>
+#include <boost/contract/detail/inlined/detail/checking.hpp>
 #endif
 
 #endif // #include guard

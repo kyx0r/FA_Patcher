@@ -21,9 +21,12 @@
 #include <type_traits>
 #include <utility>
 
-namespace boost {
-namespace beast {
-namespace websocket {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
 
 /** permessage-deflate extension options.
 
@@ -35,35 +38,35 @@ namespace websocket {
 */
 struct permessage_deflate
 {
-    /// `true` to offer the extension in the server role
-    bool server_enable = false;
+	/// `true` to offer the extension in the server role
+	bool server_enable = false;
 
-    /// `true` to offer the extension in the client role
-    bool client_enable = false;
+	/// `true` to offer the extension in the client role
+	bool client_enable = false;
 
-    /** Maximum server window bits to offer
+	/** Maximum server window bits to offer
 
-        @note Due to a bug in ZLib, this value must be greater than 8.
-    */
-    int server_max_window_bits = 15;
+	    @note Due to a bug in ZLib, this value must be greater than 8.
+	*/
+	int server_max_window_bits = 15;
 
-    /** Maximum client window bits to offer
+	/** Maximum client window bits to offer
 
-        @note Due to a bug in ZLib, this value must be greater than 8.
-    */
-    int client_max_window_bits = 15;
+	    @note Due to a bug in ZLib, this value must be greater than 8.
+	*/
+	int client_max_window_bits = 15;
 
-    /// `true` if server_no_context_takeover desired
-    bool server_no_context_takeover = false;
+	/// `true` if server_no_context_takeover desired
+	bool server_no_context_takeover = false;
 
-    /// `true` if client_no_context_takeover desired
-    bool client_no_context_takeover = false;
+	/// `true` if client_no_context_takeover desired
+	bool client_no_context_takeover = false;
 
-    /// Deflate compression level 0..9
-    int compLevel = 8;
+	/// Deflate compression level 0..9
+	int compLevel = 8;
 
-    /// Deflate memory level, 1..9
-    int memLevel = 4;
+	/// Deflate memory level, 1..9
+	int memLevel = 4;
 };
 
 } // websocket

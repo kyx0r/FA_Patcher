@@ -12,26 +12,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <class C = boost::mpl::na>
-        struct is_whitespace : is_whitespace_c<C::type::value> {};
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <class C = boost::mpl::na>
+struct is_whitespace : is_whitespace_c<C::type::value> {};
 
-        template <>
-        struct is_whitespace<boost::mpl::na>
-        {
-          typedef is_whitespace type;
-          
-          template <class C = boost::mpl::na>
-          struct apply : is_whitespace<C> {};
-        };
-      }
-    }
-  }
+template <>
+struct is_whitespace<boost::mpl::na>
+{
+	typedef is_whitespace type;
+
+	template <class C = boost::mpl::na>
+	struct apply : is_whitespace<C> {};
+};
+}
+}
+}
 }
 
 #endif

@@ -30,16 +30,16 @@
 
 namespace boost
 {
-  namespace csbl
-  {
+namespace csbl
+{
 #if defined BOOST_THREAD_USES_BOOST_QUEUE
-    using ::boost::container::queue;
+using ::boost::container::queue;
 
 #else
-    using ::std::queue;
+using ::std::queue;
 
 #endif
 
-  }
+}
 }
 #endif // header

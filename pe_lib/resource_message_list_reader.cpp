@@ -22,8 +22,8 @@ const resource_message_list resource_message_list_reader::parse_message_list(con
 
 	//Check resource data length more carefully and some possible overflows
 	if(message_data->NumberOfBlocks >= pe_utils::max_dword / sizeof(message_resource_block)
-		|| !pe_utils::is_sum_safe(message_data->NumberOfBlocks * sizeof(message_resource_block), sizeof(message_resource_data))
-		|| resource_data.length() < message_data->NumberOfBlocks * sizeof(message_resource_block) + sizeof(message_resource_data))
+	        || !pe_utils::is_sum_safe(message_data->NumberOfBlocks * sizeof(message_resource_block), sizeof(message_resource_data))
+	        || resource_data.length() < message_data->NumberOfBlocks * sizeof(message_resource_block) + sizeof(message_resource_data))
 		throw pe_exception("Incorrect resource message table", pe_exception::resource_incorrect_message_table);
 
 	//Iterate over all message resource blocks
@@ -31,7 +31,7 @@ const resource_message_list resource_message_list_reader::parse_message_list(con
 	{
 		//Get block
 		const message_resource_block* block =
-			reinterpret_cast<const message_resource_block*>(resource_data.data() + sizeof(message_resource_data) - sizeof(message_resource_block) + sizeof(message_resource_block) * i);
+		    reinterpret_cast<const message_resource_block*>(resource_data.data() + sizeof(message_resource_data) - sizeof(message_resource_block) + sizeof(message_resource_block) * i);
 
 		//Check resource data length and IDs
 		if(resource_data.length() < block->OffsetToEntries || block->LowId > block->HighId)
@@ -44,8 +44,8 @@ const resource_message_list resource_message_list_reader::parse_message_list(con
 		{
 			//Check resource data length and some possible overflows
 			if(!pe_utils::is_sum_safe(block->OffsetToEntries, current_pos)
-				|| !pe_utils::is_sum_safe(block->OffsetToEntries + current_pos, size_of_entry_headers)
-				|| resource_data.length() < block->OffsetToEntries + current_pos + size_of_entry_headers)
+			        || !pe_utils::is_sum_safe(block->OffsetToEntries + current_pos, size_of_entry_headers)
+			        || resource_data.length() < block->OffsetToEntries + current_pos + size_of_entry_headers)
 				throw pe_exception("Incorrect resource message table", pe_exception::resource_incorrect_message_table);
 
 			//Get entry
@@ -53,9 +53,9 @@ const resource_message_list resource_message_list_reader::parse_message_list(con
 
 			//Check resource data length and entry length and some possible overflows
 			if(entry->Length < size_of_entry_headers
-				|| !pe_utils::is_sum_safe(block->OffsetToEntries + current_pos, entry->Length)
-				|| resource_data.length() < block->OffsetToEntries + current_pos + entry->Length
-				|| entry->Length < size_of_entry_headers)
+			        || !pe_utils::is_sum_safe(block->OffsetToEntries + current_pos, entry->Length)
+			        || resource_data.length() < block->OffsetToEntries + current_pos + entry->Length
+			        || entry->Length < size_of_entry_headers)
 				throw pe_exception("Incorrect resource message table", pe_exception::resource_incorrect_message_table);
 
 			if(entry->Flags & message_resource_unicode)
@@ -68,14 +68,14 @@ const resource_message_list resource_message_list_reader::parse_message_list(con
 				//Add ID and string to message table
 #ifdef PE_BLISS_WINDOWS
 				ret.insert(std::make_pair(curr_id, message_table_item(
-					std::wstring(reinterpret_cast<const wchar_t*>(resource_data.data() + block->OffsetToEntries + current_pos + size_of_entry_headers),
-					(entry->Length - size_of_entry_headers) / 2)
-					)));
+				                              std::wstring(reinterpret_cast<const wchar_t*>(resource_data.data() + block->OffsetToEntries + current_pos + size_of_entry_headers),
+				                                      (entry->Length - size_of_entry_headers) / 2)
+				                          )));
 #else
 				ret.insert(std::make_pair(curr_id, message_table_item(
-					pe_utils::from_ucs2(u16string(reinterpret_cast<const unicode16_t*>(resource_data.data() + block->OffsetToEntries + current_pos + size_of_entry_headers),
-					(entry->Length - size_of_entry_headers) / 2))
-					)));
+				                              pe_utils::from_ucs2(u16string(reinterpret_cast<const unicode16_t*>(resource_data.data() + block->OffsetToEntries + current_pos + size_of_entry_headers),
+				                                      (entry->Length - size_of_entry_headers) / 2))
+				                          )));
 #endif
 			}
 			else
@@ -83,9 +83,9 @@ const resource_message_list resource_message_list_reader::parse_message_list(con
 				//If string is ANSI
 				//Add ID and string to message table
 				ret.insert(std::make_pair(curr_id, message_table_item(
-					std::string(resource_data.data() + block->OffsetToEntries + current_pos + size_of_entry_headers,
-					entry->Length - size_of_entry_headers)
-					)));
+				                              std::string(resource_data.data() + block->OffsetToEntries + current_pos + size_of_entry_headers,
+				                                      entry->Length - size_of_entry_headers)
+				                          )));
 			}
 
 			//Go to next entry

@@ -14,18 +14,21 @@
 #include <limits>
 #include <type_traits>
 
-namespace boost {
-namespace beast {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace detail
+{
 
 template<class UInt>
 static
 std::size_t
 clamp(UInt x)
 {
-    if(x >= (std::numeric_limits<std::size_t>::max)())
-        return (std::numeric_limits<std::size_t>::max)();
-    return static_cast<std::size_t>(x);
+	if(x >= (std::numeric_limits<std::size_t>::max)())
+		return (std::numeric_limits<std::size_t>::max)();
+	return static_cast<std::size_t>(x);
 }
 
 template<class UInt>
@@ -33,9 +36,9 @@ static
 std::size_t
 clamp(UInt x, std::size_t limit)
 {
-    if(x >= limit)
-        return limit;
-    return static_cast<std::size_t>(x);
+	if(x >= limit)
+		return limit;
+	return static_cast<std::size_t>(x);
 }
 
 // return `true` if x + y > z, which are unsigned
@@ -45,11 +48,11 @@ constexpr
 bool
 sum_exceeds(U1 x, U2 y, U3 z)
 {
-    static_assert(
-        std::is_unsigned<U1>::value &&
-        std::is_unsigned<U2>::value &&
-        std::is_unsigned<U3>::value, "");
-    return y > z || x > z - y;
+	static_assert(
+	    std::is_unsigned<U1>::value &&
+	    std::is_unsigned<U2>::value &&
+	    std::is_unsigned<U3>::value, "");
+	return y > z || x > z - y;
 }
 
 } // detail

@@ -24,17 +24,18 @@
 // Calls to asio_handler_is_continuation must be made from a namespace that
 // does not contain overloads of this function. This namespace is defined here
 // for that purpose.
-namespace boost_asio_handler_cont_helpers {
+namespace boost_asio_handler_cont_helpers
+{
 
 template <typename Context>
 inline bool is_continuation(Context& context)
 {
 #if !defined(BOOST_ASIO_HAS_HANDLER_HOOKS)
-  return false;
+	return false;
 #else
-  using boost::asio::asio_handler_is_continuation;
-  return asio_handler_is_continuation(
-      boost::asio::detail::addressof(context));
+	using boost::asio::asio_handler_is_continuation;
+	return asio_handler_is_continuation(
+	           boost::asio::detail::addressof(context));
 #endif
 }
 

@@ -23,9 +23,12 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 /*!
  * \brief The type trait returns the size of the value of the specified floating point type
@@ -36,14 +39,14 @@ namespace detail {
 template< typename T >
 struct value_sizeof
 {
-    static BOOST_CONSTEXPR_OR_CONST std::size_t value = sizeof(T);
+	static BOOST_CONSTEXPR_OR_CONST std::size_t value = sizeof(T);
 };
 
 #if defined(BOOST_ATOMIC_DETAIL_SIZEOF_FLOAT_VALUE)
 template< >
 struct value_sizeof< float >
 {
-    static BOOST_CONSTEXPR_OR_CONST std::size_t value = BOOST_ATOMIC_DETAIL_SIZEOF_FLOAT_VALUE;
+	static BOOST_CONSTEXPR_OR_CONST std::size_t value = BOOST_ATOMIC_DETAIL_SIZEOF_FLOAT_VALUE;
 };
 #endif
 
@@ -51,7 +54,7 @@ struct value_sizeof< float >
 template< >
 struct value_sizeof< double >
 {
-    static BOOST_CONSTEXPR_OR_CONST std::size_t value = BOOST_ATOMIC_DETAIL_SIZEOF_DOUBLE_VALUE;
+	static BOOST_CONSTEXPR_OR_CONST std::size_t value = BOOST_ATOMIC_DETAIL_SIZEOF_DOUBLE_VALUE;
 };
 #endif
 
@@ -59,7 +62,7 @@ struct value_sizeof< double >
 template< >
 struct value_sizeof< long double >
 {
-    static BOOST_CONSTEXPR_OR_CONST std::size_t value = BOOST_ATOMIC_DETAIL_SIZEOF_LONG_DOUBLE_VALUE;
+	static BOOST_CONSTEXPR_OR_CONST std::size_t value = BOOST_ATOMIC_DETAIL_SIZEOF_LONG_DOUBLE_VALUE;
 };
 #endif
 
@@ -76,7 +79,7 @@ struct value_sizeof< const volatile T > : value_sizeof< T > {};
 template< typename To, typename From >
 BOOST_FORCEINLINE To bitwise_fp_cast(From const& from) BOOST_NOEXCEPT
 {
-    return atomics::detail::bitwise_cast< To, atomics::detail::value_sizeof< From >::value >(from);
+	return atomics::detail::bitwise_cast< To, atomics::detail::value_sizeof< From >::value >(from);
 }
 
 } // namespace detail

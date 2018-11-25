@@ -22,10 +22,10 @@
 
 #ifdef _DEBUG
 # ifndef BOOST_DEBUG_PYTHON
-#  ifdef _MSC_VER  
-    // VC8.0 will complain if system headers are #included both with
-    // and without _DEBUG defined, so we have to #include all the
-    // system headers used by pyconfig.h right here.
+#  ifdef _MSC_VER
+// VC8.0 will complain if system headers are #included both with
+// and without _DEBUG defined, so we have to #include all the
+// system headers used by pyconfig.h right here.
 #   include <stddef.h>
 #   include <stdarg.h>
 #   include <stdio.h>

@@ -21,13 +21,16 @@
  * by passing it wrapped in the form tag<T>.
  */
 
-namespace boost{
+namespace boost
+{
 
-namespace flyweights{
+namespace flyweights
+{
 
-namespace detail{
+namespace detail
+{
 
-struct tag_marker{};
+struct tag_marker {};
 
 template<typename T>
 struct is_tag:is_base_and_derived<tag_marker,T>

@@ -60,10 +60,10 @@ typedef void* HANDLE;
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-union _LARGE_INTEGER;
-struct _SECURITY_ATTRIBUTES;
-BOOST_WINAPI_DETAIL_DECLARE_HANDLE(HINSTANCE);
-typedef HINSTANCE HMODULE;
+	union _LARGE_INTEGER;
+	struct _SECURITY_ATTRIBUTES;
+	BOOST_WINAPI_DETAIL_DECLARE_HANDLE(HINSTANCE);
+	typedef HINSTANCE HMODULE;
 }
 #endif
 
@@ -77,8 +77,10 @@ typedef HINSTANCE HMODULE;
 // the typedef expands to void. In Windows SDK, VOID is a macro which unfolds to void. We use our own macro in such cases.
 #define BOOST_WINAPI_DETAIL_VOID void
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 #if defined( BOOST_USE_WINDOWS_H )
 
 typedef ::BOOL BOOL_;
@@ -231,22 +233,25 @@ typedef ::HMODULE HMODULE_;
 #pragma warning(disable:4201) // nonstandard extension used : nameless struct/union
 #endif
 
-typedef union BOOST_MAY_ALIAS _LARGE_INTEGER {
-    struct {
-        DWORD_ LowPart;
-        LONG_ HighPart;
-    } u;
-    LONGLONG_ QuadPart;
+typedef union BOOST_MAY_ALIAS _LARGE_INTEGER
+{
+	struct
+	{
+		DWORD_ LowPart;
+		LONG_ HighPart;
+	} u;
+	LONGLONG_ QuadPart;
 } LARGE_INTEGER_, *PLARGE_INTEGER_;
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
 
-typedef struct BOOST_MAY_ALIAS _SECURITY_ATTRIBUTES {
-    DWORD_  nLength;
-    LPVOID_ lpSecurityDescriptor;
-    BOOL_   bInheritHandle;
+typedef struct BOOST_MAY_ALIAS _SECURITY_ATTRIBUTES
+{
+	DWORD_  nLength;
+	LPVOID_ lpSecurityDescriptor;
+	BOOL_   bInheritHandle;
 } SECURITY_ATTRIBUTES_, *PSECURITY_ATTRIBUTES_, *LPSECURITY_ATTRIBUTES_;
 
 }

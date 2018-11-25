@@ -13,9 +13,11 @@
 #pragma once
 #endif
 
-namespace boost{
+namespace boost
+{
 
-namespace flyweights{
+namespace flyweights
+{
 
 struct no_key_from_value;
 

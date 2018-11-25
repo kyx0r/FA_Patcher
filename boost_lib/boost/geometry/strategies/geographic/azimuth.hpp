@@ -21,10 +21,14 @@
 #include <boost/type_traits/is_void.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace azimuth
+namespace strategy
+{
+namespace azimuth
 {
 
 template
@@ -32,65 +36,65 @@ template
     typename FormulaPolicy = strategy::andoyer,
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class geographic
 {
 public :
 
-    typedef Spheroid model_type;
+	typedef Spheroid model_type;
 
-    inline geographic()
-        : m_spheroid()
-    {}
+	inline geographic()
+		: m_spheroid()
+	{}
 
-    explicit inline geographic(Spheroid const& spheroid)
-        : m_spheroid(spheroid)
-    {}
+	explicit inline geographic(Spheroid const& spheroid)
+		: m_spheroid(spheroid)
+	{}
 
-    inline model_type const& model() const
-    {
-        return m_spheroid;
-    }
+	inline model_type const& model() const
+	{
+		return m_spheroid;
+	}
 
-    template <typename T>
-    inline void apply(T const& lon1_rad, T const& lat1_rad,
-                      T const& lon2_rad, T const& lat2_rad,
-                      T& a1, T& a2) const
-    {
-        typedef typename boost::mpl::if_
-            <
-                boost::is_void<CalculationType>, T, CalculationType
-            >::type calc_t;            
+	template <typename T>
+	inline void apply(T const& lon1_rad, T const& lat1_rad,
+	                  T const& lon2_rad, T const& lat2_rad,
+	                  T& a1, T& a2) const
+	{
+		typedef typename boost::mpl::if_
+		<
+		boost::is_void<CalculationType>, T, CalculationType
+		>::type calc_t;
 
-        typedef typename FormulaPolicy::template inverse<calc_t, false, true, true, false, false> inverse_type;
-        typedef typename inverse_type::result_type inverse_result;
-        inverse_result i_res = inverse_type::apply(calc_t(lon1_rad), calc_t(lat1_rad),
-                                                   calc_t(lon2_rad), calc_t(lat2_rad),
-                                                   m_spheroid);
-        a1 = i_res.azimuth;
-        a2 = i_res.reverse_azimuth;
-    }
+		typedef typename FormulaPolicy::template inverse<calc_t, false, true, true, false, false> inverse_type;
+		typedef typename inverse_type::result_type inverse_result;
+		inverse_result i_res = inverse_type::apply(calc_t(lon1_rad), calc_t(lat1_rad),
+		                       calc_t(lon2_rad), calc_t(lat2_rad),
+		                       m_spheroid);
+		a1 = i_res.azimuth;
+		a2 = i_res.reverse_azimuth;
+	}
 
-    template <typename T>
-    inline void apply(T const& lon1_rad, T const& lat1_rad,
-                      T const& lon2_rad, T const& lat2_rad,
-                      T& a1) const
-    {
-        typedef typename boost::mpl::if_
-                <
-                    boost::is_void<CalculationType>, T, CalculationType
-                >::type calc_t;
+	template <typename T>
+	inline void apply(T const& lon1_rad, T const& lat1_rad,
+	                  T const& lon2_rad, T const& lat2_rad,
+	                  T& a1) const
+	{
+		typedef typename boost::mpl::if_
+		<
+		boost::is_void<CalculationType>, T, CalculationType
+		>::type calc_t;
 
-        typedef typename FormulaPolicy::template inverse<calc_t, false, true, false, false, false> inverse_type;
-        typedef typename inverse_type::result_type inverse_result;
-        inverse_result i_res = inverse_type::apply(calc_t(lon1_rad), calc_t(lat1_rad),
-                                                   calc_t(lon2_rad), calc_t(lat2_rad),
-                                                   m_spheroid);
-        a1 = i_res.azimuth;
-    }
+		typedef typename FormulaPolicy::template inverse<calc_t, false, true, false, false, false> inverse_type;
+		typedef typename inverse_type::result_type inverse_result;
+		inverse_result i_res = inverse_type::apply(calc_t(lon1_rad), calc_t(lat1_rad),
+		                       calc_t(lon2_rad), calc_t(lat2_rad),
+		                       m_spheroid);
+		a1 = i_res.azimuth;
+	}
 
 private :
-    Spheroid m_spheroid;
+	Spheroid m_spheroid;
 };
 
 #ifndef DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
@@ -101,21 +105,23 @@ namespace services
 template <typename CalculationType>
 struct default_strategy<geographic_tag, CalculationType>
 {
-    typedef strategy::azimuth::geographic
-        <
-            strategy::andoyer,
-            srs::spheroid<double>,
-            CalculationType
-        > type;
+	typedef strategy::azimuth::geographic
+	<
+	strategy::andoyer,
+	         srs::spheroid<double>,
+	         CalculationType
+	         > type;
 };
 
 }
 
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
-}} // namespace strategy::azimuth
+}
+} // namespace strategy::azimuth
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_AZIMUTH_HPP

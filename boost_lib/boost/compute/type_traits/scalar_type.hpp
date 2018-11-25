@@ -15,8 +15,10 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Meta-function returning the scalar type for a vector type.
 ///
@@ -27,8 +29,8 @@ namespace compute {
 template<class Vector>
 struct scalar_type
 {
-    /// \internal_
-    typedef void type;
+	/// \internal_
+	typedef void type;
 };
 
 /// \internal_

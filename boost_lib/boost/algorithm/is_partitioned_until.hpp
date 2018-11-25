@@ -15,10 +15,13 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 
-namespace boost { namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 /// \fn is_partitioned_until ( InputIterator first, InputIterator last, UnaryPredicate p )
-/// \brief Tests to see if a sequence is partitioned according to a predicate. 
+/// \brief Tests to see if a sequence is partitioned according to a predicate.
 ///	   In other words, all the items in the sequence that satisfy the predicate are at the beginning of the sequence.
 ///
 /// \param first    The start of the input sequence
@@ -32,18 +35,18 @@ template <typename InputIterator, typename UnaryPredicate>
 InputIterator is_partitioned_until ( InputIterator first, InputIterator last, UnaryPredicate p )
 {
 //  Run through the part that satisfy the predicate
-    for ( ; first != last; ++first )
-        if ( !p (*first))
-            break;
+	for ( ; first != last; ++first )
+		if ( !p (*first))
+			break;
 //  Now the part that does not satisfy the predicate
-    for ( ; first != last; ++first )
-        if ( p (*first))
-            return first;
-    return last;
+	for ( ; first != last; ++first )
+		if ( p (*first))
+			return first;
+	return last;
 }
 
 /// \fn is_partitioned_until ( const Range &r, UnaryPredicate p )
-/// \brief Tests to see if a sequence is partitioned according to a predicate. 
+/// \brief Tests to see if a sequence is partitioned according to a predicate.
 ///	   In other words, all the items in the sequence that satisfy the predicate are at the beginning of the sequence.
 ///
 /// \param r        The input range
@@ -55,9 +58,10 @@ InputIterator is_partitioned_until ( InputIterator first, InputIterator last, Un
 template <typename Range, typename UnaryPredicate>
 typename boost::range_iterator<const Range>::type is_partitioned_until ( const Range &r, UnaryPredicate p )
 {
-    return boost::algorithm::is_partitioned_until (boost::begin(r), boost::end(r), p);
+	return boost::algorithm::is_partitioned_until (boost::begin(r), boost::end(r), p);
 }
 
-}}
+}
+}
 
 #endif  // BOOST_ALGORITHM_IS_PARTITIONED_UNTIL_HPP

@@ -19,12 +19,15 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines2 {
+namespace boost
+{
+namespace coroutines2
+{
 
 using pooled_fixedsize_stack = boost::context::pooled_fixedsize_stack;
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

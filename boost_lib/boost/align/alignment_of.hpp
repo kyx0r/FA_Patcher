@@ -33,13 +33,15 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/align/detail/alignment_of.hpp>
 #endif
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 template<class T>
 struct alignment_of
-    : detail::alignment_of<typename
-        detail::element_type<T>::type>::type { };
+	: detail::alignment_of<typename
+	  detail::element_type<T>::type>::type { };
 
 #if !defined(BOOST_NO_CXX14_VARIABLE_TEMPLATES)
 template<class T>

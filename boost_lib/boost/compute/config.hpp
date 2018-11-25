@@ -25,14 +25,14 @@
 #if defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || \
     (defined(__GNUC__) && !defined(__clang__) && \
      __GNUC__ == 4 && __GNUC_MINOR__ <= 6)
-  #define BOOST_COMPUTE_NO_VARIADIC_TEMPLATES
+#define BOOST_COMPUTE_NO_VARIADIC_TEMPLATES
 #endif // BOOST_NO_CXX11_VARIADIC_TEMPLATES
 
 // the BOOST_COMPUTE_NO_STD_TUPLE macro is defined if the
 // compiler/stdlib does not support std::tuple
 #if defined(BOOST_NO_CXX11_HDR_TUPLE) || \
     defined(BOOST_COMPUTE_NO_VARIADIC_TEMPLATES)
-  #define BOOST_COMPUTE_NO_STD_TUPLE
+#define BOOST_COMPUTE_NO_STD_TUPLE
 #endif // BOOST_NO_CXX11_HDR_TUPLE
 
 // defines BOOST_COMPUTE_CL_CALLBACK to the value of CL_CALLBACK
@@ -46,7 +46,7 @@
 
 // Maximum number of iterators acceptable for make_zip_iterator
 #ifndef BOOST_COMPUTE_MAX_ARITY
-   // should be no more than max boost::tuple size (10 by default)
+// should be no more than max boost::tuple size (10 by default)
 #  define BOOST_COMPUTE_MAX_ARITY 10
 #endif
 

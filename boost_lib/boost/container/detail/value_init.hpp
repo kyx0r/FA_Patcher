@@ -24,22 +24,31 @@
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template<class T>
 struct value_init
 {
-   value_init()
-      : m_t()
-   {}
+	value_init()
+		: m_t()
+	{}
 
-   operator T &() { return m_t; }
+	operator T &()
+	{
+		return m_t;
+	}
 
-   T &get() { return m_t; }
+	T &get()
+	{
+		return m_t;
+	}
 
-   T m_t;
+	T m_t;
 };
 
 }  //namespace dtl {

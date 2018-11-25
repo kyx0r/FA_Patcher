@@ -27,17 +27,20 @@
 #include <boost/numeric/odeint/util/same_size.hpp>
 
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 
-template< class V , class Enabler = void >
+template< class V, class Enabler = void >
 struct state_wrapper
 {
-    typedef state_wrapper< V > state_wrapper_type;
+	typedef state_wrapper< V > state_wrapper_type;
 
-    V m_v;
+	V m_v;
 };
 
 

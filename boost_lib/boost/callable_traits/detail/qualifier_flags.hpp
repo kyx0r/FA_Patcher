@@ -12,8 +12,13 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/config.hpp>
 
-namespace boost { namespace callable_traits { namespace detail {
-    
+namespace boost
+{
+namespace callable_traits
+{
+namespace detail
+{
+
 //bit qualifier_flags used to signify cv/ref qualifiers
 using qualifier_flags = std::uint32_t;
 
@@ -37,7 +42,7 @@ using qualifier_flags = std::uint32_t;
 
 */
 
-// Flag representing the default qualifiers on a type 
+// Flag representing the default qualifiers on a type
 // or member function overload.
 constexpr qualifier_flags default_ = 0;
 
@@ -71,26 +76,26 @@ constexpr qualifier_flags cv_ = 3;
 
 template<qualifier_flags Flags>
 using remove_const_flag = std::integral_constant<
-    qualifier_flags, Flags & ~const_>;
+                          qualifier_flags, Flags & ~const_>;
 
 template<qualifier_flags Flags>
 using is_const = std::integral_constant<bool,
-    (Flags & const_) != 0>;
+      (Flags & const_) != 0>;
 
 template<qualifier_flags Flags>
 using remove_volatile_flag = std::integral_constant<
-    qualifier_flags, Flags & ~volatile_>;
+                             qualifier_flags, Flags & ~volatile_>;
 
 template<typename U, typename T = typename std::remove_reference<U>::type>
 using cv_of = std::integral_constant<qualifier_flags,
-    (std::is_const<T>::value ? const_ : default_)
-    | (std::is_volatile<T>::value ? volatile_ : default_)>;
+      (std::is_const<T>::value ? const_ : default_)
+      | (std::is_volatile<T>::value ? volatile_ : default_)>;
 
 template<typename T>
 using ref_of = std::integral_constant<qualifier_flags,
-    std::is_rvalue_reference<T>::value ? rref_
-    : (std::is_lvalue_reference<T>::value ? lref_
-        : default_)>;
+      std::is_rvalue_reference<T>::value ? rref_
+      : (std::is_lvalue_reference<T>::value ? lref_
+         : default_)>;
 
 //bit-flag implementation of C++11 reference collapsing rules
 template<qualifier_flags Existing,
@@ -98,26 +103,64 @@ template<qualifier_flags Existing,
          bool AlreadyHasRef = (Existing & (lref_ | rref_)) != 0,
          bool AlreadyHasLRef = (Existing & lref_) == lref_,
          bool IsAddingLRef = (Other & lref_) == lref_
->
+         >
 using collapse_flags = std::integral_constant<qualifier_flags,
-    !AlreadyHasRef ? (Existing | Other)
-        : (AlreadyHasLRef ? (Existing | (Other & ~rref_))
-            : (IsAddingLRef ? ((Existing & ~rref_) | Other )
-                : (Existing | Other)))>;
+      !AlreadyHasRef ? (Existing | Other)
+      : (AlreadyHasLRef ? (Existing | (Other & ~rref_))
+         : (IsAddingLRef ? ((Existing & ~rref_) | Other )
+            : (Existing | Other)))>;
 
-template<typename T> struct flag_map { static constexpr qualifier_flags value = default_; };
-template<typename T> struct flag_map<T &> { static constexpr qualifier_flags value = lref_; };
-template<typename T> struct flag_map<T &&> { static constexpr qualifier_flags value = rref_; };
-template<typename T> struct flag_map<T const> { static constexpr qualifier_flags value = const_; };
-template<typename T> struct flag_map<T const &> { static constexpr qualifier_flags value = const_ | lref_; };
-template<typename T> struct flag_map<T const &&> { static constexpr qualifier_flags value = const_ | rref_; };
-template<typename T> struct flag_map<T volatile> { static constexpr qualifier_flags value = volatile_; };
-template<typename T> struct flag_map<T volatile &> { static constexpr qualifier_flags value = volatile_ | lref_; };
-template<typename T> struct flag_map<T volatile &&> { static constexpr qualifier_flags value = volatile_ | rref_; };
-template<typename T> struct flag_map<T const volatile> { static constexpr qualifier_flags value = const_ | volatile_; };
-template<typename T> struct flag_map<T const volatile &> { static constexpr qualifier_flags value = const_ | volatile_ | lref_; };
-template<typename T> struct flag_map<T const volatile &&> { static constexpr qualifier_flags value = const_ | volatile_ | rref_; };
+template<typename T> struct flag_map
+{
+	static constexpr qualifier_flags value = default_;
+};
+template<typename T> struct flag_map<T &>
+{
+	static constexpr qualifier_flags value = lref_;
+};
+template<typename T> struct flag_map<T &&>
+{
+	static constexpr qualifier_flags value = rref_;
+};
+template<typename T> struct flag_map<T const>
+{
+	static constexpr qualifier_flags value = const_;
+};
+template<typename T> struct flag_map<T const &>
+{
+	static constexpr qualifier_flags value = const_ | lref_;
+};
+template<typename T> struct flag_map<T const &&>
+{
+	static constexpr qualifier_flags value = const_ | rref_;
+};
+template<typename T> struct flag_map<T volatile>
+{
+	static constexpr qualifier_flags value = volatile_;
+};
+template<typename T> struct flag_map<T volatile &>
+{
+	static constexpr qualifier_flags value = volatile_ | lref_;
+};
+template<typename T> struct flag_map<T volatile &&>
+{
+	static constexpr qualifier_flags value = volatile_ | rref_;
+};
+template<typename T> struct flag_map<T const volatile>
+{
+	static constexpr qualifier_flags value = const_ | volatile_;
+};
+template<typename T> struct flag_map<T const volatile &>
+{
+	static constexpr qualifier_flags value = const_ | volatile_ | lref_;
+};
+template<typename T> struct flag_map<T const volatile &&>
+{
+	static constexpr qualifier_flags value = const_ | volatile_ | rref_;
+};
 
-}}} // namespace boost::callable_traits::detail
+}
+}
+} // namespace boost::callable_traits::detail
 
 #endif // #ifndef BOOST_CLBL_TRTS_QUALIFIER_FLAGS_HPP

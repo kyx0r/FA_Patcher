@@ -17,8 +17,10 @@
 #include <boost/beast/core/file_win32.hpp>
 #include <boost/config.hpp>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** An implementation of File.
 

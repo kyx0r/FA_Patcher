@@ -28,22 +28,24 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 template< typename T >
 struct is_ostream
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = is_base_of< std::ios_base, T >::value && has_left_shift< T, int >::value;
+	static BOOST_CONSTEXPR_OR_CONST bool value = is_base_of< std::ios_base, T >::value && has_left_shift< T, int >::value;
 };
 
 template< typename CharT, typename TraitsT, typename AllocatorT >
 struct is_ostream< basic_formatting_ostream< CharT, TraitsT, AllocatorT > >
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 
 } // namespace aux

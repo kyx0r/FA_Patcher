@@ -14,41 +14,44 @@
 #include <boost/fusion/support/detail/access.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct std_tuple_tag;
+namespace fusion
+{
+struct std_tuple_tag;
 
-    namespace extension
-    {
-        template<typename T>
-        struct at_impl;
+namespace extension
+{
+template<typename T>
+struct at_impl;
 
-        template <>
-        struct at_impl<std_tuple_tag>
-        {
-            template <typename Sequence, typename N>
-            struct apply
-            {
-                typedef typename remove_const<Sequence>::type seq_type;
-                typedef typename std::tuple_element<N::value, seq_type>::type element;
+template <>
+struct at_impl<std_tuple_tag>
+{
+	template <typename Sequence, typename N>
+	struct apply
+	{
+		typedef typename remove_const<Sequence>::type seq_type;
+		typedef typename std::tuple_element<N::value, seq_type>::type element;
 
-                typedef typename
-                    mpl::if_<
-                        is_const<Sequence>
-                      , typename fusion::detail::cref_result<element>::type
-                      , typename fusion::detail::ref_result<element>::type
-                    >::type
-                type;
+		typedef typename
+		mpl::if_<
+		is_const<Sequence>
+		, typename fusion::detail::cref_result<element>::type
+		, typename fusion::detail::ref_result<element>::type
+		>::type
+		type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type
-                call(Sequence& seq)
-                {
-                    return std::get<N::value>(seq);
-                }
-            };
-        };
-    }
-}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(Sequence& seq)
+		{
+			return std::get<N::value>(seq);
+		}
+	};
+};
+}
+}
+}
 
 #endif

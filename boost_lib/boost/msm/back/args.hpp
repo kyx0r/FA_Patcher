@@ -14,7 +14,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/control/expr_if.hpp> 
+#include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/punctuation/comma.hpp>
 #include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -26,13 +26,17 @@
 #define BOOST_MSM_VISITOR_ARG_SIZE 2 // default max number of arguments
 #endif
 
-namespace boost { namespace msm { namespace back
+namespace boost
+{
+namespace msm
+{
+namespace back
 {
 struct no_args {};
 #define MSM_ARGS_TYPEDEF_SUB(z, n, unused) typedef ARG ## n argument ## n ;
 #define MSM_ARGS_PRINT(z, n, data) data
 #define MSM_ARGS_NONE_PRINT(z, n, data) class data ## n = no_args                          \
-    BOOST_PP_COMMA_IF( BOOST_PP_LESS(n, BOOST_PP_DEC(BOOST_MSM_VISITOR_ARG_SIZE) ) )                  
+    BOOST_PP_COMMA_IF( BOOST_PP_LESS(n, BOOST_PP_DEC(BOOST_MSM_VISITOR_ARG_SIZE) ) )
 
 #define MSM_VISITOR_MAIN_ARGS(n)                                                        \
     template <class RES,                                                                \
@@ -62,7 +66,9 @@ BOOST_PP_REPEAT(BOOST_MSM_VISITOR_ARG_SIZE, MSM_VISITOR_ARGS, ~)
 #undef MSM_VISITOR_ARGS
 #undef MSM_ARGS_PRINT
 
-}}}
+}
+}
+}
 
 #endif //BOOST_MSM_BACK_ARGS_H
 

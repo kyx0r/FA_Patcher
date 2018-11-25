@@ -26,7 +26,7 @@ public:
 
 private:
 	const pe_resource_viewer& res_;
-	
+
 	//VERSION INFO helpers
 	//Returns aligned version block value position
 	static uint32_t get_version_block_value_pos(uint32_t base_pos, const unicode16_t* key);

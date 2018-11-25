@@ -22,38 +22,41 @@
 #include <vexcl/multivector.hpp>
 #include <vexcl/operations.hpp>
 
-namespace vex {
+namespace vex
+{
 
 template <typename T, size_t N>
 typename std::enable_if<
-    std::is_integral<T>::value,
+std::is_integral<T>::value,
     typename boost::proto::result_of::make_expr<
-        boost::proto::tag::function,
-        abs_func,
-        const vex::multivector<T, N>&
+    boost::proto::tag::function,
+    abs_func,
+    const vex::multivector<T, N>&
     >::type const
->::type
-abs(const multivector<T, N> &arg) {
-    return boost::proto::make_expr<boost::proto::tag::function>(
-            abs_func(),
-            boost::ref(arg)
-            );
+    >::type
+    abs(const multivector<T, N> &arg)
+{
+	return boost::proto::make_expr<boost::proto::tag::function>(
+	           abs_func(),
+	           boost::ref(arg)
+	       );
 }
 
 template <typename T, size_t N>
 typename std::enable_if<
-    !std::is_integral<T>::value,
-    typename boost::proto::result_of::make_expr<
-        boost::proto::tag::function,
-        fabs_func,
-        const vex::multivector<T, N>&
-    >::type const
+!std::is_integral<T>::value,
+typename boost::proto::result_of::make_expr<
+boost::proto::tag::function,
+fabs_func,
+const vex::multivector<T, N>&
+>::type const
 >::type
-abs(const multivector<T, N> &arg) {
-    return boost::proto::make_expr<boost::proto::tag::function>(
-            fabs_func(),
-            boost::ref(arg)
-            );
+abs(const multivector<T, N> &arg)
+{
+	return boost::proto::make_expr<boost::proto::tag::function>(
+	           fabs_func(),
+	           boost::ref(arg)
+	       );
 }
 
 } // namespace vex

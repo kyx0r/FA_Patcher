@@ -12,26 +12,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <class C = boost::mpl::na>
-        struct is_ucase_letter : in_range_c<char, 'A', 'Z'>::apply<C> {};
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <class C = boost::mpl::na>
+struct is_ucase_letter : in_range_c<char, 'A', 'Z'>::apply<C> {};
 
-        template <>
-        struct is_ucase_letter<boost::mpl::na>
-        {
-          typedef is_ucase_letter type;
+template <>
+struct is_ucase_letter<boost::mpl::na>
+{
+	typedef is_ucase_letter type;
 
-          template <class C = boost::mpl::na>
-          struct apply : is_ucase_letter<C> {};
-        };
-      }
-    }
-  }
+	template <class C = boost::mpl::na>
+	struct apply : is_ucase_letter<C> {};
+};
+}
+}
+}
 }
 
 #endif

@@ -18,24 +18,27 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
-namespace bimaps {
-namespace views {
+namespace boost
+{
+namespace bimaps
+{
+namespace views
+{
 
 /// \brief Unconstrained view of a side of a bimap.
 
 template< class Tag, class BimapType>
 class unconstrained_map_view
 {
-    public:
-    template< class T >
-    unconstrained_map_view(const T &) {}
+public:
+	template< class T >
+	unconstrained_map_view(const T &) {}
 
-    typedef void iterator;
-    typedef void const_iterator;
-    typedef void reference;
-    typedef void const_reference;
-    typedef void info_type;
+	typedef void iterator;
+	typedef void const_iterator;
+	typedef void reference;
+	typedef void const_reference;
+	typedef void info_type;
 };
 
 } // namespace views

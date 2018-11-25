@@ -19,22 +19,24 @@
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-GetHandleInformation(
-    boost::winapi::HANDLE_ hObject,
-    boost::winapi::LPDWORD_ lpdwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	GetHandleInformation(
+	    boost::winapi::HANDLE_ hObject,
+	    boost::winapi::LPDWORD_ lpdwFlags);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-SetHandleInformation(
-    boost::winapi::HANDLE_ hObject,
-    boost::winapi::DWORD_ dwMask,
-    boost::winapi::DWORD_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	SetHandleInformation(
+	    boost::winapi::HANDLE_ hObject,
+	    boost::winapi::DWORD_ dwMask,
+	    boost::winapi::DWORD_ dwFlags);
 
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 using ::GetHandleInformation;
 using ::SetHandleInformation;

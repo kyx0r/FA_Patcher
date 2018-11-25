@@ -31,7 +31,9 @@
 #include <boost/geometry/strategies/relate.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -45,14 +47,14 @@ template
     typename Geometry2,
     typename Tag1 = typename tag<Geometry1>::type,
     typename Tag2 = typename tag<Geometry2>::type
->
+    >
 struct overlaps
-    : detail::relate::relate_impl
-        <
-            detail::de9im::static_mask_overlaps_type,
-            Geometry1,
-            Geometry2
-        >
+	: detail::relate::relate_impl
+	  <
+	  detail::de9im::static_mask_overlaps_type,
+	  Geometry1,
+	  Geometry2
+	  >
 {};
 
 
@@ -79,14 +81,14 @@ inline bool overlaps(Geometry1 const& geometry1,
                      Geometry2 const& geometry2,
                      Strategy const& strategy)
 {
-    concepts::check<Geometry1 const>();
-    concepts::check<Geometry2 const>();
+	concepts::check<Geometry1 const>();
+	concepts::check<Geometry2 const>();
 
-    return dispatch::overlaps
-        <
-            Geometry1,
-            Geometry2
-        >::apply(geometry1, geometry2, strategy);
+	return dispatch::overlaps
+	       <
+	       Geometry1,
+	       Geometry2
+	       >::apply(geometry1, geometry2, strategy);
 }
 
 /*!
@@ -103,22 +105,23 @@ inline bool overlaps(Geometry1 const& geometry1,
 template <typename Geometry1, typename Geometry2>
 inline bool overlaps(Geometry1 const& geometry1, Geometry2 const& geometry2)
 {
-    concepts::check<Geometry1 const>();
-    concepts::check<Geometry2 const>();
+	concepts::check<Geometry1 const>();
+	concepts::check<Geometry2 const>();
 
-    typedef typename strategy::relate::services::default_strategy
-            <
-                Geometry1,
-                Geometry2
-            >::type strategy_type;
+	typedef typename strategy::relate::services::default_strategy
+	<
+	Geometry1,
+	Geometry2
+	>::type strategy_type;
 
-    return dispatch::overlaps
-        <
-            Geometry1,
-            Geometry2
-        >::apply(geometry1, geometry2, strategy_type());
+	return dispatch::overlaps
+	       <
+	       Geometry1,
+	       Geometry2
+	       >::apply(geometry1, geometry2, strategy_type());
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAPS_INTERFACE_HPP

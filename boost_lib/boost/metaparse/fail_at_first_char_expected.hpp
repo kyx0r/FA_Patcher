@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::fail_at_first_char_expected;
-  }
+namespace metaparse
+{
+using v1::fail_at_first_char_expected;
+}
 }
 
 #endif

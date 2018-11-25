@@ -47,160 +47,162 @@ extern "C" {
 
 #if BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-AreFileApisANSI(BOOST_WINAPI_DETAIL_VOID);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	AreFileApisANSI(BOOST_WINAPI_DETAIL_VOID);
 
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-CreateFileA(
-    boost::winapi::LPCSTR_ lpFileName,
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::DWORD_ dwShareMode,
-    ::_SECURITY_ATTRIBUTES* lpSecurityAttributes,
-    boost::winapi::DWORD_ dwCreationDisposition,
-    boost::winapi::DWORD_ dwFlagsAndAttributes,
-    boost::winapi::HANDLE_ hTemplateFile);
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	CreateFileA(
+	    boost::winapi::LPCSTR_ lpFileName,
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::DWORD_ dwShareMode,
+	    ::_SECURITY_ATTRIBUTES* lpSecurityAttributes,
+	    boost::winapi::DWORD_ dwCreationDisposition,
+	    boost::winapi::DWORD_ dwFlagsAndAttributes,
+	    boost::winapi::HANDLE_ hTemplateFile);
 
-struct _WIN32_FIND_DATAA;
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-FindFirstFileA(boost::winapi::LPCSTR_ lpFileName, ::_WIN32_FIND_DATAA* lpFindFileData);
+	struct _WIN32_FIND_DATAA;
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	FindFirstFileA(boost::winapi::LPCSTR_ lpFileName, ::_WIN32_FIND_DATAA* lpFindFileData);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-FindNextFileA(boost::winapi::HANDLE_ hFindFile, ::_WIN32_FIND_DATAA* lpFindFileData);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	FindNextFileA(boost::winapi::HANDLE_ hFindFile, ::_WIN32_FIND_DATAA* lpFindFileData);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-CreateFileW(
-    boost::winapi::LPCWSTR_ lpFileName,
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::DWORD_ dwShareMode,
-    ::_SECURITY_ATTRIBUTES* lpSecurityAttributes,
-    boost::winapi::DWORD_ dwCreationDisposition,
-    boost::winapi::DWORD_ dwFlagsAndAttributes,
-    boost::winapi::HANDLE_ hTemplateFile);
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	CreateFileW(
+	    boost::winapi::LPCWSTR_ lpFileName,
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::DWORD_ dwShareMode,
+	    ::_SECURITY_ATTRIBUTES* lpSecurityAttributes,
+	    boost::winapi::DWORD_ dwCreationDisposition,
+	    boost::winapi::DWORD_ dwFlagsAndAttributes,
+	    boost::winapi::HANDLE_ hTemplateFile);
 
-struct _WIN32_FIND_DATAW;
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-FindFirstFileW(boost::winapi::LPCWSTR_ lpFileName, ::_WIN32_FIND_DATAW* lpFindFileData);
+	struct _WIN32_FIND_DATAW;
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	FindFirstFileW(boost::winapi::LPCWSTR_ lpFileName, ::_WIN32_FIND_DATAW* lpFindFileData);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-FindNextFileW(boost::winapi::HANDLE_ hFindFile, ::_WIN32_FIND_DATAW* lpFindFileData);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	FindNextFileW(boost::winapi::HANDLE_ hFindFile, ::_WIN32_FIND_DATAW* lpFindFileData);
 
-struct _BY_HANDLE_FILE_INFORMATION;
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-GetFileInformationByHandle(
-    boost::winapi::HANDLE_ hFile,
-    ::_BY_HANDLE_FILE_INFORMATION* lpFileInformation);
+	struct _BY_HANDLE_FILE_INFORMATION;
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	GetFileInformationByHandle(
+	    boost::winapi::HANDLE_ hFile,
+	    ::_BY_HANDLE_FILE_INFORMATION* lpFileInformation);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-LockFile(
-    boost::winapi::HANDLE_ hFile,
-    boost::winapi::DWORD_ dwFileOffsetLow,
-    boost::winapi::DWORD_ dwFileOffsetHigh,
-    boost::winapi::DWORD_ nNumberOfBytesToLockLow,
-    boost::winapi::DWORD_ nNumberOfBytesToLockHigh);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	LockFile(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::DWORD_ dwFileOffsetLow,
+	    boost::winapi::DWORD_ dwFileOffsetHigh,
+	    boost::winapi::DWORD_ nNumberOfBytesToLockLow,
+	    boost::winapi::DWORD_ nNumberOfBytesToLockHigh);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-LockFileEx(
-    boost::winapi::HANDLE_ hFile,
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::DWORD_ dwReserved,
-    boost::winapi::DWORD_ nNumberOfBytesToLockLow,
-    boost::winapi::DWORD_ nNumberOfBytesToLockHigh,
-    ::_OVERLAPPED* lpOverlapped);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	LockFileEx(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::DWORD_ dwReserved,
+	    boost::winapi::DWORD_ nNumberOfBytesToLockLow,
+	    boost::winapi::DWORD_ nNumberOfBytesToLockHigh,
+	    ::_OVERLAPPED* lpOverlapped);
 
 #if BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_WINXP
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-SetFileValidData(
-    boost::winapi::HANDLE_ hFile, 
-    boost::winapi::LONGLONG_ ValidDataLength);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	SetFileValidData(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::LONGLONG_ ValidDataLength);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-UnlockFile(
-    boost::winapi::HANDLE_ hFile,
-    boost::winapi::DWORD_ dwFileOffsetLow,
-    boost::winapi::DWORD_ dwFileOffsetHigh,
-    boost::winapi::DWORD_ nNumberOfBytesToUnlockLow,
-    boost::winapi::DWORD_ nNumberOfBytesToUnlockHigh);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	UnlockFile(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::DWORD_ dwFileOffsetLow,
+	    boost::winapi::DWORD_ dwFileOffsetHigh,
+	    boost::winapi::DWORD_ nNumberOfBytesToUnlockLow,
+	    boost::winapi::DWORD_ nNumberOfBytesToUnlockHigh);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-UnlockFileEx(
-    boost::winapi::HANDLE_ hFile,
-    boost::winapi::DWORD_ dwReserved,
-    boost::winapi::DWORD_ nNumberOfBytesToUnlockLow,
-    boost::winapi::DWORD_ nNumberOfBytesToUnlockHigh,
-    ::_OVERLAPPED* lpOverlapped);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	UnlockFileEx(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::DWORD_ dwReserved,
+	    boost::winapi::DWORD_ nNumberOfBytesToUnlockLow,
+	    boost::winapi::DWORD_ nNumberOfBytesToUnlockHigh,
+	    ::_OVERLAPPED* lpOverlapped);
 #endif
 
 #if BOOST_WINAPI_PARTITION_APP || BOOST_WINAPI_PARTITION_SYSTEM
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-DeleteFileA(boost::winapi::LPCSTR_ lpFileName);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	DeleteFileA(boost::winapi::LPCSTR_ lpFileName);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-MoveFileExA(
-    boost::winapi::LPCSTR_ lpExistingFileName,
-    boost::winapi::LPCSTR_ lpNewFileName,
-    boost::winapi::DWORD_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	MoveFileExA(
+	    boost::winapi::LPCSTR_ lpExistingFileName,
+	    boost::winapi::LPCSTR_ lpNewFileName,
+	    boost::winapi::DWORD_ dwFlags);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-DeleteFileW(boost::winapi::LPCWSTR_ lpFileName);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	DeleteFileW(boost::winapi::LPCWSTR_ lpFileName);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-FindClose(boost::winapi::HANDLE_ hFindFile);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	FindClose(boost::winapi::HANDLE_ hFindFile);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-MoveFileExW(
-    boost::winapi::LPCWSTR_ lpExistingFileName,
-    boost::winapi::LPCWSTR_ lpNewFileName,
-    boost::winapi::DWORD_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	MoveFileExW(
+	    boost::winapi::LPCWSTR_ lpExistingFileName,
+	    boost::winapi::LPCWSTR_ lpNewFileName,
+	    boost::winapi::DWORD_ dwFlags);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-ReadFile(
-    boost::winapi::HANDLE_ hFile,
-    boost::winapi::LPVOID_ lpBuffer,
-    boost::winapi::DWORD_ nNumberOfBytesToRead,
-    boost::winapi::LPDWORD_ lpNumberOfBytesRead,
-    ::_OVERLAPPED* lpOverlapped);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	ReadFile(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::LPVOID_ lpBuffer,
+	    boost::winapi::DWORD_ nNumberOfBytesToRead,
+	    boost::winapi::LPDWORD_ lpNumberOfBytesRead,
+	    ::_OVERLAPPED* lpOverlapped);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-SetEndOfFile(boost::winapi::HANDLE_ hFile);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	SetEndOfFile(boost::winapi::HANDLE_ hFile);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-WriteFile(
-    boost::winapi::HANDLE_ hFile,
-    boost::winapi::LPCVOID_ lpBuffer,
-    boost::winapi::DWORD_ nNumberOfBytesToWrite,
-    boost::winapi::LPDWORD_ lpNumberOfBytesWritten,
-    ::_OVERLAPPED* lpOverlapped);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	WriteFile(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::LPCVOID_ lpBuffer,
+	    boost::winapi::DWORD_ nNumberOfBytesToWrite,
+	    boost::winapi::LPDWORD_ lpNumberOfBytesWritten,
+	    ::_OVERLAPPED* lpOverlapped);
 #endif // BOOST_WINAPI_PARTITION_APP || BOOST_WINAPI_PARTITION_SYSTEM
 
 #if BOOST_WINAPI_PARTITION_APP_SYSTEM
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-GetFileAttributesA(boost::winapi::LPCSTR_ lpFileName);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	GetFileAttributesA(boost::winapi::LPCSTR_ lpFileName);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-GetFileAttributesW(boost::winapi::LPCWSTR_ lpFileName);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	GetFileAttributesW(boost::winapi::LPCWSTR_ lpFileName);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-GetFileSizeEx(boost::winapi::HANDLE_ hFile, ::_LARGE_INTEGER* lpFileSize);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	GetFileSizeEx(boost::winapi::HANDLE_ hFile, ::_LARGE_INTEGER* lpFileSize);
 
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-SetFilePointer(
-    boost::winapi::HANDLE_ hFile,
-    boost::winapi::LONG_ lpDistanceToMove,
-    boost::winapi::PLONG_ lpDistanceToMoveHigh,
-    boost::winapi::DWORD_ dwMoveMethod);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	SetFilePointer(
+	    boost::winapi::HANDLE_ hFile,
+	    boost::winapi::LONG_ lpDistanceToMove,
+	    boost::winapi::PLONG_ lpDistanceToMoveHigh,
+	    boost::winapi::DWORD_ dwMoveMethod);
 #endif // BOOST_WINAPI_PARTITION_APP_SYSTEM
 
 } // extern "C"
 #endif // !defined(BOOST_USE_WINDOWS_H)
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined( BOOST_USE_WINDOWS_H )
 
@@ -316,14 +318,14 @@ BOOST_FORCEINLINE HANDLE_ CreateFileA(
     DWORD_ dwFlagsAndAttributes,
     HANDLE_ hTemplateFile)
 {
-    return ::CreateFileA(
-        lpFileName,
-        dwDesiredAccess,
-        dwShareMode,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
-        dwCreationDisposition,
-        dwFlagsAndAttributes,
-        hTemplateFile);
+	return ::CreateFileA(
+	           lpFileName,
+	           dwDesiredAccess,
+	           dwShareMode,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
+	           dwCreationDisposition,
+	           dwFlagsAndAttributes,
+	           hTemplateFile);
 }
 
 BOOST_FORCEINLINE HANDLE_ create_file(
@@ -335,52 +337,53 @@ BOOST_FORCEINLINE HANDLE_ create_file(
     DWORD_ dwFlagsAndAttributes,
     HANDLE_ hTemplateFile)
 {
-    return ::CreateFileA(
-        lpFileName,
-        dwDesiredAccess,
-        dwShareMode,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
-        dwCreationDisposition,
-        dwFlagsAndAttributes,
-        hTemplateFile);
+	return ::CreateFileA(
+	           lpFileName,
+	           dwDesiredAccess,
+	           dwShareMode,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
+	           dwCreationDisposition,
+	           dwFlagsAndAttributes,
+	           hTemplateFile);
 }
 
-typedef struct BOOST_MAY_ALIAS _WIN32_FIND_DATAA {
-    DWORD_ dwFileAttributes;
-    FILETIME_ ftCreationTime;
-    FILETIME_ ftLastAccessTime;
-    FILETIME_ ftLastWriteTime;
-    DWORD_ nFileSizeHigh;
-    DWORD_ nFileSizeLow;
-    DWORD_ dwReserved0;
-    DWORD_ dwReserved1;
-    CHAR_   cFileName[MAX_PATH_];
-    CHAR_   cAlternateFileName[14];
+typedef struct BOOST_MAY_ALIAS _WIN32_FIND_DATAA
+{
+	DWORD_ dwFileAttributes;
+	FILETIME_ ftCreationTime;
+	FILETIME_ ftLastAccessTime;
+	FILETIME_ ftLastWriteTime;
+	DWORD_ nFileSizeHigh;
+	DWORD_ nFileSizeLow;
+	DWORD_ dwReserved0;
+	DWORD_ dwReserved1;
+	CHAR_   cFileName[MAX_PATH_];
+	CHAR_   cAlternateFileName[14];
 #ifdef _MAC
-    DWORD_ dwFileType;
-    DWORD_ dwCreatorType;
-    WORD_  wFinderFlags;
+	DWORD_ dwFileType;
+	DWORD_ dwCreatorType;
+	WORD_  wFinderFlags;
 #endif
 } WIN32_FIND_DATAA_, *PWIN32_FIND_DATAA_, *LPWIN32_FIND_DATAA_;
 
 BOOST_FORCEINLINE HANDLE_ FindFirstFileA(LPCSTR_ lpFileName, WIN32_FIND_DATAA_* lpFindFileData)
 {
-    return ::FindFirstFileA(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
+	return ::FindFirstFileA(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
 }
 
 BOOST_FORCEINLINE HANDLE_ find_first_file(LPCSTR_ lpFileName, WIN32_FIND_DATAA_* lpFindFileData)
 {
-    return ::FindFirstFileA(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
+	return ::FindFirstFileA(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
 }
 
 BOOST_FORCEINLINE BOOL_ FindNextFileA(HANDLE_ hFindFile, WIN32_FIND_DATAA_* lpFindFileData)
 {
-    return ::FindNextFileA(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
+	return ::FindNextFileA(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
 }
 
 BOOST_FORCEINLINE BOOL_ find_next_file(HANDLE_ hFindFile, WIN32_FIND_DATAA_* lpFindFileData)
 {
-    return ::FindNextFileA(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
+	return ::FindNextFileA(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAA* >(lpFindFileData));
 }
 
 #endif // !defined( BOOST_NO_ANSI_APIS )
@@ -394,14 +397,14 @@ BOOST_FORCEINLINE HANDLE_ CreateFileW(
     DWORD_ dwFlagsAndAttributes,
     HANDLE_ hTemplateFile)
 {
-    return ::CreateFileW(
-        lpFileName,
-        dwDesiredAccess,
-        dwShareMode,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
-        dwCreationDisposition,
-        dwFlagsAndAttributes,
-        hTemplateFile);
+	return ::CreateFileW(
+	           lpFileName,
+	           dwDesiredAccess,
+	           dwShareMode,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
+	           dwCreationDisposition,
+	           dwFlagsAndAttributes,
+	           hTemplateFile);
 }
 
 BOOST_FORCEINLINE HANDLE_ create_file(
@@ -413,70 +416,72 @@ BOOST_FORCEINLINE HANDLE_ create_file(
     DWORD_ dwFlagsAndAttributes,
     HANDLE_ hTemplateFile)
 {
-    return ::CreateFileW(
-        lpFileName,
-        dwDesiredAccess,
-        dwShareMode,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
-        dwCreationDisposition,
-        dwFlagsAndAttributes,
-        hTemplateFile);
+	return ::CreateFileW(
+	           lpFileName,
+	           dwDesiredAccess,
+	           dwShareMode,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpSecurityAttributes),
+	           dwCreationDisposition,
+	           dwFlagsAndAttributes,
+	           hTemplateFile);
 }
 
-typedef struct BOOST_MAY_ALIAS _WIN32_FIND_DATAW {
-    DWORD_ dwFileAttributes;
-    FILETIME_ ftCreationTime;
-    FILETIME_ ftLastAccessTime;
-    FILETIME_ ftLastWriteTime;
-    DWORD_ nFileSizeHigh;
-    DWORD_ nFileSizeLow;
-    DWORD_ dwReserved0;
-    DWORD_ dwReserved1;
-    WCHAR_  cFileName[MAX_PATH_];
-    WCHAR_  cAlternateFileName[14];
+typedef struct BOOST_MAY_ALIAS _WIN32_FIND_DATAW
+{
+	DWORD_ dwFileAttributes;
+	FILETIME_ ftCreationTime;
+	FILETIME_ ftLastAccessTime;
+	FILETIME_ ftLastWriteTime;
+	DWORD_ nFileSizeHigh;
+	DWORD_ nFileSizeLow;
+	DWORD_ dwReserved0;
+	DWORD_ dwReserved1;
+	WCHAR_  cFileName[MAX_PATH_];
+	WCHAR_  cAlternateFileName[14];
 #ifdef _MAC
-    DWORD_ dwFileType;
-    DWORD_ dwCreatorType;
-    WORD_  wFinderFlags;
+	DWORD_ dwFileType;
+	DWORD_ dwCreatorType;
+	WORD_  wFinderFlags;
 #endif
 } WIN32_FIND_DATAW_, *PWIN32_FIND_DATAW_, *LPWIN32_FIND_DATAW_;
 
-typedef struct BOOST_MAY_ALIAS _BY_HANDLE_FILE_INFORMATION {
-    DWORD_ dwFileAttributes;
-    FILETIME_ ftCreationTime;
-    FILETIME_ ftLastAccessTime;
-    FILETIME_ ftLastWriteTime;
-    DWORD_ dwVolumeSerialNumber;
-    DWORD_ nFileSizeHigh;
-    DWORD_ nFileSizeLow;
-    DWORD_ nNumberOfLinks;
-    DWORD_ nFileIndexHigh;
-    DWORD_ nFileIndexLow;
+typedef struct BOOST_MAY_ALIAS _BY_HANDLE_FILE_INFORMATION
+{
+	DWORD_ dwFileAttributes;
+	FILETIME_ ftCreationTime;
+	FILETIME_ ftLastAccessTime;
+	FILETIME_ ftLastWriteTime;
+	DWORD_ dwVolumeSerialNumber;
+	DWORD_ nFileSizeHigh;
+	DWORD_ nFileSizeLow;
+	DWORD_ nNumberOfLinks;
+	DWORD_ nFileIndexHigh;
+	DWORD_ nFileIndexLow;
 } BY_HANDLE_FILE_INFORMATION_, *PBY_HANDLE_FILE_INFORMATION_, *LPBY_HANDLE_FILE_INFORMATION_;
 
 BOOST_FORCEINLINE HANDLE_ FindFirstFileW(LPCWSTR_ lpFileName, WIN32_FIND_DATAW_* lpFindFileData)
 {
-    return ::FindFirstFileW(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
+	return ::FindFirstFileW(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
 }
 
 BOOST_FORCEINLINE HANDLE_ find_first_file(LPCWSTR_ lpFileName, WIN32_FIND_DATAW_* lpFindFileData)
 {
-    return ::FindFirstFileW(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
+	return ::FindFirstFileW(lpFileName, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
 }
 
 BOOST_FORCEINLINE BOOL_ FindNextFileW(HANDLE_ hFindFile, WIN32_FIND_DATAW_* lpFindFileData)
 {
-    return ::FindNextFileW(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
+	return ::FindNextFileW(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
 }
 
 BOOST_FORCEINLINE BOOL_ find_next_file(HANDLE_ hFindFile, WIN32_FIND_DATAW_* lpFindFileData)
 {
-    return ::FindNextFileW(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
+	return ::FindNextFileW(hFindFile, reinterpret_cast< ::_WIN32_FIND_DATAW* >(lpFindFileData));
 }
 
 BOOST_FORCEINLINE BOOL_ GetFileInformationByHandle(HANDLE_ h, BY_HANDLE_FILE_INFORMATION_* info)
 {
-    return ::GetFileInformationByHandle(h, reinterpret_cast< ::_BY_HANDLE_FILE_INFORMATION* >(info));
+	return ::GetFileInformationByHandle(h, reinterpret_cast< ::_BY_HANDLE_FILE_INFORMATION* >(info));
 }
 
 using ::LockFile;
@@ -489,7 +494,7 @@ BOOST_FORCEINLINE BOOL_ LockFileEx(
     DWORD_ nNumberOfBytesToLockHigh,
     OVERLAPPED_* lpOverlapped)
 {
-    return ::LockFileEx(hFile, dwFlags, dwReserved, nNumberOfBytesToLockLow, nNumberOfBytesToLockHigh, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
+	return ::LockFileEx(hFile, dwFlags, dwReserved, nNumberOfBytesToLockLow, nNumberOfBytesToLockHigh, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
 }
 
 #if BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_WINXP
@@ -505,7 +510,7 @@ BOOST_FORCEINLINE BOOL_ UnlockFileEx(
     DWORD_ nNumberOfBytesToUnlockHigh,
     OVERLAPPED_* lpOverlapped)
 {
-    return ::UnlockFileEx(hFile, dwReserved, nNumberOfBytesToUnlockLow, nNumberOfBytesToUnlockHigh, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
+	return ::UnlockFileEx(hFile, dwReserved, nNumberOfBytesToUnlockLow, nNumberOfBytesToUnlockHigh, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
 }
 #endif // BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
 
@@ -515,14 +520,14 @@ using ::DeleteFileA;
 
 BOOST_FORCEINLINE BOOL_ delete_file(LPCSTR_ lpFileName)
 {
-    return ::DeleteFileA(lpFileName);
+	return ::DeleteFileA(lpFileName);
 }
 
 using ::MoveFileExA;
 
 BOOST_FORCEINLINE BOOL_ move_file(LPCSTR_ lpExistingFileName, LPCSTR_ lpNewFileName, DWORD_ dwFlags)
 {
-    return ::MoveFileExA(lpExistingFileName, lpNewFileName, dwFlags);
+	return ::MoveFileExA(lpExistingFileName, lpNewFileName, dwFlags);
 }
 
 #endif
@@ -530,7 +535,7 @@ using ::DeleteFileW;
 
 BOOST_FORCEINLINE BOOL_ delete_file(LPCWSTR_ lpFileName)
 {
-    return ::DeleteFileW(lpFileName);
+	return ::DeleteFileW(lpFileName);
 }
 
 using ::FindClose;
@@ -538,7 +543,7 @@ using ::MoveFileExW;
 
 BOOST_FORCEINLINE BOOL_ move_file(LPCWSTR_ lpExistingFileName, LPCWSTR_ lpNewFileName, DWORD_ dwFlags)
 {
-    return ::MoveFileExW(lpExistingFileName, lpNewFileName, dwFlags);
+	return ::MoveFileExW(lpExistingFileName, lpNewFileName, dwFlags);
 }
 
 BOOST_FORCEINLINE BOOL_ ReadFile(
@@ -548,7 +553,7 @@ BOOST_FORCEINLINE BOOL_ ReadFile(
     LPDWORD_ lpNumberOfBytesWritten,
     OVERLAPPED_* lpOverlapped)
 {
-    return ::ReadFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
+	return ::ReadFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
 }
 
 using ::SetEndOfFile;
@@ -560,7 +565,7 @@ BOOST_FORCEINLINE BOOL_ WriteFile(
     LPDWORD_ lpNumberOfBytesWritten,
     OVERLAPPED_* lpOverlapped)
 {
-    return ::WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
+	return ::WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, reinterpret_cast< ::_OVERLAPPED* >(lpOverlapped));
 }
 #endif // BOOST_WINAPI_PARTITION_APP || BOOST_WINAPI_PARTITION_SYSTEM
 
@@ -570,19 +575,19 @@ using ::GetFileAttributesA;
 
 BOOST_FORCEINLINE DWORD_ get_file_attributes(LPCSTR_ lpFileName)
 {
-    return ::GetFileAttributesA(lpFileName);
+	return ::GetFileAttributesA(lpFileName);
 }
 #endif
 using ::GetFileAttributesW;
 
 BOOST_FORCEINLINE DWORD_ get_file_attributes(LPCWSTR_ lpFileName)
 {
-    return ::GetFileAttributesW(lpFileName);
+	return ::GetFileAttributesW(lpFileName);
 }
 
 BOOST_FORCEINLINE BOOL_ GetFileSizeEx(HANDLE_ hFile, LARGE_INTEGER_* lpFileSize)
 {
-    return ::GetFileSizeEx(hFile, reinterpret_cast< ::_LARGE_INTEGER* >(lpFileSize));
+	return ::GetFileSizeEx(hFile, reinterpret_cast< ::_LARGE_INTEGER* >(lpFileSize));
 }
 
 using ::SetFilePointer;

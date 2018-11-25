@@ -42,7 +42,7 @@ const u16string pe_utils::to_ucs2(const std::wstring& str)
 
 	size_t result = iconv(conv, const_cast<char**>(reinterpret_cast<const char**>(&in_pos)), &inbytesleft, reinterpret_cast<char**>(&out_pos), &outbytesleft);
 	iconv_close(conv);
-	
+
 	if(result == static_cast<size_t>(-1))
 		throw pe_exception("Iconv error", pe_exception::encoding_convertion_error);
 
@@ -79,8 +79,8 @@ const std::wstring pe_utils::from_ucs2(const u16string& str)
 bool operator==(const pe_win::guid& guid1, const pe_win::guid& guid2)
 {
 	return guid1.Data1 == guid2.Data1
-		&& guid1.Data2 == guid2.Data2
-		&& guid1.Data3 == guid2.Data3
-		&& !memcmp(guid1.Data4, guid2.Data4, sizeof(guid1.Data4));
+	       && guid1.Data2 == guid2.Data2
+	       && guid1.Data3 == guid2.Data3
+	       && !memcmp(guid1.Data4, guid2.Data4, sizeof(guid1.Data4));
 }
 }

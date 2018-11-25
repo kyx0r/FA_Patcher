@@ -23,8 +23,10 @@
 #include <boost/container/flat_set.hpp>
 #include <boost/interprocess/containers/containers_fwd.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 using boost::container::flat_set;
 using boost::container::flat_multiset;

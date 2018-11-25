@@ -14,31 +14,34 @@
 #include <boost/compute/function.hpp>
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T>
 class nvidia_ballot : public function<uint_(T)>
 {
 public:
-    nvidia_ballot()
-        : function<uint_(T)>("nvidia_ballot")
-    {
-        this->set_source(
-            "inline uint nvidia_ballot(const uint x)\n"
-            "{\n"
-            "    uint result;\n"
-            "    asm volatile(\n"
-            "        \"setp.ne.u32 %%p1, %1, 0;\"\n"
-            "        \"vote.ballot.b32 %0, %%p1;\"\n"
-            "        : \"=r\"(result)\n"
-            "        : \"r\"(x)\n"
-            "    );\n"
-            "    return result;\n"
-            "}\n"
-        );
-    }
+	nvidia_ballot()
+		: function<uint_(T)>("nvidia_ballot")
+	{
+		this->set_source(
+		    "inline uint nvidia_ballot(const uint x)\n"
+		    "{\n"
+		    "    uint result;\n"
+		    "    asm volatile(\n"
+		    "        \"setp.ne.u32 %%p1, %1, 0;\"\n"
+		    "        \"vote.ballot.b32 %0, %%p1;\"\n"
+		    "        : \"=r\"(result)\n"
+		    "        : \"r\"(x)\n"
+		    "    );\n"
+		    "    return result;\n"
+		    "}\n"
+		);
+	}
 };
 
 } // end detail namespace

@@ -16,38 +16,41 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/container/deque/detail/keyed_element.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    template <typename Deque, typename T>
-    struct back_extended_deque
-      : detail::keyed_element<typename Deque::next_up, T, Deque>
-      , sequence_base<back_extended_deque<Deque, T> >
-    {
-        typedef detail::keyed_element<typename Deque::next_up, T, Deque> base;
-        typedef typename Deque::next_down next_down;
-        typedef mpl::int_<(Deque::next_up::value + 1)> next_up;
-        typedef mpl::int_<(result_of::size<Deque>::value + 1)> size;
+namespace fusion
+{
+template <typename Deque, typename T>
+struct back_extended_deque
+	: detail::keyed_element<typename Deque::next_up, T, Deque>
+	, sequence_base<back_extended_deque<Deque, T> >
+{
+	typedef detail::keyed_element<typename Deque::next_up, T, Deque> base;
+	typedef typename Deque::next_down next_down;
+	typedef mpl::int_<(Deque::next_up::value + 1)> next_up;
+	typedef mpl::int_<(result_of::size<Deque>::value + 1)> size;
 
-        template <typename Arg>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        back_extended_deque(Deque const& deque, Arg const& val)
-          : base(val, deque)
-        {}
+	template <typename Arg>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	back_extended_deque(Deque const& deque, Arg const& val)
+		: base(val, deque)
+	{}
 
 #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        template <typename Arg>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        back_extended_deque(Deque const& deque, Arg& val)
-          : base(val, deque)
-        {}
+	template <typename Arg>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	back_extended_deque(Deque const& deque, Arg& val)
+		: base(val, deque)
+	{}
 #else
-        template <typename Arg>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        back_extended_deque(Deque const& deque, Arg&& val)
-          : base(BOOST_FUSION_FWD_ELEM(Arg, val), deque)
-        {}
+	template <typename Arg>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	back_extended_deque(Deque const& deque, Arg&& val)
+		: base(BOOST_FUSION_FWD_ELEM(Arg, val), deque)
+	{}
 #endif
-    };
-}}
+};
+}
+}
 
 #endif

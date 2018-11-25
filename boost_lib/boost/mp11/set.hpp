@@ -25,7 +25,7 @@ template<class S, class V> struct mp_set_contains_impl;
 
 template<template<class...> class L, class... T, class V> struct mp_set_contains_impl<L<T...>, V>
 {
-    using type = mp_to_bool<std::is_base_of<mp_identity<V>, mp_inherit<mp_identity<T>...>>>;
+	using type = mp_to_bool<std::is_base_of<mp_identity<V>, mp_inherit<mp_identity<T>...>>>;
 };
 
 } // namespace detail
@@ -40,13 +40,13 @@ template<class S, class... T> struct mp_set_push_back_impl;
 
 template<template<class...> class L, class... U> struct mp_set_push_back_impl<L<U...>>
 {
-    using type = L<U...>;
+	using type = L<U...>;
 };
 
 template<template<class...> class L, class... U, class T1, class... T> struct mp_set_push_back_impl<L<U...>, T1, T...>
 {
-    using S = mp_if<mp_set_contains<L<U...>, T1>, L<U...>, L<U..., T1>>;
-    using type = typename mp_set_push_back_impl<S, T...>::type;
+	using S = mp_if<mp_set_contains<L<U...>, T1>, L<U...>, L<U..., T1>>;
+	using type = typename mp_set_push_back_impl<S, T...>::type;
 };
 
 } // namespace detail
@@ -61,18 +61,18 @@ template<class S, class... T> struct mp_set_push_front_impl;
 
 template<template<class...> class L, class... U> struct mp_set_push_front_impl<L<U...>>
 {
-    using type = L<U...>;
+	using type = L<U...>;
 };
 
 template<template<class...> class L, class... U, class T1> struct mp_set_push_front_impl<L<U...>, T1>
 {
-    using type = mp_if<mp_set_contains<L<U...>, T1>, L<U...>, L<T1, U...>>;
+	using type = mp_if<mp_set_contains<L<U...>, T1>, L<U...>, L<T1, U...>>;
 };
 
 template<template<class...> class L, class... U, class T1, class... T> struct mp_set_push_front_impl<L<U...>, T1, T...>
 {
-    using S = typename mp_set_push_front_impl<L<U...>, T...>::type;
-    using type = typename mp_set_push_front_impl<S, T1>::type;
+	using S = typename mp_set_push_front_impl<L<U...>, T...>::type;
+	using type = typename mp_set_push_front_impl<S, T1>::type;
 };
 
 } // namespace detail
@@ -85,12 +85,12 @@ namespace detail
 
 template<class S> struct mp_is_set_impl
 {
-    using type = mp_false;
+	using type = mp_false;
 };
 
 template<template<class...> class L, class... T> struct mp_is_set_impl<L<T...>>
 {
-    using type = mp_to_bool<std::is_same<mp_list<T...>, mp_set_push_back<mp_list<>, T...>>>;
+	using type = mp_to_bool<std::is_same<mp_list<T...>, mp_set_push_back<mp_list<>, T...>>>;
 };
 
 } // namespace detail

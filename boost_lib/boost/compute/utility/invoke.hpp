@@ -20,8 +20,10 @@
 #include <boost/compute/container/detail/scalar.hpp>
 #include <boost/compute/type_traits/result_of.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 #define BOOST_COMPUTE_DETAIL_INVOKE_ARG(z, n, unused) \
     BOOST_PP_COMMA_IF(n) k.var<BOOST_PP_CAT(T, n)>("arg" BOOST_PP_STRINGIZE(n))

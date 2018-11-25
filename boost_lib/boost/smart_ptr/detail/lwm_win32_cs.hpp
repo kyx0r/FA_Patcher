@@ -40,15 +40,15 @@ namespace detail
 
 struct critical_section
 {
-    struct critical_section_debug * DebugInfo;
-    long LockCount;
-    long RecursionCount;
-    void * OwningThread;
-    void * LockSemaphore;
+	struct critical_section_debug * DebugInfo;
+	long LockCount;
+	long RecursionCount;
+	void * OwningThread;
+	void * LockSemaphore;
 #if defined(_WIN64)
-    unsigned __int64 SpinCount;
+	unsigned __int64 SpinCount;
 #else
-    unsigned long SpinCount;
+	unsigned long SpinCount;
 #endif
 };
 
@@ -80,51 +80,51 @@ class lightweight_mutex
 {
 private:
 
-    critical_section cs_;
+	critical_section cs_;
 
-    lightweight_mutex(lightweight_mutex const &);
-    lightweight_mutex & operator=(lightweight_mutex const &);
+	lightweight_mutex(lightweight_mutex const &);
+	lightweight_mutex & operator=(lightweight_mutex const &);
 
 public:
 
-    lightweight_mutex()
-    {
+	lightweight_mutex()
+	{
 #if BOOST_PLAT_WINDOWS_RUNTIME
-        boost::detail::InitializeCriticalSectionEx(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&cs_), 4000, 0);
+		boost::detail::InitializeCriticalSectionEx(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&cs_), 4000, 0);
 #else
-        boost::detail::InitializeCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&cs_));
+		boost::detail::InitializeCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&cs_));
 #endif
-    }
+	}
 
-    ~lightweight_mutex()
-    {
-        boost::detail::DeleteCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&cs_));
-    }
+	~lightweight_mutex()
+	{
+		boost::detail::DeleteCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&cs_));
+	}
 
-    class scoped_lock;
-    friend class scoped_lock;
+	class scoped_lock;
+	friend class scoped_lock;
 
-    class scoped_lock
-    {
-    private:
+	class scoped_lock
+	{
+	private:
 
-        lightweight_mutex & m_;
+		lightweight_mutex & m_;
 
-        scoped_lock(scoped_lock const &);
-        scoped_lock & operator=(scoped_lock const &);
+		scoped_lock(scoped_lock const &);
+		scoped_lock & operator=(scoped_lock const &);
 
-    public:
+	public:
 
-        explicit scoped_lock(lightweight_mutex & m): m_(m)
-        {
-            boost::detail::EnterCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&m_.cs_));
-        }
+		explicit scoped_lock(lightweight_mutex & m): m_(m)
+		{
+			boost::detail::EnterCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&m_.cs_));
+		}
 
-        ~scoped_lock()
-        {
-            boost::detail::LeaveCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&m_.cs_));
-        }
-    };
+		~scoped_lock()
+		{
+			boost::detail::LeaveCriticalSection(reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(&m_.cs_));
+		}
+	};
 };
 
 } // namespace detail

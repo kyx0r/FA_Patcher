@@ -18,8 +18,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function partial_sort_copy
 ///
@@ -32,10 +32,10 @@ template<class SinglePassRange, class RandomAccessRange>
 inline BOOST_DEDUCED_TYPENAME range_iterator<RandomAccessRange>::type
 partial_sort_copy(const SinglePassRange& rng1, RandomAccessRange& rng2)
 {
-    BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
+	BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
 
-    return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
-        boost::begin(rng2), boost::end(rng2));
+	return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
+	                              boost::begin(rng2), boost::end(rng2));
 }
 
 /// \overload
@@ -43,10 +43,10 @@ template<class SinglePassRange, class RandomAccessRange>
 inline BOOST_DEDUCED_TYPENAME range_iterator<RandomAccessRange>::type
 partial_sort_copy(const SinglePassRange& rng1, const RandomAccessRange& rng2)
 {
-    BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
+	BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
 
-    return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
-        boost::begin(rng2), boost::end(rng2));
+	return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
+	                              boost::begin(rng2), boost::end(rng2));
 }
 
 /// \overload
@@ -54,12 +54,12 @@ template<class SinglePassRange, class RandomAccessRange,
          class BinaryPredicate>
 inline BOOST_DEDUCED_TYPENAME range_iterator<RandomAccessRange>::type
 partial_sort_copy(const SinglePassRange& rng1, RandomAccessRange& rng2,
-    BinaryPredicate pred)
+                  BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
+	BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
 
-    return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
-        boost::begin(rng2), boost::end(rng2), pred);
+	return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
+	                              boost::begin(rng2), boost::end(rng2), pred);
 }
 
 /// \overload
@@ -67,16 +67,16 @@ template<class SinglePassRange, class RandomAccessRange,
          class BinaryPredicate>
 inline BOOST_DEDUCED_TYPENAME range_iterator<const RandomAccessRange>::type
 partial_sort_copy(const SinglePassRange& rng1, const RandomAccessRange& rng2,
-    BinaryPredicate pred)
+                  BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
+	BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<const SinglePassRange>));
 
-    return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
-        boost::begin(rng2), boost::end(rng2), pred);
+	return std::partial_sort_copy(boost::begin(rng1), boost::end(rng1),
+	                              boost::begin(rng2), boost::end(rng2), pred);
 }
 
-    } // namespace range
-    using range::partial_sort_copy;
+} // namespace range
+using range::partial_sort_copy;
 } // namespace boost
 
 #endif // include guard

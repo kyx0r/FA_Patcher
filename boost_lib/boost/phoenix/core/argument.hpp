@@ -15,59 +15,65 @@
 #include <boost/phoenix/core/terminal.hpp>
 #include <boost/mpl/int.hpp>
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    ////////////////////////////////////////////////////////////////////////////
-    //
-    //  argument
-    //
-    //      function for evaluating argument placeholders like: _1
-    //
-    ////////////////////////////////////////////////////////////////////////////
-    
-    template <int I>
-    struct argument
-        //: mpl::int_<I>
-    {
-        typedef typename mpl::int_<I>::value_type value_type;
-        static const value_type value = mpl::int_<I>::value;
-        
-        bool operator==(argument) const
-        {
-            return true;
-        }
-        
-        template <int I2>
-        bool operator==(argument<I2>) const
-        {
-            return false;
-        }
-    };
-}}
+namespace phoenix
+{
+////////////////////////////////////////////////////////////////////////////
+//
+//  argument
+//
+//      function for evaluating argument placeholders like: _1
+//
+////////////////////////////////////////////////////////////////////////////
 
-namespace boost {
-    template <int I>
-    struct is_placeholder<phoenix::argument<I> >
-        : mpl::int_<I>
-    {};
+template <int I>
+struct argument
+//: mpl::int_<I>
+{
+	typedef typename mpl::int_<I>::value_type value_type;
+	static const value_type value = mpl::int_<I>::value;
+
+	bool operator==(argument) const
+	{
+		return true;
+	}
+
+	template <int I2>
+	bool operator==(argument<I2>) const
+	{
+		return false;
+	}
+};
+}
 }
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    namespace expression
-    {
-        template <int I>
-        struct argument
-            : expression::terminal<phoenix::argument<I> >
-        {
-            typedef typename expression::terminal<phoenix::argument<I> >::type type;
-            static const type make()
-            {
-                type const e = {{{}}};
-                return e;
-            }
-        };
-    }
+template <int I>
+struct is_placeholder<phoenix::argument<I> >
+	: mpl::int_<I>
+{};
+}
+
+namespace boost
+{
+namespace phoenix
+{
+namespace expression
+{
+template <int I>
+struct argument
+	: expression::terminal<phoenix::argument<I> >
+{
+	typedef typename expression::terminal<phoenix::argument<I> >::type type;
+	static const type make()
+	{
+		type const e = {{{}}};
+		return e;
+	}
+};
+}
 
 #if !defined(BOOST_PHOENIX_DONT_USE_PREPROCESSED_FILES)
 
@@ -145,6 +151,7 @@ namespace boost { namespace phoenix
 
 #endif
 
-}}
+}
+}
 
 #endif

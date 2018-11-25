@@ -8,15 +8,18 @@
 
 #include <boost/type_traits/is_base_and_derived.hpp>
 
-namespace boost {
-namespace parameter {
-namespace aux {
+namespace boost
+{
+namespace parameter
+{
+namespace aux
+{
 
 struct maybe_base {};
 
 template <class T>
 struct is_maybe
-  : is_base_and_derived<maybe_base, T>
+	: is_base_and_derived<maybe_base, T>
 {};
 
 } // namespace aux

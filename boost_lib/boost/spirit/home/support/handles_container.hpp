@@ -18,38 +18,44 @@
 #include <boost/mpl/find_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace spirit { namespace traits
+namespace boost
 {
-    // Finds out whether a component handles container attributes intrinsically
-    // (or whether container attributes need to be split up separately).
-    template <typename T, typename Attribute, typename Context
-            , typename Iterator, typename Enable>
-    struct handles_container : mpl::false_ {};
+namespace spirit
+{
+namespace traits
+{
+// Finds out whether a component handles container attributes intrinsically
+// (or whether container attributes need to be split up separately).
+template <typename T, typename Attribute, typename Context
+          , typename Iterator, typename Enable>
+struct handles_container : mpl::false_ {};
 
-    template <typename Subject, typename Attribute, typename Context
-            , typename Iterator>
-    struct unary_handles_container
-      : handles_container<Subject, Attribute, Context, Iterator> {};
+template <typename Subject, typename Attribute, typename Context
+          , typename Iterator>
+struct unary_handles_container
+	: handles_container<Subject, Attribute, Context, Iterator> {};
 
-    template <typename Left, typename Right, typename Attribute
-            , typename Context, typename Iterator>
-    struct binary_handles_container 
-      : mpl::or_<
-            handles_container<Left, Attribute, Context, Iterator>
-          , handles_container<Right, Attribute, Context, Iterator> > 
-    {};
+template <typename Left, typename Right, typename Attribute
+          , typename Context, typename Iterator>
+struct binary_handles_container
+	: mpl::or_<
+	  handles_container<Left, Attribute, Context, Iterator>
+	, handles_container<Right, Attribute, Context, Iterator> >
+{};
 
-    template <typename Elements, typename Attribute, typename Context
-            , typename Iterator>
-    struct nary_handles_container
-      : mpl::not_<
-            is_same<
-                typename mpl::find_if<
-                    Elements, handles_container<mpl::_, Attribute
-                                              , Context, Iterator> 
-                >::type
-              , typename mpl::end<Elements>::type> > 
-    {};
-}}}
+template <typename Elements, typename Attribute, typename Context
+          , typename Iterator>
+struct nary_handles_container
+	: mpl::not_<
+	  is_same<
+	  typename mpl::find_if<
+	  Elements, handles_container<mpl::_, Attribute
+	, Context, Iterator>
+	  >::type
+	, typename mpl::end<Elements>::type> >
+{};
+}
+}
+}
 
 #endif

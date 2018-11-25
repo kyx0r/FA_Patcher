@@ -19,19 +19,19 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 template<typename... Ranges>
 auto combine(Ranges&&... rngs) ->
-    combined_range<decltype(boost::make_tuple(boost::begin(rngs)...))>
+combined_range<decltype(boost::make_tuple(boost::begin(rngs)...))>
 {
-    return combined_range<decltype(boost::make_tuple(boost::begin(rngs)...))>(
-                boost::make_tuple(boost::begin(rngs)...),
-                boost::make_tuple(boost::end(rngs)...));
+	return combined_range<decltype(boost::make_tuple(boost::begin(rngs)...))>(
+	           boost::make_tuple(boost::begin(rngs)...),
+	           boost::make_tuple(boost::end(rngs)...));
 }
 
-    } // namespace range
+} // namespace range
 
 using range::combine;
 

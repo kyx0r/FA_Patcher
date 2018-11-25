@@ -28,9 +28,12 @@
 #include <boost/compute/detail/is_buffer_iterator.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 namespace mpl = boost::mpl;
 
@@ -41,27 +44,27 @@ inline void fill_with_copy(BufferIterator first,
                            const T &value,
                            command_queue &queue)
 {
-    ::boost::compute::copy(
-        ::boost::compute::make_constant_iterator(value, 0),
-        ::boost::compute::make_constant_iterator(value, count),
-        first,
-        queue
-    );
+	::boost::compute::copy(
+	    ::boost::compute::make_constant_iterator(value, 0),
+	    ::boost::compute::make_constant_iterator(value, count),
+	    first,
+	    queue
+	);
 }
 
 // fills the range [first, first + count) with value using copy_async()
 template<class BufferIterator, class T>
 inline future<void> fill_async_with_copy(BufferIterator first,
-                                         size_t count,
-                                         const T &value,
-                                         command_queue &queue)
+        size_t count,
+        const T &value,
+        command_queue &queue)
 {
-    return ::boost::compute::copy_async(
-               ::boost::compute::make_constant_iterator(value, 0),
-               ::boost::compute::make_constant_iterator(value, count),
-               first,
-               queue
-           );
+	return ::boost::compute::copy_async(
+	           ::boost::compute::make_constant_iterator(value, 0),
+	           ::boost::compute::make_constant_iterator(value, count),
+	           first,
+	           queue
+	       );
 }
 
 #if defined(BOOST_COMPUTE_CL_VERSION_1_2)
@@ -72,24 +75,24 @@ inline future<void> fill_async_with_copy(BufferIterator first,
 // size of its value_type must by in {1, 2, 4, 8, 16, 32, 64, 128}.
 template<class Iterator>
 struct is_valid_fill_buffer_iterator :
-    public mpl::and_<
-        is_buffer_iterator<Iterator>,
-        mpl::contains<
-            mpl::vector<
-                mpl::int_<1>,
-                mpl::int_<2>,
-                mpl::int_<4>,
-                mpl::int_<8>,
-                mpl::int_<16>,
-                mpl::int_<32>,
-                mpl::int_<64>,
-                mpl::int_<128>
-            >,
-            mpl::int_<
-                sizeof(typename std::iterator_traits<Iterator>::value_type)
-            >
-        >
-    >::type { };
+	public mpl::and_<
+	is_buffer_iterator<Iterator>,
+	mpl::contains<
+	mpl::vector<
+	mpl::int_<1>,
+	mpl::int_<2>,
+	mpl::int_<4>,
+	mpl::int_<8>,
+	mpl::int_<16>,
+	mpl::int_<32>,
+	mpl::int_<64>,
+	mpl::int_<128>
+	>,
+	mpl::int_<
+sizeof(typename std::iterator_traits<Iterator>::value_type)
+>
+>
+>::type { };
 
 template<>
 struct is_valid_fill_buffer_iterator<discard_iterator> : public boost::false_type {};
@@ -102,44 +105,48 @@ dispatch_fill(BufferIterator first,
               const T &value,
               command_queue &queue,
               typename boost::enable_if<
-                 is_valid_fill_buffer_iterator<BufferIterator>
+              is_valid_fill_buffer_iterator<BufferIterator>
               >::type* = 0)
 {
-    typedef typename std::iterator_traits<BufferIterator>::value_type value_type;
+	typedef typename std::iterator_traits<BufferIterator>::value_type value_type;
 
-    if(count == 0){
-        // nothing to do
-        return;
-    }
+	if(count == 0)
+	{
+		// nothing to do
+		return;
+	}
 
-    // check if the device supports OpenCL 1.2 (required for enqueue_fill_buffer)
-    if(!queue.check_device_version(1, 2)){
-        return fill_with_copy(first, count, value, queue);
-    }
+	// check if the device supports OpenCL 1.2 (required for enqueue_fill_buffer)
+	if(!queue.check_device_version(1, 2))
+	{
+		return fill_with_copy(first, count, value, queue);
+	}
 
-    value_type pattern = static_cast<value_type>(value);
-    size_t offset = static_cast<size_t>(first.get_index());
+	value_type pattern = static_cast<value_type>(value);
+	size_t offset = static_cast<size_t>(first.get_index());
 
-    if(count == 1){
-        // use clEnqueueWriteBuffer() directly when writing a single value
-        // to the device buffer. this is potentially more efficient and also
-        // works around a bug in the intel opencl driver.
-        queue.enqueue_write_buffer(
-            first.get_buffer(),
-            offset * sizeof(value_type),
-            sizeof(value_type),
-            &pattern
-        );
-    }
-    else {
-        queue.enqueue_fill_buffer(
-            first.get_buffer(),
-            &pattern,
-            sizeof(value_type),
-            offset * sizeof(value_type),
-            count * sizeof(value_type)
-        );
-    }
+	if(count == 1)
+	{
+		// use clEnqueueWriteBuffer() directly when writing a single value
+		// to the device buffer. this is potentially more efficient and also
+		// works around a bug in the intel opencl driver.
+		queue.enqueue_write_buffer(
+		    first.get_buffer(),
+		    offset * sizeof(value_type),
+		    sizeof(value_type),
+		    &pattern
+		);
+	}
+	else
+	{
+		queue.enqueue_fill_buffer(
+		    first.get_buffer(),
+		    &pattern,
+		    sizeof(value_type),
+		    offset * sizeof(value_type),
+		    count * sizeof(value_type)
+		);
+	}
 }
 
 template<class BufferIterator, class T>
@@ -149,27 +156,28 @@ dispatch_fill_async(BufferIterator first,
                     const T &value,
                     command_queue &queue,
                     typename boost::enable_if<
-                       is_valid_fill_buffer_iterator<BufferIterator>
+                    is_valid_fill_buffer_iterator<BufferIterator>
                     >::type* = 0)
 {
-    typedef typename std::iterator_traits<BufferIterator>::value_type value_type;
+	typedef typename std::iterator_traits<BufferIterator>::value_type value_type;
 
-    // check if the device supports OpenCL 1.2 (required for enqueue_fill_buffer)
-    if(!queue.check_device_version(1, 2)){
-        return fill_async_with_copy(first, count, value, queue);
-    }
+	// check if the device supports OpenCL 1.2 (required for enqueue_fill_buffer)
+	if(!queue.check_device_version(1, 2))
+	{
+		return fill_async_with_copy(first, count, value, queue);
+	}
 
-    value_type pattern = static_cast<value_type>(value);
-    size_t offset = static_cast<size_t>(first.get_index());
+	value_type pattern = static_cast<value_type>(value);
+	size_t offset = static_cast<size_t>(first.get_index());
 
-    event event_ =
-        queue.enqueue_fill_buffer(first.get_buffer(),
-                                  &pattern,
-                                  sizeof(value_type),
-                                  offset * sizeof(value_type),
-                                  count * sizeof(value_type));
+	event event_ =
+	    queue.enqueue_fill_buffer(first.get_buffer(),
+	                              &pattern,
+	                              sizeof(value_type),
+	                              offset * sizeof(value_type),
+	                              count * sizeof(value_type));
 
-    return future<void>(event_);
+	return future<void>(event_);
 }
 
 #ifdef BOOST_COMPUTE_CL_VERSION_2_0
@@ -180,13 +188,14 @@ inline void dispatch_fill(svm_ptr<T> first,
                           const T &value,
                           command_queue &queue)
 {
-    if(count == 0){
-        return;
-    }
+	if(count == 0)
+	{
+		return;
+	}
 
-    queue.enqueue_svm_fill(
-        first.get(), &value, sizeof(T), count * sizeof(T)
-    );
+	queue.enqueue_svm_fill(
+	    first.get(), &value, sizeof(T), count * sizeof(T)
+	);
 }
 
 template<class T>
@@ -195,15 +204,16 @@ inline future<void> dispatch_fill_async(svm_ptr<T> first,
                                         const T &value,
                                         command_queue &queue)
 {
-    if(count == 0){
-        return future<void>();
-    }
+	if(count == 0)
+	{
+		return future<void>();
+	}
 
-    event event_ = queue.enqueue_svm_fill(
-        first.get(), &value, sizeof(T), count * sizeof(T)
-    );
+	event event_ = queue.enqueue_svm_fill(
+	                   first.get(), &value, sizeof(T), count * sizeof(T)
+	               );
 
-    return future<void>(event_);
+	return future<void>(event_);
 }
 #endif // BOOST_COMPUTE_CL_VERSION_2_0
 
@@ -215,10 +225,10 @@ dispatch_fill(BufferIterator first,
               const T &value,
               command_queue &queue,
               typename boost::disable_if<
-                  is_valid_fill_buffer_iterator<BufferIterator>
+              is_valid_fill_buffer_iterator<BufferIterator>
               >::type* = 0)
 {
-    fill_with_copy(first, count, value, queue);
+	fill_with_copy(first, count, value, queue);
 }
 
 template<class BufferIterator, class T>
@@ -228,10 +238,10 @@ dispatch_fill_async(BufferIterator first,
                     const T &value,
                     command_queue &queue,
                     typename boost::disable_if<
-                        is_valid_fill_buffer_iterator<BufferIterator>
+                    is_valid_fill_buffer_iterator<BufferIterator>
                     >::type* = 0)
 {
-    return fill_async_with_copy(first, count, value, queue);
+	return fill_async_with_copy(first, count, value, queue);
 }
 #else
 template<class BufferIterator, class T>
@@ -240,7 +250,7 @@ inline void dispatch_fill(BufferIterator first,
                           const T &value,
                           command_queue &queue)
 {
-    fill_with_copy(first, count, value, queue);
+	fill_with_copy(first, count, value, queue);
 }
 
 template<class BufferIterator, class T>
@@ -249,7 +259,7 @@ inline future<void> dispatch_fill_async(BufferIterator first,
                                         const T &value,
                                         command_queue &queue)
 {
-    return fill_async_with_copy(first, count, value, queue);
+	return fill_async_with_copy(first, count, value, queue);
 }
 #endif // !defined(BOOST_COMPUTE_CL_VERSION_1_2)
 
@@ -280,12 +290,13 @@ inline void fill(BufferIterator first,
                  const T &value,
                  command_queue &queue = system::default_queue())
 {
-    size_t count = detail::iterator_range_size(first, last);
-    if(count == 0){
-        return;
-    }
+	size_t count = detail::iterator_range_size(first, last);
+	if(count == 0)
+	{
+		return;
+	}
 
-    detail::dispatch_fill(first, count, value, queue);
+	detail::dispatch_fill(first, count, value, queue);
 }
 
 template<class BufferIterator, class T>
@@ -294,12 +305,13 @@ inline future<void> fill_async(BufferIterator first,
                                const T &value,
                                command_queue &queue = system::default_queue())
 {
-    size_t count = detail::iterator_range_size(first, last);
-    if(count == 0){
-        return future<void>();
-    }
+	size_t count = detail::iterator_range_size(first, last);
+	if(count == 0)
+	{
+		return future<void>();
+	}
 
-    return detail::dispatch_fill_async(first, count, value, queue);
+	return detail::dispatch_fill_async(first, count, value, queue);
 }
 
 } // end compute namespace

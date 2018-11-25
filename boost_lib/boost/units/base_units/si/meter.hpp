@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -18,16 +18,25 @@
 #include <boost/units/scaled_base_unit.hpp>
 #include <boost/units/physical_dimensions/length.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units {
+namespace units
+{
 
-namespace si {
+namespace si
+{
 
 struct meter_base_unit : public base_unit<meter_base_unit, length_dimension, -9>
 {
-    static std::string name()   { return("meter"); }
-    static std::string symbol() { return("m"); }
+	static std::string name()
+	{
+		return("meter");
+	}
+	static std::string symbol()
+	{
+		return("m");
+	}
 };
 
 } // namespace si

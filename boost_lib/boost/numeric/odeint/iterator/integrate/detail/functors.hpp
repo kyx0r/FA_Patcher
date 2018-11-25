@@ -20,46 +20,52 @@
 
 #include <utility>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
-namespace detail {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
+namespace detail
+{
 
 
 template< class Observer >
-struct obs_caller {
+struct obs_caller
+{
 
-    size_t &m_n;
-    Observer m_obs;
+	size_t &m_n;
+	Observer m_obs;
 
-    obs_caller( size_t &m , Observer &obs ) : m_n(m) , m_obs( obs ) {}
+	obs_caller( size_t &m, Observer &obs ) : m_n(m), m_obs( obs ) {}
 
-    template< class State , class Time >
-    void operator()( std::pair< const State & , const Time & > x )
-    {
-        typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-        observer_type &obs = m_obs;
-        obs( x.first , x.second );
-        m_n++;
-    }
+	template< class State, class Time >
+	void operator()( std::pair< const State &, const Time & > x )
+	{
+		typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+		observer_type &obs = m_obs;
+		obs( x.first, x.second );
+		m_n++;
+	}
 };
 
-template< class Observer , class Time >
-struct obs_caller_time {
+template< class Observer, class Time >
+struct obs_caller_time
+{
 
-    Time &m_t;
-    Observer m_obs;
+	Time &m_t;
+	Observer m_obs;
 
-    obs_caller_time( Time &t , Observer &obs ) : m_t(t) , m_obs( obs ) {}
+	obs_caller_time( Time &t, Observer &obs ) : m_t(t), m_obs( obs ) {}
 
-    template< class State >
-    void operator()( std::pair< const State & , const Time & > x )
-    {
-        typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-        observer_type &obs = m_obs;
-        obs( x.first , x.second );
-        m_t = x.second;
-    }
+	template< class State >
+	void operator()( std::pair< const State &, const Time & > x )
+	{
+		typedef typename odeint::unwrap_reference< Observer >::type observer_type;
+		observer_type &obs = m_obs;
+		obs( x.first, x.second );
+		m_t = x.second;
+	}
 };
 
 } // namespace detail

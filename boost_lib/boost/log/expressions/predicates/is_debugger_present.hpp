@@ -37,17 +37,20 @@
 
 #else // defined(BOOST_USE_WINDOWS_H)
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 extern "C" {
 
-__declspec(dllimport) int __stdcall IsDebuggerPresent();
+	__declspec(dllimport) int __stdcall IsDebuggerPresent();
 
 } // extern "C"
 
@@ -61,22 +64,25 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #endif // BOOST_USE_WINDOWS_H
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 struct is_debugger_present
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    result_type operator() () const
-    {
-        return IsDebuggerPresent() != 0;
-    }
+	result_type operator() () const
+	{
+		return IsDebuggerPresent() != 0;
+	}
 };
 
 } // namespace aux

@@ -24,10 +24,13 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 // Plain old array iteration (assuming member function VecT::size()!)
 #define ICL_FORALL_VEC(idx, vec) for(int idx=0; idx<vec.size(); idx++)
 
-namespace boost{namespace icl
+namespace boost
 {
-    const int UNDEFINED_INDEX = -1;
-}} // namespace icl boost
+namespace icl
+{
+const int UNDEFINED_INDEX = -1;
+}
+} // namespace icl boost
 
 
 #endif // BOOST_ICL_DETAIL_NOTATE_HPP_JOFA_990119

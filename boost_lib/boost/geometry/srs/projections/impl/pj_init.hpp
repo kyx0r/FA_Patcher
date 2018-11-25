@@ -61,7 +61,11 @@
 #include <boost/geometry/srs/projections/proj4.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 
@@ -71,51 +75,51 @@ namespace detail
 template <typename BGParams, typename T>
 inline void pj_push_defaults(BGParams const& /*bg_params*/, parameters<T>& pin)
 {
-    pin.params.push_back(pj_mkparam<T>("ellps=WGS84"));
+	pin.params.push_back(pj_mkparam<T>("ellps=WGS84"));
 
-    if (pin.name == "aea")
-    {
-        pin.params.push_back(pj_mkparam<T>("lat_1=29.5"));
-        pin.params.push_back(pj_mkparam<T>("lat_2=45.5 "));
-    }
-    else if (pin.name == "lcc")
-    {
-        pin.params.push_back(pj_mkparam<T>("lat_1=33"));
-        pin.params.push_back(pj_mkparam<T>("lat_2=45"));
-    }
-    else if (pin.name == "lagrng")
-    {
-        pin.params.push_back(pj_mkparam<T>("W=2"));
-    }
+	if (pin.name == "aea")
+	{
+		pin.params.push_back(pj_mkparam<T>("lat_1=29.5"));
+		pin.params.push_back(pj_mkparam<T>("lat_2=45.5 "));
+	}
+	else if (pin.name == "lcc")
+	{
+		pin.params.push_back(pj_mkparam<T>("lat_1=33"));
+		pin.params.push_back(pj_mkparam<T>("lat_2=45"));
+	}
+	else if (pin.name == "lagrng")
+	{
+		pin.params.push_back(pj_mkparam<T>("W=2"));
+	}
 }
 
 template <BOOST_GEOMETRY_PROJECTIONS_DETAIL_TYPENAME_PX, typename T>
 inline void pj_push_defaults(srs::static_proj4<BOOST_GEOMETRY_PROJECTIONS_DETAIL_PX> const& /*bg_params*/,
                              parameters<T>& pin)
 {
-    typedef srs::static_proj4<BOOST_GEOMETRY_PROJECTIONS_DETAIL_PX> static_parameters_type;
-    typedef typename srs::par4::detail::pick_proj_tag
-        <
-            static_parameters_type
-        >::type proj_tag;
+	typedef srs::static_proj4<BOOST_GEOMETRY_PROJECTIONS_DETAIL_PX> static_parameters_type;
+	typedef typename srs::par4::detail::pick_proj_tag
+	<
+	static_parameters_type
+	>::type proj_tag;
 
-    // statically defaulting to WGS84
-    //pin.params.push_back(pj_mkparam("ellps=WGS84"));
+	// statically defaulting to WGS84
+	//pin.params.push_back(pj_mkparam("ellps=WGS84"));
 
-    if (BOOST_GEOMETRY_CONDITION((boost::is_same<proj_tag, srs::par4::aea>::value)))
-    {
-        pin.params.push_back(pj_mkparam<T>("lat_1=29.5"));
-        pin.params.push_back(pj_mkparam<T>("lat_2=45.5 "));
-    }
-    else if (BOOST_GEOMETRY_CONDITION((boost::is_same<proj_tag, srs::par4::lcc>::value)))
-    {
-        pin.params.push_back(pj_mkparam<T>("lat_1=33"));
-        pin.params.push_back(pj_mkparam<T>("lat_2=45"));
-    }
-    else if (BOOST_GEOMETRY_CONDITION((boost::is_same<proj_tag, srs::par4::lagrng>::value)))
-    {
-        pin.params.push_back(pj_mkparam<T>("W=2"));
-    }
+	if (BOOST_GEOMETRY_CONDITION((boost::is_same<proj_tag, srs::par4::aea>::value)))
+	{
+		pin.params.push_back(pj_mkparam<T>("lat_1=29.5"));
+		pin.params.push_back(pj_mkparam<T>("lat_2=45.5 "));
+	}
+	else if (BOOST_GEOMETRY_CONDITION((boost::is_same<proj_tag, srs::par4::lcc>::value)))
+	{
+		pin.params.push_back(pj_mkparam<T>("lat_1=33"));
+		pin.params.push_back(pj_mkparam<T>("lat_2=45"));
+	}
+	else if (BOOST_GEOMETRY_CONDITION((boost::is_same<proj_tag, srs::par4::lagrng>::value)))
+	{
+		pin.params.push_back(pj_mkparam<T>("W=2"));
+	}
 }
 
 template <typename T>
@@ -127,59 +131,60 @@ inline void pj_init_units(std::vector<pvalue<T> > const& params,
                           T const& default_to_meter,
                           T const& default_fr_meter)
 {
-    std::string s;
-    std::string units = pj_param(params, sunits).s;
-    if (! units.empty())
-    {
-        const int n = sizeof(pj_units) / sizeof(pj_units[0]);
-        int index = -1;
-        for (int i = 0; i < n && index == -1; i++)
-        {
-            if(pj_units[i].id == units)
-            {
-                index = i;
-            }
-        }
+	std::string s;
+	std::string units = pj_param(params, sunits).s;
+	if (! units.empty())
+	{
+		const int n = sizeof(pj_units) / sizeof(pj_units[0]);
+		int index = -1;
+		for (int i = 0; i < n && index == -1; i++)
+		{
+			if(pj_units[i].id == units)
+			{
+				index = i;
+			}
+		}
 
-        if (index == -1) {
-            BOOST_THROW_EXCEPTION( projection_exception(-7) );
-        }
-        s = pj_units[index].to_meter;
-    }
+		if (index == -1)
+		{
+			BOOST_THROW_EXCEPTION( projection_exception(-7) );
+		}
+		s = pj_units[index].to_meter;
+	}
 
-    if (s.empty())
-    {
-        s = pj_param(params, sto_meter).s;
-    }
+	if (s.empty())
+	{
+		s = pj_param(params, sto_meter).s;
+	}
 
-    if (! s.empty())
-    {
-        std::size_t const pos = s.find('/');
-        if (pos == std::string::npos)
-        {
-            to_meter = lexical_cast<T>(s);
-        }
-        else
-        {
-            T const numerator = lexical_cast<T>(s.substr(0, pos));
-            T const denominator = lexical_cast<T>(s.substr(pos + 1));
-            if (numerator == 0.0 || denominator == 0.0)
-            {
-                BOOST_THROW_EXCEPTION( projection_exception(-99) );
-            }
-            to_meter = numerator / denominator;
-        }
-        if (to_meter == 0.0)
-        {
-            BOOST_THROW_EXCEPTION( projection_exception(-99) );
-        }
-        fr_meter = 1. / to_meter;
-    }
-    else
-    {
-        to_meter = default_to_meter;
-        fr_meter = default_fr_meter;
-    }
+	if (! s.empty())
+	{
+		std::size_t const pos = s.find('/');
+		if (pos == std::string::npos)
+		{
+			to_meter = lexical_cast<T>(s);
+		}
+		else
+		{
+			T const numerator = lexical_cast<T>(s.substr(0, pos));
+			T const denominator = lexical_cast<T>(s.substr(pos + 1));
+			if (numerator == 0.0 || denominator == 0.0)
+			{
+				BOOST_THROW_EXCEPTION( projection_exception(-99) );
+			}
+			to_meter = numerator / denominator;
+		}
+		if (to_meter == 0.0)
+		{
+			BOOST_THROW_EXCEPTION( projection_exception(-99) );
+		}
+		fr_meter = 1. / to_meter;
+	}
+	else
+	{
+		to_meter = default_to_meter;
+		fr_meter = default_fr_meter;
+	}
 }
 
 /************************************************************************/
@@ -193,152 +198,157 @@ inline void pj_init_units(std::vector<pvalue<T> > const& params,
 template <typename T, typename BGParams, typename R>
 inline parameters<T> pj_init(BGParams const& bg_params, R const& arguments, bool use_defaults = true)
 {
-    parameters<T> pin;
-    for (std::vector<std::string>::const_iterator it = boost::begin(arguments);
-        it != boost::end(arguments); it++)
-    {
-        pin.params.push_back(pj_mkparam<T>(*it));
-    }
+	parameters<T> pin;
+	for (std::vector<std::string>::const_iterator it = boost::begin(arguments);
+	        it != boost::end(arguments); it++)
+	{
+		pin.params.push_back(pj_mkparam<T>(*it));
+	}
 
-    /* check if +init present */
-    if (pj_param(pin.params, "tinit").i)
-    {
-        // maybe TODO: handle "init" parameter
-        //if (!(curr = get_init(&arguments, curr, pj_param(pin.params, "sinit").s)))
-    }
+	/* check if +init present */
+	if (pj_param(pin.params, "tinit").i)
+	{
+		// maybe TODO: handle "init" parameter
+		//if (!(curr = get_init(&arguments, curr, pj_param(pin.params, "sinit").s)))
+	}
 
-    // find projection -> implemented in projection factory
-    pin.name = pj_param(pin.params, "sproj").s;
-    // exception thrown in projection<>
-    // TODO: consider throwing here both projection_unknown_id_exception and
-    // projection_not_named_exception in order to throw before other exceptions
-    //if (pin.name.empty())
-    //{ BOOST_THROW_EXCEPTION( projection_not_named_exception() ); }
+	// find projection -> implemented in projection factory
+	pin.name = pj_param(pin.params, "sproj").s;
+	// exception thrown in projection<>
+	// TODO: consider throwing here both projection_unknown_id_exception and
+	// projection_not_named_exception in order to throw before other exceptions
+	//if (pin.name.empty())
+	//{ BOOST_THROW_EXCEPTION( projection_not_named_exception() ); }
 
-    // set defaults, unless inhibited
-    // GL-Addition, if use_defaults is false then defaults are ignored
-    if (use_defaults && ! pj_param(pin.params, "bno_defs").i)
-    {
-        // proj4 gets defaults from "proj_def.dat", file of 94/02/23 with a few defaults.
-        // Here manually
-        pj_push_defaults(bg_params, pin);
-        //curr = get_defaults(&arguments, curr, name);
-    }
+	// set defaults, unless inhibited
+	// GL-Addition, if use_defaults is false then defaults are ignored
+	if (use_defaults && ! pj_param(pin.params, "bno_defs").i)
+	{
+		// proj4 gets defaults from "proj_def.dat", file of 94/02/23 with a few defaults.
+		// Here manually
+		pj_push_defaults(bg_params, pin);
+		//curr = get_defaults(&arguments, curr, name);
+	}
 
-    /* allocate projection structure */
-    // done by BGParams constructor:
-    // pin.is_latlong = 0;
-    // pin.is_geocent = 0;
-    // pin.long_wrap_center = 0.0;
-    // pin.long_wrap_center = 0.0;
-    pin.is_long_wrap_set = false;
+	/* allocate projection structure */
+	// done by BGParams constructor:
+	// pin.is_latlong = 0;
+	// pin.is_geocent = 0;
+	// pin.long_wrap_center = 0.0;
+	// pin.long_wrap_center = 0.0;
+	pin.is_long_wrap_set = false;
 
-    /* set datum parameters */
-    pj_datum_set(bg_params, pin.params, pin);
+	/* set datum parameters */
+	pj_datum_set(bg_params, pin.params, pin);
 
-    /* set ellipsoid/sphere parameters */
-    pj_ell_set(bg_params, pin.params, pin.a, pin.es);
+	/* set ellipsoid/sphere parameters */
+	pj_ell_set(bg_params, pin.params, pin.a, pin.es);
 
-    pin.a_orig = pin.a;
-    pin.es_orig = pin.es;
+	pin.a_orig = pin.a;
+	pin.es_orig = pin.es;
 
-    pin.e = sqrt(pin.es);
-    pin.ra = 1. / pin.a;
-    pin.one_es = 1. - pin.es;
-    if (pin.one_es == 0.) {
-        BOOST_THROW_EXCEPTION( projection_exception(-6) );
-    }
-    pin.rone_es = 1./pin.one_es;
+	pin.e = sqrt(pin.es);
+	pin.ra = 1. / pin.a;
+	pin.one_es = 1. - pin.es;
+	if (pin.one_es == 0.)
+	{
+		BOOST_THROW_EXCEPTION( projection_exception(-6) );
+	}
+	pin.rone_es = 1./pin.one_es;
 
-    /* Now that we have ellipse information check for WGS84 datum */
-    if( pin.datum_type == PJD_3PARAM
-        && pin.datum_params[0] == 0.0
-        && pin.datum_params[1] == 0.0
-        && pin.datum_params[2] == 0.0
-        && pin.a == 6378137.0
-        && geometry::math::abs(pin.es - 0.006694379990) < 0.000000000050 )/*WGS84/GRS80*/
-    {
-        pin.datum_type = PJD_WGS84;
-    }
+	/* Now that we have ellipse information check for WGS84 datum */
+	if( pin.datum_type == PJD_3PARAM
+	        && pin.datum_params[0] == 0.0
+	        && pin.datum_params[1] == 0.0
+	        && pin.datum_params[2] == 0.0
+	        && pin.a == 6378137.0
+	        && geometry::math::abs(pin.es - 0.006694379990) < 0.000000000050 )/*WGS84/GRS80*/
+	{
+		pin.datum_type = PJD_WGS84;
+	}
 
-    /* set pin.geoc coordinate system */
-    pin.geoc = (pin.es && pj_param(pin.params, "bgeoc").i);
+	/* set pin.geoc coordinate system */
+	pin.geoc = (pin.es && pj_param(pin.params, "bgeoc").i);
 
-    /* over-ranging flag */
-    pin.over = pj_param(pin.params, "bover").i;
+	/* over-ranging flag */
+	pin.over = pj_param(pin.params, "bover").i;
 
-    /* longitude center for wrapping */
-    pin.is_long_wrap_set = pj_param(pin.params, "tlon_wrap").i != 0;
-    if (pin.is_long_wrap_set)
-        pin.long_wrap_center = pj_param(pin.params, "rlon_wrap").f;
+	/* longitude center for wrapping */
+	pin.is_long_wrap_set = pj_param(pin.params, "tlon_wrap").i != 0;
+	if (pin.is_long_wrap_set)
+		pin.long_wrap_center = pj_param(pin.params, "rlon_wrap").f;
 
-    /* central meridian */
-    pin.lam0 = pj_param(pin.params, "rlon_0").f;
+	/* central meridian */
+	pin.lam0 = pj_param(pin.params, "rlon_0").f;
 
-    /* central latitude */
-    pin.phi0 = pj_param(pin.params, "rlat_0").f;
+	/* central latitude */
+	pin.phi0 = pj_param(pin.params, "rlat_0").f;
 
-    /* false easting and northing */
-    pin.x0 = pj_param(pin.params, "dx_0").f;
-    pin.y0 = pj_param(pin.params, "dy_0").f;
+	/* false easting and northing */
+	pin.x0 = pj_param(pin.params, "dx_0").f;
+	pin.y0 = pj_param(pin.params, "dy_0").f;
 
-    /* general scaling factor */
-    if (pj_param(pin.params, "tk_0").i)
-        pin.k0 = pj_param(pin.params, "dk_0").f;
-    else if (pj_param(pin.params, "tk").i)
-        pin.k0 = pj_param(pin.params, "dk").f;
-    else
-        pin.k0 = 1.;
-    if (pin.k0 <= 0.) {
-        BOOST_THROW_EXCEPTION( projection_exception(-31) );
-    }
+	/* general scaling factor */
+	if (pj_param(pin.params, "tk_0").i)
+		pin.k0 = pj_param(pin.params, "dk_0").f;
+	else if (pj_param(pin.params, "tk").i)
+		pin.k0 = pj_param(pin.params, "dk").f;
+	else
+		pin.k0 = 1.;
+	if (pin.k0 <= 0.)
+	{
+		BOOST_THROW_EXCEPTION( projection_exception(-31) );
+	}
 
-    /* set units */
-    pj_init_units(pin.params, "sunits", "sto_meter",
-                  pin.to_meter, pin.fr_meter, 1., 1.);
-    pj_init_units(pin.params, "svunits", "svto_meter",
-                  pin.vto_meter, pin.vfr_meter, pin.to_meter, pin.fr_meter);
+	/* set units */
+	pj_init_units(pin.params, "sunits", "sto_meter",
+	              pin.to_meter, pin.fr_meter, 1., 1.);
+	pj_init_units(pin.params, "svunits", "svto_meter",
+	              pin.vto_meter, pin.vfr_meter, pin.to_meter, pin.fr_meter);
 
-    /* prime meridian */
-    std::string pm = pj_param(pin.params, "spm").s;
-    if (! pm.empty())
-    {
-        std::string value;
+	/* prime meridian */
+	std::string pm = pj_param(pin.params, "spm").s;
+	if (! pm.empty())
+	{
+		std::string value;
 
-        int n = sizeof(pj_prime_meridians) / sizeof(pj_prime_meridians[0]);
-        for (int i = 0; i < n ; i++)
-        {
-            if(pj_prime_meridians[i].id == pm)
-            {
-                value = pj_prime_meridians[i].defn;
-                break;
-            }
-        }
+		int n = sizeof(pj_prime_meridians) / sizeof(pj_prime_meridians[0]);
+		for (int i = 0; i < n ; i++)
+		{
+			if(pj_prime_meridians[i].id == pm)
+			{
+				value = pj_prime_meridians[i].defn;
+				break;
+			}
+		}
 
-        dms_parser<T, true> parser;
+		dms_parser<T, true> parser;
 
-        // TODO: Handle case when lexical_cast is not used consistently.
-        //       This should probably be done in dms_parser.
-        BOOST_TRY
-        {
-            if (value.empty()) {
-                pin.from_greenwich = parser.apply(pm).angle();
-            } else {
-                pin.from_greenwich = parser.apply(value).angle();
-            }
-        }
-        BOOST_CATCH(boost::bad_lexical_cast const&)
-        {
-            BOOST_THROW_EXCEPTION( projection_exception(-46) );
-        }
-        BOOST_CATCH_END
-    }
-    else
-    {
-        pin.from_greenwich = 0.0;
-    }
+		// TODO: Handle case when lexical_cast is not used consistently.
+		//       This should probably be done in dms_parser.
+		BOOST_TRY
+		{
+			if (value.empty())
+			{
+				pin.from_greenwich = parser.apply(pm).angle();
+			}
+			else
+			{
+				pin.from_greenwich = parser.apply(value).angle();
+			}
+		}
+		BOOST_CATCH(boost::bad_lexical_cast const&)
+		{
+			BOOST_THROW_EXCEPTION( projection_exception(-46) );
+		}
+		BOOST_CATCH_END
+	}
+	else
+	{
+		pin.from_greenwich = 0.0;
+	}
 
-    return pin;
+	return pin;
 }
 
 /************************************************************************/
@@ -351,45 +361,47 @@ inline parameters<T> pj_init(BGParams const& bg_params, R const& arguments, bool
 template <typename T, typename BGParams>
 inline parameters<T> pj_init_plus(BGParams const& bg_params, std::string const& definition, bool use_defaults = true)
 {
-    const char* sep = " +";
+	const char* sep = " +";
 
-    /* split into arguments based on '+' and trim white space */
+	/* split into arguments based on '+' and trim white space */
 
-    // boost::split splits on one character, here it should be on " +", so implementation below
-    // todo: put in different routine or sort out
-    std::vector<std::string> arguments;
-    std::string def = boost::trim_copy(definition);
-    boost::trim_left_if(def, boost::is_any_of(sep));
+	// boost::split splits on one character, here it should be on " +", so implementation below
+	// todo: put in different routine or sort out
+	std::vector<std::string> arguments;
+	std::string def = boost::trim_copy(definition);
+	boost::trim_left_if(def, boost::is_any_of(sep));
 
-    std::string::size_type loc = def.find(sep);
-    while (loc != std::string::npos)
-    {
-        std::string par = def.substr(0, loc);
-        boost::trim(par);
-        if (! par.empty())
-        {
-            arguments.push_back(par);
-        }
+	std::string::size_type loc = def.find(sep);
+	while (loc != std::string::npos)
+	{
+		std::string par = def.substr(0, loc);
+		boost::trim(par);
+		if (! par.empty())
+		{
+			arguments.push_back(par);
+		}
 
-        def.erase(0, loc);
-        boost::trim_left_if(def, boost::is_any_of(sep));
-        loc = def.find(sep);
-    }
+		def.erase(0, loc);
+		boost::trim_left_if(def, boost::is_any_of(sep));
+		loc = def.find(sep);
+	}
 
-    if (! def.empty())
-    {
-        arguments.push_back(def);
-    }
+	if (! def.empty())
+	{
+		arguments.push_back(def);
+	}
 
-    /*boost::split(arguments, definition, boost::is_any_of("+"));
-    for (std::vector<std::string>::iterator it = arguments.begin(); it != arguments.end(); it++)
-    {
-        boost::trim(*it);
-    }*/
-    return pj_init<T>(bg_params, arguments, use_defaults);
+	/*boost::split(arguments, definition, boost::is_any_of("+"));
+	for (std::vector<std::string>::iterator it = arguments.begin(); it != arguments.end(); it++)
+	{
+	    boost::trim(*it);
+	}*/
+	return pj_init<T>(bg_params, arguments, use_defaults);
 }
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_PJ_INIT_HPP

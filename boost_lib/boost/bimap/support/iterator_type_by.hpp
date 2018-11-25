@@ -24,7 +24,7 @@
 /** \struct boost::bimaps::support::iterator_type_by
 
 \brief Metafunction to obtain the iterator type of the map view by one of the sides.
-These metafunctions can be used outside the bimap framework for other bimap 
+These metafunctions can be used outside the bimap framework for other bimap
 signature compatible classes.
 \code
 
@@ -72,9 +72,12 @@ See also member_at.
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-namespace boost {
-namespace bimaps {
-namespace support {
+namespace boost
+{
+namespace bimaps
+{
+namespace support
+{
 
 // Implementation of iterator type by metafunction
 

@@ -39,46 +39,48 @@
 #define FUSION_HASH #
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
+namespace fusion
+{
+struct void_;
 
-    namespace result_of
-    {
-        template <
-            BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-                FUSION_MAX_VECTOR_SIZE, typename T, void_)
-          , typename Extra = void_
-        >
-        struct make_set;
+namespace result_of
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        FUSION_MAX_VECTOR_SIZE, typename T, void_)
+    , typename Extra = void_
+    >
+struct make_set;
 
-        template <>
-        struct make_set<>
-        {
-            typedef set<> type;
-        };
-    }
+template <>
+struct make_set<>
+{
+	typedef set<> type;
+};
+}
 
-    // XXX:
+// XXX:
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH if defined(BOOST_CLANG)
-    BOOST_CXX14_CONSTEXPR
-FUSION_HASH else
-    BOOST_CONSTEXPR
-FUSION_HASH endif
+	BOOST_CXX14_CONSTEXPR
+	FUSION_HASH else
+		BOOST_CONSTEXPR
+		FUSION_HASH endif
 #else
 #if defined(BOOST_CLANG)
-    BOOST_CXX14_CONSTEXPR
+BOOST_CXX14_CONSTEXPR
 #else
-    BOOST_CONSTEXPR
+BOOST_CONSTEXPR
 #endif
 #endif
-    BOOST_FUSION_GPU_ENABLED
-    inline set<>
-    make_set()
-    {
-        return set<>();
-    }
+		BOOST_FUSION_GPU_ENABLED
+		inline set<>
+		make_set()
+	{
+		return set<>();
+	}
 
 #define BOOST_FUSION_AS_FUSION_ELEMENT(z, n, data)                               \
     typename detail::as_fusion_element<BOOST_PP_CAT(T, n)>::type
@@ -90,7 +92,8 @@ FUSION_HASH endif
 #undef BOOST_FUSION_ELEMENT
 #undef BOOST_FUSION_AS_ELEMENT
 
-}}
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #undef FUSION_HASH
@@ -109,25 +112,25 @@ FUSION_HASH endif
 
 #define N BOOST_PP_ITERATION()
 
-    namespace result_of
-    {
-        template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-        #define TEXT(z, n, text) , text
-        struct make_set< BOOST_PP_ENUM_PARAMS(N, T) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_SET_SIZE, TEXT, void_) >
-        #undef TEXT
-        {
-            typedef set<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)> type;
-        };
-    }
+namespace result_of
+{
+template <BOOST_PP_ENUM_PARAMS(N, typename T)>
+#define TEXT(z, n, text) , text
+struct make_set< BOOST_PP_ENUM_PARAMS(N, T) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_SET_SIZE, TEXT, void_) >
+#undef TEXT
+{
+	typedef set<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)> type;
+};
+}
 
-    template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline set<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>
-    make_set(BOOST_PP_ENUM_BINARY_PARAMS(N, T, const& arg))
-    {
-        return set<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>(
-            BOOST_PP_ENUM_PARAMS(N, arg));
-    }
+template <BOOST_PP_ENUM_PARAMS(N, typename T)>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline set<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>
+make_set(BOOST_PP_ENUM_BINARY_PARAMS(N, T, const& arg))
+{
+	return set<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>(
+	           BOOST_PP_ENUM_PARAMS(N, arg));
+}
 
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)

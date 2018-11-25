@@ -15,11 +15,14 @@
 
 #include <boost/noncopyable.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace multi_index{
+namespace multi_index
+{
 
-namespace detail{
+namespace detail
+{
 
 /* A utility class used to hold a pointer to the header node.
  * The base from member idiom is used because index classes, which are
@@ -32,13 +35,19 @@ namespace detail{
 template<typename NodeTypePtr,typename Final>
 struct header_holder:private noncopyable
 {
-  header_holder():member(final().allocate_node()){}
-  ~header_holder(){final().deallocate_node(&*member);}
+	header_holder():member(final().allocate_node()) {}
+	~header_holder()
+	{
+		final().deallocate_node(&*member);
+	}
 
-  NodeTypePtr member;
+	NodeTypePtr member;
 
 private:
-  Final& final(){return *static_cast<Final*>(this);}
+	Final& final()
+	{
+		return *static_cast<Final*>(this);
+	}
 };
 
 } /* namespace multi_index::detail */

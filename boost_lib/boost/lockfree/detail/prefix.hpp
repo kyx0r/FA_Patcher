@@ -15,9 +15,9 @@
 
 // PowerPC caches support 128-byte cache lines.
 #if defined(powerpc) || defined(__powerpc__) || defined(__ppc__)
-    #define BOOST_LOCKFREE_CACHELINE_BYTES 128
+#define BOOST_LOCKFREE_CACHELINE_BYTES 128
 #else
-    #define BOOST_LOCKFREE_CACHELINE_BYTES 64
+#define BOOST_LOCKFREE_CACHELINE_BYTES 64
 #endif
 
 #include <boost/predef.h>

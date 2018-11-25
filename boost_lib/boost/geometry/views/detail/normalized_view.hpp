@@ -30,80 +30,96 @@
 #include <boost/geometry/views/closeable_view.hpp>
 #include <boost/geometry/util/order_as_direction.hpp>
 
-namespace boost { namespace geometry {
+namespace boost
+{
+namespace geometry
+{
 
 
 #ifndef DOXYGEN_NO_DETAIL
 
-namespace detail {
+namespace detail
+{
 
 template <typename Geometry>
 struct normalized_view
 {
-    static const bool is_const = boost::is_const<Geometry>::value;
+	static const bool is_const = boost::is_const<Geometry>::value;
 
-    //typedef typename ring_type<Geometry>::type ring_type;
+	//typedef typename ring_type<Geometry>::type ring_type;
 
-    typedef typename detail::range_type<Geometry>::type range_type;
+	typedef typename detail::range_type<Geometry>::type range_type;
 
-    typedef typename
-        boost::mpl::if_c
-            <
-                is_const,
-                range_type const,
-                range_type
-            >::type range;
+	typedef typename
+	boost::mpl::if_c
+	<
+	is_const,
+	range_type const,
+	range_type
+	>::type range;
 
-    typedef typename
-        reversible_view
-            <
-                range,
-                order_as_direction
-                    <
-                        geometry::point_order<Geometry>::value
-                    >::value
-            >::type reversible_type;
+	typedef typename
+	reversible_view
+	<
+	range,
+	order_as_direction
+	<
+	geometry::point_order<Geometry>::value
+	>::value
+	>::type reversible_type;
 
-    typedef typename
-        boost::mpl::if_c
-            <
-                is_const,
-                reversible_type const,
-                reversible_type
-            >::type reversible;
+	typedef typename
+	boost::mpl::if_c
+	<
+	is_const,
+	reversible_type const,
+	reversible_type
+	>::type reversible;
 
-    typedef typename
-        closeable_view
-            <
-                reversible,
-                geometry::closure<Geometry>::value
-            >::type closeable_type;
+	typedef typename
+	closeable_view
+	<
+	reversible,
+	geometry::closure<Geometry>::value
+	>::type closeable_type;
 
-    typedef typename
-        boost::mpl::if_c
-            <
-                is_const,
-                closeable_type const,
-                closeable_type
-            >::type closeable;
-    
-    explicit inline normalized_view(range & r)
-        : m_reversible(r)
-        , m_closeable(m_reversible)
-    {}
+	typedef typename
+	boost::mpl::if_c
+	<
+	is_const,
+	closeable_type const,
+	closeable_type
+	>::type closeable;
 
-    typedef typename boost::range_iterator<closeable>::type iterator;
-    typedef typename boost::range_const_iterator<closeable>::type const_iterator;
+	explicit inline normalized_view(range & r)
+		: m_reversible(r)
+		, m_closeable(m_reversible)
+	{}
 
-    inline const_iterator begin() const { return boost::begin(m_closeable); }
-    inline const_iterator end() const { return boost::end(m_closeable); }
+	typedef typename boost::range_iterator<closeable>::type iterator;
+	typedef typename boost::range_const_iterator<closeable>::type const_iterator;
 
-    inline iterator begin() { return boost::begin(m_closeable); }
-    inline iterator end() { return boost::end(m_closeable); }
+	inline const_iterator begin() const
+	{
+		return boost::begin(m_closeable);
+	}
+	inline const_iterator end() const
+	{
+		return boost::end(m_closeable);
+	}
+
+	inline iterator begin()
+	{
+		return boost::begin(m_closeable);
+	}
+	inline iterator end()
+	{
+		return boost::end(m_closeable);
+	}
 
 private:
-    reversible_type m_reversible;
-    closeable_type m_closeable;
+	reversible_type m_reversible;
+	closeable_type m_closeable;
 };
 
 } // namespace detail
@@ -111,7 +127,8 @@ private:
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_DETAIL_NORMALIZED_VIEW_HPP

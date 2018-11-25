@@ -30,9 +30,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace runtime_config {
+namespace boost
+{
+namespace unit_test
+{
+namespace runtime_config
+{
 
 // ************************************************************************** //
 // **************                 runtime_config               ************** //
@@ -81,12 +84,12 @@ template<typename T>
 inline T const&
 get( runtime::cstring parameter_name )
 {
-    return argument_store().get<T>( parameter_name );
+	return argument_store().get<T>( parameter_name );
 }
 
 inline bool has( runtime::cstring parameter_name )
 {
-    return argument_store().has( parameter_name );
+	return argument_store().has( parameter_name );
 }
 
 /// For public access
@@ -96,55 +99,65 @@ BOOST_TEST_DECL bool save_pattern();
 // **************                  stream_holder               ************** //
 // ************************************************************************** //
 
-class stream_holder {
+class stream_holder
+{
 public:
-    // Constructor
-    explicit        stream_holder( std::ostream& default_stream = std::cout )
-    : m_stream( &default_stream )
-    {
-    }
+	// Constructor
+	explicit        stream_holder( std::ostream& default_stream = std::cout )
+		: m_stream( &default_stream )
+	{
+	}
 
-    void            setup( const const_string& stream_name,
-                           boost::function<void ()> const &cleaner_callback = boost::function<void ()>() )
-    {
-        if(stream_name.empty())
-            return;
+	void            setup( const const_string& stream_name,
+	                       boost::function<void ()> const &cleaner_callback = boost::function<void ()>() )
+	{
+		if(stream_name.empty())
+			return;
 
-        if( stream_name == "stderr" ) {
-            m_stream = &std::cerr;
-            m_cleaner.reset();
-        }
-        else if( stream_name == "stdout" ) {
-            m_stream = &std::cout;
-            m_cleaner.reset();
-        }
-        else {
-            m_cleaner = boost::make_shared<callback_cleaner>(cleaner_callback);
-            m_cleaner->m_file.open( std::string(stream_name.begin(), stream_name.end()).c_str() );
-            m_stream = &m_cleaner->m_file;
-        }
-    }
+		if( stream_name == "stderr" )
+		{
+			m_stream = &std::cerr;
+			m_cleaner.reset();
+		}
+		else if( stream_name == "stdout" )
+		{
+			m_stream = &std::cout;
+			m_cleaner.reset();
+		}
+		else
+		{
+			m_cleaner = boost::make_shared<callback_cleaner>(cleaner_callback);
+			m_cleaner->m_file.open( std::string(stream_name.begin(), stream_name.end()).c_str() );
+			m_stream = &m_cleaner->m_file;
+		}
+	}
 
-    // Access methods
-    std::ostream&   ref() const { return *m_stream; }
+	// Access methods
+	std::ostream&   ref() const
+	{
+		return *m_stream;
+	}
 
 private:
-    struct callback_cleaner {
-        callback_cleaner(boost::function<void ()> cleaner_callback)
-        : m_cleaner_callback(cleaner_callback)
-        , m_file() {
-        }
-        ~callback_cleaner() {
-            if( m_cleaner_callback )
-                m_cleaner_callback();
-        }
-        boost::function<void ()> m_cleaner_callback;
-        std::ofstream m_file;
-    };
+	struct callback_cleaner
+	{
+		callback_cleaner(boost::function<void ()> cleaner_callback)
+			: m_cleaner_callback(cleaner_callback)
+			, m_file()
+		{
+		}
+		~callback_cleaner()
+		{
+			if( m_cleaner_callback )
+				m_cleaner_callback();
+		}
+		boost::function<void ()> m_cleaner_callback;
+		std::ofstream m_file;
+	};
 
-    // Data members
-    boost::shared_ptr<callback_cleaner>   m_cleaner;
-    std::ostream*                         m_stream;
+	// Data members
+	boost::shared_ptr<callback_cleaner>   m_cleaner;
+	std::ostream*                         m_stream;
 };
 
 } // namespace runtime_config

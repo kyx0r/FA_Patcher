@@ -48,140 +48,151 @@
 #include <boost/geometry/srs/projections/proj/gn_sinu.hpp>
 #include <boost/geometry/srs/projections/proj/moll.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct goode {};
+namespace par4
+{
+struct goode {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace goode
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace goode
+{
 
-            static const double Y_COR = 0.05280;
-            static const double PHI_LIM = .71093078197902358062;
+static const double Y_COR = 0.05280;
+static const double PHI_LIM = .71093078197902358062;
 
-            template <typename CalculationType, typename Parameters>
-            struct par_goode
-            {
-                sinu_ellipsoid<CalculationType, Parameters>    sinu;
-                moll_spheroid<CalculationType, Parameters>    moll;
-                
-                par_goode(const Parameters& par) : sinu(par), moll(par) {}
-            };
+template <typename CalculationType, typename Parameters>
+struct par_goode
+{
+	sinu_ellipsoid<CalculationType, Parameters>    sinu;
+	moll_spheroid<CalculationType, Parameters>    moll;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_goode_spheroid : public base_t_fi<base_goode_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+	par_goode(const Parameters& par) : sinu(par), moll(par) {}
+};
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_goode_spheroid : public base_t_fi<base_goode_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                par_goode<CalculationType, Parameters> m_proj_parm;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                inline base_goode_spheroid(const Parameters& par)
-                    : base_t_fi<base_goode_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par), m_proj_parm(par) {}
+	par_goode<CalculationType, Parameters> m_proj_parm;
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    if (fabs(lp_lat) <= PHI_LIM)
-                        this->m_proj_parm.sinu.fwd(lp_lon, lp_lat, xy_x, xy_y);
-                    else {
-                        this->m_proj_parm.moll.fwd(lp_lon, lp_lat, xy_x, xy_y);
-                        xy_y -= lp_lat >= 0.0 ? Y_COR : -Y_COR;
-                    }
-                }
+	inline base_goode_spheroid(const Parameters& par)
+		: base_t_fi<base_goode_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par), m_proj_parm(par) {}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    if (fabs(xy_y) <= PHI_LIM)
-                        this->m_proj_parm.sinu.inv(xy_x, xy_y, lp_lon, lp_lat);
-                    else {
-                        xy_y += xy_y >= 0.0 ? Y_COR : -Y_COR;
-                        this->m_proj_parm.moll.inv(xy_x, xy_y, lp_lon, lp_lat);
-                    }
-                }
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		if (fabs(lp_lat) <= PHI_LIM)
+			this->m_proj_parm.sinu.fwd(lp_lon, lp_lat, xy_x, xy_y);
+		else
+		{
+			this->m_proj_parm.moll.fwd(lp_lon, lp_lat, xy_x, xy_y);
+			xy_y -= lp_lat >= 0.0 ? Y_COR : -Y_COR;
+		}
+	}
 
-                static inline std::string get_name()
-                {
-                    return "goode_spheroid";
-                }
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		if (fabs(xy_y) <= PHI_LIM)
+			this->m_proj_parm.sinu.inv(xy_x, xy_y, lp_lon, lp_lat);
+		else
+		{
+			xy_y += xy_y >= 0.0 ? Y_COR : -Y_COR;
+			this->m_proj_parm.moll.inv(xy_x, xy_y, lp_lon, lp_lat);
+		}
+	}
 
-            };
+	static inline std::string get_name()
+	{
+		return "goode_spheroid";
+	}
 
-            // Goode Homolosine
-            template <typename CalculationType, typename Parameters>
-            inline void setup_goode(Parameters& par, par_goode<CalculationType, Parameters>& /*proj_parm*/)
-            {
-                par.es = 0.;
-            }
+};
 
-    }} // namespace detail::goode
-    #endif // doxygen
+// Goode Homolosine
+template <typename CalculationType, typename Parameters>
+inline void setup_goode(Parameters& par, par_goode<CalculationType, Parameters>& /*proj_parm*/)
+{
+	par.es = 0.;
+}
 
-    /*!
-        \brief Goode Homolosine projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_goode.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct goode_spheroid : public detail::goode::base_goode_spheroid<CalculationType, Parameters>
-    {
-        inline goode_spheroid(const Parameters& par) : detail::goode::base_goode_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::goode::setup_goode(this->m_par, this->m_proj_parm);
-        }
-    };
+}
+} // namespace detail::goode
+#endif // doxygen
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+/*!
+    \brief Goode Homolosine projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_goode.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct goode_spheroid : public detail::goode::base_goode_spheroid<CalculationType, Parameters>
+{
+	inline goode_spheroid(const Parameters& par) : detail::goode::base_goode_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::goode::setup_goode(this->m_par, this->m_proj_parm);
+	}
+};
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::goode, goode_spheroid, goode_spheroid)
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class goode_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<goode_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::goode, goode_spheroid, goode_spheroid)
 
-        template <typename CalculationType, typename Parameters>
-        inline void goode_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("goode", new goode_entry<CalculationType, Parameters>);
-        }
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class goode_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<goode_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-    } // namespace detail
-    #endif // doxygen
+template <typename CalculationType, typename Parameters>
+inline void goode_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("goode", new goode_entry<CalculationType, Parameters>);
+}
+
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_GOODE_HPP
 

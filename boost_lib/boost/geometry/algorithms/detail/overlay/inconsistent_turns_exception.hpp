@@ -13,25 +13,28 @@
 #if ! defined(BOOST_GEOMETRY_OVERLAY_NO_THROW)
 #include <boost/geometry/core/exception.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 class inconsistent_turns_exception : public geometry::exception
 {
 public:
 
-    inline inconsistent_turns_exception() {}
+	inline inconsistent_turns_exception() {}
 
-    virtual ~inconsistent_turns_exception() throw()
-    {}
+	virtual ~inconsistent_turns_exception() throw()
+	{}
 
-    virtual char const* what() const throw()
-    {
-        return "Boost.Geometry Inconsistent Turns exception";
-    }
+	virtual char const* what() const throw()
+	{
+		return "Boost.Geometry Inconsistent Turns exception";
+	}
 };
 
-}} // boost::geometry
+}
+} // boost::geometry
 
 #endif // BOOST_GEOMETRY_OVERLAY_NO_THROW
 

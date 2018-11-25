@@ -30,8 +30,10 @@
 #include <boost/type_erasure/relaxed.hpp>
 #include <boost/type_erasure/detail/access.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 
@@ -43,33 +45,37 @@ class binding;
 
 #endif
 
-namespace detail {
+namespace detail
+{
 
 template<class P, class T, class Table>
 bool maybe_check_table(const T& arg, const Table*& table, boost::mpl::true_)
 {
-    if(table == 0) {
-        table = &::boost::type_erasure::detail::access::table(arg);
-        return true;
-    } else {
-        return table->template find< ::boost::type_erasure::typeid_<P> >()() ==
-            ::boost::type_erasure::detail::access::table(arg).
-                template find< ::boost::type_erasure::typeid_<P> >()();
-    }
+	if(table == 0)
+	{
+		table = &::boost::type_erasure::detail::access::table(arg);
+		return true;
+	}
+	else
+	{
+		return table->template find< ::boost::type_erasure::typeid_<P> >()() ==
+		::boost::type_erasure::detail::access::table(arg).
+		template find< ::boost::type_erasure::typeid_<P> >()();
+	}
 }
 
 template<class P, class T, class Table>
 bool maybe_check_table(const T&, const Table*&, boost::mpl::false_)
 {
-    return true;
+	return true;
 }
 
 template<class Concept, class T>
 struct should_check :
-    boost::mpl::and_<
-        ::boost::type_erasure::is_placeholder<T>,
-        ::boost::type_erasure::is_relaxed<Concept>
-    >
+	boost::mpl::and_<
+	::boost::type_erasure::is_placeholder<T>,
+	::boost::type_erasure::is_relaxed<Concept>
+	>
 {};
 
 }
@@ -96,12 +102,13 @@ bool check_match(const Op& f, U&&... args);
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 
-namespace detail {
+namespace detail
+{
 
 template<class Concept, class R>
 bool check_table(const ::boost::type_erasure::binding<Concept>* /*t*/, R(*)())
 {
-    return true;
+	return true;
 }
 
 template<class Concept, class R, class T0, class... T, class U0, class... U>
@@ -111,16 +118,16 @@ bool check_table(
     const U0& arg0,
     const U&... arg)
 {
-    typedef typename ::boost::remove_cv<
-        typename ::boost::remove_reference<T0>::type
-    >::type t0;
-    if(!::boost::type_erasure::detail::maybe_check_table<t0>(
-        arg0,
-        t,
-        ::boost::type_erasure::detail::should_check<Concept, t0>()))
-        return false;
+	typedef typename ::boost::remove_cv<
+	typename ::boost::remove_reference<T0>::type
+	>::type t0;
+	if(!::boost::type_erasure::detail::maybe_check_table<t0>(
+	            arg0,
+	            t,
+	            ::boost::type_erasure::detail::should_check<Concept, t0>()))
+		return false;
 
-    return check_table(t, static_cast<void(*)(T...)>(0), arg...);
+	return check_table(t, static_cast<void(*)(T...)>(0), arg...);
 }
 
 }
@@ -132,10 +139,10 @@ bool check_match(
     U&&... arg)
 {
 
-    return ::boost::type_erasure::detail::check_table(
-        &table,
-        static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0),
-        arg...);
+	return ::boost::type_erasure::detail::check_table(
+	           &table,
+	           static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0),
+	           arg...);
 }
 
 #ifndef BOOST_TYPE_ERASURE_USE_MP11
@@ -143,28 +150,32 @@ bool check_match(
 template<
     class Op,
     class... U
->
+    >
 bool check_match(
     const Op&,
     U&&... arg)
 {
-    const ::boost::type_erasure::binding<
-        typename ::boost::type_erasure::detail::extract_concept<
-            typename ::boost::type_erasure::detail::get_signature<Op>::type, U...>::type>* p = 0;
+	const ::boost::type_erasure::binding<
+	typename ::boost::type_erasure::detail::extract_concept<
+	typename ::boost::type_erasure::detail::get_signature<Op>::type, U...>::type>* p = 0;
 
-    return ::boost::type_erasure::detail::check_table(
-        p, static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0), arg...);
+	return ::boost::type_erasure::detail::check_table(
+	           p, static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0), arg...);
 }
 
 #else
 
-namespace detail {
+namespace detail
+{
 
 template<class T>
 struct get_args;
 
 template<class R, class ... T>
-struct get_args<R(T...)> { typedef ::boost::mp11::mp_list<T...> type; };
+struct get_args<R(T...)>
+{
+	typedef ::boost::mp11::mp_list<T...> type;
+};
 
 template<class Sig>
 using get_args_t = typename get_args<Sig>::type;
@@ -174,20 +185,20 @@ using get_args_t = typename get_args<Sig>::type;
 template<
     class Op,
     class... U
->
+    >
 bool check_match(
     const Op&,
     U&&... arg)
 {
-    const ::boost::type_erasure::binding<
-        ::boost::type_erasure::detail::extract_concept_t<
-            ::boost::type_erasure::detail::get_args_t<
-                typename ::boost::type_erasure::detail::get_signature<Op>::type
-            >,
-            ::boost::mp11::mp_list< ::boost::remove_reference_t<U>...> > >* p = 0;
+	const ::boost::type_erasure::binding<
+	::boost::type_erasure::detail::extract_concept_t<
+	::boost::type_erasure::detail::get_args_t<
+	typename ::boost::type_erasure::detail::get_signature<Op>::type
+	>,
+	::boost::mp11::mp_list< ::boost::remove_reference_t<U>...> > >* p = 0;
 
-    return ::boost::type_erasure::detail::check_table(
-        p, static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0), arg...);
+	return ::boost::type_erasure::detail::check_table(
+	           p, static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0), arg...);
 }
 
 #endif
@@ -209,7 +220,8 @@ bool check_match(
 
 #else
 
-namespace detail {
+namespace detail
+{
 
 #define N BOOST_PP_ITERATION()
 
@@ -234,8 +246,8 @@ BOOST_PP_CAT(check_table, N)(
     R (*)(BOOST_PP_ENUM_PARAMS(N, T))
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, const U, &arg))
 {
-    BOOST_PP_REPEAT(N, BOOST_TYPE_ERASURE_CHECK_TABLE, ~)
-    return true;
+	BOOST_PP_REPEAT(N, BOOST_TYPE_ERASURE_CHECK_TABLE, ~)
+	return true;
 }
 
 #if N != 0
@@ -247,14 +259,14 @@ template<
     class R
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 struct BOOST_PP_CAT(do_extract_concept, N)<
-    R(BOOST_PP_ENUM_PARAMS(N, T))
-    BOOST_PP_ENUM_TRAILING_PARAMS(N, U)
+R(BOOST_PP_ENUM_PARAMS(N, T))
+BOOST_PP_ENUM_TRAILING_PARAMS(N, U)
 >
-  : ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
-        BOOST_PP_ENUM_PARAMS(N, T)
-        BOOST_PP_ENUM_TRAILING_PARAMS(N, U)>
+: ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
+BOOST_PP_ENUM_PARAMS(N, T)
+BOOST_PP_ENUM_TRAILING_PARAMS(N, U)>
 {};
 
 #endif
@@ -271,17 +283,17 @@ template<
     class Concept,
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 bool check_match(
     const ::boost::type_erasure::binding<Concept>& table,
     const Op&
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
 
-    return ::boost::type_erasure::detail::BOOST_PP_CAT(check_table, N)(
-        &table,
-        (typename ::boost::type_erasure::detail::get_signature<Op>::type*)0
-        BOOST_PP_ENUM_TRAILING_PARAMS(N, arg));
+	return ::boost::type_erasure::detail::BOOST_PP_CAT(check_table, N)(
+	           &table,
+	           (typename ::boost::type_erasure::detail::get_signature<Op>::type*)0
+	           BOOST_PP_ENUM_TRAILING_PARAMS(N, arg));
 }
 
 #if N != 0
@@ -289,20 +301,20 @@ bool check_match(
 template<
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 bool check_match(
     const Op&
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    const ::boost::type_erasure::binding<
-        typename ::boost::type_erasure::detail::BOOST_PP_CAT(do_extract_concept, N)<
-            typename ::boost::type_erasure::detail::get_signature<Op>::type,
-            BOOST_PP_ENUM_PARAMS(N, U)>::type>* p = 0;
+	const ::boost::type_erasure::binding<
+	typename ::boost::type_erasure::detail::BOOST_PP_CAT(do_extract_concept, N)<
+	typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	         BOOST_PP_ENUM_PARAMS(N, U)>::type>* p = 0;
 
-    return ::boost::type_erasure::detail::BOOST_PP_CAT(check_table, N)(
-        p,
-        (typename ::boost::type_erasure::detail::get_signature<Op>::type*)0
-        BOOST_PP_ENUM_TRAILING_PARAMS(N, arg));
+	return ::boost::type_erasure::detail::BOOST_PP_CAT(check_table, N)(
+	           p,
+	           (typename ::boost::type_erasure::detail::get_signature<Op>::type*)0
+	           BOOST_PP_ENUM_TRAILING_PARAMS(N, arg));
 }
 
 #undef RREF

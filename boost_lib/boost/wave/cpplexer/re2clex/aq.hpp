@@ -21,20 +21,24 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost {
-namespace wave {
-namespace cpplexer {
-namespace re2clex {
+namespace boost
+{
+namespace wave
+{
+namespace cpplexer
+{
+namespace re2clex
+{
 
 typedef std::size_t aq_stdelement;
 
 typedef struct tag_aq_queuetype
 {
-    std::size_t head;
-    std::size_t tail;
-    std::size_t size;
-    std::size_t max_size;
-    aq_stdelement* queue;
+	std::size_t head;
+	std::size_t tail;
+	std::size_t size;
+	std::size_t max_size;
+	aq_stdelement* queue;
 } aq_queuetype;
 
 typedef aq_queuetype* aq_queue;

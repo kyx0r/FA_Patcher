@@ -14,20 +14,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class C>
-      struct return_
-      {
-        typedef return_ type;
-        
-        template <class S, class Pos>
-        struct apply : accept<C, S, Pos> {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class C>
+struct return_
+{
+	typedef return_ type;
+
+	template <class S, class Pos>
+	struct apply : accept<C, S, Pos> {};
+};
+}
+}
 }
 
 #endif

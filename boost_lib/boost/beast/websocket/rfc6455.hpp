@@ -17,9 +17,12 @@
 #include <array>
 #include <cstdint>
 
-namespace boost {
-namespace beast {
-namespace websocket {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
 
 /** Returns `true` if the specified HTTP request is a WebSocket Upgrade.
 
@@ -56,7 +59,7 @@ namespace websocket {
 template<class Allocator>
 bool
 is_upgrade(beast::http::header<true,
-    http::basic_fields<Allocator>> const& req);
+           http::basic_fields<Allocator>> const& req);
 
 /** Close status codes.
 
@@ -66,84 +69,84 @@ is_upgrade(beast::http::header<true,
 */
 enum close_code : std::uint16_t
 {
-    /// Normal closure; the connection successfully completed whatever purpose for which it was created.
-    normal          = 1000,
+	/// Normal closure; the connection successfully completed whatever purpose for which it was created.
+	normal          = 1000,
 
-    /// The endpoint is going away, either because of a server failure or because the browser is navigating away from the page that opened the connection.
-    going_away      = 1001,
+	/// The endpoint is going away, either because of a server failure or because the browser is navigating away from the page that opened the connection.
+	going_away      = 1001,
 
-    /// The endpoint is terminating the connection due to a protocol error.
-    protocol_error  = 1002,
+	/// The endpoint is terminating the connection due to a protocol error.
+	protocol_error  = 1002,
 
-    /// The connection is being terminated because the endpoint received data of a type it cannot accept (for example, a text-only endpoint received binary data).
-    unknown_data    = 1003,
+	/// The connection is being terminated because the endpoint received data of a type it cannot accept (for example, a text-only endpoint received binary data).
+	unknown_data    = 1003,
 
-    /// The endpoint is terminating the connection because a message was received that contained inconsistent data (e.g., non-UTF-8 data within a text message).
-    bad_payload     = 1007,
+	/// The endpoint is terminating the connection because a message was received that contained inconsistent data (e.g., non-UTF-8 data within a text message).
+	bad_payload     = 1007,
 
-    /// The endpoint is terminating the connection because it received a message that violates its policy. This is a generic status code, used when codes 1003 and 1009 are not suitable.
-    policy_error    = 1008,
+	/// The endpoint is terminating the connection because it received a message that violates its policy. This is a generic status code, used when codes 1003 and 1009 are not suitable.
+	policy_error    = 1008,
 
-    /// The endpoint is terminating the connection because a data frame was received that is too large.
-    too_big         = 1009,
+	/// The endpoint is terminating the connection because a data frame was received that is too large.
+	too_big         = 1009,
 
-    /// The client is terminating the connection because it expected the server to negotiate one or more extension, but the server didn't.
-    needs_extension = 1010,
+	/// The client is terminating the connection because it expected the server to negotiate one or more extension, but the server didn't.
+	needs_extension = 1010,
 
-    /// The server is terminating the connection because it encountered an unexpected condition that prevented it from fulfilling the request.
-    internal_error  = 1011,
+	/// The server is terminating the connection because it encountered an unexpected condition that prevented it from fulfilling the request.
+	internal_error  = 1011,
 
-    /// The server is terminating the connection because it is restarting.
-    service_restart = 1012,
+	/// The server is terminating the connection because it is restarting.
+	service_restart = 1012,
 
-    /// The server is terminating the connection due to a temporary condition, e.g. it is overloaded and is casting off some of its clients.
-    try_again_later = 1013,
+	/// The server is terminating the connection due to a temporary condition, e.g. it is overloaded and is casting off some of its clients.
+	try_again_later = 1013,
 
-    //----
-    //
-    // The following are illegal on the wire
-    //
+	//----
+	//
+	// The following are illegal on the wire
+	//
 
-    /** Used internally to mean "no error"
+	/** Used internally to mean "no error"
 
-        This code is reserved and may not be sent.
-    */
-    none            = 0,
+	    This code is reserved and may not be sent.
+	*/
+	none            = 0,
 
-    /** Reserved for future use by the WebSocket standard.
+	/** Reserved for future use by the WebSocket standard.
 
-        This code is reserved and may not be sent.
-    */
-    reserved1       = 1004,
+	    This code is reserved and may not be sent.
+	*/
+	reserved1       = 1004,
 
-    /** No status code was provided even though one was expected.
+	/** No status code was provided even though one was expected.
 
-        This code is reserved and may not be sent.
-    */
-    no_status       = 1005,
+	    This code is reserved and may not be sent.
+	*/
+	no_status       = 1005,
 
-    /** Connection was closed without receiving a close frame
-        
-        This code is reserved and may not be sent.
-    */
-    abnormal        = 1006,
+	/** Connection was closed without receiving a close frame
 
-    /** Reserved for future use by the WebSocket standard.
-        
-        This code is reserved and may not be sent.
-    */
-    reserved2       = 1014,
+	    This code is reserved and may not be sent.
+	*/
+	abnormal        = 1006,
 
-    /** Reserved for future use by the WebSocket standard.
-       
-        This code is reserved and may not be sent.
-    */
-    reserved3       = 1015
+	/** Reserved for future use by the WebSocket standard.
 
-    //
-    //----
+	    This code is reserved and may not be sent.
+	*/
+	reserved2       = 1014,
 
-    //last = 5000 // satisfy warnings
+	/** Reserved for future use by the WebSocket standard.
+
+	    This code is reserved and may not be sent.
+	*/
+	reserved3       = 1015
+
+	                  //
+	                  //----
+
+	                  //last = 5000 // satisfy warnings
 };
 
 /// The type representing the reason string in a close frame.
@@ -159,51 +162,51 @@ using ping_data = static_string<125, char>;
 */
 struct close_reason
 {
-    /// The close code.
-    std::uint16_t code = close_code::none;
+	/// The close code.
+	std::uint16_t code = close_code::none;
 
-    /// The optional utf8-encoded reason string.
-    reason_string reason;
+	/// The optional utf8-encoded reason string.
+	reason_string reason;
 
-    /** Default constructor.
+	/** Default constructor.
 
-        The code will be none. Default constructed objects
-        will explicitly convert to bool as `false`.
-    */
-    close_reason() = default;
+	    The code will be none. Default constructed objects
+	    will explicitly convert to bool as `false`.
+	*/
+	close_reason() = default;
 
-    /// Construct from a code.
-    close_reason(std::uint16_t code_)
-        : code(code_)
-    {
-    }
+	/// Construct from a code.
+	close_reason(std::uint16_t code_)
+		: code(code_)
+	{
+	}
 
-    /// Construct from a reason string. code is @ref close_code::normal.
-    close_reason(string_view s)
-        : code(close_code::normal)
-        , reason(s)
-    {
-    }
+	/// Construct from a reason string. code is @ref close_code::normal.
+	close_reason(string_view s)
+		: code(close_code::normal)
+		, reason(s)
+	{
+	}
 
-    /// Construct from a reason string literal. code is @ref close_code::normal.
-    close_reason(char const* s)
-        : code(close_code::normal)
-        , reason(s)
-    {
-    }
+	/// Construct from a reason string literal. code is @ref close_code::normal.
+	close_reason(char const* s)
+		: code(close_code::normal)
+		, reason(s)
+	{
+	}
 
-    /// Construct from a close code and reason string.
-    close_reason(close_code code_, string_view s)
-        : code(code_)
-        , reason(s)
-    {
-    }
+	/// Construct from a close code and reason string.
+	close_reason(close_code code_, string_view s)
+		: code(code_)
+		, reason(s)
+	{
+	}
 
-    /// Returns `true` if a code was specified
-    operator bool() const
-    {
-        return code != close_code::none;
-    }
+	/// Returns `true` if a code was specified
+	operator bool() const
+	{
+		return code != close_code::none;
+	}
 };
 
 } // websocket

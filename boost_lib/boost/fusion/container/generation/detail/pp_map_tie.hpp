@@ -40,34 +40,36 @@
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
+namespace fusion
+{
+struct void_;
 
-    namespace result_of
-    {
-        template <
-            BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-                FUSION_MAX_MAP_SIZE, typename K, void_)
-          , BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-                FUSION_MAX_MAP_SIZE, typename D, void_)
-          , typename Extra = void_
-        >
-        struct map_tie;
+namespace result_of
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        FUSION_MAX_MAP_SIZE, typename K, void_)
+    , BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        FUSION_MAX_MAP_SIZE, typename D, void_)
+    , typename Extra = void_
+    >
+struct map_tie;
 
-        template <>
-        struct map_tie<>
-        {
-            typedef map<> type;
-        };
-    }
+template <>
+struct map_tie<>
+{
+	typedef map<> type;
+};
+}
 
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline map<>
-    map_tie()
-    {
-        return map<>();
-    }
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline map<>
+map_tie()
+{
+	return map<>();
+}
 
 #define BOOST_FUSION_TIED_PAIR(z, n, data)                                                          \
     fusion::pair<                                                                                   \
@@ -84,7 +86,8 @@ namespace boost { namespace fusion
 #undef BOOST_FUSION_PAIR
 #undef BOOST_FUSION_MAKE_PAIR
 
-}}
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)
@@ -102,31 +105,31 @@ namespace boost { namespace fusion
 
 #define N BOOST_PP_ITERATION()
 
-    namespace result_of
-    {
-        template <
-            BOOST_PP_ENUM_PARAMS(N, typename K)
-          , BOOST_PP_ENUM_PARAMS(N, typename D)
-        >
-        #define TEXT(z, n, text) , text
-        struct map_tie<BOOST_PP_ENUM_PARAMS(N, K), BOOST_PP_ENUM_PARAMS(N, D) BOOST_PP_REPEAT_FROM_TO(N, FUSION_MAX_MAP_SIZE, TEXT, void_) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_MAP_SIZE, TEXT, void_)>
-        #undef TEXT
-        {
-            typedef map<BOOST_PP_ENUM(N, BOOST_FUSION_TIED_PAIR, _)> type;
-        };
-    }
-
-    template <
-        BOOST_PP_ENUM_PARAMS(N, typename K)
-      , BOOST_PP_ENUM_PARAMS(N, typename D)
+namespace result_of
+{
+template <
+    BOOST_PP_ENUM_PARAMS(N, typename K)
+    , BOOST_PP_ENUM_PARAMS(N, typename D)
     >
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline map<BOOST_PP_ENUM(N, BOOST_FUSION_TIED_PAIR, _)>
-    map_tie(BOOST_PP_ENUM_BINARY_PARAMS(N, D, & arg))
-    {
-        return map<BOOST_PP_ENUM(N, BOOST_FUSION_TIED_PAIR, _)>(
-            BOOST_PP_ENUM(N, BOOST_FUSION_PAIR_TIE, arg));
-    }
+#define TEXT(z, n, text) , text
+struct map_tie<BOOST_PP_ENUM_PARAMS(N, K), BOOST_PP_ENUM_PARAMS(N, D) BOOST_PP_REPEAT_FROM_TO(N, FUSION_MAX_MAP_SIZE, TEXT, void_) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_MAP_SIZE, TEXT, void_)>
+#undef TEXT
+{
+	typedef map<BOOST_PP_ENUM(N, BOOST_FUSION_TIED_PAIR, _)> type;
+};
+}
+
+template <
+    BOOST_PP_ENUM_PARAMS(N, typename K)
+    , BOOST_PP_ENUM_PARAMS(N, typename D)
+    >
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline map<BOOST_PP_ENUM(N, BOOST_FUSION_TIED_PAIR, _)>
+map_tie(BOOST_PP_ENUM_BINARY_PARAMS(N, D, & arg))
+{
+	return map<BOOST_PP_ENUM(N, BOOST_FUSION_TIED_PAIR, _)>(
+	           BOOST_PP_ENUM(N, BOOST_FUSION_PAIR_TIE, arg));
+}
 
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)

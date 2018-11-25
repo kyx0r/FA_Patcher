@@ -18,8 +18,10 @@
 #include <boost/compute/functional/detail/unpack.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Transforms each value in the range [\p first, \p last) with the unary
 /// \p transform_function and then reduces each transformed value with
@@ -45,13 +47,13 @@ inline void transform_reduce(InputIterator first,
                              BinaryReduceFunction reduce_function,
                              command_queue &queue = system::default_queue())
 {
-    ::boost::compute::reduce(
-        ::boost::compute::make_transform_iterator(first, transform_function),
-        ::boost::compute::make_transform_iterator(last, transform_function),
-        result,
-        reduce_function,
-        queue
-    );
+	::boost::compute::reduce(
+	    ::boost::compute::make_transform_iterator(first, transform_function),
+	    ::boost::compute::make_transform_iterator(last, transform_function),
+	    result,
+	    reduce_function,
+	    queue
+	);
 }
 
 /// \overload
@@ -68,22 +70,22 @@ inline void transform_reduce(InputIterator1 first1,
                              BinaryReduceFunction reduce_function,
                              command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator1>::difference_type difference_type;
+	typedef typename std::iterator_traits<InputIterator1>::difference_type difference_type;
 
-    difference_type n = std::distance(first1, last1);
+	difference_type n = std::distance(first1, last1);
 
-    ::boost::compute::transform_reduce(
-        ::boost::compute::make_zip_iterator(
-            boost::make_tuple(first1, first2)
-        ),
-        ::boost::compute::make_zip_iterator(
-            boost::make_tuple(last1, first2 + n)
-        ),
-        result,
-        detail::unpack(transform_function),
-        reduce_function,
-        queue
-    );
+	::boost::compute::transform_reduce(
+	    ::boost::compute::make_zip_iterator(
+	        boost::make_tuple(first1, first2)
+	    ),
+	    ::boost::compute::make_zip_iterator(
+	        boost::make_tuple(last1, first2 + n)
+	    ),
+	    result,
+	    detail::unpack(transform_function),
+	    reduce_function,
+	    queue
+	);
 }
 
 } // end compute namespace

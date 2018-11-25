@@ -16,16 +16,19 @@
 # pragma warning(disable : 4714) // function 'xxx' marked as __forceinline not inlined
 #endif
 
-namespace boost { namespace proto
+namespace boost
 {
-    namespace detail
-    {
-        struct dont_care
-        {
-            BOOST_FORCEINLINE dont_care(...);
-        };
-    }
-}}
+namespace proto
+{
+namespace detail
+{
+struct dont_care
+{
+	BOOST_FORCEINLINE dont_care(...);
+};
+}
+}
+}
 
 #if defined(_MSC_VER)
 # pragma warning(pop)

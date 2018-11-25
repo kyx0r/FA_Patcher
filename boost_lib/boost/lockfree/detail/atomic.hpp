@@ -57,9 +57,12 @@
 #include <atomic>
 #endif
 
-namespace boost {
-namespace lockfree {
-namespace detail {
+namespace boost
+{
+namespace lockfree
+{
+namespace detail
+{
 
 #if defined(BOOST_LOCKFREE_NO_HDR_ATOMIC) || defined(BOOST_LOCKFREE_FORCE_BOOST_ATOMIC)
 using boost::atomic;
@@ -82,6 +85,7 @@ using detail::memory_order_consume;
 using detail::memory_order_relaxed;
 using detail::memory_order_release;
 
-}}
+}
+}
 
 #endif /* BOOST_LOCKFREE_DETAIL_ATOMIC_HPP */

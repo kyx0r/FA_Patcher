@@ -332,15 +332,15 @@
 // Utilities to embed parsers by reference.
 namespace boost
 {
-  namespace spirit
-  {
-    BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
+namespace spirit
+{
+BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    template<class P> class parser_reference;
-    template<class P> parser_reference<P> embed_by_reference(parser<P> const &);
+template<class P> class parser_reference;
+template<class P> parser_reference<P> embed_by_reference(parser<P> const &);
 
-    BOOST_SPIRIT_CLASSIC_NAMESPACE_END
-  }
+BOOST_SPIRIT_CLASSIC_NAMESPACE_END
+}
 }
 //==============================================================================
 // Implementation
@@ -851,42 +851,52 @@ namespace boost
 // Wrapper and gernator function to embed a parser by reference
 //------------------------------------------------------------------------------
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-  // Wrapper to embed a parser by reference
+// Wrapper to embed a parser by reference
 
-  template<class P> class parser_reference
-    : public parser< parser_reference<P> >
-  {
-    P const & ref_that;
-  public:
-    parser_reference(P & that)
-    // we allow implicit conversion but forbid temporaries.
-      : ref_that(that)
-    { }
+template<class P> class parser_reference
+	: public parser< parser_reference<P> >
+{
+	P const & ref_that;
+public:
+	parser_reference(P & that)
+	// we allow implicit conversion but forbid temporaries.
+		: ref_that(that)
+	{ }
 
-    typedef parser_reference<P>           self_t;
-    typedef self_t const &                embed_t;
-    typedef typename P::parser_category_t parser_category_t;
+	typedef parser_reference<P>           self_t;
+	typedef self_t const &                embed_t;
+	typedef typename P::parser_category_t parser_category_t;
 
-    template<typename ScannerT> struct result
-    { typedef typename P::BOOST_NESTED_TEMPLATE result<ScannerT>::type type; };
+	template<typename ScannerT> struct result
+	{
+		typedef typename P::BOOST_NESTED_TEMPLATE result<ScannerT>::type type;
+	};
 
-    template<typename ScannerT>
-    typename result<ScannerT>::type
-    parse(ScannerT const & scan) const
-    { return this->ref_that.parse(scan); }
-  };
+	template<typename ScannerT>
+	typename result<ScannerT>::type
+	parse(ScannerT const & scan) const
+	{
+		return this->ref_that.parse(scan);
+	}
+};
 
-  template<class P> parser_reference<P>
-  embed_by_reference(::BOOST_SPIRIT_CLASSIC_NS::parser<P> & p)
-  { return p; }
+template<class P> parser_reference<P>
+embed_by_reference(::BOOST_SPIRIT_CLASSIC_NS::parser<P> & p)
+{
+	return p;
+}
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-} } // namespace ::BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace ::BOOST_SPIRIT_CLASSIC_NS
 
 BOOST_TYPEOF_REGISTER_TEMPLATE(BOOST_SPIRIT_CLASSIC_NS::parser_reference, 1)
 
@@ -894,208 +904,254 @@ BOOST_TYPEOF_REGISTER_TEMPLATE(BOOST_SPIRIT_CLASSIC_NS::parser_reference, 1)
 // Expression templates for action placeholders.
 //------------------------------------------------------------------------------
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-namespace type_of {
+namespace type_of
+{
 
-  // No-operation functor
+// No-operation functor
 
-  struct nop_functor
-  {
-    template<typename T>
-    bool operator()(T const &) const
-    { return false; }
-    template<typename T, typename U>
-    bool operator()(T const &, U const &) const
-    { return false; }
+struct nop_functor
+{
+	template<typename T>
+	bool operator()(T const &) const
+	{
+		return false;
+	}
+	template<typename T, typename U>
+	bool operator()(T const &, U const &) const
+	{
+		return false;
+	}
 
-    typedef bool result_type;
-  };
+	typedef bool result_type;
+};
 
-  // Composite action
+// Composite action
 
-  template<typename Action1, typename Action2>
-  class composite_action
-  {
-    Action1 fnc_a1;
-    Action2 fnc_a2;
-  public:
-    composite_action(Action1 const & a1, Action2 const & a2)
-      : fnc_a1(a1), fnc_a2(a2)
-    { }
+template<typename Action1, typename Action2>
+class composite_action
+{
+	Action1 fnc_a1;
+	Action2 fnc_a2;
+public:
+	composite_action(Action1 const & a1, Action2 const & a2)
+		: fnc_a1(a1), fnc_a2(a2)
+	{ }
 
-    template<typename T>
-    void operator()(T const & inp) const
-    { fnc_a1(inp); fnc_a2(inp); }
+	template<typename T>
+	void operator()(T const & inp) const
+	{
+		fnc_a1(inp);
+		fnc_a2(inp);
+	}
 
-    template<typename T, typename U>
-    void operator()(T const & inp1, U const inp2) const
-    { fnc_a1(inp1, inp2); fnc_a2(inp1, inp2); }
-  };
+	template<typename T, typename U>
+	void operator()(T const & inp1, U const inp2) const
+	{
+		fnc_a1(inp1, inp2);
+		fnc_a2(inp1, inp2);
+	}
+};
 
-  // Action concatenation (and optimize away nop_functorS)
+// Action concatenation (and optimize away nop_functorS)
 
-  template<typename Action1, typename Action2>
-  struct action_concatenator
-  {
-    typedef composite_action<Action1,Action2> type;
+template<typename Action1, typename Action2>
+struct action_concatenator
+{
+	typedef composite_action<Action1,Action2> type;
 
-    static type concatenate(Action1 const & a1, Action2 const & a2)
-    { return composite_action<Action1,Action2>(a1,a2); }
-  };
-  template<typename Action> struct action_concatenator<nop_functor, Action>
-  {
-    typedef Action type;
+	static type concatenate(Action1 const & a1, Action2 const & a2)
+	{
+		return composite_action<Action1,Action2>(a1,a2);
+	}
+};
+template<typename Action> struct action_concatenator<nop_functor, Action>
+{
+	typedef Action type;
 
-    static type concatenate(nop_functor const &, Action const & a)
-    { return a; }
-  };
-  template<typename Action> struct action_concatenator<Action, nop_functor>
-  {
-    typedef Action type;
+	static type concatenate(nop_functor const &, Action const & a)
+	{
+		return a;
+	}
+};
+template<typename Action> struct action_concatenator<Action, nop_functor>
+{
+	typedef Action type;
 
-    static type concatenate(Action const & a, nop_functor const &)
-    { return a; }
-  };
-  template<> struct action_concatenator<nop_functor, nop_functor>
-  {
-    typedef nop_functor type;
+	static type concatenate(Action const & a, nop_functor const &)
+	{
+		return a;
+	}
+};
+template<> struct action_concatenator<nop_functor, nop_functor>
+{
+	typedef nop_functor type;
 
-    static type concatenate(nop_functor const &, nop_functor const &)
-    { return nop_functor(); }
-  };
+	static type concatenate(nop_functor const &, nop_functor const &)
+	{
+		return nop_functor();
+	}
+};
 
-  template<typename Action1, typename Action2>
-  typename action_concatenator<Action1,Action2>::type
-  concatenate_actions(Action1 const & a1, Action2 const & a2)
-  {
-    return action_concatenator<Action1,Action2>::concatenate(a1,a2);
-  }
+template<typename Action1, typename Action2>
+typename action_concatenator<Action1,Action2>::type
+concatenate_actions(Action1 const & a1, Action2 const & a2)
+{
+	return action_concatenator<Action1,Action2>::concatenate(a1,a2);
+}
 
-  // Action chains
+// Action chains
 
-  enum action_chain_mode { replace, append };
+enum action_chain_mode { replace, append };
 
-  template<class Placeholder, action_chain_mode Mode, typename Action>
-  class action_chain
-  {
-    Action fnc_action;
-  public:
-    action_chain(Action const & a)
-      : fnc_action(a)
-    { }
+template<class Placeholder, action_chain_mode Mode, typename Action>
+class action_chain
+{
+	Action fnc_action;
+public:
+	action_chain(Action const & a)
+		: fnc_action(a)
+	{ }
 
-    typedef Action action_type;
+	typedef Action action_type;
 
-    Action const & action() const { return fnc_action; }
-  };
+	Action const & action() const
+	{
+		return fnc_action;
+	}
+};
 
-  // This operator adds actions to an action chain definition
-  template<class PH, action_chain_mode M, typename A1, typename A2>
-  action_chain<PH, M, typename action_concatenator<A1,A2>::type>
-  operator, (action_chain<PH,M,A1> const & chain, A2 const & a)
-  {
-    return action_chain<PH,M,typename action_concatenator<A1,A2>::type>
-        ( concatenate_actions(chain.action(), a) );
-  }
+// This operator adds actions to an action chain definition
+template<class PH, action_chain_mode M, typename A1, typename A2>
+action_chain<PH, M, typename action_concatenator<A1,A2>::type>
+operator, (action_chain<PH,M,A1> const & chain, A2 const & a)
+{
+	return action_chain<PH,M,typename action_concatenator<A1,A2>::type>
+	       ( concatenate_actions(chain.action(), a) );
+}
 
-  // Expression template for mutiple action chain assignments
-  template<class ChainOrChains, class LastChain>
-  class action_chains
-  {
-    ChainOrChains obj_head;
-    LastChain     obj_tail;
-  public:
-    action_chains(ChainOrChains const & head, LastChain const & tail)
-      : obj_head(head), obj_tail(tail)
-    { }
+// Expression template for mutiple action chain assignments
+template<class ChainOrChains, class LastChain>
+class action_chains
+{
+	ChainOrChains obj_head;
+	LastChain     obj_tail;
+public:
+	action_chains(ChainOrChains const & head, LastChain const & tail)
+		: obj_head(head), obj_tail(tail)
+	{ }
 
-    typedef ChainOrChains head_type;
-    typedef LastChain     tail_type;
+	typedef ChainOrChains head_type;
+	typedef LastChain     tail_type;
 
-    head_type const & head() const { return obj_head; }
-    tail_type const & tail() const { return obj_tail; }
-  };
+	head_type const & head() const
+	{
+		return obj_head;
+	}
+	tail_type const & tail() const
+	{
+		return obj_tail;
+	}
+};
 
-  // Action chain concatenation
-  template<class Head, class Tail>
-  action_chains<Head,Tail> make_chain(Head const & h, Tail const & t)
-  { return action_chains<Head,Tail>(h,t); }
+// Action chain concatenation
+template<class Head, class Tail>
+action_chains<Head,Tail> make_chain(Head const & h, Tail const & t)
+{
+	return action_chains<Head,Tail>(h,t);
+}
 
-  template<class PH1, action_chain_mode M1, typename A1,
-           class PH2, action_chain_mode M2, typename A2>
-  action_chains< action_chain<PH1,M1,A1>, action_chain<PH2,M2,A2> >
-  operator, (action_chain<PH1,M1,A1> const & h,
-             action_chain<PH2,M2,A2> const & t)
-  { return make_chain(h,t); }
+template<class PH1, action_chain_mode M1, typename A1,
+         class PH2, action_chain_mode M2, typename A2>
+action_chains< action_chain<PH1,M1,A1>, action_chain<PH2,M2,A2> >
+operator, (action_chain<PH1,M1,A1> const & h,
+           action_chain<PH2,M2,A2> const & t)
+{
+	return make_chain(h,t);
+}
 
-  template<class Head, class Tail,class PH, action_chain_mode M, typename A>
-  action_chains< action_chains<Head,Tail>, action_chain<PH,M,A> >
-  operator, (action_chains<Head,Tail> const & h, action_chain<PH,M,A> const & t)
-  { return make_chain(h,t); }
+template<class Head, class Tail,class PH, action_chain_mode M, typename A>
+action_chains< action_chains<Head,Tail>, action_chain<PH,M,A> >
+operator, (action_chains<Head,Tail> const & h, action_chain<PH,M,A> const & t)
+{
+	return make_chain(h,t);
+}
 
 
-  // Extract the (maybe composite) action associated with an action
-  // placeholders from the chains with a fold algorithm.
-  template<class Placeholder, typename StartAction, class NewChainOrChains>
-  struct placeholdee
-  {
-    typedef StartAction type;
+// Extract the (maybe composite) action associated with an action
+// placeholders from the chains with a fold algorithm.
+template<class Placeholder, typename StartAction, class NewChainOrChains>
+struct placeholdee
+{
+	typedef StartAction type;
 
-    static type get(StartAction const & a, NewChainOrChains const &)
-    { return a; }
-  };
+	static type get(StartAction const & a, NewChainOrChains const &)
+	{
+		return a;
+	}
+};
 
-  template<class Placeholder, // <-- non-deduced
-           typename StartAction, class NewChainOrChains>
-  typename placeholdee<Placeholder,StartAction,NewChainOrChains>::type
-  get_placeholdee(StartAction const & a, NewChainOrChains const & c)
-  { return placeholdee<Placeholder,StartAction,NewChainOrChains>::get(a,c); }
+template<class Placeholder, // <-- non-deduced
+         typename StartAction, class NewChainOrChains>
+typename placeholdee<Placeholder,StartAction,NewChainOrChains>::type
+get_placeholdee(StartAction const & a, NewChainOrChains const & c)
+{
+	return placeholdee<Placeholder,StartAction,NewChainOrChains>::get(a,c);
+}
 
-  template<class Placeholder, typename StartAction, class Head, class Tail>
-  struct placeholdee
-            < Placeholder, StartAction, action_chains<Head,Tail> >
-  {
-    typedef typename placeholdee<Placeholder,
-      typename placeholdee<Placeholder,StartAction,Head>::type, Tail >::type
-    type;
+template<class Placeholder, typename StartAction, class Head, class Tail>
+struct placeholdee
+	< Placeholder, StartAction, action_chains<Head,Tail> >
+{
+	typedef typename placeholdee<Placeholder,
+	        typename placeholdee<Placeholder,StartAction,Head>::type, Tail >::type
+	        type;
 
-    static type get(StartAction const & a, action_chains<Head,Tail> const & c)
-    {
-      return get_placeholdee<Placeholder>(
-        get_placeholdee<Placeholder>(a,c.head()), c.tail() );
-    }
-  };
+	static type get(StartAction const & a, action_chains<Head,Tail> const & c)
+	{
+		return get_placeholdee<Placeholder>(
+		           get_placeholdee<Placeholder>(a,c.head()), c.tail() );
+	}
+};
 
-  template<class Placeholder, typename StartAction, typename A>
-  struct placeholdee
-            < Placeholder, StartAction, action_chain<Placeholder,replace,A> >
-  {
-    typedef A type;
+template<class Placeholder, typename StartAction, typename A>
+struct placeholdee
+	< Placeholder, StartAction, action_chain<Placeholder,replace,A> >
+{
+	typedef A type;
 
-    static type get(StartAction const &,
-                    action_chain<Placeholder,replace,A> const & c)
-    { return c.action(); }
-  };
+	static type get(StartAction const &,
+	                action_chain<Placeholder,replace,A> const & c)
+	{
+		return c.action();
+	}
+};
 
-  template<class Placeholder, typename StartAction, typename A>
-  struct placeholdee
-            < Placeholder, StartAction, action_chain<Placeholder,append,A> >
-  {
-    typedef typename action_concatenator<StartAction,A>::type type;
+template<class Placeholder, typename StartAction, typename A>
+struct placeholdee
+	< Placeholder, StartAction, action_chain<Placeholder,append,A> >
+{
+	typedef typename action_concatenator<StartAction,A>::type type;
 
-    static type get(StartAction const & a,
-                    action_chain<Placeholder,append,A> const & c)
-    { return concatenate_actions(a,c.action()); }
-  };
+	static type get(StartAction const & a,
+	                action_chain<Placeholder,append,A> const & c)
+	{
+		return concatenate_actions(a,c.action());
+	}
+};
 
 }
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-} } // namespace ::BOOST_SPIRIT_CLASSIC_NS::type_of
+}
+} // namespace ::BOOST_SPIRIT_CLASSIC_NS::type_of
 
 BOOST_TYPEOF_REGISTER_TYPE(BOOST_SPIRIT_CLASSIC_NS::type_of::nop_functor)
 BOOST_TYPEOF_REGISTER_TEMPLATE(BOOST_SPIRIT_CLASSIC_NS::type_of::composite_action,2)
@@ -1104,37 +1160,46 @@ BOOST_TYPEOF_REGISTER_TEMPLATE(BOOST_SPIRIT_CLASSIC_NS::type_of::composite_actio
 // Misc.utilities
 //------------------------------------------------------------------------------
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-namespace type_of {
+namespace type_of
+{
 
-  // Utility function to create a dependency to a template argument.
+// Utility function to create a dependency to a template argument.
 
-  template<typename T, typename X>
-  X const & depend_on_type(X const & x)
-  { return x; }
+template<typename T, typename X>
+X const & depend_on_type(X const & x)
+{
+	return x;
+}
 
-  // Utility to allow use parenthesized type expressions with commas inside
-  // as a type within macros. Thanks to Dave Abrahams for telling me this nice
-  // trick.
+// Utility to allow use parenthesized type expressions with commas inside
+// as a type within macros. Thanks to Dave Abrahams for telling me this nice
+// trick.
 
-  #define BOOST_SPIRIT_RP_TYPE(x) \
+#define BOOST_SPIRIT_RP_TYPE(x) \
     ::BOOST_SPIRIT_CLASSIC_NS::type_of::remove_special_fptr \
       < ::BOOST_SPIRIT_CLASSIC_NS::type_of::special_result & (*) x >::type
 
-  struct special_result;
+struct special_result;
 
-  template<typename T> struct remove_special_fptr { };
-  template<typename T> struct remove_special_fptr< special_result & (*)(T) >
-  { typedef T type; };
+template<typename T> struct remove_special_fptr { };
+template<typename T> struct remove_special_fptr< special_result & (*)(T) >
+{
+	typedef T type;
+};
 
 }
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-} } // namespace ::BOOST_SPIRIT_CLASSIC_NS::type_of
+}
+} // namespace ::BOOST_SPIRIT_CLASSIC_NS::type_of
 
 //------------------------------------------------------------------------------
 #endif

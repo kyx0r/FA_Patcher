@@ -14,59 +14,62 @@
 #include <boost/compute/function.hpp>
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Key>
 std::string make_hash_function_name()
 {
-    return std::string("boost_hash_") + type_name<Key>();
+	return std::string("boost_hash_") + type_name<Key>();
 }
 
 template<class Key>
 inline std::string make_hash_function_source()
 {
-  std::stringstream source;
-  source << "inline ulong " << make_hash_function_name<Key>()
-         << "(const " << type_name<Key>() << " x)\n"
-         << "{\n"
-         // note we reinterpret the argument as a 32-bit uint and
-         // then promote it to a 64-bit ulong for the result type
-         << "    ulong a = as_uint(x);\n"
-         << "    a = (a ^ 61) ^ (a >> 16);\n"
-         << "    a = a + (a << 3);\n"
-         << "    a = a ^ (a >> 4);\n"
-         << "    a = a * 0x27d4eb2d;\n"
-         << "    a = a ^ (a >> 15);\n"
-         << "    return a;\n"
-         << "}\n";
-    return source.str();
+	std::stringstream source;
+	source << "inline ulong " << make_hash_function_name<Key>()
+	       << "(const " << type_name<Key>() << " x)\n"
+	       << "{\n"
+	       // note we reinterpret the argument as a 32-bit uint and
+	       // then promote it to a 64-bit ulong for the result type
+	       << "    ulong a = as_uint(x);\n"
+	       << "    a = (a ^ 61) ^ (a >> 16);\n"
+	       << "    a = a + (a << 3);\n"
+	       << "    a = a ^ (a >> 4);\n"
+	       << "    a = a * 0x27d4eb2d;\n"
+	       << "    a = a ^ (a >> 15);\n"
+	       << "    return a;\n"
+	       << "}\n";
+	return source.str();
 }
 
 template<class Key>
 struct hash_impl
 {
-    typedef Key argument_type;
-    typedef ulong_ result_type;
+	typedef Key argument_type;
+	typedef ulong_ result_type;
 
-    hash_impl()
-        : m_function("")
-    {
-        m_function = make_function_from_source<result_type(argument_type)>(
-            make_hash_function_name<argument_type>(),
-            make_hash_function_source<argument_type>()
-        );
-    }
+	hash_impl()
+		: m_function("")
+	{
+		m_function = make_function_from_source<result_type(argument_type)>(
+		                 make_hash_function_name<argument_type>(),
+		                 make_hash_function_source<argument_type>()
+		             );
+	}
 
-    template<class Arg>
-    invoked_function<result_type, boost::tuple<Arg> >
-    operator()(const Arg &arg) const
-    {
-        return m_function(arg);
-    }
+	template<class Arg>
+	invoked_function<result_type, boost::tuple<Arg> >
+	operator()(const Arg &arg) const
+	{
+		return m_function(arg);
+	}
 
-    function<result_type(argument_type)> m_function;
+	function<result_type(argument_type)> m_function;
 };
 
 } // end detail namespace

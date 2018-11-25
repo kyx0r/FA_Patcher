@@ -11,7 +11,12 @@
 
 # ifndef BOOST_PYTHON_MODULE_INIT
 
-namespace boost { namespace python { namespace detail {
+namespace boost
+{
+namespace python
+{
+namespace detail
+{
 
 #  if PY_VERSION_HEX >= 0x03000000
 
@@ -23,7 +28,9 @@ BOOST_PYTHON_DECL PyObject* init_module(char const* name, void(*)());
 
 #endif
 
-}}}
+}
+}
+}
 
 #  if PY_VERSION_HEX >= 0x03000000
 

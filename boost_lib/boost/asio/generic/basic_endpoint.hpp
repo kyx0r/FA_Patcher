@@ -20,9 +20,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace generic {
+namespace boost
+{
+namespace asio
+{
+namespace generic
+{
 
 /// Describes an endpoint for any socket type.
 /**
@@ -43,147 +46,147 @@ template <typename Protocol>
 class basic_endpoint
 {
 public:
-  /// The protocol type associated with the endpoint.
-  typedef Protocol protocol_type;
+	/// The protocol type associated with the endpoint.
+	typedef Protocol protocol_type;
 
-  /// The type of the endpoint structure. This type is dependent on the
-  /// underlying implementation of the socket layer.
+	/// The type of the endpoint structure. This type is dependent on the
+	/// underlying implementation of the socket layer.
 #if defined(GENERATING_DOCUMENTATION)
-  typedef implementation_defined data_type;
+	typedef implementation_defined data_type;
 #else
-  typedef boost::asio::detail::socket_addr_type data_type;
+	typedef boost::asio::detail::socket_addr_type data_type;
 #endif
 
-  /// Default constructor.
-  basic_endpoint()
-  {
-  }
+	/// Default constructor.
+	basic_endpoint()
+	{
+	}
 
-  /// Construct an endpoint from the specified socket address.
-  basic_endpoint(const void* socket_address,
-      std::size_t socket_address_size, int socket_protocol = 0)
-    : impl_(socket_address, socket_address_size, socket_protocol)
-  {
-  }
+	/// Construct an endpoint from the specified socket address.
+	basic_endpoint(const void* socket_address,
+	               std::size_t socket_address_size, int socket_protocol = 0)
+		: impl_(socket_address, socket_address_size, socket_protocol)
+	{
+	}
 
-  /// Construct an endpoint from the specific endpoint type.
-  template <typename Endpoint>
-  basic_endpoint(const Endpoint& endpoint)
-    : impl_(endpoint.data(), endpoint.size(), endpoint.protocol().protocol())
-  {
-  }
+	/// Construct an endpoint from the specific endpoint type.
+	template <typename Endpoint>
+	basic_endpoint(const Endpoint& endpoint)
+		: impl_(endpoint.data(), endpoint.size(), endpoint.protocol().protocol())
+	{
+	}
 
-  /// Copy constructor.
-  basic_endpoint(const basic_endpoint& other)
-    : impl_(other.impl_)
-  {
-  }
-
-#if defined(BOOST_ASIO_HAS_MOVE)
-  /// Move constructor.
-  basic_endpoint(basic_endpoint&& other)
-    : impl_(other.impl_)
-  {
-  }
-#endif // defined(BOOST_ASIO_HAS_MOVE)
-
-  /// Assign from another endpoint.
-  basic_endpoint& operator=(const basic_endpoint& other)
-  {
-    impl_ = other.impl_;
-    return *this;
-  }
+	/// Copy constructor.
+	basic_endpoint(const basic_endpoint& other)
+		: impl_(other.impl_)
+	{
+	}
 
 #if defined(BOOST_ASIO_HAS_MOVE)
-  /// Move-assign from another endpoint.
-  basic_endpoint& operator=(basic_endpoint&& other)
-  {
-    impl_ = other.impl_;
-    return *this;
-  }
+	/// Move constructor.
+	basic_endpoint(basic_endpoint&& other)
+		: impl_(other.impl_)
+	{
+	}
 #endif // defined(BOOST_ASIO_HAS_MOVE)
 
-  /// The protocol associated with the endpoint.
-  protocol_type protocol() const
-  {
-    return protocol_type(impl_.family(), impl_.protocol());
-  }
+	/// Assign from another endpoint.
+	basic_endpoint& operator=(const basic_endpoint& other)
+	{
+		impl_ = other.impl_;
+		return *this;
+	}
 
-  /// Get the underlying endpoint in the native type.
-  data_type* data()
-  {
-    return impl_.data();
-  }
+#if defined(BOOST_ASIO_HAS_MOVE)
+	/// Move-assign from another endpoint.
+	basic_endpoint& operator=(basic_endpoint&& other)
+	{
+		impl_ = other.impl_;
+		return *this;
+	}
+#endif // defined(BOOST_ASIO_HAS_MOVE)
 
-  /// Get the underlying endpoint in the native type.
-  const data_type* data() const
-  {
-    return impl_.data();
-  }
+	/// The protocol associated with the endpoint.
+	protocol_type protocol() const
+	{
+		return protocol_type(impl_.family(), impl_.protocol());
+	}
 
-  /// Get the underlying size of the endpoint in the native type.
-  std::size_t size() const
-  {
-    return impl_.size();
-  }
+	/// Get the underlying endpoint in the native type.
+	data_type* data()
+	{
+		return impl_.data();
+	}
 
-  /// Set the underlying size of the endpoint in the native type.
-  void resize(std::size_t new_size)
-  {
-    impl_.resize(new_size);
-  }
+	/// Get the underlying endpoint in the native type.
+	const data_type* data() const
+	{
+		return impl_.data();
+	}
 
-  /// Get the capacity of the endpoint in the native type.
-  std::size_t capacity() const
-  {
-    return impl_.capacity();
-  }
+	/// Get the underlying size of the endpoint in the native type.
+	std::size_t size() const
+	{
+		return impl_.size();
+	}
 
-  /// Compare two endpoints for equality.
-  friend bool operator==(const basic_endpoint<Protocol>& e1,
-      const basic_endpoint<Protocol>& e2)
-  {
-    return e1.impl_ == e2.impl_;
-  }
+	/// Set the underlying size of the endpoint in the native type.
+	void resize(std::size_t new_size)
+	{
+		impl_.resize(new_size);
+	}
 
-  /// Compare two endpoints for inequality.
-  friend bool operator!=(const basic_endpoint<Protocol>& e1,
-      const basic_endpoint<Protocol>& e2)
-  {
-    return !(e1.impl_ == e2.impl_);
-  }
+	/// Get the capacity of the endpoint in the native type.
+	std::size_t capacity() const
+	{
+		return impl_.capacity();
+	}
 
-  /// Compare endpoints for ordering.
-  friend bool operator<(const basic_endpoint<Protocol>& e1,
-      const basic_endpoint<Protocol>& e2)
-  {
-    return e1.impl_ < e2.impl_;
-  }
+	/// Compare two endpoints for equality.
+	friend bool operator==(const basic_endpoint<Protocol>& e1,
+	                       const basic_endpoint<Protocol>& e2)
+	{
+		return e1.impl_ == e2.impl_;
+	}
 
-  /// Compare endpoints for ordering.
-  friend bool operator>(const basic_endpoint<Protocol>& e1,
-      const basic_endpoint<Protocol>& e2)
-  {
-    return e2.impl_ < e1.impl_;
-  }
+	/// Compare two endpoints for inequality.
+	friend bool operator!=(const basic_endpoint<Protocol>& e1,
+	                       const basic_endpoint<Protocol>& e2)
+	{
+		return !(e1.impl_ == e2.impl_);
+	}
 
-  /// Compare endpoints for ordering.
-  friend bool operator<=(const basic_endpoint<Protocol>& e1,
-      const basic_endpoint<Protocol>& e2)
-  {
-    return !(e2 < e1);
-  }
+	/// Compare endpoints for ordering.
+	friend bool operator<(const basic_endpoint<Protocol>& e1,
+	                      const basic_endpoint<Protocol>& e2)
+	{
+		return e1.impl_ < e2.impl_;
+	}
 
-  /// Compare endpoints for ordering.
-  friend bool operator>=(const basic_endpoint<Protocol>& e1,
-      const basic_endpoint<Protocol>& e2)
-  {
-    return !(e1 < e2);
-  }
+	/// Compare endpoints for ordering.
+	friend bool operator>(const basic_endpoint<Protocol>& e1,
+	                      const basic_endpoint<Protocol>& e2)
+	{
+		return e2.impl_ < e1.impl_;
+	}
+
+	/// Compare endpoints for ordering.
+	friend bool operator<=(const basic_endpoint<Protocol>& e1,
+	                       const basic_endpoint<Protocol>& e2)
+	{
+		return !(e2 < e1);
+	}
+
+	/// Compare endpoints for ordering.
+	friend bool operator>=(const basic_endpoint<Protocol>& e1,
+	                       const basic_endpoint<Protocol>& e2)
+	{
+		return !(e1 < e2);
+	}
 
 private:
-  // The underlying generic endpoint.
-  boost::asio::generic::detail::endpoint impl_;
+	// The underlying generic endpoint.
+	boost::asio::generic::detail::endpoint impl_;
 };
 
 } // namespace generic

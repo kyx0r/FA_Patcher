@@ -19,11 +19,13 @@
 
 #include <boost/random/detail/disable_warnings.hpp>
 
-namespace boost {
+namespace boost
+{
 
 /// \cond hide_private_members
 
-namespace random {
+namespace random
+{
 
 ///\endcond
 
@@ -51,64 +53,88 @@ template<class Engine, class Distribution>
 class variate_generator
 {
 private:
-    typedef boost::random::detail::ptr_helper<Engine> helper_type;
+	typedef boost::random::detail::ptr_helper<Engine> helper_type;
 public:
-    typedef typename helper_type::value_type engine_value_type;
-    typedef Engine engine_type;
-    typedef Distribution distribution_type;
-    typedef typename Distribution::result_type result_type;
+	typedef typename helper_type::value_type engine_value_type;
+	typedef Engine engine_type;
+	typedef Distribution distribution_type;
+	typedef typename Distribution::result_type result_type;
 
-    /**
-     * Constructs a @c variate_generator object with the associated
-     * \uniform_random_number_generator eng and the associated
-     * \random_distribution d.
-     *
-     * Throws: If and what the copy constructor of Engine or
-     * Distribution throws.
-     */
-    variate_generator(Engine e, Distribution d)
-      : _eng(e), _dist(d) { }
+	/**
+	 * Constructs a @c variate_generator object with the associated
+	 * \uniform_random_number_generator eng and the associated
+	 * \random_distribution d.
+	 *
+	 * Throws: If and what the copy constructor of Engine or
+	 * Distribution throws.
+	 */
+	variate_generator(Engine e, Distribution d)
+		: _eng(e), _dist(d) { }
 
-    /** Returns: distribution()(engine()) */
-    result_type operator()() { return _dist(engine()); }
-    /**
-     * Returns: distribution()(engine(), value).
-     */
-    template<class T>
-    result_type operator()(const T& value) { return _dist(engine(), value); }
+	/** Returns: distribution()(engine()) */
+	result_type operator()()
+	{
+		return _dist(engine());
+	}
+	/**
+	 * Returns: distribution()(engine(), value).
+	 */
+	template<class T>
+	result_type operator()(const T& value)
+	{
+		return _dist(engine(), value);
+	}
 
-    /**
-     * Returns: A reference to the associated uniform random number generator.
-     */
-    engine_value_type& engine() { return helper_type::ref(_eng); }
-    /**
-     * Returns: A reference to the associated uniform random number generator.
-     */
-    const engine_value_type& engine() const { return helper_type::ref(_eng); }
+	/**
+	 * Returns: A reference to the associated uniform random number generator.
+	 */
+	engine_value_type& engine()
+	{
+		return helper_type::ref(_eng);
+	}
+	/**
+	 * Returns: A reference to the associated uniform random number generator.
+	 */
+	const engine_value_type& engine() const
+	{
+		return helper_type::ref(_eng);
+	}
 
-    /** Returns: A reference to the associated \random_distribution. */
-    distribution_type& distribution() { return _dist; }
-    /**
-     * Returns: A reference to the associated random distribution.
-     */
-    const distribution_type& distribution() const { return _dist; }
+	/** Returns: A reference to the associated \random_distribution. */
+	distribution_type& distribution()
+	{
+		return _dist;
+	}
+	/**
+	 * Returns: A reference to the associated random distribution.
+	 */
+	const distribution_type& distribution() const
+	{
+		return _dist;
+	}
 
-    /**
-     * Precondition: distribution().min() is well-formed
-     *
-     * Returns: distribution().min()
-     */
-    result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () const { return (distribution().min)(); }
-    /**
-     * Precondition: distribution().max() is well-formed
-     *
-     * Returns: distribution().max()
-     */
-    result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () const { return (distribution().max)(); }
+	/**
+	 * Precondition: distribution().min() is well-formed
+	 *
+	 * Returns: distribution().min()
+	 */
+	result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () const
+	{
+		return (distribution().min)();
+	}
+	/**
+	 * Precondition: distribution().max() is well-formed
+	 *
+	 * Returns: distribution().max()
+	 */
+	result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () const
+	{
+		return (distribution().max)();
+	}
 
 private:
-    Engine _eng;
-    distribution_type _dist;
+	Engine _eng;
+	distribution_type _dist;
 };
 
 } // namespace random

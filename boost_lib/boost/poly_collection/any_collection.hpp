@@ -18,55 +18,63 @@
 #include <boost/poly_collection/detail/poly_collection.hpp>
 #include <utility>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
 template<typename Concept,typename Allocator>
 class any_collection:
- public common_impl::poly_collection<detail::any_model<Concept>,Allocator>
+	public common_impl::poly_collection<detail::any_model<Concept>,Allocator>
 {
-  using base_type=common_impl::poly_collection<
-    detail::any_model<Concept>,Allocator>;
+	using base_type=common_impl::poly_collection<
+	                detail::any_model<Concept>,Allocator>;
 
-  base_type&       base()noexcept{return *this;}
-  const base_type& base()const noexcept{return *this;}
+	base_type&       base()noexcept
+	{
+		return *this;
+	}
+	const base_type& base()const noexcept
+	{
+		return *this;
+	}
 
 public:
-  using base_type::base_type;
+	using base_type::base_type;
 
-  any_collection()=default;
-  any_collection(const any_collection& x)=default;
-  any_collection(any_collection&& x)=default;
-  any_collection& operator=(const any_collection& x)=default;
-  any_collection& operator=(any_collection&& x)=default;
- 
-  template<typename C,typename A>
-  friend bool operator==(
-    const any_collection<C,A>&,const any_collection<C,A>&);
+	any_collection()=default;
+	any_collection(const any_collection& x)=default;
+	any_collection(any_collection&& x)=default;
+	any_collection& operator=(const any_collection& x)=default;
+	any_collection& operator=(any_collection&& x)=default;
+
+	template<typename C,typename A>
+	friend bool operator==(
+	    const any_collection<C,A>&,const any_collection<C,A>&);
 };
 
 template<typename Concept,typename Allocator>
 bool operator==(
-  const any_collection<Concept,Allocator>& x,
-  const any_collection<Concept,Allocator>& y)
+    const any_collection<Concept,Allocator>& x,
+    const any_collection<Concept,Allocator>& y)
 {
-  return x.base()==y.base();
+	return x.base()==y.base();
 }
 
 template<typename Concept,typename Allocator>
 bool operator!=(
-  const any_collection<Concept,Allocator>& x,
-  const any_collection<Concept,Allocator>& y)
+    const any_collection<Concept,Allocator>& x,
+    const any_collection<Concept,Allocator>& y)
 {
- return !(x==y);
+	return !(x==y);
 }
 
 template<typename Concept,typename Allocator>
 void swap(
-  any_collection<Concept,Allocator>& x,any_collection<Concept,Allocator>& y)
+    any_collection<Concept,Allocator>& x,any_collection<Concept,Allocator>& y)
 {
-  x.swap(y);
+	x.swap(y);
 }
 
 } /* namespace  */

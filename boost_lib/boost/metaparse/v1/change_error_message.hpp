@@ -13,26 +13,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class Msg>
-      struct change_error_message
-      {
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::eval_if<
-            typename is_error<typename P::template apply<S, Pos> >::type,
-            reject<Msg, Pos>,
-            typename P::template apply<S, Pos>
-          >
-        {};
-        
-        typedef change_error_message type;
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class Msg>
+struct change_error_message
+{
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<typename P::template apply<S, Pos> >::type,
+	reject<Msg, Pos>,
+	       typename P::template apply<S, Pos>
+	>
+	{};
+
+	typedef change_error_message type;
+};
+}
+}
 }
 
 #endif

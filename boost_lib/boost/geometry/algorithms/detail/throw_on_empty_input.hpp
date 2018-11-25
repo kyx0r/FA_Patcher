@@ -38,7 +38,9 @@
 #include <boost/core/ignore_unused.hpp>
 #endif
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -49,12 +51,12 @@ template <typename Geometry>
 inline void throw_on_empty_input(Geometry const& geometry)
 {
 #if ! defined(BOOST_GEOMETRY_EMPTY_INPUT_NO_THROW)
-    if (geometry::is_empty(geometry))
-    {
-        BOOST_THROW_EXCEPTION(empty_input_exception());
-    }
+	if (geometry::is_empty(geometry))
+	{
+		BOOST_THROW_EXCEPTION(empty_input_exception());
+	}
 #else
-    boost::ignore_unused(geometry);
+	boost::ignore_unused(geometry);
 #endif
 }
 
@@ -62,7 +64,8 @@ inline void throw_on_empty_input(Geometry const& geometry)
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_THROW_ON_EMPTY_INPUT_HPP

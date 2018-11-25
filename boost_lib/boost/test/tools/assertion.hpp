@@ -34,9 +34,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace assertion {
+namespace boost
+{
+namespace test_tools
+{
+namespace assertion
+{
 
 // ************************************************************************** //
 // **************             assertion::operators             ************** //
@@ -62,7 +65,8 @@ namespace assertion {
 // precedence 18: comma
 //  not supported
 
-namespace op {
+namespace op
+{
 
 #define BOOST_TEST_FOR_EACH_COMP_OP(action) \
     action( < , LT, >= )                    \
@@ -177,13 +181,14 @@ BOOST_TEST_FOR_EACH_CONST_OP( DEFINE_CONST_OPER )
 template<typename Lhs, typename Rhs, typename OP> class binary_expr;
 
 template<typename ExprType,typename ValType>
-class expression_base {
+class expression_base
+{
 public:
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    template<typename T>
-    struct RhsT : remove_const<typename remove_reference<T>::type> {};
-    
+	template<typename T>
+	struct RhsT : remove_const<typename remove_reference<T>::type> {};
+
 #define ADD_OP_SUPPORT( oper, name, _ )                         \
     template<typename T>                                        \
     binary_expr<ExprType,T,                                     \
@@ -213,35 +218,35 @@ public:
 /**/
 #endif
 
-    BOOST_TEST_FOR_EACH_CONST_OP( ADD_OP_SUPPORT )
-    #undef ADD_OP_SUPPORT
+	BOOST_TEST_FOR_EACH_CONST_OP( ADD_OP_SUPPORT )
+#undef ADD_OP_SUPPORT
 
 #ifndef BOOST_NO_CXX11_AUTO_DECLARATIONS
-    // Disabled operators
-    template<typename T>
-    ExprType&
-    operator ||( T const& /*rhs*/ )
-    {
-        BOOST_MPL_ASSERT_MSG(false, CANT_USE_LOGICAL_OPERATOR_OR_WITHIN_THIS_TESTING_TOOL, () );
+	// Disabled operators
+	template<typename T>
+	ExprType&
+	operator ||( T const& /*rhs*/ )
+	{
+		BOOST_MPL_ASSERT_MSG(false, CANT_USE_LOGICAL_OPERATOR_OR_WITHIN_THIS_TESTING_TOOL, () );
 
-        return *static_cast<ExprType*>(this);
-    }
+		return *static_cast<ExprType*>(this);
+	}
 
-    template<typename T>
-    ExprType&
-    operator &&( T const& /*rhs*/ )
-    {
-        BOOST_MPL_ASSERT_MSG(false, CANT_USE_LOGICAL_OPERATOR_AND_WITHIN_THIS_TESTING_TOOL, () );
+	template<typename T>
+	ExprType&
+	operator &&( T const& /*rhs*/ )
+	{
+		BOOST_MPL_ASSERT_MSG(false, CANT_USE_LOGICAL_OPERATOR_AND_WITHIN_THIS_TESTING_TOOL, () );
 
-        return *static_cast<ExprType*>(this);
-    }
+		return *static_cast<ExprType*>(this);
+	}
 
-    operator bool()
-    {
-        BOOST_MPL_ASSERT_MSG(false, CANT_USE_TERNARY_OPERATOR_WITHIN_THIS_TESTING_TOOL, () );
+	operator bool()
+	{
+		BOOST_MPL_ASSERT_MSG(false, CANT_USE_TERNARY_OPERATOR_WITHIN_THIS_TESTING_TOOL, () );
 
-        return false;
-    }
+		return false;
+	}
 #endif
 };
 
@@ -251,36 +256,37 @@ public:
 // simple value expression
 
 template<typename T>
-class value_expr : public expression_base<value_expr<T>,typename remove_const<typename remove_reference<T>::type>::type> {
+class value_expr : public expression_base<value_expr<T>,typename remove_const<typename remove_reference<T>::type>::type>
+{
 public:
-    // Public types
-    typedef T                   result_type;
+	// Public types
+	typedef T                   result_type;
 
-    // Constructor
+	// Constructor
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    value_expr( value_expr&& ve )
-    : m_value( std::forward<T>(ve.m_value) )
-    {}
-    explicit                    value_expr( T&& val )
-    : m_value( std::forward<T>(val) )
-    {}
+	value_expr( value_expr&& ve )
+		: m_value( std::forward<T>(ve.m_value) )
+	{}
+	explicit                    value_expr( T&& val )
+		: m_value( std::forward<T>(val) )
+	{}
 #else
-    explicit                    value_expr( T const& val )
-    : m_value( val )
-    {}
+	explicit                    value_expr( T const& val )
+		: m_value( val )
+	{}
 #endif
 
-    // Specific expression interface
-    T const&                    value() const
-    {
-        return m_value;
-    }
-    void                        report( std::ostream& ostr ) const
-    {
-        ostr << tt_detail::print_helper( m_value );
-    }
+	// Specific expression interface
+	T const&                    value() const
+	{
+		return m_value;
+	}
+	void                        report( std::ostream& ostr ) const
+	{
+		ostr << tt_detail::print_helper( m_value );
+	}
 
-    // Mutating operators
+	// Mutating operators
 #define ADD_OP_SUPPORT( OPER, ID, _ )   \
     template<typename U>                \
     value_expr<T>&                      \
@@ -292,29 +298,32 @@ public:
     }                                   \
 /**/
 
-    BOOST_TEST_FOR_EACH_MUT_OP( ADD_OP_SUPPORT )
+	BOOST_TEST_FOR_EACH_MUT_OP( ADD_OP_SUPPORT )
 #undef ADD_OP_SUPPORT
 
-    // expression interface
-    assertion_result            evaluate( bool no_message = false ) const
-    {
-        assertion_result res( value() );
-        if( no_message || res )
-            return res;
+	// expression interface
+	assertion_result            evaluate( bool no_message = false ) const
+	{
+		assertion_result res( value() );
+		if( no_message || res )
+			return res;
 
-        format_message( res.message(), value() );
+		format_message( res.message(), value() );
 
-        return tt_detail::format_assertion_result( "", res.message().str() );
-    }
+		return tt_detail::format_assertion_result( "", res.message().str() );
+	}
 
 private:
-    template<typename U>
-    static void format_message( wrap_stringstream& ostr, U const& v )   { ostr << "[(bool)" << v << " is false]"; }
-    static void format_message( wrap_stringstream& /*ostr*/, bool /*v*/ )       {}
-    static void format_message( wrap_stringstream& /*ostr*/, assertion_result const& /*v*/ ) {}
+	template<typename U>
+	static void format_message( wrap_stringstream& ostr, U const& v )
+	{
+		ostr << "[(bool)" << v << " is false]";
+	}
+	static void format_message( wrap_stringstream& /*ostr*/, bool /*v*/ )       {}
+	static void format_message( wrap_stringstream& /*ostr*/, assertion_result const& /*v*/ ) {}
 
-    // Data members
-    T                           m_value;
+	// Data members
+	T                           m_value;
 };
 
 // ************************************************************************** //
@@ -323,57 +332,64 @@ private:
 // binary expression
 
 template<typename LExpr, typename Rhs, typename OP>
-class binary_expr : public expression_base<binary_expr<LExpr,Rhs,OP>,typename OP::result_type> {
+class binary_expr : public expression_base<binary_expr<LExpr,Rhs,OP>,typename OP::result_type>
+{
 public:
-    // Public types
-    typedef typename OP::result_type result_type;
+	// Public types
+	typedef typename OP::result_type result_type;
 
-    // Constructor
+	// Constructor
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    binary_expr( binary_expr&& be )
-    : m_lhs( std::forward<LExpr>(be.m_lhs) )
-    , m_rhs( std::forward<Rhs>(be.m_rhs) )
-    {}
-    binary_expr( LExpr&& lhs, Rhs&& rhs )
-    : m_lhs( std::forward<LExpr>(lhs) )
-    , m_rhs( std::forward<Rhs>(rhs) )
-    {}
+	binary_expr( binary_expr&& be )
+		: m_lhs( std::forward<LExpr>(be.m_lhs) )
+		, m_rhs( std::forward<Rhs>(be.m_rhs) )
+	{}
+	binary_expr( LExpr&& lhs, Rhs&& rhs )
+		: m_lhs( std::forward<LExpr>(lhs) )
+		, m_rhs( std::forward<Rhs>(rhs) )
+	{}
 #else
-    binary_expr( LExpr const& lhs, Rhs const& rhs )
-    : m_lhs( lhs )
-    , m_rhs( rhs )
-    {}
+	binary_expr( LExpr const& lhs, Rhs const& rhs )
+		: m_lhs( lhs )
+		, m_rhs( rhs )
+	{}
 #endif
 
-    // Specific expression interface
-    result_type                 value() const
-    {
-        return OP::eval( m_lhs.value(), m_rhs );
-    }
-    void                        report( std::ostream& ostr ) const
-    {
-        return OP::report( ostr, m_lhs, m_rhs );
-    }
+	// Specific expression interface
+	result_type                 value() const
+	{
+		return OP::eval( m_lhs.value(), m_rhs );
+	}
+	void                        report( std::ostream& ostr ) const
+	{
+		return OP::report( ostr, m_lhs, m_rhs );
+	}
 
-    assertion_result            evaluate( bool no_message = false ) const
-    {
-        assertion_result const expr_res( value() );
-        if( no_message || expr_res )
-            return expr_res;
+	assertion_result            evaluate( bool no_message = false ) const
+	{
+		assertion_result const expr_res( value() );
+		if( no_message || expr_res )
+			return expr_res;
 
-        wrap_stringstream buff;
-        report( buff.stream() );
+		wrap_stringstream buff;
+		report( buff.stream() );
 
-        return tt_detail::format_assertion_result( buff.stream().str(), expr_res.message() );
-    }
+		return tt_detail::format_assertion_result( buff.stream().str(), expr_res.message() );
+	}
 
-    // To support custom manipulators
-    LExpr const&                lhs() const     { return m_lhs; }
-    Rhs const&                  rhs() const     { return m_rhs; }
+	// To support custom manipulators
+	LExpr const&                lhs() const
+	{
+		return m_lhs;
+	}
+	Rhs const&                  rhs() const
+	{
+		return m_rhs;
+	}
 private:
-    // Data members
-    LExpr                       m_lhs;
-    Rhs                         m_rhs;
+	// Data members
+	LExpr                       m_lhs;
+	Rhs                         m_rhs;
 };
 
 // ************************************************************************** //
@@ -381,21 +397,22 @@ private:
 // ************************************************************************** //
 // seed added ot the input expression to form an assertion expression
 
-class seed {
+class seed
+{
 public:
-    // ->* is highest precedence left to right operator
-    template<typename T>
-    value_expr<T>
+	// ->* is highest precedence left to right operator
+	template<typename T>
+	value_expr<T>
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    operator->*( T&& v ) const
-    {
-        return value_expr<T>( std::forward<T>( v ) );
-    }
+	operator->*( T&& v ) const
+	{
+		return value_expr<T>( std::forward<T>( v ) );
+	}
 #else
-    operator->*( T const& v )  const
-    {
-        return value_expr<T>( v );
-    }
+	operator->*( T const& v )  const
+	{
+		return value_expr<T>( v );
+	}
 #endif
 };
 

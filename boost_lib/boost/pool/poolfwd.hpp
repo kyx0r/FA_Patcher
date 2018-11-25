@@ -23,7 +23,8 @@
 // boost::details::pool::default_mutex
 #include <boost/pool/detail/mutex.hpp>
 
-namespace boost {
+namespace boost
+{
 
 //
 // Location: <boost/pool/simple_segregated_storage.hpp>
@@ -50,10 +51,10 @@ class object_pool;
 // Location: <boost/pool/singleton_pool.hpp>
 //
 template <typename Tag, unsigned RequestedSize,
-    typename UserAllocator = default_user_allocator_new_delete,
-    typename Mutex = details::pool::default_mutex,
-    unsigned NextSize = 32,
-    unsigned MaxSize = 0>
+          typename UserAllocator = default_user_allocator_new_delete,
+          typename Mutex = details::pool::default_mutex,
+          unsigned NextSize = 32,
+          unsigned MaxSize = 0>
 class singleton_pool;
 
 //
@@ -62,19 +63,19 @@ class singleton_pool;
 struct pool_allocator_tag;
 
 template <typename T,
-    typename UserAllocator = default_user_allocator_new_delete,
-    typename Mutex = details::pool::default_mutex,
-    unsigned NextSize = 32,
-    unsigned MaxSize = 0>
+          typename UserAllocator = default_user_allocator_new_delete,
+          typename Mutex = details::pool::default_mutex,
+          unsigned NextSize = 32,
+          unsigned MaxSize = 0>
 class pool_allocator;
 
 struct fast_pool_allocator_tag;
 
 template <typename T,
-    typename UserAllocator = default_user_allocator_new_delete,
-    typename Mutex = details::pool::default_mutex,
-    unsigned NextSize = 32,
-    unsigned MaxSize = 0>
+          typename UserAllocator = default_user_allocator_new_delete,
+          typename Mutex = details::pool::default_mutex,
+          unsigned NextSize = 32,
+          unsigned MaxSize = 0>
 class fast_pool_allocator;
 
 } // namespace boost

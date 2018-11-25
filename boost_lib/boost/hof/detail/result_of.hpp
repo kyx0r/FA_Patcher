@@ -17,38 +17,44 @@
 #include <boost/hof/detail/holder.hpp>
 #include <boost/hof/detail/can_be_called.hpp>
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class F, class Args, class=void>
 struct result_of_impl {};
 
 template<class F, class... Ts>
 struct result_of_impl<
-    F, 
-    holder<Ts...>, 
-    typename std::enable_if<can_be_called<F, typename Ts::type...>::value>::type
->
+	F,
+	holder<Ts...>,
+	typename std::enable_if<can_be_called<F, typename Ts::type...>::value>::type
+	>
 {
-    typedef decltype(std::declval<F>()(std::declval<typename Ts::type>()...)) type;
+	typedef decltype(std::declval<F>()(std::declval<typename Ts::type>()...)) type;
 };
 }
 
 template<class T>
 struct id_
 {
-    typedef T type;
+	typedef T type;
 };
 
 template<class F, class... Ts>
 struct result_of
-: detail::result_of_impl<F, detail::holder<Ts...>>
+	: detail::result_of_impl<F, detail::holder<Ts...>>
 {};
 
 // template<class F, class... Ts>
 // using result_of = detail::result_of_impl<F, detail::holder<Ts...>>;
 // using result_of = id_<decltype(std::declval<F>()(std::declval<typename Ts::type>()...))>;
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 #endif
 
 #if BOOST_HOF_NO_EXPRESSION_SFINAE

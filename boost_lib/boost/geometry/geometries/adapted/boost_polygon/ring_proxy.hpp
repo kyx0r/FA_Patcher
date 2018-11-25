@@ -18,10 +18,14 @@
 
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace adapt { namespace bp
+namespace adapt
+{
+namespace bp
 {
 
 namespace detail
@@ -34,30 +38,30 @@ struct modify
 template <>
 struct modify<true>
 {
-    template <typename Ring, typename Point>
-    static inline void push_back(Ring& ring, Point const& point)
-    {
-        // Boost.Polygon's polygons are not appendable. So create a temporary vector,
-        // add a record and set it to the original. Of course: this is not efficient.
-        // But there seems no other way (without using a wrapper)
-        std::vector<Point> temporary_vector
-            (
-                boost::polygon::begin_points(ring),
-                boost::polygon::end_points(ring)
-            );
-        temporary_vector.push_back(point);
-        boost::polygon::set_points(ring, temporary_vector.begin(), temporary_vector.end());
-    }
+	template <typename Ring, typename Point>
+	static inline void push_back(Ring& ring, Point const& point)
+	{
+		// Boost.Polygon's polygons are not appendable. So create a temporary vector,
+		// add a record and set it to the original. Of course: this is not efficient.
+		// But there seems no other way (without using a wrapper)
+		std::vector<Point> temporary_vector
+		(
+		    boost::polygon::begin_points(ring),
+		    boost::polygon::end_points(ring)
+		);
+		temporary_vector.push_back(point);
+		boost::polygon::set_points(ring, temporary_vector.begin(), temporary_vector.end());
+	}
 
 };
 
 template <>
 struct modify<false>
 {
-    template <typename Ring, typename Point>
-    static inline void push_back(Ring& /*ring*/, Point const& /*point*/)
-    {
-    }
+	template <typename Ring, typename Point>
+	static inline void push_back(Ring& /*ring*/, Point const& /*point*/)
+	{
+	}
 
 };
 
@@ -71,125 +75,125 @@ template<typename Polygon>
 class ring_proxy
 {
 public :
-    typedef typename boost::polygon::polygon_traits
-        <
-            typename boost::remove_const<Polygon>::type
-        >::iterator_type iterator_type;
+	typedef typename boost::polygon::polygon_traits
+	<
+	typename boost::remove_const<Polygon>::type
+	>::iterator_type iterator_type;
 
-    typedef typename boost::polygon::polygon_with_holes_traits
-        <
-            typename boost::remove_const<Polygon>::type
-        >::iterator_holes_type hole_iterator_type;
+	typedef typename boost::polygon::polygon_with_holes_traits
+	<
+	typename boost::remove_const<Polygon>::type
+	>::iterator_holes_type hole_iterator_type;
 
-    static const bool is_mutable = !boost::is_const<Polygon>::type::value;
+	static const bool is_mutable = !boost::is_const<Polygon>::type::value;
 
-    inline ring_proxy(Polygon& p)
-        : m_polygon_pointer(&p)
-        , m_do_hole(false)
-    {}
+	inline ring_proxy(Polygon& p)
+		: m_polygon_pointer(&p)
+		, m_do_hole(false)
+	{}
 
-    // Constructor used from hole_iterator
-    inline ring_proxy(Polygon& p, hole_iterator_type hole_it)
-        : m_polygon_pointer(&p)
-        , m_do_hole(true)
-        , m_hole_it(hole_it)
-    {}
+	// Constructor used from hole_iterator
+	inline ring_proxy(Polygon& p, hole_iterator_type hole_it)
+		: m_polygon_pointer(&p)
+		, m_do_hole(true)
+		, m_hole_it(hole_it)
+	{}
 
-    // Default constructor, for mutable polygons / appending (interior) rings
-    inline ring_proxy()
-        : m_polygon_pointer(&m_polygon_for_default_constructor)
-        , m_do_hole(false)
-    {}
-
-
-    iterator_type begin() const
-    {
-        return m_do_hole
-            ? boost::polygon::begin_points(*m_hole_it)
-            : boost::polygon::begin_points(*m_polygon_pointer)
-            ;
-    }
-
-    iterator_type begin()
-    {
-        return m_do_hole
-            ? boost::polygon::begin_points(*m_hole_it)
-            : boost::polygon::begin_points(*m_polygon_pointer)
-            ;
-    }
-
-    iterator_type end() const
-    {
-        return m_do_hole
-            ? boost::polygon::end_points(*m_hole_it)
-            : boost::polygon::end_points(*m_polygon_pointer)
-            ;
-    }
-
-    iterator_type end()
-    {
-        return m_do_hole
-            ? boost::polygon::end_points(*m_hole_it)
-            : boost::polygon::end_points(*m_polygon_pointer)
-            ;
-    }
-
-    // Mutable
-    void clear()
-    {
-        Polygon p;
-        if (m_do_hole)
-        {
-            // Does NOT work see comment above
-        }
-        else
-        {
-            boost::polygon::set_points(*m_polygon_pointer,
-                boost::polygon::begin_points(p),
-                boost::polygon::end_points(p));
-        }
-    }
-
-    void resize(std::size_t /*new_size*/)
-    {
-        if (m_do_hole)
-        {
-            // Does NOT work see comment above
-        }
-        else
-        {
-            // TODO: implement this by resizing the container
-        }
-    }
+	// Default constructor, for mutable polygons / appending (interior) rings
+	inline ring_proxy()
+		: m_polygon_pointer(&m_polygon_for_default_constructor)
+		, m_do_hole(false)
+	{}
 
 
+	iterator_type begin() const
+	{
+		return m_do_hole
+		       ? boost::polygon::begin_points(*m_hole_it)
+		       : boost::polygon::begin_points(*m_polygon_pointer)
+		       ;
+	}
 
-    template <typename Point>
-    void push_back(Point const& point)
-    {
-        if (m_do_hole)
-        {
-            //detail::modify<is_mutable>::push_back(*m_hole_it, point);
-            //std::cout << "HOLE: " << typeid(*m_hole_it).name() << std::endl;
-            //std::cout << "HOLE: " << typeid(m_hole_it).name() << std::endl;
-            //std::cout << "HOLE: " << typeid(hole_iterator_type).name() << std::endl;
+	iterator_type begin()
+	{
+		return m_do_hole
+		       ? boost::polygon::begin_points(*m_hole_it)
+		       : boost::polygon::begin_points(*m_polygon_pointer)
+		       ;
+	}
 
-            // Note, ths does NOT work because hole_iterator_type is defined
-            // as a const_iterator by Boost.Polygon
+	iterator_type end() const
+	{
+		return m_do_hole
+		       ? boost::polygon::end_points(*m_hole_it)
+		       : boost::polygon::end_points(*m_polygon_pointer)
+		       ;
+	}
 
-        }
-        else
-        {
-            detail::modify<is_mutable>::push_back(*m_polygon_pointer, point);
-        }
-    }
+	iterator_type end()
+	{
+		return m_do_hole
+		       ? boost::polygon::end_points(*m_hole_it)
+		       : boost::polygon::end_points(*m_polygon_pointer)
+		       ;
+	}
+
+	// Mutable
+	void clear()
+	{
+		Polygon p;
+		if (m_do_hole)
+		{
+			// Does NOT work see comment above
+		}
+		else
+		{
+			boost::polygon::set_points(*m_polygon_pointer,
+			                           boost::polygon::begin_points(p),
+			                           boost::polygon::end_points(p));
+		}
+	}
+
+	void resize(std::size_t /*new_size*/)
+	{
+		if (m_do_hole)
+		{
+			// Does NOT work see comment above
+		}
+		else
+		{
+			// TODO: implement this by resizing the container
+		}
+	}
+
+
+
+	template <typename Point>
+	void push_back(Point const& point)
+	{
+		if (m_do_hole)
+		{
+			//detail::modify<is_mutable>::push_back(*m_hole_it, point);
+			//std::cout << "HOLE: " << typeid(*m_hole_it).name() << std::endl;
+			//std::cout << "HOLE: " << typeid(m_hole_it).name() << std::endl;
+			//std::cout << "HOLE: " << typeid(hole_iterator_type).name() << std::endl;
+
+			// Note, ths does NOT work because hole_iterator_type is defined
+			// as a const_iterator by Boost.Polygon
+
+		}
+		else
+		{
+			detail::modify<is_mutable>::push_back(*m_polygon_pointer, point);
+		}
+	}
 
 private :
-    Polygon* m_polygon_pointer;
-    bool m_do_hole;
-    hole_iterator_type m_hole_it;
+	Polygon* m_polygon_pointer;
+	bool m_do_hole;
+	hole_iterator_type m_hole_it;
 
-    Polygon m_polygon_for_default_constructor;
+	Polygon m_polygon_for_default_constructor;
 };
 
 
@@ -198,36 +202,37 @@ private :
 // Support geometry::adapt::bp::ring_proxy for Boost.Range ADP
 template<typename Polygon>
 inline typename boost::geometry::adapt::bp::ring_proxy<Polygon>::iterator_type
-            range_begin(boost::geometry::adapt::bp::ring_proxy<Polygon>& proxy)
+range_begin(boost::geometry::adapt::bp::ring_proxy<Polygon>& proxy)
 {
-    return proxy.begin();
+	return proxy.begin();
 }
 
 template<typename Polygon>
 inline typename boost::geometry::adapt::bp::ring_proxy<Polygon const>::iterator_type
-            range_begin(boost::geometry::adapt::bp::ring_proxy<Polygon const> const& proxy)
+range_begin(boost::geometry::adapt::bp::ring_proxy<Polygon const> const& proxy)
 {
-    return proxy.begin();
+	return proxy.begin();
 }
 
 template<typename Polygon>
 inline typename boost::geometry::adapt::bp::ring_proxy<Polygon>::iterator_type
-            range_end(boost::geometry::adapt::bp::ring_proxy<Polygon>& proxy)
+range_end(boost::geometry::adapt::bp::ring_proxy<Polygon>& proxy)
 {
-    return proxy.end();
+	return proxy.end();
 }
 
 template<typename Polygon>
 inline typename boost::geometry::adapt::bp::ring_proxy<Polygon const>::iterator_type
-            range_end(boost::geometry::adapt::bp::ring_proxy<Polygon const> const& proxy)
+range_end(boost::geometry::adapt::bp::ring_proxy<Polygon const> const& proxy)
 {
-    return proxy.end();
+	return proxy.end();
 }
 
 
 
 
-}} // namespace adapt::bp
+}
+} // namespace adapt::bp
 
 
 namespace traits
@@ -236,64 +241,65 @@ namespace traits
 template <typename Polygon>
 struct tag<adapt::bp::ring_proxy<Polygon> >
 {
-    typedef ring_tag type;
+	typedef ring_tag type;
 };
 
 
 template <typename Polygon>
 struct rvalue_type<adapt::bp::ring_proxy<Polygon> >
 {
-    typedef adapt::bp::ring_proxy<Polygon> type;
+	typedef adapt::bp::ring_proxy<Polygon> type;
 };
 
 template <typename Polygon>
 struct clear<adapt::bp::ring_proxy<Polygon> >
 {
-    static inline void apply(adapt::bp::ring_proxy<Polygon> proxy)
-    {
-        proxy.clear();
-    }
+	static inline void apply(adapt::bp::ring_proxy<Polygon> proxy)
+	{
+		proxy.clear();
+	}
 };
 
 
 template <typename Polygon>
 struct resize<adapt::bp::ring_proxy<Polygon> >
 {
-    static inline void apply(adapt::bp::ring_proxy<Polygon> proxy, std::size_t new_size)
-    {
-        proxy.resize(new_size);
-    }
+	static inline void apply(adapt::bp::ring_proxy<Polygon> proxy, std::size_t new_size)
+	{
+		proxy.resize(new_size);
+	}
 };
 
 template <typename Polygon>
 struct push_back<adapt::bp::ring_proxy<Polygon> >
 {
-    static inline void apply(adapt::bp::ring_proxy<Polygon> proxy,
-        typename boost::polygon::polygon_traits<Polygon>::point_type const& point)
-    {
-        proxy.push_back(point);
-    }
+	static inline void apply(adapt::bp::ring_proxy<Polygon> proxy,
+	                         typename boost::polygon::polygon_traits<Polygon>::point_type const& point)
+	{
+		proxy.push_back(point);
+	}
 };
 
 
 } // namespace traits
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 // Specialize ring_proxy for Boost.Range
 namespace boost
 {
-    template<typename Polygon>
-    struct range_mutable_iterator<geometry::adapt::bp::ring_proxy<Polygon> >
-    {
-        typedef typename geometry::adapt::bp::ring_proxy<Polygon>::iterator_type type;
-    };
+template<typename Polygon>
+struct range_mutable_iterator<geometry::adapt::bp::ring_proxy<Polygon> >
+{
+	typedef typename geometry::adapt::bp::ring_proxy<Polygon>::iterator_type type;
+};
 
-    template<typename Polygon>
-    struct range_const_iterator<geometry::adapt::bp::ring_proxy<Polygon> >
-    {
-        typedef typename geometry::adapt::bp::ring_proxy<Polygon const>::iterator_type type;
-    };
+template<typename Polygon>
+struct range_const_iterator<geometry::adapt::bp::ring_proxy<Polygon> >
+{
+	typedef typename geometry::adapt::bp::ring_proxy<Polygon const>::iterator_type type;
+};
 
 } // namespace boost
 

@@ -11,8 +11,8 @@ namespace pe_bliss
 //translations - version info translations map
 version_info_editor::version_info_editor(lang_string_values_map& strings, translation_values_map& translations)
 	:version_info_viewer(strings, translations),
-	strings_edit_(strings),
-	translations_edit_(translations)
+	 strings_edit_(strings),
+	 translations_edit_(translations)
 {}
 
 //Below functions have parameter translation
@@ -116,7 +116,7 @@ void version_info_editor::add_translation(const std::wstring& translation)
 void version_info_editor::add_translation(uint16_t language_id, uint16_t codepage_id)
 {
 	std::pair<translation_values_map::const_iterator, translation_values_map::const_iterator>
-		range(translations_edit_.equal_range(language_id));
+	range(translations_edit_.equal_range(language_id));
 
 	//If translation already exists
 	for(translation_values_map::const_iterator it = range.first; it != range.second; ++it)
@@ -141,15 +141,15 @@ void version_info_editor::remove_translation(uint16_t language_id, uint16_t code
 		//Erase string table (if exists)
 		std::wstringstream ss;
 		ss << std::hex
-			<< std::setw(4) << std::setfill(L'0') << language_id
-			<< std::setw(4) << std::setfill(L'0') << codepage_id;
-		
+		   << std::setw(4) << std::setfill(L'0') << language_id
+		   << std::setw(4) << std::setfill(L'0') << codepage_id;
+
 		strings_edit_.erase(ss.str());
 	}
 
 	//Find and erase translation from translations table
 	std::pair<translation_values_map::iterator, translation_values_map::iterator>
-		it_pair = translations_edit_.equal_range(language_id);
+	it_pair = translations_edit_.equal_range(language_id);
 
 	for(translation_values_map::iterator it = it_pair.first; it != it_pair.second; ++it)
 	{

@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------+    
+/*-----------------------------------------------------------------------------+
 Copyright (c) 2008-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -13,10 +13,10 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-#ifdef BOOST_MSVC 
+#ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4913) // user defined binary operator ',' exists but no overload could convert all operands, default built-in binary operator ',' used
-#endif                        
+#endif
 
 #include <boost/detail/is_incrementable.hpp>
 
@@ -29,35 +29,38 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/icl/type_traits/rep_type_of.hpp>
 #include <boost/icl/type_traits/is_numeric.hpp>
 
-namespace boost{ namespace icl
+namespace boost
 {
-    template <class Type> struct is_discrete
-    {
-        typedef is_discrete type;
-        BOOST_STATIC_CONSTANT(bool, 
-            value = 
-                (mpl::and_
-                 < 
-                     boost::detail::is_incrementable<Type>
-                   , mpl::or_
-                     < 
-                         mpl::and_
-                         <
-                             mpl::not_<has_rep_type<Type> >
-                           , is_non_floating_point<Type>
-                         >
-                       , mpl::and_
-                         <
-                             has_rep_type<Type>
-                           , is_discrete<typename rep_type_of<Type>::type>
-                         >
-                     >
-                 >::value
-                )
-            );
-    };
+namespace icl
+{
+template <class Type> struct is_discrete
+{
+	typedef is_discrete type;
+	BOOST_STATIC_CONSTANT(bool,
+	                      value =
+	                          (mpl::and_
+	                           <
+	                           boost::detail::is_incrementable<Type>
+	                           , mpl::or_
+	                           <
+	                           mpl::and_
+	                           <
+	                           mpl::not_<has_rep_type<Type> >
+	                           , is_non_floating_point<Type>
+	                           >
+	                           , mpl::and_
+	                           <
+	                           has_rep_type<Type>
+	                           , is_discrete<typename rep_type_of<Type>::type>
+	                           >
+	                           >
+	                           >::value
+	                          )
+	                     );
+};
 
-}} // namespace boost icl
+}
+} // namespace boost icl
 
 #endif
 

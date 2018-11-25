@@ -27,7 +27,7 @@
 #define BOOST_PHOENIX_SCOPE_ACTOR_GEN_NAME lambda_actor_gen
 #define BOOST_PHOENIX_SCOPE_ACTOR_GEN_FUNCTION operator()
 #define BOOST_PHOENIX_SCOPE_ACTOR_GEN_CONST const
-    #include <boost/phoenix/scope/detail/cpp03/local_gen.hpp>
+#include <boost/phoenix/scope/detail/cpp03/local_gen.hpp>
 #undef BOOST_PHOENIX_SCOPE_ACTOR_GEN_NAME
 #undef BOOST_PHOENIX_SCOPE_ACTOR_GEN_FUNCTION
 #undef BOOST_PHOENIX_SCOPE_ACTOR_GEN_CONST

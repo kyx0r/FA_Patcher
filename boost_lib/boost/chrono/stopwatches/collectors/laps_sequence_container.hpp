@@ -12,51 +12,56 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    template<
-      typename Duration,
-      typename SequenceContainer = std::list<Duration>
+template<
+    typename Duration,
+    typename SequenceContainer = std::list<Duration>
     >
-    struct laps_sequence_container
-    {
-      typedef Duration duration;
-      typedef typename duration::rep rep;
-      typedef SequenceContainer storage_type;
-      typedef typename SequenceContainer::iterator iterator;
-      typedef typename SequenceContainer::const_iterator const_iterator;
-      storage_type cont_;
+struct laps_sequence_container
+{
+	typedef Duration duration;
+	typedef typename duration::rep rep;
+	typedef SequenceContainer storage_type;
+	typedef typename SequenceContainer::iterator iterator;
+	typedef typename SequenceContainer::const_iterator const_iterator;
+	storage_type cont_;
 
-      void store(duration const& d)
-      {
-        cont_.push_front(d);
-      }
+	void store(duration const& d)
+	{
+		cont_.push_front(d);
+	}
 
-      void reset()
-      {
-        cont_.clear();
-      }
+	void reset()
+	{
+		cont_.clear();
+	}
 
-      storage_type const& container() const  { return cont_; }
+	storage_type const& container() const
+	{
+		return cont_;
+	}
 
-      duration last() const  {
-        if (cont_.empty())
-          return duration::zero();
-        else
-          return *cont_.begin();
-      }
+	duration last() const
+	{
+		if (cont_.empty())
+			return duration::zero();
+		else
+			return *cont_.begin();
+	}
 
-      duration elapsed() const  {
-        duration elapsed_ = duration::zero();
-        for (const_iterator it = cont_.begin(); it !=cont_.end(); ++it) elapsed_ += *it;
-        return elapsed_;
-      }
+	duration elapsed() const
+	{
+		duration elapsed_ = duration::zero();
+		for (const_iterator it = cont_.begin(); it !=cont_.end(); ++it) elapsed_ += *it;
+		return elapsed_;
+	}
 
-    };
+};
 
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 

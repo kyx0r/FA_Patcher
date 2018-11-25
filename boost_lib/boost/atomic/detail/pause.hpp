@@ -23,16 +23,19 @@ extern "C" void _mm_pause(void);
 #endif
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 BOOST_FORCEINLINE void pause() BOOST_NOEXCEPT
 {
 #if defined(_MSC_VER) && (defined(_M_AMD64) || defined(_M_IX86))
-    _mm_pause();
+	_mm_pause();
 #elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
-    __asm__ __volatile__("pause;");
+	__asm__ __volatile__("pause;");
 #endif
 }
 

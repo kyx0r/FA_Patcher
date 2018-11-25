@@ -10,42 +10,48 @@
 #include <boost/spirit/home/x3/support/unused.hpp>
 #include <boost/spirit/home/x3/core/parser.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // omit_directive forces the attribute of subject parser
-    // to be unused_type
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Subject>
-    struct omit_directive : unary_parser<Subject, omit_directive<Subject>>
-    {
-        typedef unary_parser<Subject, omit_directive<Subject> > base_type;
-        typedef unused_type attribute_type;
-        static bool const has_attribute = false;
+namespace spirit
+{
+namespace x3
+{
+///////////////////////////////////////////////////////////////////////////
+// omit_directive forces the attribute of subject parser
+// to be unused_type
+///////////////////////////////////////////////////////////////////////////
+template <typename Subject>
+struct omit_directive : unary_parser<Subject, omit_directive<Subject>>
+{
+	typedef unary_parser<Subject, omit_directive<Subject> > base_type;
+	typedef unused_type attribute_type;
+	static bool const has_attribute = false;
 
-        typedef Subject subject_type;
-        omit_directive(Subject const& subject)
-          : base_type(subject) {}
+	typedef Subject subject_type;
+	omit_directive(Subject const& subject)
+		: base_type(subject) {}
 
-        template <typename Iterator, typename Context, typename RContext>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, RContext& rcontext, unused_type) const
-        {
-            return this->subject.parse(first, last, context, rcontext, unused);
-        }
-    };
+	template <typename Iterator, typename Context, typename RContext>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, RContext& rcontext, unused_type) const
+	{
+		return this->subject.parse(first, last, context, rcontext, unused);
+	}
+};
 
-    struct omit_gen
-    {
-        template <typename Subject>
-        omit_directive<typename extension::as_parser<Subject>::value_type>
-        operator[](Subject const& subject) const
-        {
-            return { as_parser(subject) };
-        }
-    };
+struct omit_gen
+{
+	template <typename Subject>
+	omit_directive<typename extension::as_parser<Subject>::value_type>
+	operator[](Subject const& subject) const
+	{
+		return { as_parser(subject) };
+	}
+};
 
-    auto const omit = omit_gen{};
-}}}
+auto const omit = omit_gen {};
+}
+}
+}
 
 #endif

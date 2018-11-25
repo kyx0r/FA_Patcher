@@ -25,31 +25,31 @@ class atomic_count
 {
 public:
 
-    explicit atomic_count( long v ): value_( v )
-    {
-    }
+	explicit atomic_count( long v ): value_( v )
+	{
+	}
 
-    long operator++()
-    {
-        return ++value_;
-    }
+	long operator++()
+	{
+		return ++value_;
+	}
 
-    long operator--()
-    {
-        return --value_;
-    }
+	long operator--()
+	{
+		return --value_;
+	}
 
-    operator long() const
-    {
-        return value_;
-    }
+	operator long() const
+	{
+		return value_;
+	}
 
 private:
 
-    atomic_count(atomic_count const &);
-    atomic_count & operator=(atomic_count const &);
+	atomic_count(atomic_count const &);
+	atomic_count & operator=(atomic_count const &);
 
-    long value_;
+	long value_;
 };
 
 } // namespace detail

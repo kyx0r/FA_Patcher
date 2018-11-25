@@ -26,11 +26,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace ipc {
+namespace ipc
+{
 
 /*!
  * \brief A system object name class
@@ -70,194 +72,203 @@ namespace ipc {
 class object_name
 {
 public:
-    //! Name scopes
-    enum scope
-    {
-        global,        //!< The name has global scope; any process in the system has the potential to open the resource identified by the name
-        user,          //!< The name is limited to processes running under the current user
-        session,       //!< The name is limited to processes running in the current login session
-        process_group  //!< The name is limited to processes running in the current process group
-    };
+	//! Name scopes
+	enum scope
+	{
+		global,        //!< The name has global scope; any process in the system has the potential to open the resource identified by the name
+		user,          //!< The name is limited to processes running under the current user
+		session,       //!< The name is limited to processes running in the current login session
+		process_group  //!< The name is limited to processes running in the current process group
+	};
 
 #if !defined(BOOST_LOG_DOXYGEN_PASS)
 
-    BOOST_COPYABLE_AND_MOVABLE(object_name)
+	BOOST_COPYABLE_AND_MOVABLE(object_name)
 
 private:
-    std::string m_name;
+	std::string m_name;
 
 #endif // !defined(BOOST_LOG_DOXYGEN_PASS)
 
 public:
-    /*!
-     * Default constructor. The method creates an empty object name.
-     *
-     * \post <tt>empty() == true</tt>
-     */
-    object_name() BOOST_NOEXCEPT
-    {
-    }
+	/*!
+	 * Default constructor. The method creates an empty object name.
+	 *
+	 * \post <tt>empty() == true</tt>
+	 */
+	object_name() BOOST_NOEXCEPT
+	{
+	}
 
-    /*!
-     * Move constructor.
-     */
-    object_name(BOOST_RV_REF(object_name) that) BOOST_NOEXCEPT
-    {
-        m_name.swap(that.m_name);
-    }
+	/*!
+	 * Move constructor.
+	 */
+	object_name(BOOST_RV_REF(object_name) that) BOOST_NOEXCEPT
+	{
+		m_name.swap(that.m_name);
+	}
 
-    /*!
-     * Copy constructor.
-     */
-    object_name(object_name const& that) : m_name(that.m_name)
-    {
-    }
+	/*!
+	 * Copy constructor.
+	 */
+	object_name(object_name const& that) : m_name(that.m_name)
+	{
+	}
 
-    /*!
-     * Constructor from the native string.
-     *
-     * \param str The object name string, must not be \c NULL. The string format is specific to the operating system.
-     */
-    static object_name from_native(const char* str)
-    {
-        object_name name;
-        name.m_name = str;
-        return name;
-    }
+	/*!
+	 * Constructor from the native string.
+	 *
+	 * \param str The object name string, must not be \c NULL. The string format is specific to the operating system.
+	 */
+	static object_name from_native(const char* str)
+	{
+		object_name name;
+		name.m_name = str;
+		return name;
+	}
 
-    /*!
-     * Constructor from the native string.
-     *
-     * \param str The object name string. The string format is specific to the operating system.
-     */
-    static object_name from_native(std::string const& str)
-    {
-        object_name name;
-        name.m_name = str;
-        return name;
-    }
+	/*!
+	 * Constructor from the native string.
+	 *
+	 * \param str The object name string. The string format is specific to the operating system.
+	 */
+	static object_name from_native(std::string const& str)
+	{
+		object_name name;
+		name.m_name = str;
+		return name;
+	}
 
-    /*!
-     * Constructor from the object name
-     * \param ns The scope of the object name
-     * \param str The object name, must not be NULL.
-     */
-    BOOST_LOG_API object_name(scope ns, const char* str);
+	/*!
+	 * Constructor from the object name
+	 * \param ns The scope of the object name
+	 * \param str The object name, must not be NULL.
+	 */
+	BOOST_LOG_API object_name(scope ns, const char* str);
 
-    /*!
-     * Constructor from the object name
-     * \param ns The scope of the object name
-     * \param str The object name
-     */
-    BOOST_LOG_API object_name(scope ns, std::string const& str);
+	/*!
+	 * Constructor from the object name
+	 * \param ns The scope of the object name
+	 * \param str The object name
+	 */
+	BOOST_LOG_API object_name(scope ns, std::string const& str);
 
-    /*!
-     * Move assignment
-     */
-    object_name& operator= (BOOST_RV_REF(object_name) that) BOOST_NOEXCEPT
-    {
-        m_name.clear();
-        m_name.swap(that.m_name);
-        return *this;
-    }
+	/*!
+	 * Move assignment
+	 */
+	object_name& operator= (BOOST_RV_REF(object_name) that) BOOST_NOEXCEPT
+	{
+		m_name.clear();
+		m_name.swap(that.m_name);
+		return *this;
+	}
 
-    /*!
-     * Copy assignment
-     */
-    object_name& operator= (BOOST_COPY_ASSIGN_REF(object_name) that)
-    {
-        m_name = that.m_name;
-        return *this;
-    }
+	/*!
+	 * Copy assignment
+	 */
+	object_name& operator= (BOOST_COPY_ASSIGN_REF(object_name) that)
+	{
+		m_name = that.m_name;
+		return *this;
+	}
 
-    /*!
-     * Returns \c true if the object name is empty
-     */
-    bool empty() const BOOST_NOEXCEPT { return m_name.empty(); }
+	/*!
+	 * Returns \c true if the object name is empty
+	 */
+	bool empty() const BOOST_NOEXCEPT
+	{
+		return m_name.empty();
+	}
 
-    /*!
-     * Returns length of the name, in bytes
-     */
-    std::size_t size() const BOOST_NOEXCEPT { return m_name.size(); }
+	/*!
+	 * Returns length of the name, in bytes
+	 */
+	std::size_t size() const BOOST_NOEXCEPT
+	{
+		return m_name.size();
+	}
 
-    /*!
-     * Returns the name string
-     */
-    const char* c_str() const BOOST_NOEXCEPT { return m_name.c_str(); }
+	/*!
+	 * Returns the name string
+	 */
+	const char* c_str() const BOOST_NOEXCEPT
+	{
+		return m_name.c_str();
+	}
 
-    /*!
-     * Swaps the object name with another object name
-     */
-    void swap(object_name& that) BOOST_NOEXCEPT { m_name.swap(that.m_name); }
+	/*!
+	 * Swaps the object name with another object name
+	 */
+	void swap(object_name& that) BOOST_NOEXCEPT { m_name.swap(that.m_name); }
 
-    /*!
-     * Swaps two object names
-     */
-    friend void swap(object_name& left, object_name& right) BOOST_NOEXCEPT
-    {
-        left.swap(right);
-    }
+	/*!
+	 * Swaps two object names
+	 */
+	friend void swap(object_name& left, object_name& right) BOOST_NOEXCEPT
+	{
+		left.swap(right);
+	}
 
-    /*!
-     * Returns string representation of the object name
-     */
-    friend std::string to_string(object_name const& name)
-    {
-        return name.m_name;
-    }
+	/*!
+	 * Returns string representation of the object name
+	 */
+	friend std::string to_string(object_name const& name)
+	{
+		return name.m_name;
+	}
 
-    /*!
-     * Equality operator
-     */
-    friend bool operator== (object_name const& left, object_name const& right) BOOST_NOEXCEPT
-    {
-        return left.m_name == right.m_name;
-    }
-    /*!
-     * Inequality operator
-     */
-    friend bool operator!= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
-    {
-        return left.m_name != right.m_name;
-    }
-    /*!
-     * Less operator
-     */
-    friend bool operator< (object_name const& left, object_name const& right) BOOST_NOEXCEPT
-    {
-        return left.m_name < right.m_name;
-    }
-    /*!
-     * Greater operator
-     */
-    friend bool operator> (object_name const& left, object_name const& right) BOOST_NOEXCEPT
-    {
-        return left.m_name > right.m_name;
-    }
-    /*!
-     * Less or equal operator
-     */
-    friend bool operator<= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
-    {
-        return left.m_name <= right.m_name;
-    }
-    /*!
-     * Greater or equal operator
-     */
-    friend bool operator>= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
-    {
-        return left.m_name >= right.m_name;
-    }
+	/*!
+	 * Equality operator
+	 */
+	friend bool operator== (object_name const& left, object_name const& right) BOOST_NOEXCEPT
+	{
+		return left.m_name == right.m_name;
+	}
+	/*!
+	 * Inequality operator
+	 */
+	friend bool operator!= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
+	{
+		return left.m_name != right.m_name;
+	}
+	/*!
+	 * Less operator
+	 */
+	friend bool operator< (object_name const& left, object_name const& right) BOOST_NOEXCEPT
+	{
+		return left.m_name < right.m_name;
+	}
+	/*!
+	 * Greater operator
+	 */
+	friend bool operator> (object_name const& left, object_name const& right) BOOST_NOEXCEPT
+	{
+		return left.m_name > right.m_name;
+	}
+	/*!
+	 * Less or equal operator
+	 */
+	friend bool operator<= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
+	{
+		return left.m_name <= right.m_name;
+	}
+	/*!
+	 * Greater or equal operator
+	 */
+	friend bool operator>= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
+	{
+		return left.m_name >= right.m_name;
+	}
 
-    /*!
-     * Stream ouput operator
-     */
-    template< typename CharT, typename TraitsT >
-    friend std::basic_ostream< CharT, TraitsT >& operator<< (std::basic_ostream< CharT, TraitsT >& strm, object_name const& name)
-    {
-        strm << name.c_str();
-        return strm;
-    }
+	/*!
+	 * Stream ouput operator
+	 */
+	template< typename CharT, typename TraitsT >
+	friend std::basic_ostream< CharT, TraitsT >& operator<< (std::basic_ostream< CharT, TraitsT >& strm, object_name const& name)
+	{
+		strm << name.c_str();
+		return strm;
+	}
 };
 
 } // namespace ipc

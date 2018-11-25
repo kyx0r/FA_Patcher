@@ -13,16 +13,22 @@
 
 #include <iterator>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Iterator, class Distance, class Tag>
 inline Iterator iterator_plus_distance(Iterator i, Distance n, Tag)
 {
-    while(n--){ i++; }
+	while(n--)
+	{
+		i++;
+	}
 
-    return i;
+	return i;
 }
 
 template<class Iterator, class Distance>
@@ -30,10 +36,10 @@ inline Iterator iterator_plus_distance(Iterator i,
                                        Distance n,
                                        std::random_access_iterator_tag)
 {
-    typedef typename
-        std::iterator_traits<Iterator>::difference_type difference_type;
+	typedef typename
+	std::iterator_traits<Iterator>::difference_type difference_type;
 
-    return i + static_cast<difference_type>(n);
+	return i + static_cast<difference_type>(n);
 }
 
 // similar to std::advance() except returns the advanced iterator and
@@ -41,9 +47,9 @@ inline Iterator iterator_plus_distance(Iterator i,
 template<class Iterator, class Distance>
 inline Iterator iterator_plus_distance(Iterator i, Distance n)
 {
-    typedef typename std::iterator_traits<Iterator>::iterator_category tag;
+	typedef typename std::iterator_traits<Iterator>::iterator_category tag;
 
-    return iterator_plus_distance(i, n, tag());
+	return iterator_plus_distance(i, n, tag());
 }
 
 } // end detail namespace

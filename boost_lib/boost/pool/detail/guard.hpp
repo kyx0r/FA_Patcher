@@ -18,14 +18,18 @@
   It is used to ensure that a Mutex is unlocked, even if an exception is thrown.
 */
 
-namespace boost {
+namespace boost
+{
 
-namespace details {
-namespace pool {
+namespace details
+{
+namespace pool
+{
 
 template <typename Mutex> //!< \tparam Mutex (platform-specific) mutex class.
 class guard
-{ //! Locks the mutex, binding guard<Mutex> to Mutex.
+{
+	//! Locks the mutex, binding guard<Mutex> to Mutex.
 	/*! Example:
 	Given a (platform-specific) mutex class, we can wrap code as follows:
 
@@ -42,23 +46,25 @@ class guard
 				//   or just fall through
 	} // g's destructor unlocks "global_lock"
 	*/
-  private:
-    Mutex & mtx;
+private:
+	Mutex & mtx;
 
-    guard(const guard &); //!< Guards the mutex, ensuring unlocked on destruction, even if exception is thrown.
-    void operator=(const guard &);
+	guard(const guard &); //!< Guards the mutex, ensuring unlocked on destruction, even if exception is thrown.
+	void operator=(const guard &);
 
-  public:
-    explicit guard(Mutex & nmtx)
-    :mtx(nmtx)
-    { //! Locks the mutex of the guard class.
-			mtx.lock();
-		}
+public:
+	explicit guard(Mutex & nmtx)
+		:mtx(nmtx)
+	{
+		//! Locks the mutex of the guard class.
+		mtx.lock();
+	}
 
-    ~guard()
-    { //! destructor unlocks the mutex of the guard class.
-			mtx.unlock();
-		}
+	~guard()
+	{
+		//! destructor unlocks the mutex of the guard class.
+		mtx.unlock();
+	}
 }; // class guard
 
 } // namespace pool

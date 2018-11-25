@@ -26,22 +26,24 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 template< typename T >
 inline typename boost::enable_if_c< is_character_type< T >::value, const T* >::type c_str(const T* str) BOOST_NOEXCEPT
 {
-    return str;
+	return str;
 }
 
 template< typename T, typename TraitsT, typename AllocatorT >
 inline typename boost::enable_if_c< is_character_type< T >::value, const T* >::type c_str(std::basic_string< T, TraitsT, AllocatorT > const& str) BOOST_NOEXCEPT
 {
-    return str.c_str();
+	return str.c_str();
 }
 
 } // namespace aux

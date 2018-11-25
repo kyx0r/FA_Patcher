@@ -21,7 +21,9 @@
 #include <boost/geometry/util/select_most_precise.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -33,42 +35,42 @@ template
 <
     typename RadiusTypeOrSphere,
     typename Tag = typename tag<RadiusTypeOrSphere>::type
->
+    >
 struct get_radius
 {
-    typedef typename geometry::radius_type<RadiusTypeOrSphere>::type type;
-    static type apply(RadiusTypeOrSphere const& sphere)
-    {
-        return geometry::get_radius<0>(sphere);
-    }
+	typedef typename geometry::radius_type<RadiusTypeOrSphere>::type type;
+	static type apply(RadiusTypeOrSphere const& sphere)
+	{
+		return geometry::get_radius<0>(sphere);
+	}
 };
 
 template <typename RadiusTypeOrSphere>
 struct get_radius<RadiusTypeOrSphere, void>
 {
-    typedef RadiusTypeOrSphere type;
-    static type apply(RadiusTypeOrSphere const& radius)
-    {
-        return radius;
-    }
+	typedef RadiusTypeOrSphere type;
+	static type apply(RadiusTypeOrSphere const& radius)
+	{
+		return radius;
+	}
 };
 
 // For backward compatibility
 template <typename Point>
 struct get_radius<Point, point_tag>
 {
-    typedef typename select_most_precise
-        <
-            typename coordinate_type<Point>::type,
-            double
-        >::type type;
+	typedef typename select_most_precise
+	<
+	typename coordinate_type<Point>::type,
+	         double
+	         >::type type;
 
-    template <typename RadiusOrSphere>
-    static typename get_radius<RadiusOrSphere>::type
-        apply(RadiusOrSphere const& radius_or_sphere)
-    {
-        return get_radius<RadiusOrSphere>::apply(radius_or_sphere);
-    }
+	template <typename RadiusOrSphere>
+	static typename get_radius<RadiusOrSphere>::type
+	apply(RadiusOrSphere const& radius_or_sphere)
+	{
+		return get_radius<RadiusOrSphere>::apply(radius_or_sphere);
+	}
 };
 
 
@@ -76,6 +78,7 @@ struct get_radius<Point, point_tag>
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_SPHERICAL_GET_RADIUS_HPP

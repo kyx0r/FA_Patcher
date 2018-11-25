@@ -39,9 +39,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace tt_detail {
+namespace boost
+{
+namespace test_tools
+{
+namespace tt_detail
+{
 
 // ************************************************************************** //
 // **************          old TOOLBOX Implementation          ************** //
@@ -104,185 +107,221 @@ BOOST_PP_REPEAT( BOOST_TEST_MAX_PREDICATE_ARITY, IMPL_FRWD, _ )
 template <class Left, class Right>
 inline assertion_result equal_impl( Left const& left, Right const& right )
 {
-    return left == right;
+	return left == right;
 }
 
 //____________________________________________________________________________//
 
-inline assertion_result equal_impl( char* left, char const* right ) { return equal_impl( static_cast<char const*>(left), static_cast<char const*>(right) ); }
-inline assertion_result equal_impl( char const* left, char* right ) { return equal_impl( static_cast<char const*>(left), static_cast<char const*>(right) ); }
-inline assertion_result equal_impl( char* left, char* right )       { return equal_impl( static_cast<char const*>(left), static_cast<char const*>(right) ); }
+inline assertion_result equal_impl( char* left, char const* right )
+{
+	return equal_impl( static_cast<char const*>(left), static_cast<char const*>(right) );
+}
+inline assertion_result equal_impl( char const* left, char* right )
+{
+	return equal_impl( static_cast<char const*>(left), static_cast<char const*>(right) );
+}
+inline assertion_result equal_impl( char* left, char* right )
+{
+	return equal_impl( static_cast<char const*>(left), static_cast<char const*>(right) );
+}
 
 #if !defined( BOOST_NO_CWCHAR )
 assertion_result        BOOST_TEST_DECL equal_impl( wchar_t const* left, wchar_t const* right );
-inline assertion_result equal_impl( wchar_t* left, wchar_t const* right ) { return equal_impl( static_cast<wchar_t const*>(left), static_cast<wchar_t const*>(right) ); }
-inline assertion_result equal_impl( wchar_t const* left, wchar_t* right ) { return equal_impl( static_cast<wchar_t const*>(left), static_cast<wchar_t const*>(right) ); }
-inline assertion_result equal_impl( wchar_t* left, wchar_t* right )       { return equal_impl( static_cast<wchar_t const*>(left), static_cast<wchar_t const*>(right) ); }
+inline assertion_result equal_impl( wchar_t* left, wchar_t const* right )
+{
+	return equal_impl( static_cast<wchar_t const*>(left), static_cast<wchar_t const*>(right) );
+}
+inline assertion_result equal_impl( wchar_t const* left, wchar_t* right )
+{
+	return equal_impl( static_cast<wchar_t const*>(left), static_cast<wchar_t const*>(right) );
+}
+inline assertion_result equal_impl( wchar_t* left, wchar_t* right )
+{
+	return equal_impl( static_cast<wchar_t const*>(left), static_cast<wchar_t const*>(right) );
+}
 #endif
 
 //____________________________________________________________________________//
 
-struct equal_impl_frwd {
-    template <typename Left, typename Right>
-    inline assertion_result
-    call_impl( Left const& left, Right const& right, mpl::false_ ) const
-    {
-        return equal_impl( left, right );
-    }
+struct equal_impl_frwd
+{
+	template <typename Left, typename Right>
+	inline assertion_result
+	call_impl( Left const& left, Right const& right, mpl::false_ ) const
+	{
+		return equal_impl( left, right );
+	}
 
-    template <typename Left, typename Right>
-    inline assertion_result
-    call_impl( Left const& left, Right const& right, mpl::true_ ) const
-    {
-        return (*this)( right, &left[0] );
-    }
+	template <typename Left, typename Right>
+	inline assertion_result
+	call_impl( Left const& left, Right const& right, mpl::true_ ) const
+	{
+		return (*this)( right, &left[0] );
+	}
 
-    template <typename Left, typename Right>
-    inline assertion_result
-    operator()( Left const& left, Right const& right ) const
-    {
-        typedef typename is_array<Left>::type left_is_array;
-        return call_impl( left, right, left_is_array() );
-    }
+	template <typename Left, typename Right>
+	inline assertion_result
+	operator()( Left const& left, Right const& right ) const
+	{
+		typedef typename is_array<Left>::type left_is_array;
+		return call_impl( left, right, left_is_array() );
+	}
 };
 
 //____________________________________________________________________________//
 
-struct ne_impl {
-    template <class Left, class Right>
-    assertion_result operator()( Left const& left, Right const& right )
-    {
-        return !equal_impl_frwd()( left, right );
-    }
+struct ne_impl
+{
+	template <class Left, class Right>
+	assertion_result operator()( Left const& left, Right const& right )
+	{
+		return !equal_impl_frwd()( left, right );
+	}
 };
 
 //____________________________________________________________________________//
 
-struct lt_impl {
-    template <class Left, class Right>
-    assertion_result operator()( Left const& left, Right const& right )
-    {
-        return left < right;
-    }
+struct lt_impl
+{
+	template <class Left, class Right>
+	assertion_result operator()( Left const& left, Right const& right )
+	{
+		return left < right;
+	}
 };
 
 //____________________________________________________________________________//
 
-struct le_impl {
-    template <class Left, class Right>
-    assertion_result operator()( Left const& left, Right const& right )
-    {
-        return left <= right;
-    }
+struct le_impl
+{
+	template <class Left, class Right>
+	assertion_result operator()( Left const& left, Right const& right )
+	{
+		return left <= right;
+	}
 };
 
 //____________________________________________________________________________//
 
-struct gt_impl {
-    template <class Left, class Right>
-    assertion_result operator()( Left const& left, Right const& right )
-    {
-        return left > right;
-    }
+struct gt_impl
+{
+	template <class Left, class Right>
+	assertion_result operator()( Left const& left, Right const& right )
+	{
+		return left > right;
+	}
 };
 
 //____________________________________________________________________________//
 
-struct ge_impl {
-    template <class Left, class Right>
-    assertion_result operator()( Left const& left, Right const& right )
-    {
-        return left >= right;
-    }
+struct ge_impl
+{
+	template <class Left, class Right>
+	assertion_result operator()( Left const& left, Right const& right )
+	{
+		return left >= right;
+	}
 };
 
 //____________________________________________________________________________//
 
-struct equal_coll_impl {
-    template <typename Left, typename Right>
-    assertion_result operator()( Left left_begin, Left left_end, Right right_begin, Right right_end )
-    {
-        assertion_result    pr( true );
-        std::size_t         pos = 0;
+struct equal_coll_impl
+{
+	template <typename Left, typename Right>
+	assertion_result operator()( Left left_begin, Left left_end, Right right_begin, Right right_end )
+	{
+		assertion_result    pr( true );
+		std::size_t         pos = 0;
 
-        for( ; left_begin != left_end && right_begin != right_end; ++left_begin, ++right_begin, ++pos ) {
-            if( *left_begin != *right_begin ) {
-                pr = false;
-                pr.message() << "\nMismatch at position " << pos << ": "
-                  << ::boost::test_tools::tt_detail::print_helper(*left_begin)
-                  << " != "
-                  << ::boost::test_tools::tt_detail::print_helper(*right_begin);
-            }
-        }
+		for( ; left_begin != left_end && right_begin != right_end; ++left_begin, ++right_begin, ++pos )
+		{
+			if( *left_begin != *right_begin )
+			{
+				pr = false;
+				pr.message() << "\nMismatch at position " << pos << ": "
+				             << ::boost::test_tools::tt_detail::print_helper(*left_begin)
+				             << " != "
+				             << ::boost::test_tools::tt_detail::print_helper(*right_begin);
+			}
+		}
 
-        if( left_begin != left_end ) {
-            std::size_t r_size = pos;
-            while( left_begin != left_end ) {
-                ++pos;
-                ++left_begin;
-            }
+		if( left_begin != left_end )
+		{
+			std::size_t r_size = pos;
+			while( left_begin != left_end )
+			{
+				++pos;
+				++left_begin;
+			}
 
-            pr = false;
-            pr.message() << "\nCollections size mismatch: " << pos << " != " << r_size;
-        }
+			pr = false;
+			pr.message() << "\nCollections size mismatch: " << pos << " != " << r_size;
+		}
 
-        if( right_begin != right_end ) {
-            std::size_t l_size = pos;
-            while( right_begin != right_end ) {
-                ++pos;
-                ++right_begin;
-            }
+		if( right_begin != right_end )
+		{
+			std::size_t l_size = pos;
+			while( right_begin != right_end )
+			{
+				++pos;
+				++right_begin;
+			}
 
-            pr = false;
-            pr.message() << "\nCollections size mismatch: " << l_size << " != " << pos;
-        }
+			pr = false;
+			pr.message() << "\nCollections size mismatch: " << l_size << " != " << pos;
+		}
 
-        return pr;
-    }
+		return pr;
+	}
 };
 
 //____________________________________________________________________________//
 
-struct bitwise_equal_impl {
-    template <class Left, class Right>
-    assertion_result    operator()( Left const& left, Right const& right )
-    {
-        assertion_result    pr( true );
+struct bitwise_equal_impl
+{
+	template <class Left, class Right>
+	assertion_result    operator()( Left const& left, Right const& right )
+	{
+		assertion_result    pr( true );
 
-        std::size_t left_bit_size  = sizeof(Left)*CHAR_BIT;
-        std::size_t right_bit_size = sizeof(Right)*CHAR_BIT;
+		std::size_t left_bit_size  = sizeof(Left)*CHAR_BIT;
+		std::size_t right_bit_size = sizeof(Right)*CHAR_BIT;
 
-        static Left const leftOne( 1 );
-        static Right const rightOne( 1 );
+		static Left const leftOne( 1 );
+		static Right const rightOne( 1 );
 
-        std::size_t total_bits = left_bit_size < right_bit_size ? left_bit_size : right_bit_size;
+		std::size_t total_bits = left_bit_size < right_bit_size ? left_bit_size : right_bit_size;
 
-        for( std::size_t counter = 0; counter < total_bits; ++counter ) {
-            if( ( left & ( leftOne << counter ) ) != ( right & ( rightOne << counter ) ) ) {
-                pr = false;
-                pr.message() << "\nMismatch at position " << counter;
-            }
-        }
+		for( std::size_t counter = 0; counter < total_bits; ++counter )
+		{
+			if( ( left & ( leftOne << counter ) ) != ( right & ( rightOne << counter ) ) )
+			{
+				pr = false;
+				pr.message() << "\nMismatch at position " << counter;
+			}
+		}
 
-        if( left_bit_size != right_bit_size ) {
-            pr = false;
-            pr.message() << "\nOperands bit sizes mismatch: " << left_bit_size << " != " << right_bit_size;
-        }
+		if( left_bit_size != right_bit_size )
+		{
+			pr = false;
+			pr.message() << "\nOperands bit sizes mismatch: " << left_bit_size << " != " << right_bit_size;
+		}
 
-        return pr;
-    }
+		return pr;
+	}
 };
 
 //____________________________________________________________________________//
 
 template<typename FPT1, typename FPT2>
-struct comp_supertype {
-    // deduce "better" type from types of arguments being compared
-    // if one type is floating and the second integral we use floating type and
-    // value of integral type is promoted to the floating. The same for float and double
-    // But we don't want to compare two values of integral types using this tool.
-    typedef typename numeric::conversion_traits<FPT1,FPT2>::supertype type;
-    BOOST_STATIC_ASSERT_MSG( !is_integral<type>::value, "Only floating-point types can be compared!");
+struct comp_supertype
+{
+	// deduce "better" type from types of arguments being compared
+	// if one type is floating and the second integral we use floating type and
+	// value of integral type is promoted to the floating. The same for float and double
+	// But we don't want to compare two values of integral types using this tool.
+	typedef typename numeric::conversion_traits<FPT1,FPT2>::supertype type;
+	BOOST_STATIC_ASSERT_MSG( !is_integral<type>::value, "Only floating-point types can be compared!");
 };
 
 } // namespace tt_detail
@@ -293,23 +332,24 @@ namespace fpc = math::fpc;
 // **************               check_is_close                 ************** //
 // ************************************************************************** //
 
-struct BOOST_TEST_DECL check_is_close_t {
-    // Public typedefs
-    typedef assertion_result result_type;
+struct BOOST_TEST_DECL check_is_close_t
+{
+	// Public typedefs
+	typedef assertion_result result_type;
 
-    template<typename FPT1, typename FPT2, typename ToleranceType>
-    assertion_result
-    operator()( FPT1 left, FPT2 right, ToleranceType tolerance ) const
-    {
-        fpc::close_at_tolerance<typename tt_detail::comp_supertype<FPT1,FPT2>::type> pred( tolerance, fpc::FPC_STRONG );
+	template<typename FPT1, typename FPT2, typename ToleranceType>
+	assertion_result
+	operator()( FPT1 left, FPT2 right, ToleranceType tolerance ) const
+	{
+		fpc::close_at_tolerance<typename tt_detail::comp_supertype<FPT1,FPT2>::type> pred( tolerance, fpc::FPC_STRONG );
 
-        assertion_result ar( pred( left, right ) );
+		assertion_result ar( pred( left, right ) );
 
-        if( !ar )
-            ar.message() << pred.tested_rel_diff();
+		if( !ar )
+			ar.message() << pred.tested_rel_diff();
 
-        return ar;
-    }
+		return ar;
+	}
 };
 
 //____________________________________________________________________________//
@@ -318,7 +358,7 @@ template<typename FPT1, typename FPT2, typename ToleranceType>
 inline assertion_result
 check_is_close( FPT1 left, FPT2 right, ToleranceType tolerance )
 {
-    return check_is_close_t()( left, right, tolerance );
+	return check_is_close_t()( left, right, tolerance );
 }
 
 //____________________________________________________________________________//
@@ -327,16 +367,17 @@ check_is_close( FPT1 left, FPT2 right, ToleranceType tolerance )
 // **************               check_is_small                 ************** //
 // ************************************************************************** //
 
-struct BOOST_TEST_DECL check_is_small_t {
-    // Public typedefs
-    typedef bool result_type;
+struct BOOST_TEST_DECL check_is_small_t
+{
+	// Public typedefs
+	typedef bool result_type;
 
-    template<typename FPT>
-    bool
-    operator()( FPT fpv, FPT tolerance ) const
-    {
-        return fpc::is_small( fpv, tolerance );
-    }
+	template<typename FPT>
+	bool
+	operator()( FPT fpv, FPT tolerance ) const
+	{
+		return fpc::is_small( fpv, tolerance );
+	}
 };
 
 //____________________________________________________________________________//
@@ -345,7 +386,7 @@ template<typename FPT>
 inline bool
 check_is_small( FPT fpv, FPT tolerance )
 {
-    return fpc::is_small( fpv, tolerance );
+	return fpc::is_small( fpv, tolerance );
 }
 
 //____________________________________________________________________________//

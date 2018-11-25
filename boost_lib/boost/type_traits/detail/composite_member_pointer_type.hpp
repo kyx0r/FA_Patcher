@@ -32,34 +32,34 @@ template<class T, class U> struct composite_member_pointer_type;
 
 template<class C, class T> struct composite_member_pointer_type<T C::*, decltype(nullptr)>
 {
-    typedef T C::* type;
+	typedef T C::* type;
 };
 
 template<class C, class T> struct composite_member_pointer_type<decltype(nullptr), T C::*>
 {
-    typedef T C::* type;
+	typedef T C::* type;
 };
 
 template<> struct composite_member_pointer_type<decltype(nullptr), decltype(nullptr)>
 {
-    typedef decltype(nullptr) type;
+	typedef decltype(nullptr) type;
 };
 
 #else
 
 template<class C, class T> struct composite_member_pointer_type<T C::*, std::nullptr_t>
 {
-    typedef T C::* type;
+	typedef T C::* type;
 };
 
 template<class C, class T> struct composite_member_pointer_type<std::nullptr_t, T C::*>
 {
-    typedef T C::* type;
+	typedef T C::* type;
 };
 
 template<> struct composite_member_pointer_type<std::nullptr_t, std::nullptr_t>
 {
-    typedef std::nullptr_t type;
+	typedef std::nullptr_t type;
 };
 
 #endif
@@ -70,40 +70,40 @@ template<class C1, class C2> struct common_member_class;
 
 template<class C> struct common_member_class<C, C>
 {
-    typedef C type;
+	typedef C type;
 };
 
 template<class C1, class C2> struct common_member_class
 {
-    typedef typename boost::conditional<
+	typedef typename boost::conditional<
 
-        boost::is_base_of<C1, C2>::value,
-        C2,
-        typename boost::conditional<boost::is_base_of<C2, C1>::value, C1, void>::type
+	boost::is_base_of<C1, C2>::value,
+	      C2,
+	      typename boost::conditional<boost::is_base_of<C2, C1>::value, C1, void>::type
 
-    >::type type;
+	      >::type type;
 };
 
-//This indirection avoids compilation errors on some older 
+//This indirection avoids compilation errors on some older
 //compilers like MSVC 7.1
 template<class CT, class CB>
 struct common_member_class_pointer_to_member
 {
-    typedef CT CB::* type;
+	typedef CT CB::* type;
 };
 
 template<class C1, class T1, class C2, class T2> struct composite_member_pointer_type<T1 C1::*, T2 C2::*>
 {
 private:
 
-    typedef typename composite_pointer_type<T1*, T2*>::type CPT;
-    typedef typename boost::remove_pointer<CPT>::type CT;
+	typedef typename composite_pointer_type<T1*, T2*>::type CPT;
+	typedef typename boost::remove_pointer<CPT>::type CT;
 
-    typedef typename common_member_class<C1, C2>::type CB;
+	typedef typename common_member_class<C1, C2>::type CB;
 
 public:
 
-    typedef typename common_member_class_pointer_to_member<CT, CB>::type type;
+	typedef typename common_member_class_pointer_to_member<CT, CB>::type type;
 };
 
 } // namespace type_traits_detail

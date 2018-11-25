@@ -12,7 +12,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ is_rvalue_reference_member_hpp
 /*`[section:ref_is_rvalue_reference_member is_rvalue_reference_member]
@@ -29,18 +32,20 @@ struct is_rvalue_reference_member;
 //<-
 template<typename T>
 struct is_rvalue_reference_member : detail::traits<
-    detail::shallow_decay<T>>::is_rvalue_reference_member {
+	detail::shallow_decay<T>>::is_rvalue_reference_member
+{
 
-    using type = typename detail::traits<
-        detail::shallow_decay<T>>::is_rvalue_reference_member;
+	using type = typename detail::traits<
+	             detail::shallow_decay<T>>::is_rvalue_reference_member;
 };
 
 #ifdef BOOST_CLBL_TRTS_DISABLE_VARIABLE_TEMPLATES
 
 template<typename T>
-struct is_rvalue_reference_member_v {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "Variable templates not supported on this compiler.");
+struct is_rvalue_reference_member_v
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "Variable templates not supported on this compiler.");
 };
 
 #else
@@ -56,7 +61,8 @@ constexpr bool is_rvalue_reference_member_v = //see below
 
 #endif
 
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`
@@ -64,7 +70,7 @@ constexpr bool is_rvalue_reference_member_v = //see below
 * none
 
 [heading Behavior]
-* `is_rvalue_reference_member<T>::value` is `true` when either: 
+* `is_rvalue_reference_member<T>::value` is `true` when either:
   * `T` is a function type with a '&&' member qualifier
   * `T` is a pointer to a member function with a '&&' member qualifiers
   * `T` is a function object with a non-overloaded `operator()`, where the `operator()` has a '&&' member qualifier

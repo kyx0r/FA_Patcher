@@ -24,34 +24,35 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! The in_range functor
 struct in_range_fun
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& value, std::pair< U, U > const& rng) const
-    {
-        return op(value, rng, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
-    }
+	template< typename T, typename U >
+	bool operator() (T const& value, std::pair< U, U > const& rng) const
+	{
+		return op(value, rng, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
+	}
 
 private:
-    template< typename T, typename U >
-    static bool op(T const& value, std::pair< U, U > const& rng, mpl::false_ const&)
-    {
-        return (value >= rng.first && value < rng.second);
-    }
-    template< typename T, typename U >
-    static bool op(T const& value, std::pair< U, U > const& rng, mpl::true_ const&)
-    {
-        typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
-        return (static_cast< common_integral_type >(value) >= static_cast< common_integral_type >(rng.first))
-            && (static_cast< common_integral_type >(value) < static_cast< common_integral_type >(rng.second));
-    }
+	template< typename T, typename U >
+	static bool op(T const& value, std::pair< U, U > const& rng, mpl::false_ const&)
+	{
+		return (value >= rng.first && value < rng.second);
+	}
+	template< typename T, typename U >
+	static bool op(T const& value, std::pair< U, U > const& rng, mpl::true_ const&)
+	{
+		typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
+		return (static_cast< common_integral_type >(value) >= static_cast< common_integral_type >(rng.first))
+		       && (static_cast< common_integral_type >(value) < static_cast< common_integral_type >(rng.second));
+	}
 };
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

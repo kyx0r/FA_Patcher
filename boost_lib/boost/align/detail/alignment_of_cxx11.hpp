@@ -10,9 +10,12 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <type_traits>
 
-namespace boost {
-namespace alignment {
-namespace detail {
+namespace boost
+{
+namespace alignment
+{
+namespace detail
+{
 
 using std::alignment_of;
 

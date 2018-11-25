@@ -19,7 +19,9 @@
 #include <boost/geometry/util/bare_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -39,7 +41,7 @@ namespace traits
 template <typename Geometry, typename Enable = void>
 struct tag
 {
-    typedef void type;
+	typedef void type;
 };
 
 } // namespace traits
@@ -58,12 +60,13 @@ struct tag
 template <typename Geometry>
 struct tag
 {
-    typedef typename traits::tag
-        <
-            typename geometry::util::bare_type<Geometry>::type
-        >::type type;
+	typedef typename traits::tag
+	<
+	typename geometry::util::bare_type<Geometry>::type
+	>::type type;
 };
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_TAG_HPP

@@ -34,158 +34,175 @@
 
 
 
-namespace boost { namespace program_options { namespace detail {
+namespace boost
+{
+namespace program_options
+{
+namespace detail
+{
 
-    /** Standalone parser for config files in ini-line format.
-        The parser is a model of single-pass lvalue iterator, and
-        default constructor creates past-the-end-iterator. The typical usage is:
-        config_file_iterator i(is, ... set of options ...), e;
-        for(; i !=e; ++i) {
-            *i;
-        }
-        
-        Syntax conventions:
+/** Standalone parser for config files in ini-line format.
+    The parser is a model of single-pass lvalue iterator, and
+    default constructor creates past-the-end-iterator. The typical usage is:
+    config_file_iterator i(is, ... set of options ...), e;
+    for(; i !=e; ++i) {
+        *i;
+    }
 
-        - config file can not contain positional options
-        - '#' is comment character: it is ignored together with
-          the rest of the line.
-        - variable assignments are in the form
-          name '=' value.
-          spaces around '=' are trimmed.
-        - Section names are given in brackets. 
+    Syntax conventions:
 
-         The actual option name is constructed by combining current section
-         name and specified option name, with dot between. If section_name 
-         already contains dot at the end, new dot is not inserted. For example:
-         @verbatim
-         [gui.accessibility]
-         visual_bell=yes
-         @endverbatim
-         will result in option "gui.accessibility.visual_bell" with value
-         "yes" been returned.
+    - config file can not contain positional options
+    - '#' is comment character: it is ignored together with
+      the rest of the line.
+    - variable assignments are in the form
+      name '=' value.
+      spaces around '=' are trimmed.
+    - Section names are given in brackets.
 
-         TODO: maybe, we should just accept a pointer to options_description
-         class.
-     */    
-    class BOOST_PROGRAM_OPTIONS_DECL common_config_file_iterator
-        : public eof_iterator<common_config_file_iterator, option>
-    {
-    public:
-        common_config_file_iterator() { found_eof(); }
-        common_config_file_iterator(
-            const std::set<std::string>& allowed_options,
-            bool allow_unregistered = false);
+     The actual option name is constructed by combining current section
+     name and specified option name, with dot between. If section_name
+     already contains dot at the end, new dot is not inserted. For example:
+     @verbatim
+     [gui.accessibility]
+     visual_bell=yes
+     @endverbatim
+     will result in option "gui.accessibility.visual_bell" with value
+     "yes" been returned.
 
-        virtual ~common_config_file_iterator() {}
+     TODO: maybe, we should just accept a pointer to options_description
+     class.
+ */
+class BOOST_PROGRAM_OPTIONS_DECL common_config_file_iterator
+	: public eof_iterator<common_config_file_iterator, option>
+{
+public:
+	common_config_file_iterator()
+	{
+		found_eof();
+	}
+	common_config_file_iterator(
+	    const std::set<std::string>& allowed_options,
+	    bool allow_unregistered = false);
 
-    public: // Method required by eof_iterator
-        
-        void get();
-        
+	virtual ~common_config_file_iterator() {}
+
+public: // Method required by eof_iterator
+
+	void get();
+
 #if BOOST_WORKAROUND(_MSC_VER, <= 1900)
-        void decrement() {}
-        void advance(difference_type) {}
+	void decrement() {}
+	void advance(difference_type) {}
 #endif
 
-    protected: // Stubs for derived classes
+protected: // Stubs for derived classes
 
-        // Obtains next line from the config file
-        // Note: really, this design is a bit ugly
-        // The most clean thing would be to pass 'line_iterator' to
-        // constructor of this class, but to avoid templating this class
-        // we'd need polymorphic iterator, which does not exist yet.
-        virtual bool getline(std::string&) { return false; }
-        
-    private:
-        /** Adds another allowed option. If the 'name' ends with
-            '*', then all options with the same prefix are
-            allowed. For example, if 'name' is 'foo*', then 'foo1' and
-            'foo_bar' are allowed. */
-        void add_option(const char* name);
+	// Obtains next line from the config file
+	// Note: really, this design is a bit ugly
+	// The most clean thing would be to pass 'line_iterator' to
+	// constructor of this class, but to avoid templating this class
+	// we'd need polymorphic iterator, which does not exist yet.
+	virtual bool getline(std::string&)
+	{
+		return false;
+	}
 
-        // Returns true if 's' is a registered option name.
-        bool allowed_option(const std::string& s) const; 
+private:
+	/** Adds another allowed option. If the 'name' ends with
+	    '*', then all options with the same prefix are
+	    allowed. For example, if 'name' is 'foo*', then 'foo1' and
+	    'foo_bar' are allowed. */
+	void add_option(const char* name);
 
-        // That's probably too much data for iterator, since
-        // it will be copied, but let's not bother for now.
-        std::set<std::string> allowed_options;
-        // Invariant: no element is prefix of other element.
-        std::set<std::string> allowed_prefixes;
-        std::string m_prefix;
-        bool m_allow_unregistered;
-    };
+	// Returns true if 's' is a registered option name.
+	bool allowed_option(const std::string& s) const;
 
-    template<class charT>
-    class basic_config_file_iterator : public common_config_file_iterator {
-    public:
-        basic_config_file_iterator()
-        {
-            found_eof();
-        }
+	// That's probably too much data for iterator, since
+	// it will be copied, but let's not bother for now.
+	std::set<std::string> allowed_options;
+	// Invariant: no element is prefix of other element.
+	std::set<std::string> allowed_prefixes;
+	std::string m_prefix;
+	bool m_allow_unregistered;
+};
 
-        /** Creates a config file parser for the specified stream.            
-        */
-        basic_config_file_iterator(std::basic_istream<charT>& is, 
-                                   const std::set<std::string>& allowed_options,
-                                   bool allow_unregistered = false); 
+template<class charT>
+class basic_config_file_iterator : public common_config_file_iterator
+{
+public:
+	basic_config_file_iterator()
+	{
+		found_eof();
+	}
 
-    private: // base overrides
+	/** Creates a config file parser for the specified stream.
+	*/
+	basic_config_file_iterator(std::basic_istream<charT>& is,
+	                           const std::set<std::string>& allowed_options,
+	                           bool allow_unregistered = false);
 
-        bool getline(std::string&);
+private: // base overrides
 
-    private: // internal data
-        shared_ptr<std::basic_istream<charT> > is;
-    };
-    
-    typedef basic_config_file_iterator<char> config_file_iterator;
-    typedef basic_config_file_iterator<wchar_t> wconfig_file_iterator;
+	bool getline(std::string&);
 
+private: // internal data
+	shared_ptr<std::basic_istream<charT> > is;
+};
 
-    struct null_deleter
-    {
-        void operator()(void const *) const {}
-    };
+typedef basic_config_file_iterator<char> config_file_iterator;
+typedef basic_config_file_iterator<wchar_t> wconfig_file_iterator;
 
 
-    template<class charT>
-    basic_config_file_iterator<charT>::
-    basic_config_file_iterator(std::basic_istream<charT>& is, 
-                               const std::set<std::string>& allowed_options,
-                               bool allow_unregistered)
-    : common_config_file_iterator(allowed_options, allow_unregistered)
-    {
-        this->is.reset(&is, null_deleter());                 
-        get();
-    }
+struct null_deleter
+{
+	void operator()(void const *) const {}
+};
 
-    // Specializing this function for wchar_t causes problems on
-    // borland and vc7, as well as on metrowerks. On the first two
-    // I don't know a workaround, so make use of 'to_internal' to
-    // avoid specialization.
-    template<class charT>
-    bool
-    basic_config_file_iterator<charT>::getline(std::string& s)
-    {
-        std::basic_string<charT> in;
-        if (std::getline(*is, in)) {
-            s = to_internal(in);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
-    // Specialization is needed to workaround getline bug on Comeau.
+template<class charT>
+basic_config_file_iterator<charT>::
+basic_config_file_iterator(std::basic_istream<charT>& is,
+                           const std::set<std::string>& allowed_options,
+                           bool allow_unregistered)
+	: common_config_file_iterator(allowed_options, allow_unregistered)
+{
+	this->is.reset(&is, null_deleter());
+	get();
+}
+
+// Specializing this function for wchar_t causes problems on
+// borland and vc7, as well as on metrowerks. On the first two
+// I don't know a workaround, so make use of 'to_internal' to
+// avoid specialization.
+template<class charT>
+bool
+basic_config_file_iterator<charT>::getline(std::string& s)
+{
+	std::basic_string<charT> in;
+	if (std::getline(*is, in))
+	{
+		s = to_internal(in);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+// Specialization is needed to workaround getline bug on Comeau.
 #if BOOST_WORKAROUND(__COMO_VERSION__, BOOST_TESTED_AT(4303)) || \
         (defined(__sgi) && BOOST_WORKAROUND(_COMPILER_VERSION, BOOST_TESTED_AT(741)))
-    template<>
-    bool
-    basic_config_file_iterator<wchar_t>::getline(std::string& s);
+template<>
+bool
+basic_config_file_iterator<wchar_t>::getline(std::string& s);
 #endif
 
-    
 
-}}}
+
+}
+}
+}
 
 #ifdef BOOST_MSVC
 # pragma warning(pop)

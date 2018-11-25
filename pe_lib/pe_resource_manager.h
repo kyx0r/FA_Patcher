@@ -19,7 +19,7 @@ class pe_resource_manager : public pe_resource_viewer
 public:
 	//Constructor from root resource directory
 	explicit pe_resource_manager(resource_directory& root_directory);
-	
+
 	resource_directory& get_root_directory();
 
 public: //Resource editing
@@ -29,7 +29,7 @@ public: //Resource editing
 	//Returns true if resource was deleted
 	bool remove_resource_type(resource_type type);
 	bool remove_resource(const std::wstring& root_name);
-	
+
 	//Removes all resource languages by resource type/root name and name
 	//Deletes only one entry of given type and name
 	//Returns true if resource was deleted
@@ -51,7 +51,7 @@ public: //Resource editing
 	//Returns true if resource was deleted
 	bool remove_resource(resource_type type, uint32_t id, uint32_t language);
 	bool remove_resource(const std::wstring& root_name, uint32_t id, uint32_t language);
-	
+
 	//Adds resource. If resource already exists, replaces it
 	//timestamp will be used for directories that will be added
 	void add_resource(const std::string& data, resource_type type, const std::wstring& name, uint32_t language, uint32_t codepage = 0, uint32_t timestamp = 0);
@@ -64,20 +64,20 @@ public: //Resource editing
 public:
 	//Helpers to add/replace resource
 	void add_resource(const std::string& data, resource_type type,
-		resource_directory_entry& new_entry,
-		const resource_directory::entry_finder& finder,
-		uint32_t language, uint32_t codepage, uint32_t timestamp);
+	                  resource_directory_entry& new_entry,
+	                  const resource_directory::entry_finder& finder,
+	                  uint32_t language, uint32_t codepage, uint32_t timestamp);
 
 	void add_resource(const std::string& data, const std::wstring& root_name,
-		resource_directory_entry& new_entry,
-		const resource_directory::entry_finder& finder,
-		uint32_t language, uint32_t codepage, uint32_t timestamp);
+	                  resource_directory_entry& new_entry,
+	                  const resource_directory::entry_finder& finder,
+	                  uint32_t language, uint32_t codepage, uint32_t timestamp);
 
 	void add_resource(const std::string& data, resource_directory_entry& new_root_entry,
-		const resource_directory::entry_finder& root_finder,
-		resource_directory_entry& new_entry,
-		const resource_directory::entry_finder& finder,
-		uint32_t language, uint32_t codepage, uint32_t timestamp);
+	                  const resource_directory::entry_finder& root_finder,
+	                  resource_directory_entry& new_entry,
+	                  const resource_directory::entry_finder& finder,
+	                  uint32_t language, uint32_t codepage, uint32_t timestamp);
 
 private:
 	//Root resource directory. We're not copying it, because it might be heavy

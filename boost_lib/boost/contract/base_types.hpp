@@ -57,7 +57,7 @@ used.
 #define BOOST_CONTRACT_BASE_TYPES(...)
 
 #elif !BOOST_PP_VARIADICS
-    
+
 #define BOOST_CONTRACT_BASE_TYPES \
 BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manually_program_base_types
 

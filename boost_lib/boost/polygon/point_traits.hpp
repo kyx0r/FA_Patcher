@@ -14,33 +14,40 @@
 
 #include "isotropy.hpp"
 
-namespace boost {
-namespace polygon {
+namespace boost
+{
+namespace polygon
+{
 
 template <typename PointType>
-struct point_traits {
-  typedef PointType point_type;
-  typedef typename point_type::coordinate_type coordinate_type;
+struct point_traits
+{
+	typedef PointType point_type;
+	typedef typename point_type::coordinate_type coordinate_type;
 
-  static coordinate_type get(
-      const point_type& point, orientation_2d orient) {
-    return point.get(orient);
-  }
+	static coordinate_type get(
+	    const point_type& point, orientation_2d orient)
+	{
+		return point.get(orient);
+	}
 };
 
 template <typename PointType>
-struct point_mutable_traits {
-  typedef PointType point_type;
-  typedef typename point_type::coordinate_type coordinate_type;
+struct point_mutable_traits
+{
+	typedef PointType point_type;
+	typedef typename point_type::coordinate_type coordinate_type;
 
-  static void set(
-      point_type& point, orientation_2d orient, coordinate_type value) {
-    point.set(orient, value);
-  }
+	static void set(
+	    point_type& point, orientation_2d orient, coordinate_type value)
+	{
+		point.set(orient, value);
+	}
 
-  static point_type construct(coordinate_type x, coordinate_type y) {
-    return point_type(x, y);
-  }
+	static point_type construct(coordinate_type x, coordinate_type y)
+	{
+		return point_type(x, y);
+	}
 };
 }  // polygon
 }  // boost

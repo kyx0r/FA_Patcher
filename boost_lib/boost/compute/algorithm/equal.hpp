@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/mismatch.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns \c true if the range [\p first1, \p last1) and the range
 /// beginning at \p first2 are equal.
@@ -28,10 +30,10 @@ inline bool equal(InputIterator1 first1,
                   InputIterator2 first2,
                   command_queue &queue = system::default_queue())
 {
-    return ::boost::compute::mismatch(first1,
-                                      last1,
-                                      first2,
-                                      queue).first == last1;
+	return ::boost::compute::mismatch(first1,
+	                                  last1,
+	                                  first2,
+	                                  queue).first == last1;
 }
 
 /// \overload
@@ -42,11 +44,12 @@ inline bool equal(InputIterator1 first1,
                   InputIterator2 last2,
                   command_queue &queue = system::default_queue())
 {
-    if(std::distance(first1, last1) != std::distance(first2, last2)){
-        return false;
-    }
+	if(std::distance(first1, last1) != std::distance(first2, last2))
+	{
+		return false;
+	}
 
-    return ::boost::compute::equal(first1, last1, first2, queue);
+	return ::boost::compute::equal(first1, last1, first2, queue);
 }
 
 } // end compute namespace

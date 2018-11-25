@@ -11,7 +11,12 @@
 # include <boost/detail/workaround.hpp>
 # include <boost/python/detail/type_traits.hpp>
 
-namespace boost { namespace python { namespace objects {
+namespace boost
+{
+namespace python
+{
+namespace objects
+{
 
 typedef type_info class_id;
 using python::type_id;
@@ -36,31 +41,31 @@ BOOST_PYTHON_DECL void add_cast(
 template <class T>
 struct polymorphic_id_generator
 {
-    static dynamic_id_t execute(void* p_)
-    {
-        T* p = static_cast<T*>(p_);
-        return std::make_pair(dynamic_cast<void*>(p), class_id(typeid(*p)));
-    }
+	static dynamic_id_t execute(void* p_)
+	{
+		T* p = static_cast<T*>(p_);
+		return std::make_pair(dynamic_cast<void*>(p), class_id(typeid(*p)));
+	}
 };
 
 // now, the non-polymorphic case.
 template <class T>
 struct non_polymorphic_id_generator
 {
-    static dynamic_id_t execute(void* p_)
-    {
-        return std::make_pair(p_, python::type_id<T>());
-    }
+	static dynamic_id_t execute(void* p_)
+	{
+		return std::make_pair(p_, python::type_id<T>());
+	}
 };
 
 // Now the generalized selector
 template <class T>
 struct dynamic_id_generator
-  : mpl::if_<
-        boost::python::detail::is_polymorphic<T>
-        , boost::python::objects::polymorphic_id_generator<T>
-        , boost::python::objects::non_polymorphic_id_generator<T>
-    >
+	: mpl::if_<
+	  boost::python::detail::is_polymorphic<T>
+	, boost::python::objects::polymorphic_id_generator<T>
+	, boost::python::objects::non_polymorphic_id_generator<T>
+	  >
 {};
 
 // Register the dynamic id function for T with the type-conversion
@@ -68,9 +73,9 @@ struct dynamic_id_generator
 template <class T>
 void register_dynamic_id(T* = 0)
 {
-    typedef typename dynamic_id_generator<T>::type generator;
-    register_dynamic_id_aux(
-        python::type_id<T>(), &generator::execute);
+	typedef typename dynamic_id_generator<T>::type generator;
+	register_dynamic_id_aux(
+	    python::type_id<T>(), &generator::execute);
 }
 
 //
@@ -82,31 +87,31 @@ void register_dynamic_id(T* = 0)
 template <class Source, class Target>
 struct dynamic_cast_generator
 {
-    static void* execute(void* source)
-    {
-        return dynamic_cast<Target*>(
-            static_cast<Source*>(source));
-    }
-        
+	static void* execute(void* source)
+	{
+		return dynamic_cast<Target*>(
+		           static_cast<Source*>(source));
+	}
+
 };
 
 template <class Source, class Target>
 struct implicit_cast_generator
 {
-    static void* execute(void* source)
-    {
-        Target* result = static_cast<Source*>(source);
-        return result;
-    }
+	static void* execute(void* source)
+	{
+		Target* result = static_cast<Source*>(source);
+		return result;
+	}
 };
 
 template <class Source, class Target>
 struct cast_generator
-  : mpl::if_<
-        boost::python::detail::is_base_and_derived<Target,Source>
-      , implicit_cast_generator<Source,Target>
-      , dynamic_cast_generator<Source,Target>
-    >
+	: mpl::if_<
+	  boost::python::detail::is_base_and_derived<Target,Source>
+	, implicit_cast_generator<Source,Target>
+	, dynamic_cast_generator<Source,Target>
+	  >
 {
 };
 
@@ -116,16 +121,18 @@ inline void register_conversion(
     // These parameters shouldn't be used; they're an MSVC bug workaround
     , Source* = 0, Target* = 0)
 {
-    typedef typename cast_generator<Source,Target>::type generator;
+	typedef typename cast_generator<Source,Target>::type generator;
 
-    add_cast(
-        python::type_id<Source>()
-      , python::type_id<Target>()
-      , &generator::execute
-      , is_downcast
-    );
+	add_cast(
+	    python::type_id<Source>()
+	    , python::type_id<Target>()
+	    , &generator::execute
+	    , is_downcast
+	);
 }
 
-}}} // namespace boost::python::object
+}
+}
+} // namespace boost::python::object
 
 #endif // INHERITANCE_DWA200216_HPP

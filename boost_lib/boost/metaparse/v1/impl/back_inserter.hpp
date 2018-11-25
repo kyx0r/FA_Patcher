@@ -10,22 +10,22 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct back_inserter
-        {
-          typedef back_inserter type;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct back_inserter
+{
+	typedef back_inserter type;
 
-          template <class T0, class T1>
-          struct apply : boost::mpl::push_back<T0, T1> {};
-        };
-      }
-    }
-  }
+	template <class T0, class T1>
+	struct apply : boost::mpl::push_back<T0, T1> {};
+};
+}
+}
+}
 }
 
 #endif

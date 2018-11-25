@@ -40,20 +40,28 @@
 #define BOOST_GEOMETRY_PROJECTIONS_PJ_MSFN_HPP
 
 
-namespace boost { namespace geometry { namespace projections {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
 
-namespace detail {
+namespace detail
+{
 
 
 /* determine constant small m */
 template <typename T>
 inline T pj_msfn(T const& sinphi, T const& cosphi, T const& es)
 {
-    return (cosphi / sqrt (1. - es * sinphi * sinphi));
+	return (cosphi / sqrt (1. - es * sinphi * sinphi));
 }
 
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif

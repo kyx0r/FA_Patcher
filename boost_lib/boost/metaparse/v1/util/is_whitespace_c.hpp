@@ -10,22 +10,22 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <char C>
-        struct is_whitespace_c : boost::mpl::false_ {};
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <char C>
+struct is_whitespace_c : boost::mpl::false_ {};
 
-        template <> struct is_whitespace_c<' '> : boost::mpl::true_ {};
-        template <> struct is_whitespace_c<'\r'> : boost::mpl::true_ {};
-        template <> struct is_whitespace_c<'\n'> : boost::mpl::true_ {};
-        template <> struct is_whitespace_c<'\t'> : boost::mpl::true_ {};
-      }
-    }
-  }
+template <> struct is_whitespace_c<' '> : boost::mpl::true_ {};
+template <> struct is_whitespace_c<'\r'> : boost::mpl::true_ {};
+template <> struct is_whitespace_c<'\n'> : boost::mpl::true_ {};
+template <> struct is_whitespace_c<'\t'> : boost::mpl::true_ {};
+}
+}
+}
 }
 
 #endif

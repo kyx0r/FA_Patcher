@@ -25,7 +25,7 @@
 #define BOOST_LOCAL_FUNCTION_AUX_DECL_OK_(id, typename01, decl_traits) \
     BOOST_LOCAL_FUNCTION_AUX_CODE_RESULT(id, typename01, decl_traits) \
     BOOST_LOCAL_FUNCTION_AUX_CODE_BIND(id, typename01, decl_traits) \
-    BOOST_LOCAL_FUNCTION_AUX_CODE_FUNCTOR(id, typename01, decl_traits) 
+    BOOST_LOCAL_FUNCTION_AUX_CODE_FUNCTOR(id, typename01, decl_traits)
 
 #define BOOST_LOCAL_FUNCTION_AUX_DECL_ERROR_(id, typename01, decl_traits) \
     BOOST_PP_IIF(BOOST_PP_LIST_IS_CONS( \
@@ -50,7 +50,7 @@
 // Undefine local function bound args global variable. Actual declaration of
 // this variable is made using SFINAE mechanisms by each local function macro.
 extern boost::scope_exit::detail::undeclared
-        BOOST_LOCAL_FUNCTION_AUX_DECL_ARGS_VAR;
+BOOST_LOCAL_FUNCTION_AUX_DECL_ARGS_VAR;
 
 // sign_params: parsed parenthesized params.
 #define BOOST_LOCAL_FUNCTION_AUX_DECL(id, typename01, decl_traits) \

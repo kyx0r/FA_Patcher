@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::range;
-  }
+namespace metaparse
+{
+using v1::range;
+}
 }
 
 #endif

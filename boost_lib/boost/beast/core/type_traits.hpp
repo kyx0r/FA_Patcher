@@ -16,8 +16,10 @@
 #include <boost/asio/buffer.hpp>
 #include <type_traits>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 //------------------------------------------------------------------------------
 //
@@ -31,7 +33,7 @@ namespace beast {
     handler, and is also callable with the specified signature.
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
 
@@ -52,8 +54,8 @@ template<class T, class Signature>
 using is_completion_handler = std::integral_constant<bool, ...>;
 #else
 using is_completion_handler = std::integral_constant<bool,
-    std::is_move_constructible<typename std::decay<T>::type>::value &&
-    detail::is_invocable<T, Signature>::value>;
+      std::is_move_constructible<typename std::decay<T>::type>::value &&
+      detail::is_invocable<T, Signature>::value>;
 #endif
 
 //------------------------------------------------------------------------------
@@ -66,7 +68,7 @@ using is_completion_handler = std::integral_constant<bool,
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` has the member
-    function with the correct signature, else type will be `std::false_type`. 
+    function with the correct signature, else type will be `std::false_type`.
 
     @par Example
 
@@ -111,15 +113,15 @@ using is_completion_handler = std::integral_constant<bool,
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct has_get_executor : std::integral_constant<bool, ...>{};
+struct has_get_executor : std::integral_constant<bool, ...> {};
 #else
 template<class T, class = void>
 struct has_get_executor : std::false_type {};
 
 template<class T>
 struct has_get_executor<T, beast::detail::void_t<decltype(
-        std::declval<T&>().get_executor(),
-    (void)0)>> : std::true_type {};
+    std::declval<T&>().get_executor(),
+(void)0)>> : std::true_type {};
 #endif
 
 /** Alias for `T::lowest_layer_type` if it exists, else `T`
@@ -161,12 +163,12 @@ using get_lowest_layer = typename detail::get_lowest_layer_helper<T>::type;
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
-    
+
     Use with `static_assert`:
-    
+
     @code
     template<class AsyncReadStream>
     void f(AsyncReadStream& stream)
@@ -175,9 +177,9 @@ using get_lowest_layer = typename detail::get_lowest_layer_helper<T>::type;
             "AsyncReadStream requirements not met");
     ...
     @endcode
-    
+
     Use with `std::enable_if` (SFINAE):
-    
+
     @code
         template<class AsyncReadStream>
         typename std::enable_if<is_async_read_stream<AsyncReadStream>::value>::type
@@ -186,7 +188,7 @@ using get_lowest_layer = typename detail::get_lowest_layer_helper<T>::type;
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct is_async_read_stream : std::integral_constant<bool, ...>{};
+struct is_async_read_stream : std::integral_constant<bool, ...> {};
 #else
 template<class T, class = void>
 struct is_async_read_stream : std::false_type {};
@@ -196,16 +198,16 @@ struct is_async_read_stream<T, detail::void_t<decltype(
     std::declval<T>().async_read_some(
         std::declval<detail::MutableBufferSequence>(),
         std::declval<detail::ReadHandler>()),
-            (void)0)>> : std::integral_constant<bool,
+    (void)0)>> : std::integral_constant<bool,
     has_get_executor<T>::value
-        > {};
+    > {};
 #endif
 
 /** Determine if `T` meets the requirements of @b AsyncWriteStream.
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
 
@@ -230,7 +232,7 @@ struct is_async_read_stream<T, detail::void_t<decltype(
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct is_async_write_stream : std::integral_constant<bool, ...>{};
+struct is_async_write_stream : std::integral_constant<bool, ...> {};
 #else
 template<class T, class = void>
 struct is_async_write_stream : std::false_type {};
@@ -240,16 +242,16 @@ struct is_async_write_stream<T, detail::void_t<decltype(
     std::declval<T>().async_write_some(
         std::declval<detail::ConstBufferSequence>(),
         std::declval<detail::WriteHandler>()),
-            (void)0)>> : std::integral_constant<bool,
+    (void)0)>> : std::integral_constant<bool,
     has_get_executor<T>::value
-        > {};
+    > {};
 #endif
 
 /** Determine if `T` meets the requirements of @b SyncReadStream.
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
 
@@ -274,7 +276,7 @@ struct is_async_write_stream<T, detail::void_t<decltype(
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct is_sync_read_stream : std::integral_constant<bool, ...>{};
+struct is_sync_read_stream : std::integral_constant<bool, ...> {};
 #else
 template<class T, class = void>
 struct is_sync_read_stream : std::false_type {};
@@ -282,18 +284,18 @@ struct is_sync_read_stream : std::false_type {};
 template<class T>
 struct is_sync_read_stream<T, detail::void_t<decltype(
     std::declval<std::size_t&>() = std::declval<T>().read_some(
-        std::declval<detail::MutableBufferSequence>()),
+                                       std::declval<detail::MutableBufferSequence>()),
     std::declval<std::size_t&>() = std::declval<T>().read_some(
-        std::declval<detail::MutableBufferSequence>(),
-        std::declval<boost::system::error_code&>()),
-            (void)0)>> : std::true_type {};
+                                       std::declval<detail::MutableBufferSequence>(),
+                                       std::declval<boost::system::error_code&>()),
+(void)0)>> : std::true_type {};
 #endif
 
 /** Determine if `T` meets the requirements of @b SyncWriteStream.
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
 
@@ -318,7 +320,7 @@ struct is_sync_read_stream<T, detail::void_t<decltype(
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct is_sync_write_stream : std::integral_constant<bool, ...>{};
+struct is_sync_write_stream : std::integral_constant<bool, ...> {};
 #else
 template<class T, class = void>
 struct is_sync_write_stream : std::false_type {};
@@ -326,18 +328,18 @@ struct is_sync_write_stream : std::false_type {};
 template<class T>
 struct is_sync_write_stream<T, detail::void_t<decltype(
     std::declval<std::size_t&>() = std::declval<T&>().write_some(
-        std::declval<detail::ConstBufferSequence>()),
+                                       std::declval<detail::ConstBufferSequence>()),
     std::declval<std::size_t&>() = std::declval<T&>().write_some(
-        std::declval<detail::ConstBufferSequence>(),
-        std::declval<boost::system::error_code&>()),
-            (void)0)>> : std::true_type {};
+                                       std::declval<detail::ConstBufferSequence>(),
+                                       std::declval<boost::system::error_code&>()),
+(void)0)>> : std::true_type {};
 #endif
 
 /** Determine if `T` meets the requirements of @b AsyncStream.
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
 
@@ -362,18 +364,18 @@ struct is_sync_write_stream<T, detail::void_t<decltype(
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct is_async_stream : std::integral_constant<bool, ...>{};
+struct is_async_stream : std::integral_constant<bool, ...> {};
 #else
 template<class T>
 using is_async_stream = std::integral_constant<bool,
-    is_async_read_stream<T>::value && is_async_write_stream<T>::value>;
+      is_async_read_stream<T>::value && is_async_write_stream<T>::value>;
 #endif
 
 /** Determine if `T` meets the requirements of @b SyncStream.
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
 
@@ -398,11 +400,11 @@ using is_async_stream = std::integral_constant<bool,
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct is_sync_stream : std::integral_constant<bool, ...>{};
+struct is_sync_stream : std::integral_constant<bool, ...> {};
 #else
 template<class T>
 using is_sync_stream = std::integral_constant<bool,
-    is_sync_read_stream<T>::value && is_sync_write_stream<T>::value>;
+      is_sync_read_stream<T>::value && is_sync_write_stream<T>::value>;
 #endif
 
 //------------------------------------------------------------------------------
@@ -415,7 +417,7 @@ using is_sync_stream = std::integral_constant<bool,
 
     Metafunctions are used to perform compile time checking of template
     types. This type will be `std::true_type` if `T` meets the requirements,
-    else the type will be `std::false_type`. 
+    else the type will be `std::false_type`.
 
     @par Example
 
@@ -440,7 +442,7 @@ using is_sync_stream = std::integral_constant<bool,
 */
 #if BOOST_BEAST_DOXYGEN
 template<class T>
-struct is_file : std::integral_constant<bool, ...>{};
+struct is_file : std::integral_constant<bool, ...> {};
 #else
 template<class T, class = void>
 struct is_file : std::false_type {};
@@ -454,24 +456,24 @@ struct is_file<T, detail::void_t<decltype(
         std::declval<file_mode>(),
         std::declval<error_code&>()),
     std::declval<std::uint64_t&>() = std::declval<T&>().size(
-        std::declval<error_code&>()),
+            std::declval<error_code&>()),
     std::declval<std::uint64_t&>() = std::declval<T&>().pos(
-        std::declval<error_code&>()),
+            std::declval<error_code&>()),
     std::declval<T&>().seek(
         std::declval<std::uint64_t>(),
         std::declval<error_code&>()),
     std::declval<std::size_t&>() = std::declval<T&>().read(
-        std::declval<void*>(),
-        std::declval<std::size_t>(),
-        std::declval<error_code&>()),
+                                       std::declval<void*>(),
+                                       std::declval<std::size_t>(),
+                                       std::declval<error_code&>()),
     std::declval<std::size_t&>() = std::declval<T&>().write(
-        std::declval<void const*>(),
-        std::declval<std::size_t>(),
-        std::declval<error_code&>()),
-            (void)0)>> : std::integral_constant<bool,
+                                       std::declval<void const*>(),
+                                       std::declval<std::size_t>(),
+                                       std::declval<error_code&>()),
+    (void)0)>> : std::integral_constant<bool,
     std::is_default_constructible<T>::value &&
     std::is_destructible<T>::value
-        > {};
+    > {};
 #endif
 
 } // beast

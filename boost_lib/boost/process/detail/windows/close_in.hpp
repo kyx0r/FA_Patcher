@@ -14,18 +14,28 @@
 #include <boost/winapi/handles.hpp>
 #include <boost/process/detail/handler_base.hpp>
 
-namespace boost { namespace process { namespace detail { namespace windows {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace windows
+{
 
 struct close_in : public ::boost::process::detail::handler_base
 {
-    template <class WindowsExecutor>
-    void on_setup(WindowsExecutor &e) const
-    {
-        e.startup_info.hStdInput = boost::winapi::INVALID_HANDLE_VALUE_;
-        e.startup_info.dwFlags  |= boost::winapi::STARTF_USESTDHANDLES_;
-    }
+	template <class WindowsExecutor>
+	void on_setup(WindowsExecutor &e) const
+	{
+		e.startup_info.hStdInput = boost::winapi::INVALID_HANDLE_VALUE_;
+		e.startup_info.dwFlags  |= boost::winapi::STARTF_USESTDHANDLES_;
+	}
 };
 
-}}}}
+}
+}
+}
+}
 
 #endif

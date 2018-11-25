@@ -15,11 +15,18 @@
 #ifndef BOOST_GEOMETRY_INDEX_DETAIL_META_HPP
 #define BOOST_GEOMETRY_INDEX_DETAIL_META_HPP
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
 template <typename T>
 struct is_range
-    : ::boost::mpl::aux::has_type< ::boost::range_iterator<T> >
+	: ::boost::mpl::aux::has_type< ::boost::range_iterator<T> >
 {};
 
 //template <typename T, typename V, bool IsRange>
@@ -37,6 +44,9 @@ struct is_range
 //    : is_range_of_convertible_values_impl<T, V, is_range<T>::value>
 //{};
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_META_HPP

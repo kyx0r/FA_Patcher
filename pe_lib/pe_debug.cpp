@@ -9,25 +9,25 @@ using namespace pe_win;
 //Default constructor
 debug_info::debug_info()
 	:characteristics_(0),
-	time_stamp_(0),
-	major_version_(0), minor_version_(0),
-	type_(0),
-	size_of_data_(0),
-	address_of_raw_data_(0),
-	pointer_to_raw_data_(0),
-	advanced_info_type_(advanced_info_none)
+	 time_stamp_(0),
+	 major_version_(0), minor_version_(0),
+	 type_(0),
+	 size_of_data_(0),
+	 address_of_raw_data_(0),
+	 pointer_to_raw_data_(0),
+	 advanced_info_type_(advanced_info_none)
 {}
 
 //Constructor from data
 debug_info::debug_info(const image_debug_directory& debug)
 	:characteristics_(debug.Characteristics),
-	time_stamp_(debug.TimeDateStamp),
-	major_version_(debug.MajorVersion), minor_version_(debug.MinorVersion),
-	type_(debug.Type),
-	size_of_data_(debug.SizeOfData),
-	address_of_raw_data_(debug.AddressOfRawData),
-	pointer_to_raw_data_(debug.PointerToRawData),
-	advanced_info_type_(advanced_info_none)
+	 time_stamp_(debug.TimeDateStamp),
+	 major_version_(debug.MajorVersion), minor_version_(debug.MinorVersion),
+	 type_(debug.Type),
+	 size_of_data_(debug.SizeOfData),
+	 address_of_raw_data_(debug.AddressOfRawData),
+	 pointer_to_raw_data_(debug.PointerToRawData),
+	 advanced_info_type_(advanced_info_none)
 {}
 
 //Returns debug characteristics
@@ -124,13 +124,13 @@ uint32_t debug_info::get_pointer_to_raw_data() const
 //Copy constructor
 debug_info::debug_info(const debug_info& info)
 	:characteristics_(info.characteristics_),
-	time_stamp_(info.time_stamp_),
-	major_version_(info.major_version_), minor_version_(info.minor_version_),
-	type_(info.type_),
-	size_of_data_(info.size_of_data_),
-	address_of_raw_data_(info.address_of_raw_data_),
-	pointer_to_raw_data_(info.pointer_to_raw_data_),
-	advanced_info_type_(info.advanced_info_type_)
+	 time_stamp_(info.time_stamp_),
+	 major_version_(info.major_version_), minor_version_(info.minor_version_),
+	 type_(info.type_),
+	 size_of_data_(info.size_of_data_),
+	 address_of_raw_data_(info.address_of_raw_data_),
+	 pointer_to_raw_data_(info.pointer_to_raw_data_),
+	 advanced_info_type_(info.advanced_info_type_)
 {
 	copy_advanced_info(info);
 }
@@ -312,7 +312,7 @@ pdb_7_0_info::pdb_7_0_info()
 //Constructor from data
 pdb_7_0_info::pdb_7_0_info(const CV_INFO_PDB70* info)
 	:age_(info->Age), guid_(info->Signature),
-	pdb_file_name_(reinterpret_cast<const char*>(info->PdbFileName)) //Must be checked before for null-termination
+	 pdb_file_name_(reinterpret_cast<const char*>(info->PdbFileName)) //Must be checked before for null-termination
 {}
 
 //Returns debug PDB 7.0 structure GUID
@@ -341,7 +341,7 @@ pdb_2_0_info::pdb_2_0_info()
 //Constructor from data
 pdb_2_0_info::pdb_2_0_info(const CV_INFO_PDB20* info)
 	:age_(info->Age), signature_(info->Signature),
-	pdb_file_name_(reinterpret_cast<const char*>(info->PdbFileName)) //Must be checked before for null-termination
+	 pdb_file_name_(reinterpret_cast<const char*>(info->PdbFileName)) //Must be checked before for null-termination
 {}
 
 //Returns debug PDB 2.0 structure signature
@@ -379,7 +379,7 @@ misc_debug_info::misc_debug_info(const image_debug_misc* info)
 #else
 		debug_data_unicode_ = pe_utils::from_ucs2(u16string(reinterpret_cast<const unicode16_t*>(info->Data), (info->Length - sizeof(image_debug_misc) + 1 /* BYTE[1] in the end of structure */) / 2));
 #endif
-		
+
 		pe_utils::strip_nullbytes(debug_data_unicode_); //Strip nullbytes in the end of string
 	}
 	else
@@ -422,25 +422,25 @@ const std::wstring& misc_debug_info::get_data_unicode() const
 //Default constructor
 coff_debug_info::coff_debug_info()
 	:number_of_symbols_(0),
-	lva_to_first_symbol_(0),
-	number_of_line_numbers_(0),
-	lva_to_first_line_number_(0),
-	rva_to_first_byte_of_code_(0),
-	rva_to_last_byte_of_code_(0),
-	rva_to_first_byte_of_data_(0),
-	rva_to_last_byte_of_data_(0)
+	 lva_to_first_symbol_(0),
+	 number_of_line_numbers_(0),
+	 lva_to_first_line_number_(0),
+	 rva_to_first_byte_of_code_(0),
+	 rva_to_last_byte_of_code_(0),
+	 rva_to_first_byte_of_data_(0),
+	 rva_to_last_byte_of_data_(0)
 {}
 
 //Constructor from data
 coff_debug_info::coff_debug_info(const image_coff_symbols_header* info)
 	:number_of_symbols_(info->NumberOfSymbols),
-	lva_to_first_symbol_(info->LvaToFirstSymbol),
-	number_of_line_numbers_(info->NumberOfLinenumbers),
-	lva_to_first_line_number_(info->LvaToFirstLinenumber),
-	rva_to_first_byte_of_code_(info->RvaToFirstByteOfCode),
-	rva_to_last_byte_of_code_(info->RvaToLastByteOfCode),
-	rva_to_first_byte_of_data_(info->RvaToFirstByteOfData),
-	rva_to_last_byte_of_data_(info->RvaToLastByteOfData)
+	 lva_to_first_symbol_(info->LvaToFirstSymbol),
+	 number_of_line_numbers_(info->NumberOfLinenumbers),
+	 lva_to_first_line_number_(info->LvaToFirstLinenumber),
+	 rva_to_first_byte_of_code_(info->RvaToFirstByteOfCode),
+	 rva_to_last_byte_of_code_(info->RvaToLastByteOfCode),
+	 rva_to_first_byte_of_data_(info->RvaToFirstByteOfData),
+	 rva_to_last_byte_of_data_(info->RvaToLastByteOfData)
 {}
 
 //Returns number of symbols
@@ -506,10 +506,10 @@ void coff_debug_info::add_symbol(const coff_symbol& sym)
 //Default constructor
 coff_debug_info::coff_symbol::coff_symbol()
 	:storage_class_(0),
-	index_(0),
-	section_number_(0), rva_(0),
-	type_(0),
-	is_filename_(false)
+	 index_(0),
+	 section_number_(0), rva_(0),
+	 type_(0),
+	 is_filename_(false)
 {}
 
 //Returns storage class
@@ -609,7 +609,7 @@ const debug_info_list get_debug_information(const pe_base& pe)
 
 	//Check the length in bytes of the section containing debug directory
 	if(pe.section_data_length_from_rva(pe.get_directory_rva(image_directory_entry_debug), pe.get_directory_rva(image_directory_entry_debug), section_data_virtual, true)
-		< sizeof(image_debug_directory))
+	        < sizeof(image_debug_directory))
 		throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
 
 	unsigned long current_pos = pe.get_directory_rva(image_directory_entry_debug);
@@ -622,7 +622,7 @@ const debug_info_list get_debug_information(const pe_base& pe)
 
 	//Iterate over all IMAGE_DEBUG_DIRECTORY directories
 	while(directory.PointerToRawData
-		&& current_pos < pe.get_directory_rva(image_directory_entry_debug) + pe.get_directory_size(image_directory_entry_debug))
+	        && current_pos < pe.get_directory_rva(image_directory_entry_debug) + pe.get_directory_size(image_directory_entry_debug))
 	{
 		//Create debug information structure
 		debug_info info(directory);
@@ -636,194 +636,194 @@ const debug_info_list get_debug_information(const pe_base& pe)
 			switch(directory.Type)
 			{
 			case image_debug_type_coff:
+			{
+				//Check data length
+				if(debug_data.length() < sizeof(image_coff_symbols_header))
+					throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+				//Get coff header structure pointer
+				const image_coff_symbols_header* coff = reinterpret_cast<const image_coff_symbols_header*>(debug_data.data());
+
+				//Check possible overflows
+				if(coff->NumberOfSymbols >= pe_utils::max_dword / sizeof(image_symbol)
+				        || !pe_utils::is_sum_safe(coff->NumberOfSymbols * sizeof(image_symbol), coff->LvaToFirstSymbol))
+					throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+				//Check data length again
+				if(debug_data.length() < coff->NumberOfSymbols * sizeof(image_symbol) + coff->LvaToFirstSymbol)
+					throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+				//Create COFF debug info structure
+				coff_debug_info coff_info(coff);
+
+				//Enumerate debug symbols data
+				for(uint32_t i = 0; i < coff->NumberOfSymbols; ++i)
 				{
-					//Check data length
-					if(debug_data.length() < sizeof(image_coff_symbols_header))
-						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+					//Safe sum (checked above)
+					const image_symbol* sym = reinterpret_cast<const image_symbol*>(debug_data.data() + i * sizeof(image_symbol) + coff->LvaToFirstSymbol);
 
-					//Get coff header structure pointer
-					const image_coff_symbols_header* coff = reinterpret_cast<const image_coff_symbols_header*>(debug_data.data());
-
-					//Check possible overflows
-					if(coff->NumberOfSymbols >= pe_utils::max_dword / sizeof(image_symbol)
-						|| !pe_utils::is_sum_safe(coff->NumberOfSymbols * sizeof(image_symbol), coff->LvaToFirstSymbol))
-						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+					coff_debug_info::coff_symbol symbol;
+					symbol.set_index(i); //Save symbol index
+					symbol.set_storage_class(sym->StorageClass); //Save storage class
+					symbol.set_type(sym->Type); //Save storage class
 
 					//Check data length again
-					if(debug_data.length() < coff->NumberOfSymbols * sizeof(image_symbol) + coff->LvaToFirstSymbol)
+					if(!pe_utils::is_sum_safe(i, sym->NumberOfAuxSymbols)
+					        || (i + sym->NumberOfAuxSymbols) > coff->NumberOfSymbols
+					        || debug_data.length() < (i + 1) * sizeof(image_symbol) + coff->LvaToFirstSymbol + sym->NumberOfAuxSymbols * sizeof(image_symbol))
 						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
 
-					//Create COFF debug info structure
-					coff_debug_info coff_info(coff);
-
-					//Enumerate debug symbols data
-					for(uint32_t i = 0; i < coff->NumberOfSymbols; ++i)
+					//If symbol is filename
+					if(sym->StorageClass == image_sym_class_file)
 					{
-						//Safe sum (checked above)
-						const image_symbol* sym = reinterpret_cast<const image_symbol*>(debug_data.data() + i * sizeof(image_symbol) + coff->LvaToFirstSymbol);
+						//Save file name, it is situated just after this IMAGE_SYMBOL structure
+						std::string file_name(reinterpret_cast<const char*>(debug_data.data() + (i + 1) * sizeof(image_symbol)), sym->NumberOfAuxSymbols * sizeof(image_symbol));
+						pe_utils::strip_nullbytes(file_name);
+						symbol.set_file_name(file_name);
 
-						coff_debug_info::coff_symbol symbol;
-						symbol.set_index(i); //Save symbol index
-						symbol.set_storage_class(sym->StorageClass); //Save storage class
-						symbol.set_type(sym->Type); //Save storage class
+						//Save symbol info
+						coff_info.add_symbol(symbol);
 
-						//Check data length again
-						if(!pe_utils::is_sum_safe(i, sym->NumberOfAuxSymbols)
-							|| (i + sym->NumberOfAuxSymbols) > coff->NumberOfSymbols
-							|| debug_data.length() < (i + 1) * sizeof(image_symbol) + coff->LvaToFirstSymbol + sym->NumberOfAuxSymbols * sizeof(image_symbol))
-							throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
-
-						//If symbol is filename
-						if(sym->StorageClass == image_sym_class_file)
-						{
-							//Save file name, it is situated just after this IMAGE_SYMBOL structure
-							std::string file_name(reinterpret_cast<const char*>(debug_data.data() + (i + 1) * sizeof(image_symbol)), sym->NumberOfAuxSymbols * sizeof(image_symbol));
-							pe_utils::strip_nullbytes(file_name);
-							symbol.set_file_name(file_name);
-
-							//Save symbol info
-							coff_info.add_symbol(symbol);
-
-							//Move to next symbol
-							i += sym->NumberOfAuxSymbols;
-							continue;
-						}
-
-						//Dump some other symbols
-						if(((sym->StorageClass == image_sym_class_static)
-							&& (sym->NumberOfAuxSymbols == 0)
-							&& (sym->SectionNumber == 1))
-							||
-							((sym->StorageClass == image_sym_class_external)
-							&& ISFCN(sym->Type)
-							&& (sym->SectionNumber > 0))
-							)
-						{
-							//Save RVA and section number
-							symbol.set_section_number(sym->SectionNumber);
-							symbol.set_rva(sym->Value);
-
-							//If symbol has short name
-							if(sym->N.Name.Short)
-							{
-								//Copy and save symbol name
-								char name_buff[9];
-								memcpy(name_buff, sym->N.ShortName, 8);
-								name_buff[8] = '\0';
-								symbol.set_symbol_name(name_buff);
-							}
-							else
-							{
-								//Symbol has long name
-
-								//Check possible overflows
-								if(!pe_utils::is_sum_safe(coff->LvaToFirstSymbol + coff->NumberOfSymbols * sizeof(image_symbol), sym->N.Name.Long))
-									throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
-
-								//Here we have an offset to the string table
-								uint32_t symbol_offset = coff->LvaToFirstSymbol + coff->NumberOfSymbols * sizeof(image_symbol) + sym->N.Name.Long;
-
-								//Check data length
-								if(debug_data.length() < symbol_offset)
-									throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
-
-								//Check symbol name for null-termination
-								if(!pe_utils::is_null_terminated(debug_data.data() + symbol_offset, debug_data.length() - symbol_offset))
-									throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
-
-								//Save symbol name
-								symbol.set_symbol_name(debug_data.data() + symbol_offset);
-							}
-
-							//Save symbol info
-							coff_info.add_symbol(symbol);
-
-							//Move to next symbol
-							i += sym->NumberOfAuxSymbols;
-							continue;
-						}
+						//Move to next symbol
+						i += sym->NumberOfAuxSymbols;
+						continue;
 					}
 
-					info.set_advanced_debug_info(coff_info);
+					//Dump some other symbols
+					if(((sym->StorageClass == image_sym_class_static)
+					        && (sym->NumberOfAuxSymbols == 0)
+					        && (sym->SectionNumber == 1))
+					        ||
+					        ((sym->StorageClass == image_sym_class_external)
+					         && ISFCN(sym->Type)
+					         && (sym->SectionNumber > 0))
+					  )
+					{
+						//Save RVA and section number
+						symbol.set_section_number(sym->SectionNumber);
+						symbol.set_rva(sym->Value);
+
+						//If symbol has short name
+						if(sym->N.Name.Short)
+						{
+							//Copy and save symbol name
+							char name_buff[9];
+							memcpy(name_buff, sym->N.ShortName, 8);
+							name_buff[8] = '\0';
+							symbol.set_symbol_name(name_buff);
+						}
+						else
+						{
+							//Symbol has long name
+
+							//Check possible overflows
+							if(!pe_utils::is_sum_safe(coff->LvaToFirstSymbol + coff->NumberOfSymbols * sizeof(image_symbol), sym->N.Name.Long))
+								throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+							//Here we have an offset to the string table
+							uint32_t symbol_offset = coff->LvaToFirstSymbol + coff->NumberOfSymbols * sizeof(image_symbol) + sym->N.Name.Long;
+
+							//Check data length
+							if(debug_data.length() < symbol_offset)
+								throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+							//Check symbol name for null-termination
+							if(!pe_utils::is_null_terminated(debug_data.data() + symbol_offset, debug_data.length() - symbol_offset))
+								throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+							//Save symbol name
+							symbol.set_symbol_name(debug_data.data() + symbol_offset);
+						}
+
+						//Save symbol info
+						coff_info.add_symbol(symbol);
+
+						//Move to next symbol
+						i += sym->NumberOfAuxSymbols;
+						continue;
+					}
 				}
-				break;
+
+				info.set_advanced_debug_info(coff_info);
+			}
+			break;
 
 			case image_debug_type_codeview:
+			{
+				//Check data length
+				if(debug_data.length() < sizeof(OMFSignature*))
+					throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+				//Get POMFSignature structure pointer from the very beginning of debug data
+				const OMFSignature* sig = reinterpret_cast<const OMFSignature*>(debug_data.data());
+				if(!memcmp(sig->Signature, "RSDS", 4))
 				{
+					//Signature is "RSDS" - PDB 7.0
+
 					//Check data length
-					if(debug_data.length() < sizeof(OMFSignature*))
+					if(debug_data.length() < sizeof(CV_INFO_PDB70))
 						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
 
-					//Get POMFSignature structure pointer from the very beginning of debug data
-					const OMFSignature* sig = reinterpret_cast<const OMFSignature*>(debug_data.data());
-					if(!memcmp(sig->Signature, "RSDS", 4))
-					{
-						//Signature is "RSDS" - PDB 7.0
+					const CV_INFO_PDB70* pdb_data = reinterpret_cast<const CV_INFO_PDB70*>(debug_data.data());
 
-						//Check data length
-						if(debug_data.length() < sizeof(CV_INFO_PDB70))
-							throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+					//Check PDB file name null-termination
+					if(!pe_utils::is_null_terminated(pdb_data->PdbFileName, debug_data.length() - (sizeof(CV_INFO_PDB70) - 1 /* BYTE of filename in structure */)))
+						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
 
-						const CV_INFO_PDB70* pdb_data = reinterpret_cast<const CV_INFO_PDB70*>(debug_data.data());
-
-						//Check PDB file name null-termination
-						if(!pe_utils::is_null_terminated(pdb_data->PdbFileName, debug_data.length() - (sizeof(CV_INFO_PDB70) - 1 /* BYTE of filename in structure */)))
-							throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
-
-						info.set_advanced_debug_info(pdb_7_0_info(pdb_data));
-					}
-					else if(!memcmp(sig->Signature, "NB10", 4))
-					{
-						//Signature is "NB10" - PDB 2.0
-
-						//Check data length
-						if(debug_data.length() < sizeof(CV_INFO_PDB20))
-							throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
-
-						const CV_INFO_PDB20* pdb_data = reinterpret_cast<const CV_INFO_PDB20*>(debug_data.data());
-
-						//Check PDB file name null-termination
-						if(!pe_utils::is_null_terminated(pdb_data->PdbFileName, debug_data.length() - (sizeof(CV_INFO_PDB20) - 1 /* BYTE of filename in structure */)))
-							throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
-
-						info.set_advanced_debug_info(pdb_2_0_info(pdb_data));
-					}
-					else if(!memcmp(sig->Signature, "NB09", 4))
-					{
-						//CodeView 4.0, no structures available
-						info.set_advanced_info_type(debug_info::advanced_info_codeview_4_0);
-					}
-					else if(!memcmp(sig->Signature, "NB11", 4))
-					{
-						//CodeView 5.0, no structures available
-						info.set_advanced_info_type(debug_info::advanced_info_codeview_5_0);
-					}
-					else if(!memcmp(sig->Signature, "NB05", 4))
-					{
-						//Other CodeView, no structures available
-						info.set_advanced_info_type(debug_info::advanced_info_codeview);
-					}
+					info.set_advanced_debug_info(pdb_7_0_info(pdb_data));
 				}
+				else if(!memcmp(sig->Signature, "NB10", 4))
+				{
+					//Signature is "NB10" - PDB 2.0
 
-				break;
+					//Check data length
+					if(debug_data.length() < sizeof(CV_INFO_PDB20))
+						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+					const CV_INFO_PDB20* pdb_data = reinterpret_cast<const CV_INFO_PDB20*>(debug_data.data());
+
+					//Check PDB file name null-termination
+					if(!pe_utils::is_null_terminated(pdb_data->PdbFileName, debug_data.length() - (sizeof(CV_INFO_PDB20) - 1 /* BYTE of filename in structure */)))
+						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+
+					info.set_advanced_debug_info(pdb_2_0_info(pdb_data));
+				}
+				else if(!memcmp(sig->Signature, "NB09", 4))
+				{
+					//CodeView 4.0, no structures available
+					info.set_advanced_info_type(debug_info::advanced_info_codeview_4_0);
+				}
+				else if(!memcmp(sig->Signature, "NB11", 4))
+				{
+					//CodeView 5.0, no structures available
+					info.set_advanced_info_type(debug_info::advanced_info_codeview_5_0);
+				}
+				else if(!memcmp(sig->Signature, "NB05", 4))
+				{
+					//Other CodeView, no structures available
+					info.set_advanced_info_type(debug_info::advanced_info_codeview);
+				}
+			}
+
+			break;
 
 			case image_debug_type_misc:
-				{
-					//Check data length
-					if(debug_data.length() < sizeof(image_debug_misc))
-						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+			{
+				//Check data length
+				if(debug_data.length() < sizeof(image_debug_misc))
+					throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
 
-					//Get misc structure pointer
-					const image_debug_misc* misc_data = reinterpret_cast<const image_debug_misc*>(debug_data.data());
+				//Get misc structure pointer
+				const image_debug_misc* misc_data = reinterpret_cast<const image_debug_misc*>(debug_data.data());
 
-					//Check misc data length
-					if(debug_data.length() < misc_data->Length /* Total length of record */)
-						throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
+				//Check misc data length
+				if(debug_data.length() < misc_data->Length /* Total length of record */)
+					throw pe_exception("Incorrect debug directory", pe_exception::incorrect_debug_directory);
 
-					//Save advanced information
-					info.set_advanced_debug_info(misc_debug_info(misc_data));
-				}
-				break;
+				//Save advanced information
+				info.set_advanced_debug_info(misc_debug_info(misc_data));
+			}
+			break;
 			}
 		}
 

@@ -22,7 +22,9 @@
 #include <boost/geometry/geometries/concepts/point_concept.hpp>
 #include <boost/geometry/util/select_coordinate_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -32,24 +34,24 @@ namespace detail
 template <typename P1, typename P2, std::size_t Dimension, std::size_t DimensionCount>
 struct dot_product_maker
 {
-    typedef typename select_coordinate_type<P1, P2>::type coordinate_type;
+	typedef typename select_coordinate_type<P1, P2>::type coordinate_type;
 
-    static inline coordinate_type apply(P1 const& p1, P2 const& p2)
-    {
-        return get<Dimension>(p1) * get<Dimension>(p2)
-            + dot_product_maker<P1, P2, Dimension+1, DimensionCount>::apply(p1, p2);
-    }
+	static inline coordinate_type apply(P1 const& p1, P2 const& p2)
+	{
+		return get<Dimension>(p1) * get<Dimension>(p2)
+		       + dot_product_maker<P1, P2, Dimension+1, DimensionCount>::apply(p1, p2);
+	}
 };
 
 template <typename P1, typename P2, std::size_t DimensionCount>
 struct dot_product_maker<P1, P2, DimensionCount, DimensionCount>
 {
-    typedef typename select_coordinate_type<P1, P2>::type coordinate_type;
+	typedef typename select_coordinate_type<P1, P2>::type coordinate_type;
 
-    static inline coordinate_type apply(P1 const& p1, P2 const& p2)
-    {
-        return get<DimensionCount>(p1) * get<DimensionCount>(p2);
-    }
+	static inline coordinate_type apply(P1 const& p1, P2 const& p2)
+	{
+		return get<DimensionCount>(p1) * get<DimensionCount>(p2);
+	}
 };
 
 } // namespace detail
@@ -67,18 +69,19 @@ struct dot_product_maker<P1, P2, DimensionCount, DimensionCount>
  */
 template <typename Point1, typename Point2>
 inline typename select_coordinate_type<Point1, Point2>::type dot_product(
-        Point1 const& p1, Point2 const& p2)
+    Point1 const& p1, Point2 const& p2)
 {
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<Point1>) );
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<Point2>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<Point1>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<Point2>) );
 
-    return detail::dot_product_maker
-        <
-            Point1, Point2,
-            0, dimension<Point1>::type::value - 1
-        >::apply(p1, p2);
+	return detail::dot_product_maker
+	       <
+	       Point1, Point2,
+	       0, dimension<Point1>::type::value - 1
+	       >::apply(p1, p2);
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ARITHMETIC_DOT_PRODUCT_HPP

@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword allows to pass log file name the rotating file stream methods
 BOOST_PARAMETER_KEYWORD(tag, file_name)

@@ -18,9 +18,12 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
-namespace bimaps {
-namespace detail {
+namespace boost
+{
+namespace bimaps
+{
+namespace detail
+{
 
 /// \brief A binary to unary functor relation modifier adaptor.
 
@@ -29,29 +32,29 @@ template
     class Modifier,
     class NewArgument,
     class FirstExtractor,
-    class SecondExtractor 
->
+    class SecondExtractor
+    >
 struct relation_modifier_adaptor :
-    Modifier,
-    FirstExtractor,
-    SecondExtractor
+	Modifier,
+	FirstExtractor,
+	SecondExtractor
 {
-    typedef NewArgument argument_type;
-    typedef void result_type;
+	typedef NewArgument argument_type;
+	typedef void result_type;
 
-    relation_modifier_adaptor( const Modifier & m ) : Modifier(m) {}
-    relation_modifier_adaptor( const Modifier & m,
-                               const FirstExtractor & fe,
-                               const SecondExtractor & se ) :
-        Modifier(m), FirstExtractor(fe), SecondExtractor(se) {}
+	relation_modifier_adaptor( const Modifier & m ) : Modifier(m) {}
+	relation_modifier_adaptor( const Modifier & m,
+	                           const FirstExtractor & fe,
+	                           const SecondExtractor & se ) :
+		Modifier(m), FirstExtractor(fe), SecondExtractor(se) {}
 
-    void operator()( NewArgument & x ) const
-    {
-        Modifier::operator()(
-            FirstExtractor ::operator()( x ),
-            SecondExtractor::operator()( x )
-        );
-    }
+	void operator()( NewArgument & x ) const
+	{
+		Modifier::operator()(
+		    FirstExtractor ::operator()( x ),
+		    SecondExtractor::operator()( x )
+		);
+	}
 };
 
 /// \brief A simple unary modifier adaptor.
@@ -63,23 +66,23 @@ template
     class Modifier,
     class NewArgument,
     class Extractor
->
+    >
 struct unary_modifier_adaptor :
-    Modifier,
-    Extractor
+	Modifier,
+	Extractor
 {
-    typedef NewArgument argument_type;
-    typedef void result_type;
+	typedef NewArgument argument_type;
+	typedef void result_type;
 
-    unary_modifier_adaptor( const Modifier & m ) : Modifier(m) {}
-    unary_modifier_adaptor( const Modifier & m,
-                            const Extractor & fe) :
-        Modifier(m), Extractor(fe) {}
+	unary_modifier_adaptor( const Modifier & m ) : Modifier(m) {}
+	unary_modifier_adaptor( const Modifier & m,
+	                        const Extractor & fe) :
+		Modifier(m), Extractor(fe) {}
 
-    void operator()( NewArgument & x ) const
-    {
-        Modifier::operator()( Extractor::operator()( x ) );
-    }
+	void operator()( NewArgument & x ) const
+	{
+		Modifier::operator()( Extractor::operator()( x ) );
+	}
 };
 
 

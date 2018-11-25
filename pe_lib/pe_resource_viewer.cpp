@@ -117,34 +117,34 @@ const pe_resource_viewer::resource_id_list pe_resource_viewer::list_resource_ids
 unsigned long pe_resource_viewer::get_resource_count(resource_type type) const
 {
 	return static_cast<unsigned long>(
-		root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.get_entry_list()
-		.size());
+	           root_dir_ //Type directory
+	           .entry_by_id(type)
+	           .get_resource_directory() //Name/ID directory
+	           .get_entry_list()
+	           .size());
 }
 
 //Returns resource count by name
 unsigned long pe_resource_viewer::get_resource_count(const std::wstring& root_name) const
 {
 	return static_cast<unsigned long>(
-		root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.get_entry_list()
-		.size());
+	           root_dir_ //Type directory
+	           .entry_by_name(root_name)
+	           .get_resource_directory() //Name/ID directory
+	           .get_entry_list()
+	           .size());
 }
 
 //Returns language count of resource by resource type and name
 unsigned long pe_resource_viewer::get_language_count(resource_type type, const std::wstring& name) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_id(type)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_name(name)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return static_cast<unsigned long>(std::count_if(entries.begin(), entries.end(), has_id()));
 }
@@ -153,12 +153,12 @@ unsigned long pe_resource_viewer::get_language_count(resource_type type, const s
 unsigned long pe_resource_viewer::get_language_count(const std::wstring& root_name, const std::wstring& name) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_name(root_name)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_name(name)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return static_cast<unsigned long>(std::count_if(entries.begin(), entries.end(), has_id()));
 }
@@ -167,12 +167,12 @@ unsigned long pe_resource_viewer::get_language_count(const std::wstring& root_na
 unsigned long pe_resource_viewer::get_language_count(resource_type type, uint32_t id) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_id(type)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_id(id)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return static_cast<unsigned long>(std::count_if(entries.begin(), entries.end(), has_id()));
 }
@@ -181,12 +181,12 @@ unsigned long pe_resource_viewer::get_language_count(resource_type type, uint32_
 unsigned long pe_resource_viewer::get_language_count(const std::wstring& root_name, uint32_t id) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_name(root_name)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_id(id)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return static_cast<unsigned long>(std::count_if(entries.begin(), entries.end(), has_id()));
 }
@@ -195,12 +195,12 @@ unsigned long pe_resource_viewer::get_language_count(const std::wstring& root_na
 const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resource_languages(resource_type type, const std::wstring& name) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_id(type)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_name(name)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return get_id_list(entries);
 }
@@ -209,12 +209,12 @@ const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resour
 const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resource_languages(const std::wstring& root_name, const std::wstring& name) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_name(root_name)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_name(name)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return get_id_list(entries);
 }
@@ -223,12 +223,12 @@ const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resour
 const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resource_languages(resource_type type, uint32_t id) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_id(type)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_id(id)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return get_id_list(entries);
 }
@@ -237,12 +237,12 @@ const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resour
 const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resource_languages(const std::wstring& root_name, uint32_t id) const
 {
 	const resource_directory::entry_list& entries =
-		root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	    root_dir_ //Type directory
+	    .entry_by_name(root_name)
+	    .get_resource_directory() //Name/ID directory
+	    .entry_by_id(id)
+	    .get_resource_directory() //Language directory
+	    .get_entry_list();
 
 	return get_id_list(entries);
 }
@@ -251,59 +251,59 @@ const pe_resource_viewer::resource_language_list pe_resource_viewer::list_resour
 const resource_data_info pe_resource_viewer::get_resource_data_by_name(uint32_t language, resource_type type, const std::wstring& name) const
 {
 	return resource_data_info(root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.entry_by_id(language)
-		.get_data_entry()); //Data directory
+	                          .entry_by_id(type)
+	                          .get_resource_directory() //Name/ID directory
+	                          .entry_by_name(name)
+	                          .get_resource_directory() //Language directory
+	                          .entry_by_id(language)
+	                          .get_data_entry()); //Data directory
 }
 
 //Returns raw resource data by root name, name and language
 const resource_data_info pe_resource_viewer::get_resource_data_by_name(uint32_t language, const std::wstring& root_name, const std::wstring& name) const
 {
 	return resource_data_info(root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.entry_by_id(language)
-		.get_data_entry()); //Data directory
+	                          .entry_by_name(root_name)
+	                          .get_resource_directory() //Name/ID directory
+	                          .entry_by_name(name)
+	                          .get_resource_directory() //Language directory
+	                          .entry_by_id(language)
+	                          .get_data_entry()); //Data directory
 }
 
 //Returns raw resource data by type, ID and language
 const resource_data_info pe_resource_viewer::get_resource_data_by_id(uint32_t language, resource_type type, uint32_t id) const
 {
 	return resource_data_info(root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.entry_by_id(language)
-		.get_data_entry()); //Data directory
+	                          .entry_by_id(type)
+	                          .get_resource_directory() //Name/ID directory
+	                          .entry_by_id(id)
+	                          .get_resource_directory() //Language directory
+	                          .entry_by_id(language)
+	                          .get_data_entry()); //Data directory
 }
 
 //Returns raw resource data by root name, ID and language
 const resource_data_info pe_resource_viewer::get_resource_data_by_id(uint32_t language, const std::wstring& root_name, uint32_t id) const
 {
 	return resource_data_info(root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.entry_by_id(language)
-		.get_data_entry()); //Data directory
+	                          .entry_by_name(root_name)
+	                          .get_resource_directory() //Name/ID directory
+	                          .entry_by_id(id)
+	                          .get_resource_directory() //Language directory
+	                          .entry_by_id(language)
+	                          .get_data_entry()); //Data directory
 }
 
 //Returns raw resource data by type, name and index in language directory (instead of language)
 const resource_data_info pe_resource_viewer::get_resource_data_by_name(resource_type type, const std::wstring& name, uint32_t index) const
 {
 	const resource_directory::entry_list& entries = root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	        .entry_by_id(type)
+	        .get_resource_directory() //Name/ID directory
+	        .entry_by_name(name)
+	        .get_resource_directory() //Language directory
+	        .get_entry_list();
 
 	if(entries.size() <= index)
 		throw pe_exception("Resource data entry not found", pe_exception::resource_data_entry_not_found);
@@ -315,11 +315,11 @@ const resource_data_info pe_resource_viewer::get_resource_data_by_name(resource_
 const resource_data_info pe_resource_viewer::get_resource_data_by_name(const std::wstring& root_name, const std::wstring& name, uint32_t index) const
 {
 	const resource_directory::entry_list& entries = root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_name(name)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	        .entry_by_name(root_name)
+	        .get_resource_directory() //Name/ID directory
+	        .entry_by_name(name)
+	        .get_resource_directory() //Language directory
+	        .get_entry_list();
 
 	if(entries.size() <= index)
 		throw pe_exception("Resource data entry not found", pe_exception::resource_data_entry_not_found);
@@ -331,11 +331,11 @@ const resource_data_info pe_resource_viewer::get_resource_data_by_name(const std
 const resource_data_info pe_resource_viewer::get_resource_data_by_id(resource_type type, uint32_t id, uint32_t index) const
 {
 	const resource_directory::entry_list& entries = root_dir_ //Type directory
-		.entry_by_id(type)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	        .entry_by_id(type)
+	        .get_resource_directory() //Name/ID directory
+	        .entry_by_id(id)
+	        .get_resource_directory() //Language directory
+	        .get_entry_list();
 
 	if(entries.size() <= index)
 		throw pe_exception("Resource data entry not found", pe_exception::resource_data_entry_not_found);
@@ -347,11 +347,11 @@ const resource_data_info pe_resource_viewer::get_resource_data_by_id(resource_ty
 const resource_data_info pe_resource_viewer::get_resource_data_by_id(const std::wstring& root_name, uint32_t id, uint32_t index) const
 {
 	const resource_directory::entry_list& entries = root_dir_ //Type directory
-		.entry_by_name(root_name)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(id)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	        .entry_by_name(root_name)
+	        .get_resource_directory() //Name/ID directory
+	        .entry_by_id(id)
+	        .get_resource_directory() //Language directory
+	        .get_entry_list();
 
 	if(entries.size() <= index)
 		throw pe_exception("Resource data entry not found", pe_exception::resource_data_entry_not_found);

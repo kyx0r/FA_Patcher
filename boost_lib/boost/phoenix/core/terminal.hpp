@@ -40,102 +40,106 @@
     }}                                                                          \
 /**/
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    template <typename T, typename Dummy>
-    struct is_custom_terminal
-        : mpl::false_ {};
+namespace phoenix
+{
+template <typename T, typename Dummy>
+struct is_custom_terminal
+	: mpl::false_ {};
 
-    template <typename T, typename Dummy>
-    struct custom_terminal;
+template <typename T, typename Dummy>
+struct custom_terminal;
 
-    namespace tag {
-      struct terminal /*: public proto::tag::terminal */ {};
-    }
- 
-    namespace expression
-    {
-        template <typename T, template <typename> class Actor = actor>
-        struct terminal
-            : proto::terminal<T>
-        {
-            typedef
-                proto::basic_expr<
-                proto::tag::terminal
-            // tag::terminal //cannot change to use phoenix tag - breaks code.
-                  , proto::term<T>
-                  , 0
-                >
-                base_type;
-            typedef Actor<base_type> type;
-            
-            static const type make(T const& t)
-            {
-            // ?? Should the next line be Actor not actor which is the default?
-                actor<base_type> const e = {base_type::make(t)};
-                //Actor<base_type> const e = {base_type::make(t)};
-                return e;
-            }
-        };
-    }
+namespace tag
+{
+struct terminal /*: public proto::tag::terminal */ {};
+}
 
-    namespace rule
-    {
-        struct argument
-            : proto::if_<boost::is_placeholder<proto::_value>()>
-        {};
+namespace expression
+{
+template <typename T, template <typename> class Actor = actor>
+struct terminal
+	: proto::terminal<T>
+{
+	typedef
+	proto::basic_expr<
+	proto::tag::terminal
+	// tag::terminal //cannot change to use phoenix tag - breaks code.
+	, proto::term<T>
+	, 0
+	>
+	base_type;
+	typedef Actor<base_type> type;
 
-        struct custom_terminal
-            : proto::if_<boost::phoenix::is_custom_terminal<proto::_value>()>
-        {};
-        
-        struct terminal
-            : proto::terminal<proto::_>
-        {};
-    }
+	static const type make(T const& t)
+	{
+		// ?? Should the next line be Actor not actor which is the default?
+		actor<base_type> const e = {base_type::make(t)};
+		//Actor<base_type> const e = {base_type::make(t)};
+		return e;
+	}
+};
+}
 
-    template <typename Dummy>
-    struct meta_grammar::case_<proto::tag::terminal, Dummy>
-        : proto::or_<
-            enable_rule<rule::argument       , Dummy>
-          , enable_rule<rule::custom_terminal, Dummy>
-          , enable_rule<rule::terminal       , Dummy>
-        >
-    {};
+namespace rule
+{
+struct argument
+: proto::if_<boost::is_placeholder<proto::_value>()>
+  {};
 
-    template <typename Dummy>
-    struct default_actions::when<rule::custom_terminal, Dummy>
-        : proto::lazy<
-            custom_terminal<proto::_value>(
-                proto::_value
-              , _context
-            )
-        >
-    {};
+struct custom_terminal
+: proto::if_<boost::phoenix::is_custom_terminal<proto::_value>()>
+  {};
 
-    namespace detail
-    {
-        template <typename N>
-        struct placeholder_idx
-            : mpl::int_<N::value>
-        {};
-    }
-    
-    template <typename Grammar>
-    struct default_actions::when<rule::argument, Grammar>
-        : proto::call<
-            proto::functional::at(
-                _env
-              , proto::make<
-                    detail::placeholder_idx<
-                        proto::make<
-                            boost::is_placeholder<proto::_value>()
-                        >
-                    >()
-                >
-            )
-        >
-    {};
-}}
+struct terminal
+	: proto::terminal<proto::_>
+{};
+}
+
+template <typename Dummy>
+struct meta_grammar::case_<proto::tag::terminal, Dummy>
+	: proto::or_<
+	  enable_rule<rule::argument, Dummy>
+	, enable_rule<rule::custom_terminal, Dummy>
+	, enable_rule<rule::terminal, Dummy>
+	  >
+{};
+
+template <typename Dummy>
+struct default_actions::when<rule::custom_terminal, Dummy>
+	: proto::lazy<
+  custom_terminal<proto::_value>(
+      proto::_value
+      , _context
+  )
+  >
+  {};
+
+namespace detail
+{
+template <typename N>
+struct placeholder_idx
+	: mpl::int_<N::value>
+{};
+}
+
+template <typename Grammar>
+struct default_actions::when<rule::argument, Grammar>
+	: proto::call<
+  proto::functional::at(
+      _env
+      , proto::make<
+      detail::placeholder_idx<
+      proto::make<
+      boost::is_placeholder<proto::_value>()
+      >
+      >()
+      >
+  )
+  >
+  {};
+}
+}
 
 #endif

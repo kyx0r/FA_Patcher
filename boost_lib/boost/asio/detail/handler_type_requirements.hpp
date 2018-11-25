@@ -53,9 +53,12 @@
 # include <boost/asio/async_result.hpp>
 #endif // defined(BOOST_ASIO_ENABLE_HANDLER_TYPE_REQUIREMENTS)
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if defined(BOOST_ASIO_ENABLE_HANDLER_TYPE_REQUIREMENTS)
 
@@ -63,7 +66,7 @@ namespace detail {
 
 template <typename Handler>
 auto zero_arg_copyable_handler_test(Handler h, void*)
-  -> decltype(
+-> decltype(
     sizeof(Handler(static_cast<const Handler&>(h))),
     ((h)()),
     char(0));
@@ -73,7 +76,7 @@ char (&zero_arg_copyable_handler_test(Handler, ...))[2];
 
 template <typename Handler, typename Arg1>
 auto one_arg_handler_test(Handler h, Arg1* a1)
-  -> decltype(
+-> decltype(
     sizeof(Handler(BOOST_ASIO_MOVE_CAST(Handler)(h))),
     ((h)(*a1)),
     char(0));
@@ -83,7 +86,7 @@ char (&one_arg_handler_test(Handler h, ...))[2];
 
 template <typename Handler, typename Arg1, typename Arg2>
 auto two_arg_handler_test(Handler h, Arg1* a1, Arg2* a2)
-  -> decltype(
+-> decltype(
     sizeof(Handler(BOOST_ASIO_MOVE_CAST(Handler)(h))),
     ((h)(*a1, *a2)),
     char(0));
@@ -93,7 +96,7 @@ char (&two_arg_handler_test(Handler, ...))[2];
 
 template <typename Handler, typename Arg1, typename Arg2>
 auto two_arg_move_handler_test(Handler h, Arg1* a1, Arg2* a2)
-  -> decltype(
+-> decltype(
     sizeof(Handler(BOOST_ASIO_MOVE_CAST(Handler)(h))),
     ((h)(*a1, BOOST_ASIO_MOVE_CAST(Arg2)(*a2))),
     char(0));

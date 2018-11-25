@@ -12,43 +12,43 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S>
-        struct remove_trailing_no_chars : S {};
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S>
+struct remove_trailing_no_chars : S {};
 
-        // this code assumes that BOOST_NO_CHARs are at the end of the string
-        template <char... Cs>
-        struct remove_trailing_no_chars<string<BOOST_NO_CHAR, Cs...>> :
-          string<>
-        {};
+// this code assumes that BOOST_NO_CHARs are at the end of the string
+template <char... Cs>
+struct remove_trailing_no_chars<string<BOOST_NO_CHAR, Cs...>> :
+	        string<>
+{};
 
-        template <char C, char... Cs>
-        struct remove_trailing_no_chars<string<C, Cs...>> :
-          push_front_c<typename remove_trailing_no_chars<string<Cs...>>::type,C>
-        {};
+template <char C, char... Cs>
+struct remove_trailing_no_chars<string<C, Cs...>> :
+	        push_front_c<typename remove_trailing_no_chars<string<Cs...>>::type,C>
+{};
 
 #ifdef _MSC_VER
-        /*
-         * These specialisations are needed to avoid an internal compiler error
-         * in Visual C++ 12
-         */
-        template <char C>
-        struct remove_trailing_no_chars<string<C>> : string<C> {};
+/*
+ * These specialisations are needed to avoid an internal compiler error
+ * in Visual C++ 12
+ */
+template <char C>
+struct remove_trailing_no_chars<string<C>> : string<C> {};
 
-        template <>
-        struct remove_trailing_no_chars<string<BOOST_NO_CHAR>> : string<> {};
+template <>
+struct remove_trailing_no_chars<string<BOOST_NO_CHAR>> : string<> {};
 
-        template <>
-        struct remove_trailing_no_chars<string<>> : string<> {};
+template <>
+struct remove_trailing_no_chars<string<>> : string<> {};
 #endif
-      }
-    }
-  }
+}
+}
+}
 }
 
 #endif

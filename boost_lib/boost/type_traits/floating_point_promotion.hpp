@@ -8,17 +8,33 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
-   template<class T> struct floating_point_promotion { typedef T type; };
-   template<> struct floating_point_promotion<float> { typedef double type; };
-   template<> struct floating_point_promotion<float const> { typedef double const type; };
-   template<> struct floating_point_promotion<float volatile>{ typedef double volatile type; };
-   template<> struct floating_point_promotion<float const volatile> { typedef double const volatile type; };
+template<class T> struct floating_point_promotion
+{
+	typedef T type;
+};
+template<> struct floating_point_promotion<float>
+{
+	typedef double type;
+};
+template<> struct floating_point_promotion<float const>
+{
+	typedef double const type;
+};
+template<> struct floating_point_promotion<float volatile>
+{
+	typedef double volatile type;
+};
+template<> struct floating_point_promotion<float const volatile>
+{
+	typedef double const volatile type;
+};
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
-   template <class T> using floating_point_promotion_t = typename floating_point_promotion<T>::type;
+template <class T> using floating_point_promotion_t = typename floating_point_promotion<T>::type;
 
 #endif
 

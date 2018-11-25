@@ -68,7 +68,7 @@ template<
     class T1 = void, class T2 = void, class T3 = void,
     class T4 = void, class T5 = void, class T6 = void,
     class T7 = void, class T8 = void, class T9 = void
->
+    >
 struct common_type: common_type<typename common_type<T1, T2>::type, T3, T4, T5, T6, T7, T8, T9>
 {
 };
@@ -79,7 +79,7 @@ struct common_type: common_type<typename common_type<T1, T2>::type, T3, T4, T5, 
 
 template<class T> struct common_type<T>: boost::decay<T>
 {
-   BOOST_STATIC_ASSERT_MSG(::boost::is_complete<T>::value || ::boost::is_void<T>::value || ::boost::is_array<T>::value, "Arguments to common_type must both be complete types");
+	BOOST_STATIC_ASSERT_MSG(::boost::is_complete<T>::value || ::boost::is_void<T>::value || ::boost::is_array<T>::value, "Arguments to common_type must both be complete types");
 };
 
 // two arguments
@@ -92,7 +92,7 @@ namespace type_traits_detail
 #if !defined(BOOST_NO_CXX11_DECLTYPE)
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
-    
+
 #if !defined(BOOST_MSVC) || BOOST_MSVC > 1800
 
 // internal compiler error on msvc-12.0
@@ -143,8 +143,8 @@ template<class T1, class T2> struct common_type_decay_helper<T1, T2, T1, T2>: co
 
 template<class T1, class T2> struct common_type<T1, T2>: type_traits_detail::common_type_decay_helper<T1, T2>
 {
-   BOOST_STATIC_ASSERT_MSG(::boost::is_complete<T1>::value || ::boost::is_void<T1>::value || ::boost::is_array<T1>::value, "Arguments to common_type must both be complete types");
-   BOOST_STATIC_ASSERT_MSG(::boost::is_complete<T2>::value || ::boost::is_void<T2>::value || ::boost::is_array<T2>::value, "Arguments to common_type must both be complete types");
+	BOOST_STATIC_ASSERT_MSG(::boost::is_complete<T1>::value || ::boost::is_void<T1>::value || ::boost::is_array<T1>::value, "Arguments to common_type must both be complete types");
+	BOOST_STATIC_ASSERT_MSG(::boost::is_complete<T2>::value || ::boost::is_void<T2>::value || ::boost::is_array<T2>::value, "Arguments to common_type must both be complete types");
 };
 
 } // namespace boost

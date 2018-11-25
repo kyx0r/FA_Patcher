@@ -23,71 +23,74 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class gcc_x86_fenced_block
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  enum half_t { half };
-  enum full_t { full };
+	enum half_t { half };
+	enum full_t { full };
 
-  // Constructor for a half fenced block.
-  explicit gcc_x86_fenced_block(half_t)
-  {
-  }
+	// Constructor for a half fenced block.
+	explicit gcc_x86_fenced_block(half_t)
+	{
+	}
 
-  // Constructor for a full fenced block.
-  explicit gcc_x86_fenced_block(full_t)
-  {
-    lbarrier();
-  }
+	// Constructor for a full fenced block.
+	explicit gcc_x86_fenced_block(full_t)
+	{
+		lbarrier();
+	}
 
-  // Destructor.
-  ~gcc_x86_fenced_block()
-  {
-    sbarrier();
-  }
+	// Destructor.
+	~gcc_x86_fenced_block()
+	{
+		sbarrier();
+	}
 
 private:
-  static int barrier()
-  {
-    int r = 0, m = 1;
-    __asm__ __volatile__ (
-        "xchgl %0, %1" :
-        "=r"(r), "=m"(m) :
-        "0"(1), "m"(m) :
-        "memory", "cc");
-    return r;
-  }
+	static int barrier()
+	{
+		int r = 0, m = 1;
+		__asm__ __volatile__ (
+		    "xchgl %0, %1" :
+		    "=r"(r), "=m"(m) :
+		    "0"(1), "m"(m) :
+		    "memory", "cc");
+		return r;
+	}
 
-  static void lbarrier()
-  {
+	static void lbarrier()
+	{
 #if defined(__SSE2__)
 # if (__GNUC__ >= 4) && !defined(__INTEL_COMPILER) && !defined(__ICL)
-    __builtin_ia32_lfence();
+		__builtin_ia32_lfence();
 # else // (__GNUC__ >= 4) && !defined(__INTEL_COMPILER) && !defined(__ICL)
-    __asm__ __volatile__ ("lfence" ::: "memory");
+		__asm__ __volatile__ ("lfence" ::: "memory");
 # endif // (__GNUC__ >= 4) && !defined(__INTEL_COMPILER) && !defined(__ICL)
 #else // defined(__SSE2__)
-    barrier();
+		barrier();
 #endif // defined(__SSE2__)
-  }
+	}
 
-  static void sbarrier()
-  {
+	static void sbarrier()
+	{
 #if defined(__SSE2__)
 # if (__GNUC__ >= 4) && !defined(__INTEL_COMPILER) && !defined(__ICL)
-    __builtin_ia32_sfence();
+		__builtin_ia32_sfence();
 # else // (__GNUC__ >= 4) && !defined(__INTEL_COMPILER) && !defined(__ICL)
-    __asm__ __volatile__ ("sfence" ::: "memory");
+		__asm__ __volatile__ ("sfence" ::: "memory");
 # endif // (__GNUC__ >= 4) && !defined(__INTEL_COMPILER) && !defined(__ICL)
 #else // defined(__SSE2__)
-    barrier();
+		barrier();
 #endif // defined(__SSE2__)
-  }
+	}
 };
 
 } // namespace detail

@@ -42,9 +42,12 @@
     (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format).
 */
 
-namespace boost {
-namespace beast {
-namespace zlib {
+namespace boost
+{
+namespace beast
+{
+namespace zlib
+{
 
 #if !defined(__MACTYPES__)
 using Byte = unsigned char; // 8 bits
@@ -54,9 +57,9 @@ using uInt = unsigned int;  // 16 bits or more
 /* Possible values of the data_type field (though see inflate()) */
 enum kind
 {
-    binary    = 0,
-    text      = 1,
-    unknown   = 2
+	binary    = 0,
+	text      = 1,
+	unknown   = 2
 };
 
 /** Deflate codec parameters.
@@ -78,59 +81,59 @@ enum kind
 */
 struct z_params
 {
-    /** A pointer to the next input byte.
+	/** A pointer to the next input byte.
 
-        If there is no more input, this may be set to `nullptr`.
-    */
-    void const* next_in;
+	    If there is no more input, this may be set to `nullptr`.
+	*/
+	void const* next_in;
 
-    /** The number of bytes of input available at `next_in`.
+	/** The number of bytes of input available at `next_in`.
 
-        If there is no more input, this should be set to zero.
-    */
-    std::size_t avail_in;
+	    If there is no more input, this should be set to zero.
+	*/
+	std::size_t avail_in;
 
-    /** The total number of input bytes read so far.
-    */
-    std::size_t total_in = 0;
+	/** The total number of input bytes read so far.
+	*/
+	std::size_t total_in = 0;
 
-    /** A pointer to the next output byte.
-    */
-    void* next_out;
+	/** A pointer to the next output byte.
+	*/
+	void* next_out;
 
-    /** The remaining bytes of space at `next_out`.
-    */
-    std::size_t avail_out;
+	/** The remaining bytes of space at `next_out`.
+	*/
+	std::size_t avail_out;
 
-    /** The total number of bytes output so far.
-    */
-    std::size_t total_out = 0;
+	/** The total number of bytes output so far.
+	*/
+	std::size_t total_out = 0;
 
-    int data_type = unknown;  // best guess about the data type: binary or text
+	int data_type = unknown;  // best guess about the data type: binary or text
 };
 
 /** Flush option.
 */
 enum class Flush
 {
-    // order matters
+	// order matters
 
-    none,
-    block,
-    partial,
-    sync,
-    full,
-    finish,
-    trees
+	none,
+	block,
+	partial,
+	sync,
+	full,
+	finish,
+	trees
 };
 
 /* compression levels */
 enum compression
 {
-    none        =  0,
-    best_speed            =  1,
-    best_size      =  9,
-    default_size   = -1
+	none        =  0,
+	best_speed            =  1,
+	best_size      =  9,
+	default_size   = -1
 };
 
 /** Compression strategy.
@@ -139,41 +142,41 @@ enum compression
 */
 enum class Strategy
 {
-    /** Default strategy.
+	/** Default strategy.
 
-        This is suitable for general purpose compression, and works
-        well in the majority of cases.
-    */
-    normal,
+	    This is suitable for general purpose compression, and works
+	    well in the majority of cases.
+	*/
+	normal,
 
-    /** Filtered strategy.
+	/** Filtered strategy.
 
-        This strategy should be used when the data be compressed
-        is produced by a filter or predictor.
-    */
-    filtered,
+	    This strategy should be used when the data be compressed
+	    is produced by a filter or predictor.
+	*/
+	filtered,
 
-    /** Huffman-only strategy.
+	/** Huffman-only strategy.
 
-        This strategy only performs Huffman encoding, without doing
-        any string matching.
-    */
-    huffman,
+	    This strategy only performs Huffman encoding, without doing
+	    any string matching.
+	*/
+	huffman,
 
-    /** Run Length Encoding strategy.
+	/** Run Length Encoding strategy.
 
-        This strategy limits match distances to one, making it
-        equivalent to run length encoding. This can give better
-        performance for things like PNG image data.
-    */
-    rle,
+	    This strategy limits match distances to one, making it
+	    equivalent to run length encoding. This can give better
+	    performance for things like PNG image data.
+	*/
+	rle,
 
-    /** Fixed table strategy.
+	/** Fixed table strategy.
 
-        This strategy prevents the use of dynamic Huffman codes,
-        allowing for a simpler decoder for special applications.
-    */
-    fixed
+	    This strategy prevents the use of dynamic Huffman codes,
+	    allowing for a simpler decoder for special applications.
+	*/
+	fixed
 };
 
 } // zlib

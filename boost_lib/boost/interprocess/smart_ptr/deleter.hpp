@@ -29,8 +29,10 @@
 //!\file
 //!Describes the functor to delete objects from the segment.
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 //!A deleter that uses the segment manager's destroy_ptr
 //!function to destroy the passed pointer resource.
@@ -39,25 +41,27 @@ namespace interprocess {
 template<class T, class SegmentManager>
 class deleter
 {
-   public:
-   typedef typename boost::intrusive::
-      pointer_traits<typename SegmentManager::void_pointer>::template
-         rebind_pointer<T>::type                pointer;
+public:
+	typedef typename boost::intrusive::
+	pointer_traits<typename SegmentManager::void_pointer>::template
+	rebind_pointer<T>::type                pointer;
 
-   private:
-   typedef typename boost::intrusive::
-      pointer_traits<pointer>::template
-         rebind_pointer<SegmentManager>::type                segment_manager_pointer;
+private:
+	typedef typename boost::intrusive::
+	pointer_traits<pointer>::template
+	rebind_pointer<SegmentManager>::type                segment_manager_pointer;
 
-   segment_manager_pointer mp_mngr;
+	segment_manager_pointer mp_mngr;
 
-   public:
-   deleter(segment_manager_pointer pmngr)
-      :  mp_mngr(pmngr)
-   {}
+public:
+	deleter(segment_manager_pointer pmngr)
+		:  mp_mngr(pmngr)
+	{}
 
-   void operator()(const pointer &p)
-   {  mp_mngr->destroy_ptr(ipcdetail::to_raw_pointer(p));   }
+	void operator()(const pointer &p)
+	{
+		mp_mngr->destroy_ptr(ipcdetail::to_raw_pointer(p));
+	}
 };
 
 }  //namespace interprocess {

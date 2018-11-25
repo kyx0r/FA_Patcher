@@ -10,10 +10,10 @@
 // Cannot include core/*.hpp other than config.hpp here (avoid circular incl).
 #include <boost/contract/detail/tvariadic.hpp>
 #if !BOOST_CONTRACT_DETAIL_TVARIADIC
-    #include <boost/contract/core/config.hpp>
-    #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/preprocessor/tuple/elem.hpp>
-    #include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/contract/core/config.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
 #endif
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -50,7 +50,7 @@
     )
 
 #if BOOST_CONTRACT_DETAIL_TVARIADIC
-    #define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(z, \
+#define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(z, \
         O, VR, F, C, Args, \
         v, r, f, obj, args \
     ) \
@@ -63,8 +63,8 @@
             O, VR, F, C, Args, v, r, f, obj, args \
         );
 #else
-    /* PRIVATE */
-    #define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_( \
+/* PRIVATE */
+#define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_( \
             z, n, result_O_R_F_C_Args_v_r_f_obj_args) \
         BOOST_CONTRACT_DETAIL_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
             /* arity = */ n, \
@@ -82,8 +82,8 @@
             BOOST_PP_TUPLE_ELEM(11, 10, result_O_R_F_C_Args_v_r_f_obj_args) \
         );
 
-    /* PUBLIC */
-    #define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(z, \
+/* PUBLIC */
+#define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(z, \
         O, VR, F, C, Args, \
         v, r, f, obj, args \
     ) \
@@ -116,14 +116,16 @@
 
 /* CODE */
 
-namespace boost {
-    namespace contract {
-        class virtual_;
+namespace boost
+{
+namespace contract
+{
+class virtual_;
 
-        template<typename VR = void>
-        class specify_precondition_old_postcondition_except;
-    }
+template<typename VR = void>
+class specify_precondition_old_postcondition_except;
 }
-    
+}
+
 #endif // #include guard
 

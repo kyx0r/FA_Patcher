@@ -20,10 +20,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
-namespace monomorphic {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
+namespace monomorphic
+{
 
 // ************************************************************************** //
 // **************                      join                    ************** //
@@ -34,56 +38,75 @@ namespace monomorphic {
 //! The size of the resulting dataset is the sum of the two underlying datasets. The arity of the datasets
 //! should match.
 template<typename DataSet1, typename DataSet2>
-class join {
-    typedef typename boost::decay<DataSet1>::type   dataset1_decay;
-    typedef typename boost::decay<DataSet2>::type   dataset2_decay;
+class join
+{
+	typedef typename boost::decay<DataSet1>::type   dataset1_decay;
+	typedef typename boost::decay<DataSet2>::type   dataset2_decay;
 
-    typedef typename dataset1_decay::iterator       dataset1_iter;
-    typedef typename dataset2_decay::iterator       dataset2_iter;
+	typedef typename dataset1_decay::iterator       dataset1_iter;
+	typedef typename dataset2_decay::iterator       dataset2_iter;
 public:
-    typedef typename dataset1_decay::sample         sample;
+	typedef typename dataset1_decay::sample         sample;
 
-    enum { arity = dataset1_decay::arity };
+	enum { arity = dataset1_decay::arity };
 
-    struct iterator {
-        // Constructor
-        explicit    iterator( dataset1_iter it1, dataset2_iter it2, data::size_t first_size )
-        : m_it1( std::move( it1 ) )
-        , m_it2( std::move( it2 ) )
-        , m_first_size( first_size )
-        {}
+	struct iterator
+	{
+		// Constructor
+		explicit    iterator( dataset1_iter it1, dataset2_iter it2, data::size_t first_size )
+			: m_it1( std::move( it1 ) )
+			, m_it2( std::move( it2 ) )
+			, m_first_size( first_size )
+		{}
 
-        // forward iterator interface
-        sample const&       operator*() const   { return m_first_size > 0 ? *m_it1 : *m_it2; }
-        void                operator++()        { if( m_first_size > 0 ) { --m_first_size; ++m_it1; } else ++m_it2; }
+		// forward iterator interface
+		sample const&       operator*() const
+		{
+			return m_first_size > 0 ? *m_it1 : *m_it2;
+		}
+		void                operator++()
+		{
+			if( m_first_size > 0 )
+			{
+				--m_first_size;
+				++m_it1;
+			}
+			else ++m_it2;
+		}
 
-    private:
-        // Data members
-        dataset1_iter       m_it1;
-        dataset2_iter       m_it2;
-        data::size_t        m_first_size;
-    };
+	private:
+		// Data members
+		dataset1_iter       m_it1;
+		dataset2_iter       m_it2;
+		data::size_t        m_first_size;
+	};
 
-    //! Constructor 
-    join( DataSet1&& ds1, DataSet2&& ds2 )
-    : m_ds1( std::forward<DataSet1>( ds1 ) )
-    , m_ds2( std::forward<DataSet2>( ds2 ) )
-    {}
+	//! Constructor
+	join( DataSet1&& ds1, DataSet2&& ds2 )
+		: m_ds1( std::forward<DataSet1>( ds1 ) )
+		, m_ds2( std::forward<DataSet2>( ds2 ) )
+	{}
 
-    //! Move constructor
-    join( join&& j )
-    : m_ds1( std::forward<DataSet1>( j.m_ds1 ) )
-    , m_ds2( std::forward<DataSet2>( j.m_ds2 ) )
-    {}
+	//! Move constructor
+	join( join&& j )
+		: m_ds1( std::forward<DataSet1>( j.m_ds1 ) )
+		, m_ds2( std::forward<DataSet2>( j.m_ds2 ) )
+	{}
 
-    //! dataset interface
-    data::size_t    size() const    { return m_ds1.size() + m_ds2.size(); }
-    iterator        begin() const   { return iterator( m_ds1.begin(), m_ds2.begin(), m_ds1.size() ); }
+	//! dataset interface
+	data::size_t    size() const
+	{
+		return m_ds1.size() + m_ds2.size();
+	}
+	iterator        begin() const
+	{
+		return iterator( m_ds1.begin(), m_ds2.begin(), m_ds1.size() );
+	}
 
 private:
-    // Data members
-    DataSet1        m_ds1;
-    DataSet2        m_ds2;
+	// Data members
+	DataSet1        m_ds1;
+	DataSet2        m_ds2;
 };
 
 //____________________________________________________________________________//
@@ -94,12 +117,14 @@ struct is_dataset<join<DataSet1,DataSet2>> : mpl::true_ {};
 
 //____________________________________________________________________________//
 
-namespace result_of {
+namespace result_of
+{
 
 //! Result type of the join operation on datasets.
 template<typename DataSet1Gen, typename DataSet2Gen>
-struct join {
-    typedef monomorphic::join<typename DataSet1Gen::type,typename DataSet2Gen::type> type;
+struct join
+{
+	typedef monomorphic::join<typename DataSet1Gen::type,typename DataSet2Gen::type> type;
 };
 
 } // namespace result_of
@@ -108,33 +133,33 @@ struct join {
 
 template<typename DataSet1, typename DataSet2>
 inline typename boost::lazy_enable_if_c<is_dataset<DataSet1>::value && is_dataset<DataSet2>::value,
-                                        result_of::join<mpl::identity<DataSet1>,mpl::identity<DataSet2>>
->::type
-operator+( DataSet1&& ds1, DataSet2&& ds2 )
+       result_of::join<mpl::identity<DataSet1>,mpl::identity<DataSet2>>
+       >::type
+       operator+( DataSet1&& ds1, DataSet2&& ds2 )
 {
-    return join<DataSet1,DataSet2>( std::forward<DataSet1>( ds1 ),  std::forward<DataSet2>( ds2 ) );
+	return join<DataSet1,DataSet2>( std::forward<DataSet1>( ds1 ),  std::forward<DataSet2>( ds2 ) );
 }
 
 //____________________________________________________________________________//
 
 template<typename DataSet1, typename DataSet2>
 inline typename boost::lazy_enable_if_c<is_dataset<DataSet1>::value && !is_dataset<DataSet2>::value,
-                                        result_of::join<mpl::identity<DataSet1>,data::result_of::make<DataSet2>>
->::type
-operator+( DataSet1&& ds1, DataSet2&& ds2 )
+       result_of::join<mpl::identity<DataSet1>,data::result_of::make<DataSet2>>
+       >::type
+       operator+( DataSet1&& ds1, DataSet2&& ds2 )
 {
-    return std::forward<DataSet1>( ds1 ) + data::make( std::forward<DataSet2>( ds2 ) );
+	return std::forward<DataSet1>( ds1 ) + data::make( std::forward<DataSet2>( ds2 ) );
 }
 
 //____________________________________________________________________________//
 
 template<typename DataSet1, typename DataSet2>
 inline typename boost::lazy_enable_if_c<!is_dataset<DataSet1>::value && is_dataset<DataSet2>::value,
-                                        result_of::join<data::result_of::make<DataSet1>,mpl::identity<DataSet2>>
->::type
-operator+( DataSet1&& ds1, DataSet2&& ds2 )
+       result_of::join<data::result_of::make<DataSet1>,mpl::identity<DataSet2>>
+       >::type
+       operator+( DataSet1&& ds1, DataSet2&& ds2 )
 {
-    return data::make( std::forward<DataSet1>(ds1) ) + std::forward<DataSet2>( ds2 );
+	return data::make( std::forward<DataSet1>(ds1) ) + std::forward<DataSet2>( ds2 );
 }
 
 } // namespace monomorphic

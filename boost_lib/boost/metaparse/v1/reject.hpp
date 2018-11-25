@@ -11,22 +11,22 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class Msg, class Pos>
-      struct reject
-      {
-        typedef fail_tag tag;
+namespace metaparse
+{
+namespace v1
+{
+template <class Msg, class Pos>
+struct reject
+{
+	typedef fail_tag tag;
 
-        typedef reject<Msg, typename Pos::type> type;
-        
-        typedef Pos source_position;
-        typedef Msg message;
-      };
-    }
-  }
+	typedef reject<Msg, typename Pos::type> type;
+
+	typedef Pos source_position;
+	typedef Msg message;
+};
+}
+}
 }
 
 #endif

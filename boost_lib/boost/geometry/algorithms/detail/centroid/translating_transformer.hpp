@@ -33,11 +33,15 @@
 #include <boost/geometry/iterators/point_iterator.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace centroid
+namespace detail
+{
+namespace centroid
 {
 
 
@@ -47,73 +51,75 @@ namespace detail { namespace centroid
 // vector should contain coordinates being multiplies of 2PI or 360 deg.
 template <typename Geometry,
           typename CastedTag = typename tag_cast
-                                <
-                                    typename tag<Geometry>::type,
-                                    areal_tag
-                                >::type,
-    typename CSTag = typename cs_tag<Geometry>::type>
+          <
+              typename tag<Geometry>::type,
+              areal_tag
+              >::type,
+          typename CSTag = typename cs_tag<Geometry>::type>
 struct translating_transformer
 {
-    typedef typename geometry::point_type<Geometry>::type point_type;
-    typedef boost::reference_wrapper<point_type const> result_type;
+	typedef typename geometry::point_type<Geometry>::type point_type;
+	typedef boost::reference_wrapper<point_type const> result_type;
 
-    explicit translating_transformer(Geometry const&) {}
-    explicit translating_transformer(point_type const&) {}
+	explicit translating_transformer(Geometry const&) {}
+	explicit translating_transformer(point_type const&) {}
 
-    result_type apply(point_type const& pt) const
-    {
-        return result_type(pt);
-    }
+	result_type apply(point_type const& pt) const
+	{
+		return result_type(pt);
+	}
 
-    template <typename ResPt>
-    void apply_reverse(ResPt &) const {}
+	template <typename ResPt>
+	void apply_reverse(ResPt &) const {}
 };
 
 // Specialization for Areal Geometries in cartesian CS
 template <typename Geometry>
 struct translating_transformer<Geometry, areal_tag, cartesian_tag>
 {
-    typedef typename geometry::point_type<Geometry>::type point_type;
-    typedef point_type result_type;
-    
-    explicit translating_transformer(Geometry const& geom)
-        : m_origin(NULL)
-    {
-        geometry::point_iterator<Geometry const>
-            pt_it = geometry::points_begin(geom);
-        if ( pt_it != geometry::points_end(geom) )
-        {
-            m_origin = boost::addressof(*pt_it);
-        }
-    }
+	typedef typename geometry::point_type<Geometry>::type point_type;
+	typedef point_type result_type;
 
-    explicit translating_transformer(point_type const& origin)
-        : m_origin(boost::addressof(origin))
-    {}
+	explicit translating_transformer(Geometry const& geom)
+		: m_origin(NULL)
+	{
+		geometry::point_iterator<Geometry const>
+		pt_it = geometry::points_begin(geom);
+		if ( pt_it != geometry::points_end(geom) )
+		{
+			m_origin = boost::addressof(*pt_it);
+		}
+	}
 
-    result_type apply(point_type const& pt) const
-    {
-        point_type res = pt;
-        if ( m_origin )
-            geometry::subtract_point(res, *m_origin);
-        return res;
-    }
+	explicit translating_transformer(point_type const& origin)
+		: m_origin(boost::addressof(origin))
+	{}
 
-    template <typename ResPt>
-    void apply_reverse(ResPt & res_pt) const
-    {
-        if ( m_origin )
-            geometry::add_point(res_pt, *m_origin);
-    }
+	result_type apply(point_type const& pt) const
+	{
+		point_type res = pt;
+		if ( m_origin )
+			geometry::subtract_point(res, *m_origin);
+		return res;
+	}
 
-    const point_type * m_origin;
+	template <typename ResPt>
+	void apply_reverse(ResPt & res_pt) const
+	{
+		if ( m_origin )
+			geometry::add_point(res_pt, *m_origin);
+	}
+
+	const point_type * m_origin;
 };
 
 
-}} // namespace detail::centroid
+}
+} // namespace detail::centroid
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_CENTROID_TRANSLATING_TRANSFORMER_HPP

@@ -28,12 +28,15 @@
 #include <boost/serialization/collection_size_type.hpp>
 #include <boost/serialization/item_version_type.hpp>
 
-namespace boost { namespace mpi {
+namespace boost
+{
+namespace mpi
+{
 
 #ifdef BOOST_MPI_HOMOGENEOUS
-  typedef binary_buffer_oprimitive oprimitive;
+typedef binary_buffer_oprimitive oprimitive;
 #else
-  typedef packed_oprimitive oprimitive;
+typedef packed_oprimitive oprimitive;
 #endif
 
 /** @brief An archive that packs binary data into an MPI buffer.
@@ -46,97 +49,101 @@ namespace boost { namespace mpi {
  */
 
 class BOOST_MPI_DECL packed_oarchive
-  : public oprimitive
-  , public archive::detail::common_oarchive<packed_oarchive>
+	: public oprimitive
+	, public archive::detail::common_oarchive<packed_oarchive>
 {
 public:
-  /**
-   *  Construct a @c packed_oarchive for transmission over the given
-   *  MPI communicator and with an initial buffer.
-   *
-   *  @param comm The communicator over which this archive will be
-   *  sent.
-   *
-   *  @param b A user-defined buffer that will be filled with the
-   *  binary representation of serialized objects.
-   *
-   *  @param flags Control the serialization of the data types. Refer
-   *  to the Boost.Serialization documentation before changing the
-   *  default flags.
-   *
-   *  @param position Set the offset into buffer @p b at which
-   *  deserialization will begin.
-   */
-  packed_oarchive( MPI_Comm const & comm, buffer_type & b, unsigned int flags = boost::archive::no_header)
-         : oprimitive(b,comm),
-           archive::detail::common_oarchive<packed_oarchive>(flags)
-        {}
+	/**
+	 *  Construct a @c packed_oarchive for transmission over the given
+	 *  MPI communicator and with an initial buffer.
+	 *
+	 *  @param comm The communicator over which this archive will be
+	 *  sent.
+	 *
+	 *  @param b A user-defined buffer that will be filled with the
+	 *  binary representation of serialized objects.
+	 *
+	 *  @param flags Control the serialization of the data types. Refer
+	 *  to the Boost.Serialization documentation before changing the
+	 *  default flags.
+	 *
+	 *  @param position Set the offset into buffer @p b at which
+	 *  deserialization will begin.
+	 */
+	packed_oarchive( MPI_Comm const & comm, buffer_type & b, unsigned int flags = boost::archive::no_header)
+		: oprimitive(b,comm),
+		  archive::detail::common_oarchive<packed_oarchive>(flags)
+	{}
 
-  /**
-   *  Construct a @c packed_oarchive for transmission over the given
-   *  MPI communicator.
-   *
-   *  @param comm The communicator over which this archive will be
-   *  sent.
-   *
-   *  @param s The size of the buffer to be received.
-   *
-   *  @param flags Control the serialization of the data types. Refer
-   *  to the Boost.Serialization documentation before changing the
-   *  default flags.
-   */
-  packed_oarchive ( MPI_Comm const & comm, unsigned int flags =  boost::archive::no_header)
-         : oprimitive(internal_buffer_,comm),
-           archive::detail::common_oarchive<packed_oarchive>(flags)
-        {}
+	/**
+	 *  Construct a @c packed_oarchive for transmission over the given
+	 *  MPI communicator.
+	 *
+	 *  @param comm The communicator over which this archive will be
+	 *  sent.
+	 *
+	 *  @param s The size of the buffer to be received.
+	 *
+	 *  @param flags Control the serialization of the data types. Refer
+	 *  to the Boost.Serialization documentation before changing the
+	 *  default flags.
+	 */
+	packed_oarchive ( MPI_Comm const & comm, unsigned int flags =  boost::archive::no_header)
+		: oprimitive(internal_buffer_,comm),
+		  archive::detail::common_oarchive<packed_oarchive>(flags)
+	{}
 
-  // Save everything else in the usual way, forwarding on to the Base class
-  template<class T>
-  void save_override(T const& x, mpl::false_)
-  {
-    archive::detail::common_oarchive<packed_oarchive>::save_override(x);
-  }
+	// Save everything else in the usual way, forwarding on to the Base class
+	template<class T>
+	void save_override(T const& x, mpl::false_)
+	{
+		archive::detail::common_oarchive<packed_oarchive>::save_override(x);
+	}
 
-  // Save it directly using the primitives
-  template<class T>
-  void save_override(T const& x, mpl::true_)
-  {
-    oprimitive::save(x);
-  }
+	// Save it directly using the primitives
+	template<class T>
+	void save_override(T const& x, mpl::true_)
+	{
+		oprimitive::save(x);
+	}
 
-  // Save all supported datatypes directly
-  template<class T>
-  void save_override(T const& x)
-  {
-    typedef typename mpl::apply1<use_array_optimization,T>::type use_optimized;
-    save_override(x, use_optimized());
-  }
+	// Save all supported datatypes directly
+	template<class T>
+	void save_override(T const& x)
+	{
+		typedef typename mpl::apply1<use_array_optimization,T>::type use_optimized;
+		save_override(x, use_optimized());
+	}
 
-  // output archives need to ignore  the optional information
-  void save_override(const archive::class_id_optional_type & ){}
+	// output archives need to ignore  the optional information
+	void save_override(const archive::class_id_optional_type & ) {}
 
-  // explicitly convert to char * to avoid compile ambiguities
-  void save_override(const archive::class_name_type & t){
-      const std::string s(t);
-      * this->This() << s;
-  }
+	// explicitly convert to char * to avoid compile ambiguities
+	void save_override(const archive::class_name_type & t)
+	{
+		const std::string s(t);
+		* this->This() << s;
+	}
 
-  void save_override(const archive::class_id_type & t){
-    const boost::int_least16_t x = t;
-    * this->This() << x;
-  }
+	void save_override(const archive::class_id_type & t)
+	{
+		const boost::int_least16_t x = t;
+		* this->This() << x;
+	}
 
-  void save_override(const archive::version_type & t){
-    const boost::int_least8_t x = t;
-    * this->This() << x;
-  }
+	void save_override(const archive::version_type & t)
+	{
+		const boost::int_least8_t x = t;
+		* this->This() << x;
+	}
 private:
-  /// An internal buffer to be used when the user does not supply his
-  /// own buffer.
-  buffer_type internal_buffer_;
+	/// An internal buffer to be used when the user does not supply his
+	/// own buffer.
+	buffer_type internal_buffer_;
 };
 
-} } // end namespace boost::mpi
+}
+} // end namespace boost::mpi
 
 // required by export
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(boost::mpi::packed_oarchive)

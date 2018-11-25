@@ -16,8 +16,10 @@
 #include <cstdio>
 #include <cstdint>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** An implementation of File which uses cstdio.
 
@@ -26,128 +28,128 @@ namespace beast {
 */
 class file_stdio
 {
-    FILE* f_ = nullptr;
+	FILE* f_ = nullptr;
 
 public:
-    /** The type of the underlying file handle.
+	/** The type of the underlying file handle.
 
-        This is platform-specific.
-    */
-    using native_handle_type = FILE*;
+	    This is platform-specific.
+	*/
+	using native_handle_type = FILE*;
 
-    /** Destructor
+	/** Destructor
 
-        If the file is open it is first closed.
-    */
-    ~file_stdio();
+	    If the file is open it is first closed.
+	*/
+	~file_stdio();
 
-    /** Constructor
+	/** Constructor
 
-        There is no open file initially.
-    */
-    file_stdio() = default;
+	    There is no open file initially.
+	*/
+	file_stdio() = default;
 
-    /** Constructor
+	/** Constructor
 
-        The moved-from object behaves as if default constructed.
-    */
-    file_stdio(file_stdio&& other);
+	    The moved-from object behaves as if default constructed.
+	*/
+	file_stdio(file_stdio&& other);
 
-    /** Assignment
+	/** Assignment
 
-        The moved-from object behaves as if default constructed.
-    */
-    file_stdio& operator=(file_stdio&& other);
+	    The moved-from object behaves as if default constructed.
+	*/
+	file_stdio& operator=(file_stdio&& other);
 
-    /// Returns the native handle associated with the file.
-    FILE*
-    native_handle() const
-    {
-        return f_;
-    }
+	/// Returns the native handle associated with the file.
+	FILE*
+	native_handle() const
+	{
+		return f_;
+	}
 
-    /** Set the native handle associated with the file.
+	/** Set the native handle associated with the file.
 
-        If the file is open it is first closed.
+	    If the file is open it is first closed.
 
-        @param f The native file handle to assign.
-    */
-    void
-    native_handle(FILE* f);
+	    @param f The native file handle to assign.
+	*/
+	void
+	native_handle(FILE* f);
 
-    /// Returns `true` if the file is open
-    bool
-    is_open() const
-    {
-        return f_ != nullptr;
-    }
+	/// Returns `true` if the file is open
+	bool
+	is_open() const
+	{
+		return f_ != nullptr;
+	}
 
-    /** Close the file if open
+	/** Close the file if open
 
-        @param ec Set to the error, if any occurred.
-    */
-    void
-    close(error_code& ec);
+	    @param ec Set to the error, if any occurred.
+	*/
+	void
+	close(error_code& ec);
 
-    /** Open a file at the given path with the specified mode
+	/** Open a file at the given path with the specified mode
 
-        @param path The utf-8 encoded path to the file
+	    @param path The utf-8 encoded path to the file
 
-        @param mode The file mode to use
+	    @param mode The file mode to use
 
-        @param ec Set to the error, if any occurred
-    */
-    void
-    open(char const* path, file_mode mode, error_code& ec);
+	    @param ec Set to the error, if any occurred
+	*/
+	void
+	open(char const* path, file_mode mode, error_code& ec);
 
-    /** Return the size of the open file
+	/** Return the size of the open file
 
-        @param ec Set to the error, if any occurred
+	    @param ec Set to the error, if any occurred
 
-        @return The size in bytes
-    */
-    std::uint64_t
-    size(error_code& ec) const;
+	    @return The size in bytes
+	*/
+	std::uint64_t
+	size(error_code& ec) const;
 
-    /** Return the current position in the open file
+	/** Return the current position in the open file
 
-        @param ec Set to the error, if any occurred
+	    @param ec Set to the error, if any occurred
 
-        @return The offset in bytes from the beginning of the file
-    */
-    std::uint64_t
-    pos(error_code& ec) const;
+	    @return The offset in bytes from the beginning of the file
+	*/
+	std::uint64_t
+	pos(error_code& ec) const;
 
-    /** Adjust the current position in the open file
+	/** Adjust the current position in the open file
 
-        @param offset The offset in bytes from the beginning of the file
+	    @param offset The offset in bytes from the beginning of the file
 
-        @param ec Set to the error, if any occurred
-    */
-    void
-    seek(std::uint64_t offset, error_code& ec);
+	    @param ec Set to the error, if any occurred
+	*/
+	void
+	seek(std::uint64_t offset, error_code& ec);
 
-    /** Read from the open file
+	/** Read from the open file
 
-        @param buffer The buffer for storing the result of the read
+	    @param buffer The buffer for storing the result of the read
 
-        @param n The number of bytes to read
+	    @param n The number of bytes to read
 
-        @param ec Set to the error, if any occurred
-    */
-    std::size_t
-    read(void* buffer, std::size_t n, error_code& ec) const;
+	    @param ec Set to the error, if any occurred
+	*/
+	std::size_t
+	read(void* buffer, std::size_t n, error_code& ec) const;
 
-    /** Write to the open file
+	/** Write to the open file
 
-        @param buffer The buffer holding the data to write
+	    @param buffer The buffer holding the data to write
 
-        @param n The number of bytes to write
+	    @param n The number of bytes to write
 
-        @param ec Set to the error, if any occurred
-    */
-    std::size_t
-    write(void const* buffer, std::size_t n, error_code& ec);
+	    @param ec Set to the error, if any occurred
+	*/
+	std::size_t
+	write(void const* buffer, std::size_t n, error_code& ec);
 };
 
 } // beast

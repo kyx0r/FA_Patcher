@@ -29,32 +29,36 @@
 #include <boost/numeric/odeint/iterator/times_time_iterator.hpp>
 #include <boost/numeric/odeint/iterator/integrate/detail/functors.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
-namespace detail {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
+namespace detail
+{
 
 
 
 /*
  * integrate_times for all steppers
  */
-template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer , class StepperTag >
+template< class Stepper, class System, class State, class TimeIterator, class Time, class Observer, class StepperTag >
 size_t integrate_times(
-        Stepper stepper , System system , State &start_state ,
-        TimeIterator start_time , TimeIterator end_time , Time dt ,
-        Observer observer , StepperTag
+    Stepper stepper, System system, State &start_state,
+    TimeIterator start_time, TimeIterator end_time, Time dt,
+    Observer observer, StepperTag
 )
 {
-    size_t obs_calls = 0;
+	size_t obs_calls = 0;
 
-    boost::for_each( make_times_time_range( stepper , system , start_state ,
-                                            start_time , end_time , dt ) ,
-                         // should we use traits<Stepper>::state_type here instead of State? NO!
-                     obs_caller< Observer >( obs_calls , observer ) );
+	boost::for_each( make_times_time_range( stepper, system, start_state,
+	                                        start_time, end_time, dt ),
+	                 // should we use traits<Stepper>::state_type here instead of State? NO!
+	                 obs_caller< Observer >( obs_calls, observer ) );
 
-        // step integration steps gives step+1 observer calls
-    return obs_calls-1;
+	// step integration steps gives step+1 observer calls
+	return obs_calls-1;
 }
 
 

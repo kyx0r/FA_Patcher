@@ -11,7 +11,7 @@ all: $(LIBPATH)/lib$(LIBNAME).a
 
 clean:
 	rm -f $(OBJS) lib$(LIBNAME).a
-	rm -rf ../../lib/$(LIBNAME).a
+	rm -rf ../../lib/lib$(LIBNAME).a
 
 lib$(LIBNAME).a: $(OBJS)
 	ar -cvr lib$(LIBNAME).a $(OBJS)

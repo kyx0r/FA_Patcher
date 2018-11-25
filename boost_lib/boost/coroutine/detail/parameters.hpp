@@ -16,84 +16,95 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
-namespace detail {
+namespace boost
+{
+namespace coroutines
+{
+namespace detail
+{
 
 template< typename Data >
 struct parameters
 {
-    Data                *   data;
-    bool                    do_unwind;
-    void                *   coro;
+	Data                *   data;
+	bool                    do_unwind;
+	void                *   coro;
 
-    parameters() :
-        data( 0), do_unwind( false), coro( 0)
-    {}
+	parameters() :
+		data( 0), do_unwind( false), coro( 0)
+	{}
 
-    explicit parameters( void * coro_) :
-        data( 0), do_unwind( false), coro( coro_)
-    { BOOST_ASSERT( 0 != coro); }
+	explicit parameters( void * coro_) :
+		data( 0), do_unwind( false), coro( coro_)
+	{
+		BOOST_ASSERT( 0 != coro);
+	}
 
-    explicit parameters( Data * data_, void * coro_) :
-        data( data_), do_unwind( false), coro( coro_)
-    {
-        BOOST_ASSERT( 0 != data);
-        BOOST_ASSERT( 0 != coro);
-    }
+	explicit parameters( Data * data_, void * coro_) :
+		data( data_), do_unwind( false), coro( coro_)
+	{
+		BOOST_ASSERT( 0 != data);
+		BOOST_ASSERT( 0 != coro);
+	}
 
-    explicit parameters( unwind_t::flag_t) :
-        data( 0), do_unwind( true)
-    {}
+	explicit parameters( unwind_t::flag_t) :
+		data( 0), do_unwind( true)
+	{}
 };
 
 template< typename Data >
 struct parameters< Data & >
 {
-    Data                *   data;
-    bool                    do_unwind;
-    void                *   coro;
+	Data                *   data;
+	bool                    do_unwind;
+	void                *   coro;
 
-    parameters() :
-        data( 0), do_unwind( false), coro( 0)
-    {}
+	parameters() :
+		data( 0), do_unwind( false), coro( 0)
+	{}
 
-    explicit parameters( void * coro_) :
-        data( 0), do_unwind( false), coro( coro_)
-    { BOOST_ASSERT( 0 != coro); }
+	explicit parameters( void * coro_) :
+		data( 0), do_unwind( false), coro( coro_)
+	{
+		BOOST_ASSERT( 0 != coro);
+	}
 
-    explicit parameters( Data * data_, void * coro_) :
-        data( data_), do_unwind( false), coro( coro_)
-    {
-        BOOST_ASSERT( 0 != data);
-        BOOST_ASSERT( 0 != coro);
-    }
+	explicit parameters( Data * data_, void * coro_) :
+		data( data_), do_unwind( false), coro( coro_)
+	{
+		BOOST_ASSERT( 0 != data);
+		BOOST_ASSERT( 0 != coro);
+	}
 
-    explicit parameters( unwind_t::flag_t) :
-        data( 0), do_unwind( true), coro( 0)
-    {}
+	explicit parameters( unwind_t::flag_t) :
+		data( 0), do_unwind( true), coro( 0)
+	{}
 };
 
 template<>
 struct parameters< void >
 {
-    bool                    do_unwind;
-    void                *   coro;
+	bool                    do_unwind;
+	void                *   coro;
 
-    parameters() :
-        do_unwind( false), coro(0)
-    {}
+	parameters() :
+		do_unwind( false), coro(0)
+	{}
 
-    parameters( void * coro_) :
-        do_unwind( false), coro( coro_)
-    { BOOST_ASSERT( 0 != coro); }
+	parameters( void * coro_) :
+		do_unwind( false), coro( coro_)
+	{
+		BOOST_ASSERT( 0 != coro);
+	}
 
-    explicit parameters( unwind_t::flag_t) :
-        do_unwind( true), coro( 0)
-    {}
+	explicit parameters( unwind_t::flag_t) :
+		do_unwind( true), coro( 0)
+	{}
 };
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

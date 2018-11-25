@@ -136,7 +136,7 @@ typedef std::vector<exported_function> exported_functions_list;
 const exported_functions_list get_exported_functions(const pe_base& pe);
 //Returns array of exported functions and information about export
 const exported_functions_list get_exported_functions(const pe_base& pe, export_info& info);
-	
+
 //Helper export functions
 //Returns pair: <ordinal base for supplied functions; maximum ordinal value for supplied functions>
 const std::pair<uint16_t, uint16_t> get_export_ordinal_limits(const exported_functions_list& exports);

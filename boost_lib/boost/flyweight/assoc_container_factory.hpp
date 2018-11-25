@@ -26,87 +26,99 @@
 #include <utility>
 #endif
 
-namespace boost{namespace flyweights{namespace detail{
+namespace boost
+{
+namespace flyweights
+{
+namespace detail
+{
 BOOST_FLYWEIGHT_NESTED_XXX_IF_NOT_PLACEHOLDER_EXPRESSION_DEF(iterator)
 BOOST_FLYWEIGHT_NESTED_XXX_IF_NOT_PLACEHOLDER_EXPRESSION_DEF(value_type)
-}}} /* namespace boost::flyweights::detail */
+}
+}
+} /* namespace boost::flyweights::detail */
 
 /* Factory class using a given associative container.
  */
 
-namespace boost{
+namespace boost
+{
 
-namespace flyweights{
+namespace flyweights
+{
 
 template<typename Container>
 class assoc_container_factory_class:public factory_marker
 {
 public:
-  /* When assoc_container_factory_class<Container> is an MPL placeholder
-   * expression, referring to Container::iterator and Container::value_type
-   * force the MPL placeholder expression Container to be instantiated, which
-   * is wasteful and can fail in concept-checked STL implementations.
-   * We protect ourselves against this circumstance.
-   */
+	/* When assoc_container_factory_class<Container> is an MPL placeholder
+	 * expression, referring to Container::iterator and Container::value_type
+	 * force the MPL placeholder expression Container to be instantiated, which
+	 * is wasteful and can fail in concept-checked STL implementations.
+	 * We protect ourselves against this circumstance.
+	 */
 
-  typedef typename detail::nested_iterator_if_not_placeholder_expression<
-    Container
-  >::type                                handle_type;
-  typedef typename detail::nested_value_type_if_not_placeholder_expression<
-    Container
-  >::type                                entry_type;
-  
-  handle_type insert(const entry_type& x)
-  {
-    return cont.insert(x).first;
-  }
+	typedef typename detail::nested_iterator_if_not_placeholder_expression<
+	Container
+	>::type                                handle_type;
+	typedef typename detail::nested_value_type_if_not_placeholder_expression<
+	Container
+	>::type                                entry_type;
+
+	handle_type insert(const entry_type& x)
+	{
+		return cont.insert(x).first;
+	}
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-  handle_type insert(entry_type&& x)
-  {
-    return cont.insert(std::move(x)).first;
-  }
+	handle_type insert(entry_type&& x)
+	{
+		return cont.insert(std::move(x)).first;
+	}
 #endif
 
-  void erase(handle_type h)
-  {
-    cont.erase(h);
-  }
+	void erase(handle_type h)
+	{
+		cont.erase(h);
+	}
 
-  static const entry_type& entry(handle_type h){return *h;}
+	static const entry_type& entry(handle_type h)
+	{
+		return *h;
+	}
 
 private:
-  /* As above, avoid instantiating Container if it is an
-   * MPL placeholder expression.
-   */
+	/* As above, avoid instantiating Container if it is an
+	 * MPL placeholder expression.
+	 */
 
-  typedef typename mpl::if_<
-    detail::is_placeholder_expression<Container>,
-    int,
-    Container
-  >::type container_type;
-  container_type cont;
+	typedef typename mpl::if_<
+	detail::is_placeholder_expression<Container>,
+	       int,
+	       Container
+	       >::type container_type;
+	container_type cont;
 
 public:
-  typedef assoc_container_factory_class type;
-  BOOST_MPL_AUX_LAMBDA_SUPPORT(1,assoc_container_factory_class,(Container))
+	typedef assoc_container_factory_class type;
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(1,assoc_container_factory_class,(Container))
 };
 
 /* assoc_container_factory_class specifier */
 
 template<
-  typename ContainerSpecifier
-  BOOST_FLYWEIGHT_NOT_A_PLACEHOLDER_EXPRESSION_DEF
->
+    typename ContainerSpecifier
+    BOOST_FLYWEIGHT_NOT_A_PLACEHOLDER_EXPRESSION_DEF
+    >
 struct assoc_container_factory:factory_marker
 {
-  template<typename Entry,typename Key>
-  struct apply
-  {
-    typedef assoc_container_factory_class<
-      typename mpl::apply2<ContainerSpecifier,Entry,Key>::type
-    > type;
-  };
+	template<typename Entry,typename Key>
+	struct apply
+	{
+		typedef assoc_container_factory_class<
+		typename mpl::apply2<ContainerSpecifier,Entry,Key>::type
+		> type;
+	};
 };
 
 }  /* namespace flyweights */

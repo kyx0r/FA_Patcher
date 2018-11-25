@@ -43,47 +43,51 @@
 #include <cstring>
 #include <memory>
 
-namespace boost {
-namespace beast {
-namespace zlib {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace zlib
+{
+namespace detail
+{
 
 class window
 {
-    std::unique_ptr<std::uint8_t[]> p_;
-    std::uint16_t i_ = 0;
-    std::uint16_t size_ = 0;
-    std::uint16_t capacity_ = 0;
-    std::uint8_t bits_ = 0;
+	std::unique_ptr<std::uint8_t[]> p_;
+	std::uint16_t i_ = 0;
+	std::uint16_t size_ = 0;
+	std::uint16_t capacity_ = 0;
+	std::uint8_t bits_ = 0;
 
 public:
-    int
-    bits() const
-    {
-        return bits_;
-    }
+	int
+	bits() const
+	{
+		return bits_;
+	}
 
-    unsigned
-    capacity() const
-    {
-        return capacity_;
-    }
+	unsigned
+	capacity() const
+	{
+		return capacity_;
+	}
 
-    unsigned
-    size() const
-    {
-        return size_;
-    }
+	unsigned
+	size() const
+	{
+		return size_;
+	}
 
-    void
-    reset(int bits);
+	void
+	reset(int bits);
 
-    void
-    read(std::uint8_t* out, std::size_t pos, std::size_t n);
+	void
+	read(std::uint8_t* out, std::size_t pos, std::size_t n);
 
-    template<class = void>
-    void
-    write(std::uint8_t const* in, std::size_t n);
+	template<class = void>
+	void
+	write(std::uint8_t const* in, std::size_t n);
 };
 
 inline
@@ -91,14 +95,14 @@ void
 window::
 reset(int bits)
 {
-    if(bits_ != bits)
-    {
-        p_.reset();
-        bits_ = static_cast<std::uint8_t>(bits);
-        capacity_ = 1U << bits_;
-    }
-    i_ = 0;
-    size_ = 0;
+	if(bits_ != bits)
+	{
+		p_.reset();
+		bits_ = static_cast<std::uint8_t>(bits);
+		capacity_ = 1U << bits_;
+	}
+	i_ = 0;
+	size_ = 0;
 }
 
 inline
@@ -106,22 +110,22 @@ void
 window::
 read(std::uint8_t* out, std::size_t pos, std::size_t n)
 {
-    if(i_ >= size_)
-    {
-        // window is contiguous
-        std::memcpy(out, &p_[i_ - pos], n);
-        return;
-    }
-    auto i = ((i_ - pos) + capacity_) % capacity_;
-    auto m = capacity_ - i;
-    if(n <= m)
-    {
-        std::memcpy(out, &p_[i], n);
-        return;
-    }
-    std::memcpy(out, &p_[i], m);
-    out += m;
-    std::memcpy(out, &p_[0], n - m);
+	if(i_ >= size_)
+	{
+		// window is contiguous
+		std::memcpy(out, &p_[i_ - pos], n);
+		return;
+	}
+	auto i = ((i_ - pos) + capacity_) % capacity_;
+	auto m = capacity_ - i;
+	if(n <= m)
+	{
+		std::memcpy(out, &p_[i], n);
+		return;
+	}
+	std::memcpy(out, &p_[i], m);
+	out += m;
+	std::memcpy(out, &p_[0], n - m);
 }
 
 template<class>
@@ -129,34 +133,34 @@ void
 window::
 write(std::uint8_t const* in, std::size_t n)
 {
-    if(! p_)
-        p_ = boost::make_unique<
-            std::uint8_t[]>(capacity_);
-    if(n >= capacity_)
-    {
-        i_ = 0;
-        size_ = capacity_;
-        std::memcpy(&p_[0], in + (n - size_), size_);
-        return;
-    }
-    if(i_ + n <= capacity_)
-    {
-        std::memcpy(&p_[i_], in, n);
-        if(size_ >= capacity_ - n)
-            size_ = capacity_;
-        else
-            size_ = static_cast<std::uint16_t>(size_ + n);
+	if(! p_)
+		p_ = boost::make_unique<
+		     std::uint8_t[]>(capacity_);
+	if(n >= capacity_)
+	{
+		i_ = 0;
+		size_ = capacity_;
+		std::memcpy(&p_[0], in + (n - size_), size_);
+		return;
+	}
+	if(i_ + n <= capacity_)
+	{
+		std::memcpy(&p_[i_], in, n);
+		if(size_ >= capacity_ - n)
+			size_ = capacity_;
+		else
+			size_ = static_cast<std::uint16_t>(size_ + n);
 
-        i_ = static_cast<std::uint16_t>(
-            (i_ + n) % capacity_);
-        return;
-    }
-    auto m = capacity_ - i_;
-    std::memcpy(&p_[i_], in, m);
-    in += m;
-    i_ = static_cast<std::uint16_t>(n - m);
-    std::memcpy(&p_[0], in, i_);
-    size_ = capacity_;
+		i_ = static_cast<std::uint16_t>(
+		         (i_ + n) % capacity_);
+		return;
+	}
+	auto m = capacity_ - i_;
+	std::memcpy(&p_[i_], in, m);
+	in += m;
+	i_ = static_cast<std::uint16_t>(n - m);
+	std::memcpy(&p_[0], in, i_);
+	size_ = capacity_;
 }
 
 } // detail

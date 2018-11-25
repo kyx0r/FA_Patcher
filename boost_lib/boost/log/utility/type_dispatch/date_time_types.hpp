@@ -28,7 +28,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -83,21 +84,21 @@ BOOST_LOG_OPEN_NAMESPACE
  * An MPL-sequence of natively supported date and time types of attributes
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_NATIVE_DATE_TIME_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_NATIVE_DATE_TIME_TYPES())
 > native_date_time_types;
 
 /*!
  * An MPL-sequence of Boost date and time types of attributes
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_DATE_TIME_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_DATE_TIME_TYPES())
 > boost_date_time_types;
 
 /*!
  * An MPL-sequence with the complete list of the supported date and time types
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_DATE_TIME_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_DATE_TIME_TYPES())
 > date_time_types;
 
 /*!
@@ -109,14 +110,14 @@ typedef native_date_time_types native_date_types;
  * An MPL-sequence of Boost date types of attributes
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_DATE_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_DATE_TYPES())
 > boost_date_types;
 
 /*!
  * An MPL-sequence with the complete list of the supported date types
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_DATE_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_DATE_TYPES())
 > date_types;
 
 /*!
@@ -136,28 +137,28 @@ typedef date_time_types time_types;
  * An MPL-sequence of natively supported time duration types of attributes
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_NATIVE_TIME_DURATION_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_NATIVE_TIME_DURATION_TYPES())
 > native_time_duration_types;
 
 /*!
  * An MPL-sequence of Boost time duration types of attributes
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_TIME_DURATION_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_TIME_DURATION_TYPES())
 > boost_time_duration_types;
 
 /*!
  * An MPL-sequence with the complete list of the supported time duration types
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_TIME_DURATION_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_TIME_DURATION_TYPES())
 > time_duration_types;
 
 /*!
  * An MPL-sequence of Boost time duration types of attributes
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_TIME_PERIOD_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_BOOST_TIME_PERIOD_TYPES())
 > boost_time_period_types;
 
 /*!

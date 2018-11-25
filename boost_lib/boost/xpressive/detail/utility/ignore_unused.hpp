@@ -15,10 +15,16 @@
 
 #include "boost/proto/detail/ignore_unused.hpp"
 
-namespace boost { namespace xpressive { namespace detail
+namespace boost
 {
-  using boost::proto::detail::ignore_unused;
-}}}
+namespace xpressive
+{
+namespace detail
+{
+using boost::proto::detail::ignore_unused;
+}
+}
+}
 
 #endif
 

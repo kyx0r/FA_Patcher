@@ -12,31 +12,37 @@
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/remove_extent.hpp>
 
-namespace boost { namespace fusion { namespace extension
+namespace boost
 {
-    template <typename>
-    struct deref_impl;
+namespace fusion
+{
+namespace extension
+{
+template <typename>
+struct deref_impl;
 
-    template <>
-    struct deref_impl<po_array_iterator_tag>
-    {
-        template <typename It>
-        struct apply
-        {
-            typedef typename
-                add_reference<
-                    typename remove_extent<typename It::seq_type>::type
-                >::type
-            type;
+template <>
+struct deref_impl<po_array_iterator_tag>
+{
+	template <typename It>
+	struct apply
+	{
+		typedef typename
+		add_reference<
+		typename remove_extent<typename It::seq_type>::type
+		>::type
+		type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-            static type
-            call(It const& it)
-            {
-                return (*it.seq)[It::index::value];
-            }
-        };
-    };
-}}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(It const& it)
+		{
+			return (*it.seq)[It::index::value];
+		}
+	};
+};
+}
+}
+}
 
 #endif

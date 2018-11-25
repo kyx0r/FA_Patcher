@@ -12,29 +12,35 @@
 #include <boost/spirit/home/x3/support/traits/move_to.hpp>
 #include <boost/spirit/home/x3/support/no_case.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // The base char_parser
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Derived>
-    struct char_parser : parser<Derived>
-    {
-        template <typename Iterator, typename Context, typename Attribute>
-        bool parse(
-            Iterator& first, Iterator const& last
-          , Context const& context, unused_type, Attribute& attr) const
-        {
-            x3::skip_over(first, last, context);
-            if (first != last && this->derived().test(*first, context))
-            {
-                x3::traits::move_to(*first, attr);
-                ++first;
-                return true;
-            }
-            return false;
-        }
-    };
-}}}
+namespace spirit
+{
+namespace x3
+{
+///////////////////////////////////////////////////////////////////////////
+// The base char_parser
+///////////////////////////////////////////////////////////////////////////
+template <typename Derived>
+struct char_parser : parser<Derived>
+{
+	template <typename Iterator, typename Context, typename Attribute>
+	bool parse(
+	    Iterator& first, Iterator const& last
+	    , Context const& context, unused_type, Attribute& attr) const
+	{
+		x3::skip_over(first, last, context);
+		if (first != last && this->derived().test(*first, context))
+		{
+			x3::traits::move_to(*first, attr);
+			++first;
+			return true;
+		}
+		return false;
+	}
+};
+}
+}
+}
 
 #endif

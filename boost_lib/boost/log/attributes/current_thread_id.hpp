@@ -32,14 +32,16 @@
 #include <boost/log/attributes/attribute_value_impl.hpp>
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! Thread identifier type
 typedef boost::log::aux::thread::id thread_id;
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that always returns the current thread identifier
@@ -48,54 +50,57 @@ namespace attributes {
  *       thread identifier, no matter which thread emits the log record.
  */
 class current_thread_id :
-    public attribute
+	public attribute
 {
 public:
-    //! A held attribute value type
-    typedef thread_id value_type;
+	//! A held attribute value type
+	typedef thread_id value_type;
 
 protected:
-    //! Factory implementation
-    class BOOST_SYMBOL_VISIBLE impl :
-        public attribute_value::impl
-    {
-    public:
-        bool dispatch(type_dispatcher& dispatcher)
-        {
-            type_dispatcher::callback< value_type > callback =
-                dispatcher.get_callback< value_type >();
-            if (callback)
-            {
-                callback(boost::log::aux::this_thread::get_id());
-                return true;
-            }
-            else
-                return false;
-        }
+	//! Factory implementation
+	class BOOST_SYMBOL_VISIBLE impl :
+		public attribute_value::impl
+	{
+	public:
+		bool dispatch(type_dispatcher& dispatcher)
+		{
+			type_dispatcher::callback< value_type > callback =
+			    dispatcher.get_callback< value_type >();
+			if (callback)
+			{
+				callback(boost::log::aux::this_thread::get_id());
+				return true;
+			}
+			else
+				return false;
+		}
 
-        intrusive_ptr< attribute_value::impl > detach_from_thread()
-        {
-            typedef attribute_value_impl< value_type > detached_value;
-            return new detached_value(boost::log::aux::this_thread::get_id());
-        }
+		intrusive_ptr< attribute_value::impl > detach_from_thread()
+		{
+			typedef attribute_value_impl< value_type > detached_value;
+			return new detached_value(boost::log::aux::this_thread::get_id());
+		}
 
-        typeindex::type_index get_type() const { return typeindex::type_id< value_type >(); }
-    };
+		typeindex::type_index get_type() const
+		{
+			return typeindex::type_id< value_type >();
+		}
+	};
 
 public:
-    /*!
-     * Default constructor
-     */
-    current_thread_id() : attribute(new impl())
-    {
-    }
-    /*!
-     * Constructor for casting support
-     */
-    explicit current_thread_id(cast_source const& source) :
-        attribute(source.as< impl >())
-    {
-    }
+	/*!
+	 * Default constructor
+	 */
+	current_thread_id() : attribute(new impl())
+	{
+	}
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit current_thread_id(cast_source const& source) :
+		attribute(source.as< impl >())
+	{
+	}
 };
 
 } // namespace attributes

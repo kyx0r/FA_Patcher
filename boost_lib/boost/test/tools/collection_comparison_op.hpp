@@ -27,9 +27,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace assertion {
+namespace boost
+{
+namespace test_tools
+{
+namespace assertion
+{
 
 // ************************************************************************** //
 // ************* selectors for specialized comparizon routines ************** //
@@ -58,84 +61,91 @@ struct specialized_compare<Col> : public mpl::true_ {};         \
 // **************            lexicographic_compare             ************** //
 // ************************************************************************** //
 
-namespace op {
+namespace op
+{
 
 template <typename OP, bool can_be_equal, bool prefer_shorter,
           typename Lhs, typename Rhs>
 inline
 typename boost::enable_if_c<
-       unit_test::is_forward_iterable<Lhs>::value && !unit_test::is_cstring<Lhs>::value
-    && unit_test::is_forward_iterable<Rhs>::value && !unit_test::is_cstring<Rhs>::value,
-    assertion_result>::type
+unit_test::is_forward_iterable<Lhs>::value && !unit_test::is_cstring<Lhs>::value
+&& unit_test::is_forward_iterable<Rhs>::value && !unit_test::is_cstring<Rhs>::value,
+assertion_result>::type
 lexicographic_compare( Lhs const& lhs, Rhs const& rhs )
 {
-    assertion_result ar( true );
+	assertion_result ar( true );
 
-    typedef unit_test::bt_iterator_traits<Lhs> t_Lhs_iterator;
-    typedef unit_test::bt_iterator_traits<Rhs> t_Rhs_iterator;
+	typedef unit_test::bt_iterator_traits<Lhs> t_Lhs_iterator;
+	typedef unit_test::bt_iterator_traits<Rhs> t_Rhs_iterator;
 
-    typename t_Lhs_iterator::const_iterator first1 = t_Lhs_iterator::begin(lhs);
-    typename t_Rhs_iterator::const_iterator first2 = t_Rhs_iterator::begin(rhs);
-    typename t_Lhs_iterator::const_iterator last1  = t_Lhs_iterator::end(lhs);
-    typename t_Rhs_iterator::const_iterator last2  = t_Rhs_iterator::end(rhs);
-    std::size_t                             pos    = 0;
+	typename t_Lhs_iterator::const_iterator first1 = t_Lhs_iterator::begin(lhs);
+	typename t_Rhs_iterator::const_iterator first2 = t_Rhs_iterator::begin(rhs);
+	typename t_Lhs_iterator::const_iterator last1  = t_Lhs_iterator::end(lhs);
+	typename t_Rhs_iterator::const_iterator last2  = t_Rhs_iterator::end(rhs);
+	std::size_t                             pos    = 0;
 
-    for( ; (first1 != last1) && (first2 != last2); ++first1, ++first2, ++pos ) {
-        assertion_result const& element_ar = OP::eval(*first1, *first2);
-        if( !can_be_equal && element_ar )
-            return ar; // a < b
+	for( ; (first1 != last1) && (first2 != last2); ++first1, ++first2, ++pos )
+	{
+		assertion_result const& element_ar = OP::eval(*first1, *first2);
+		if( !can_be_equal && element_ar )
+			return ar; // a < b
 
-        assertion_result const& reverse_ar = OP::eval(*first2, *first1);
-        if( element_ar && !reverse_ar )
-            return ar; // a<=b and !(b<=a) => a < b => return true
+		assertion_result const& reverse_ar = OP::eval(*first2, *first1);
+		if( element_ar && !reverse_ar )
+			return ar; // a<=b and !(b<=a) => a < b => return true
 
-        if( element_ar || !reverse_ar )
-            continue; // (a<=b and b<=a) or (!(a<b) and !(b<a)) => a == b => keep looking
+		if( element_ar || !reverse_ar )
+			continue; // (a<=b and b<=a) or (!(a<b) and !(b<a)) => a == b => keep looking
 
-        // !(a<=b) and b<=a => b < a => return false
-        ar = false;
-        ar.message() << "\nFailure at position " << pos << ": "
-                     << tt_detail::print_helper(*first1)
-                     << OP::revert()
-                     << tt_detail::print_helper(*first2)
-                     << ". " << element_ar.message();
-        return ar;
-    }
+		// !(a<=b) and b<=a => b < a => return false
+		ar = false;
+		ar.message() << "\nFailure at position " << pos << ": "
+		             << tt_detail::print_helper(*first1)
+		             << OP::revert()
+		             << tt_detail::print_helper(*first2)
+		             << ". " << element_ar.message();
+		return ar;
+	}
 
-    if( first1 != last1 ) {
-        if( prefer_shorter ) {
-            ar = false;
-            ar.message() << "\nFirst collection has extra trailing elements.";
-        }
-    }
-    else if( first2 != last2 ) {
-        if( !prefer_shorter ) {
-            ar = false;
-            ar.message() << "\nSecond collection has extra trailing elements.";
-        }
-    }
-    else if( !can_be_equal ) {
-        ar = false;
-        ar.message() << "\nCollections appear to be equal.";
-    }
+	if( first1 != last1 )
+	{
+		if( prefer_shorter )
+		{
+			ar = false;
+			ar.message() << "\nFirst collection has extra trailing elements.";
+		}
+	}
+	else if( first2 != last2 )
+	{
+		if( !prefer_shorter )
+		{
+			ar = false;
+			ar.message() << "\nSecond collection has extra trailing elements.";
+		}
+	}
+	else if( !can_be_equal )
+	{
+		ar = false;
+		ar.message() << "\nCollections appear to be equal.";
+	}
 
-    return ar;
+	return ar;
 }
 
 template <typename OP, bool can_be_equal, bool prefer_shorter,
           typename Lhs, typename Rhs>
 inline
 typename boost::enable_if_c<
-    (unit_test::is_cstring<Lhs>::value || unit_test::is_cstring<Rhs>::value),
-    assertion_result>::type
+(unit_test::is_cstring<Lhs>::value || unit_test::is_cstring<Rhs>::value),
+assertion_result>::type
 lexicographic_compare( Lhs const& lhs, Rhs const& rhs )
 {
-    typedef typename unit_test::deduce_cstring<Lhs>::type lhs_char_type;
-    typedef typename unit_test::deduce_cstring<Rhs>::type rhs_char_type;
+	typedef typename unit_test::deduce_cstring<Lhs>::type lhs_char_type;
+	typedef typename unit_test::deduce_cstring<Rhs>::type rhs_char_type;
 
-    return lexicographic_compare<OP, can_be_equal, prefer_shorter>(
-        lhs_char_type(lhs),
-        rhs_char_type(rhs));
+	return lexicographic_compare<OP, can_be_equal, prefer_shorter>(
+	           lhs_char_type(lhs),
+	           rhs_char_type(rhs));
 }
 
 //____________________________________________________________________________//
@@ -147,55 +157,57 @@ lexicographic_compare( Lhs const& lhs, Rhs const& rhs )
 template <typename OP, typename Lhs, typename Rhs>
 inline
 typename boost::enable_if_c<
-       unit_test::is_forward_iterable<Lhs>::value && !unit_test::is_cstring<Lhs>::value
-    && unit_test::is_forward_iterable<Rhs>::value && !unit_test::is_cstring<Rhs>::value,
-    assertion_result>::type
+unit_test::is_forward_iterable<Lhs>::value && !unit_test::is_cstring<Lhs>::value
+&& unit_test::is_forward_iterable<Rhs>::value && !unit_test::is_cstring<Rhs>::value,
+assertion_result>::type
 element_compare( Lhs const& lhs, Rhs const& rhs )
 {
-    typedef unit_test::bt_iterator_traits<Lhs> t_Lhs_iterator;
-    typedef unit_test::bt_iterator_traits<Rhs> t_Rhs_iterator;
+	typedef unit_test::bt_iterator_traits<Lhs> t_Lhs_iterator;
+	typedef unit_test::bt_iterator_traits<Rhs> t_Rhs_iterator;
 
-    assertion_result ar( true );
+	assertion_result ar( true );
 
-    if( t_Lhs_iterator::size(lhs) != t_Rhs_iterator::size(rhs) ) {
-        ar = false;
-        ar.message() << "\nCollections size mismatch: " << t_Lhs_iterator::size(lhs) << " != " << t_Rhs_iterator::size(rhs);
-        return ar;
-    }
+	if( t_Lhs_iterator::size(lhs) != t_Rhs_iterator::size(rhs) )
+	{
+		ar = false;
+		ar.message() << "\nCollections size mismatch: " << t_Lhs_iterator::size(lhs) << " != " << t_Rhs_iterator::size(rhs);
+		return ar;
+	}
 
-    typename t_Lhs_iterator::const_iterator left  = t_Lhs_iterator::begin(lhs);
-    typename t_Rhs_iterator::const_iterator right = t_Rhs_iterator::begin(rhs);
-    std::size_t                             pos   = 0;
+	typename t_Lhs_iterator::const_iterator left  = t_Lhs_iterator::begin(lhs);
+	typename t_Rhs_iterator::const_iterator right = t_Rhs_iterator::begin(rhs);
+	std::size_t                             pos   = 0;
 
-    for( ; pos < t_Lhs_iterator::size(lhs); ++left, ++right, ++pos ) {
-        assertion_result const element_ar = OP::eval( *left, *right );
-        if( element_ar )
-            continue;
+	for( ; pos < t_Lhs_iterator::size(lhs); ++left, ++right, ++pos )
+	{
+		assertion_result const element_ar = OP::eval( *left, *right );
+		if( element_ar )
+			continue;
 
-        ar = false;
-        ar.message() << "\nMismatch at position " << pos << ": "
-                     << tt_detail::print_helper(*left)
-                     << OP::revert()
-                     << tt_detail::print_helper(*right)
-                     << ". " << element_ar.message();
-    }
+		ar = false;
+		ar.message() << "\nMismatch at position " << pos << ": "
+		             << tt_detail::print_helper(*left)
+		             << OP::revert()
+		             << tt_detail::print_helper(*right)
+		             << ". " << element_ar.message();
+	}
 
-    return ar;
+	return ar;
 }
 
 // In case string comparison is branching here
 template <typename OP, typename Lhs, typename Rhs>
 inline
 typename boost::enable_if_c<
-    (unit_test::is_cstring<Lhs>::value || unit_test::is_cstring<Rhs>::value),
-    assertion_result>::type
+(unit_test::is_cstring<Lhs>::value || unit_test::is_cstring<Rhs>::value),
+assertion_result>::type
 element_compare( Lhs const& lhs, Rhs const& rhs )
 {
-    typedef typename unit_test::deduce_cstring<Lhs>::type lhs_char_type;
-    typedef typename unit_test::deduce_cstring<Rhs>::type rhs_char_type;
+	typedef typename unit_test::deduce_cstring<Lhs>::type lhs_char_type;
+	typedef typename unit_test::deduce_cstring<Rhs>::type rhs_char_type;
 
-    return element_compare<OP>(lhs_char_type(lhs),
-                               rhs_char_type(rhs));
+	return element_compare<OP>(lhs_char_type(lhs),
+	                           rhs_char_type(rhs));
 }
 
 //____________________________________________________________________________//
@@ -208,27 +220,28 @@ template <typename OP, typename Lhs, typename Rhs>
 inline assertion_result
 non_equality_compare( Lhs const& lhs, Rhs const& rhs )
 {
-    typedef unit_test::bt_iterator_traits<Lhs> t_Lhs_iterator;
-    typedef unit_test::bt_iterator_traits<Rhs> t_Rhs_iterator;
+	typedef unit_test::bt_iterator_traits<Lhs> t_Lhs_iterator;
+	typedef unit_test::bt_iterator_traits<Rhs> t_Rhs_iterator;
 
-    assertion_result ar( true );
+	assertion_result ar( true );
 
-    if( t_Lhs_iterator::size(lhs) != t_Rhs_iterator::size(rhs) )
-        return ar;
+	if( t_Lhs_iterator::size(lhs) != t_Rhs_iterator::size(rhs) )
+		return ar;
 
-    typename t_Lhs_iterator::const_iterator left = t_Lhs_iterator::begin(lhs);
-    typename t_Rhs_iterator::const_iterator right = t_Rhs_iterator::begin(rhs);
-    typename t_Lhs_iterator::const_iterator end = t_Lhs_iterator::end(lhs);
+	typename t_Lhs_iterator::const_iterator left = t_Lhs_iterator::begin(lhs);
+	typename t_Rhs_iterator::const_iterator right = t_Rhs_iterator::begin(rhs);
+	typename t_Lhs_iterator::const_iterator end = t_Lhs_iterator::end(lhs);
 
-    for( ; left != end; ++left, ++right ) {
-        if( OP::eval( *left, *right ) )
-            return ar;
-    }
+	for( ; left != end; ++left, ++right )
+	{
+		if( OP::eval( *left, *right ) )
+			return ar;
+	}
 
-    ar = false;
-    ar.message() << "\nCollections appear to be equal";
+	ar = false;
+	ar.message() << "\nCollections appear to be equal";
 
-    return ar;
+	return ar;
 }
 
 //____________________________________________________________________________//
@@ -242,45 +255,51 @@ template<typename OP>
 struct cctraits;
 
 template<typename Lhs, typename Rhs>
-struct cctraits<op::EQ<Lhs, Rhs> > {
-    typedef specialized_compare<Lhs> is_specialized;
+struct cctraits<op::EQ<Lhs, Rhs> >
+{
+	typedef specialized_compare<Lhs> is_specialized;
 };
 
 template<typename Lhs, typename Rhs>
-struct cctraits<op::NE<Lhs, Rhs> > {
-    typedef specialized_compare<Lhs> is_specialized;
+struct cctraits<op::NE<Lhs, Rhs> >
+{
+	typedef specialized_compare<Lhs> is_specialized;
 };
 
 template<typename Lhs, typename Rhs>
-struct cctraits<op::LT<Lhs, Rhs> > {
-    static const bool can_be_equal = false;
-    static const bool prefer_short = true;
+struct cctraits<op::LT<Lhs, Rhs> >
+{
+	static const bool can_be_equal = false;
+	static const bool prefer_short = true;
 
-    typedef specialized_compare<Lhs> is_specialized;
+	typedef specialized_compare<Lhs> is_specialized;
 };
 
 template<typename Lhs, typename Rhs>
-struct cctraits<op::LE<Lhs, Rhs> > {
-    static const bool can_be_equal = true;
-    static const bool prefer_short = true;
+struct cctraits<op::LE<Lhs, Rhs> >
+{
+	static const bool can_be_equal = true;
+	static const bool prefer_short = true;
 
-    typedef specialized_compare<Lhs> is_specialized;
+	typedef specialized_compare<Lhs> is_specialized;
 };
 
 template<typename Lhs, typename Rhs>
-struct cctraits<op::GT<Lhs, Rhs> > {
-    static const bool can_be_equal = false;
-    static const bool prefer_short = false;
+struct cctraits<op::GT<Lhs, Rhs> >
+{
+	static const bool can_be_equal = false;
+	static const bool prefer_short = false;
 
-    typedef specialized_compare<Lhs> is_specialized;
+	typedef specialized_compare<Lhs> is_specialized;
 };
 
 template<typename Lhs, typename Rhs>
-struct cctraits<op::GE<Lhs, Rhs> > {
-    static const bool can_be_equal = true;
-    static const bool prefer_short = false;
+struct cctraits<op::GE<Lhs, Rhs> >
+{
+	static const bool can_be_equal = true;
+	static const bool prefer_short = false;
 
-    typedef specialized_compare<Lhs> is_specialized;
+	typedef specialized_compare<Lhs> is_specialized;
 };
 
 // ************************************************************************** //
@@ -292,7 +311,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::EQ<L, R> >*, mpl::true_ )
 {
-    return assertion::op::element_compare<op::EQ<L, R> >( lhs, rhs );
+	return assertion::op::element_compare<op::EQ<L, R> >( lhs, rhs );
 }
 
 //____________________________________________________________________________//
@@ -301,7 +320,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::EQ<L, R> >*, mpl::false_ )
 {
-    return lhs == rhs;
+	return lhs == rhs;
 }
 
 //____________________________________________________________________________//
@@ -310,7 +329,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::NE<L, R> >*, mpl::true_ )
 {
-    return assertion::op::non_equality_compare<op::NE<L, R> >( lhs, rhs );
+	return assertion::op::non_equality_compare<op::NE<L, R> >( lhs, rhs );
 }
 
 //____________________________________________________________________________//
@@ -319,7 +338,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::NE<L, R> >*, mpl::false_ )
 {
-    return lhs != rhs;
+	return lhs != rhs;
 }
 
 //____________________________________________________________________________//
@@ -328,7 +347,7 @@ template <typename OP, typename Lhs, typename Rhs>
 inline assertion_result
 lexicographic_compare( Lhs const& lhs, Rhs const& rhs )
 {
-    return assertion::op::lexicographic_compare<OP, cctraits<OP>::can_be_equal, cctraits<OP>::prefer_short>( lhs, rhs );
+	return assertion::op::lexicographic_compare<OP, cctraits<OP>::can_be_equal, cctraits<OP>::prefer_short>( lhs, rhs );
 }
 
 //____________________________________________________________________________//
@@ -337,7 +356,7 @@ template <typename Lhs, typename Rhs, typename OP>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<OP>*, mpl::true_ )
 {
-    return lexicographic_compare<OP>( lhs, rhs );
+	return lexicographic_compare<OP>( lhs, rhs );
 }
 
 //____________________________________________________________________________//
@@ -346,7 +365,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::LT<L, R> >*, mpl::false_ )
 {
-    return lhs < rhs;
+	return lhs < rhs;
 }
 
 //____________________________________________________________________________//
@@ -355,7 +374,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::LE<L, R> >*, mpl::false_ )
 {
-    return lhs <= rhs;
+	return lhs <= rhs;
 }
 
 //____________________________________________________________________________//
@@ -364,7 +383,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::GT<L, R> >*, mpl::false_ )
 {
-    return lhs > rhs;
+	return lhs > rhs;
 }
 
 //____________________________________________________________________________//
@@ -373,7 +392,7 @@ template <typename Lhs, typename Rhs, typename L, typename R>
 inline assertion_result
 compare_collections( Lhs const& lhs, Rhs const& rhs, boost::type<op::GE<L, R> >*, mpl::false_ )
 {
-    return lhs >= rhs;
+	return lhs >= rhs;
 }
 
 //____________________________________________________________________________//

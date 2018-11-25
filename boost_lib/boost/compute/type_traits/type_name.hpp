@@ -16,9 +16,12 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T>
 struct type_name_trait;
@@ -95,7 +98,7 @@ BOOST_COMPUTE_DEFINE_BUILTIN_TYPE_NAME_FUNCTION(void)
 template<class T>
 inline const char* type_name()
 {
-    return detail::type_name_trait<T>::value();
+	return detail::type_name_trait<T>::value();
 }
 
 } // end compute namespace

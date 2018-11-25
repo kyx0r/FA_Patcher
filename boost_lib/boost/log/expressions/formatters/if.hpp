@@ -32,165 +32,168 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 template< typename LeftT, typename CondT, typename ThenT >
 class if_output_terminal
 {
 private:
-    //! Self type
-    typedef if_output_terminal this_type;
+	//! Self type
+	typedef if_output_terminal this_type;
 
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! Internal typedef for type categorization
-    typedef void _is_boost_log_terminal;
+	//! Internal typedef for type categorization
+	typedef void _is_boost_log_terminal;
 #endif
 
-    //! Result type definition
-    template< typename >
-    struct result;
+	//! Result type definition
+	template< typename >
+	struct result;
 
-    template< typename ThisT, typename ContextT >
-    struct result< ThisT(ContextT) >
-    {
-        typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
-        typedef typename phoenix::evaluator::impl<
-            typename LeftT::proto_base_expr&,
-            context_type,
-            phoenix::unused
-        >::result_type type;
-    };
+	template< typename ThisT, typename ContextT >
+	struct result< ThisT(ContextT) >
+	{
+		typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
+		typedef typename phoenix::evaluator::impl<
+		typename LeftT::proto_base_expr&,
+		         context_type,
+		         phoenix::unused
+		         >::result_type type;
+	};
 
 private:
-    //! Left argument actor
-    LeftT m_left;
-    //! Condition expression
-    CondT m_cond;
-    //! Positive branch
-    ThenT m_then;
+	//! Left argument actor
+	LeftT m_left;
+	//! Condition expression
+	CondT m_cond;
+	//! Positive branch
+	ThenT m_then;
 
 public:
-    //! Initializing constructor
-    if_output_terminal(LeftT const& left, CondT const& cond, ThenT const& then_) : m_left(left), m_cond(cond), m_then(then_)
-    {
-    }
+	//! Initializing constructor
+	if_output_terminal(LeftT const& left, CondT const& cond, ThenT const& then_) : m_left(left), m_cond(cond), m_then(then_)
+	{
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
-    {
-        typedef typename result< this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        if (phoenix::eval(m_cond, ctx))
-            phoenix::eval(m_then, ctx);
-        return strm;
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
+	{
+		typedef typename result< this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		if (phoenix::eval(m_cond, ctx))
+			phoenix::eval(m_then, ctx);
+		return strm;
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
-    {
-        typedef typename result< const this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        if (phoenix::eval(m_cond, ctx))
-            phoenix::eval(m_then, ctx);
-        return strm;
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
+	{
+		typedef typename result< const this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		if (phoenix::eval(m_cond, ctx))
+			phoenix::eval(m_then, ctx);
+		return strm;
+	}
 
-    BOOST_DELETED_FUNCTION(if_output_terminal())
+	BOOST_DELETED_FUNCTION(if_output_terminal())
 };
 
 template< typename LeftT, typename CondT, typename ThenT, typename ElseT >
 class if_else_output_terminal
 {
 private:
-    //! Self type
-    typedef if_else_output_terminal this_type;
+	//! Self type
+	typedef if_else_output_terminal this_type;
 
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! Internal typedef for type categorization
-    typedef void _is_boost_log_terminal;
+	//! Internal typedef for type categorization
+	typedef void _is_boost_log_terminal;
 #endif
 
-    //! Result type definition
-    template< typename >
-    struct result;
+	//! Result type definition
+	template< typename >
+	struct result;
 
-    template< typename ThisT, typename ContextT >
-    struct result< ThisT(ContextT) >
-    {
-        typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
-        typedef typename phoenix::evaluator::impl<
-            typename LeftT::proto_base_expr&,
-            context_type,
-            phoenix::unused
-        >::result_type type;
-    };
+	template< typename ThisT, typename ContextT >
+	struct result< ThisT(ContextT) >
+	{
+		typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
+		typedef typename phoenix::evaluator::impl<
+		typename LeftT::proto_base_expr&,
+		         context_type,
+		         phoenix::unused
+		         >::result_type type;
+	};
 
 private:
-    //! Left argument actor
-    LeftT m_left;
-    //! Condition expression
-    CondT m_cond;
-    //! Positive branch
-    ThenT m_then;
-    //! Negative branch
-    ElseT m_else;
+	//! Left argument actor
+	LeftT m_left;
+	//! Condition expression
+	CondT m_cond;
+	//! Positive branch
+	ThenT m_then;
+	//! Negative branch
+	ElseT m_else;
 
 public:
-    //! Initializing constructor
-    if_else_output_terminal(LeftT const& left, CondT const& cond, ThenT const& then_, ElseT const& else_) : m_left(left), m_cond(cond), m_then(then_), m_else(else_)
-    {
-    }
+	//! Initializing constructor
+	if_else_output_terminal(LeftT const& left, CondT const& cond, ThenT const& then_, ElseT const& else_) : m_left(left), m_cond(cond), m_then(then_), m_else(else_)
+	{
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
-    {
-        typedef typename result< this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        if (phoenix::eval(m_cond, ctx))
-            phoenix::eval(m_then, ctx);
-        else
-            phoenix::eval(m_else, ctx);
-        return strm;
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
+	{
+		typedef typename result< this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		if (phoenix::eval(m_cond, ctx))
+			phoenix::eval(m_then, ctx);
+		else
+			phoenix::eval(m_else, ctx);
+		return strm;
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
-    {
-        typedef typename result< const this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        if (phoenix::eval(m_cond, ctx))
-            phoenix::eval(m_then, ctx);
-        else
-            phoenix::eval(m_else, ctx);
-        return strm;
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
+	{
+		typedef typename result< const this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		if (phoenix::eval(m_cond, ctx))
+			phoenix::eval(m_then, ctx);
+		else
+			phoenix::eval(m_else, ctx);
+		return strm;
+	}
 
-    BOOST_DELETED_FUNCTION(if_else_output_terminal())
+	BOOST_DELETED_FUNCTION(if_else_output_terminal())
 };
 
 
 template< typename CondT, typename ThenT, typename ElseT >
 struct if_then_else_gen
 {
-    CondT m_cond;
-    ThenT m_then;
-    ElseT m_else;
+	CondT m_cond;
+	ThenT m_then;
+	ElseT m_else;
 
-    if_then_else_gen(CondT const& cond, ThenT const& then_, ElseT const& else_) : m_cond(cond), m_then(then_), m_else(else_)
-    {
-    }
+	if_then_else_gen(CondT const& cond, ThenT const& then_, ElseT const& else_) : m_cond(cond), m_then(then_), m_else(else_)
+	{
+	}
 };
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
@@ -214,24 +217,24 @@ struct if_then_else_gen
 template< typename CondT, typename ThenT >
 struct if_then_gen
 {
-    struct else_gen
-    {
-        CondT m_cond;
-        ThenT m_then;
+	struct else_gen
+	{
+		CondT m_cond;
+		ThenT m_then;
 
-        else_gen(CondT const& cond, ThenT const& then_) : m_cond(cond), m_then(then_)
-        {
-        }
+		else_gen(CondT const& cond, ThenT const& then_) : m_cond(cond), m_then(then_)
+		{
+		}
 
-        template< typename ElseT >
-        BOOST_FORCEINLINE if_then_else_gen< CondT, ThenT, ElseT > operator[] (ElseT const& el)
-        {
-            return if_then_else_gen< CondT, ThenT, ElseT >(m_cond, m_then, el);
-        }
-    }
-    else_;
+		template< typename ElseT >
+		BOOST_FORCEINLINE if_then_else_gen< CondT, ThenT, ElseT > operator[] (ElseT const& el)
+		{
+			return if_then_else_gen< CondT, ThenT, ElseT >(m_cond, m_then, el);
+		}
+	}
+	else_;
 
-    if_then_gen(CondT const& cond, ThenT const& then_) : else_(cond, then_) {}
+	if_then_gen(CondT const& cond, ThenT const& then_) : else_(cond, then_) {}
 };
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
@@ -256,18 +259,18 @@ template< typename CondT >
 class if_gen
 {
 private:
-    CondT const& m_cond;
+	CondT const& m_cond;
 
 public:
-    explicit if_gen(CondT const& cond) : m_cond(cond)
-    {
-    }
+	explicit if_gen(CondT const& cond) : m_cond(cond)
+	{
+	}
 
-    template< typename ThenT >
-    BOOST_FORCEINLINE if_then_gen< CondT, ThenT > operator[] (ThenT const& then_) const
-    {
-        return if_then_gen< CondT, ThenT >(m_cond, then_);
-    }
+	template< typename ThenT >
+	BOOST_FORCEINLINE if_then_gen< CondT, ThenT > operator[] (ThenT const& then_) const
+	{
+		return if_then_gen< CondT, ThenT >(m_cond, then_);
+	}
 };
 
 } // namespace aux
@@ -281,7 +284,7 @@ public:
 template< typename CondT >
 BOOST_FORCEINLINE aux::if_gen< CondT > if_(CondT const& cond)
 {
-    return aux::if_gen< CondT >(cond);
+	return aux::if_gen< CondT >(cond);
 }
 
 } // namespace expressions
@@ -290,19 +293,21 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
-namespace phoenix {
+namespace phoenix
+{
 
-namespace result_of {
+namespace result_of
+{
 
 template< typename LeftT, typename CondT, typename ThenT >
 struct is_nullary< custom_terminal< boost::log::expressions::aux::if_output_terminal< LeftT, CondT, ThenT > > > :
-    public mpl::false_
+	public mpl::false_
 {
 };
 
 template< typename LeftT, typename CondT, typename ThenT, typename ElseT >
 struct is_nullary< custom_terminal< boost::log::expressions::aux::if_else_output_terminal< LeftT, CondT, ThenT, ElseT > > > :
-    public mpl::false_
+	public mpl::false_
 {
 };
 

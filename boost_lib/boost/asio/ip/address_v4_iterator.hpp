@@ -20,9 +20,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ip {
+namespace boost
+{
+namespace asio
+{
+namespace ip
+{
 
 template <typename> class basic_address_iterator;
 
@@ -38,118 +41,121 @@ template <typename> class basic_address_iterator;
 template <> class basic_address_iterator<address_v4>
 {
 public:
-  /// The type of the elements pointed to by the iterator.
-  typedef address_v4 value_type;
+	/// The type of the elements pointed to by the iterator.
+	typedef address_v4 value_type;
 
-  /// Distance between two iterators.
-  typedef std::ptrdiff_t difference_type;
+	/// Distance between two iterators.
+	typedef std::ptrdiff_t difference_type;
 
-  /// The type of a pointer to an element pointed to by the iterator.
-  typedef const address_v4* pointer;
+	/// The type of a pointer to an element pointed to by the iterator.
+	typedef const address_v4* pointer;
 
-  /// The type of a reference to an element pointed to by the iterator.
-  typedef const address_v4& reference;
+	/// The type of a reference to an element pointed to by the iterator.
+	typedef const address_v4& reference;
 
-  /// Denotes that the iterator satisfies the input iterator requirements.
-  typedef std::input_iterator_tag iterator_category;
+	/// Denotes that the iterator satisfies the input iterator requirements.
+	typedef std::input_iterator_tag iterator_category;
 
-  /// Construct an iterator that points to the specified address.
-  basic_address_iterator(const address_v4& addr) BOOST_ASIO_NOEXCEPT
-    : address_(addr)
-  {
-  }
+	/// Construct an iterator that points to the specified address.
+	basic_address_iterator(const address_v4& addr) BOOST_ASIO_NOEXCEPT
+:
+	address_(addr)
+	{
+	}
 
-  /// Copy constructor.
-  basic_address_iterator(
-      const basic_address_iterator& other) BOOST_ASIO_NOEXCEPT
-    : address_(other.address_)
-  {
-  }
-
-#if defined(BOOST_ASIO_HAS_MOVE)
-  /// Move constructor.
-  basic_address_iterator(basic_address_iterator&& other) BOOST_ASIO_NOEXCEPT
-    : address_(BOOST_ASIO_MOVE_CAST(address_v4)(other.address_))
-  {
-  }
-#endif // defined(BOOST_ASIO_HAS_MOVE)
-
-  /// Assignment operator.
-  basic_address_iterator& operator=(
-      const basic_address_iterator& other) BOOST_ASIO_NOEXCEPT
-  {
-    address_ = other.address_;
-    return *this;
-  }
+	/// Copy constructor.
+	basic_address_iterator(
+	    const basic_address_iterator& other) BOOST_ASIO_NOEXCEPT
+:
+	address_(other.address_)
+	{
+	}
 
 #if defined(BOOST_ASIO_HAS_MOVE)
-  /// Move assignment operator.
-  basic_address_iterator& operator=(
-      basic_address_iterator&& other) BOOST_ASIO_NOEXCEPT
-  {
-    address_ = BOOST_ASIO_MOVE_CAST(address_v4)(other.address_);
-    return *this;
-  }
+	/// Move constructor.
+	basic_address_iterator(basic_address_iterator&& other) BOOST_ASIO_NOEXCEPT
+:
+	address_(BOOST_ASIO_MOVE_CAST(address_v4)(other.address_))
+	{
+	}
 #endif // defined(BOOST_ASIO_HAS_MOVE)
 
-  /// Dereference the iterator.
-  const address_v4& operator*() const BOOST_ASIO_NOEXCEPT
-  {
-    return address_;
-  }
+	/// Assignment operator.
+	basic_address_iterator& operator=(
+	    const basic_address_iterator& other) BOOST_ASIO_NOEXCEPT
+	{
+		address_ = other.address_;
+		return *this;
+	}
 
-  /// Dereference the iterator.
-  const address_v4* operator->() const BOOST_ASIO_NOEXCEPT
-  {
-    return &address_;
-  }
+#if defined(BOOST_ASIO_HAS_MOVE)
+	/// Move assignment operator.
+	basic_address_iterator& operator=(
+	    basic_address_iterator&& other) BOOST_ASIO_NOEXCEPT
+	{
+		address_ = BOOST_ASIO_MOVE_CAST(address_v4)(other.address_);
+		return *this;
+	}
+#endif // defined(BOOST_ASIO_HAS_MOVE)
 
-  /// Pre-increment operator.
-  basic_address_iterator& operator++() BOOST_ASIO_NOEXCEPT
-  {
-    address_ = address_v4((address_.to_uint() + 1) & 0xFFFFFFFF);
-    return *this;
-  }
+	/// Dereference the iterator.
+	const address_v4& operator*() const BOOST_ASIO_NOEXCEPT
+	{
+		return address_;
+	}
 
-  /// Post-increment operator.
-  basic_address_iterator operator++(int) BOOST_ASIO_NOEXCEPT
-  {
-    basic_address_iterator tmp(*this);
-    ++*this;
-    return tmp;
-  }
+	/// Dereference the iterator.
+	const address_v4* operator->() const BOOST_ASIO_NOEXCEPT
+	{
+		return &address_;
+	}
 
-  /// Pre-decrement operator.
-  basic_address_iterator& operator--() BOOST_ASIO_NOEXCEPT
-  {
-    address_ = address_v4((address_.to_uint() - 1) & 0xFFFFFFFF);
-    return *this;
-  }
+	/// Pre-increment operator.
+	basic_address_iterator& operator++() BOOST_ASIO_NOEXCEPT
+	{
+		address_ = address_v4((address_.to_uint() + 1) & 0xFFFFFFFF);
+		return *this;
+	}
 
-  /// Post-decrement operator.
-  basic_address_iterator operator--(int)
-  {
-    basic_address_iterator tmp(*this);
-    --*this;
-    return tmp;
-  }
+	/// Post-increment operator.
+	basic_address_iterator operator++(int) BOOST_ASIO_NOEXCEPT
+	{
+		basic_address_iterator tmp(*this);
+		++*this;
+		return tmp;
+	}
 
-  /// Compare two addresses for equality.
-  friend bool operator==(const basic_address_iterator& a,
-      const basic_address_iterator& b)
-  {
-    return a.address_ == b.address_;
-  }
+	/// Pre-decrement operator.
+	basic_address_iterator& operator--() BOOST_ASIO_NOEXCEPT
+	{
+		address_ = address_v4((address_.to_uint() - 1) & 0xFFFFFFFF);
+		return *this;
+	}
 
-  /// Compare two addresses for inequality.
-  friend bool operator!=(const basic_address_iterator& a,
-      const basic_address_iterator& b)
-  {
-    return a.address_ != b.address_;
-  }
+	/// Post-decrement operator.
+	basic_address_iterator operator--(int)
+	{
+		basic_address_iterator tmp(*this);
+		--*this;
+		return tmp;
+	}
+
+	/// Compare two addresses for equality.
+	friend bool operator==(const basic_address_iterator& a,
+	                       const basic_address_iterator& b)
+	{
+		return a.address_ == b.address_;
+	}
+
+	/// Compare two addresses for inequality.
+	friend bool operator!=(const basic_address_iterator& a,
+	                       const basic_address_iterator& b)
+	{
+		return a.address_ != b.address_;
+	}
 
 private:
-  address_v4 address_;
+	address_v4 address_;
 };
 
 /// An input iterator that can be used for traversing IPv4 addresses.

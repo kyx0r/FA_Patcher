@@ -10,35 +10,35 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class StateP, class ForwardOp>
-      class foldl_start_with_parser
-      {
-      private:
-        template <class Res>
-        struct apply_unchecked :
-          foldl<P, typename get_result<Res>::type, ForwardOp>::template apply<
-            typename get_remaining<Res>::type,
-            typename get_position<Res>::type
-          >
-        {};
-      public:
-        typedef foldl_start_with_parser type;
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class StateP, class ForwardOp>
+class foldl_start_with_parser
+{
+private:
+	template <class Res>
+	struct apply_unchecked :
+		foldl<P, typename get_result<Res>::type, ForwardOp>::template apply<
+		    typename get_remaining<Res>::type,
+		    typename get_position<Res>::type
+		    >
+	{};
+public:
+	typedef foldl_start_with_parser type;
 
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::eval_if<
-            typename is_error<typename StateP::template apply<S, Pos> >::type,
-            typename StateP::template apply<S, Pos>,
-            apply_unchecked<typename StateP::template apply<S, Pos> >
-          >
-        {};
-      };
-    }
-  }
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<typename StateP::template apply<S, Pos> >::type,
+	typename StateP::template apply<S, Pos>,
+	         apply_unchecked<typename StateP::template apply<S, Pos> >
+	>
+	{};
+};
+}
+}
 }
 
 #endif

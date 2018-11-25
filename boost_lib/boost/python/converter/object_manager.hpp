@@ -62,95 +62,105 @@
 
 // Forward declarations
 //
-namespace boost { namespace python
+namespace boost
 {
-  namespace api
-  {
-    class object; 
-  }
-}}
+namespace python
+{
+namespace api
+{
+class object;
+}
+}
+}
 
-namespace boost { namespace python { namespace converter { 
+namespace boost
+{
+namespace python
+{
+namespace converter
+{
 
 
 // Specializations for handle<T>
 template <class T>
 struct handle_object_manager_traits
-    : pyobject_traits<typename T::element_type>
+	: pyobject_traits<typename T::element_type>
 {
- private:
-  typedef pyobject_traits<typename T::element_type> base;
-  
- public:
-  BOOST_STATIC_CONSTANT(bool, is_specialized = true);
+private:
+	typedef pyobject_traits<typename T::element_type> base;
 
-  // Initialize with a null_ok pointer for efficiency, bypassing the
-  // null check since the source is always non-null.
-  static null_ok<typename T::element_type>* adopt(PyObject* p)
-  {
-      return python::allow_null(base::checked_downcast(p));
-  }
+public:
+	BOOST_STATIC_CONSTANT(bool, is_specialized = true);
+
+	// Initialize with a null_ok pointer for efficiency, bypassing the
+	// null check since the source is always non-null.
+	static null_ok<typename T::element_type>* adopt(PyObject* p)
+	{
+		return python::allow_null(base::checked_downcast(p));
+	}
 };
 
 template <class T>
 struct default_object_manager_traits
 {
-    BOOST_STATIC_CONSTANT(
-        bool, is_specialized = python::detail::is_borrowed_ptr<T>::value
-        );
+	BOOST_STATIC_CONSTANT(
+	    bool, is_specialized = python::detail::is_borrowed_ptr<T>::value
+	);
 };
 
 template <class T>
 struct object_manager_traits
-    : mpl::if_c<
-         is_handle<T>::value
-       , handle_object_manager_traits<T>
-       , default_object_manager_traits<T>
-    >::type
+	: mpl::if_c<
+	  is_handle<T>::value
+	, handle_object_manager_traits<T>
+	, default_object_manager_traits<T>
+	  >::type
 {
 };
 
 //
 // Traits for detecting whether a type is an object manager or a
 // (cv-qualified) reference to an object manager.
-// 
+//
 
 template <class T>
 struct is_object_manager
-    : mpl::bool_<object_manager_traits<T>::is_specialized>
+	: mpl::bool_<object_manager_traits<T>::is_specialized>
 {
 };
 
 template <class T>
 struct is_reference_to_object_manager
-    : mpl::false_
+	: mpl::false_
 {
 };
 
 template <class T>
 struct is_reference_to_object_manager<T&>
-    : is_object_manager<T>
+	: is_object_manager<T>
 {
 };
 
 template <class T>
 struct is_reference_to_object_manager<T const&>
-    : is_object_manager<T>
+	: is_object_manager<T>
 {
 };
 
 template <class T>
 struct is_reference_to_object_manager<T volatile&>
-    : is_object_manager<T>
+	: is_object_manager<T>
 {
 };
 
 template <class T>
 struct is_reference_to_object_manager<T const volatile&>
-    : is_object_manager<T>
+	: is_object_manager<T>
 {
 };
 
-}}} // namespace boost::python::converter
+}
+}
+} // namespace boost::python::converter
 
 #endif // OBJECT_MANAGER_DWA2002614_HPP

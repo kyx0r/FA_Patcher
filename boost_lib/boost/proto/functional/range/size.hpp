@@ -12,34 +12,40 @@
 #include <boost/range/size.hpp>
 #include <boost/proto/proto_fwd.hpp>
 
-namespace boost { namespace proto { namespace functional
+namespace boost
+{
+namespace proto
+{
+namespace functional
 {
 
-    // A PolymorphicFunctionObject that wraps boost::size()
-    struct size
-    {
-        BOOST_PROTO_CALLABLE()
+// A PolymorphicFunctionObject that wraps boost::size()
+struct size
+{
+	BOOST_PROTO_CALLABLE()
 
-        template<typename Sig>
-        struct result;
+	template<typename Sig>
+	struct result;
 
-        template<typename This, typename Rng>
-        struct result<This(Rng)>
-          : boost::range_size<Rng>
-        {};
+	template<typename This, typename Rng>
+	struct result<This(Rng)>
+: boost::range_size<Rng>
+	{};
 
-        template<typename This, typename Rng>
-        struct result<This(Rng &)>
-          : boost::range_size<Rng>
-        {};
+	template<typename This, typename Rng>
+	struct result<This(Rng &)>
+: boost::range_size<Rng>
+	{};
 
-        template<typename Rng>
-        typename boost::range_size<Rng>::type operator()(Rng const &rng) const
-        {
-            return boost::size(rng);
-        }
-    };
+	template<typename Rng>
+	typename boost::range_size<Rng>::type operator()(Rng const &rng) const
+	{
+		return boost::size(rng);
+	}
+};
 
-}}}
+}
+}
+}
 
 #endif

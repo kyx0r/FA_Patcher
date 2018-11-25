@@ -51,7 +51,12 @@ namespace boost {
 #include <boost/process/detail/windows/on_exit.hpp>
 #endif
 
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 struct async_tag;
 
@@ -63,25 +68,31 @@ struct is_io_context<api::io_context_ref> : std::true_type {};
 template<typename Tuple>
 inline asio::io_context& get_io_context(const Tuple & tup)
 {
-    auto& ref = *boost::fusion::find_if<is_io_context<boost::mpl::_>>(tup);
-    return ref.get();
+	auto& ref = *boost::fusion::find_if<is_io_context<boost::mpl::_>>(tup);
+	return ref.get();
 }
 
 struct async_builder
 {
-    boost::asio::io_context * ios;
+	boost::asio::io_context * ios;
 
-    void operator()(boost::asio::io_context & ios_) {this->ios = &ios_;};
+	void operator()(boost::asio::io_context & ios_)
+	{
+		this->ios = &ios_;
+	};
 
-    typedef api::io_context_ref result_type;
-    api::io_context_ref get_initializer() {return api::io_context_ref (*ios);};
+	typedef api::io_context_ref result_type;
+	api::io_context_ref get_initializer()
+	{
+		return api::io_context_ref (*ios);
+	};
 };
 
 
 template<>
 struct initializer_builder<async_tag>
 {
-    typedef async_builder type;
+	typedef async_builder type;
 };
 
 }
@@ -125,7 +136,8 @@ same restrictions as that class (do not register a handler for `SIGCHLD` except 
 constexpr static ::boost::process::detail::on_exit_ on_exit{};
 #endif
 
-}}
+}
+}
 
 
 

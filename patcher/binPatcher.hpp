@@ -4,3 +4,4 @@
 #include "fileIO.hpp"
 #include "hooks.hpp"
 #include "utils.hpp"
+#include "jitHooks.hpp"

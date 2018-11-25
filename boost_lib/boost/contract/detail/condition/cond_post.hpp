@@ -12,11 +12,11 @@
 #include <boost/contract/detail/condition/cond_base.hpp>
 #include <boost/contract/detail/none.hpp>
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-    #include <boost/contract/detail/type_traits/optional.hpp>
-    #include <boost/optional.hpp>
-    #include <boost/function.hpp>
-    #include <boost/type_traits/remove_reference.hpp>
-    #include <boost/mpl/if.hpp>
+#include <boost/contract/detail/type_traits/optional.hpp>
+#include <boost/optional.hpp>
+#include <boost/function.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/mpl/if.hpp>
 #endif
 
 /* PRIVATE */
@@ -39,50 +39,60 @@
 
 /* CODE */
 
-namespace boost { namespace contract { namespace detail {
+namespace boost
+{
+namespace contract
+{
+namespace detail
+{
 
 template<typename VR>
-class cond_post : public cond_base { // Non-copyable base.
+class cond_post : public cond_base   // Non-copyable base.
+{
 public:
-    explicit cond_post(boost::contract::from from) : cond_base(from) {}
-    
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        private: typedef typename boost::mpl::if_<is_optional<VR>,
-            boost::optional<typename boost::remove_reference<typename
-                    optional_value_type<VR>::type>::type const&> const&
-        ,
-            VR const&
-        >::type r_type;
+	explicit cond_post(boost::contract::from from) : cond_base(from) {}
 
-        BOOST_CONTRACT_DETAIL_COND_POST_DEF_(
-            r_type,
-            r,
-            void (r_type),
-            // Won't raise this error if NO_POST (for optimization).
-            BOOST_CONTRACT_ERROR_postcondition_result_parameter_required,
-            BOOST_CONTRACT_ERROR_postcondition_result_parameter_required(r)
-        )
-    #endif
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+private:
+	typedef typename boost::mpl::if_<is_optional<VR>,
+	        boost::optional<typename boost::remove_reference<typename
+	        optional_value_type<VR>::type>::type const&> const&
+	        ,
+	        VR const&
+	        >::type r_type;
+
+	BOOST_CONTRACT_DETAIL_COND_POST_DEF_(
+	    r_type,
+	    r,
+	    void (r_type),
+	    // Won't raise this error if NO_POST (for optimization).
+	    BOOST_CONTRACT_ERROR_postcondition_result_parameter_required,
+	    BOOST_CONTRACT_ERROR_postcondition_result_parameter_required(r)
+	)
+#endif
 };
 
 template<>
-class cond_post<none> : public cond_base { // Non-copyable base.
+class cond_post<none> : public cond_base   // Non-copyable base.
+{
 public:
-    explicit cond_post(boost::contract::from from) : cond_base(from) {}
-    
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        BOOST_CONTRACT_DETAIL_COND_POST_DEF_(
-            none,
-            unused,
-            void (),
-            // Won't raise this error if NO_POST (for optimization).
-            BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed,
-            BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed()
-        )
-    #endif
+	explicit cond_post(boost::contract::from from) : cond_base(from) {}
+
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+	BOOST_CONTRACT_DETAIL_COND_POST_DEF_(
+	    none,
+	    unused,
+	    void (),
+	    // Won't raise this error if NO_POST (for optimization).
+	    BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed,
+	    BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed()
+	)
+#endif
 };
 
-} } } // namespace
+}
+}
+} // namespace
 
 #endif // #include guard
 

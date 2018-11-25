@@ -23,24 +23,29 @@
 
 #include <boost/intrusive/detail/workaround.hpp>
 
-namespace boost {
-namespace intrusive {
-namespace detail {
+namespace boost
+{
+namespace intrusive
+{
+namespace detail
+{
 
 //This functor compares a stored value
 //and the one passed as an argument
 template<class ConstReference>
 class equal_to_value
 {
-   ConstReference t_;
+	ConstReference t_;
 
-   public:
-   equal_to_value(ConstReference t)
-      :  t_(t)
-   {}
+public:
+	equal_to_value(ConstReference t)
+		:  t_(t)
+	{}
 
-   BOOST_INTRUSIVE_FORCEINLINE bool operator()(ConstReference t)const
-   {  return t_ == t;   }
+	BOOST_INTRUSIVE_FORCEINLINE bool operator()(ConstReference t)const
+	{
+		return t_ == t;
+	}
 };
 
 }  //namespace detail{

@@ -21,18 +21,21 @@
 #include <boost/chrono/duration.hpp>
 #endif
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 #ifndef BOOST_COMPUTE_NO_HDR_CHRONO
 template<class Rep, class Period>
 inline std::chrono::duration<Rep, Period>
 make_duration_from_nanoseconds(std::chrono::duration<Rep, Period>, size_t nanoseconds)
 {
-    return std::chrono::duration_cast<std::chrono::duration<Rep, Period> >(
-        std::chrono::nanoseconds(nanoseconds)
-    );
+	return std::chrono::duration_cast<std::chrono::duration<Rep, Period> >(
+	           std::chrono::nanoseconds(nanoseconds)
+	       );
 }
 #endif // BOOST_COMPUTE_NO_HDR_CHRONO
 
@@ -41,9 +44,9 @@ template<class Rep, class Period>
 inline boost::chrono::duration<Rep, Period>
 make_duration_from_nanoseconds(boost::chrono::duration<Rep, Period>, size_t nanoseconds)
 {
-    return boost::chrono::duration_cast<boost::chrono::duration<Rep, Period> >(
-        boost::chrono::nanoseconds(nanoseconds)
-    );
+	return boost::chrono::duration_cast<boost::chrono::duration<Rep, Period> >(
+	           boost::chrono::nanoseconds(nanoseconds)
+	       );
 }
 #endif // BOOST_COMPUTE_NO_BOOST_CHRONO
 

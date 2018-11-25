@@ -30,11 +30,13 @@
 #include <boost/log/core/record_view.hpp>
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 /*!
  * \brief An implementation of a logging sink backend that outputs to the debugger
@@ -46,31 +48,31 @@ namespace sinks {
  */
 template< typename CharT >
 class basic_debug_output_backend :
-    public basic_formatted_sink_backend< CharT, concurrent_feeding >
+	public basic_formatted_sink_backend< CharT, concurrent_feeding >
 {
-    //! Base type
-    typedef basic_formatted_sink_backend< CharT, concurrent_feeding > base_type;
+	//! Base type
+	typedef basic_formatted_sink_backend< CharT, concurrent_feeding > base_type;
 
 public:
-    //! Character type
-    typedef typename base_type::char_type char_type;
-    //! String type to be used as a message text holder
-    typedef typename base_type::string_type string_type;
+	//! Character type
+	typedef typename base_type::char_type char_type;
+	//! String type to be used as a message text holder
+	typedef typename base_type::string_type string_type;
 
 public:
-    /*!
-     * Constructor. Initializes the sink backend.
-     */
-    BOOST_LOG_API basic_debug_output_backend();
-    /*!
-     * Destructor
-     */
-    BOOST_LOG_API ~basic_debug_output_backend();
+	/*!
+	 * Constructor. Initializes the sink backend.
+	 */
+	BOOST_LOG_API basic_debug_output_backend();
+	/*!
+	 * Destructor
+	 */
+	BOOST_LOG_API ~basic_debug_output_backend();
 
-    /*!
-     * The method passes the formatted message to debugger
-     */
-    BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
+	/*!
+	 * The method passes the formatted message to debugger
+	 */
+	BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
 };
 
 #ifdef BOOST_LOG_USE_CHAR

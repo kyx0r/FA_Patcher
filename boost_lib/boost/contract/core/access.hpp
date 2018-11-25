@@ -15,31 +15,36 @@ Allow to declare invariants, base types, etc all as private members.
 #include <boost/contract/core/config.hpp>
 #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
         defined(BOOST_CONTRACT_STATIC_LINK)
-    #include <boost/contract/detail/decl.hpp>
-    #include <boost/contract/detail/type_traits/mirror.hpp>
+#include <boost/contract/detail/decl.hpp>
+#include <boost/contract/detail/type_traits/mirror.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_INVARIANTS
-    #include <boost/contract/detail/debug.hpp>
-    #include <boost/function_types/property_tags.hpp>
-    #include <boost/mpl/vector.hpp>
+#include <boost/contract/detail/debug.hpp>
+#include <boost/function_types/property_tags.hpp>
+#include <boost/mpl/vector.hpp>
 #endif
 
-namespace boost { namespace contract {
-        
+namespace boost
+{
+namespace contract
+{
+
 #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
         defined(BOOST_CONTRACT_STATIC_LINK)
-    class virtual_;
+class virtual_;
 
-    namespace detail {
-        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-                /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
-    }
+namespace detail
+{
+BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+        /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
+}
 #endif
 #ifndef BOOST_CONTRACT_NO_INVARIANTS
-    namespace detail {
-        template<typename RR, class CC>
-        class cond_inv;
-    }
+namespace detail
+{
+template<typename RR, class CC>
+class cond_inv;
+}
 #endif
 
 /**
@@ -84,100 +89,108 @@ member and it is not copyable).
 
 @see @RefSect{advanced.access_specifiers, Access Specifiers}
 */
-class access { // Non-copyable (see below).
-/** @cond */
+class access   // Non-copyable (see below).
+{
+	/** @cond */
 private: // No public APIs (so users cannot use it directly by mistake).
 
-    access(); // Should never be constructed (not even internally).
-    ~access();
-    
-    // No boost::noncopyable to avoid its overhead when contracts disabled.
-    access(access&);
-    access& operator=(access&);
-    
-    #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+	access(); // Should never be constructed (not even internally).
+	~access();
+
+	// No boost::noncopyable to avoid its overhead when contracts disabled.
+	access(access&);
+	access& operator=(access&);
+
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
             defined(BOOST_CONTRACT_STATIC_LINK)
-        BOOST_CONTRACT_DETAIL_MIRROR_HAS_TYPE(has_base_types,
-                BOOST_CONTRACT_BASES_TYPEDEF)
+	BOOST_CONTRACT_DETAIL_MIRROR_HAS_TYPE(has_base_types,
+	                                      BOOST_CONTRACT_BASES_TYPEDEF)
 
-        template<class C>
-        struct base_types_of {
-            typedef typename C::BOOST_CONTRACT_BASES_TYPEDEF type;
-        };
-    #endif
+	template<class C>
+	struct base_types_of
+	{
+		typedef typename C::BOOST_CONTRACT_BASES_TYPEDEF type;
+	};
+#endif
 
-    #ifndef BOOST_CONTRACT_NO_INVARIANTS
-        BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION(
-                has_static_invariant_f, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
-        
-        BOOST_CONTRACT_DETAIL_MIRROR_HAS_STATIC_MEMBER_FUNCTION(
-                has_static_invariant_s, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
+#ifndef BOOST_CONTRACT_NO_INVARIANTS
+	BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION(
+	    has_static_invariant_f, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
 
-        template<class C>
-        struct has_static_invariant : has_static_invariant_s<C, void,
-                boost::mpl::vector<> > {};
+	BOOST_CONTRACT_DETAIL_MIRROR_HAS_STATIC_MEMBER_FUNCTION(
+	    has_static_invariant_s, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
 
-        template<class C>
-        static void static_invariant() {
-            C::BOOST_CONTRACT_STATIC_INVARIANT_FUNC();
-        }
+	template<class C>
+	struct has_static_invariant : has_static_invariant_s<C, void,
+		boost::mpl::vector<> > {};
 
-        template<class C>
-        class static_invariant_addr { // Class so to pass it as tparam.
-            typedef void (*func_ptr)();
-        public:
-            static func_ptr apply() {
-                return &C::BOOST_CONTRACT_STATIC_INVARIANT_FUNC;
-            }
-        };
+	template<class C>
+	static void static_invariant()
+	{
+		C::BOOST_CONTRACT_STATIC_INVARIANT_FUNC();
+	}
 
-        BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION(
-                has_invariant_f, BOOST_CONTRACT_INVARIANT_FUNC)
-        
-        BOOST_CONTRACT_DETAIL_MIRROR_HAS_STATIC_MEMBER_FUNCTION(
-                has_invariant_s, BOOST_CONTRACT_INVARIANT_FUNC)
+	template<class C>
+	class static_invariant_addr   // Class so to pass it as tparam.
+	{
+		typedef void (*func_ptr)();
+	public:
+		static func_ptr apply()
+		{
+			return &C::BOOST_CONTRACT_STATIC_INVARIANT_FUNC;
+		}
+	};
 
-        template<class C>
-        struct has_cv_invariant : has_invariant_f<C, void, boost::mpl::vector<>,
-                boost::function_types::cv_qualified> {};
-        
-        template<class C>
-        struct has_const_invariant : has_invariant_f<C, void, boost::mpl::
-                vector<>, boost::function_types::const_qualified> {};
+	BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION(
+	    has_invariant_f, BOOST_CONTRACT_INVARIANT_FUNC)
 
-        template<class C>
-        static void cv_invariant(C const volatile* obj) {
-            BOOST_CONTRACT_DETAIL_DEBUG(obj);
-            obj->BOOST_CONTRACT_INVARIANT_FUNC();
-        }
-        
-        template<class C>
-        static void const_invariant(C const* obj) {
-            BOOST_CONTRACT_DETAIL_DEBUG(obj);
-            obj->BOOST_CONTRACT_INVARIANT_FUNC();
-        }
-    #endif
-    
-    // Friends (used to limit library's public API).
-    // NOTE: Using friends here and in all other places in this library
-    // does not increase compilation times (I experimented replacing all
-    // friends with public and got the same compilation times).
-    #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+	BOOST_CONTRACT_DETAIL_MIRROR_HAS_STATIC_MEMBER_FUNCTION(
+	    has_invariant_s, BOOST_CONTRACT_INVARIANT_FUNC)
+
+	template<class C>
+	struct has_cv_invariant : has_invariant_f<C, void, boost::mpl::vector<>,
+		boost::function_types::cv_qualified> {};
+
+	template<class C>
+	struct has_const_invariant : has_invariant_f<C, void, boost::mpl::
+		vector<>, boost::function_types::const_qualified> {};
+
+	template<class C>
+	static void cv_invariant(C const volatile* obj)
+	{
+		BOOST_CONTRACT_DETAIL_DEBUG(obj);
+		obj->BOOST_CONTRACT_INVARIANT_FUNC();
+	}
+
+	template<class C>
+	static void const_invariant(C const* obj)
+	{
+		BOOST_CONTRACT_DETAIL_DEBUG(obj);
+		obj->BOOST_CONTRACT_INVARIANT_FUNC();
+	}
+#endif
+
+	// Friends (used to limit library's public API).
+	// NOTE: Using friends here and in all other places in this library
+	// does not increase compilation times (I experimented replacing all
+	// friends with public and got the same compilation times).
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
             defined(BOOST_CONTRACT_STATIC_LINK)
-        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-                /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
-            
-        BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
-                OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
-    #endif
-    #ifndef BOOST_CONTRACT_NO_INVARIANTS
-        template<typename RR, class CC>
-        friend class boost::contract::detail::cond_inv;
-    #endif
-/** @endcond */
+	BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+	        /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
+
+	BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
+	        OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
+#endif
+#ifndef BOOST_CONTRACT_NO_INVARIANTS
+	template<typename RR, class CC>
+	friend class boost::contract::detail::cond_inv;
+#endif
+	/** @endcond */
 };
 
-} } // namespace
+}
+} // namespace
 
 #endif // #include guard
 

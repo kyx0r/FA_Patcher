@@ -29,7 +29,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -50,32 +51,32 @@ BOOST_LOG_SETUP_API void init_from_settings(basic_settings_section< CharT > cons
 template< typename CharT >
 struct sink_factory
 {
-    //! Character type
-    typedef CharT char_type;
-    //! String type
-    typedef std::basic_string< char_type > string_type;
-    //! Settings section type
-    typedef basic_settings_section< char_type > settings_section;
+	//! Character type
+	typedef CharT char_type;
+	//! String type
+	typedef std::basic_string< char_type > string_type;
+	//! Settings section type
+	typedef basic_settings_section< char_type > settings_section;
 
-    /*!
-     * Default constructor
-     */
-    BOOST_DEFAULTED_FUNCTION(sink_factory(), {})
+	/*!
+	 * Default constructor
+	 */
+	BOOST_DEFAULTED_FUNCTION(sink_factory(), {})
 
-    /*!
-     * Virtual destructor
-     */
-    virtual ~sink_factory() {}
+	/*!
+	 * Virtual destructor
+	 */
+	virtual ~sink_factory() {}
 
-    /*!
-     * The function creates a formatter for the specified attribute.
-     *
-     * \param settings Sink parameters
-     */
-    virtual shared_ptr< sinks::sink > create_sink(settings_section const& settings) = 0;
+	/*!
+	 * The function creates a formatter for the specified attribute.
+	 *
+	 * \param settings Sink parameters
+	 */
+	virtual shared_ptr< sinks::sink > create_sink(settings_section const& settings) = 0;
 
-    BOOST_DELETED_FUNCTION(sink_factory(sink_factory const&))
-    BOOST_DELETED_FUNCTION(sink_factory& operator= (sink_factory const&))
+	BOOST_DELETED_FUNCTION(sink_factory(sink_factory const&))
+	BOOST_DELETED_FUNCTION(sink_factory& operator= (sink_factory const&))
 };
 
 /*!
@@ -109,7 +110,7 @@ BOOST_LOG_SETUP_API void register_sink_factory(const char* sink_name, shared_ptr
 template< typename CharT >
 inline void register_sink_factory(std::string const& sink_name, shared_ptr< sink_factory< CharT > > const& factory)
 {
-    register_sink_factory(sink_name.c_str(), factory);
+	register_sink_factory(sink_name.c_str(), factory);
 }
 
 /*!
@@ -127,11 +128,11 @@ inline void register_sink_factory(std::string const& sink_name, shared_ptr< sink
  */
 template< typename FactoryT >
 inline typename boost::enable_if_c<
-    is_base_and_derived< sink_factory< typename FactoryT::char_type >, FactoryT >::value
+is_base_and_derived< sink_factory< typename FactoryT::char_type >, FactoryT >::value
 >::type register_sink_factory(const char* sink_name, shared_ptr< FactoryT > const& factory)
 {
-    typedef sink_factory< typename FactoryT::char_type > factory_base;
-    register_sink_factory(sink_name, boost::static_pointer_cast< factory_base >(factory));
+	typedef sink_factory< typename FactoryT::char_type > factory_base;
+	register_sink_factory(sink_name, boost::static_pointer_cast< factory_base >(factory));
 }
 
 /*!
@@ -148,11 +149,11 @@ inline typename boost::enable_if_c<
  */
 template< typename FactoryT >
 inline typename boost::enable_if_c<
-    is_base_and_derived< sink_factory< typename FactoryT::char_type >, FactoryT >::value
+is_base_and_derived< sink_factory< typename FactoryT::char_type >, FactoryT >::value
 >::type register_sink_factory(std::string const& sink_name, shared_ptr< FactoryT > const& factory)
 {
-    typedef sink_factory< typename FactoryT::char_type > factory_base;
-    register_sink_factory(sink_name.c_str(), boost::static_pointer_cast< factory_base >(factory));
+	typedef sink_factory< typename FactoryT::char_type > factory_base;
+	register_sink_factory(sink_name.c_str(), boost::static_pointer_cast< factory_base >(factory));
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

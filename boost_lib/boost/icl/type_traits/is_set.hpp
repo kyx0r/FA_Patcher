@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------+    
+/*-----------------------------------------------------------------------------+
 Copyright (c) 2008-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -11,15 +11,18 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/config.hpp>
 #include <boost/icl/type_traits/is_container.hpp>
 
-namespace boost{ namespace icl
+namespace boost
 {
-    template <class Type> struct is_set
-    { 
-        typedef is_set<Type> type;
-        BOOST_STATIC_CONSTANT(bool, value = is_std_set<Type>::value); 
-    };
+namespace icl
+{
+template <class Type> struct is_set
+{
+	typedef is_set<Type> type;
+	BOOST_STATIC_CONSTANT(bool, value = is_std_set<Type>::value);
+};
 
-}} // namespace boost icl
+}
+} // namespace boost icl
 
 #endif
 

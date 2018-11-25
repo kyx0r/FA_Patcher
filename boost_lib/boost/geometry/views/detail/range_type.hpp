@@ -24,7 +24,9 @@
 
 #include <boost/geometry/views/box_view.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -37,39 +39,39 @@ template <typename Geometry,
           typename Tag = typename tag<Geometry>::type>
 struct range_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_OR_NOT_YET_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_OR_NOT_YET_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 
 template <typename Geometry>
 struct range_type<Geometry, ring_tag>
 {
-    typedef Geometry type;
+	typedef Geometry type;
 };
 
 
 template <typename Geometry>
 struct range_type<Geometry, linestring_tag>
 {
-    typedef Geometry type;
+	typedef Geometry type;
 };
 
 
 template <typename Geometry>
 struct range_type<Geometry, polygon_tag>
 {
-    typedef typename ring_type<Geometry>::type type;
+	typedef typename ring_type<Geometry>::type type;
 };
 
 
 template <typename Geometry>
 struct range_type<Geometry, box_tag>
 {
-    typedef box_view<Geometry> type;
+	typedef box_view<Geometry> type;
 };
 
 
@@ -77,25 +79,25 @@ struct range_type<Geometry, box_tag>
 template <typename Geometry>
 struct range_type<Geometry, multi_point_tag>
 {
-    typedef Geometry type;
+	typedef Geometry type;
 };
 
 
 template <typename Geometry>
 struct range_type<Geometry, multi_linestring_tag>
 {
-    typedef typename boost::range_value<Geometry>::type type;
+	typedef typename boost::range_value<Geometry>::type type;
 };
 
 
 template <typename Geometry>
 struct range_type<Geometry, multi_polygon_tag>
 {
-    // Call its single-version
-    typedef typename dispatch::range_type
-        <
-            typename boost::range_value<Geometry>::type
-        >::type type;
+	// Call its single-version
+	typedef typename dispatch::range_type
+	<
+	typename boost::range_value<Geometry>::type
+	>::type type;
 };
 
 
@@ -120,15 +122,16 @@ namespace detail
 template <typename Geometry>
 struct range_type
 {
-    typedef typename dispatch::range_type
-        <
-            Geometry
-        >::type type;
+	typedef typename dispatch::range_type
+	<
+	Geometry
+	>::type type;
 };
 
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_DETAIL_RANGE_TYPE_HPP

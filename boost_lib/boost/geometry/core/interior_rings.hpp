@@ -24,7 +24,9 @@
 #include <boost/geometry/core/tags.hpp>
 #include <boost/geometry/core/interior_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -45,11 +47,11 @@ namespace traits
 template <typename Geometry>
 struct interior_rings
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 
@@ -66,33 +68,33 @@ template
 <
     typename GeometryTag,
     typename Geometry
->
+    >
 struct interior_rings {};
 
 
 template <typename Polygon>
 struct interior_rings<polygon_tag, Polygon>
 {
-    static inline
-    typename geometry::interior_return_type<Polygon>::type
-                apply(Polygon& polygon)
-    {
-        return traits::interior_rings
-            <
-                typename boost::remove_const<Polygon>::type
-            >::get(polygon);
-    }
+	static inline
+	typename geometry::interior_return_type<Polygon>::type
+	apply(Polygon& polygon)
+	{
+		return traits::interior_rings
+		       <
+		       typename boost::remove_const<Polygon>::type
+		       >::get(polygon);
+	}
 };
 
 
 template <typename MultiPolygon>
 struct interior_type<multi_polygon_tag, MultiPolygon>
 {
-    typedef typename core_dispatch::interior_type
-        <
-            polygon_tag,
-            typename boost::range_value<MultiPolygon>::type
-        >::type type;
+	typedef typename core_dispatch::interior_type
+	<
+	polygon_tag,
+	typename boost::range_value<MultiPolygon>::type
+	>::type type;
 };
 
 
@@ -113,11 +115,11 @@ struct interior_type<multi_polygon_tag, MultiPolygon>
 template <typename Polygon>
 inline typename interior_return_type<Polygon>::type interior_rings(Polygon& polygon)
 {
-    return core_dispatch::interior_rings
-        <
-            typename tag<Polygon>::type,
-            Polygon
-        >::apply(polygon);
+	return core_dispatch::interior_rings
+	       <
+	       typename tag<Polygon>::type,
+	       Polygon
+	       >::apply(polygon);
 }
 
 
@@ -133,18 +135,19 @@ inline typename interior_return_type<Polygon>::type interior_rings(Polygon& poly
 */
 template <typename Polygon>
 inline typename interior_return_type<Polygon const>::type interior_rings(
-            Polygon const& polygon)
+    Polygon const& polygon)
 {
-    return core_dispatch::interior_rings
-        <
-            typename tag<Polygon>::type,
-            Polygon const
-        >::apply(polygon);
+	return core_dispatch::interior_rings
+	       <
+	       typename tag<Polygon>::type,
+	       Polygon const
+	       >::apply(polygon);
 }
 
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_INTERIOR_RINGS_HPP

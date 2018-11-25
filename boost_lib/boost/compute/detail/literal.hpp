@@ -19,31 +19,35 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T>
 std::string make_literal(T x)
 {
-    std::stringstream s;
-    s << std::setprecision(
+	std::stringstream s;
+	s << std::setprecision(
 #ifndef BOOST_NO_CXX11_NUMERIC_LIMITS
-            std::numeric_limits<T>::max_digits10
+	      std::numeric_limits<T>::max_digits10
 #else
-            // We don't have max_digits10, so add 3 other digits (this is what is required for
-            // float, and is one more than required for double).
-            3 + std::numeric_limits<T>::digits10
+	      // We don't have max_digits10, so add 3 other digits (this is what is required for
+	      // float, and is one more than required for double).
+	      3 + std::numeric_limits<T>::digits10
 #endif
-            )
-      << std::scientific
-      << x;
+	  )
+	  << std::scientific
+	  << x;
 
-    if(boost::is_same<T, float>::value || boost::is_same<T, float_>::value){
-        s << "f";
-    }
+	if(boost::is_same<T, float>::value || boost::is_same<T, float_>::value)
+	{
+		s << "f";
+	}
 
-    return s.str();
+	return s.str();
 }
 
 } // end detail namespace

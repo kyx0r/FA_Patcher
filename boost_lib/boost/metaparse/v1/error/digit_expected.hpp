@@ -10,16 +10,16 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        BOOST_METAPARSE_V1_DEFINE_ERROR(digit_expected, "Digit expected");
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+BOOST_METAPARSE_V1_DEFINE_ERROR(digit_expected, "Digit expected");
+}
+}
+}
 }
 
 #endif

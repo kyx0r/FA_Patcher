@@ -10,19 +10,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        BOOST_METAPARSE_V1_DEFINE_ERROR(
-          unexpected_character,
-          "Unexpected character"
-        );
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+BOOST_METAPARSE_V1_DEFINE_ERROR(
+    unexpected_character,
+    "Unexpected character"
+);
+}
+}
+}
 }
 
 #endif

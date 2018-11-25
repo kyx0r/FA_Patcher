@@ -28,9 +28,12 @@
 #include <boost/numeric/odeint/util/resize.hpp>
 #include <boost/numeric/odeint/external/openmp/openmp_nested_algebra.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 /** \brief A container that is split into distinct parts, for threading.
  * Just a wrapper for vector<vector<T>>, use `copy` for splitting/joining.
@@ -38,17 +41,17 @@ namespace odeint {
 template< class T >
 struct openmp_state : public std::vector< std::vector< T > >
 {
-    openmp_state() {}
+	openmp_state() {}
 
-    openmp_state(size_t n, const std::vector<T>& val = std::vector<T>())
-    : std::vector< std::vector< T > >(n, val) {}
+	openmp_state(size_t n, const std::vector<T>& val = std::vector<T>())
+		: std::vector< std::vector< T > >(n, val) {}
 
-    template<class InputIterator>
-    openmp_state(InputIterator first, InputIterator last)
-    : std::vector< std::vector< T > >(first, last) {}
+	template<class InputIterator>
+	openmp_state(InputIterator first, InputIterator last)
+		: std::vector< std::vector< T > >(first, last) {}
 
-    openmp_state(const std::vector< std::vector< T > > &orig)
-    : std::vector< std::vector< T > >(orig) {}
+	openmp_state(const std::vector< std::vector< T > > &orig)
+		: std::vector< std::vector< T > >(orig) {}
 
 };
 
@@ -60,28 +63,28 @@ struct is_resizeable< openmp_state< T > > : boost::true_type { };
 
 
 template< class T >
-struct same_size_impl< openmp_state< T > , openmp_state< T > >
+struct same_size_impl< openmp_state< T >, openmp_state< T > >
 {
-    static bool same_size( const openmp_state< T > &x , const openmp_state< T > &y )
-    {
-        if( x.size() != y.size() ) return false;
-        for( size_t i = 0 ; i != x.size() ; i++ )
-            if( x[i].size() != y[i].size() ) return false;
-        return true;
-    }
+	static bool same_size( const openmp_state< T > &x, const openmp_state< T > &y )
+	{
+		if( x.size() != y.size() ) return false;
+		for( size_t i = 0 ; i != x.size() ; i++ )
+			if( x[i].size() != y[i].size() ) return false;
+		return true;
+	}
 };
 
 
 template< class T >
-struct resize_impl< openmp_state< T > , openmp_state< T > >
+struct resize_impl< openmp_state< T >, openmp_state< T > >
 {
-    static void resize( openmp_state< T > &x , const openmp_state< T > &y )
-    {
-        x.resize( y.size() );
-#       pragma omp parallel for schedule(dynamic)
-        for(size_t i = 0 ; i < x.size() ; i++)
-            x[i].resize( y[i].size() );
-    }
+	static void resize( openmp_state< T > &x, const openmp_state< T > &y )
+	{
+		x.resize( y.size() );
+		#       pragma omp parallel for schedule(dynamic)
+		for(size_t i = 0 ; i < x.size() ; i++)
+			x[i].resize( y[i].size() );
+	}
 };
 
 
@@ -89,12 +92,12 @@ struct resize_impl< openmp_state< T > , openmp_state< T > >
 template< class T >
 struct copy_impl< openmp_state< T >, openmp_state< T > >
 {
-    static void copy( const openmp_state< T > &from, openmp_state< T > &to )
-    {
-#       pragma omp parallel for schedule(dynamic)
-        for(size_t i = 0 ; i < from.size() ; i++)
-            std::copy( from[i].begin() , from[i].end() , to.begin() );
-    }
+	static void copy( const openmp_state< T > &from, openmp_state< T > &to )
+	{
+		#       pragma omp parallel for schedule(dynamic)
+		for(size_t i = 0 ; i < from.size() ; i++)
+			std::copy( from[i].begin(), from[i].end(), to.begin() );
+	}
 };
 
 
@@ -107,21 +110,22 @@ struct copy_impl< openmp_state< T >, openmp_state< T > >
 template< class SourceContainer >
 struct split_impl< SourceContainer, openmp_state< typename SourceContainer::value_type > >
 {
-    static void split( const SourceContainer &from, openmp_state< typename SourceContainer::value_type > &to )
-    {
-        if(to.size() == 0) to.resize( omp_get_max_threads() );
-        const size_t part = from.size() / to.size();
-#       pragma omp parallel for schedule(dynamic)
-        for(size_t i = 0 ; i < to.size() ; i++) {
-            typedef typename SourceContainer::const_iterator it_t;
-            const it_t begin = from.begin() + i * part;
-            it_t end = begin + part;
-            // for cases where from.size() % to.size() > 0
-            if(i + 1 == to.size() || end > from.end()) end = from.end();
-            to[i].resize(end - begin);
-            std::copy(begin, end, to[i].begin());
-        }
-    }
+	static void split( const SourceContainer &from, openmp_state< typename SourceContainer::value_type > &to )
+	{
+		if(to.size() == 0) to.resize( omp_get_max_threads() );
+		const size_t part = from.size() / to.size();
+		#       pragma omp parallel for schedule(dynamic)
+		for(size_t i = 0 ; i < to.size() ; i++)
+		{
+			typedef typename SourceContainer::const_iterator it_t;
+			const it_t begin = from.begin() + i * part;
+			it_t end = begin + part;
+			// for cases where from.size() % to.size() > 0
+			if(i + 1 == to.size() || end > from.end()) end = from.end();
+			to[i].resize(end - begin);
+			std::copy(begin, end, to[i].begin());
+		}
+	}
 };
 
 /** \brief Copy data from an openmp_state to some container and resize it.
@@ -130,18 +134,18 @@ struct split_impl< SourceContainer, openmp_state< typename SourceContainer::valu
 template< class TargetContainer >
 struct unsplit_impl< openmp_state< typename TargetContainer::value_type >, TargetContainer >
 {
-    static void unsplit( const openmp_state< typename TargetContainer::value_type > &from , TargetContainer &to )
-    {
-        // resize target
-        size_t total_size = 0;
-        for(size_t i = 0 ; i < from.size() ; i++)
-            total_size += from[i].size();
-        to.resize( total_size );
-        // copy parts
-        typename TargetContainer::iterator out = to.begin();
-        for(size_t i = 0 ; i < from.size() ; i++)
-            out = std::copy(from[i].begin(), from[i].end(), out);
-    }
+	static void unsplit( const openmp_state< typename TargetContainer::value_type > &from, TargetContainer &to )
+	{
+		// resize target
+		size_t total_size = 0;
+		for(size_t i = 0 ; i < from.size() ; i++)
+			total_size += from[i].size();
+		to.resize( total_size );
+		// copy parts
+		typename TargetContainer::iterator out = to.begin();
+		for(size_t i = 0 ; i < from.size() ; i++)
+			out = std::copy(from[i].begin(), from[i].end(), out);
+	}
 };
 
 
@@ -158,7 +162,7 @@ typedef openmp_nested_algebra< range_algebra > openmp_algebra;
 template< class T >
 struct algebra_dispatcher< openmp_state< T > >
 {
-    typedef openmp_algebra algebra_type;
+	typedef openmp_algebra algebra_type;
 };
 
 

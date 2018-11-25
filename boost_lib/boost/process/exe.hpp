@@ -26,31 +26,36 @@ namespace boost {
 </programlisting>
 \endxmlonly
  */
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 struct exe_
 {
-    template<typename Char>
-    inline exe_setter_<Char> operator()(const Char *s) const
-    {
-        return exe_setter_<Char>(s);
-    }
-    template<typename Char>
-    inline exe_setter_<Char> operator= (const Char *s) const
-    {
-        return exe_setter_<Char>(s);
-    }
+	template<typename Char>
+	inline exe_setter_<Char> operator()(const Char *s) const
+	{
+		return exe_setter_<Char>(s);
+	}
+	template<typename Char>
+	inline exe_setter_<Char> operator= (const Char *s) const
+	{
+		return exe_setter_<Char>(s);
+	}
 
-    template<typename Char>
-    inline exe_setter_<Char> operator()(const std::basic_string<Char> &s) const
-    {
-        return exe_setter_<Char>(s);
-    }
-    template<typename Char>
-    inline exe_setter_<Char> operator= (const std::basic_string<Char> &s) const
-    {
-        return exe_setter_<Char>(s);
-    }
+	template<typename Char>
+	inline exe_setter_<Char> operator()(const std::basic_string<Char> &s) const
+	{
+		return exe_setter_<Char>(s);
+	}
+	template<typename Char>
+	inline exe_setter_<Char> operator= (const std::basic_string<Char> &s) const
+	{
+		return exe_setter_<Char>(s);
+	}
 };
 
 }
@@ -74,6 +79,7 @@ The property can only be used for assignments.
  */
 constexpr boost::process::detail::exe_ exe{};
 
-}}
+}
+}
 
 #endif

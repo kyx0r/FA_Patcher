@@ -23,7 +23,9 @@
 #include <boost/geometry/algorithms/dispatch/is_valid.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -44,32 +46,32 @@ namespace dispatch
 template <typename Segment>
 struct is_valid<Segment, segment_tag>
 {
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(Segment const& segment, VisitPolicy& visitor, Strategy const&)
-    {
-        boost::ignore_unused(visitor);
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(Segment const& segment, VisitPolicy& visitor, Strategy const&)
+	{
+		boost::ignore_unused(visitor);
 
-        typename point_type<Segment>::type p[2];
-        detail::assign_point_from_index<0>(segment, p[0]);
-        detail::assign_point_from_index<1>(segment, p[1]);
+		typename point_type<Segment>::type p[2];
+		detail::assign_point_from_index<0>(segment, p[0]);
+		detail::assign_point_from_index<1>(segment, p[1]);
 
-        if (detail::is_valid::has_invalid_coordinate
-                <
-                    Segment
-                >::apply(segment, visitor))
-        {
-            return false;
-        }
-        else if (! geometry::equals(p[0], p[1]))
-        {
-            return visitor.template apply<no_failure>();
-        }
-        else
-        {
-            return
-                visitor.template apply<failure_wrong_topological_dimension>();
-        }
-    }
+		if (detail::is_valid::has_invalid_coordinate
+		        <
+		        Segment
+		        >::apply(segment, visitor))
+		{
+			return false;
+		}
+		else if (! geometry::equals(p[0], p[1]))
+		{
+			return visitor.template apply<no_failure>();
+		}
+		else
+		{
+			return
+			    visitor.template apply<failure_wrong_topological_dimension>();
+		}
+	}
 };
 
 
@@ -77,7 +79,8 @@ struct is_valid<Segment, segment_tag>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_SEGMENT_HPP

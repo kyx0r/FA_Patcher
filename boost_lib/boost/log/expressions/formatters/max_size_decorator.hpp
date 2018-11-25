@@ -40,194 +40,197 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 //! String size limiting decorator stream output terminal
 template< typename LeftT, typename SubactorT, typename CharT >
 class max_size_decorator_output_terminal
 {
 private:
-    //! Self type
-    typedef max_size_decorator_output_terminal< LeftT, SubactorT, CharT > this_type;
+	//! Self type
+	typedef max_size_decorator_output_terminal< LeftT, SubactorT, CharT > this_type;
 
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! Internal typedef for type categorization
-    typedef void _is_boost_log_terminal;
+	//! Internal typedef for type categorization
+	typedef void _is_boost_log_terminal;
 #endif
 
-    //! Character type
-    typedef CharT char_type;
-    //! String type
-    typedef std::basic_string< char_type > string_type;
-    //! String size type
-    typedef std::size_t size_type;
-    //! Adopted actor type
-    typedef SubactorT subactor_type;
+	//! Character type
+	typedef CharT char_type;
+	//! String type
+	typedef std::basic_string< char_type > string_type;
+	//! String size type
+	typedef std::size_t size_type;
+	//! Adopted actor type
+	typedef SubactorT subactor_type;
 
-    //! Result type definition
-    template< typename >
-    struct result;
+	//! Result type definition
+	template< typename >
+	struct result;
 
-    template< typename ThisT, typename ContextT >
-    struct result< ThisT(ContextT) >
-    {
-        typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
-        typedef typename phoenix::evaluator::impl<
-            typename LeftT::proto_base_expr&,
-            context_type,
-            phoenix::unused
-        >::result_type type;
-    };
+	template< typename ThisT, typename ContextT >
+	struct result< ThisT(ContextT) >
+	{
+		typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
+		typedef typename phoenix::evaluator::impl<
+		typename LeftT::proto_base_expr&,
+		         context_type,
+		         phoenix::unused
+		         >::result_type type;
+	};
 
 private:
-    //! Left argument actor
-    LeftT m_left;
-    //! Adopted formatter actor
-    subactor_type m_subactor;
-    //! Max size of the formatted string produced by the adopted formatter
-    size_type m_max_size;
-    //! Overflow marker
-    string_type m_overflow_marker;
+	//! Left argument actor
+	LeftT m_left;
+	//! Adopted formatter actor
+	subactor_type m_subactor;
+	//! Max size of the formatted string produced by the adopted formatter
+	size_type m_max_size;
+	//! Overflow marker
+	string_type m_overflow_marker;
 
 public:
-    /*!
-     * Initializing constructor. Creates decorator of the \a fmt formatter with the specified \a decorations.
-     */
-    max_size_decorator_output_terminal(LeftT const& left, subactor_type const& sub, size_type max_size, string_type const& overflow_marker = string_type()) :
-        m_left(left), m_subactor(sub), m_max_size(max_size), m_overflow_marker(overflow_marker)
-    {
-        BOOST_ASSERT(overflow_marker.size() <= max_size);
-    }
-    /*!
-     * Copy constructor
-     */
-    max_size_decorator_output_terminal(max_size_decorator_output_terminal const& that) :
-        m_left(that.m_left), m_subactor(that.m_subactor), m_max_size(that.m_max_size), m_overflow_marker(that.m_overflow_marker)
-    {
-    }
+	/*!
+	 * Initializing constructor. Creates decorator of the \a fmt formatter with the specified \a decorations.
+	 */
+	max_size_decorator_output_terminal(LeftT const& left, subactor_type const& sub, size_type max_size, string_type const& overflow_marker = string_type()) :
+		m_left(left), m_subactor(sub), m_max_size(max_size), m_overflow_marker(overflow_marker)
+	{
+		BOOST_ASSERT(overflow_marker.size() <= max_size);
+	}
+	/*!
+	 * Copy constructor
+	 */
+	max_size_decorator_output_terminal(max_size_decorator_output_terminal const& that) :
+		m_left(that.m_left), m_subactor(that.m_subactor), m_max_size(that.m_max_size), m_overflow_marker(that.m_overflow_marker)
+	{
+	}
 
-    /*!
-     * Invokation operator
-     */
-    template< typename ContextT >
-    typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
-    {
-        // Flush the stream and keep the current write position in the target string
-        typedef typename result< this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        strm.flush();
+	/*!
+	 * Invokation operator
+	 */
+	template< typename ContextT >
+	typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
+	{
+		// Flush the stream and keep the current write position in the target string
+		typedef typename result< this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		strm.flush();
 
-        if (!strm.rdbuf()->storage_overflow())
-        {
-            const size_type old_max_size = strm.rdbuf()->max_size();
-            const size_type start_pos = strm.rdbuf()->storage()->size(), max_size_left = strm.rdbuf()->storage()->max_size() - start_pos;
-            strm.rdbuf()->max_size(start_pos + (m_max_size <= max_size_left ? m_max_size : max_size_left));
+		if (!strm.rdbuf()->storage_overflow())
+		{
+			const size_type old_max_size = strm.rdbuf()->max_size();
+			const size_type start_pos = strm.rdbuf()->storage()->size(), max_size_left = strm.rdbuf()->storage()->max_size() - start_pos;
+			strm.rdbuf()->max_size(start_pos + (m_max_size <= max_size_left ? m_max_size : max_size_left));
 
-            try
-            {
-                // Invoke the adopted formatter
-                phoenix::eval(m_subactor, ctx);
+			try
+			{
+				// Invoke the adopted formatter
+				phoenix::eval(m_subactor, ctx);
 
-                // Flush the buffered characters and apply decorations
-                strm.flush();
+				// Flush the buffered characters and apply decorations
+				strm.flush();
 
-                if (strm.rdbuf()->storage_overflow())
-                {
-                    if (!m_overflow_marker.empty())
-                    {
-                        // Free up space for the overflow marker
-                        strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
+				if (strm.rdbuf()->storage_overflow())
+				{
+					if (!m_overflow_marker.empty())
+					{
+						// Free up space for the overflow marker
+						strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
 
-                        // Append the marker
-                        strm.rdbuf()->max_size(strm.rdbuf()->storage()->max_size());
-                        strm.rdbuf()->storage_overflow(false);
-                        strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
-                    }
-                    else
-                    {
-                        strm.rdbuf()->storage_overflow(false);
-                    }
-                }
+						// Append the marker
+						strm.rdbuf()->max_size(strm.rdbuf()->storage()->max_size());
+						strm.rdbuf()->storage_overflow(false);
+						strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
+					}
+					else
+					{
+						strm.rdbuf()->storage_overflow(false);
+					}
+				}
 
-                // Restore the original size limit
-                strm.rdbuf()->max_size(old_max_size);
-            }
-            catch (...)
-            {
-                strm.rdbuf()->storage_overflow(false);
-                strm.rdbuf()->max_size(old_max_size);
-                throw;
-            }
-        }
+				// Restore the original size limit
+				strm.rdbuf()->max_size(old_max_size);
+			}
+			catch (...)
+			{
+				strm.rdbuf()->storage_overflow(false);
+				strm.rdbuf()->max_size(old_max_size);
+				throw;
+			}
+		}
 
-        return strm;
-    }
+		return strm;
+	}
 
-    /*!
-     * Invokation operator
-     */
-    template< typename ContextT >
-    typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
-    {
-        // Flush the stream and keep the current write position in the target string
-        typedef typename result< const this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        strm.flush();
+	/*!
+	 * Invokation operator
+	 */
+	template< typename ContextT >
+	typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
+	{
+		// Flush the stream and keep the current write position in the target string
+		typedef typename result< const this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		strm.flush();
 
-        if (!strm.rdbuf()->storage_overflow())
-        {
-            const size_type old_max_size = strm.rdbuf()->max_size();
-            const size_type start_pos = strm.rdbuf()->storage()->size(), max_size_left = strm.rdbuf()->storage()->max_size() - start_pos;
-            strm.rdbuf()->max_size(start_pos + (m_max_size <= max_size_left ? m_max_size : max_size_left));
+		if (!strm.rdbuf()->storage_overflow())
+		{
+			const size_type old_max_size = strm.rdbuf()->max_size();
+			const size_type start_pos = strm.rdbuf()->storage()->size(), max_size_left = strm.rdbuf()->storage()->max_size() - start_pos;
+			strm.rdbuf()->max_size(start_pos + (m_max_size <= max_size_left ? m_max_size : max_size_left));
 
-            try
-            {
-                // Invoke the adopted formatter
-                phoenix::eval(m_subactor, ctx);
+			try
+			{
+				// Invoke the adopted formatter
+				phoenix::eval(m_subactor, ctx);
 
-                // Flush the buffered characters and apply decorations
-                strm.flush();
+				// Flush the buffered characters and apply decorations
+				strm.flush();
 
-                if (strm.rdbuf()->storage_overflow())
-                {
-                    if (!m_overflow_marker.empty())
-                    {
-                        // Free up space for the overflow marker
-                        strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
+				if (strm.rdbuf()->storage_overflow())
+				{
+					if (!m_overflow_marker.empty())
+					{
+						// Free up space for the overflow marker
+						strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
 
-                        // Append the marker
-                        strm.rdbuf()->max_size(strm.rdbuf()->storage()->max_size());
-                        strm.rdbuf()->storage_overflow(false);
-                        strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
-                    }
-                    else
-                    {
-                        strm.rdbuf()->storage_overflow(false);
-                    }
-                }
+						// Append the marker
+						strm.rdbuf()->max_size(strm.rdbuf()->storage()->max_size());
+						strm.rdbuf()->storage_overflow(false);
+						strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
+					}
+					else
+					{
+						strm.rdbuf()->storage_overflow(false);
+					}
+				}
 
-                // Restore the original size limit
-                strm.rdbuf()->max_size(old_max_size);
-            }
-            catch (...)
-            {
-                strm.rdbuf()->storage_overflow(false);
-                strm.rdbuf()->max_size(old_max_size);
-                throw;
-            }
-        }
+				// Restore the original size limit
+				strm.rdbuf()->max_size(old_max_size);
+			}
+			catch (...)
+			{
+				strm.rdbuf()->storage_overflow(false);
+				strm.rdbuf()->max_size(old_max_size);
+				throw;
+			}
+		}
 
-        return strm;
-    }
+		return strm;
+	}
 
-    BOOST_DELETED_FUNCTION(max_size_decorator_output_terminal())
+	BOOST_DELETED_FUNCTION(max_size_decorator_output_terminal())
 };
 
 } // namespace aux
@@ -246,161 +249,161 @@ template< typename SubactorT, typename CharT >
 class max_size_decorator_terminal
 {
 private:
-    //! Self type
-    typedef max_size_decorator_terminal< SubactorT, CharT > this_type;
+	//! Self type
+	typedef max_size_decorator_terminal< SubactorT, CharT > this_type;
 
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! Internal typedef for type categorization
-    typedef void _is_boost_log_terminal;
+	//! Internal typedef for type categorization
+	typedef void _is_boost_log_terminal;
 #endif
 
-    //! Character type
-    typedef CharT char_type;
-    //! String type
-    typedef std::basic_string< char_type > string_type;
-    //! String size type
-    typedef std::size_t size_type;
-    //! Stream type
-    typedef basic_formatting_ostream< char_type > stream_type;
-    //! Adopted actor type
-    typedef SubactorT subactor_type;
+	//! Character type
+	typedef CharT char_type;
+	//! String type
+	typedef std::basic_string< char_type > string_type;
+	//! String size type
+	typedef std::size_t size_type;
+	//! Stream type
+	typedef basic_formatting_ostream< char_type > stream_type;
+	//! Adopted actor type
+	typedef SubactorT subactor_type;
 
-    //! Result type definition
-    typedef string_type result_type;
+	//! Result type definition
+	typedef string_type result_type;
 
 private:
-    //! Adopted formatter actor
-    subactor_type m_subactor;
-    //! Max size of the formatted string produced by the adopted formatter
-    size_type m_max_size;
-    //! Overflow marker
-    string_type m_overflow_marker;
+	//! Adopted formatter actor
+	subactor_type m_subactor;
+	//! Max size of the formatted string produced by the adopted formatter
+	size_type m_max_size;
+	//! Overflow marker
+	string_type m_overflow_marker;
 
 public:
-    /*!
-     * Initializing constructor.
-     */
-    max_size_decorator_terminal(subactor_type const& sub, size_type max_size, string_type const& overflow_marker = string_type()) :
-        m_subactor(sub), m_max_size(max_size), m_overflow_marker(overflow_marker)
-    {
-        BOOST_ASSERT(overflow_marker.size() <= max_size);
-    }
-    /*!
-     * Copy constructor
-     */
-    max_size_decorator_terminal(max_size_decorator_terminal const& that) :
-        m_subactor(that.m_subactor), m_max_size(that.m_max_size), m_overflow_marker(that.m_overflow_marker)
-    {
-    }
+	/*!
+	 * Initializing constructor.
+	 */
+	max_size_decorator_terminal(subactor_type const& sub, size_type max_size, string_type const& overflow_marker = string_type()) :
+		m_subactor(sub), m_max_size(max_size), m_overflow_marker(overflow_marker)
+	{
+		BOOST_ASSERT(overflow_marker.size() <= max_size);
+	}
+	/*!
+	 * Copy constructor
+	 */
+	max_size_decorator_terminal(max_size_decorator_terminal const& that) :
+		m_subactor(that.m_subactor), m_max_size(that.m_max_size), m_overflow_marker(that.m_overflow_marker)
+	{
+	}
 
-    /*!
-     * \returns Adopted subactor
-     */
-    subactor_type const& get_subactor() const
-    {
-        return m_subactor;
-    }
+	/*!
+	 * \returns Adopted subactor
+	 */
+	subactor_type const& get_subactor() const
+	{
+		return m_subactor;
+	}
 
-    /*!
-     * \returns Max string size limit
-     */
-    size_type get_max_size() const
-    {
-        return m_max_size;
-    }
+	/*!
+	 * \returns Max string size limit
+	 */
+	size_type get_max_size() const
+	{
+		return m_max_size;
+	}
 
-    /*!
-     * \returns Max string size limit
-     */
-    string_type const& get_overflow_marker() const
-    {
-        return m_overflow_marker;
-    }
+	/*!
+	 * \returns Max string size limit
+	 */
+	string_type const& get_overflow_marker() const
+	{
+		return m_overflow_marker;
+	}
 
-    /*!
-     * Invokation operator
-     */
-    template< typename ContextT >
-    result_type operator() (ContextT const& ctx)
-    {
-        string_type str;
-        stream_type strm(str);
-        strm.rdbuf()->max_size(m_max_size);
+	/*!
+	 * Invokation operator
+	 */
+	template< typename ContextT >
+	result_type operator() (ContextT const& ctx)
+	{
+		string_type str;
+		stream_type strm(str);
+		strm.rdbuf()->max_size(m_max_size);
 
-        // Invoke the adopted formatter
-        typedef phoenix::vector3<
-            subactor_type*,
-            typename fusion::result_of::at_c<
-                typename remove_cv<
-                    typename remove_reference<
-                        typename phoenix::result_of::env< ContextT const& >::type
-                    >::type
-                >::type::args_type,
-                0
-            >::type,
-            stream_type&
-        > env_type;
-        env_type env = { boost::addressof(m_subactor), fusion::at_c< 0 >(phoenix::env(ctx).args()), strm };
-        phoenix::eval(m_subactor, phoenix::make_context(env, phoenix::actions(ctx)));
+		// Invoke the adopted formatter
+		typedef phoenix::vector3<
+		subactor_type*,
+		typename fusion::result_of::at_c<
+		typename remove_cv<
+		typename remove_reference<
+		typename phoenix::result_of::env< ContextT const& >::type
+		>::type
+		>::type::args_type,
+		0
+		>::type,
+		stream_type&
+		> env_type;
+		env_type env = { boost::addressof(m_subactor), fusion::at_c< 0 >(phoenix::env(ctx).args()), strm };
+		phoenix::eval(m_subactor, phoenix::make_context(env, phoenix::actions(ctx)));
 
-        // Flush the buffered characters and see of overflow happened
-        strm.flush();
+		// Flush the buffered characters and see of overflow happened
+		strm.flush();
 
-        if (strm.rdbuf()->storage_overflow() && !m_overflow_marker.empty())
-        {
-            strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
-            strm.rdbuf()->max_size(str.max_size());
-            strm.rdbuf()->storage_overflow(false);
-            strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
-            strm.flush();
-        }
+		if (strm.rdbuf()->storage_overflow() && !m_overflow_marker.empty())
+		{
+			strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
+			strm.rdbuf()->max_size(str.max_size());
+			strm.rdbuf()->storage_overflow(false);
+			strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
+			strm.flush();
+		}
 
-        return BOOST_LOG_NRVO_RESULT(str);
-    }
+		return BOOST_LOG_NRVO_RESULT(str);
+	}
 
-    /*!
-     * Invokation operator
-     */
-    template< typename ContextT >
-    result_type operator() (ContextT const& ctx) const
-    {
-        string_type str;
-        stream_type strm(str);
-        strm.rdbuf()->max_size(m_max_size);
+	/*!
+	 * Invokation operator
+	 */
+	template< typename ContextT >
+	result_type operator() (ContextT const& ctx) const
+	{
+		string_type str;
+		stream_type strm(str);
+		strm.rdbuf()->max_size(m_max_size);
 
-        // Invoke the adopted formatter
-        typedef phoenix::vector3<
-            const subactor_type*,
-            typename fusion::result_of::at_c<
-                typename remove_cv<
-                    typename remove_reference<
-                        typename phoenix::result_of::env< ContextT const& >::type
-                    >::type
-                >::type::args_type,
-                0
-            >::type,
-            stream_type&
-        > env_type;
-        env_type env = { boost::addressof(m_subactor), fusion::at_c< 0 >(phoenix::env(ctx).args()), strm };
-        phoenix::eval(m_subactor, phoenix::make_context(env, phoenix::actions(ctx)));
+		// Invoke the adopted formatter
+		typedef phoenix::vector3<
+		const subactor_type*,
+		      typename fusion::result_of::at_c<
+		      typename remove_cv<
+		      typename remove_reference<
+		      typename phoenix::result_of::env< ContextT const& >::type
+		      >::type
+		      >::type::args_type,
+		      0
+		      >::type,
+		      stream_type&
+		      > env_type;
+		env_type env = { boost::addressof(m_subactor), fusion::at_c< 0 >(phoenix::env(ctx).args()), strm };
+		phoenix::eval(m_subactor, phoenix::make_context(env, phoenix::actions(ctx)));
 
-        // Flush the buffered characters and see of overflow happened
-        strm.flush();
+		// Flush the buffered characters and see of overflow happened
+		strm.flush();
 
-        if (strm.rdbuf()->storage_overflow())
-        {
-            strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
-            strm.rdbuf()->max_size(str.max_size());
-            strm.rdbuf()->storage_overflow(false);
-            strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
-            strm.flush();
-        }
+		if (strm.rdbuf()->storage_overflow())
+		{
+			strm.rdbuf()->max_size(strm.rdbuf()->max_size() - m_overflow_marker.size());
+			strm.rdbuf()->max_size(str.max_size());
+			strm.rdbuf()->storage_overflow(false);
+			strm.rdbuf()->append(m_overflow_marker.data(), m_overflow_marker.size());
+			strm.flush();
+		}
 
-        return BOOST_LOG_NRVO_RESULT(str);
-    }
+		return BOOST_LOG_NRVO_RESULT(str);
+	}
 
-    BOOST_DELETED_FUNCTION(max_size_decorator_terminal())
+	BOOST_DELETED_FUNCTION(max_size_decorator_terminal())
 };
 
 /*!
@@ -408,28 +411,28 @@ public:
  */
 template< typename SubactorT, typename CharT, template< typename > class ActorT = phoenix::actor >
 class max_size_decorator_actor :
-    public ActorT< max_size_decorator_terminal< SubactorT, CharT > >
+	public ActorT< max_size_decorator_terminal< SubactorT, CharT > >
 {
 public:
-    //! Base terminal type
-    typedef max_size_decorator_terminal< SubactorT, CharT > terminal_type;
-    //! Character type
-    typedef typename terminal_type::char_type char_type;
+	//! Base terminal type
+	typedef max_size_decorator_terminal< SubactorT, CharT > terminal_type;
+	//! Character type
+	typedef typename terminal_type::char_type char_type;
 
-    //! Base actor type
-    typedef ActorT< terminal_type > base_type;
+	//! Base actor type
+	typedef ActorT< terminal_type > base_type;
 
 public:
-    //! Initializing constructor
-    explicit max_size_decorator_actor(base_type const& act) : base_type(act)
-    {
-    }
+	//! Initializing constructor
+	explicit max_size_decorator_actor(base_type const& act) : base_type(act)
+	{
+	}
 
-    //! Returns reference to the terminal
-    terminal_type const& get_terminal() const
-    {
-        return this->proto_expr_.child0;
-    }
+	//! Returns reference to the terminal
+	terminal_type const& get_terminal() const
+	{
+		return this->proto_expr_.child0;
+	}
 };
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
@@ -450,35 +453,36 @@ public:
 
 #endif // BOOST_LOG_DOXYGEN_PASS
 
-namespace aux {
+namespace aux
+{
 
 template< typename CharT >
 class max_size_decorator_gen
 {
 private:
-    typedef CharT char_type;
-    typedef std::basic_string< char_type > string_type;
-    typedef std::size_t size_type;
+	typedef CharT char_type;
+	typedef std::basic_string< char_type > string_type;
+	typedef std::size_t size_type;
 
 private:
-    size_type m_max_size;
-    string_type m_overflow_marker;
+	size_type m_max_size;
+	string_type m_overflow_marker;
 
 public:
-    explicit max_size_decorator_gen(size_type max_size, string_type const& overflow_marker = string_type()) :
-        m_max_size(max_size), m_overflow_marker(overflow_marker)
-    {
-        BOOST_ASSERT(overflow_marker.size() <= max_size);
-    }
+	explicit max_size_decorator_gen(size_type max_size, string_type const& overflow_marker = string_type()) :
+		m_max_size(max_size), m_overflow_marker(overflow_marker)
+	{
+		BOOST_ASSERT(overflow_marker.size() <= max_size);
+	}
 
-    template< typename SubactorT >
-    BOOST_FORCEINLINE max_size_decorator_actor< SubactorT, char_type > operator[] (SubactorT const& subactor) const
-    {
-        typedef max_size_decorator_actor< SubactorT, char_type > result_type;
-        typedef typename result_type::terminal_type terminal_type;
-        typename result_type::base_type act = {{ terminal_type(subactor, m_max_size, m_overflow_marker) }};
-        return result_type(act);
-    }
+	template< typename SubactorT >
+	BOOST_FORCEINLINE max_size_decorator_actor< SubactorT, char_type > operator[] (SubactorT const& subactor) const
+	{
+		typedef max_size_decorator_actor< SubactorT, char_type > result_type;
+		typedef typename result_type::terminal_type terminal_type;
+		typename result_type::base_type act = {{ terminal_type(subactor, m_max_size, m_overflow_marker) }};
+		return result_type(act);
+	}
 };
 
 } // namespace aux
@@ -492,7 +496,7 @@ public:
 template< typename CharT >
 BOOST_FORCEINLINE aux::max_size_decorator_gen< CharT > max_size_decor(std::size_t max_size)
 {
-    return aux::max_size_decorator_gen< CharT >(max_size);
+	return aux::max_size_decorator_gen< CharT >(max_size);
 }
 
 /*!
@@ -508,7 +512,7 @@ BOOST_FORCEINLINE aux::max_size_decorator_gen< CharT > max_size_decor(std::size_
 template< typename CharT >
 BOOST_FORCEINLINE aux::max_size_decorator_gen< CharT > max_size_decor(std::size_t max_size, const CharT* overflow_marker)
 {
-    return aux::max_size_decorator_gen< CharT >(max_size, overflow_marker);
+	return aux::max_size_decorator_gen< CharT >(max_size, overflow_marker);
 }
 
 /*!
@@ -523,7 +527,7 @@ BOOST_FORCEINLINE aux::max_size_decorator_gen< CharT > max_size_decor(std::size_
 template< typename CharT >
 BOOST_FORCEINLINE aux::max_size_decorator_gen< CharT > max_size_decor(std::size_t max_size, std::basic_string< CharT > const& overflow_marker)
 {
-    return aux::max_size_decorator_gen< CharT >(max_size, overflow_marker);
+	return aux::max_size_decorator_gen< CharT >(max_size, overflow_marker);
 }
 
 } // namespace expressions
@@ -532,19 +536,21 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
-namespace phoenix {
+namespace phoenix
+{
 
-namespace result_of {
+namespace result_of
+{
 
 template< typename SubactorT, typename CharT >
 struct is_nullary< custom_terminal< boost::log::expressions::max_size_decorator_terminal< SubactorT, CharT > > > :
-    public mpl::false_
+	public mpl::false_
 {
 };
 
 template< typename LeftT, typename SubactorT, typename CharT >
 struct is_nullary< custom_terminal< boost::log::expressions::aux::max_size_decorator_output_terminal< LeftT, SubactorT, CharT > > > :
-    public mpl::false_
+	public mpl::false_
 {
 };
 

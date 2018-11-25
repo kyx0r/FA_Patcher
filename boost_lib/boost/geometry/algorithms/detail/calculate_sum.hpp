@@ -21,7 +21,9 @@
 
 #include <boost/range.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -31,32 +33,33 @@ namespace detail
 
 class calculate_polygon_sum
 {
-    template <typename ReturnType, typename Policy, typename Rings, typename Strategy>
-    static inline ReturnType sum_interior_rings(Rings const& rings, Strategy const& strategy)
-    {
-        ReturnType sum = ReturnType(0);
-        for (typename boost::range_iterator<Rings const>::type
-                it = boost::begin(rings); it != boost::end(rings); ++it)
-        {
-            sum += Policy::apply(*it, strategy);
-        }
-        return sum;
-    }
+	template <typename ReturnType, typename Policy, typename Rings, typename Strategy>
+	static inline ReturnType sum_interior_rings(Rings const& rings, Strategy const& strategy)
+	{
+		ReturnType sum = ReturnType(0);
+		for (typename boost::range_iterator<Rings const>::type
+		        it = boost::begin(rings); it != boost::end(rings); ++it)
+		{
+			sum += Policy::apply(*it, strategy);
+		}
+		return sum;
+	}
 
 public :
-    template <typename ReturnType, typename Policy, typename Polygon, typename Strategy>
-    static inline ReturnType apply(Polygon const& poly, Strategy const& strategy)
-    {
-        return Policy::apply(exterior_ring(poly), strategy)
-            + sum_interior_rings<ReturnType, Policy>(interior_rings(poly), strategy)
-            ;
-    }
+	template <typename ReturnType, typename Policy, typename Polygon, typename Strategy>
+	static inline ReturnType apply(Polygon const& poly, Strategy const& strategy)
+	{
+		return Policy::apply(exterior_ring(poly), strategy)
+		       + sum_interior_rings<ReturnType, Policy>(interior_rings(poly), strategy)
+		       ;
+	}
 };
 
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_CALCULATE_SUM_HPP

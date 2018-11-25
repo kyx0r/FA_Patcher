@@ -24,46 +24,49 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 // Helper function to create thread-specific storage.
 BOOST_ASIO_DECL DWORD win_tss_ptr_create();
 
 template <typename T>
 class win_tss_ptr
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  // Constructor.
-  win_tss_ptr()
-    : tss_key_(win_tss_ptr_create())
-  {
-  }
+	// Constructor.
+	win_tss_ptr()
+		: tss_key_(win_tss_ptr_create())
+	{
+	}
 
-  // Destructor.
-  ~win_tss_ptr()
-  {
-    ::TlsFree(tss_key_);
-  }
+	// Destructor.
+	~win_tss_ptr()
+	{
+		::TlsFree(tss_key_);
+	}
 
-  // Get the value.
-  operator T*() const
-  {
-    return static_cast<T*>(::TlsGetValue(tss_key_));
-  }
+	// Get the value.
+	operator T*() const
+	{
+		return static_cast<T*>(::TlsGetValue(tss_key_));
+	}
 
-  // Set the value.
-  void operator=(T* value)
-  {
-    ::TlsSetValue(tss_key_, value);
-  }
+	// Set the value.
+	void operator=(T* value)
+	{
+		::TlsSetValue(tss_key_, value);
+	}
 
 private:
-  // Thread-specific storage to allow unlocked access to determine whether a
-  // thread is a member of the pool.
-  DWORD tss_key_;
+	// Thread-specific storage to allow unlocked access to determine whether a
+	// thread is a member of the pool.
+	DWORD tss_key_;
 };
 
 } // namespace detail

@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword for passing format specifiers to functions
 BOOST_PARAMETER_KEYWORD(tag, format)

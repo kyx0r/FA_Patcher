@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -34,15 +34,20 @@
 
 #include <boost/units/systems/si/codata/typedefs.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units { 
+namespace units
+{
 
-namespace si {
-                            
-namespace constants {
+namespace si
+{
 
-namespace codata {
+namespace constants
+{
+
+namespace codata
+{
 
 // ELECTROMAGNETIC
 /// elementary charge
@@ -64,7 +69,7 @@ BOOST_UNITS_PHYSICAL_CONSTANT(mu_N,quantity<energy_over_magnetic_flux_density>,5
 
 } // namespace codata
 
-} // namespace constants    
+} // namespace constants
 
 } // namespace si
 

@@ -18,8 +18,10 @@
 #include <boost/compute/algorithm/copy.hpp>
 #include <boost/compute/algorithm/replace.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Copies the value in the range [\p first, \p last) to the range
 /// beginning at \p result while replacing each instance of \p old_value
@@ -37,25 +39,26 @@ replace_copy(InputIterator first,
              const T &new_value,
              command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<OutputIterator>::difference_type difference_type;
+	typedef typename std::iterator_traits<OutputIterator>::difference_type difference_type;
 
-    difference_type count = std::distance(first, last);
-    if(count == 0){
-        return result;
-    }
+	difference_type count = std::distance(first, last);
+	if(count == 0)
+	{
+		return result;
+	}
 
-    // copy data to result
-    ::boost::compute::copy(first, last, result, queue);
+	// copy data to result
+	::boost::compute::copy(first, last, result, queue);
 
-    // replace in result
-    ::boost::compute::replace(result,
-                              result + count,
-                              old_value,
-                              new_value,
-                              queue);
+	// replace in result
+	::boost::compute::replace(result,
+	                          result + count,
+	                          old_value,
+	                          new_value,
+	                          queue);
 
-    // return iterator to the end of result
-    return result + count;
+	// return iterator to the end of result
+	return result + count;
 }
 
 } // end compute namespace

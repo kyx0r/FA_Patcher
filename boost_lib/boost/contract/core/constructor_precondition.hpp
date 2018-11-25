@@ -14,13 +14,16 @@ Program preconditions for constructors.
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-    #include <boost/contract/core/exception.hpp>
-    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-        #include <boost/contract/detail/checking.hpp>
-    #endif
+#include <boost/contract/core/exception.hpp>
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+#include <boost/contract/detail/checking.hpp>
+#endif
 #endif
 
-namespace boost { namespace contract {
+namespace boost
+{
+namespace contract
+{
 
 /**
 Program preconditions for constructors.
@@ -71,52 +74,60 @@ local object within the constructor definition just before
                 being programmed.
 */
 template<class Class>
-class constructor_precondition { // Copyable (has no data).
+class constructor_precondition   // Copyable (has no data).
+{
 public:
-    /**
-    Construct this object without specifying constructor preconditions.
+	/**
+	Construct this object without specifying constructor preconditions.
 
-    This is implicitly called for those constructors of the contracted class
-    that do not specify preconditions.
-    
-    @note   Calling this default constructor should amount to negligible
-            compile-time and run-time overheads (likely to be optimized away
-            completely by most compilers).
-    */
-    constructor_precondition() {}
+	This is implicitly called for those constructors of the contracted class
+	that do not specify preconditions.
 
-    /**
-    Construct this object specifying constructor preconditions.
+	@note   Calling this default constructor should amount to negligible
+	        compile-time and run-time overheads (likely to be optimized away
+	        completely by most compilers).
+	*/
+	constructor_precondition() {}
 
-    @param f    Nullary functor called by this library to check constructor
-                preconditions @c f().
-                Assertions within this functor call are usually programmed
-                using @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown
-                by a call to this functor indicates a contract failure (and will
-                result in this library calling
-                @RefFunc{boost::contract::precondition_failure}).
-                This functor should capture variables by (constant) value, or
-                better by (constant) reference to avoid extra copies.
-    */
-    template<typename F>
-    explicit constructor_precondition(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            try {
-                #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-                    if(boost::contract::detail::checking::already()) return;
-                    #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
-                        boost::contract::detail::checking k;
-                    #endif
-                #endif
-                f();
-            } catch(...) { precondition_failure(from_constructor); }
-        #endif
-    }
+	/**
+	Construct this object specifying constructor preconditions.
 
-    // Default copy operations (so user's derived classes can be copied, etc.).
+	@param f    Nullary functor called by this library to check constructor
+	            preconditions @c f().
+	            Assertions within this functor call are usually programmed
+	            using @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown
+	            by a call to this functor indicates a contract failure (and will
+	            result in this library calling
+	            @RefFunc{boost::contract::precondition_failure}).
+	            This functor should capture variables by (constant) value, or
+	            better by (constant) reference to avoid extra copies.
+	*/
+	template<typename F>
+	explicit constructor_precondition(F const& f)
+	{
+#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+		try
+		{
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+			if(boost::contract::detail::checking::already()) return;
+#ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
+			boost::contract::detail::checking k;
+#endif
+#endif
+			f();
+		}
+		catch(...)
+		{
+			precondition_failure(from_constructor);
+		}
+#endif
+	}
+
+	// Default copy operations (so user's derived classes can be copied, etc.).
 };
 
-} } // namespace
+}
+} // namespace
 
 #endif // #include guard
 

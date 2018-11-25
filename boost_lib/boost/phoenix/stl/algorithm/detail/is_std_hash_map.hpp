@@ -24,27 +24,27 @@
 
 namespace boost
 {
-    template<class T>
-    struct is_std_hash_map
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_hash_map
+	: boost::mpl::false_
+{};
 
-    template<class T>
-    struct is_std_hash_multimap
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_hash_multimap
+	: boost::mpl::false_
+{};
 
 #ifdef BOOST_PHOENIX_HAS_HASH
 
-    template<class Kty,class Ty,BOOST_PHOENIX_HASH_template_rest_param>
-    struct is_std_hash_map< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_map<Kty,Ty,BOOST_PHOENIX_HASH_type_rest_param> >
-        : boost::mpl::true_
-    {};
+template<class Kty,class Ty,BOOST_PHOENIX_HASH_template_rest_param>
+struct is_std_hash_map< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_map<Kty,Ty,BOOST_PHOENIX_HASH_type_rest_param> >
+	: boost::mpl::true_
+{};
 
-    template<class Kty,class Ty,BOOST_PHOENIX_HASH_template_rest_param>
-    struct is_std_hash_multimap< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_multimap<Kty,Ty,BOOST_PHOENIX_HASH_type_rest_param> >
-        : boost::mpl::true_
-    {};
+template<class Kty,class Ty,BOOST_PHOENIX_HASH_template_rest_param>
+struct is_std_hash_multimap< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_multimap<Kty,Ty,BOOST_PHOENIX_HASH_type_rest_param> >
+	: boost::mpl::true_
+{};
 
 #endif
 

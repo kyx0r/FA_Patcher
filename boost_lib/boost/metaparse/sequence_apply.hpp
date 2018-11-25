@@ -13,23 +13,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
+namespace metaparse
+{
 #ifdef BOOST_METAPARSE_USING
 #  error BOOST_METAPARSE_USING already defined
 #endif
 #define BOOST_METAPARSE_USING(z, n, unused) \
     using BOOST_PP_CAT(v1::sequence_apply, n);
 
-    BOOST_PP_REPEAT_FROM_TO(
-      1,
-      BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-      BOOST_METAPARSE_USING,
-      ~
-    )
+BOOST_PP_REPEAT_FROM_TO(
+    1,
+    BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+    BOOST_METAPARSE_USING,
+    ~
+)
 
 #undef BOOST_METAPARSE_USING
-  }
+}
 }
 
 #endif

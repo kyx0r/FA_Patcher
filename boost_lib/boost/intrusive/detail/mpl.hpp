@@ -26,10 +26,13 @@
 #include <boost/move/detail/type_traits.hpp>
 #include <cstddef>
 
-namespace boost {
-namespace intrusive {
-namespace detail {
-   
+namespace boost
+{
+namespace intrusive
+{
+namespace detail
+{
+
 using boost::move_detail::is_same;
 using boost::move_detail::add_const;
 using boost::move_detail::remove_const;
@@ -69,19 +72,19 @@ using boost::move_detail::add_const_if_c;
 template<std::size_t S>
 struct ls_zeros
 {
-   static const std::size_t value = (S & std::size_t(1)) ? 0 : (1 + ls_zeros<(S>>1u)>::value);
+	static const std::size_t value = (S & std::size_t(1)) ? 0 : (1 + ls_zeros<(S>>1u)>::value);
 };
 
 template<>
 struct ls_zeros<0>
 {
-   static const std::size_t value = 0;
+	static const std::size_t value = 0;
 };
 
 template<>
 struct ls_zeros<1>
 {
-   static const std::size_t value = 0;
+	static const std::size_t value = 0;
 };
 
 // Infrastructure for providing a default type for T::TNAME if absent.

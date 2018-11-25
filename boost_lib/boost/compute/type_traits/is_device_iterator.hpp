@@ -13,8 +13,10 @@
 
 #include <boost/type_traits/integral_constant.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Meta-function returning \c true if \c Iterator is a device-iterator.
 ///

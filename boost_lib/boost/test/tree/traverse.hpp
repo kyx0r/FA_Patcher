@@ -26,8 +26,10 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************               traverse_test_tree             ************** //
@@ -35,17 +37,17 @@ namespace unit_test {
 
 BOOST_TEST_DECL void    traverse_test_tree( test_case const&, test_tree_visitor&, bool ignore_status = false );
 BOOST_TEST_DECL void    traverse_test_tree( test_suite const&, test_tree_visitor&, bool ignore_status = false );
-BOOST_TEST_DECL void    traverse_test_tree( test_unit_id     , test_tree_visitor&, bool ignore_status = false );
+BOOST_TEST_DECL void    traverse_test_tree( test_unit_id, test_tree_visitor&, bool ignore_status = false );
 
 //____________________________________________________________________________//
 
 inline void
 traverse_test_tree( test_unit const& tu, test_tree_visitor& V, bool ignore_status = false )
 {
-    if( tu.p_type == TUT_CASE )
-        traverse_test_tree( static_cast<test_case const&>( tu ), V, ignore_status );
-    else
-        traverse_test_tree( static_cast<test_suite const&>( tu ), V, ignore_status );
+	if( tu.p_type == TUT_CASE )
+		traverse_test_tree( static_cast<test_case const&>( tu ), V, ignore_status );
+	else
+		traverse_test_tree( static_cast<test_suite const&>( tu ), V, ignore_status );
 }
 
 //____________________________________________________________________________//

@@ -18,10 +18,13 @@ Program contracts for constructors.
 #if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
          defined(BOOST_CONTRACT_STATIC_LINK)
-    #include <boost/contract/detail/operation/constructor.hpp>
+#include <boost/contract/detail/operation/constructor.hpp>
 #endif
 
-namespace boost { namespace contract {
+namespace boost
+{
+namespace contract
+{
 
 /**
 Program contracts for constructors.
@@ -70,7 +73,7 @@ For optimization, this can be omitted for constructors that do not have
 postconditions and exception guarantees, within classes that have no invariants.
 
 @see @RefSect{tutorial.constructors, Constructors}
-    
+
 @param obj  The object @c this from the scope of the enclosing constructor
             declaring the contract.
             (Constructors check all class invariants, including static and
@@ -90,19 +93,21 @@ postconditions and exception guarantees, within classes that have no invariants.
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>
-specify_old_postcondition_except<> constructor(Class* obj) {
-    // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
-    #if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+specify_old_postcondition_except<> constructor(Class* obj)
+{
+	// Must #if also on ..._PRECONDITIONS here because specify_... is generic.
+#if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
              defined(BOOST_CONTRACT_STATIC_LINK)
-        return specify_old_postcondition_except<>(
-                new boost::contract::detail::constructor<Class>(obj));
-    #else
-        return specify_old_postcondition_except<>();
-    #endif
+	return specify_old_postcondition_except<>(
+	           new boost::contract::detail::constructor<Class>(obj));
+#else
+	return specify_old_postcondition_except<>();
+#endif
 }
 
-} } // namespace
+}
+} // namespace
 
 #endif // #include guard
 

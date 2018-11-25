@@ -12,22 +12,22 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S, char C>
-        struct push_back_c;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S, char C>
+struct push_back_c;
 
-        template <class S, char C>
-        struct push_back_c :
-          update_c<typename S::type, size<typename S::type>::type::value, C>
-        {};
-      }
-    }
-  }
+template <class S, char C>
+struct push_back_c :
+	update_c<typename S::type, size<typename S::type>::type::value, C>
+{};
+}
+}
+}
 }
 
 #endif

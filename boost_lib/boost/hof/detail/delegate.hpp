@@ -53,7 +53,7 @@
     constexpr_ C(FitXs&&... fit_xs) \
     BOOST_HOF_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
     : var((FitXs&&)boost::hof::forward<FitXs>(fit_xs)...) {}
-    
+
 #else
 #define BOOST_HOF_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr_, C, T, var) \
     template<class... FitXs, BOOST_HOF_ENABLE_IF_CONSTRUCTIBLE(T, FitXs&&...)> \
@@ -78,19 +78,23 @@
     constexpr Derived(FitX&& fit_x) : Base(BOOST_HOF_FORWARD(FitX)(fit_x)) {}
 #endif
 
-namespace boost { namespace hof {
-namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class... Xs>
 constexpr bool is_nothrow_default_constructible_c()
 {
-    return BOOST_HOF_AND_UNPACK(BOOST_HOF_IS_NOTHROW_CONSTRUCTIBLE(Xs));
+	return BOOST_HOF_AND_UNPACK(BOOST_HOF_IS_NOTHROW_CONSTRUCTIBLE(Xs));
 }
 
 template<class... Xs>
 constexpr bool is_default_constructible_c()
 {
-    return BOOST_HOF_AND_UNPACK(BOOST_HOF_IS_DEFAULT_CONSTRUCTIBLE(Xs));
+	return BOOST_HOF_AND_UNPACK(BOOST_HOF_IS_DEFAULT_CONSTRUCTIBLE(Xs));
 }
 
 template<class... Xs>
@@ -98,10 +102,11 @@ BOOST_HOF_USING(is_default_constructible, std::integral_constant<bool, is_defaul
 
 template<class C, class X, class... Xs>
 struct enable_if_constructible
-: std::enable_if<is_constructible<X, Xs&&...>::value, int>
+	: std::enable_if<is_constructible<X, Xs&&...>::value, int>
 {};
 
 }
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

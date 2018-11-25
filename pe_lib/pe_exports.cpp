@@ -91,15 +91,15 @@ void exported_function::set_forwarded_name(const std::string& name)
 //Default constructor
 export_info::export_info()
 	:characteristics_(0),
-	timestamp_(0),
-	major_version_(0),
-	minor_version_(0),
-	ordinal_base_(0),
-	number_of_functions_(0),
-	number_of_names_(0),
-	address_of_functions_(0),
-	address_of_names_(0),
-	address_of_name_ordinals_(0)
+	 timestamp_(0),
+	 major_version_(0),
+	 minor_version_(0),
+	 ordinal_base_(0),
+	 number_of_functions_(0),
+	 number_of_names_(0),
+	 address_of_functions_(0),
+	 address_of_names_(0),
+	 address_of_name_ordinals_(0)
 {}
 
 //Returns characteristics
@@ -252,7 +252,7 @@ const exported_functions_list get_exported_functions(const pe_base& pe, export_i
 struct ordinal_sorter
 {
 public:
-		bool operator()(const exported_function& func1, const exported_function& func2) const;
+	bool operator()(const exported_function& func1, const exported_function& func2) const;
 };
 
 //Returns array of exported functions and information about export (if info != 0)
@@ -265,8 +265,8 @@ const exported_functions_list get_exported_functions(const pe_base& pe, export_i
 	{
 		//Check the length in bytes of the section containing export directory
 		if(pe.section_data_length_from_rva(pe.get_directory_rva(image_directory_entry_export),
-			pe.get_directory_rva(image_directory_entry_export), section_data_virtual, true)
-			< sizeof(image_export_directory))
+		                                   pe.get_directory_rva(image_directory_entry_export), section_data_virtual, true)
+		        < sizeof(image_export_directory))
 			throw pe_exception("Incorrect export directory", pe_exception::incorrect_export_directory);
 
 		image_export_directory exports = pe.section_data_from_rva<image_export_directory>(pe.get_directory_rva(image_directory_entry_export), section_data_virtual, true);
@@ -311,33 +311,33 @@ const exported_functions_list get_exported_functions(const pe_base& pe, export_i
 
 		//Check some export directory fields
 		if((!exports.AddressOfNameOrdinals && exports.AddressOfNames) ||
-			(exports.AddressOfNameOrdinals && !exports.AddressOfNames) ||
-			!exports.AddressOfFunctions
-			|| exports.NumberOfFunctions >= pe_utils::max_dword / sizeof(uint32_t)
-			|| exports.NumberOfNames > pe_utils::max_dword / sizeof(uint32_t)
-			|| !pe_utils::is_sum_safe(exports.AddressOfFunctions, exports.NumberOfFunctions * sizeof(uint32_t))
-			|| !pe_utils::is_sum_safe(exports.AddressOfNames, exports.NumberOfNames * sizeof(uint32_t))
-			|| !pe_utils::is_sum_safe(exports.AddressOfNameOrdinals, exports.NumberOfFunctions * sizeof(uint32_t))
-			|| !pe_utils::is_sum_safe(pe.get_directory_rva(image_directory_entry_export), pe.get_directory_size(image_directory_entry_export)))
+		        (exports.AddressOfNameOrdinals && !exports.AddressOfNames) ||
+		        !exports.AddressOfFunctions
+		        || exports.NumberOfFunctions >= pe_utils::max_dword / sizeof(uint32_t)
+		        || exports.NumberOfNames > pe_utils::max_dword / sizeof(uint32_t)
+		        || !pe_utils::is_sum_safe(exports.AddressOfFunctions, exports.NumberOfFunctions * sizeof(uint32_t))
+		        || !pe_utils::is_sum_safe(exports.AddressOfNames, exports.NumberOfNames * sizeof(uint32_t))
+		        || !pe_utils::is_sum_safe(exports.AddressOfNameOrdinals, exports.NumberOfFunctions * sizeof(uint32_t))
+		        || !pe_utils::is_sum_safe(pe.get_directory_rva(image_directory_entry_export), pe.get_directory_size(image_directory_entry_export)))
 			throw pe_exception("Incorrect export directory", pe_exception::incorrect_export_directory);
 
 		//Check if it is enough bytes to hold AddressOfFunctions table
 		if(pe.section_data_length_from_rva(exports.AddressOfFunctions, exports.AddressOfFunctions, section_data_virtual, true)
-			< exports.NumberOfFunctions * sizeof(uint32_t))
+		        < exports.NumberOfFunctions * sizeof(uint32_t))
 			throw pe_exception("Incorrect export directory", pe_exception::incorrect_export_directory);
 
 		if(exports.AddressOfNames)
 		{
 			//Check if it is enough bytes to hold name and ordinal tables
 			if(pe.section_data_length_from_rva(exports.AddressOfNameOrdinals, exports.AddressOfNameOrdinals, section_data_virtual, true)
-				< exports.NumberOfNames * sizeof(uint16_t))
+			        < exports.NumberOfNames * sizeof(uint16_t))
 				throw pe_exception("Incorrect export directory", pe_exception::incorrect_export_directory);
 
 			if(pe.section_data_length_from_rva(exports.AddressOfNames, exports.AddressOfNames, section_data_virtual, true)
-				< exports.NumberOfNames * sizeof(uint32_t))
+			        < exports.NumberOfNames * sizeof(uint32_t))
 				throw pe_exception("Incorrect export directory", pe_exception::incorrect_export_directory);
 		}
-		
+
 		for(uint32_t ordinal = 0; ordinal < exports.NumberOfFunctions; ordinal++)
 		{
 			//Get function address
@@ -385,7 +385,7 @@ const exported_functions_list get_exported_functions(const pe_base& pe, export_i
 
 					//If the function is just a redirect, save its name
 					if(rva >= pe.get_directory_rva(image_directory_entry_export) + sizeof(image_directory_entry_export) &&
-						rva < pe.get_directory_rva(image_directory_entry_export) + pe.get_directory_size(image_directory_entry_export))
+					        rva < pe.get_directory_rva(image_directory_entry_export) + pe.get_directory_size(image_directory_entry_export))
 					{
 						if((max_name_length = pe.section_data_length_from_rva(rva, rva, section_data_virtual, true)) < 2)
 							throw pe_exception("Incorrect export directory", pe_exception::incorrect_export_directory);
@@ -487,13 +487,13 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 	uint32_t number_of_names = 0; //Number of named functions
 	uint32_t max_ordinal = 0; //Maximum ordinal number
 	uint32_t ordinal_base = static_cast<uint32_t>(-1); //Minimum ordinal value
-	
+
 	if(exports.empty())
 		ordinal_base = info.get_ordinal_base();
 
 	uint32_t needed_size_for_function_names = 0; //Needed space for function name strings
 	uint32_t needed_size_for_function_forwards = 0; //Needed space for function forwards names
-	
+
 	//List all exported functions
 	//Calculate needed size for function list
 	{
@@ -511,13 +511,13 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 			//Check if ordinal is unique
 			if(!used_function_ordinals.insert(func.get_ordinal()).second)
 				throw pe_exception("Duplicate exported function ordinal", pe_exception::duplicate_exported_function_ordinal);
-			
+
 			if(func.has_name())
 			{
 				//If function is named
 				++number_of_names;
 				needed_size_for_function_names += static_cast<uint32_t>(func.get_name().length() + 1);
-				
+
 				//Check if it's name and name ordinal are unique
 				if(!used_function_names.insert(func.get_name()).second)
 					throw pe_exception("Duplicate exported function name", pe_exception::duplicate_exported_function_name);
@@ -528,7 +528,7 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 				needed_size_for_function_forwards += static_cast<uint32_t>(func.get_forwarded_name().length() + 1);
 		}
 	}
-	
+
 	//Sort functions by ordinal value
 	std::sort(exports.begin(), exports.end(), ordinal_sorter());
 
@@ -538,7 +538,7 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 	uint32_t needed_size_for_function_name_ordinals = number_of_names * sizeof(uint16_t);
 	uint32_t needed_size_for_function_name_rvas = number_of_names * sizeof(uint32_t);
 	uint32_t needed_size_for_function_addresses = (max_ordinal - ordinal_base + 1) * sizeof(uint32_t);
-	
+
 	//Export directory header will be placed first
 	uint32_t directory_pos = pe_utils::align_up(offset_from_section_start, sizeof(uint32_t));
 
@@ -552,8 +552,8 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 	needed_size += needed_size_for_function_name_rvas; //For function name strings RVAs
 
 	//Check if exports_section is last one. If it's not, check if there's enough place for exports data
-	if(&exports_section != &*(pe.get_image_sections().end() - 1) && 
-		(exports_section.empty() || pe_utils::align_up(exports_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + directory_pos))
+	if(&exports_section != &*(pe.get_image_sections().end() - 1) &&
+	        (exports_section.empty() || pe_utils::align_up(exports_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + directory_pos))
 		throw pe_exception("Insufficient space for export directory", pe_exception::insufficient_space);
 
 	std::string& raw_data = exports_section.get_raw_data();
@@ -615,11 +615,11 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 				memset(&raw_data[current_pos_of_function_addresses], 0, len);
 				current_pos_of_function_addresses += len;
 			}
-			
+
 			//Save last encountered ordinal
 			last_ordinal = func.get_ordinal();
 		}
-		
+
 		//If function is named, save its name ordinal and name in sorted alphabetically order
 		if(func.has_name())
 			funcs.insert(std::make_pair(func.get_name(), static_cast<uint16_t>(func.get_ordinal() - ordinal_base))); //Calculate name ordinal
@@ -643,7 +643,7 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 			current_pos_of_function_addresses += sizeof(function_rva);
 		}
 	}
-	
+
 	//Enumerate sorted function names
 	for(funclist::const_iterator it = funcs.begin(); it != funcs.end(); ++it)
 	{
@@ -661,10 +661,10 @@ const image_directory rebuild_exports(pe_base& pe, const export_info& info, expo
 		memcpy(&raw_data[current_pos_of_function_name_ordinals], &name_ordinal, sizeof(name_ordinal));
 		current_pos_of_function_name_ordinals += sizeof(name_ordinal);
 	}
-	
+
 	//Adjust section raw and virtual sizes
 	pe.recalculate_section_sizes(exports_section, auto_strip_last_section);
-	
+
 	image_directory ret(pe.rva_from_section_offset(exports_section, directory_pos), needed_size);
 
 	//If auto-rewrite of PE headers is required

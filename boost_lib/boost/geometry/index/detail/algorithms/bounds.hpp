@@ -13,9 +13,17 @@
 
 #include <boost/geometry/index/detail/bounded_view.hpp>
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
-namespace dispatch {
+namespace dispatch
+{
 
 template <typename Geometry,
           typename Bounds,
@@ -23,20 +31,20 @@ template <typename Geometry,
           typename TagBounds = typename geometry::tag<Bounds>::type>
 struct bounds
 {
-    static inline void apply(Geometry const& g, Bounds & b)
-    {
-        geometry::convert(g, b);
-    }
+	static inline void apply(Geometry const& g, Bounds & b)
+	{
+		geometry::convert(g, b);
+	}
 };
 
 template <typename Geometry, typename Bounds>
 struct bounds<Geometry, Bounds, segment_tag, box_tag>
 {
-    static inline void apply(Geometry const& g, Bounds & b)
-    {
-        index::detail::bounded_view<Geometry, Bounds> v(g);
-        geometry::convert(v, b);
-    }
+	static inline void apply(Geometry const& g, Bounds & b)
+	{
+		index::detail::bounded_view<Geometry, Bounds> v(g);
+		geometry::convert(v, b);
+	}
 };
 
 } // namespace dispatch
@@ -44,35 +52,36 @@ struct bounds<Geometry, Bounds, segment_tag, box_tag>
 template <typename Geometry, typename Bounds>
 inline void bounds(Geometry const& g, Bounds & b)
 {
-    concepts::check_concepts_and_equal_dimensions<Geometry const, Bounds>();
-    dispatch::bounds<Geometry, Bounds>::apply(g, b);
+	concepts::check_concepts_and_equal_dimensions<Geometry const, Bounds>();
+	dispatch::bounds<Geometry, Bounds>::apply(g, b);
 }
 
-namespace dispatch {
+namespace dispatch
+{
 
 template <typename Geometry,
           typename TagGeometry = typename geometry::tag<Geometry>::type>
 struct return_ref_or_bounds
 {
-    typedef Geometry const& result_type;
+	typedef Geometry const& result_type;
 
-    static inline result_type apply(Geometry const& g)
-    {
-        return g;
-    }
+	static inline result_type apply(Geometry const& g)
+	{
+		return g;
+	}
 };
 
 template <typename Geometry>
 struct return_ref_or_bounds<Geometry, segment_tag>
 {
-    typedef typename point_type<Geometry>::type point_type;
-    typedef geometry::model::box<point_type> bounds_type;
-    typedef index::detail::bounded_view<Geometry, bounds_type> result_type;
+	typedef typename point_type<Geometry>::type point_type;
+	typedef geometry::model::box<point_type> bounds_type;
+	typedef index::detail::bounded_view<Geometry, bounds_type> result_type;
 
-    static inline result_type apply(Geometry const& g)
-    {
-        return result_type(g);
-    }
+	static inline result_type apply(Geometry const& g)
+	{
+		return result_type(g);
+	}
 };
 
 } // namespace dispatch
@@ -82,9 +91,12 @@ inline
 typename dispatch::return_ref_or_bounds<Geometry>::result_type
 return_ref_or_bounds(Geometry const& g)
 {
-    return dispatch::return_ref_or_bounds<Geometry>::apply(g);
+	return dispatch::return_ref_or_bounds<Geometry>::apply(g);
 }
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_BOUNDS_HPP

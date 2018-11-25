@@ -26,11 +26,14 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
-namespace asio {
+namespace asio
+{
 
-namespace ip {
+namespace ip
+{
 
 class address;
 

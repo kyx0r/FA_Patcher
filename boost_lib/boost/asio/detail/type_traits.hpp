@@ -36,8 +36,10 @@
 # include <boost/utility/result_of.hpp>
 #endif // defined(BOOST_ASIO_HAS_TYPE_TRAITS)
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 #if defined(BOOST_ASIO_HAS_STD_TYPE_TRAITS)
 using std::add_const;

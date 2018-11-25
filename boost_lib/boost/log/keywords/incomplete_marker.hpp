@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword for passing incomplete marker for the list of scopes to the \c named_scope formatter
 BOOST_PARAMETER_KEYWORD(tag, incomplete_marker)

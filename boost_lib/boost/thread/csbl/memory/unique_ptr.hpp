@@ -18,11 +18,11 @@
 
 namespace boost
 {
-  namespace csbl
-  {
-    using ::boost::movelib::unique_ptr;
-    using ::boost::movelib::make_unique;
+namespace csbl
+{
+using ::boost::movelib::unique_ptr;
+using ::boost::movelib::make_unique;
 
-  }
+}
 }
 #endif // header

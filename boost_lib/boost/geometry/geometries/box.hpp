@@ -27,7 +27,9 @@
 #endif
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace model
@@ -53,80 +55,80 @@ The box can also take a latlong point type as template parameter.
 template<typename Point>
 class box
 {
-    BOOST_CONCEPT_ASSERT( (concepts::Point<Point>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Point<Point>) );
 
 public:
 
 #if !defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
 #if !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
-    /// \constructor_default_no_init
-    box() = default;
+	/// \constructor_default_no_init
+	box() = default;
 #else
-    /// \constructor_default_no_init
-    inline box()
-    {}
+	/// \constructor_default_no_init
+	inline box()
+	{}
 #endif
 #else // defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
-    inline box()
-    {
-        m_created = 1;
-    }
-    ~box()
-    {
-        m_created = 0;
-    }
+	inline box()
+	{
+		m_created = 1;
+	}
+	~box()
+	{
+		m_created = 0;
+	}
 #endif
 
-    /*!
-        \brief Constructor taking the minimum corner point and the maximum corner point
-    */
-    inline box(Point const& min_corner, Point const& max_corner)
-    {
-        geometry::convert(min_corner, m_min_corner);
-        geometry::convert(max_corner, m_max_corner);
+	/*!
+	    \brief Constructor taking the minimum corner point and the maximum corner point
+	*/
+	inline box(Point const& min_corner, Point const& max_corner)
+	{
+		geometry::convert(min_corner, m_min_corner);
+		geometry::convert(max_corner, m_max_corner);
 
 #if defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
-        m_created = 1;
+		m_created = 1;
 #endif
-    }
+	}
 
-    inline Point const& min_corner() const
-    {
+	inline Point const& min_corner() const
+	{
 #if defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
-        BOOST_GEOMETRY_ASSERT(m_created == 1);
+		BOOST_GEOMETRY_ASSERT(m_created == 1);
 #endif
-        return m_min_corner;
-    }
-    inline Point const& max_corner() const
-    {
+		return m_min_corner;
+	}
+	inline Point const& max_corner() const
+	{
 #if defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
-        BOOST_GEOMETRY_ASSERT(m_created == 1);
+		BOOST_GEOMETRY_ASSERT(m_created == 1);
 #endif
-        return m_max_corner;
-    }
+		return m_max_corner;
+	}
 
-    inline Point& min_corner()
-    {
+	inline Point& min_corner()
+	{
 #if defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
-        BOOST_GEOMETRY_ASSERT(m_created == 1);
+		BOOST_GEOMETRY_ASSERT(m_created == 1);
 #endif
-        return m_min_corner;
-    }
-    inline Point& max_corner()
-    {
+		return m_min_corner;
+	}
+	inline Point& max_corner()
+	{
 #if defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
-        BOOST_GEOMETRY_ASSERT(m_created == 1);
+		BOOST_GEOMETRY_ASSERT(m_created == 1);
 #endif
-        return m_max_corner;
-    }
+		return m_max_corner;
+	}
 
 private:
 
-    Point m_min_corner;
-    Point m_max_corner;
+	Point m_min_corner;
+	Point m_max_corner;
 
 #if defined(BOOST_GEOMETRY_ENABLE_ACCESS_DEBUGGING)
-    int m_created;
+	int m_created;
 #endif
 };
 
@@ -142,50 +144,51 @@ namespace traits
 template <typename Point>
 struct tag<model::box<Point> >
 {
-    typedef box_tag type;
+	typedef box_tag type;
 };
 
 template <typename Point>
 struct point_type<model::box<Point> >
 {
-    typedef Point type;
+	typedef Point type;
 };
 
 template <typename Point, std::size_t Dimension>
 struct indexed_access<model::box<Point>, min_corner, Dimension>
 {
-    typedef typename geometry::coordinate_type<Point>::type coordinate_type;
+	typedef typename geometry::coordinate_type<Point>::type coordinate_type;
 
-    static inline coordinate_type get(model::box<Point> const& b)
-    {
-        return geometry::get<Dimension>(b.min_corner());
-    }
+	static inline coordinate_type get(model::box<Point> const& b)
+	{
+		return geometry::get<Dimension>(b.min_corner());
+	}
 
-    static inline void set(model::box<Point>& b, coordinate_type const& value)
-    {
-        geometry::set<Dimension>(b.min_corner(), value);
-    }
+	static inline void set(model::box<Point>& b, coordinate_type const& value)
+	{
+		geometry::set<Dimension>(b.min_corner(), value);
+	}
 };
 
 template <typename Point, std::size_t Dimension>
 struct indexed_access<model::box<Point>, max_corner, Dimension>
 {
-    typedef typename geometry::coordinate_type<Point>::type coordinate_type;
+	typedef typename geometry::coordinate_type<Point>::type coordinate_type;
 
-    static inline coordinate_type get(model::box<Point> const& b)
-    {
-        return geometry::get<Dimension>(b.max_corner());
-    }
+	static inline coordinate_type get(model::box<Point> const& b)
+	{
+		return geometry::get<Dimension>(b.max_corner());
+	}
 
-    static inline void set(model::box<Point>& b, coordinate_type const& value)
-    {
-        geometry::set<Dimension>(b.max_corner(), value);
-    }
+	static inline void set(model::box<Point>& b, coordinate_type const& value)
+	{
+		geometry::set<Dimension>(b.max_corner(), value);
+	}
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_BOX_HPP

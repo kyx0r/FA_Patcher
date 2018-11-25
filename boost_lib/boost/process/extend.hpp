@@ -29,16 +29,20 @@
  */
 
 
-namespace boost {
-namespace process {
-namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 template<typename Tuple>
 inline asio::io_context& get_io_context(const Tuple & tup);
 }
 
 
 ///Namespace for extensions \attention This is experimental.
-namespace extend {
+namespace extend
+{
 
 #if defined(BOOST_WINDOWS_API)
 
@@ -109,42 +113,42 @@ inline asio::io_context& get_io_context(const Sequence & seq);
  */
 struct handler
 {
-    ///This function is invoked before the process launch. \note It is not required to be const.
-    template <class Executor>
-    void on_setup(Executor&) const {}
+	///This function is invoked before the process launch. \note It is not required to be const.
+	template <class Executor>
+	void on_setup(Executor&) const {}
 
-    /** This function is invoked if an error occured while trying to launch the process.
-     * \note It is not required to be const.
-     */
-    template <class Executor>
-    void on_error(Executor&, const std::error_code &) const {}
+	/** This function is invoked if an error occured while trying to launch the process.
+	 * \note It is not required to be const.
+	 */
+	template <class Executor>
+	void on_error(Executor&, const std::error_code &) const {}
 
-    /** This function is invoked if the process was successfully launched.
-     * \note It is not required to be const.
-     */
-    template <class Executor>
-    void on_success(Executor&) const {}
+	/** This function is invoked if the process was successfully launched.
+	 * \note It is not required to be const.
+	 */
+	template <class Executor>
+	void on_success(Executor&) const {}
 
-    /**This function is invoked if an error occured during the call of `fork`.
-     * \note This function will only be called on posix.
-     */
-    template<typename Executor>
-    void on_fork_error  (Executor &, const std::error_code&) const {}
+	/**This function is invoked if an error occured during the call of `fork`.
+	 * \note This function will only be called on posix.
+	 */
+	template<typename Executor>
+	void on_fork_error  (Executor &, const std::error_code&) const {}
 
-    /**This function is invoked if the call of `fork` was successful, before
-     * calling `execve`.
-     * \note This function will only be called on posix.
-     * \attention It will be invoked from the new process.
-     */
-    template<typename Executor>
-    void on_exec_setup  (Executor &) const {}
+	/**This function is invoked if the call of `fork` was successful, before
+	 * calling `execve`.
+	 * \note This function will only be called on posix.
+	 * \attention It will be invoked from the new process.
+	 */
+	template<typename Executor>
+	void on_exec_setup  (Executor &) const {}
 
-    /**This function is invoked if the call of `execve` failed.
-     * \note This function will only be called on posix.
-     * \attention It will be invoked from the new process.
-     */
-    template<typename Executor>
-    void on_exec_error  (Executor &, const std::error_code&) const {}
+	/**This function is invoked if the call of `execve` failed.
+	 * \note This function will only be called on posix.
+	 * \attention It will be invoked from the new process.
+	 */
+	template<typename Executor>
+	void on_exec_error  (Executor &, const std::error_code&) const {}
 
 };
 
@@ -231,27 +235,27 @@ As information for extension development, here is the structure of the process l
 template<typename Sequence>
 struct posix_executor
 {
-    ///A reference to the actual initializer-sequence
-     Sequence & seq;
-    ///A pointer to the name of the executable.
-     const char * exe      = nullptr;
-     ///A pointer to the argument-vector.
-     char *const* cmd_line = nullptr;
-     ///A pointer to the environment variables, as default it is set to [environ](http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap08.html)
-     char **env      = ::environ;
-     ///The pid of the process - it will be -1 before invoking [fork](http://pubs.opengroup.org/onlinepubs/009695399/functions/fork.html), and after forking either 0 for the new process or a positive value if in the current process. */
-     pid_t pid = -1;
-     ///This shared-pointer holds the exit code. It's done this way, so it can be shared between an `asio::io_context` and \ref child.
-     std::shared_ptr<std::atomic<int>> exit_status = std::make_shared<std::atomic<int>>(still_active);
+	///A reference to the actual initializer-sequence
+	Sequence & seq;
+	///A pointer to the name of the executable.
+	const char * exe      = nullptr;
+	///A pointer to the argument-vector.
+	char *const* cmd_line = nullptr;
+	///A pointer to the environment variables, as default it is set to [environ](http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap08.html)
+	char **env      = ::environ;
+	///The pid of the process - it will be -1 before invoking [fork](http://pubs.opengroup.org/onlinepubs/009695399/functions/fork.html), and after forking either 0 for the new process or a positive value if in the current process. */
+	pid_t pid = -1;
+	///This shared-pointer holds the exit code. It's done this way, so it can be shared between an `asio::io_context` and \ref child.
+	std::shared_ptr<std::atomic<int>> exit_status = std::make_shared<std::atomic<int>>(still_active);
 
-     ///This function returns a const reference to the error state of the executor.
-     const std::error_code & error() const;
+	///This function returns a const reference to the error state of the executor.
+	const std::error_code & error() const;
 
-     ///This function can be used to report an error to the executor. This will be handled according to the configuration of the executor, i.e. it
-     /// might throw an exception. \note This is the required way to handle errors in initializers.
-     void set_error(const std::error_code &ec, const std::string &msg);
-     ///\overload void set_error(const std::error_code &ec, const std::string &msg);
-     void set_error(const std::error_code &ec, const char* msg);
+	///This function can be used to report an error to the executor. This will be handled according to the configuration of the executor, i.e. it
+	/// might throw an exception. \note This is the required way to handle errors in initializers.
+	void set_error(const std::error_code &ec, const std::string &msg);
+	///\overload void set_error(const std::error_code &ec, const std::string &msg);
+	void set_error(const std::error_code &ec, const char* msg);
 };
 
 ///The windows executor type.
@@ -279,53 +283,53 @@ As information for extension development, here is the structure of the process l
 template<typename Char, typename Sequence>
 struct windows_executor
 {
-    ///A reference to the actual initializer-sequence
-     Sequence & seq;
+	///A reference to the actual initializer-sequence
+	Sequence & seq;
 
-     ///A pointer to the name of the executable. It's null by default.
-     const Char * exe      = nullptr;
-     ///A pointer to the argument-vector. Must be set by some initializer.
-     char  Char* cmd_line = nullptr;
-     ///A pointer to the environment variables. It's null by default.
-     char  Char* env      = nullptr;
-     ///A pointer to the working directory. It's null by default.
-     const Char * work_dir = nullptr;
+	///A pointer to the name of the executable. It's null by default.
+	const Char * exe      = nullptr;
+	///A pointer to the argument-vector. Must be set by some initializer.
+	char  Char* cmd_line = nullptr;
+	///A pointer to the environment variables. It's null by default.
+	char  Char* env      = nullptr;
+	///A pointer to the working directory. It's null by default.
+	const Char * work_dir = nullptr;
 
-     ///A pointer to the process-attributes of type [SECURITY_ATTRIBUTES](https://msdn.microsoft.com/en-us/library/windows/desktop/aa379560.aspx). It's null by default.
-     ::boost::detail::winapi::LPSECURITY_ATTRIBUTES_ proc_attrs   = nullptr;
-     ///A pointer to the thread-attributes of type [SECURITY_ATTRIBUTES](https://msdn.microsoft.com/en-us/library/windows/desktop/aa379560.aspx). It' null by default.
-     ::boost::detail::winapi::LPSECURITY_ATTRIBUTES_ thread_attrs = nullptr;
-     ///A logical bool value setting whether handles shall be inherited or not.
-     ::boost::detail::winapi::BOOL_ inherit_handles = false;
+	///A pointer to the process-attributes of type [SECURITY_ATTRIBUTES](https://msdn.microsoft.com/en-us/library/windows/desktop/aa379560.aspx). It's null by default.
+	::boost::detail::winapi::LPSECURITY_ATTRIBUTES_ proc_attrs   = nullptr;
+	///A pointer to the thread-attributes of type [SECURITY_ATTRIBUTES](https://msdn.microsoft.com/en-us/library/windows/desktop/aa379560.aspx). It' null by default.
+	::boost::detail::winapi::LPSECURITY_ATTRIBUTES_ thread_attrs = nullptr;
+	///A logical bool value setting whether handles shall be inherited or not.
+	::boost::detail::winapi::BOOL_ inherit_handles = false;
 
-     ///The element holding the process-information after process creation. The type is [PROCESS_INFORMATION](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684873.aspx)
-     ::boost::detail::winapi::PROCESS_INFORMATION_ proc_info{nullptr, nullptr, 0,0};
+	///The element holding the process-information after process creation. The type is [PROCESS_INFORMATION](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684873.aspx)
+	::boost::detail::winapi::PROCESS_INFORMATION_ proc_info{nullptr, nullptr, 0,0};
 
 
-     ///This shared-pointer holds the exit code. It's done this way, so it can be shared between an `asio::io_context` and \ref child.
-     std::shared_ptr<std::atomic<int>> exit_status = std::make_shared<std::atomic<int>>(still_active);
+	///This shared-pointer holds the exit code. It's done this way, so it can be shared between an `asio::io_context` and \ref child.
+	std::shared_ptr<std::atomic<int>> exit_status = std::make_shared<std::atomic<int>>(still_active);
 
-     ///This function returns a const reference to the error state of the executor.
-     const std::error_code & error() const;
+	///This function returns a const reference to the error state of the executor.
+	const std::error_code & error() const;
 
-     ///This function can be used to report an error to the executor. This will be handled according to the configuration of the executor, i.e. it
-     /// might throw an exception. \note This is the required way to handle errors in initializers.
-     void set_error(const std::error_code &ec, const std::string &msg);
-     ///\overload void set_error(const std::error_code &ec, const std::string &msg);
-     void set_error(const std::error_code &ec, const char* msg);
+	///This function can be used to report an error to the executor. This will be handled according to the configuration of the executor, i.e. it
+	/// might throw an exception. \note This is the required way to handle errors in initializers.
+	void set_error(const std::error_code &ec, const std::string &msg);
+	///\overload void set_error(const std::error_code &ec, const std::string &msg);
+	void set_error(const std::error_code &ec, const char* msg);
 
-     ///The creation flags of the process
-    ::boost::detail::winapi::DWORD_ creation_flags;
-    ///The type of the [startup-info](https://msdn.microsoft.com/en-us/library/windows/desktop/ms686331.aspx), depending on the char-type.
-    typedef typename detail::startup_info<Char>::type    startup_info_t;
-    ///The type of the [extended startup-info](https://msdn.microsoft.com/de-de/library/windows/desktop/ms686329.aspx), depending the char-type; only defined with winapi-version equal or higher than 6.
-    typedef typename detail::startup_info_ex<Char>::type startup_info_ex_t;
-    ///This function switches the information, so that the extended structure is used. \note It's only defined with winapi-version equal or higher than 6.
-    void set_startup_info_ex();
-    ///This element is an instance or a reference (if \ref startup_info_ex exists) to the [startup-info](https://msdn.microsoft.com/en-us/library/windows/desktop/ms686331.aspx) for the process.
-    startup_info_t startup_info;
-    ///This element is the instance of the  [extended startup-info](https://msdn.microsoft.com/de-de/library/windows/desktop/ms686329.aspx). It is only available with a winapi-version equal or highter than 6.
-    startup_info_ex_t  startup_info_ex;
+	///The creation flags of the process
+	::boost::detail::winapi::DWORD_ creation_flags;
+	///The type of the [startup-info](https://msdn.microsoft.com/en-us/library/windows/desktop/ms686331.aspx), depending on the char-type.
+	typedef typename detail::startup_info<Char>::type    startup_info_t;
+	///The type of the [extended startup-info](https://msdn.microsoft.com/de-de/library/windows/desktop/ms686329.aspx), depending the char-type; only defined with winapi-version equal or higher than 6.
+	typedef typename detail::startup_info_ex<Char>::type startup_info_ex_t;
+	///This function switches the information, so that the extended structure is used. \note It's only defined with winapi-version equal or higher than 6.
+	void set_startup_info_ex();
+	///This element is an instance or a reference (if \ref startup_info_ex exists) to the [startup-info](https://msdn.microsoft.com/en-us/library/windows/desktop/ms686331.aspx) for the process.
+	startup_info_t startup_info;
+	///This element is the instance of the  [extended startup-info](https://msdn.microsoft.com/de-de/library/windows/desktop/ms686329.aspx). It is only available with a winapi-version equal or highter than 6.
+	startup_info_ex_t  startup_info_ex;
 };
 
 

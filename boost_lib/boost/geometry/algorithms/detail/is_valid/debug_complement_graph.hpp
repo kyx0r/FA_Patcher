@@ -14,10 +14,14 @@
 #include <iostream>
 #endif
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 
@@ -27,44 +31,46 @@ inline void
 debug_print_complement_graph(OutputStream& os,
                              complement_graph<TurnPoint> const& graph)
 {
-    typedef typename complement_graph<TurnPoint>::vertex_handle vertex_handle;
+	typedef typename complement_graph<TurnPoint>::vertex_handle vertex_handle;
 
-    os << "num rings: " << graph.m_num_rings << std::endl;
-    os << "vertex ids: {";
-    for (vertex_handle it = graph.m_vertices.begin();
-         it != graph.m_vertices.end(); ++it)
-    {
-        os << " " << it->id();
-    }
-    os << " }" << std::endl;        
+	os << "num rings: " << graph.m_num_rings << std::endl;
+	os << "vertex ids: {";
+	for (vertex_handle it = graph.m_vertices.begin();
+	        it != graph.m_vertices.end(); ++it)
+	{
+		os << " " << it->id();
+	}
+	os << " }" << std::endl;
 
-    for (vertex_handle it = graph.m_vertices.begin();
-         it != graph.m_vertices.end(); ++it)
-    {
-        os << "neighbors of " << it->id() << ": {";
-        for (typename complement_graph
-                 <
-                     TurnPoint
-                 >::neighbor_container::const_iterator
-                 nit = graph.m_neighbors[it->id()].begin();
-             nit != graph.m_neighbors[it->id()].end(); ++nit)
-        {
-            os << " " << (*nit)->id();
-        }
-        os << "}" << std::endl;        
-    }
+	for (vertex_handle it = graph.m_vertices.begin();
+	        it != graph.m_vertices.end(); ++it)
+	{
+		os << "neighbors of " << it->id() << ": {";
+		for (typename complement_graph
+		        <
+		        TurnPoint
+		        >::neighbor_container::const_iterator
+		        nit = graph.m_neighbors[it->id()].begin();
+		        nit != graph.m_neighbors[it->id()].end(); ++nit)
+		{
+			os << " " << (*nit)->id();
+		}
+		os << "}" << std::endl;
+	}
 }
 #else
 template <typename OutputStream, typename TurnPoint>
 inline void debug_print_complement_graph(OutputStream&,
-                                         complement_graph<TurnPoint> const&)
+        complement_graph<TurnPoint> const&)
 {
 }
 #endif
 
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_COMPLEMENT_GRAPH_HPP

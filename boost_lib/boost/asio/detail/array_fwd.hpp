@@ -17,7 +17,8 @@
 
 #include <boost/asio/detail/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template<class T, std::size_t N>
 class array;

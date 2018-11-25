@@ -16,9 +16,12 @@
 #include <boost/compute/lambda.hpp>
 #include <boost/compute/algorithm/transform.hpp>
 
-namespace boost {
-namespace compute {
-namespace experimental {
+namespace boost
+{
+namespace compute
+{
+namespace experimental
+{
 
 template<class InputIterator, class OutputIterator>
 inline OutputIterator
@@ -29,17 +32,17 @@ clamp_range(InputIterator first,
             typename std::iterator_traits<InputIterator>::value_type hi,
             command_queue &queue)
 {
-    using ::boost::compute::lambda::_1;
-    using ::boost::compute::lambda::_2;
-    using ::boost::compute::lambda::clamp;
+	using ::boost::compute::lambda::_1;
+	using ::boost::compute::lambda::_2;
+	using ::boost::compute::lambda::clamp;
 
-    return ::boost::compute::transform(
-        first,
-        last,
-        result,
-        clamp(_1, lo, hi),
-        queue
-    );
+	return ::boost::compute::transform(
+	           first,
+	           last,
+	           result,
+	           clamp(_1, lo, hi),
+	           queue
+	       );
 }
 
 } // end experimental namespace

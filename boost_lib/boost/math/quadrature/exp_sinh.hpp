@@ -20,77 +20,84 @@
 #include <memory>
 #include <boost/math/quadrature/detail/exp_sinh_detail.hpp>
 
-namespace boost{ namespace math{ namespace quadrature {
+namespace boost
+{
+namespace math
+{
+namespace quadrature
+{
 
 template<class Real, class Policy = policies::policy<> >
 class exp_sinh
 {
 public:
-   exp_sinh(size_t max_refinements = 9)
-      : m_imp(std::make_shared<detail::exp_sinh_detail<Real, Policy>>(max_refinements)) {}
+	exp_sinh(size_t max_refinements = 9)
+		: m_imp(std::make_shared<detail::exp_sinh_detail<Real, Policy>>(max_refinements)) {}
 
-    template<class F>
-    Real integrate(const F& f, Real a, Real b, Real tol = boost::math::tools::root_epsilon<Real>(), Real* error = nullptr, Real* L1 = nullptr, std::size_t* levels = nullptr) const;
-    template<class F>
-    Real integrate(const F& f, Real tol = boost::math::tools::root_epsilon<Real>(), Real* error = nullptr, Real* L1 = nullptr, std::size_t* levels = nullptr) const;
+	template<class F>
+	Real integrate(const F& f, Real a, Real b, Real tol = boost::math::tools::root_epsilon<Real>(), Real* error = nullptr, Real* L1 = nullptr, std::size_t* levels = nullptr) const;
+	template<class F>
+	Real integrate(const F& f, Real tol = boost::math::tools::root_epsilon<Real>(), Real* error = nullptr, Real* L1 = nullptr, std::size_t* levels = nullptr) const;
 
 private:
-    std::shared_ptr<detail::exp_sinh_detail<Real, Policy>> m_imp;
+	std::shared_ptr<detail::exp_sinh_detail<Real, Policy>> m_imp;
 };
 
 template<class Real, class Policy>
 template<class F>
 Real exp_sinh<Real, Policy>::integrate(const F& f, Real a, Real b, Real tolerance, Real* error, Real* L1, std::size_t* levels) const
 {
-    using std::abs;
-    using boost::math::constants::half;
-    using boost::math::quadrature::detail::exp_sinh_detail;
+	using std::abs;
+	using boost::math::constants::half;
+	using boost::math::quadrature::detail::exp_sinh_detail;
 
-    static const char* function = "boost::math::quadrature::exp_sinh<%1%>::integrate";
+	static const char* function = "boost::math::quadrature::exp_sinh<%1%>::integrate";
 
-    // Neither limit may be a NaN:
-    if((boost::math::isnan)(a) || (boost::math::isnan)(b))
-       return policies::raise_domain_error(function, "NaN supplied as one limit of integration - sorry I don't know what to do", a, Policy());
-    // Right limit is infinite:
-    if ((boost::math::isfinite)(a) && (b >= boost::math::tools::max_value<Real>()))
-    {
-        // If a = 0, don't use an additional level of indirection:
-        if (a == (Real) 0)
-        {
-            return m_imp->integrate(f, error, L1, function, tolerance, levels);
-        }
-        const auto u = [&](Real t)->Real { return f(t + a); };
-        return m_imp->integrate(u, error, L1, function, tolerance, levels);
-    }
+	// Neither limit may be a NaN:
+	if((boost::math::isnan)(a) || (boost::math::isnan)(b))
+		return policies::raise_domain_error(function, "NaN supplied as one limit of integration - sorry I don't know what to do", a, Policy());
+	// Right limit is infinite:
+	if ((boost::math::isfinite)(a) && (b >= boost::math::tools::max_value<Real>()))
+	{
+		// If a = 0, don't use an additional level of indirection:
+		if (a == (Real) 0)
+		{
+			return m_imp->integrate(f, error, L1, function, tolerance, levels);
+		}
+		const auto u = [&](Real t)->Real { return f(t + a); };
+		return m_imp->integrate(u, error, L1, function, tolerance, levels);
+	}
 
-    if ((boost::math::isfinite)(b) && a <= -boost::math::tools::max_value<Real>())
-    {
-        const auto u = [&](Real t)->Real { return f(b-t);};
-        return m_imp->integrate(u, error, L1, function, tolerance, levels);
-    }
+	if ((boost::math::isfinite)(b) && a <= -boost::math::tools::max_value<Real>())
+	{
+		const auto u = [&](Real t)->Real { return f(b-t);};
+		return m_imp->integrate(u, error, L1, function, tolerance, levels);
+	}
 
-    // Infinite limits:
-    if ((a <= -boost::math::tools::max_value<Real>()) && (b >= boost::math::tools::max_value<Real>()))
-    {
-        return policies::raise_domain_error(function, "Use sinh_sinh quadrature for integration over the whole real line; exp_sinh is for half infinite integrals.", a, Policy());
-    }
-    // If we get to here then both ends must necessarily be finite:
-    return policies::raise_domain_error(function, "Use tanh_sinh quadrature for integration over finite domains; exp_sinh is for half infinite integrals.", a, Policy());
+	// Infinite limits:
+	if ((a <= -boost::math::tools::max_value<Real>()) && (b >= boost::math::tools::max_value<Real>()))
+	{
+		return policies::raise_domain_error(function, "Use sinh_sinh quadrature for integration over the whole real line; exp_sinh is for half infinite integrals.", a, Policy());
+	}
+	// If we get to here then both ends must necessarily be finite:
+	return policies::raise_domain_error(function, "Use tanh_sinh quadrature for integration over finite domains; exp_sinh is for half infinite integrals.", a, Policy());
 }
 
 template<class Real, class Policy>
 template<class F>
 Real exp_sinh<Real, Policy>::integrate(const F& f, Real tolerance, Real* error, Real* L1, std::size_t* levels) const
 {
-    using std::abs;
-    using boost::math::constants::half;
-    using boost::math::quadrature::detail::exp_sinh_detail;
+	using std::abs;
+	using boost::math::constants::half;
+	using boost::math::quadrature::detail::exp_sinh_detail;
 
-    static const char* function = "boost::math::quadrature::exp_sinh<%1%>::integrate";
+	static const char* function = "boost::math::quadrature::exp_sinh<%1%>::integrate";
 
-    return m_imp->integrate(f, error, L1, function, tolerance, levels);
+	return m_imp->integrate(f, error, L1, function, tolerance, levels);
 }
 
 
-}}}
+}
+}
+}
 #endif

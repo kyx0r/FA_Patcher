@@ -17,40 +17,42 @@
 #include <boost/geometry/srs/projections/iau2000_traits.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
 {
-    
+namespace geometry
+{
+
 namespace projections
 {
 
 template <typename CT>
 struct dynamic_parameters<srs::iau2000, CT>
 {
-    static inline projections::parameters<CT> apply(srs::iau2000 const& params)
-    {
-        return projections::detail::pj_init_plus<CT>(
-                srs::dynamic(),
-                projections::detail::iau2000_to_string(params.code),
-                false);
-    }  
+	static inline projections::parameters<CT> apply(srs::iau2000 const& params)
+	{
+		return projections::detail::pj_init_plus<CT>(
+		           srs::dynamic(),
+		           projections::detail::iau2000_to_string(params.code),
+		           false);
+	}
 };
 
 template <int Code, typename CT>
 class proj_wrapper<srs::static_iau2000<Code>, CT>
-    : public static_proj_wrapper_base
-        <
-            typename projections::detail::iau2000_traits<Code>::static_parameters_type,
-            CT
-        >
+	: public static_proj_wrapper_base
+	  <
+	  typename projections::detail::iau2000_traits<Code>::static_parameters_type,
+	  CT
+	  >
 {
-    typedef projections::detail::iau2000_traits<Code> iau2000_traits;
-    typedef typename iau2000_traits::static_parameters_type static_parameters_type;
-    typedef static_proj_wrapper_base<static_parameters_type, CT> base_t;
+	typedef projections::detail::iau2000_traits<Code> iau2000_traits;
+	typedef typename iau2000_traits::static_parameters_type static_parameters_type;
+	typedef static_proj_wrapper_base<static_parameters_type, CT> base_t;
 
 public:
-    proj_wrapper()
-        : base_t(iau2000_traits::s_par(), iau2000_traits::par())
-    {}
+	proj_wrapper()
+		: base_t(iau2000_traits::s_par(), iau2000_traits::par())
+	{}
 };
 
 
@@ -63,20 +65,21 @@ namespace srs
 
 template <int Code, typename CT>
 class projection<srs::static_iau2000<Code>, CT>
-    : public projections::projection<srs::static_iau2000<Code>, CT>
+	: public projections::projection<srs::static_iau2000<Code>, CT>
 {
-    typedef projections::projection<srs::static_iau2000<Code>, CT> base_t;
+	typedef projections::projection<srs::static_iau2000<Code>, CT> base_t;
 
 public:
-    projection()
-    {}
+	projection()
+	{}
 };
 
 
 } // namespace srs
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_SRS_IAU2000_HPP

@@ -8,21 +8,21 @@ using namespace pe_win;
 //Default constructor
 file_version_info::file_version_info()
 	:file_version_ms_(0), file_version_ls_(0),
-	product_version_ms_(0), product_version_ls_(0),
-	file_flags_(0),
-	file_os_(0),
-	file_type_(0), file_subtype_(0),
-	file_date_ms_(0), file_date_ls_(0)
+	 product_version_ms_(0), product_version_ls_(0),
+	 file_flags_(0),
+	 file_os_(0),
+	 file_type_(0), file_subtype_(0),
+	 file_date_ms_(0), file_date_ls_(0)
 {}
 
 //Constructor from Windows fixed version info structure
 file_version_info::file_version_info(const vs_fixedfileinfo& info)
 	:file_version_ms_(info.dwFileVersionMS), file_version_ls_(info.dwFileVersionLS),
-	product_version_ms_(info.dwProductVersionMS), product_version_ls_(info.dwProductVersionLS),
-	file_flags_(info.dwFileFlags),
-	file_os_(info.dwFileOS),
-	file_type_(info.dwFileType), file_subtype_(info.dwFileSubtype),
-	file_date_ms_(info.dwFileDateMS), file_date_ls_(info.dwFileDateLS)
+	 product_version_ms_(info.dwProductVersionMS), product_version_ls_(info.dwProductVersionLS),
+	 file_flags_(info.dwFileFlags),
+	 file_os_(info.dwFileOS),
+	 file_type_(info.dwFileType), file_subtype_(info.dwFileSubtype),
+	 file_date_ms_(info.dwFileDateMS), file_date_ls_(info.dwFileDateLS)
 {}
 
 //Returns true if file is debug-built
@@ -320,7 +320,7 @@ void file_version_info::set_file_os(file_os_type file_os)
 	case file_os_win16:
 		file_os_ = vos__windows16;
 		return;
-		
+
 	case file_os_pm16:
 		file_os_ = vos__pm16;
 		return;
@@ -373,7 +373,7 @@ void file_version_info::set_file_type(file_type file_type)
 	case file_type_application:
 		file_type_ = vft_app;
 		return;
-		
+
 	case file_type_dll:
 		file_type_ = vft_dll;
 		return;

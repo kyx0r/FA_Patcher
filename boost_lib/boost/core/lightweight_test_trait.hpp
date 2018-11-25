@@ -27,23 +27,23 @@ namespace detail
 {
 
 template< class T > inline void test_trait_impl( char const * trait, void (*)( T ),
-  bool expected, char const * file, int line, char const * function )
+        bool expected, char const * file, int line, char const * function )
 {
-    if( T::value == expected )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): predicate '" << trait << "' ["
-            << boost::core::demangled_name( BOOST_CORE_TYPEID(T) ) << "]"
-            << " test failed in function '" << function
-            << "' (should have been " << ( expected? "true": "false" ) << ")"
-            << std::endl;
+	if( T::value == expected )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): predicate '" << trait << "' ["
+		        << boost::core::demangled_name( BOOST_CORE_TYPEID(T) ) << "]"
+		        << " test failed in function '" << function
+		        << "' (should have been " << ( expected? "true": "false" ) << ")"
+		        << std::endl;
 
-        ++test_errors();
-    }
+		++test_errors();
+	}
 }
 
 } // namespace detail

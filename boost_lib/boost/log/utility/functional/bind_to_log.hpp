@@ -25,7 +25,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -33,38 +34,38 @@ BOOST_LOG_OPEN_NAMESPACE
 template< typename TagT = void >
 struct to_log_fun
 {
-    typedef void result_type;
+	typedef void result_type;
 
-    template< typename StreamT, typename T >
-    void operator() (StreamT& strm, T const& val) const
-    {
-        strm << boost::log::to_log< TagT >(val);
-    }
+	template< typename StreamT, typename T >
+	void operator() (StreamT& strm, T const& val) const
+	{
+		strm << boost::log::to_log< TagT >(val);
+	}
 };
 
 //! The function object that outputs its second operand to the first one
 template< >
 struct to_log_fun< void >
 {
-    typedef void result_type;
+	typedef void result_type;
 
-    template< typename StreamT, typename T >
-    void operator() (StreamT& strm, T const& val) const
-    {
-        strm << boost::log::to_log(val);
-    }
+	template< typename StreamT, typename T >
+	void operator() (StreamT& strm, T const& val) const
+	{
+		strm << boost::log::to_log(val);
+	}
 };
 
 template< typename StreamT >
 BOOST_FORCEINLINE binder1st< to_log_fun< >, StreamT& > bind_to_log(StreamT& strm)
 {
-    return binder1st< to_log_fun< >, StreamT& >(to_log_fun< >(), strm);
+	return binder1st< to_log_fun< >, StreamT& >(to_log_fun< >(), strm);
 }
 
 template< typename TagT, typename StreamT >
 BOOST_FORCEINLINE binder1st< to_log_fun< TagT >, StreamT& > bind_to_log(StreamT& strm)
 {
-    return binder1st< to_log_fun< TagT >, StreamT& >(to_log_fun< TagT >(), strm);
+	return binder1st< to_log_fun< TagT >, StreamT& >(to_log_fun< TagT >(), strm);
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -25,9 +25,11 @@
 #include <boost/units/detail/one.hpp>
 #include <boost/units/detail/static_rational_power.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units {
+namespace units
+{
 
 template<class S, class Scale>
 struct scaled_base_unit;
@@ -37,14 +39,17 @@ struct scaled_base_unit;
 template<long Base, class Exponent>
 struct scale
 {
-    BOOST_STATIC_CONSTEXPR long base = Base;
-    typedef Exponent exponent;
-    typedef double value_type;
-    static BOOST_CONSTEXPR value_type value() { return(detail::static_rational_power<Exponent>(static_cast<double>(base))); }
-    // These need to be defined in specializations for
-    // printing to work.
-    // static std::string name();
-    // static std::string symbol();
+	BOOST_STATIC_CONSTEXPR long base = Base;
+	typedef Exponent exponent;
+	typedef double value_type;
+	static BOOST_CONSTEXPR value_type value()
+	{
+		return(detail::static_rational_power<Exponent>(static_cast<double>(base)));
+	}
+	// These need to be defined in specializations for
+	// printing to work.
+	// static std::string name();
+	// static std::string symbol();
 };
 
 template<long Base, class Exponent>
@@ -54,12 +59,21 @@ BOOST_CONSTEXPR_OR_CONST long scale<Base, Exponent>::base;
 template<long Base>
 struct scale<Base, static_rational<0> >
 {
-    BOOST_STATIC_CONSTEXPR long base = Base;
-    typedef static_rational<0> exponent;
-    typedef one value_type;
-    static BOOST_CONSTEXPR one value() { return(one()); }
-    static std::string name() { return(""); }
-    static std::string symbol() { return(""); }
+	BOOST_STATIC_CONSTEXPR long base = Base;
+	typedef static_rational<0> exponent;
+	typedef one value_type;
+	static BOOST_CONSTEXPR one value()
+	{
+		return(one());
+	}
+	static std::string name()
+	{
+		return("");
+	}
+	static std::string symbol()
+	{
+		return("");
+	}
 };
 
 template<long Base>
@@ -68,13 +82,13 @@ BOOST_CONSTEXPR_OR_CONST long scale<Base, static_rational<0> >::base;
 template<long Base,class Exponent>
 std::string symbol_string(const scale<Base,Exponent>&)
 {
-    return scale<Base,Exponent>::symbol();
+	return scale<Base,Exponent>::symbol();
 }
 
 template<long Base,class Exponent>
 std::string name_string(const scale<Base,Exponent>&)
 {
-    return scale<Base,Exponent>::name();
+	return scale<Base,Exponent>::name();
 }
 
 #ifndef BOOST_UNITS_DOXYGEN

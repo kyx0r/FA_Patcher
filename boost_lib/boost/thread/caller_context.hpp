@@ -20,38 +20,38 @@
 namespace boost
 {
 
-  struct caller_context_t
-  {
-    const char * filename;
-    unsigned lineno;
-    const char * func;
-    caller_context_t(const char * filename, unsigned lineno, const char * func) :
-      filename(filename), lineno(lineno), func(func)
-    {
-    }
-  };
+struct caller_context_t
+{
+	const char * filename;
+	unsigned lineno;
+	const char * func;
+	caller_context_t(const char * filename, unsigned lineno, const char * func) :
+		filename(filename), lineno(lineno), func(func)
+	{
+	}
+};
 
 #define BOOST_CONTEXTOF boost::caller_context_t(__FILE__, __LINE__, BOOST_CURRENT_FUNCTION)
 
-  template <typename OStream>
-  OStream& operator<<(OStream& os, caller_context_t const& ctx)
-  {
+template <typename OStream>
+OStream& operator<<(OStream& os, caller_context_t const& ctx)
+{
 #if defined BOOST_THREAD_USES_LOG_THREAD_ID
-    {
-      io::ios_flags_saver ifs( os );
-      os << std::left << std::setw(14) << boost::this_thread::get_id() << " ";
-    }
+	{
+		io::ios_flags_saver ifs( os );
+		os << std::left << std::setw(14) << boost::this_thread::get_id() << " ";
+	}
 #endif
-    {
-      io::ios_flags_saver ifs(os);
-      os << std::setw(50) << ctx.filename << "["
-         << std::setw(4) << std::right << std::dec<< ctx.lineno << "] ";
+	{
+		io::ios_flags_saver ifs(os);
+		os << std::setw(50) << ctx.filename << "["
+		   << std::setw(4) << std::right << std::dec<< ctx.lineno << "] ";
 #if defined BOOST_THREAD_USES_LOG_CURRENT_FUNCTION
-      os << ctx.func << " " ;
+		os << ctx.func << " " ;
 #endif
-    }
-    return os;
-  }
+	}
+	return os;
+}
 }
 
 #include <boost/config/abi_suffix.hpp>

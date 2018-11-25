@@ -13,7 +13,10 @@
 
 // 33 distributions at Boost 1.9.1 after adding hyperexpon and arcsine
 
-namespace boost{ namespace math{
+namespace boost
+{
+namespace math
+{
 
 template <class RealType, class Policy>
 class arcsine_distribution;
@@ -114,7 +117,8 @@ class uniform_distribution;
 template <class RealType, class Policy>
 class weibull_distribution;
 
-}} // namespaces
+}
+} // namespaces
 
 #define BOOST_MATH_DECLARE_DISTRIBUTIONS(Type, Policy)\
    typedef boost::math::arcsine_distribution<Type, Policy> arcsine;\

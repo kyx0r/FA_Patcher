@@ -12,15 +12,18 @@
 #define BOOST_CONTAINER_PMR_VECTOR_HPP
 
 #if defined (_MSC_VER)
-#  pragma once 
+#  pragma once
 #endif
 
 #include <boost/container/vector.hpp>
 #include <boost/container/pmr/polymorphic_allocator.hpp>
 
-namespace boost {
-namespace container {
-namespace pmr {
+namespace boost
+{
+namespace container
+{
+namespace pmr
+{
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
@@ -34,8 +37,8 @@ using vector = boost::container::vector<T, polymorphic_allocator<T>>;
 template<class T>
 struct vector_of
 {
-   typedef boost::container::vector
-      < T, polymorphic_allocator<T> > type;
+	typedef boost::container::vector
+	< T, polymorphic_allocator<T> > type;
 };
 
 }  //namespace pmr {

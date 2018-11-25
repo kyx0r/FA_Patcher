@@ -22,46 +22,56 @@
 
 #include <bcrypt.h>
 
-namespace boost { namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 typedef ::BCRYPT_ALG_HANDLE BCRYPT_ALG_HANDLE_;
-}}
+}
+}
 
 #else // defined(BOOST_USE_WINDOWS_H)
 
-namespace boost { namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 typedef PVOID_ BCRYPT_ALG_HANDLE_;
-}}
+}
+}
 
 extern "C" {
 
-boost::winapi::NTSTATUS_ WINAPI
-BCryptCloseAlgorithmProvider(
-    boost::winapi::BCRYPT_ALG_HANDLE_ hAlgorithm,
-    boost::winapi::ULONG_             dwFlags
-);
+	boost::winapi::NTSTATUS_ WINAPI
+	BCryptCloseAlgorithmProvider(
+	    boost::winapi::BCRYPT_ALG_HANDLE_ hAlgorithm,
+	    boost::winapi::ULONG_             dwFlags
+	);
 
-boost::winapi::NTSTATUS_ WINAPI
-BCryptGenRandom(
-    boost::winapi::BCRYPT_ALG_HANDLE_ hAlgorithm,
-    boost::winapi::PUCHAR_            pbBuffer,
-    boost::winapi::ULONG_             cbBuffer,
-    boost::winapi::ULONG_             dwFlags
-);
+	boost::winapi::NTSTATUS_ WINAPI
+	BCryptGenRandom(
+	    boost::winapi::BCRYPT_ALG_HANDLE_ hAlgorithm,
+	    boost::winapi::PUCHAR_            pbBuffer,
+	    boost::winapi::ULONG_             cbBuffer,
+	    boost::winapi::ULONG_             dwFlags
+	);
 
-boost::winapi::NTSTATUS_ WINAPI
-BCryptOpenAlgorithmProvider(
-    boost::winapi::BCRYPT_ALG_HANDLE_ *phAlgorithm,
-    boost::winapi::LPCWSTR_           pszAlgId,
-    boost::winapi::LPCWSTR_           pszImplementation,
-    boost::winapi::DWORD_             dwFlags
-);
+	boost::winapi::NTSTATUS_ WINAPI
+	BCryptOpenAlgorithmProvider(
+	    boost::winapi::BCRYPT_ALG_HANDLE_ *phAlgorithm,
+	    boost::winapi::LPCWSTR_           pszAlgId,
+	    boost::winapi::LPCWSTR_           pszImplementation,
+	    boost::winapi::DWORD_             dwFlags
+	);
 
 } // extern "C"
 
 #endif // defined(BOOST_USE_WINDOWS_H)
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined(BOOST_USE_WINDOWS_H)
 const WCHAR_ BCRYPT_RNG_ALGORITHM_[] = BCRYPT_RNG_ALGORITHM;

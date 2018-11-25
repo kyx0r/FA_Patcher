@@ -18,11 +18,13 @@
 #  pragma once
 #endif
 
-struct boost_container_new_t{};
+struct boost_container_new_t {};
 
 //avoid including <new>
 inline void *operator new(std::size_t, void *p, boost_container_new_t)
-{  return p;  }
+{
+	return p;
+}
 
 inline void operator delete(void *, void *, boost_container_new_t)
 {}

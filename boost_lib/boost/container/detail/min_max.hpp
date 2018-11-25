@@ -18,17 +18,24 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template<class T>
 const T &max_value(const T &a, const T &b)
-{  return a > b ? a : b;   }
+{
+	return a > b ? a : b;
+}
 
 template<class T>
 const T &min_value(const T &a, const T &b)
-{  return a < b ? a : b;   }
+{
+	return a < b ? a : b;
+}
 
 }  //namespace dtl {
 }  //namespace container {

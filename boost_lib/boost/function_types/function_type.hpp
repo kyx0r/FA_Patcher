@@ -12,17 +12,17 @@
 #include <boost/function_types/detail/synthesize.hpp>
 #include <boost/function_types/detail/to_sequence.hpp>
 
-namespace boost 
-{ 
-  namespace function_types 
-  {
-    template<typename Types, typename Tag = null_tag> struct function_type
-      : detail::synthesize_func<typename detail::to_sequence<Types>::type, Tag>
-    {
-      BOOST_MPL_AUX_LAMBDA_SUPPORT(2,function_type,(Types,Tag))
-    };
-  }
+namespace boost
+{
+namespace function_types
+{
+template<typename Types, typename Tag = null_tag> struct function_type
+	: detail::synthesize_func<typename detail::to_sequence<Types>::type, Tag>
+{
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(2,function_type,(Types,Tag))
+};
+}
 }
 
 #endif
- 
+

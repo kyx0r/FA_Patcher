@@ -18,66 +18,79 @@
 #include <boost/iterator/iterator_facade.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace adapt { namespace bp
+namespace adapt
+{
+namespace bp
 {
 
 
 template <typename Polygon, typename RingProxy>
 class hole_iterator
-    : public ::boost::iterator_facade
-        <
-            hole_iterator<Polygon, RingProxy>,
-            RingProxy, // value type
-            boost::forward_traversal_tag,
-            RingProxy // reference type
-        >
+	: public ::boost::iterator_facade
+	  <
+	  hole_iterator<Polygon, RingProxy>,
+	  RingProxy, // value type
+	  boost::forward_traversal_tag,
+	  RingProxy // reference type
+	  >
 {
 public :
-    typedef typename boost::polygon::polygon_with_holes_traits
-        <
-            Polygon
-        >::iterator_holes_type ith_type;
+	typedef typename boost::polygon::polygon_with_holes_traits
+	<
+	Polygon
+	>::iterator_holes_type ith_type;
 
-    explicit inline hole_iterator(Polygon& polygon, ith_type const it)
-        : m_polygon(polygon)
-        , m_base(it)
-    {
-    }
+	explicit inline hole_iterator(Polygon& polygon, ith_type const it)
+		: m_polygon(polygon)
+		, m_base(it)
+	{
+	}
 
-    typedef std::ptrdiff_t difference_type;
+	typedef std::ptrdiff_t difference_type;
 
 private:
-    friend class boost::iterator_core_access;
+	friend class boost::iterator_core_access;
 
-    inline RingProxy dereference() const
-    {
-        return RingProxy(m_polygon, this->m_base);
-    }
+	inline RingProxy dereference() const
+	{
+		return RingProxy(m_polygon, this->m_base);
+	}
 
-    inline void increment() { ++m_base; }
-    inline void decrement() { --m_base; }
-    inline void advance(difference_type n)
-    {
-        for (int i = 0; i < n; i++)
-        {
-            ++m_base;
-        }
-    }
+	inline void increment()
+	{
+		++m_base;
+	}
+	inline void decrement()
+	{
+		--m_base;
+	}
+	inline void advance(difference_type n)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			++m_base;
+		}
+	}
 
-    inline bool equal(hole_iterator<Polygon, RingProxy> const& other) const
-    {
-        return this->m_base == other.m_base;
-    }
+	inline bool equal(hole_iterator<Polygon, RingProxy> const& other) const
+	{
+		return this->m_base == other.m_base;
+	}
 
-    Polygon& m_polygon;
-    ith_type m_base;
+	Polygon& m_polygon;
+	ith_type m_base;
 };
 
 
-}}}}
+}
+}
+}
+}
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_ADAPTED_BOOST_POLYGON_HOLE_ITERATOR_HPP
 

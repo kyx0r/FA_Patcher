@@ -17,12 +17,14 @@
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI GetLastError(BOOST_WINAPI_DETAIL_VOID);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI GetLastError(BOOST_WINAPI_DETAIL_VOID);
 }
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 using ::GetLastError;
 }
 }

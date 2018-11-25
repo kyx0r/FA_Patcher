@@ -10,23 +10,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <char C>
-        struct is_char_c
-        {
-          typedef is_char_c type;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <char C>
+struct is_char_c
+{
+	typedef is_char_c type;
 
-          template <class Ch>
-          struct apply : boost::mpl::bool_<Ch::type::value == C> {};
-        };
-      }
-    }
-  }
+	template <class Ch>
+	struct apply : boost::mpl::bool_<Ch::type::value == C> {};
+};
+}
+}
+}
 }
 
 #endif

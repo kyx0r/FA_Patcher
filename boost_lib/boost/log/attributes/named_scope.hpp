@@ -34,22 +34,25 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
-namespace aux {
+namespace aux
+{
 
-    //! Double-linked list node
-    struct named_scope_list_node
-    {
-        mutable named_scope_list_node* _m_pPrev;
-        mutable named_scope_list_node* _m_pNext;
+//! Double-linked list node
+struct named_scope_list_node
+{
+	mutable named_scope_list_node* _m_pPrev;
+	mutable named_scope_list_node* _m_pNext;
 
-        named_scope_list_node() BOOST_NOEXCEPT { _m_pPrev = _m_pNext = this; }
-    };
+	named_scope_list_node() BOOST_NOEXCEPT { _m_pPrev = _m_pNext = this; }
+};
 
 } // namespace aux
 
@@ -61,52 +64,52 @@ namespace aux {
  * instance.
  */
 struct named_scope_entry
-    //! \cond
-    : public aux::named_scope_list_node
-    //! \endcond
+//! \cond
+	: public aux::named_scope_list_node
+//! \endcond
 {
-    /*!
-     * \brief Scope entry type
-     *
-     * Describes scope name specifics
-     */
-    enum scope_name_type
-    {
-        general,   //!< The scope name contains some unstructured string that should not be interpreted by the library
-        function   //!< The scope name contains a function signature
-    };
+	/*!
+	 * \brief Scope entry type
+	 *
+	 * Describes scope name specifics
+	 */
+	enum scope_name_type
+	{
+		general,   //!< The scope name contains some unstructured string that should not be interpreted by the library
+		function   //!< The scope name contains a function signature
+	};
 
-    /*!
-     * The scope name (e.g. a function signature)
-     */
-    string_literal scope_name;
-    /*!
-     * The source file name
-     */
-    string_literal file_name;
-    /*!
-     * The line number in the source file
-     */
-    unsigned int line;
-    /*!
-     * The scope name type
-     */
-    scope_name_type type;
+	/*!
+	 * The scope name (e.g. a function signature)
+	 */
+	string_literal scope_name;
+	/*!
+	 * The source file name
+	 */
+	string_literal file_name;
+	/*!
+	 * The line number in the source file
+	 */
+	unsigned int line;
+	/*!
+	 * The scope name type
+	 */
+	scope_name_type type;
 
-    /*!
-     * Initializing constructor
-     *
-     * \post <tt>scope_name == sn && file_name == fn && line == ln</tt>
-     *
-     * \b Throws: Nothing.
-     */
-    named_scope_entry(string_literal const& sn, string_literal const& fn, unsigned int ln, scope_name_type t = general) BOOST_NOEXCEPT :
-        scope_name(sn),
-        file_name(fn),
-        line(ln),
-        type(t)
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \post <tt>scope_name == sn && file_name == fn && line == ln</tt>
+	 *
+	 * \b Throws: Nothing.
+	 */
+named_scope_entry(string_literal const& sn, string_literal const& fn, unsigned int ln, scope_name_type t = general) BOOST_NOEXCEPT :
+	scope_name(sn),
+	           file_name(fn),
+	           line(ln),
+	           type(t)
+	{
+	}
 };
 
 /*!
@@ -115,228 +118,264 @@ struct named_scope_entry
  * The scope list provides a read-only access to a doubly-linked list of scopes.
  */
 class named_scope_list
-    //! \cond
-    : protected std::allocator< named_scope_entry >
-    //! \endcond
+//! \cond
+	: protected std::allocator< named_scope_entry >
+//! \endcond
 {
 public:
-    //! Allocator type
-    typedef std::allocator< named_scope_entry > allocator_type;
+	//! Allocator type
+	typedef std::allocator< named_scope_entry > allocator_type;
 
-    //  Standard types
-    typedef allocator_type::value_type value_type;
-    typedef allocator_type::reference reference;
-    typedef allocator_type::const_reference const_reference;
-    typedef allocator_type::pointer pointer;
-    typedef allocator_type::const_pointer const_pointer;
-    typedef allocator_type::size_type size_type;
-    typedef allocator_type::difference_type difference_type;
+	//  Standard types
+	typedef allocator_type::value_type value_type;
+	typedef allocator_type::reference reference;
+	typedef allocator_type::const_reference const_reference;
+	typedef allocator_type::pointer pointer;
+	typedef allocator_type::const_pointer const_pointer;
+	typedef allocator_type::size_type size_type;
+	typedef allocator_type::difference_type difference_type;
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
 protected:
-    //! Iterator class
+	//! Iterator class
 #ifndef BOOST_LOG_NO_MEMBER_TEMPLATE_FRIENDS
-    template< bool fConstV > class iter;
-    template< bool fConstV > friend class iter;
+	template< bool fConstV > class iter;
+	template< bool fConstV > friend class iter;
 #endif
-    template< bool fConstV >
-    class iter
-    {
-        friend class iter< !fConstV >;
+	template< bool fConstV >
+	class iter
+	{
+		friend class iter< !fConstV >;
 
-    public:
-        //  Standard typedefs
-        typedef named_scope_list::difference_type difference_type;
-        typedef named_scope_list::value_type value_type;
-        typedef typename mpl::if_c<
-            fConstV,
-            named_scope_list::const_reference,
-            named_scope_list::reference
-        >::type reference;
-        typedef typename mpl::if_c<
-            fConstV,
-            named_scope_list::const_pointer,
-            named_scope_list::pointer
-        >::type pointer;
-        typedef std::bidirectional_iterator_tag iterator_category;
+	public:
+		//  Standard typedefs
+		typedef named_scope_list::difference_type difference_type;
+		typedef named_scope_list::value_type value_type;
+		typedef typename mpl::if_c<
+		fConstV,
+		named_scope_list::const_reference,
+		named_scope_list::reference
+		>::type reference;
+		typedef typename mpl::if_c<
+		fConstV,
+		named_scope_list::const_pointer,
+		named_scope_list::pointer
+		>::type pointer;
+		typedef std::bidirectional_iterator_tag iterator_category;
 
-    public:
-        //  Constructors
-        iter() : m_pNode(NULL) {}
-        explicit iter(aux::named_scope_list_node* pNode) : m_pNode(pNode) {}
-        iter(iter< false > const& that) : m_pNode(that.m_pNode) {}
+	public:
+		//  Constructors
+		iter() : m_pNode(NULL) {}
+		explicit iter(aux::named_scope_list_node* pNode) : m_pNode(pNode) {}
+		iter(iter< false > const& that) : m_pNode(that.m_pNode) {}
 
-        //! Assignment
-        template< bool f >
-        iter& operator= (iter< f > const& that)
-        {
-            m_pNode = that.m_pNode;
-            return *this;
-        }
+		//! Assignment
+		template< bool f >
+		iter& operator= (iter< f > const& that)
+		{
+			m_pNode = that.m_pNode;
+			return *this;
+		}
 
-        //  Comparison
-        template< bool f >
-        bool operator== (iter< f > const& that) const { return (m_pNode == that.m_pNode); }
-        template< bool f >
-        bool operator!= (iter< f > const& that) const { return (m_pNode != that.m_pNode); }
+		//  Comparison
+		template< bool f >
+		bool operator== (iter< f > const& that) const
+		{
+			return (m_pNode == that.m_pNode);
+		}
+		template< bool f >
+		bool operator!= (iter< f > const& that) const
+		{
+			return (m_pNode != that.m_pNode);
+		}
 
-        //  Modification
-        iter& operator++ ()
-        {
-            m_pNode = m_pNode->_m_pNext;
-            return *this;
-        }
-        iter& operator-- ()
-        {
-            m_pNode = m_pNode->_m_pPrev;
-            return *this;
-        }
-        iter operator++ (int)
-        {
-            iter tmp(*this);
-            m_pNode = m_pNode->_m_pNext;
-            return tmp;
-        }
-        iter operator-- (int)
-        {
-            iter tmp(*this);
-            m_pNode = m_pNode->_m_pPrev;
-            return tmp;
-        }
+		//  Modification
+		iter& operator++ ()
+		{
+			m_pNode = m_pNode->_m_pNext;
+			return *this;
+		}
+		iter& operator-- ()
+		{
+			m_pNode = m_pNode->_m_pPrev;
+			return *this;
+		}
+		iter operator++ (int)
+		{
+			iter tmp(*this);
+			m_pNode = m_pNode->_m_pNext;
+			return tmp;
+		}
+		iter operator-- (int)
+		{
+			iter tmp(*this);
+			m_pNode = m_pNode->_m_pPrev;
+			return tmp;
+		}
 
-        //  Dereferencing
-        pointer operator-> () const { return static_cast< pointer >(m_pNode); }
-        reference operator* () const { return *static_cast< pointer >(m_pNode); }
+		//  Dereferencing
+		pointer operator-> () const
+		{
+			return static_cast< pointer >(m_pNode);
+		}
+		reference operator* () const
+		{
+			return *static_cast< pointer >(m_pNode);
+		}
 
-    private:
-        aux::named_scope_list_node* m_pNode;
-    };
+	private:
+		aux::named_scope_list_node* m_pNode;
+	};
 
 public:
-    typedef iter< true > const_iterator;
-    typedef iter< false > iterator;
-    typedef std::reverse_iterator< const_iterator > const_reverse_iterator;
-    typedef std::reverse_iterator< iterator > reverse_iterator;
+	typedef iter< true > const_iterator;
+	typedef iter< false > iterator;
+	typedef std::reverse_iterator< const_iterator > const_reverse_iterator;
+	typedef std::reverse_iterator< iterator > reverse_iterator;
 
 protected:
-    //! The root node of the container
-    aux::named_scope_list_node m_RootNode;
-    //! The size of the container
-    size_type m_Size;
-    //! The flag shows if the contained elements are dynamically allocated
-    bool m_fNeedToDeallocate;
+	//! The root node of the container
+	aux::named_scope_list_node m_RootNode;
+	//! The size of the container
+	size_type m_Size;
+	//! The flag shows if the contained elements are dynamically allocated
+	bool m_fNeedToDeallocate;
 
 #else // BOOST_LOG_DOXYGEN_PASS
 
-    /*!
-     * A constant iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
-     */
-    typedef implementation_defined const_iterator;
-    /*!
-     * An iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
-     */
-    typedef implementation_defined iterator;
-    /*!
-     * A constant reverse iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
-     */
-    typedef implementation_defined const_reverse_iterator;
-    /*!
-     * A reverse iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
-     */
-    typedef implementation_defined reverse_iterator;
+	/*!
+	 * A constant iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
+	 */
+	typedef implementation_defined const_iterator;
+	/*!
+	 * An iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
+	 */
+	typedef implementation_defined iterator;
+	/*!
+	 * A constant reverse iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
+	 */
+	typedef implementation_defined const_reverse_iterator;
+	/*!
+	 * A reverse iterator to the sequence of scopes. Complies to bidirectional iterator requirements.
+	 */
+	typedef implementation_defined reverse_iterator;
 
 #endif // BOOST_LOG_DOXYGEN_PASS
 
 public:
-    /*!
-     * Default constructor
-     *
-     * \post <tt>empty() == true</tt>
-     */
-    named_scope_list() : m_Size(0), m_fNeedToDeallocate(false) {}
-    /*!
-     * Copy constructor
-     *
-     * \post <tt>std::equal(begin(), end(), that.begin()) == true</tt>
-     */
-    BOOST_LOG_API named_scope_list(named_scope_list const& that);
-    /*!
-     * Destructor. Destroys the stored entries.
-     */
-    BOOST_LOG_API ~named_scope_list();
+	/*!
+	 * Default constructor
+	 *
+	 * \post <tt>empty() == true</tt>
+	 */
+	named_scope_list() : m_Size(0), m_fNeedToDeallocate(false) {}
+	/*!
+	 * Copy constructor
+	 *
+	 * \post <tt>std::equal(begin(), end(), that.begin()) == true</tt>
+	 */
+	BOOST_LOG_API named_scope_list(named_scope_list const& that);
+	/*!
+	 * Destructor. Destroys the stored entries.
+	 */
+	BOOST_LOG_API ~named_scope_list();
 
-    /*!
-     * Assignment operator
-     *
-     * \post <tt>std::equal(begin(), end(), that.begin()) == true</tt>
-     */
-    named_scope_list& operator= (named_scope_list const& that)
-    {
-        if (this != &that)
-        {
-            named_scope_list tmp(that);
-            swap(tmp);
-        }
-        return *this;
-    }
+	/*!
+	 * Assignment operator
+	 *
+	 * \post <tt>std::equal(begin(), end(), that.begin()) == true</tt>
+	 */
+	named_scope_list& operator= (named_scope_list const& that)
+	{
+		if (this != &that)
+		{
+			named_scope_list tmp(that);
+			swap(tmp);
+		}
+		return *this;
+	}
 
-    /*!
-     * \return Constant iterator to the first element of the container.
-     */
-    const_iterator begin() const { return const_iterator(m_RootNode._m_pNext); }
-    /*!
-     * \return Constant iterator to the after-the-last element of the container.
-     */
-    const_iterator end() const { return const_iterator(const_cast< aux::named_scope_list_node* >(&m_RootNode)); }
-    /*!
-     * \return Constant iterator to the last element of the container.
-     */
-    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
-    /*!
-     * \return Constant iterator to the before-the-first element of the container.
-     */
-    const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+	/*!
+	 * \return Constant iterator to the first element of the container.
+	 */
+	const_iterator begin() const
+	{
+		return const_iterator(m_RootNode._m_pNext);
+	}
+	/*!
+	 * \return Constant iterator to the after-the-last element of the container.
+	 */
+	const_iterator end() const
+	{
+		return const_iterator(const_cast< aux::named_scope_list_node* >(&m_RootNode));
+	}
+	/*!
+	 * \return Constant iterator to the last element of the container.
+	 */
+	const_reverse_iterator rbegin() const
+	{
+		return const_reverse_iterator(end());
+	}
+	/*!
+	 * \return Constant iterator to the before-the-first element of the container.
+	 */
+	const_reverse_iterator rend() const
+	{
+		return const_reverse_iterator(begin());
+	}
 
-    /*!
-     * \return The number of elements in the container
-     */
-    size_type size() const { return m_Size; }
-    /*!
-     * \return true if the container is empty and false otherwise
-     */
-    bool empty() const { return (m_Size == 0); }
+	/*!
+	 * \return The number of elements in the container
+	 */
+	size_type size() const
+	{
+		return m_Size;
+	}
+	/*!
+	 * \return true if the container is empty and false otherwise
+	 */
+	bool empty() const
+	{
+		return (m_Size == 0);
+	}
 
-    /*!
-     * Swaps two instances of the container
-     */
-    BOOST_LOG_API void swap(named_scope_list& that);
+	/*!
+	 * Swaps two instances of the container
+	 */
+	BOOST_LOG_API void swap(named_scope_list& that);
 
-    /*!
-     * \return Last pushed scope entry
-     */
-    const_reference back() const { return *rbegin(); }
-    /*!
-     * \return First pushed scope entry
-     */
-    const_reference front() const { return *begin(); }
+	/*!
+	 * \return Last pushed scope entry
+	 */
+	const_reference back() const
+	{
+		return *rbegin();
+	}
+	/*!
+	 * \return First pushed scope entry
+	 */
+	const_reference front() const
+	{
+		return *begin();
+	}
 };
 
 //! Stream output operator
 template< typename CharT, typename TraitsT >
 inline std::basic_ostream< CharT, TraitsT >& operator<< (std::basic_ostream< CharT, TraitsT >& strm, named_scope_list const& sl)
 {
-    if (strm.good())
-    {
-        named_scope_list::const_iterator it = sl.begin(), end = sl.end();
-        if (it != end)
-        {
-            strm << it->scope_name.c_str();
-            for (++it; it != end; ++it)
-                strm << "->" << it->scope_name.c_str();
-        }
-    }
-    return strm;
+	if (strm.good())
+	{
+		named_scope_list::const_iterator it = sl.begin(), end = sl.end();
+		if (it != end)
+		{
+			strm << it->scope_name.c_str();
+			for (++it; it != end; ++it)
+				strm << "->" << it->scope_name.c_str();
+		}
+	}
+	return strm;
 }
 
 /*!
@@ -352,81 +391,81 @@ inline std::basic_ostream< CharT, TraitsT >& operator<< (std::basic_ostream< Cha
  * maintain scope list manually. Use \c BOOST_LOG_NAMED_SCOPE or \c BOOST_LOG_FUNCTION macros instead.
  */
 class BOOST_LOG_API named_scope :
-    public attribute
+	public attribute
 {
 public:
-    //! Scope names stack (the attribute value type)
-    typedef named_scope_list value_type;
-    //! Scope entry
-    typedef value_type::value_type scope_entry;
+	//! Scope names stack (the attribute value type)
+	typedef named_scope_list value_type;
+	//! Scope entry
+	typedef value_type::value_type scope_entry;
 
-    //! Sentry object class to automatically push and pop scopes
-    struct sentry
-    {
-        /*!
-         * Constructor. Pushes the specified scope to the end of the thread-local list of scopes.
-         *
-         * \param sn Scope name.
-         * \param fn File name, in which the scope is located.
-         * \param ln Line number in the file.
-         */
-        sentry(string_literal const& sn, string_literal const& fn, unsigned int ln, scope_entry::scope_name_type t = scope_entry::general) BOOST_NOEXCEPT :
-            m_Entry(sn, fn, ln, t)
-        {
-            named_scope::push_scope(m_Entry);
-        }
+	//! Sentry object class to automatically push and pop scopes
+	struct sentry
+	{
+		/*!
+		 * Constructor. Pushes the specified scope to the end of the thread-local list of scopes.
+		 *
+		 * \param sn Scope name.
+		 * \param fn File name, in which the scope is located.
+		 * \param ln Line number in the file.
+		 */
+	sentry(string_literal const& sn, string_literal const& fn, unsigned int ln, scope_entry::scope_name_type t = scope_entry::general) BOOST_NOEXCEPT :
+		m_Entry(sn, fn, ln, t)
+		{
+			named_scope::push_scope(m_Entry);
+		}
 
-        /*!
-         * Destructor. Removes the last pushed scope from the thread-local list of scopes.
-         */
-        ~sentry() BOOST_NOEXCEPT
-        {
-            named_scope::pop_scope();
-        }
+		/*!
+		 * Destructor. Removes the last pushed scope from the thread-local list of scopes.
+		 */
+		~sentry() BOOST_NOEXCEPT
+		{
+			named_scope::pop_scope();
+		}
 
-        BOOST_DELETED_FUNCTION(sentry(sentry const&))
-        BOOST_DELETED_FUNCTION(sentry& operator= (sentry const&))
+		BOOST_DELETED_FUNCTION(sentry(sentry const&))
+		BOOST_DELETED_FUNCTION(sentry& operator= (sentry const&))
 
-    private:
-        scope_entry m_Entry;
-    };
+	private:
+		scope_entry m_Entry;
+	};
 
 private:
-    //! Attribute implementation class
-    struct BOOST_SYMBOL_VISIBLE impl;
+	//! Attribute implementation class
+	struct BOOST_SYMBOL_VISIBLE impl;
 
 public:
-    /*!
-     * Constructor. Creates an attribute.
-     */
-    named_scope();
-    /*!
-     * Constructor for casting support
-     */
-    explicit named_scope(cast_source const& source);
+	/*!
+	 * Constructor. Creates an attribute.
+	 */
+	named_scope();
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit named_scope(cast_source const& source);
 
-    /*!
-     * The method pushes the scope to the back of the current thread's scope list
-     *
-     * \b Throws: Nothing.
-     */
-    static void push_scope(scope_entry const& entry) BOOST_NOEXCEPT;
-    /*!
-     * The method pops the last pushed scope from the current thread's scope list
-     *
-     * \b Throws: Nothing.
-     */
-    static void pop_scope() BOOST_NOEXCEPT;
+	/*!
+	 * The method pushes the scope to the back of the current thread's scope list
+	 *
+	 * \b Throws: Nothing.
+	 */
+	static void push_scope(scope_entry const& entry) BOOST_NOEXCEPT;
+	/*!
+	 * The method pops the last pushed scope from the current thread's scope list
+	 *
+	 * \b Throws: Nothing.
+	 */
+	static void pop_scope() BOOST_NOEXCEPT;
 
-    /*!
-     *  \return The current thread's list of scopes
-     *
-     *  \note The returned reference is only valid until the current thread ends. The scopes in the
-     *        returned container may change if the execution scope is changed (i.e. either \c push_scope
-     *        or \c pop_scope is called). User has to copy the stack if he wants to keep it intact regardless
-     *        of the execution scope.
-     */
-    static value_type const& get_scopes();
+	/*!
+	 *  \return The current thread's list of scopes
+	 *
+	 *  \note The returned reference is only valid until the current thread ends. The scopes in the
+	 *        returned container may change if the execution scope is changed (i.e. either \c push_scope
+	 *        or \c pop_scope is called). User has to copy the stack if he wants to keep it intact regardless
+	 *        of the execution scope.
+	 */
+	static value_type const& get_scopes();
 };
 
 } // namespace attributes

@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (c) Marshall Clow 2011-2012.
 
    Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -12,13 +12,16 @@
 #ifndef BOOST_ALGORITHM_COPY_N_HPP
 #define BOOST_ALGORITHM_COPY_N_HPP
 
-namespace boost { namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 /// \fn copy_n ( InputIterator first, Size n, OutputIterator result )
 /// \brief Copies exactly n (n > 0) elements from the range starting at first to
 ///     the range starting at result.
 /// \return         The updated output iterator
-/// 
+///
 /// \param first    The start of the input sequence
 /// \param n        The number of elements to copy
 /// \param result   An output iterator to write the results into
@@ -26,10 +29,11 @@ namespace boost { namespace algorithm {
 template <typename InputIterator, typename Size, typename OutputIterator>
 OutputIterator copy_n ( InputIterator first, Size n, OutputIterator result )
 {
-    for ( ; n > 0; --n, ++first, ++result )
-        *result = *first;
-    return result;
+	for ( ; n > 0; --n, ++first, ++result )
+		*result = *first;
+	return result;
 }
-}} // namespace boost and algorithm
+}
+} // namespace boost and algorithm
 
 #endif  // BOOST_ALGORITHM_COPY_IF_HPP

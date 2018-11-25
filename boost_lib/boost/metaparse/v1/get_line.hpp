@@ -10,19 +10,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class>
-      struct get_line_impl;
+namespace metaparse
+{
+namespace v1
+{
+template <class>
+struct get_line_impl;
 
-      template <class T>
-      struct get_line : get_line_impl<typename T::type::tag>::template apply<typename T::type>
-      {};
+template <class T>
+struct get_line : get_line_impl<typename T::type::tag>::template apply<typename T::type>
+{};
 
-    }
-  }
+}
+}
 }
 
 #endif

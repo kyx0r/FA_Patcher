@@ -19,7 +19,10 @@
 #include <boost/range/end.hpp>
 #include <boost/range/value_type.hpp>
 
-namespace boost { namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 template<class InputIterator, class OutputIterator,
          class BinaryOperation, class UnaryOperation, class T>
@@ -28,12 +31,13 @@ OutputIterator transform_inclusive_scan(InputIterator first, InputIterator last,
                                         BinaryOperation bOp, UnaryOperation uOp,
                                         T init)
 {
-    for (; first != last; ++first, (void) ++result) {
-        init = bOp(init, uOp(*first));
-        *result = init;
-        }
+	for (; first != last; ++first, (void) ++result)
+	{
+		init = bOp(init, uOp(*first));
+		*result = init;
+	}
 
-    return result;
+	return result;
 }
 
 template<class InputIterator, class OutputIterator,
@@ -42,17 +46,19 @@ OutputIterator transform_inclusive_scan(InputIterator first, InputIterator last,
                                         OutputIterator result,
                                         BinaryOperation bOp, UnaryOperation uOp)
 {
-    if (first != last) {
-        typename std::iterator_traits<InputIterator>::value_type init = uOp(*first);
-        *result++ = init;
-        if (++first != last)
-            return transform_inclusive_scan(first, last, result, bOp, uOp, init);
-        }
+	if (first != last)
+	{
+		typename std::iterator_traits<InputIterator>::value_type init = uOp(*first);
+		*result++ = init;
+		if (++first != last)
+			return transform_inclusive_scan(first, last, result, bOp, uOp, init);
+	}
 
-    return result;
+	return result;
 }
 
 
-}} // namespace boost and algorithm
+}
+} // namespace boost and algorithm
 
 #endif // BOOST_ALGORITHM_TRANSFORM_REDUCE_HPP

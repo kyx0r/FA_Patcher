@@ -20,7 +20,11 @@
 #include <boost/concept_check.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -33,46 +37,48 @@ class SegmentIntersectStrategy
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 
-    // 1) must define return_type
-    typedef typename Strategy::return_type return_type;
+	// 1) must define return_type
+	typedef typename Strategy::return_type return_type;
 
-    // 2) must define point_type (of segment points)
-    //typedef typename Strategy::point_type point_type;
+	// 2) must define point_type (of segment points)
+	//typedef typename Strategy::point_type point_type;
 
-    // 3) must define segment_type 1 and 2 (of segment points)
-    typedef typename Strategy::segment_type1 segment_type1;
-    typedef typename Strategy::segment_type2 segment_type2;
+	// 3) must define segment_type 1 and 2 (of segment points)
+	typedef typename Strategy::segment_type1 segment_type1;
+	typedef typename Strategy::segment_type2 segment_type2;
 
 
-    struct check_methods
-    {
-        static void apply()
-        {
-            Strategy const* str;
+	struct check_methods
+	{
+		static void apply()
+		{
+			Strategy const* str;
 
-            return_type* rt;
-            //point_type const* p;
-            segment_type1 const* s1;
-            segment_type2 const* s2;
+			return_type* rt;
+			//point_type const* p;
+			segment_type1 const* s1;
+			segment_type2 const* s2;
 
-            // 4) must implement a method apply
-            //    having two segments
-            *rt = str->apply(*s1, *s2);
+			// 4) must implement a method apply
+			//    having two segments
+			*rt = str->apply(*s1, *s2);
 
-        }
-    };
+		}
+	};
 
 
 public :
-    BOOST_CONCEPT_USAGE(SegmentIntersectStrategy)
-    {
-        check_methods::apply();
-    }
+	BOOST_CONCEPT_USAGE(SegmentIntersectStrategy)
+	{
+		check_methods::apply();
+	}
 #endif
 };
 
 
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CONCEPTS_SEGMENT_INTERSECT_CONCEPT_HPP

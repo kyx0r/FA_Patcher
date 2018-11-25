@@ -47,9 +47,15 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 
 
-namespace boost { namespace geometry { namespace projections {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
 
-namespace detail {
+namespace detail
+{
 
 
 
@@ -57,24 +63,24 @@ namespace detail {
 template <typename T>
 inline pvalue<T> pj_mkparam(std::string const& str)
 {
-    std::string name = str;
-    std::string value;
-    boost::trim_left_if(name, boost::is_any_of("+"));
-    std::string::size_type loc = name.find("=");
-    if (loc != std::string::npos)
-    {
-        value = name.substr(loc + 1);
-        name.erase(loc);
-    }
+	std::string name = str;
+	std::string value;
+	boost::trim_left_if(name, boost::is_any_of("+"));
+	std::string::size_type loc = name.find("=");
+	if (loc != std::string::npos)
+	{
+		value = name.substr(loc + 1);
+		name.erase(loc);
+	}
 
 
-    pvalue<T> newitem;
-    newitem.param = name;
-    newitem.s = value;
-    newitem.used = 0;
-    newitem.i = atoi(value.c_str());
-    newitem.f = atof(value.c_str());
-    return newitem;
+	pvalue<T> newitem;
+	newitem.param = name;
+	newitem.s = value;
+	newitem.used = 0;
+	newitem.i = atoi(value.c_str());
+	newitem.f = atof(value.c_str());
+	return newitem;
 }
 
 /************************************************************************/
@@ -97,65 +103,70 @@ inline pvalue<T> pj_mkparam(std::string const& str)
 template <typename T>
 inline pvalue<T> pj_param(std::vector<pvalue<T> > const& pl, std::string opt)
 {
-    char type = opt[0];
-    opt.erase(opt.begin());
+	char type = opt[0];
+	opt.erase(opt.begin());
 
-    pvalue<T> value;
+	pvalue<T> value;
 
-    /* simple linear lookup */
-    typedef typename std::vector<pvalue<T> >::const_iterator iterator;
-    for (iterator it = pl.begin(); it != pl.end(); it++)
-    {
-        if (it->param == opt)
-        {
-            //it->used = 1;
-            switch (type)
-            {
-            case 't':
-                value.i = 1;
-                break;
-            case 'i':    /* integer input */
-                value.i = atoi(it->s.c_str());
-                break;
-            case 'd':    /* simple real input */
-                value.f = atof(it->s.c_str());
-                break;
-            case 'r':    /* degrees input */
-                {
-                    dms_parser<T, true> parser;
-                    value.f = parser.apply(it->s.c_str()).angle();
-                }
-                break;
-            case 's':    /* char string */
-                value.s = it->s;
-                break;
-            case 'b':    /* boolean */
-                switch (it->s[0])
-                {
-                case 'F': case 'f':
-                    value.i = 0;
-                    break;
-                case '\0': case 'T': case 't':
-                    value.i = 1;
-                    break;
-                default:
-                    value.i = 0;
-                    break;
-                }
-                break;
-            }
-            return value;
-        }
+	/* simple linear lookup */
+	typedef typename std::vector<pvalue<T> >::const_iterator iterator;
+	for (iterator it = pl.begin(); it != pl.end(); it++)
+	{
+		if (it->param == opt)
+		{
+			//it->used = 1;
+			switch (type)
+			{
+			case 't':
+				value.i = 1;
+				break;
+			case 'i':    /* integer input */
+				value.i = atoi(it->s.c_str());
+				break;
+			case 'd':    /* simple real input */
+				value.f = atof(it->s.c_str());
+				break;
+			case 'r':    /* degrees input */
+			{
+				dms_parser<T, true> parser;
+				value.f = parser.apply(it->s.c_str()).angle();
+			}
+			break;
+			case 's':    /* char string */
+				value.s = it->s;
+				break;
+			case 'b':    /* boolean */
+				switch (it->s[0])
+				{
+				case 'F':
+				case 'f':
+					value.i = 0;
+					break;
+				case '\0':
+				case 'T':
+				case 't':
+					value.i = 1;
+					break;
+				default:
+					value.i = 0;
+					break;
+				}
+				break;
+			}
+			return value;
+		}
 
-    }
+	}
 
-    value.i = 0;
-    value.f = 0.0;
-    value.s = "";
-    return value;
+	value.i = 0;
+	value.f = 0.0;
+	value.s = "";
+	return value;
 }
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif

@@ -22,30 +22,39 @@
 
 #include <boost/function.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
-template< class State , class Time >
+template< class State, class Time >
 class observer_collection
 {
 public:
 
-    typedef boost::function< void( const State& , const Time& ) > observer_type;
-    typedef std::vector< observer_type > collection_type;
+	typedef boost::function< void( const State&, const Time& ) > observer_type;
+	typedef std::vector< observer_type > collection_type;
 
-    void operator()( const State& x , Time t )
-    {
-        for( size_t i=0 ; i<m_observers.size() ; ++i )
-            m_observers[i]( x , t );
-    }
+	void operator()( const State& x, Time t )
+	{
+		for( size_t i=0 ; i<m_observers.size() ; ++i )
+			m_observers[i]( x, t );
+	}
 
-    collection_type& observers( void ) { return m_observers; }
-    const collection_type& observers( void ) const { return m_observers; }
+	collection_type& observers( void )
+	{
+		return m_observers;
+	}
+	const collection_type& observers( void ) const
+	{
+		return m_observers;
+	}
 
 private:
 
-    collection_type m_observers;
+	collection_type m_observers;
 };
 
 } // namespace odeint

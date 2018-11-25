@@ -33,8 +33,10 @@
 //!\file
 //!Describes the smart pointer scoped_ptr
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 //!scoped_ptr stores a pointer to a dynamically allocated object.
 //!The object pointed to is guaranteed to be deleted, either on destruction
@@ -47,115 +49,147 @@ namespace interprocess {
 //!offset_ptr<void>, the internal pointer will be offset_ptr<T>).
 template<class T, class Deleter>
 class scoped_ptr
-   : private Deleter
+	: private Deleter
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-   scoped_ptr(scoped_ptr const &);
-   scoped_ptr & operator=(scoped_ptr const &);
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+	scoped_ptr(scoped_ptr const &);
+	scoped_ptr & operator=(scoped_ptr const &);
 
-   typedef scoped_ptr<T, Deleter> this_type;
-   typedef typename ipcdetail::add_reference<T>::type reference;
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+	typedef scoped_ptr<T, Deleter> this_type;
+	typedef typename ipcdetail::add_reference<T>::type reference;
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
-   public:
+public:
 
-   typedef T element_type;
-   typedef Deleter deleter_type;
-   typedef typename ipcdetail::pointer_type<T, Deleter>::type pointer;
+	typedef T element_type;
+	typedef Deleter deleter_type;
+	typedef typename ipcdetail::pointer_type<T, Deleter>::type pointer;
 
-   //!Constructs a scoped_ptr, storing a copy of p(which can be 0) and d.
-   //!Does not throw.
-   explicit scoped_ptr(const pointer &p = 0, const Deleter &d = Deleter())
-      : Deleter(d), m_ptr(p) // throws if pointer/Deleter copy ctor throws
-   {}
+	//!Constructs a scoped_ptr, storing a copy of p(which can be 0) and d.
+	//!Does not throw.
+	explicit scoped_ptr(const pointer &p = 0, const Deleter &d = Deleter())
+		: Deleter(d), m_ptr(p) // throws if pointer/Deleter copy ctor throws
+	{}
 
-   //!If the stored pointer is not 0, destroys the object pointed to by the stored pointer.
-   //!calling the operator() of the stored deleter. Never throws
-   ~scoped_ptr()
-   {
-      if(m_ptr){
-         Deleter &del = static_cast<Deleter&>(*this);
-         del(m_ptr);
-      }
-   }
+	//!If the stored pointer is not 0, destroys the object pointed to by the stored pointer.
+	//!calling the operator() of the stored deleter. Never throws
+	~scoped_ptr()
+	{
+		if(m_ptr)
+		{
+			Deleter &del = static_cast<Deleter&>(*this);
+			del(m_ptr);
+		}
+	}
 
-   //!Deletes the object pointed to by the stored pointer and then
-   //!stores a copy of p. Never throws
-   void reset(const pointer &p = 0) // never throws
-   {  BOOST_ASSERT(p == 0 || p != m_ptr); this_type(p).swap(*this);  }
+	//!Deletes the object pointed to by the stored pointer and then
+	//!stores a copy of p. Never throws
+	void reset(const pointer &p = 0) // never throws
+	{
+		BOOST_ASSERT(p == 0 || p != m_ptr);
+		this_type(p).swap(*this);
+	}
 
-   //!Deletes the object pointed to by the stored pointer and then
-   //!stores a copy of p and a copy of d.
-   void reset(const pointer &p, const Deleter &d) // never throws
-   {  BOOST_ASSERT(p == 0 || p != m_ptr); this_type(p, d).swap(*this);  }
+	//!Deletes the object pointed to by the stored pointer and then
+	//!stores a copy of p and a copy of d.
+	void reset(const pointer &p, const Deleter &d) // never throws
+	{
+		BOOST_ASSERT(p == 0 || p != m_ptr);
+		this_type(p, d).swap(*this);
+	}
 
-   //!Assigns internal pointer as 0 and returns previous pointer. This will
-   //!avoid deletion on destructor
-   pointer release()
-   {  pointer tmp(m_ptr);  m_ptr = 0;  return tmp; }
+	//!Assigns internal pointer as 0 and returns previous pointer. This will
+	//!avoid deletion on destructor
+	pointer release()
+	{
+		pointer tmp(m_ptr);
+		m_ptr = 0;
+		return tmp;
+	}
 
-   //!Returns a reference to the object pointed to by the stored pointer.
-   //!Never throws.
-   reference operator*() const
-   {  BOOST_ASSERT(m_ptr != 0);  return *m_ptr; }
+	//!Returns a reference to the object pointed to by the stored pointer.
+	//!Never throws.
+	reference operator*() const
+	{
+		BOOST_ASSERT(m_ptr != 0);
+		return *m_ptr;
+	}
 
-   //!Returns the internal stored pointer.
-   //!Never throws.
-   pointer &operator->()
-   {  BOOST_ASSERT(m_ptr != 0);  return m_ptr;  }
+	//!Returns the internal stored pointer.
+	//!Never throws.
+	pointer &operator->()
+	{
+		BOOST_ASSERT(m_ptr != 0);
+		return m_ptr;
+	}
 
-   //!Returns the internal stored pointer.
-   //!Never throws.
-   const pointer &operator->() const
-   {  BOOST_ASSERT(m_ptr != 0);  return m_ptr;  }
+	//!Returns the internal stored pointer.
+	//!Never throws.
+	const pointer &operator->() const
+	{
+		BOOST_ASSERT(m_ptr != 0);
+		return m_ptr;
+	}
 
-   //!Returns the stored pointer.
-   //!Never throws.
-   pointer & get()
-   {  return m_ptr;  }
+	//!Returns the stored pointer.
+	//!Never throws.
+	pointer & get()
+	{
+		return m_ptr;
+	}
 
-   //!Returns the stored pointer.
-   //!Never throws.
-   const pointer & get() const
-   {  return m_ptr;  }
+	//!Returns the stored pointer.
+	//!Never throws.
+	const pointer & get() const
+	{
+		return m_ptr;
+	}
 
-   typedef pointer this_type::*unspecified_bool_type;
+	typedef pointer this_type::*unspecified_bool_type;
 
-   //!Conversion to bool
-   //!Never throws
-   operator unspecified_bool_type() const
-   {  return m_ptr == 0? 0: &this_type::m_ptr;  }
+	//!Conversion to bool
+	//!Never throws
+	operator unspecified_bool_type() const
+	{
+		return m_ptr == 0? 0: &this_type::m_ptr;
+	}
 
-   //!Returns true if the stored pointer is 0.
-   //!Never throws.
-   bool operator! () const // never throws
-   {  return m_ptr == 0;   }
+	//!Returns true if the stored pointer is 0.
+	//!Never throws.
+	bool operator! () const // never throws
+	{
+		return m_ptr == 0;
+	}
 
-   //!Exchanges the internal pointer and deleter with other scoped_ptr
-   //!Never throws.
-   void swap(scoped_ptr & b) // never throws
-   {
-      ::boost::adl_move_swap(static_cast<Deleter&>(*this), static_cast<Deleter&>(b));
-      ::boost::adl_move_swap(m_ptr, b.m_ptr);
-   }
+	//!Exchanges the internal pointer and deleter with other scoped_ptr
+	//!Never throws.
+	void swap(scoped_ptr & b) // never throws
+	{
+		::boost::adl_move_swap(static_cast<Deleter&>(*this), static_cast<Deleter&>(b));
+		::boost::adl_move_swap(m_ptr, b.m_ptr);
+	}
 
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-   private:
-   pointer m_ptr;
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+private:
+	pointer m_ptr;
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 };
 
 //!Exchanges the internal pointer and deleter with other scoped_ptr
 //!Never throws.
 template<class T, class D> inline
 void swap(scoped_ptr<T, D> & a, scoped_ptr<T, D> & b)
-{  a.swap(b); }
+{
+	a.swap(b);
+}
 
 //!Returns a copy of the stored pointer
 //!Never throws
 template<class T, class D> inline
 typename scoped_ptr<T, D>::pointer to_raw_pointer(scoped_ptr<T, D> const & p)
-{  return p.get();   }
+{
+	return p.get();
+}
 
 } // namespace interprocess
 
@@ -164,7 +198,9 @@ typename scoped_ptr<T, D>::pointer to_raw_pointer(scoped_ptr<T, D> const & p)
 #if defined(_MSC_VER) && (_MSC_VER < 1400)
 template<class T, class D> inline
 T *to_raw_pointer(boost::interprocess::scoped_ptr<T, D> const & p)
-{  return p.get();   }
+{
+	return p.get();
+}
 #endif
 
 #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED

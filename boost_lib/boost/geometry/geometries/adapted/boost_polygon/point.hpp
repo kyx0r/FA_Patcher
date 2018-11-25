@@ -22,7 +22,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -34,61 +36,61 @@ namespace traits
 template <typename CoordinateType>
 struct tag<boost::polygon::point_data<CoordinateType> >
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 
 template <typename CoordinateType>
 struct coordinate_type<boost::polygon::point_data<CoordinateType> >
 {
-    typedef CoordinateType type;
+	typedef CoordinateType type;
 };
 
 
 template <typename CoordinateType>
 struct coordinate_system<boost::polygon::point_data<CoordinateType> >
 {
-    typedef cs::cartesian type;
+	typedef cs::cartesian type;
 };
 
 
 template <typename CoordinateType>
 struct dimension<boost::polygon::point_data<CoordinateType> >
-            : boost::mpl::int_<2>
+	: boost::mpl::int_<2>
 {};
 
 
 template <typename CoordinateType>
 struct access<boost::polygon::point_data<CoordinateType>, 0>
 {
-    typedef boost::polygon::point_data<CoordinateType> point_type;
+	typedef boost::polygon::point_data<CoordinateType> point_type;
 
-    static inline CoordinateType get(point_type const& p)
-    {
-        return p.x();
-    }
+	static inline CoordinateType get(point_type const& p)
+	{
+		return p.x();
+	}
 
-    static inline void set(point_type& p, CoordinateType const& value)
-    {
-        p.x(value);
-    }
+	static inline void set(point_type& p, CoordinateType const& value)
+	{
+		p.x(value);
+	}
 };
 
 
 template <typename CoordinateType>
 struct access<boost::polygon::point_data<CoordinateType>, 1>
 {
-    typedef boost::polygon::point_data<CoordinateType> point_type;
+	typedef boost::polygon::point_data<CoordinateType> point_type;
 
-    static inline CoordinateType get(point_type const& p)
-    {
-        return p.y();
-    }
+	static inline CoordinateType get(point_type const& p)
+	{
+		return p.y();
+	}
 
-    static inline void set(point_type& p, CoordinateType const& value)
-    {
-        p.y(value);
-    }
+	static inline void set(point_type& p, CoordinateType const& value)
+	{
+		p.y(value);
+	}
 };
 
 
@@ -96,7 +98,8 @@ struct access<boost::polygon::point_data<CoordinateType>, 1>
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_ADAPTED_BOOST_POLYGON_POINT_HPP

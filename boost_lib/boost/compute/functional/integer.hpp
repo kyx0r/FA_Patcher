@@ -13,8 +13,10 @@
 
 #include <boost/compute/functional/detail/macros.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 BOOST_COMPUTE_DECLARE_BUILTIN_FUNCTION(abs, T (T), class T)
 BOOST_COMPUTE_DECLARE_BUILTIN_FUNCTION(abs_diff, T (T, T), class T)

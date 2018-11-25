@@ -21,36 +21,38 @@
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-FormatMessageA(
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::LPCVOID_ lpSource,
-    boost::winapi::DWORD_ dwMessageId,
-    boost::winapi::DWORD_ dwLanguageId,
-    boost::winapi::LPSTR_ lpBuffer,
-    boost::winapi::DWORD_ nSize,
-    va_list *Arguments);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	FormatMessageA(
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::LPCVOID_ lpSource,
+	    boost::winapi::DWORD_ dwMessageId,
+	    boost::winapi::DWORD_ dwLanguageId,
+	    boost::winapi::LPSTR_ lpBuffer,
+	    boost::winapi::DWORD_ nSize,
+	    va_list *Arguments);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-FormatMessageW(
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::LPCVOID_ lpSource,
-    boost::winapi::DWORD_ dwMessageId,
-    boost::winapi::DWORD_ dwLanguageId,
-    boost::winapi::LPWSTR_ lpBuffer,
-    boost::winapi::DWORD_ nSize,
-    va_list *Arguments);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	FormatMessageW(
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::LPCVOID_ lpSource,
+	    boost::winapi::DWORD_ dwMessageId,
+	    boost::winapi::DWORD_ dwLanguageId,
+	    boost::winapi::LPWSTR_ lpBuffer,
+	    boost::winapi::DWORD_ nSize,
+	    va_list *Arguments);
 
 #if BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
-BOOST_SYMBOL_IMPORT boost::winapi::UINT_ WINAPI
-SetErrorMode(boost::winapi::UINT_ uMode);
+	BOOST_SYMBOL_IMPORT boost::winapi::UINT_ WINAPI
+	SetErrorMode(boost::winapi::UINT_ uMode);
 #endif
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined( BOOST_USE_WINDOWS_H )
 
@@ -72,7 +74,7 @@ const WORD_ SUBLANG_DEFAULT_=               SUBLANG_DEFAULT;    // user default
 
 BOOST_FORCEINLINE BOOST_CONSTEXPR WORD_ MAKELANGID_(WORD_ p, WORD_ s) BOOST_NOEXCEPT
 {
-    return MAKELANGID(p,s);
+	return MAKELANGID(p,s);
 }
 
 #if BOOST_WINAPI_PARTITION_DESKTOP
@@ -101,7 +103,7 @@ const WORD_ SUBLANG_DEFAULT_=               0x01;    // user default
 
 BOOST_FORCEINLINE BOOST_CONSTEXPR WORD_ MAKELANGID_(WORD_ p, WORD_ s) BOOST_NOEXCEPT
 {
-    return (WORD_)((((WORD_)(s)) << 10) | (WORD_)(p));
+	return (WORD_)((((WORD_)(s)) << 10) | (WORD_)(p));
 }
 
 #if BOOST_WINAPI_PARTITION_DESKTOP
@@ -131,7 +133,7 @@ BOOST_FORCEINLINE DWORD_ format_message(
     DWORD_ nSize,
     va_list *Arguments)
 {
-    return ::FormatMessageA(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
+	return ::FormatMessageA(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
 }
 #endif
 
@@ -144,7 +146,7 @@ BOOST_FORCEINLINE DWORD_ format_message(
     DWORD_ nSize,
     va_list *Arguments)
 {
-    return ::FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
+	return ::FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, Arguments);
 }
 
 }

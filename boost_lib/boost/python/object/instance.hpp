@@ -9,43 +9,53 @@
 
 # include <cstddef>
 
-namespace boost { namespace python
+namespace boost
 {
-  struct instance_holder;
-}} // namespace boost::python
+namespace python
+{
+struct instance_holder;
+}
+} // namespace boost::python
 
-namespace boost { namespace python { namespace objects { 
+namespace boost
+{
+namespace python
+{
+namespace objects
+{
 
 // Each extension instance will be one of these
 template <class Data = char>
 struct instance
 {
-    PyObject_VAR_HEAD
-    PyObject* dict;
-    PyObject* weakrefs; 
-    instance_holder* objects;
+	PyObject_VAR_HEAD
+	PyObject* dict;
+	PyObject* weakrefs;
+	instance_holder* objects;
 
-    typedef typename boost::python::detail::type_with_alignment<
-        boost::python::detail::alignment_of<Data>::value
-    >::type align_t;
-          
-    union
-    {
-        align_t align;
-        char bytes[sizeof(Data)];
-    } storage;
+	typedef typename boost::python::detail::type_with_alignment<
+	boost::python::detail::alignment_of<Data>::value
+	>::type align_t;
+
+	union
+	{
+		align_t align;
+		char bytes[sizeof(Data)];
+	} storage;
 };
 
 template <class Data>
 struct additional_instance_size
 {
-    typedef instance<Data> instance_data;
-    typedef instance<char> instance_char;
-    BOOST_STATIC_CONSTANT(
-        std::size_t, value = sizeof(instance_data)
-                           - BOOST_PYTHON_OFFSETOF(instance_char,storage));
+	typedef instance<Data> instance_data;
+	typedef instance<char> instance_char;
+	BOOST_STATIC_CONSTANT(
+	    std::size_t, value = sizeof(instance_data)
+	                         - BOOST_PYTHON_OFFSETOF(instance_char,storage));
 };
 
-}}} // namespace boost::python::object
+}
+}
+} // namespace boost::python::object
 
 #endif // INSTANCE_DWA200295_HPP

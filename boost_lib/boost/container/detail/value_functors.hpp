@@ -22,15 +22,19 @@
 template<class ValueType>
 struct value_less
 {
-   bool operator()(const ValueType &a, const ValueType &b) const
-      {  return a < b;  }
+	bool operator()(const ValueType &a, const ValueType &b) const
+	{
+		return a < b;
+	}
 };
 
 template<class ValueType>
 struct value_equal
 {
-   bool operator()(const ValueType &a, const ValueType &b) const
-      {  return a == b;  }
+	bool operator()(const ValueType &a, const ValueType &b) const
+	{
+		return a == b;
+	}
 };
 
 #endif   //BOOST_CONTAINER_DETAIL_VALUE_FUNCTORS_HPP

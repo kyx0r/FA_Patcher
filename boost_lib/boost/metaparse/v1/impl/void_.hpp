@@ -9,16 +9,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct void_ { typedef void_ type; };
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct void_
+{
+	typedef void_ type;
+};
+}
+}
+}
 }
 
 #endif

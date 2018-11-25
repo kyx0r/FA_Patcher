@@ -18,25 +18,28 @@
 // C++11 variadic interface
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace result_of
-    {
-        template <typename ...T>
-        struct vector_tie
-        {
-            typedef vector<T&...> type;
-        };
-    }
+namespace fusion
+{
+namespace result_of
+{
+template <typename ...T>
+struct vector_tie
+{
+	typedef vector<T&...> type;
+};
+}
 
-    template <typename ...T>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline vector<T&...>
-    vector_tie(T&... arg)
-    {
-        return vector<T&...>(arg...);
-    }
- }}
+template <typename ...T>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline vector<T&...>
+vector_tie(T&... arg)
+{
+	return vector<T&...>(arg...);
+}
+}
+}
 
 
 #endif

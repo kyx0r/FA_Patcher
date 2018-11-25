@@ -19,69 +19,79 @@
 #include <boost/geometry/index/detail/assert.hpp>
 #endif
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
 #ifndef BOOST_NO_EXCEPTIONS
 
 inline void throw_runtime_error(const char * str)
 {
-    BOOST_THROW_EXCEPTION(std::runtime_error(str));
+	BOOST_THROW_EXCEPTION(std::runtime_error(str));
 }
 
 inline void throw_logic_error(const char * str)
 {
-    BOOST_THROW_EXCEPTION(std::logic_error(str));
+	BOOST_THROW_EXCEPTION(std::logic_error(str));
 }
 
 inline void throw_invalid_argument(const char * str)
 {
-    BOOST_THROW_EXCEPTION(std::invalid_argument(str));
+	BOOST_THROW_EXCEPTION(std::invalid_argument(str));
 }
 
 inline void throw_length_error(const char * str)
 {
-    BOOST_THROW_EXCEPTION(std::length_error(str));
+	BOOST_THROW_EXCEPTION(std::length_error(str));
 }
 
 inline void throw_out_of_range(const char * str)
 {
-    BOOST_THROW_EXCEPTION(std::out_of_range(str));
+	BOOST_THROW_EXCEPTION(std::out_of_range(str));
 }
 
 #else
 
 inline void throw_runtime_error(const char * str)
 {
-    BOOST_GEOMETRY_INDEX_ASSERT(!"runtime_error thrown", str);
-    std::abort();
+	BOOST_GEOMETRY_INDEX_ASSERT(!"runtime_error thrown", str);
+	std::abort();
 }
 
 inline void throw_logic_error(const char * str)
 {
-    BOOST_GEOMETRY_INDEX_ASSERT(!"logic_error thrown", str);
-    std::abort();
+	BOOST_GEOMETRY_INDEX_ASSERT(!"logic_error thrown", str);
+	std::abort();
 }
 
 inline void throw_invalid_argument(const char * str)
 {
-    BOOST_GEOMETRY_INDEX_ASSERT(!"invalid_argument thrown", str);
-    std::abort();
+	BOOST_GEOMETRY_INDEX_ASSERT(!"invalid_argument thrown", str);
+	std::abort();
 }
 
 inline void throw_length_error(const char * str)
 {
-    BOOST_GEOMETRY_INDEX_ASSERT(!"length_error thrown", str);
-    std::abort();
+	BOOST_GEOMETRY_INDEX_ASSERT(!"length_error thrown", str);
+	std::abort();
 }
 
 inline void throw_out_of_range(const char * str)
 {
-    BOOST_GEOMETRY_INDEX_ASSERT(!"out_of_range thrown", str);
-    std::abort();
+	BOOST_GEOMETRY_INDEX_ASSERT(!"out_of_range thrown", str);
+	std::abort();
 }
 
 #endif
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_EXCEPTION_HPP

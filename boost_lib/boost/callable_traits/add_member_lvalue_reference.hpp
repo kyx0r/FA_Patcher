@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ add_member_lvalue_reference_hpp
 /*`
@@ -24,9 +27,10 @@ namespace boost { namespace callable_traits {
 #ifdef BOOST_CLBL_TRTS_DISABLE_REFERENCE_QUALIFIERS
 
 template<typename T>
-struct add_member_lvalue_reference_t {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "Reference member qualifiers are not supported by this configuration.");
+struct add_member_lvalue_reference_t
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "Reference member qualifiers are not supported by this configuration.");
 };
 
 #else
@@ -37,44 +41,46 @@ using add_member_lvalue_reference_t = //see below
 #ifdef BOOST_CLBL_TRTS_DISABLE_ABOMINABLE_FUNCTIONS
 
     detail::sfinae_try<
-        typename detail::traits<T>::add_member_lvalue_reference,
+    typename detail::traits<T>::add_member_lvalue_reference,
 
-        detail::fail_when_same<typename detail::traits<T>::add_member_lvalue_reference,
-            detail::abominable_functions_not_supported_on_this_compiler,
-            this_compiler_doesnt_support_abominable_function_types>,
+    detail::fail_when_same<typename detail::traits<T>::add_member_lvalue_reference,
+    detail::abominable_functions_not_supported_on_this_compiler,
+    this_compiler_doesnt_support_abominable_function_types>,
 
-        detail::fail_if_invalid<
-            typename detail::traits<T>::add_member_lvalue_reference,
-            member_qualifiers_are_illegal_for_this_type>>;
+    detail::fail_if_invalid<
+    typename detail::traits<T>::add_member_lvalue_reference,
+    member_qualifiers_are_illegal_for_this_type>>;
 #else
 
     detail::try_but_fail_if_invalid<
-        typename detail::traits<T>::add_member_lvalue_reference,
-        member_qualifiers_are_illegal_for_this_type>;
+    typename detail::traits<T>::add_member_lvalue_reference,
+    member_qualifiers_are_illegal_for_this_type>;
 
 #endif // #ifdef BOOST_CLBL_TRTS_DISABLE_ABOMINABLE_FUNCTIONS
 #endif // #ifdef BOOST_CLBL_TRTS_DISABLE_REFERENCE_QUALIFIERS
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct add_member_lvalue_reference_impl {};
+template<typename T, typename = std::false_type>
+struct add_member_lvalue_reference_impl {};
 
-    template<typename T>
-    struct add_member_lvalue_reference_impl <T, typename std::is_same<
-        add_member_lvalue_reference_t<T>, detail::dummy>::type>
-    {
-        using type = add_member_lvalue_reference_t<T>;
-    };
+template<typename T>
+struct add_member_lvalue_reference_impl <T, typename std::is_same<
+	add_member_lvalue_reference_t<T>, detail::dummy>::type>
+{
+	using type = add_member_lvalue_reference_t<T>;
+};
 }
 //->
 
 template<typename T>
 struct add_member_lvalue_reference
-  : detail::add_member_lvalue_reference_impl<T> {};
+	: detail::add_member_lvalue_reference_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

@@ -12,15 +12,18 @@
 #define BOOST_CONTAINER_PMR_SLIST_HPP
 
 #if defined (_MSC_VER)
-#  pragma once 
+#  pragma once
 #endif
 
 #include <boost/container/slist.hpp>
 #include <boost/container/pmr/polymorphic_allocator.hpp>
 
-namespace boost {
-namespace container {
-namespace pmr {
+namespace boost
+{
+namespace container
+{
+namespace pmr
+{
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
@@ -34,8 +37,8 @@ using slist = boost::container::slist<T, polymorphic_allocator<T>>;
 template<class T>
 struct slist_of
 {
-   typedef boost::container::slist
-      < T, polymorphic_allocator<T> > type;
+	typedef boost::container::slist
+	< T, polymorphic_allocator<T> > type;
 };
 
 }  //namespace pmr {

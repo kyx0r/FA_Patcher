@@ -153,7 +153,7 @@
 //
 // UWP Support
 //
-// On platforms without windows family partition support it is assumed one 
+// On platforms without windows family partition support it is assumed one
 // has all APIs and access is controlled by _WIN32_WINNT or similar mechanisms.
 //
 // Leveraging Boost.Predef here
@@ -175,9 +175,9 @@
 #endif // BOOST_PLAT_WINDOWS_UWP
 
 //
-// Windows 8.x SDK defines some items in the DESKTOP partition and then Windows SDK 10.0 defines 
-// the same items to be in APP or SYSTEM partitions, and APP expands to DESKTOP or PC or PHONE.  
-// The definition of BOOST_WINAPI_PARTITION_APP_SYSTEM provides a universal way to get this 
+// Windows 8.x SDK defines some items in the DESKTOP partition and then Windows SDK 10.0 defines
+// the same items to be in APP or SYSTEM partitions, and APP expands to DESKTOP or PC or PHONE.
+// The definition of BOOST_WINAPI_PARTITION_APP_SYSTEM provides a universal way to get this
 // right as it is seen in a number of places in the SDK.
 //
 #define BOOST_WINAPI_PARTITION_APP_SYSTEM \

@@ -10,43 +10,52 @@
 
 #include <boost/spirit/home/x3/support/traits/is_substitute.hpp>
 
-namespace boost { namespace spirit { namespace x3 { namespace traits
+namespace boost
 {
-    template <typename Variant, typename Attribute>
-    struct variant_find_substitute
-    {
-        // Get the type from the variant that can be a substitute for Attribute.
-        // If none is found, just return Attribute
+namespace spirit
+{
+namespace x3
+{
+namespace traits
+{
+template <typename Variant, typename Attribute>
+struct variant_find_substitute
+{
+	// Get the type from the variant that can be a substitute for Attribute.
+	// If none is found, just return Attribute
 
-        typedef Variant variant_type;
-        typedef typename variant_type::types types;
-        typedef typename mpl::end<types>::type end;
+	typedef Variant variant_type;
+	typedef typename variant_type::types types;
+	typedef typename mpl::end<types>::type end;
 
-        typedef typename
-            mpl::find_if<types, is_same<mpl::_1, Attribute> >::type
-        iter_1;
+	typedef typename
+	mpl::find_if<types, is_same<mpl::_1, Attribute> >::type
+	iter_1;
 
-        typedef typename
-            mpl::eval_if<
-                is_same<iter_1, end>,
-                mpl::find_if<types, traits::is_substitute<mpl::_1, Attribute> >,
-                mpl::identity<iter_1>
-            >::type
-        iter;
+	typedef typename
+	mpl::eval_if<
+	is_same<iter_1, end>,
+	        mpl::find_if<types, traits::is_substitute<mpl::_1, Attribute> >,
+	        mpl::identity<iter_1>
+	        >::type
+	        iter;
 
-        typedef typename
-            mpl::eval_if<
-                is_same<iter, end>,
-                mpl::identity<Attribute>,
-                mpl::deref<iter>
-            >::type
-        type;
-    };
-    
-    template <typename Variant>
-    struct variant_find_substitute<Variant, Variant>
-        : mpl::identity<Variant> {};
+	typedef typename
+	mpl::eval_if<
+	is_same<iter, end>,
+	        mpl::identity<Attribute>,
+	        mpl::deref<iter>
+	        >::type
+	        type;
+};
 
-}}}}
+template <typename Variant>
+struct variant_find_substitute<Variant, Variant>
+	: mpl::identity<Variant> {};
+
+}
+}
+}
+}
 
 #endif

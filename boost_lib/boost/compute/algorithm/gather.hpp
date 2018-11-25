@@ -19,41 +19,45 @@
 #include <boost/compute/system.hpp>
 #include <boost/compute/type_traits/type_name.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class MapIterator, class OutputIterator>
 class gather_kernel : public meta_kernel
 {
 public:
-    gather_kernel() : meta_kernel("gather")
-    {}
+	gather_kernel() : meta_kernel("gather")
+	{}
 
-    void set_range(MapIterator first,
-                   MapIterator last,
-                   InputIterator input,
-                   OutputIterator result)
-    {
-        m_count = iterator_range_size(first, last);
+	void set_range(MapIterator first,
+	               MapIterator last,
+	               InputIterator input,
+	               OutputIterator result)
+	{
+		m_count = iterator_range_size(first, last);
 
-        *this <<
-            "const uint i = get_global_id(0);\n" <<
-            result[expr<uint_>("i")] << "=" << 
-                input[first[expr<uint_>("i")]] << ";\n";
-    }
+		*this <<
+		      "const uint i = get_global_id(0);\n" <<
+		      result[expr<uint_>("i")] << "=" <<
+		      input[first[expr<uint_>("i")]] << ";\n";
+	}
 
-    event exec(command_queue &queue)
-    {
-        if(m_count == 0) {
-            return event();
-        }
+	event exec(command_queue &queue)
+	{
+		if(m_count == 0)
+		{
+			return event();
+		}
 
-        return exec_1d(queue, 0, m_count);
-    }
+		return exec_1d(queue, 0, m_count);
+	}
 
 private:
-    size_t m_count;
+	size_t m_count;
 };
 
 } // end detail namespace
@@ -72,10 +76,10 @@ inline void gather(MapIterator first,
                    OutputIterator result,
                    command_queue &queue = system::default_queue())
 {
-    detail::gather_kernel<InputIterator, MapIterator, OutputIterator> kernel;
-    
-    kernel.set_range(first, last, input, result);
-    kernel.exec(queue);
+	detail::gather_kernel<InputIterator, MapIterator, OutputIterator> kernel;
+
+	kernel.set_range(first, last, input, result);
+	kernel.exec(queue);
 }
 
 } // end compute namespace

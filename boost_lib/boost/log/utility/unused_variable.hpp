@@ -28,11 +28,13 @@
 
 #else
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 template< typename T >
 BOOST_FORCEINLINE void no_unused_warnings(T const&) BOOST_NOEXCEPT {}

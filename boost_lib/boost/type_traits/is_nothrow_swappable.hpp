@@ -20,7 +20,7 @@
 namespace boost
 {
 template <class T> struct is_nothrow_swappable : boost::integral_constant<bool,
-    boost::is_scalar<T>::value && !boost::is_const<T>::value> {};
+	boost::is_scalar<T>::value && !boost::is_const<T>::value> {};
 
 template <class T, class U> struct is_nothrow_swappable_with : false_type {};
 template <class T> struct is_nothrow_swappable_with<T, T> : is_nothrow_swappable<T> {};
@@ -43,12 +43,18 @@ using std::swap;
 template<class T, class U, bool B = noexcept(swap(declval<T>(), declval<U>()))> integral_constant<bool, B> is_nothrow_swappable_with_impl( int );
 template<class T, class U> false_type is_nothrow_swappable_with_impl( ... );
 template<class T, class U>
-struct is_nothrow_swappable_with_helper { typedef decltype( type_traits_swappable_detail::is_nothrow_swappable_with_impl<T, U>(0) ) type; };
+struct is_nothrow_swappable_with_helper
+{
+	typedef decltype( type_traits_swappable_detail::is_nothrow_swappable_with_impl<T, U>(0) ) type;
+};
 
 template<class T, bool B = noexcept(swap(declval<T&>(), declval<T&>()))> integral_constant<bool, B> is_nothrow_swappable_impl( int );
 template<class T> false_type is_nothrow_swappable_impl( ... );
 template<class T>
-struct is_nothrow_swappable_helper { typedef decltype( type_traits_swappable_detail::is_nothrow_swappable_impl<T>(0) ) type; };
+struct is_nothrow_swappable_helper
+{
+	typedef decltype( type_traits_swappable_detail::is_nothrow_swappable_impl<T>(0) ) type;
+};
 
 } // namespace type_traits_swappable_detail
 

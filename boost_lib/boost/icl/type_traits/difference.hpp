@@ -8,11 +8,17 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ICL_TYPE_TRAITS_DIFFERENCE_HPP_JOFA_080911
 #define BOOST_ICL_TYPE_TRAITS_DIFFERENCE_HPP_JOFA_080911
 
-namespace boost{ namespace icl
+namespace boost
 {
-    template <class Type> struct difference{ typedef Type type; };
+namespace icl
+{
+template <class Type> struct difference
+{
+	typedef Type type;
+};
 
-}} // namespace boost icl
+}
+} // namespace boost icl
 
 #endif
 

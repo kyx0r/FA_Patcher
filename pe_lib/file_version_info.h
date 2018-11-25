@@ -104,7 +104,7 @@ public: //Getters
 	{
 		return get_version_string<T>(product_version_ms_, product_version_ls_);
 	}
-		
+
 public: //Setters
 	//Sets if file is debug-built
 	void set_debug(bool debug);
@@ -155,9 +155,9 @@ private:
 	{
 		std::basic_stringstream<T> ss;
 		ss << (ms >> 16) << static_cast<T>(L'.')
-			<< (ms & 0xFFFF) << static_cast<T>(L'.')
-			<< (ls >> 16) << static_cast<T>(L'.')
-			<< (ls & 0xFFFF);
+		   << (ms & 0xFFFF) << static_cast<T>(L'.')
+		   << (ls >> 16) << static_cast<T>(L'.')
+		   << (ls & 0xFFFF);
 		return ss.str();
 	}
 
@@ -169,7 +169,7 @@ private:
 	void set_file_flag(uint32_t flag, bool set_flag);
 
 	uint32_t file_version_ms_, file_version_ls_,
-		product_version_ms_, product_version_ls_;
+	         product_version_ms_, product_version_ls_;
 	uint32_t file_flags_;
 	uint32_t file_os_;
 	uint32_t file_type_, file_subtype_;

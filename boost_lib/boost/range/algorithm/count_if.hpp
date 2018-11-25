@@ -18,8 +18,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function count_if
 ///
@@ -31,8 +31,8 @@ template< class SinglePassRange, class UnaryPredicate >
 inline BOOST_DEDUCED_TYPENAME boost::range_difference<SinglePassRange>::type
 count_if(SinglePassRange& rng, UnaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<SinglePassRange> ));
-    return std::count_if(boost::begin(rng), boost::end(rng), pred);
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<SinglePassRange> ));
+	return std::count_if(boost::begin(rng), boost::end(rng), pred);
 }
 
 /// \overload
@@ -40,12 +40,12 @@ template< class SinglePassRange, class UnaryPredicate >
 inline BOOST_DEDUCED_TYPENAME boost::range_difference<const SinglePassRange>::type
 count_if(const SinglePassRange& rng, UnaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
-    return std::count_if(boost::begin(rng), boost::end(rng), pred);
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
+	return std::count_if(boost::begin(rng), boost::end(rng), pred);
 }
 
-    } // namespace range
-    using range::count_if;
+} // namespace range
+using range::count_if;
 } // namespace boost
 
 #endif // include guard

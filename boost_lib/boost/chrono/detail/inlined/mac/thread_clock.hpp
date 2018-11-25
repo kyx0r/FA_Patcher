@@ -19,74 +19,78 @@
 # include <pthread.h>
 # include <mach/thread_act.h>
 
-namespace boost { namespace chrono {
+namespace boost
+{
+namespace chrono
+{
 
-    thread_clock::time_point thread_clock::now( ) BOOST_NOEXCEPT
-    {
-        // get the thread port (borrowing pthread's reference)
-        mach_port_t port = pthread_mach_thread_np(pthread_self());
+thread_clock::time_point thread_clock::now( ) BOOST_NOEXCEPT
+{
+	// get the thread port (borrowing pthread's reference)
+	mach_port_t port = pthread_mach_thread_np(pthread_self());
 
-        // get the thread info
-        thread_basic_info_data_t info;
-        mach_msg_type_number_t count = THREAD_BASIC_INFO_COUNT;
-        if ( thread_info(port, THREAD_BASIC_INFO, (thread_info_t)&info, &count) != KERN_SUCCESS )
-        {
-            BOOST_ASSERT(0 && "Boost::Chrono - Internal Error");
-            return time_point();
-        }
+	// get the thread info
+	thread_basic_info_data_t info;
+	mach_msg_type_number_t count = THREAD_BASIC_INFO_COUNT;
+	if ( thread_info(port, THREAD_BASIC_INFO, (thread_info_t)&info, &count) != KERN_SUCCESS )
+	{
+		BOOST_ASSERT(0 && "Boost::Chrono - Internal Error");
+		return time_point();
+	}
 
-        // convert to nanoseconds
-        duration user = duration(
-                static_cast<thread_clock::rep>( info.user_time.seconds ) * 1000000000
-                        + static_cast<thread_clock::rep>(info.user_time.microseconds ) * 1000);
+	// convert to nanoseconds
+	duration user = duration(
+	    static_cast<thread_clock::rep>( info.user_time.seconds ) * 1000000000
+	    + static_cast<thread_clock::rep>(info.user_time.microseconds ) * 1000);
 
-        duration system = duration(
-                static_cast<thread_clock::rep>( info.system_time.seconds ) * 1000000000
-                        + static_cast<thread_clock::rep>( info.system_time.microseconds ) * 1000);
+	duration system = duration(
+	    static_cast<thread_clock::rep>( info.system_time.seconds ) * 1000000000
+	    + static_cast<thread_clock::rep>( info.system_time.microseconds ) * 1000);
 
-        return time_point( user + system );
-    }
+	return time_point( user + system );
+}
 
 #if !defined BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
-    thread_clock::time_point thread_clock::now( system::error_code & ec )
-    {
-        // get the thread port (borrowing pthread's reference)
-        mach_port_t port = pthread_mach_thread_np(pthread_self());
+thread_clock::time_point thread_clock::now( system::error_code & ec )
+{
+	// get the thread port (borrowing pthread's reference)
+	mach_port_t port = pthread_mach_thread_np(pthread_self());
 
-        // get the thread info
-        thread_basic_info_data_t info;
-        mach_msg_type_number_t count = THREAD_BASIC_INFO_COUNT;
-        if ( thread_info(port, THREAD_BASIC_INFO, (thread_info_t)&info, &count) != KERN_SUCCESS )
-        {
-            if (BOOST_CHRONO_IS_THROWS(ec))
-            {
-                boost::throw_exception(
-                        system::system_error(
-                                EINVAL,
-                                BOOST_CHRONO_SYSTEM_CATEGORY,
-                                "chrono::thread_clock" ));
-            }
-            else
-            {
-                ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
-                return time_point();
-            }
-        }
-        if (!BOOST_CHRONO_IS_THROWS(ec))
-        {
-            ec.clear();
-        }
+	// get the thread info
+	thread_basic_info_data_t info;
+	mach_msg_type_number_t count = THREAD_BASIC_INFO_COUNT;
+	if ( thread_info(port, THREAD_BASIC_INFO, (thread_info_t)&info, &count) != KERN_SUCCESS )
+	{
+		if (BOOST_CHRONO_IS_THROWS(ec))
+		{
+			boost::throw_exception(
+			    system::system_error(
+			        EINVAL,
+			        BOOST_CHRONO_SYSTEM_CATEGORY,
+			        "chrono::thread_clock" ));
+		}
+		else
+		{
+			ec.assign( errno, BOOST_CHRONO_SYSTEM_CATEGORY );
+			return time_point();
+		}
+	}
+	if (!BOOST_CHRONO_IS_THROWS(ec))
+	{
+		ec.clear();
+	}
 
-        // convert to nanoseconds
-        duration user = duration(
-                static_cast<thread_clock::rep>( info.user_time.seconds ) * 1000000000
-                        + static_cast<thread_clock::rep>(info.user_time.microseconds ) * 1000);
+	// convert to nanoseconds
+	duration user = duration(
+	                    static_cast<thread_clock::rep>( info.user_time.seconds ) * 1000000000
+	                    + static_cast<thread_clock::rep>(info.user_time.microseconds ) * 1000);
 
-        duration system = duration(
-                static_cast<thread_clock::rep>( info.system_time.seconds ) * 1000000000
-                        + static_cast<thread_clock::rep>( info.system_time.microseconds ) * 1000);
+	duration system = duration(
+	                      static_cast<thread_clock::rep>( info.system_time.seconds ) * 1000000000
+	                      + static_cast<thread_clock::rep>( info.system_time.microseconds ) * 1000);
 
-        return time_point( user + system );
-    }
+	return time_point( user + system );
+}
 #endif
-} }
+}
+}

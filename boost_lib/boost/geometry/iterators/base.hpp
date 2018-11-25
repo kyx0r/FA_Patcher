@@ -19,7 +19,13 @@
 #include <boost/mpl/if.hpp>
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace boost { namespace geometry { namespace detail { namespace iterators
+namespace boost
+{
+namespace geometry
+{
+namespace detail
+{
+namespace iterators
 {
 
 template
@@ -27,42 +33,45 @@ template
     typename DerivedClass,
     typename Iterator,
     typename TraversalFlag = boost::bidirectional_traversal_tag
->
-struct iterator_base
-    : public boost::iterator_adaptor
-    <
-        DerivedClass,
-        Iterator,
-        boost::use_default,
-        typename boost::mpl::if_
-        <
-            boost::is_convertible
-            <
-                typename boost::iterator_traversal<Iterator>::type,
-                boost::random_access_traversal_tag
-            >,
-            TraversalFlag,
-            boost::use_default
-        >::type
     >
+struct iterator_base
+	: public boost::iterator_adaptor
+	  <
+	  DerivedClass,
+	  Iterator,
+	  boost::use_default,
+	  typename boost::mpl::if_
+	  <
+	  boost::is_convertible
+	  <
+	  typename boost::iterator_traversal<Iterator>::type,
+	  boost::random_access_traversal_tag
+	  >,
+	  TraversalFlag,
+	  boost::use_default
+	  >::type
+	  >
 {
-    // Define operator cast to Iterator to be able to write things like Iterator it = myit++
-    inline operator Iterator() const
-    {
-        return this->base();
-    }
+	// Define operator cast to Iterator to be able to write things like Iterator it = myit++
+	inline operator Iterator() const
+	{
+		return this->base();
+	}
 
-    /*inline bool operator==(Iterator const& other) const
-    {
-        return this->base() == other;
-    }
-    inline bool operator!=(Iterator const& other) const
-    {
-        return ! operator==(other);
-    }*/
+	/*inline bool operator==(Iterator const& other) const
+	{
+	    return this->base() == other;
+	}
+	inline bool operator!=(Iterator const& other) const
+	{
+	    return ! operator==(other);
+	}*/
 };
 
-}}}} // namespace boost::geometry::detail::iterators
+}
+}
+}
+} // namespace boost::geometry::detail::iterators
 #endif
 
 

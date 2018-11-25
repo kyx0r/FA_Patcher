@@ -19,7 +19,11 @@
 #include <boost/concept_check.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -32,47 +36,49 @@ class CentroidStrategy
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 
-    // 1) must define state_type,
-    typedef typename Strategy::state_type state_type;
+	// 1) must define state_type,
+	typedef typename Strategy::state_type state_type;
 
-    // 2) must define point_type,
-    typedef typename Strategy::point_type point_type;
+	// 2) must define point_type,
+	typedef typename Strategy::point_type point_type;
 
-    // 3) must define point_type, of polygon (segments)
-    typedef typename Strategy::segment_point_type spoint_type;
+	// 3) must define point_type, of polygon (segments)
+	typedef typename Strategy::segment_point_type spoint_type;
 
-    struct check_methods
-    {
-        static void apply()
-        {
-            Strategy *str = 0;
-            state_type *st = 0;
+	struct check_methods
+	{
+		static void apply()
+		{
+			Strategy *str = 0;
+			state_type *st = 0;
 
-            // 4) must implement a static method apply,
-            // getting two segment-points
-            spoint_type const* sp = 0;
-            str->apply(*sp, *sp, *st);
+			// 4) must implement a static method apply,
+			// getting two segment-points
+			spoint_type const* sp = 0;
+			str->apply(*sp, *sp, *st);
 
-            // 5) must implement a static method result
-            //  getting the centroid
-            point_type *c = 0;
-            bool r = str->result(*st, *c);
+			// 5) must implement a static method result
+			//  getting the centroid
+			point_type *c = 0;
+			bool r = str->result(*st, *c);
 
-            boost::ignore_unused_variable_warning(str);
-            boost::ignore_unused_variable_warning(r);
-        }
-    };
+			boost::ignore_unused_variable_warning(str);
+			boost::ignore_unused_variable_warning(r);
+		}
+	};
 
 public :
-    BOOST_CONCEPT_USAGE(CentroidStrategy)
-    {
-        check_methods::apply();
-    }
+	BOOST_CONCEPT_USAGE(CentroidStrategy)
+	{
+		check_methods::apply();
+	}
 #endif
 };
 
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CONCEPTS_CENTROID_CONCEPT_HPP

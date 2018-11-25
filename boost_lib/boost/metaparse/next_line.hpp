@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::next_line;
-  }
+namespace metaparse
+{
+using v1::next_line;
+}
 }
 
 #endif

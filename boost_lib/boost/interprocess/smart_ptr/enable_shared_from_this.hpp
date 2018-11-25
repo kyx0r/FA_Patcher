@@ -32,8 +32,10 @@
 //!\file
 //!Describes an utility to form a shared pointer from this
 
-namespace boost{
-namespace interprocess{
+namespace boost
+{
+namespace interprocess
+{
 
 //!This class is used as a base class that allows a shared_ptr to the current
 //!object to be obtained from within a member function.
@@ -42,40 +44,42 @@ namespace interprocess{
 template<class T, class A, class D>
 class enable_shared_from_this
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-   protected:
-   enable_shared_from_this()
-   {}
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+protected:
+	enable_shared_from_this()
+	{}
 
-   enable_shared_from_this(enable_shared_from_this const &)
-   {}
+	enable_shared_from_this(enable_shared_from_this const &)
+	{}
 
-   enable_shared_from_this & operator=(enable_shared_from_this const &)
-   {  return *this;  }
+	enable_shared_from_this & operator=(enable_shared_from_this const &)
+	{
+		return *this;
+	}
 
-   ~enable_shared_from_this()
-   {}
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+	~enable_shared_from_this()
+	{}
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
-   public:
-   shared_ptr<T, A, D> shared_from_this()
-   {
-      shared_ptr<T, A, D> p(_internal_weak_this);
-      BOOST_ASSERT(ipcdetail::to_raw_pointer(p.get()) == this);
-      return p;
-   }
+public:
+	shared_ptr<T, A, D> shared_from_this()
+	{
+		shared_ptr<T, A, D> p(_internal_weak_this);
+		BOOST_ASSERT(ipcdetail::to_raw_pointer(p.get()) == this);
+		return p;
+	}
 
-   shared_ptr<T const, A, D> shared_from_this() const
-   {
-      shared_ptr<T const, A, D> p(_internal_weak_this);
-      BOOST_ASSERT(ipcdetail::to_raw_pointer(p.get()) == this);
-      return p;
-   }
+	shared_ptr<T const, A, D> shared_from_this() const
+	{
+		shared_ptr<T const, A, D> p(_internal_weak_this);
+		BOOST_ASSERT(ipcdetail::to_raw_pointer(p.get()) == this);
+		return p;
+	}
 
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-   typedef T element_type;
-   mutable weak_ptr<element_type, A, D> _internal_weak_this;
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+	typedef T element_type;
+	mutable weak_ptr<element_type, A, D> _internal_weak_this;
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 };
 
 } // namespace interprocess

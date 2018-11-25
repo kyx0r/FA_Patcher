@@ -15,8 +15,10 @@
 
 #include <boost/compute/type_traits/vector_size.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Meta-function returning \c true if \p T is a vector type.
 ///

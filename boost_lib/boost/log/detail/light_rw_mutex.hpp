@@ -38,42 +38,44 @@
 
 #include <boost/winapi/srw_lock.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A light read/write mutex that uses WinNT 6 and later APIs
 class light_rw_mutex
 {
-    boost::winapi::SRWLOCK_ m_Mutex;
+	boost::winapi::SRWLOCK_ m_Mutex;
 
 public:
-    light_rw_mutex()
-    {
-        boost::winapi::InitializeSRWLock(&m_Mutex);
-    }
-    void lock_shared()
-    {
-        boost::winapi::AcquireSRWLockShared(&m_Mutex);
-    }
-    void unlock_shared()
-    {
-        boost::winapi::ReleaseSRWLockShared(&m_Mutex);
-    }
-    void lock()
-    {
-        boost::winapi::AcquireSRWLockExclusive(&m_Mutex);
-    }
-    void unlock()
-    {
-        boost::winapi::ReleaseSRWLockExclusive(&m_Mutex);
-    }
+	light_rw_mutex()
+	{
+		boost::winapi::InitializeSRWLock(&m_Mutex);
+	}
+	void lock_shared()
+	{
+		boost::winapi::AcquireSRWLockShared(&m_Mutex);
+	}
+	void unlock_shared()
+	{
+		boost::winapi::ReleaseSRWLockShared(&m_Mutex);
+	}
+	void lock()
+	{
+		boost::winapi::AcquireSRWLockExclusive(&m_Mutex);
+	}
+	void unlock()
+	{
+		boost::winapi::ReleaseSRWLockExclusive(&m_Mutex);
+	}
 
-    // Noncopyable
-    BOOST_DELETED_FUNCTION(light_rw_mutex(light_rw_mutex const&))
-    BOOST_DELETED_FUNCTION(light_rw_mutex& operator= (light_rw_mutex const&))
+	// Noncopyable
+	BOOST_DELETED_FUNCTION(light_rw_mutex(light_rw_mutex const&))
+	BOOST_DELETED_FUNCTION(light_rw_mutex& operator= (light_rw_mutex const&))
 };
 
 } // namespace aux
@@ -86,46 +88,48 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #include <pthread.h>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A light read/write mutex that maps directly onto POSIX threading library
 class light_rw_mutex
 {
-    pthread_rwlock_t m_Mutex;
+	pthread_rwlock_t m_Mutex;
 
 public:
-    light_rw_mutex()
-    {
-        pthread_rwlock_init(&m_Mutex, NULL);
-    }
-    ~light_rw_mutex()
-    {
-        pthread_rwlock_destroy(&m_Mutex);
-    }
-    void lock_shared()
-    {
-        pthread_rwlock_rdlock(&m_Mutex);
-    }
-    void unlock_shared()
-    {
-        pthread_rwlock_unlock(&m_Mutex);
-    }
-    void lock()
-    {
-        pthread_rwlock_wrlock(&m_Mutex);
-    }
-    void unlock()
-    {
-        pthread_rwlock_unlock(&m_Mutex);
-    }
+	light_rw_mutex()
+	{
+		pthread_rwlock_init(&m_Mutex, NULL);
+	}
+	~light_rw_mutex()
+	{
+		pthread_rwlock_destroy(&m_Mutex);
+	}
+	void lock_shared()
+	{
+		pthread_rwlock_rdlock(&m_Mutex);
+	}
+	void unlock_shared()
+	{
+		pthread_rwlock_unlock(&m_Mutex);
+	}
+	void lock()
+	{
+		pthread_rwlock_wrlock(&m_Mutex);
+	}
+	void unlock()
+	{
+		pthread_rwlock_unlock(&m_Mutex);
+	}
 
-    // Noncopyable
-    BOOST_DELETED_FUNCTION(light_rw_mutex(light_rw_mutex const&))
-    BOOST_DELETED_FUNCTION(light_rw_mutex& operator= (light_rw_mutex const&))
+	// Noncopyable
+	BOOST_DELETED_FUNCTION(light_rw_mutex(light_rw_mutex const&))
+	BOOST_DELETED_FUNCTION(light_rw_mutex& operator= (light_rw_mutex const&))
 };
 
 } // namespace aux
@@ -136,28 +140,33 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #else
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A light read/write mutex
 class light_rw_mutex
 {
-    struct BOOST_LOG_MAY_ALIAS mutex_state { void* p; } m_Mutex;
+	struct BOOST_LOG_MAY_ALIAS mutex_state
+	{
+		void* p;
+	} m_Mutex;
 
 public:
-    BOOST_LOG_API light_rw_mutex();
-    BOOST_LOG_API ~light_rw_mutex();
-    BOOST_LOG_API void lock_shared();
-    BOOST_LOG_API void unlock_shared();
-    BOOST_LOG_API void lock();
-    BOOST_LOG_API void unlock();
+	BOOST_LOG_API light_rw_mutex();
+	BOOST_LOG_API ~light_rw_mutex();
+	BOOST_LOG_API void lock_shared();
+	BOOST_LOG_API void unlock_shared();
+	BOOST_LOG_API void lock();
+	BOOST_LOG_API void unlock();
 
-    // Noncopyable
-    BOOST_DELETED_FUNCTION(light_rw_mutex(light_rw_mutex const&))
-    BOOST_DELETED_FUNCTION(light_rw_mutex& operator= (light_rw_mutex const&))
+	// Noncopyable
+	BOOST_DELETED_FUNCTION(light_rw_mutex(light_rw_mutex const&))
+	BOOST_DELETED_FUNCTION(light_rw_mutex& operator= (light_rw_mutex const&))
 };
 
 } // namespace aux

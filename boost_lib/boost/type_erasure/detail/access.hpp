@@ -26,8 +26,10 @@
 #include <boost/utility/enable_if.hpp>
 #endif
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 template<class Concept, class T>
 class any;
@@ -38,198 +40,199 @@ class param;
 template<class Concept>
 class binding;
 
-namespace detail {
+namespace detail
+{
 
 struct access
 {
-    template<class Derived>
-    static const typename Derived::table_type&
-    table(const ::boost::type_erasure::any_base<Derived>& arg)
-    {
-        return static_cast<const Derived&>(arg).table;
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::binding<Concept>&
-    table(const ::boost::type_erasure::param<Concept, T>& arg)
-    {
-        return table(arg._impl);
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::binding<Concept>&
-    table(const ::boost::type_erasure::param<Concept, T&>& arg)
-    {
-        return arg._impl.table;
-    }
+	template<class Derived>
+	static const typename Derived::table_type&
+	table(const ::boost::type_erasure::any_base<Derived>& arg)
+	{
+		return static_cast<const Derived&>(arg).table;
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::binding<Concept>&
+	table(const ::boost::type_erasure::param<Concept, T>& arg)
+	{
+		return table(arg._impl);
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::binding<Concept>&
+	table(const ::boost::type_erasure::param<Concept, T&>& arg)
+	{
+		return arg._impl.table;
+	}
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    template<class Concept, class T>
-    static const ::boost::type_erasure::binding<Concept>&
-    table(const ::boost::type_erasure::param<Concept, T&&>& arg)
-    {
-        return arg._impl.table;
-    }
+	template<class Concept, class T>
+	static const ::boost::type_erasure::binding<Concept>&
+	table(const ::boost::type_erasure::param<Concept, T&&>& arg)
+	{
+		return arg._impl.table;
+	}
 #endif
 #ifdef BOOST_TYPE_ERASURE_SFINAE_FRIENDLY_CONSTRUCTORS
-    template<class Concept, class T, class = typename ::boost::enable_if_c<!::boost::is_reference<T>::value>::type>
-    static const typename any<Concept, T>::table_type&
-    table(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >& arg)
-    {
-        return static_cast<const ::boost::type_erasure::any<Concept, T>&>(arg)._boost_type_erasure_table;
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >& arg)
-    {
-        return static_cast< ::boost::type_erasure::any<Concept, T>&>(arg)._boost_type_erasure_data;
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::detail::storage&
-    data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >& arg)
-    {
-        return static_cast<const ::boost::type_erasure::any<Concept, T>&>(arg)._boost_type_erasure_data;
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >&& arg)
-    {
-        return std::move(static_cast< ::boost::type_erasure::any<Concept, T>&&>(arg)._boost_type_erasure_data);
-    }
+	template<class Concept, class T, class = typename ::boost::enable_if_c<!::boost::is_reference<T>::value>::type>
+	static const typename any<Concept, T>::table_type&
+	table(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >& arg)
+	{
+		return static_cast<const ::boost::type_erasure::any<Concept, T>&>(arg)._boost_type_erasure_table;
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >& arg)
+	{
+		return static_cast< ::boost::type_erasure::any<Concept, T>&>(arg)._boost_type_erasure_data;
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::detail::storage&
+	data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >& arg)
+	{
+		return static_cast<const ::boost::type_erasure::any<Concept, T>&>(arg)._boost_type_erasure_data;
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T> >&& arg)
+	{
+		return std::move(static_cast< ::boost::type_erasure::any<Concept, T>&&>(arg)._boost_type_erasure_data);
+	}
 #endif
-    template<class Derived>
-    static ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::any_base<Derived>& arg)
-    {
-        return static_cast<Derived&>(arg).data;
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, const T&> >& arg)
-    {
-        return static_cast< ::boost::type_erasure::any<Concept, const T&>&>(arg).data;
-    }
-    template<class Derived>
-    static const ::boost::type_erasure::detail::storage&
-    data(const ::boost::type_erasure::any_base<Derived>& arg)
-    {
-        return static_cast<const Derived&>(arg).data;
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&> >& arg)
-    {
-        return const_cast< ::boost::type_erasure::detail::storage&>(static_cast< ::boost::type_erasure::any<Concept, T&>&>(arg).data);
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&
-    data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&> >& arg)
-    {
-        return const_cast< ::boost::type_erasure::detail::storage&>(static_cast< const ::boost::type_erasure::any<Concept, T&>&>(arg).data);
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::detail::storage&
-    data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, const T&> >& arg)
-    {
-        return static_cast<const ::boost::type_erasure::any<Concept, const T&>&>(arg).data;
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::param<Concept, T>& arg)
-    {
-        return data(arg._impl);
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::param<Concept, T&>& arg)
-    {
-        return arg._impl.data;
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::param<Concept, const T&>& arg)
-    {
-        return arg._impl.data;
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::detail::storage&
-    data(const ::boost::type_erasure::param<Concept, T>& arg)
-    {
-        return data(arg._impl);
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::detail::storage&
-    data(const ::boost::type_erasure::param<Concept, T&>& arg)
-    {
-        return arg._impl.data;
-    }
+	template<class Derived>
+	static ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::any_base<Derived>& arg)
+	{
+		return static_cast<Derived&>(arg).data;
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, const T&> >& arg)
+	{
+		return static_cast< ::boost::type_erasure::any<Concept, const T&>&>(arg).data;
+	}
+	template<class Derived>
+	static const ::boost::type_erasure::detail::storage&
+	data(const ::boost::type_erasure::any_base<Derived>& arg)
+	{
+		return static_cast<const Derived&>(arg).data;
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&> >& arg)
+	{
+		return const_cast< ::boost::type_erasure::detail::storage&>(static_cast< ::boost::type_erasure::any<Concept, T&>&>(arg).data);
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&
+	data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&> >& arg)
+	{
+		return const_cast< ::boost::type_erasure::detail::storage&>(static_cast< const ::boost::type_erasure::any<Concept, T&>&>(arg).data);
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::detail::storage&
+	data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, const T&> >& arg)
+	{
+		return static_cast<const ::boost::type_erasure::any<Concept, const T&>&>(arg).data;
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::param<Concept, T>& arg)
+	{
+		return data(arg._impl);
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::param<Concept, T&>& arg)
+	{
+		return arg._impl.data;
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::param<Concept, const T&>& arg)
+	{
+		return arg._impl.data;
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::detail::storage&
+	data(const ::boost::type_erasure::param<Concept, T>& arg)
+	{
+		return data(arg._impl);
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::detail::storage&
+	data(const ::boost::type_erasure::param<Concept, T&>& arg)
+	{
+		return arg._impl.data;
+	}
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 
-    template<class Derived>
-    static ::boost::type_erasure::detail::storage&&
-    data(::boost::type_erasure::any_base<Derived>&& arg)
-    {
-        return std::move(static_cast<Derived&>(arg).data);
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&&> >& arg)
-    {
-        return std::move(static_cast< ::boost::type_erasure::any<Concept, T&&>&>(arg).data);
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&&> >&& arg)
-    {
-        return std::move(static_cast< ::boost::type_erasure::any<Concept, T&&>&>(arg).data);
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&&> >& arg)
-    {
-        return std::move(const_cast< ::boost::type_erasure::detail::storage&>(static_cast< const ::boost::type_erasure::any<Concept, T&&>&>(arg).data));
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&> >&& arg)
-    {
-        return std::move(static_cast< ::boost::type_erasure::any<Concept, T&>&>(arg).data);
-    }
+	template<class Derived>
+	static ::boost::type_erasure::detail::storage&&
+	data(::boost::type_erasure::any_base<Derived>&& arg)
+	{
+		return std::move(static_cast<Derived&>(arg).data);
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&&> >& arg)
+	{
+		return std::move(static_cast< ::boost::type_erasure::any<Concept, T&&>&>(arg).data);
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&&> >&& arg)
+	{
+		return std::move(static_cast< ::boost::type_erasure::any<Concept, T&&>&>(arg).data);
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(const ::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&&> >& arg)
+	{
+		return std::move(const_cast< ::boost::type_erasure::detail::storage&>(static_cast< const ::boost::type_erasure::any<Concept, T&&>&>(arg).data));
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::any_base< ::boost::type_erasure::any<Concept, T&> >&& arg)
+	{
+		return std::move(static_cast< ::boost::type_erasure::any<Concept, T&>&>(arg).data);
+	}
 
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(::boost::type_erasure::param<Concept, T>&& arg)
-    {
-        return std::move(data(arg._impl));
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(::boost::type_erasure::param<Concept, T&&>&& arg)
-    {
-        return std::move(arg._impl.data);
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::param<Concept, T&>&& arg)
-    {
-        return arg._impl.data;
-    }
-    template<class Concept, class T>
-    static const ::boost::type_erasure::detail::storage&
-    data(::boost::type_erasure::param<Concept, const T&>&& arg)
-    {
-        return arg._impl.data;
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(::boost::type_erasure::param<Concept, T&&>& arg)
-    {
-        return std::move(arg._impl.data);
-    }
-    template<class Concept, class T>
-    static ::boost::type_erasure::detail::storage&&
-    data(const ::boost::type_erasure::param<Concept, T&&>& arg)
-    {
-        return std::move(const_cast< ::boost::type_erasure::detail::storage&>(arg._impl.data));
-    }
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(::boost::type_erasure::param<Concept, T>&& arg)
+	{
+		return std::move(data(arg._impl));
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(::boost::type_erasure::param<Concept, T&&>&& arg)
+	{
+		return std::move(arg._impl.data);
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::param<Concept, T&>&& arg)
+	{
+		return arg._impl.data;
+	}
+	template<class Concept, class T>
+	static const ::boost::type_erasure::detail::storage&
+	data(::boost::type_erasure::param<Concept, const T&>&& arg)
+	{
+		return arg._impl.data;
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(::boost::type_erasure::param<Concept, T&&>& arg)
+	{
+		return std::move(arg._impl.data);
+	}
+	template<class Concept, class T>
+	static ::boost::type_erasure::detail::storage&&
+	data(const ::boost::type_erasure::param<Concept, T&&>& arg)
+	{
+		return std::move(const_cast< ::boost::type_erasure::detail::storage&>(arg._impl.data));
+	}
 
 #endif
 

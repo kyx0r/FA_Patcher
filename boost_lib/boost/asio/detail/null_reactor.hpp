@@ -24,39 +24,42 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class null_reactor
-  : public execution_context_service_base<null_reactor>
+	: public execution_context_service_base<null_reactor>
 {
 public:
-  // Constructor.
-  null_reactor(boost::asio::execution_context& ctx)
-    : execution_context_service_base<null_reactor>(ctx)
-  {
-  }
+	// Constructor.
+	null_reactor(boost::asio::execution_context& ctx)
+		: execution_context_service_base<null_reactor>(ctx)
+	{
+	}
 
-  // Destructor.
-  ~null_reactor()
-  {
-  }
+	// Destructor.
+	~null_reactor()
+	{
+	}
 
-  // Destroy all user-defined handler objects owned by the service.
-  void shutdown()
-  {
-  }
+	// Destroy all user-defined handler objects owned by the service.
+	void shutdown()
+	{
+	}
 
-  // No-op because should never be called.
-  void run(long /*usec*/, op_queue<scheduler_operation>& /*ops*/)
-  {
-  }
+	// No-op because should never be called.
+	void run(long /*usec*/, op_queue<scheduler_operation>& /*ops*/)
+	{
+	}
 
-  // No-op.
-  void interrupt()
-  {
-  }
+	// No-op.
+	void interrupt()
+	{
+	}
 };
 
 } // namespace detail

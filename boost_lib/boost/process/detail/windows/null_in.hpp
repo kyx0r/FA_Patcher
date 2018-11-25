@@ -16,26 +16,36 @@
 #include <boost/process/detail/handler_base.hpp>
 #include <boost/process/detail/windows/file_descriptor.hpp>
 
-namespace boost { namespace process { namespace detail { namespace windows {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace windows
+{
 
 struct null_in : public ::boost::process::detail::handler_base
 {
-    file_descriptor source{"NUL", file_descriptor::read};
+	file_descriptor source{"NUL", file_descriptor::read};
 
 public:
-    template <class WindowsExecutor>
-    void on_setup(WindowsExecutor &e) const
-    {
-        boost::winapi::SetHandleInformation(source.handle(),
-                boost::winapi::HANDLE_FLAG_INHERIT_,
-                boost::winapi::HANDLE_FLAG_INHERIT_);
+	template <class WindowsExecutor>
+	void on_setup(WindowsExecutor &e) const
+	{
+		boost::winapi::SetHandleInformation(source.handle(),
+		                                    boost::winapi::HANDLE_FLAG_INHERIT_,
+		                                    boost::winapi::HANDLE_FLAG_INHERIT_);
 
-        e.startup_info.hStdInput = source.handle();
-        e.startup_info.dwFlags  |= boost::winapi::STARTF_USESTDHANDLES_;
-        e.inherit_handles = true;
-    }
+		e.startup_info.hStdInput = source.handle();
+		e.startup_info.dwFlags  |= boost::winapi::STARTF_USESTDHANDLES_;
+		e.inherit_handles = true;
+	}
 };
 
-}}}}
+}
+}
+}
+}
 
 #endif

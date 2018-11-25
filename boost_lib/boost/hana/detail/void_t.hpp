@@ -13,9 +13,10 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/config.hpp>
 
 
-BOOST_HANA_NAMESPACE_BEGIN namespace detail {
-    template <typename ...>
-    using void_t = void;
+BOOST_HANA_NAMESPACE_BEGIN namespace detail
+{
+template <typename ...>
+using void_t = void;
 } BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_VOID_T_HPP

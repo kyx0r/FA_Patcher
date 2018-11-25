@@ -18,14 +18,19 @@
 # include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines2 {
-namespace detail {
+namespace boost
+{
+namespace coroutines2
+{
+namespace detail
+{
 
 template< typename X, typename Y >
 using disable_overload = boost::context::detail::disable_overload< X, Y >;
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #include BOOST_ABI_SUFFIX

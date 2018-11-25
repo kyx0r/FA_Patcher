@@ -11,34 +11,43 @@
 
 #include <boost/mpl/identity.hpp>
 
-namespace boost { namespace spirit { namespace x3 { namespace traits
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    //  transform_attribute
-    //
-    //  Sometimes the user needs to transform the attribute types for certain
-    //  attributes. This template can be used as a customization point, where
-    //  the user is able specify specific transformation rules for any attribute
-    //  type.
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Exposed, typename Transformed, typename Tag
-      , typename Enable = void>
-    struct transform_attribute;
+namespace spirit
+{
+namespace x3
+{
+namespace traits
+{
+///////////////////////////////////////////////////////////////////////////
+//  transform_attribute
+//
+//  Sometimes the user needs to transform the attribute types for certain
+//  attributes. This template can be used as a customization point, where
+//  the user is able specify specific transformation rules for any attribute
+//  type.
+///////////////////////////////////////////////////////////////////////////
+template <typename Exposed, typename Transformed, typename Tag
+          , typename Enable = void>
+struct transform_attribute;
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Tag, typename Transformed, typename Exposed>
-    typename transform_attribute<Exposed, Transformed, Tag>::type
-    pre_transform(Exposed& attr)
-    {
-        return transform_attribute<Exposed, Transformed, Tag>::pre(attr);
-    }
+///////////////////////////////////////////////////////////////////////////
+template <typename Tag, typename Transformed, typename Exposed>
+typename transform_attribute<Exposed, Transformed, Tag>::type
+pre_transform(Exposed& attr)
+{
+	return transform_attribute<Exposed, Transformed, Tag>::pre(attr);
+}
 
-    template <typename Tag, typename Transformed, typename Exposed>
-    typename transform_attribute<Exposed, Transformed, Tag>::type
-    pre_transform(Exposed const& attr)
-    {
-        return transform_attribute<Exposed const, Transformed, Tag>::pre(attr);
-    }
-}}}}
+template <typename Tag, typename Transformed, typename Exposed>
+typename transform_attribute<Exposed, Transformed, Tag>::type
+pre_transform(Exposed const& attr)
+{
+	return transform_attribute<Exposed const, Transformed, Tag>::pre(attr);
+}
+}
+}
+}
+}
 
 #endif

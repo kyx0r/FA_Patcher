@@ -30,69 +30,69 @@
 
 namespace boost
 {
-    template<class T>
-    struct is_std_unordered_set
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_unordered_set
+	: boost::mpl::false_
+{};
 
-    template<class T>
-    struct is_std_unordered_multiset
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_unordered_multiset
+	: boost::mpl::false_
+{};
 
-    template<class T>
-    struct is_std_unordered_map
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_unordered_map
+	: boost::mpl::false_
+{};
 
-    template<class T>
-    struct is_std_unordered_multimap
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_unordered_multimap
+	: boost::mpl::false_
+{};
 
 #ifdef BOOST_PHOENIX_HAS_UNORDERED_SET_AND_MAP
 
-    template<
-        class Kty
-      , class Hash
-      , class Cmp
-      , class Alloc
+template<
+    class Kty
+    , class Hash
+    , class Cmp
+    , class Alloc
     >
-    struct is_std_unordered_set< std::unordered_set<Kty,Hash,Cmp,Alloc> >
-        : boost::mpl::true_
-    {};
+struct is_std_unordered_set< std::unordered_set<Kty,Hash,Cmp,Alloc> >
+	: boost::mpl::true_
+{};
 
-    template<
-        class Kty
-      , class Hash
-      , class Cmp
-      , class Alloc
+template<
+    class Kty
+    , class Hash
+    , class Cmp
+    , class Alloc
     >
-    struct is_std_unordered_multiset< std::unordered_multiset<Kty,Hash,Cmp,Alloc> >
-        : boost::mpl::true_
-    {};
+struct is_std_unordered_multiset< std::unordered_multiset<Kty,Hash,Cmp,Alloc> >
+	: boost::mpl::true_
+{};
 
-    template<
-        class Kty
-      , class Ty
-      , class Hash
-      , class Cmp
-      , class Alloc
+template<
+    class Kty
+    , class Ty
+    , class Hash
+    , class Cmp
+    , class Alloc
     >
-    struct is_std_unordered_map< std::unordered_map<Kty,Ty,Hash,Cmp,Alloc> >
-        : boost::mpl::true_
-    {};
+struct is_std_unordered_map< std::unordered_map<Kty,Ty,Hash,Cmp,Alloc> >
+	: boost::mpl::true_
+{};
 
-    template<
-        class Kty
-      , class Ty
-      , class Hash
-      , class Cmp
-      , class Alloc
+template<
+    class Kty
+    , class Ty
+    , class Hash
+    , class Cmp
+    , class Alloc
     >
-    struct is_std_unordered_multimap< std::unordered_multimap<Kty,Ty,Hash,Cmp,Alloc> >
-        : boost::mpl::true_
-    {};
+struct is_std_unordered_multimap< std::unordered_multimap<Kty,Ty,Hash,Cmp,Alloc> >
+	: boost::mpl::true_
+{};
 
 #endif
 } // namespace boost

@@ -9,9 +9,16 @@
 
 #include <boost/fusion/support/detail/index_sequence.hpp>
 
-namespace boost { namespace phoenix { namespace detail {
+namespace boost
+{
+namespace phoenix
+{
+namespace detail
+{
 using ::boost::fusion::detail::index_sequence;
 using ::boost::fusion::detail::make_index_sequence;
-}}}
+}
+}
+}
 
 #endif

@@ -44,37 +44,37 @@
 
 #else
 
-        template <typename This, BOOST_PHOENIX_typename_A, typename Context>
-        struct result<This(BOOST_PHOENIX_A, Context)>
-            : detail::result_of::target<A0>
-        {
-        };
-        
-        template <BOOST_PHOENIX_typename_A, typename Context>
-        typename detail::result_of::target<A0>::type
-        operator()(
-            A0 const&
-          , BOOST_PP_ENUM_SHIFTED_BINARY_PARAMS(
-                BOOST_PHOENIX_ITERATION
-              , A
-              , const& a
-            )
-          , Context const & ctx
-        ) const
-        {
+template <typename This, BOOST_PHOENIX_typename_A, typename Context>
+struct result<This(BOOST_PHOENIX_A, Context)>
+: detail::result_of::target<A0>
+{
+};
+
+template <BOOST_PHOENIX_typename_A, typename Context>
+typename detail::result_of::target<A0>::type
+operator()(
+    A0 const&
+    , BOOST_PP_ENUM_SHIFTED_BINARY_PARAMS(
+        BOOST_PHOENIX_ITERATION
+        , A
+        , const& a
+    )
+    , Context const & ctx
+) const
+{
 #define EVAL_a(_,n,__) \
             BOOST_PP_COMMA_IF(BOOST_PP_DEC(n)) boost::phoenix::eval(a ## n, ctx)
 
-            return
-                typename detail::result_of::target<A0>::type(
-                    BOOST_PP_REPEAT_FROM_TO(
-                        1
-                      , BOOST_PHOENIX_ITERATION
-                      , EVAL_a, _
-                    )
-                );
+	return
+	    typename detail::result_of::target<A0>::type(
+	        BOOST_PP_REPEAT_FROM_TO(
+	            1
+	            , BOOST_PHOENIX_ITERATION
+	            , EVAL_a, _
+	        )
+	    );
 #undef EVAL_a
-        }
+}
 
 #endif
 

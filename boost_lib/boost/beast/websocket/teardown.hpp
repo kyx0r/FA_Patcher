@@ -16,9 +16,12 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <type_traits>
 
-namespace boost {
-namespace beast {
-namespace websocket {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
 
 /** Tear down a connection.
 
@@ -42,17 +45,17 @@ teardown(
     Socket& socket,
     error_code& ec)
 {
-    boost::ignore_unused(role, socket, ec);
-/*
-    If you are trying to use OpenSSL and this goes off, you need to
-    add an include for <boost/beast/websocket/ssl.hpp>.
+	boost::ignore_unused(role, socket, ec);
+	/*
+	    If you are trying to use OpenSSL and this goes off, you need to
+	    add an include for <boost/beast/websocket/ssl.hpp>.
 
-    If you are creating an instance of beast::websocket::stream with your
-    own user defined type, you must provide an overload of teardown with
-    the corresponding signature (including the role_type).
-*/
-    static_assert(sizeof(Socket)==-1,
-        "Unknown Socket type in teardown.");
+	    If you are creating an instance of beast::websocket::stream with your
+	    own user defined type, you must provide an overload of teardown with
+	    the corresponding signature (including the role_type).
+	*/
+	static_assert(sizeof(Socket)==-1,
+	              "Unknown Socket type in teardown.");
 }
 
 /** Start tearing down a connection.
@@ -91,24 +94,25 @@ async_teardown(
     Socket& socket,
     TeardownHandler&& handler)
 {
-    boost::ignore_unused(role, socket, handler);
-/*
-    If you are trying to use OpenSSL and this goes off, you need to
-    add an include for <boost/beast/websocket/ssl.hpp>.
+	boost::ignore_unused(role, socket, handler);
+	/*
+	    If you are trying to use OpenSSL and this goes off, you need to
+	    add an include for <boost/beast/websocket/ssl.hpp>.
 
-    If you are creating an instance of beast::websocket::stream with your
-    own user defined type, you must provide an overload of teardown with
-    the corresponding signature (including the role_type).
-*/
-    static_assert(sizeof(Socket)==-1,
-        "Unknown Socket type in async_teardown.");
+	    If you are creating an instance of beast::websocket::stream with your
+	    own user defined type, you must provide an overload of teardown with
+	    the corresponding signature (including the role_type).
+	*/
+	static_assert(sizeof(Socket)==-1,
+	              "Unknown Socket type in async_teardown.");
 }
 
 } // websocket
 
 //------------------------------------------------------------------------------
 
-namespace websocket {
+namespace websocket
+{
 
 /** Tear down a `boost::asio::ip::tcp::socket`.
 

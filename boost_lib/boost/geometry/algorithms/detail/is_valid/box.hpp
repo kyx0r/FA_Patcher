@@ -24,64 +24,69 @@
 #include <boost/geometry/algorithms/dispatch/is_valid.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 template <typename Box, std::size_t I>
 struct has_valid_corners
 {
-    template <typename VisitPolicy>
-    static inline bool apply(Box const& box, VisitPolicy& visitor)
-    {
-        if (math::equals(geometry::get<geometry::min_corner, I-1>(box),
-                         geometry::get<geometry::max_corner, I-1>(box)))
-        {
-            return
-                visitor.template apply<failure_wrong_topological_dimension>();
-        }
-        else if (geometry::get<geometry::min_corner, I-1>(box)
-                 >
-                 geometry::get<geometry::max_corner, I-1>(box))
-        {
-            return visitor.template apply<failure_wrong_corner_order>();
-        }
-        return has_valid_corners<Box, I-1>::apply(box, visitor);
-    }
+	template <typename VisitPolicy>
+	static inline bool apply(Box const& box, VisitPolicy& visitor)
+	{
+		if (math::equals(geometry::get<geometry::min_corner, I-1>(box),
+		                 geometry::get<geometry::max_corner, I-1>(box)))
+		{
+			return
+			    visitor.template apply<failure_wrong_topological_dimension>();
+		}
+		else if (geometry::get<geometry::min_corner, I-1>(box)
+		         >
+		         geometry::get<geometry::max_corner, I-1>(box))
+		{
+			return visitor.template apply<failure_wrong_corner_order>();
+		}
+		return has_valid_corners<Box, I-1>::apply(box, visitor);
+	}
 };
 
 
 template <typename Box>
 struct has_valid_corners<Box, 0>
 {
-    template <typename VisitPolicy>
-    static inline bool apply(Box const&, VisitPolicy& visitor)
-    {
-        boost::ignore_unused(visitor);
+	template <typename VisitPolicy>
+	static inline bool apply(Box const&, VisitPolicy& visitor)
+	{
+		boost::ignore_unused(visitor);
 
-        return visitor.template apply<no_failure>();
-    }
+		return visitor.template apply<no_failure>();
+	}
 };
 
 
 template <typename Box>
 struct is_valid_box
 {
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(Box const& box, VisitPolicy& visitor, Strategy const&)
-    {
-        return
-            ! has_invalid_coordinate<Box>::apply(box, visitor)
-            &&
-            has_valid_corners<Box, dimension<Box>::value>::apply(box, visitor);
-    }
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(Box const& box, VisitPolicy& visitor, Strategy const&)
+	{
+		return
+		    ! has_invalid_coordinate<Box>::apply(box, visitor)
+		    &&
+		    has_valid_corners<Box, dimension<Box>::value>::apply(box, visitor);
+	}
 };
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -100,7 +105,7 @@ namespace dispatch
 // Reference (for polygon validity): OGC 06-103r4 (6.1.11.1)
 template <typename Box>
 struct is_valid<Box, box_tag>
-    : detail::is_valid::is_valid_box<Box>
+	: detail::is_valid::is_valid_box<Box>
 {};
 
 
@@ -109,7 +114,8 @@ struct is_valid<Box, box_tag>
 
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_BOX_HPP

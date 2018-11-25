@@ -15,31 +15,34 @@
 
 #include <QVector>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Iterator>
 struct _is_contiguous_iterator<
-    Iterator,
-    typename boost::enable_if<
-        typename boost::is_same<
-            Iterator,
-            typename QVector<typename Iterator::value_type>::iterator
-        >::type
-    >::type
-> : public boost::true_type {};
+	Iterator,
+	typename boost::enable_if<
+	typename boost::is_same<
+	Iterator,
+	typename QVector<typename Iterator::value_type>::iterator
+	>::type
+	>::type
+	> : public boost::true_type {};
 
 template<class Iterator>
 struct _is_contiguous_iterator<
-    Iterator,
-    typename boost::enable_if<
-        typename boost::is_same<
-            Iterator,
-            typename QVector<typename Iterator::value_type>::const_iterator
-        >::type
-    >::type
-> : public boost::true_type {};
+	Iterator,
+	typename boost::enable_if<
+	typename boost::is_same<
+	Iterator,
+	typename QVector<typename Iterator::value_type>::const_iterator
+	>::type
+	>::type
+	> : public boost::true_type {};
 
 } // end detail namespace
 } // end compute namespace

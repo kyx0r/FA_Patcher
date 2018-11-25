@@ -15,29 +15,29 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <int N, class P, class Accum, class S, class Pos>
-        struct iterate_impl_unchecked :
-          iterate_impl<
-            N - 1,
-            P,
-            typename boost::mpl::push_back<
-              Accum,
-              typename get_result<typename P::template apply<S, Pos> >::type
-            >::type
-          >::template apply<
-            typename get_remaining<typename P::template apply<S, Pos> >::type,
-            typename get_position<typename P::template apply<S, Pos> >::type
-          >
-        {};
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <int N, class P, class Accum, class S, class Pos>
+struct iterate_impl_unchecked :
+	iterate_impl<
+	N - 1,
+	P,
+	typename boost::mpl::push_back<
+	Accum,
+	typename get_result<typename P::template apply<S, Pos> >::type
+>::type
+>::template apply<
+    typename get_remaining<typename P::template apply<S, Pos> >::type,
+    typename get_position<typename P::template apply<S, Pos> >::type
+    >
+{};
+}
+}
+}
 }
 
 #endif

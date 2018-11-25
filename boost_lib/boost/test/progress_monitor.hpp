@@ -23,34 +23,40 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************                progress_monitor              ************** //
 // ************************************************************************** //
 
 /// This class implements test observer interface and updates test progress as test units finish or get aborted
-class BOOST_TEST_DECL progress_monitor_t : public test_observer, public singleton<progress_monitor_t> {
+class BOOST_TEST_DECL progress_monitor_t : public test_observer, public singleton<progress_monitor_t>
+{
 public:
-    /// @name Test observer interface
-    /// @{
-    virtual void    test_start( counter_t test_cases_amount );
-    virtual void    test_aborted();
+	/// @name Test observer interface
+	/// @{
+	virtual void    test_start( counter_t test_cases_amount );
+	virtual void    test_aborted();
 
-    virtual void    test_unit_finish( test_unit const&, unsigned long );
-    virtual void    test_unit_skipped( test_unit const&, const_string );
+	virtual void    test_unit_finish( test_unit const&, unsigned long );
+	virtual void    test_unit_skipped( test_unit const&, const_string );
 
-    virtual int     priority() { return 4; }
-    /// @}
+	virtual int     priority()
+	{
+		return 4;
+	}
+	/// @}
 
-    /// @name Configuration
-    /// @{
-    void            set_stream( std::ostream& );
-    /// @}
+	/// @name Configuration
+	/// @{
+	void            set_stream( std::ostream& );
+	/// @}
 
 private:
-    BOOST_TEST_SINGLETON_CONS( progress_monitor_t )
+	BOOST_TEST_SINGLETON_CONS( progress_monitor_t )
 }; // progress_monitor_t
 
 BOOST_TEST_SINGLETON_INST( progress_monitor )

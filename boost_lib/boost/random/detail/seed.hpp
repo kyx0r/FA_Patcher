@@ -23,9 +23,12 @@
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/mpl/bool.hpp>
 
-namespace boost {
-namespace random {
-namespace detail {
+namespace boost
+{
+namespace random
+{
+namespace detail
+{
 
 template<class T>
 struct disable_seed : boost::disable_if<boost::is_arithmetic<T> > {};

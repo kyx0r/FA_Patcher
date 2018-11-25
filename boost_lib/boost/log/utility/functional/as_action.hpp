@@ -22,7 +22,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -30,25 +31,25 @@ BOOST_LOG_OPEN_NAMESPACE
 template< typename FunT >
 struct as_action_adapter
 {
-    typedef typename FunT::result_type result_type;
+	typedef typename FunT::result_type result_type;
 
-    BOOST_DEFAULTED_FUNCTION(as_action_adapter(), {})
-    explicit as_action_adapter(FunT const& fun) : m_fun(fun) {}
+	BOOST_DEFAULTED_FUNCTION(as_action_adapter(), {})
+	explicit as_action_adapter(FunT const& fun) : m_fun(fun) {}
 
-    template< typename AttributeT, typename ContextT >
-    result_type operator() (AttributeT const& attr, ContextT const& ctx, bool& pass) const
-    {
-        return m_fun(attr);
-    }
+	template< typename AttributeT, typename ContextT >
+	result_type operator() (AttributeT const& attr, ContextT const& ctx, bool& pass) const
+	{
+		return m_fun(attr);
+	}
 
 private:
-    FunT m_fun;
+	FunT m_fun;
 };
 
 template< typename FunT >
 BOOST_FORCEINLINE as_action_adapter< FunT > as_action(FunT const& fun)
 {
-    return as_action_adapter< FunT >(fun);
+	return as_action_adapter< FunT >(fun);
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

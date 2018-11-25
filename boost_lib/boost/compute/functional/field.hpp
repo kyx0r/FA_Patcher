@@ -13,23 +13,26 @@
 
 #include <string>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T, class Arg>
 struct invoked_field
 {
-    typedef T result_type;
+	typedef T result_type;
 
-    invoked_field(const Arg &arg, const std::string &field)
-        : m_arg(arg),
-          m_field(field)
-    {
-    }
+	invoked_field(const Arg &arg, const std::string &field)
+		: m_arg(arg),
+		  m_field(field)
+	{
+	}
 
-    Arg m_arg;
-    std::string m_field;
+	Arg m_arg;
+	std::string m_field;
 };
 
 } // end detail namespace
@@ -60,24 +63,24 @@ template<class T>
 class field
 {
 public:
-    /// Result type.
-    typedef T result_type;
+	/// Result type.
+	typedef T result_type;
 
-    /// Creates a new field functor with \p field.
-    field(const std::string &field)
-        : m_field(field)
-    {
-    }
+	/// Creates a new field functor with \p field.
+	field(const std::string &field)
+		: m_field(field)
+	{
+	}
 
-    /// \internal_
-    template<class Arg>
-    detail::invoked_field<T, Arg> operator()(const Arg &arg) const
-    {
-        return detail::invoked_field<T, Arg>(arg, m_field);
-    }
+	/// \internal_
+	template<class Arg>
+	detail::invoked_field<T, Arg> operator()(const Arg &arg) const
+	{
+		return detail::invoked_field<T, Arg>(arg, m_field);
+	}
 
 private:
-    std::string m_field;
+	std::string m_field;
 };
 
 } // end compute namespace

@@ -25,7 +25,8 @@
 
 #ifndef BOOST_LOG_NO_THREADS
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -50,14 +51,14 @@ BOOST_LOG_OPEN_NAMESPACE
 struct once_block_flag
 {
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    // Do not use, implementation detail
-    enum
-    {
-        uninitialized = 0, // this must be zero, so that zero-initialized once_block_flag is equivalent to the one initialized with uninitialized
-        being_initialized,
-        initialized
-    };
-    unsigned char status;
+	// Do not use, implementation detail
+	enum
+	{
+		uninitialized = 0, // this must be zero, so that zero-initialized once_block_flag is equivalent to the one initialized with uninitialized
+		being_initialized,
+		initialized
+	};
+	unsigned char status;
 #endif // BOOST_LOG_DOXYGEN_PASS
 };
 
@@ -68,38 +69,40 @@ struct once_block_flag
  */
 #define BOOST_LOG_ONCE_BLOCK_INIT { boost::log::once_block_flag::uninitialized }
 
-namespace aux {
+namespace aux
+{
 
 class once_block_sentry
 {
 private:
-    once_block_flag& m_flag;
+	once_block_flag& m_flag;
 
 public:
-    explicit once_block_sentry(once_block_flag& f) BOOST_NOEXCEPT : m_flag(f)
-    {
-    }
+explicit once_block_sentry(once_block_flag& f) BOOST_NOEXCEPT :
+	m_flag(f)
+	{
+	}
 
-    ~once_block_sentry() BOOST_NOEXCEPT
-    {
-        if (BOOST_UNLIKELY(m_flag.status != once_block_flag::initialized))
-            rollback();
-    }
+	~once_block_sentry() BOOST_NOEXCEPT
+	{
+		if (BOOST_UNLIKELY(m_flag.status != once_block_flag::initialized))
+			rollback();
+	}
 
-    bool executed() const BOOST_NOEXCEPT
-    {
-        return (m_flag.status == once_block_flag::initialized || enter_once_block());
-    }
+	bool executed() const BOOST_NOEXCEPT
+	{
+		return (m_flag.status == once_block_flag::initialized || enter_once_block());
+	}
 
-    BOOST_LOG_API void commit() BOOST_NOEXCEPT;
+	BOOST_LOG_API void commit() BOOST_NOEXCEPT;
 
 private:
-    BOOST_LOG_API bool enter_once_block() const BOOST_NOEXCEPT;
-    BOOST_LOG_API void rollback() BOOST_NOEXCEPT;
+	BOOST_LOG_API bool enter_once_block() const BOOST_NOEXCEPT;
+	BOOST_LOG_API void rollback() BOOST_NOEXCEPT;
 
-    //  Non-copyable, non-assignable
-    BOOST_DELETED_FUNCTION(once_block_sentry(once_block_sentry const&))
-    BOOST_DELETED_FUNCTION(once_block_sentry& operator= (once_block_sentry const&))
+	//  Non-copyable, non-assignable
+	BOOST_DELETED_FUNCTION(once_block_sentry(once_block_sentry const&))
+	BOOST_DELETED_FUNCTION(once_block_sentry& operator= (once_block_sentry const&))
 };
 
 } // namespace aux
@@ -110,42 +113,45 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #else // BOOST_LOG_NO_THREADS
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 struct once_block_flag
 {
-    bool status;
+	bool status;
 };
 
 #define BOOST_LOG_ONCE_BLOCK_INIT { false }
 
-namespace aux {
+namespace aux
+{
 
 class once_block_sentry
 {
 private:
-    once_block_flag& m_flag;
+	once_block_flag& m_flag;
 
 public:
-    explicit once_block_sentry(once_block_flag& f) BOOST_NOEXCEPT : m_flag(f)
-    {
-    }
+explicit once_block_sentry(once_block_flag& f) BOOST_NOEXCEPT :
+	m_flag(f)
+	{
+	}
 
-    bool executed() const BOOST_NOEXCEPT
-    {
-        return m_flag.status;
-    }
+	bool executed() const BOOST_NOEXCEPT
+	{
+		return m_flag.status;
+	}
 
-    void commit() BOOST_NOEXCEPT
-    {
-        m_flag.status = true;
-    }
+	void commit() BOOST_NOEXCEPT
+	{
+		m_flag.status = true;
+	}
 
-    //  Non-copyable, non-assignable
-    BOOST_DELETED_FUNCTION(once_block_sentry(once_block_sentry const&))
-    BOOST_DELETED_FUNCTION(once_block_sentry& operator= (once_block_sentry const&))
+	//  Non-copyable, non-assignable
+	BOOST_DELETED_FUNCTION(once_block_sentry(once_block_sentry const&))
+	BOOST_DELETED_FUNCTION(once_block_sentry& operator= (once_block_sentry const&))
 };
 
 } // namespace aux

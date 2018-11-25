@@ -28,66 +28,69 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
-namespace aux {
+namespace aux
+{
 
 //! Log record with enqueueing timestamp
 class enqueued_record
 {
-    BOOST_COPYABLE_AND_MOVABLE(enqueued_record)
+	BOOST_COPYABLE_AND_MOVABLE(enqueued_record)
 
 public:
-    //! Ordering predicate
-    template< typename OrderT >
-    struct order :
-        public OrderT
-    {
-        typedef typename OrderT::result_type result_type;
+	//! Ordering predicate
+	template< typename OrderT >
+	struct order :
+		public OrderT
+	{
+		typedef typename OrderT::result_type result_type;
 
-        order() {}
-        order(order const& that) : OrderT(static_cast< OrderT const& >(that)) {}
-        order(OrderT const& that) : OrderT(that) {}
+		order() {}
+		order(order const& that) : OrderT(static_cast< OrderT const& >(that)) {}
+		order(OrderT const& that) : OrderT(that) {}
 
-        result_type operator() (enqueued_record const& left, enqueued_record const& right) const
-        {
-            // std::priority_queue requires ordering with semantics of std::greater, so we swap arguments
-            return OrderT::operator() (right.m_record, left.m_record);
-        }
-    };
+		result_type operator() (enqueued_record const& left, enqueued_record const& right) const
+		{
+			// std::priority_queue requires ordering with semantics of std::greater, so we swap arguments
+			return OrderT::operator() (right.m_record, left.m_record);
+		}
+	};
 
-    boost::log::aux::timestamp m_timestamp;
-    record_view m_record;
+	boost::log::aux::timestamp m_timestamp;
+	record_view m_record;
 
-    enqueued_record(enqueued_record const& that) : m_timestamp(that.m_timestamp), m_record(that.m_record)
-    {
-    }
-    enqueued_record(BOOST_RV_REF(enqueued_record) that) :
-        m_timestamp(that.m_timestamp),
-        m_record(boost::move(that.m_record))
-    {
-    }
-    explicit enqueued_record(record_view const& rec) :
-        m_timestamp(boost::log::aux::get_timestamp()),
-        m_record(rec)
-    {
-    }
-    enqueued_record& operator= (BOOST_COPY_ASSIGN_REF(enqueued_record) that)
-    {
-        m_timestamp = that.m_timestamp;
-        m_record = that.m_record;
-        return *this;
-    }
-    enqueued_record& operator= (BOOST_RV_REF(enqueued_record) that)
-    {
-        m_timestamp = that.m_timestamp;
-        m_record = boost::move(that.m_record);
-        return *this;
-    }
+	enqueued_record(enqueued_record const& that) : m_timestamp(that.m_timestamp), m_record(that.m_record)
+	{
+	}
+	enqueued_record(BOOST_RV_REF(enqueued_record) that) :
+		m_timestamp(that.m_timestamp),
+		m_record(boost::move(that.m_record))
+	{
+	}
+	explicit enqueued_record(record_view const& rec) :
+		m_timestamp(boost::log::aux::get_timestamp()),
+		m_record(rec)
+	{
+	}
+	enqueued_record& operator= (BOOST_COPY_ASSIGN_REF(enqueued_record) that)
+	{
+		m_timestamp = that.m_timestamp;
+		m_record = that.m_record;
+		return *this;
+	}
+	enqueued_record& operator= (BOOST_RV_REF(enqueued_record) that)
+	{
+		m_timestamp = that.m_timestamp;
+		m_record = boost::move(that.m_record);
+		return *this;
+	}
 };
 
 } // namespace aux

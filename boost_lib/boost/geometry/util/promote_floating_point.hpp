@@ -19,7 +19,9 @@
 #include <boost/type_traits/is_integral.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -34,17 +36,18 @@ namespace boost { namespace geometry
 template <typename T, typename PromoteIntegerTo = double>
 struct promote_floating_point
 {
-    typedef typename
-        boost::mpl::if_
-        <
-            boost::is_integral<T>,
-            PromoteIntegerTo,
-            T
-        >::type type;
+	typedef typename
+	boost::mpl::if_
+	<
+	boost::is_integral<T>,
+	      PromoteIntegerTo,
+	      T
+	      >::type type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_UTIL_PROMOTE_FLOATING_POINT_HPP

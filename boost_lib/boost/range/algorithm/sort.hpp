@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function sort
 ///
@@ -29,40 +29,40 @@ namespace boost
 template<class RandomAccessRange>
 inline RandomAccessRange& sort(RandomAccessRange& rng)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::sort(boost::begin(rng), boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::sort(boost::begin(rng), boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange>
 inline const RandomAccessRange& sort(const RandomAccessRange& rng)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::sort(boost::begin(rng), boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::sort(boost::begin(rng), boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class BinaryPredicate>
 inline RandomAccessRange& sort(RandomAccessRange& rng, BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::sort(boost::begin(rng), boost::end(rng), pred);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::sort(boost::begin(rng), boost::end(rng), pred);
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class BinaryPredicate>
 inline const RandomAccessRange& sort(const RandomAccessRange& rng, BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::sort(boost::begin(rng), boost::end(rng), pred);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::sort(boost::begin(rng), boost::end(rng), pred);
+	return rng;
 }
 
-    } // namespace range
-    using range::sort;
+} // namespace range
+using range::sort;
 } // namespace boost
 
 #endif // include guard

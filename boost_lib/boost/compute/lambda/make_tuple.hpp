@@ -16,24 +16,28 @@
 #include <boost/compute/config.hpp>
 #include <boost/compute/types/tuple.hpp>
 
-namespace boost {
-namespace compute {
-namespace lambda {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace lambda
+{
+namespace detail
+{
 
 // function wrapper for make_tuple() in lambda expressions
 struct make_tuple_func
 {
-    template<class Expr, class Args, int N>
-    struct make_tuple_result_type;
+	template<class Expr, class Args, int N>
+	struct make_tuple_result_type;
 
-    #define BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG(z, n, unused) \
+#define BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG(z, n, unused) \
         typedef typename proto::result_of::child_c<Expr, BOOST_PP_INC(n)>::type BOOST_PP_CAT(Arg, n);
 
-    #define BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG_TYPE(z, n, unused) \
+#define BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG_TYPE(z, n, unused) \
         typedef typename lambda::result_of<BOOST_PP_CAT(Arg, n), Args>::type BOOST_PP_CAT(T, n);
 
-    #define BOOST_COMPUTE_MAKE_TUPLE_RESULT_TYPE(z, n, unused) \
+#define BOOST_COMPUTE_MAKE_TUPLE_RESULT_TYPE(z, n, unused) \
         template<class Expr, class Args> \
         struct make_tuple_result_type<Expr, Args, n> \
         { \
@@ -42,32 +46,32 @@ struct make_tuple_func
             typedef boost::tuple<BOOST_PP_ENUM_PARAMS(n, T)> type; \
         };
 
-    BOOST_PP_REPEAT_FROM_TO(1, BOOST_COMPUTE_MAX_ARITY, BOOST_COMPUTE_MAKE_TUPLE_RESULT_TYPE, ~)
+	BOOST_PP_REPEAT_FROM_TO(1, BOOST_COMPUTE_MAX_ARITY, BOOST_COMPUTE_MAKE_TUPLE_RESULT_TYPE, ~)
 
-    #undef BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG
-    #undef BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG_TYPE
-    #undef BOOST_COMPUTE_MAKE_TUPLE_RESULT_TYPE
+#undef BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG
+#undef BOOST_COMPUTE_MAKE_TUPLE_RESULT_GET_ARG_TYPE
+#undef BOOST_COMPUTE_MAKE_TUPLE_RESULT_TYPE
 
-    template<class Expr, class Args>
-    struct lambda_result
-    {
-        typedef typename make_tuple_result_type<
-            Expr, Args, proto::arity_of<Expr>::value - 1
-        >::type type;
-    };
+	template<class Expr, class Args>
+	struct lambda_result
+	{
+		typedef typename make_tuple_result_type<
+		Expr, Args, proto::arity_of<Expr>::value - 1
+		>::type type;
+	};
 
-    #define BOOST_COMPUTE_MAKE_TUPLE_GET_ARG_TYPE(z, n, unused) \
+#define BOOST_COMPUTE_MAKE_TUPLE_GET_ARG_TYPE(z, n, unused) \
         typedef typename lambda::result_of< \
             BOOST_PP_CAT(Arg, n), typename Context::args_tuple \
         >::type BOOST_PP_CAT(T, n);
 
-    #define BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_ARG(z, n, unused) \
+#define BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_ARG(z, n, unused) \
         BOOST_PP_COMMA_IF(n) BOOST_PP_CAT(const Arg, n) BOOST_PP_CAT(&arg, n)
 
-    #define BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_EVAL_ARG(z, n, unused) \
+#define BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_EVAL_ARG(z, n, unused) \
         BOOST_PP_EXPR_IF(n, ctx.stream << ", ";) proto::eval(BOOST_PP_CAT(arg, n), ctx);
 
-    #define BOOST_COMPUTE_MAKE_TUPLE_APPLY(z, n, unused) \
+#define BOOST_COMPUTE_MAKE_TUPLE_APPLY(z, n, unused) \
     template<class Context, BOOST_PP_ENUM_PARAMS(n, class Arg)> \
     static void apply(Context &ctx, BOOST_PP_REPEAT(n, BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_ARG, ~)) \
     { \
@@ -79,12 +83,12 @@ struct make_tuple_func
         ctx.stream << "})"; \
     }
 
-    BOOST_PP_REPEAT_FROM_TO(1, BOOST_COMPUTE_MAX_ARITY, BOOST_COMPUTE_MAKE_TUPLE_APPLY, ~)
+	BOOST_PP_REPEAT_FROM_TO(1, BOOST_COMPUTE_MAX_ARITY, BOOST_COMPUTE_MAKE_TUPLE_APPLY, ~)
 
-    #undef BOOST_COMPUTE_MAKE_TUPLE_GET_ARG_TYPE
-    #undef BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_ARG
-    #undef BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_EVAL_ARG
-    #undef BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY
+#undef BOOST_COMPUTE_MAKE_TUPLE_GET_ARG_TYPE
+#undef BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_ARG
+#undef BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY_EVAL_ARG
+#undef BOOST_COMPUTE_LAMBDA_MAKE_TUPLE_APPLY
 };
 
 } // end detail namespace

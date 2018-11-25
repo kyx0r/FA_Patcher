@@ -16,29 +16,38 @@
 #include <boost/type_traits/is_pod.hpp>
 
 
-namespace boost{
+namespace boost
+{
 
-   namespace integer {
+namespace integer
+{
 
-      namespace gcd_detail {
+namespace gcd_detail
+{
 
-         template <class T>
-         struct gcd_traits;
+template <class T>
+struct gcd_traits;
 
-         template <class T>
-         struct gcd_traits<boost::math::tools::polynomial<T> >
-         {
-            inline static const boost::math::tools::polynomial<T>& abs(const boost::math::tools::polynomial<T>& val) { return val; }
+template <class T>
+struct gcd_traits<boost::math::tools::polynomial<T> >
+{
+	inline static const boost::math::tools::polynomial<T>& abs(const boost::math::tools::polynomial<T>& val)
+	{
+		return val;
+	}
 
-            static const method_type method = method_euclid;
-         };
+	static const method_type method = method_euclid;
+};
 
-      }
+}
 }
 
 
 
-namespace math{ namespace tools{
+namespace math
+{
+namespace tools
+{
 
 /* From Knuth, 4.6.1:
 *
@@ -54,21 +63,21 @@ namespace math{ namespace tools{
 template <class T>
 T content(polynomial<T> const &x)
 {
-    return x ? boost::integer::gcd_range(x.data().begin(), x.data().end()).first : T(0);
+	return x ? boost::integer::gcd_range(x.data().begin(), x.data().end()).first : T(0);
 }
 
 // Knuth, 4.6.1
 template <class T>
 polynomial<T> primitive_part(polynomial<T> const &x, T const &cont)
 {
-    return x ? x / cont : polynomial<T>();
+	return x ? x / cont : polynomial<T>();
 }
 
 
 template <class T>
 polynomial<T> primitive_part(polynomial<T> const &x)
 {
-    return primitive_part(x, content(x));
+	return primitive_part(x, content(x));
 }
 
 
@@ -76,24 +85,24 @@ polynomial<T> primitive_part(polynomial<T> const &x)
 template <class T>
 T leading_coefficient(polynomial<T> const &x)
 {
-    return x ? x.data().back() : T(0);
+	return x ? x.data().back() : T(0);
 }
 
 
 namespace detail
 {
-    /* Reduce u and v to their primitive parts and return the gcd of their
-    * contents. Used in a couple of gcd algorithms.
-    */
-    template <class T>
-    T reduce_to_primitive(polynomial<T> &u, polynomial<T> &v)
-    {
-        using boost::integer::gcd;
-        T const u_cont = content(u), v_cont = content(v);
-        u /= u_cont;
-        v /= v_cont;
-        return gcd(u_cont, v_cont);
-    }
+/* Reduce u and v to their primitive parts and return the gcd of their
+* contents. Used in a couple of gcd algorithms.
+*/
+template <class T>
+T reduce_to_primitive(polynomial<T> &u, polynomial<T> &v)
+{
+	using boost::integer::gcd;
+	T const u_cont = content(u), v_cont = content(v);
+	u /= u_cont;
+	v /= v_cont;
+	return gcd(u_cont, v_cont);
+}
 }
 
 
@@ -117,42 +126,42 @@ template <class T>
 typename enable_if_c< std::numeric_limits<T>::is_integer, polynomial<T> >::type
 subresultant_gcd(polynomial<T> u, polynomial<T> v)
 {
-    using std::swap;
-    BOOST_ASSERT(u || v);
+	using std::swap;
+	BOOST_ASSERT(u || v);
 
-    if (!u)
-        return v;
-    if (!v)
-        return u;
+	if (!u)
+		return v;
+	if (!v)
+		return u;
 
-    typedef typename polynomial<T>::size_type N;
+	typedef typename polynomial<T>::size_type N;
 
-    if (u.degree() < v.degree())
-        swap(u, v);
+	if (u.degree() < v.degree())
+		swap(u, v);
 
-    T const d = detail::reduce_to_primitive(u, v);
-    T g = 1, h = 1;
-    polynomial<T> r;
-    while (true)
-    {
-        BOOST_ASSERT(u.degree() >= v.degree());
-        // Pseudo-division.
-        r = u % v;
-        if (!r)
-            return d * primitive_part(v); // Attach the content.
-        if (r.degree() == 0)
-            return d * polynomial<T>(T(1)); // The content is the result.
-        N const delta = u.degree() - v.degree();
-        // Adjust remainder.
-        u = v;
-        v = r / (g * detail::integer_power(h, delta));
-        g = leading_coefficient(u);
-        T const tmp = detail::integer_power(g, delta);
-        if (delta <= N(1))
-            h = tmp * detail::integer_power(h, N(1) - delta);
-        else
-            h = tmp / detail::integer_power(h, delta - N(1));
-    }
+	T const d = detail::reduce_to_primitive(u, v);
+	T g = 1, h = 1;
+	polynomial<T> r;
+	while (true)
+	{
+		BOOST_ASSERT(u.degree() >= v.degree());
+		// Pseudo-division.
+		r = u % v;
+		if (!r)
+			return d * primitive_part(v); // Attach the content.
+		if (r.degree() == 0)
+			return d * polynomial<T>(T(1)); // The content is the result.
+		N const delta = u.degree() - v.degree();
+		// Adjust remainder.
+		u = v;
+		v = r / (g * detail::integer_power(h, delta));
+		g = leading_coefficient(u);
+		T const tmp = detail::integer_power(g, delta);
+		if (delta <= N(1))
+			h = tmp * detail::integer_power(h, N(1) - delta);
+		else
+			h = tmp / detail::integer_power(h, delta - N(1));
+	}
 }
 
 
@@ -170,22 +179,22 @@ template <typename T>
 typename enable_if_c<std::numeric_limits<T>::is_integer && !std::numeric_limits<T>::is_bounded, polynomial<T> >::type
 gcd(polynomial<T> const &u, polynomial<T> const &v)
 {
-    return subresultant_gcd(u, v);
+	return subresultant_gcd(u, v);
 }
 // GCD over bounded integers is not currently allowed:
 template <typename T>
 typename enable_if_c<std::numeric_limits<T>::is_integer && std::numeric_limits<T>::is_bounded, polynomial<T> >::type
 gcd(polynomial<T> const &u, polynomial<T> const &v)
 {
-   BOOST_STATIC_ASSERT_MSG(sizeof(v) == 0, "GCD on polynomials of bounded integers is disallowed due to the excessive growth in the size of intermediate terms.");
-   return subresultant_gcd(u, v);
+	BOOST_STATIC_ASSERT_MSG(sizeof(v) == 0, "GCD on polynomials of bounded integers is disallowed due to the excessive growth in the size of intermediate terms.");
+	return subresultant_gcd(u, v);
 }
 // GCD over polynomials of floats can go via the Euclid algorithm:
 template <typename T>
 typename enable_if_c<!std::numeric_limits<T>::is_integer && (std::numeric_limits<T>::min_exponent != std::numeric_limits<T>::max_exponent) && !std::numeric_limits<T>::is_exact, polynomial<T> >::type
 gcd(polynomial<T> const &u, polynomial<T> const &v)
 {
-   return boost::integer::gcd_detail::Euclid_gcd(u, v);
+	return boost::integer::gcd_detail::Euclid_gcd(u, v);
 }
 
 }
@@ -198,10 +207,10 @@ using boost::math::tools::gcd;
 
 namespace integer
 {
-   //
-   // Using declaration so we overload the default implementation in this namespace:
-   //
-   using boost::math::tools::gcd;
+//
+// Using declaration so we overload the default implementation in this namespace:
+//
+using boost::math::tools::gcd;
 }
 
 } // namespace boost::math::tools

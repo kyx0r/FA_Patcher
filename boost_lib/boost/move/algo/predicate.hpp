@@ -18,66 +18,70 @@
 #include <boost/move/detail/destruct_n.hpp>
 #include <boost/assert.hpp>
 
-namespace boost {
-namespace movelib {
+namespace boost
+{
+namespace movelib
+{
 
 template<class Comp>
 struct antistable
 {
-   explicit antistable(Comp &comp)
-      : m_comp(comp)
-   {}
+	explicit antistable(Comp &comp)
+		: m_comp(comp)
+	{}
 
-   template<class U, class V>
-   bool operator()(const U &u, const V & v)
-   {  return !m_comp(v, u);  }
+	template<class U, class V>
+	bool operator()(const U &u, const V & v)
+	{
+		return !m_comp(v, u);
+	}
 
-   private:
-   antistable & operator=(const antistable &);
-   Comp &m_comp;
+private:
+	antistable & operator=(const antistable &);
+	Comp &m_comp;
 };
 
 template <class Comp>
 class negate
 {
-   public:
-   negate()
-   {}
+public:
+	negate()
+	{}
 
-   explicit negate(Comp comp)
-      : m_comp(comp)
-   {}
+	explicit negate(Comp comp)
+		: m_comp(comp)
+	{}
 
-   template <class T1, class T2>
-   bool operator()(const T1& l, const T2& r)
-   {
-      return !m_comp(l, r);
-   }
+	template <class T1, class T2>
+	bool operator()(const T1& l, const T2& r)
+	{
+		return !m_comp(l, r);
+	}
 
-   private:
-   Comp m_comp;
+private:
+	Comp m_comp;
 };
 
 
 template <class Comp>
 class inverse
 {
-   public:
-   inverse()
-   {}
+public:
+	inverse()
+	{}
 
-   explicit inverse(Comp comp)
-      : m_comp(comp)
-   {}
+	explicit inverse(Comp comp)
+		: m_comp(comp)
+	{}
 
-   template <class T1, class T2>
-   bool operator()(const T1& l, const T2& r)
-   {
-      return m_comp(r, l);
-   }
+	template <class T1, class T2>
+	bool operator()(const T1& l, const T2& r)
+	{
+		return m_comp(r, l);
+	}
 
-   private:
-   Comp m_comp;
+private:
+	Comp m_comp;
 };
 
 }  //namespace movelib {

@@ -38,62 +38,67 @@
 #  pragma warning(disable : 4511 4512)
 #endif
 
-namespace boost{
-namespace archive{
+namespace boost
+{
+namespace archive
+{
 
 template < typename Ch, class Tr >
 class basic_streambuf_locale_saver :
-    private boost::noncopyable
+	private boost::noncopyable
 {
 public:
-    explicit basic_streambuf_locale_saver(std::basic_streambuf<Ch, Tr> &s) :
-        m_streambuf(s),
-        m_locale(s.getloc())
-    {}
-    ~basic_streambuf_locale_saver(){
-        m_streambuf.pubsync();
-        m_streambuf.pubimbue(m_locale);
-    }
+	explicit basic_streambuf_locale_saver(std::basic_streambuf<Ch, Tr> &s) :
+		m_streambuf(s),
+		m_locale(s.getloc())
+	{}
+	~basic_streambuf_locale_saver()
+	{
+		m_streambuf.pubsync();
+		m_streambuf.pubimbue(m_locale);
+	}
 private:
-    std::basic_streambuf<Ch, Tr> &       m_streambuf;
-    std::locale const  m_locale;
+	std::basic_streambuf<Ch, Tr> &       m_streambuf;
+	std::locale const  m_locale;
 };
 
 template < typename Ch, class Tr >
 class basic_istream_locale_saver :
-    private boost::noncopyable
+	private boost::noncopyable
 {
 public:
-    explicit basic_istream_locale_saver(std::basic_istream<Ch, Tr> &s) :
-        m_istream(s),
-        m_locale(s.getloc())
-    {}
-    ~basic_istream_locale_saver(){
-        // libstdc++ crashes without this
-        m_istream.sync();
-        m_istream.imbue(m_locale);
-    }
+	explicit basic_istream_locale_saver(std::basic_istream<Ch, Tr> &s) :
+		m_istream(s),
+		m_locale(s.getloc())
+	{}
+	~basic_istream_locale_saver()
+	{
+		// libstdc++ crashes without this
+		m_istream.sync();
+		m_istream.imbue(m_locale);
+	}
 private:
-    std::basic_istream<Ch, Tr> & m_istream;
-    std::locale const  m_locale;
+	std::basic_istream<Ch, Tr> & m_istream;
+	std::locale const  m_locale;
 };
 
 template < typename Ch, class Tr >
 class basic_ostream_locale_saver :
-    private boost::noncopyable
+	private boost::noncopyable
 {
 public:
-    explicit basic_ostream_locale_saver(std::basic_ostream<Ch, Tr> &s) :
-        m_ostream(s),
-        m_locale(s.getloc())
-    {}
-    ~basic_ostream_locale_saver(){
-        m_ostream.flush();
-        m_ostream.imbue(m_locale);
-    }
+	explicit basic_ostream_locale_saver(std::basic_ostream<Ch, Tr> &s) :
+		m_ostream(s),
+		m_locale(s.getloc())
+	{}
+	~basic_ostream_locale_saver()
+	{
+		m_ostream.flush();
+		m_ostream.imbue(m_locale);
+	}
 private:
-    std::basic_ostream<Ch, Tr> & m_ostream;
-    std::locale const  m_locale;
+	std::basic_ostream<Ch, Tr> & m_ostream;
+	std::locale const  m_locale;
 };
 
 

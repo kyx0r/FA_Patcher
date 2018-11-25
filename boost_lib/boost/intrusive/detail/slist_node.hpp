@@ -26,14 +26,16 @@
 #include <boost/intrusive/detail/workaround.hpp>
 #include <boost/intrusive/pointer_rebind.hpp>
 
-namespace boost {
-namespace intrusive {
+namespace boost
+{
+namespace intrusive
+{
 
 template<class VoidPointer>
 struct slist_node
 {
-   typedef typename pointer_rebind<VoidPointer, slist_node>::type   node_ptr;
-   node_ptr next_;
+	typedef typename pointer_rebind<VoidPointer, slist_node>::type   node_ptr;
+	node_ptr next_;
 };
 
 // slist_node_traits can be used with circular_slist_algorithms and supplies
@@ -42,18 +44,24 @@ struct slist_node
 template<class VoidPointer>
 struct slist_node_traits
 {
-   typedef slist_node<VoidPointer>  node;
-   typedef typename node::node_ptr  node_ptr;
-   typedef typename pointer_rebind<VoidPointer, const node>::type    const_node_ptr;
+	typedef slist_node<VoidPointer>  node;
+	typedef typename node::node_ptr  node_ptr;
+	typedef typename pointer_rebind<VoidPointer, const node>::type    const_node_ptr;
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_next(const const_node_ptr & n)
-   {  return n->next_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_next(const const_node_ptr & n)
+	{
+		return n->next_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_next(const node_ptr & n)
-   {  return n->next_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_next(const node_ptr & n)
+	{
+		return n->next_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_next(const node_ptr & n, const node_ptr & next)
-   {  n->next_ = next;  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_next(const node_ptr & n, const node_ptr & next)
+	{
+		n->next_ = next;
+	}
 };
 
 } //namespace intrusive

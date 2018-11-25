@@ -21,82 +21,85 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace spirit
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // We do not import fusion ::unused_type anymore to avoid boost::fusion
-    // being turned into an associate namespace for boost::spirit, as this
-    // interferes with ADL in unexpected ways. We rather copy the full 
-    // unused_type implementation from boost::fusion.
-    ///////////////////////////////////////////////////////////////////////////
-    struct unused_type
-    {
-        unused_type()
-        {
-        }
+namespace spirit
+{
+///////////////////////////////////////////////////////////////////////////
+// We do not import fusion ::unused_type anymore to avoid boost::fusion
+// being turned into an associate namespace for boost::spirit, as this
+// interferes with ADL in unexpected ways. We rather copy the full
+// unused_type implementation from boost::fusion.
+///////////////////////////////////////////////////////////////////////////
+struct unused_type
+{
+	unused_type()
+	{
+	}
 
-        template <typename T>
-        unused_type(T const&)
-        {
-        }
+	template <typename T>
+	unused_type(T const&)
+	{
+	}
 
-        template <typename T>
-        unused_type const&
-        operator=(T const&) const
-        {
-            return *this;
-        }
+	template <typename T>
+	unused_type const&
+	operator=(T const&) const
+	{
+		return *this;
+	}
 
-        template <typename T>
-        unused_type&
-        operator=(T const&)
-        {
-            return *this;
-        }
+	template <typename T>
+	unused_type&
+	operator=(T const&)
+	{
+		return *this;
+	}
 
-        unused_type const&
-        operator=(unused_type const&) const
-        {
-            return *this;
-        }
+	unused_type const&
+	operator=(unused_type const&) const
+	{
+		return *this;
+	}
 
-        unused_type&
-        operator=(unused_type const&)
-        {
-            return *this;
-        }
-    };
+	unused_type&
+	operator=(unused_type const&)
+	{
+		return *this;
+	}
+};
 
-    unused_type const unused = unused_type();
+unused_type const unused = unused_type();
 
-    namespace detail
-    {
-        struct unused_only
-        {
-            unused_only(unused_type const&) {}
-        };
-    }
+namespace detail
+{
+struct unused_only
+{
+	unused_only(unused_type const&) {}
+};
+}
 
-    template <typename Out>
-    inline Out& operator<<(Out& out, detail::unused_only const&)
-    {
-        return out;
-    }
+template <typename Out>
+inline Out& operator<<(Out& out, detail::unused_only const&)
+{
+	return out;
+}
 
-    template <typename In>
-    inline In& operator>>(In& in, unused_type&)
-    {
-        return in;
-    }
+template <typename In>
+inline In& operator>>(In& in, unused_type&)
+{
+	return in;
+}
 
-    ///////////////////////////////////////////////////////////////////////////
-    namespace traits
-    {
-        // We use this test to detect if the argument is not an unused_type
-        template <typename T> struct not_is_unused : mpl::true_ {};
-        template <> struct not_is_unused<unused_type> : mpl::false_ {};
-    }
-}}
+///////////////////////////////////////////////////////////////////////////
+namespace traits
+{
+// We use this test to detect if the argument is not an unused_type
+template <typename T> struct not_is_unused : mpl::true_ {};
+template <> struct not_is_unused<unused_type> : mpl::false_ {};
+}
+}
+}
 
 #if defined(BOOST_MSVC)
 # pragma warning(pop)

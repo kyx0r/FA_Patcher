@@ -12,12 +12,14 @@
 #ifndef BOOST_TEST_FWD_DECL_HPP_011605GER
 #define BOOST_TEST_FWD_DECL_HPP_011605GER
 
-namespace boost {
+namespace boost
+{
 
 class  execution_monitor;
 class  execution_exception;
 
-namespace unit_test {
+namespace unit_test
+{
 
 class  test_unit;
 class  test_case;

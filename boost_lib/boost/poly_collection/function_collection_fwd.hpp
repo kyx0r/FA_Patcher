@@ -15,38 +15,41 @@
 
 #include <memory>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 template<typename Signature> struct function_model;
 }
 
 template<typename Signature>
 using function_collection_value_type=
-  typename detail::function_model<Signature>::value_type;
+    typename detail::function_model<Signature>::value_type;
 
 template<
-  typename Signature,
-  typename Allocator=std::allocator<function_collection_value_type<Signature>>
->
+    typename Signature,
+    typename Allocator=std::allocator<function_collection_value_type<Signature>>
+    >
 class function_collection;
 
 template<typename Signature,typename Allocator>
 bool operator==(
-  const function_collection<Signature,Allocator>& x,
-  const function_collection<Signature,Allocator>& y);
+    const function_collection<Signature,Allocator>& x,
+    const function_collection<Signature,Allocator>& y);
 
 template<typename Signature,typename Allocator>
 bool operator!=(
-  const function_collection<Signature,Allocator>& x,
-  const function_collection<Signature,Allocator>& y);
+    const function_collection<Signature,Allocator>& x,
+    const function_collection<Signature,Allocator>& y);
 
 template<typename Signature,typename Allocator>
 void swap(
-  function_collection<Signature,Allocator>& x,
-  function_collection<Signature,Allocator>& y);
+    function_collection<Signature,Allocator>& x,
+    function_collection<Signature,Allocator>& y);
 
 } /* namespace poly_collection */
 

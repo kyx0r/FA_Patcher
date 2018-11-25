@@ -26,17 +26,20 @@
 
 
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 // specialization for fusion sequences
 template< class FusionSequence >
-struct algebra_dispatcher_sfinae< FusionSequence ,
-                           typename boost::enable_if<
-                               typename boost::fusion::traits::is_sequence< FusionSequence >::type >::type >
+struct algebra_dispatcher_sfinae< FusionSequence,
+	       typename boost::enable_if<
+	       typename boost::fusion::traits::is_sequence< FusionSequence >::type >::type >
 {
-    typedef fusion_algebra algebra_type;
+	typedef fusion_algebra algebra_type;
 };
 
 

@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -32,15 +32,20 @@
 /// CODATA recommended values of fundamental atomic and nuclear constants
 /// CODATA 2006 values as of 2007/03/30
 
-namespace boost {
+namespace boost
+{
 
-namespace units { 
+namespace units
+{
 
-namespace si {
-                            
-namespace constants {
+namespace si
+{
 
-namespace codata {
+namespace constants
+{
+
+namespace codata
+{
 
 /// CODATA recommended values of the fundamental physical constants: NIST SP 961
 
@@ -73,7 +78,7 @@ BOOST_UNITS_PHYSICAL_CONSTANT(gamma_n,quantity<frequency_over_magnetic_flux_dens
 
 } // namespace codata
 
-} // namespace constants    
+} // namespace constants
 
 } // namespace si
 

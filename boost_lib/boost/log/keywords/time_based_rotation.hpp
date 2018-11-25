@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword allows to pass time-based file rotation predicate to the file sink backend
 BOOST_PARAMETER_KEYWORD(tag, time_based_rotation)

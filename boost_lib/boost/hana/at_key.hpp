@@ -35,63 +35,73 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename Key>
-    constexpr decltype(auto) at_key_t::operator()(Xs&& xs, Key const& key) const {
-        using S = typename hana::tag_of<Xs>::type;
-        using AtKey = BOOST_HANA_DISPATCH_IF(at_key_impl<S>,
-            hana::Searchable<S>::value
-        );
+//! @cond
+template <typename Xs, typename Key>
+constexpr decltype(auto) at_key_t::operator()(Xs&& xs, Key const& key) const
+{
+	using S = typename hana::tag_of<Xs>::type;
+	using AtKey = BOOST_HANA_DISPATCH_IF(at_key_impl<S>,
+	                                     hana::Searchable<S>::value
+	                                    );
 
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::Searchable<S>::value,
-        "hana::at_key(xs, key) requires 'xs' to be Searchable");
-    #endif
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::Searchable<S>::value,
+	              "hana::at_key(xs, key) requires 'xs' to be Searchable");
+#endif
 
-        return AtKey::apply(static_cast<Xs&&>(xs), key);
-    }
-    //! @endcond
+	return AtKey::apply(static_cast<Xs&&>(xs), key);
+}
+//! @endcond
 
-    template <typename S, bool condition>
-    struct at_key_impl<S, when<condition>> : default_ {
-        template <typename Xs, typename Key>
-        static constexpr auto apply(Xs&& xs, Key const& key) {
-            return hana::find(static_cast<Xs&&>(xs), key).value();
-        }
-    };
+template <typename S, bool condition>
+struct at_key_impl<S, when<condition>> : default_
+{
+	template <typename Xs, typename Key>
+	static constexpr auto apply(Xs&& xs, Key const& key)
+	{
+		return hana::find(static_cast<Xs&&>(xs), key).value();
+	}
+};
 
-    namespace at_key_detail {
-        template <typename T>
-        struct equal_to {
-            T const& t;
-            template <typename U>
-            constexpr auto operator()(U const& u) const {
-                return hana::equal(t, u);
-            }
-        };
-    }
+namespace at_key_detail
+{
+template <typename T>
+struct equal_to
+{
+	T const& t;
+	template <typename U>
+	constexpr auto operator()(U const& u) const
+	{
+		return hana::equal(t, u);
+	}
+};
+}
 
-    template <typename S>
-    struct at_key_impl<S, when<hana::Sequence<S>::value>> {
-        template <typename Xs, typename Key>
-        static constexpr decltype(auto) apply(Xs&& xs, Key const& key) {
-            using Result = decltype(hana::index_if(
-                static_cast<Xs&&>(xs), at_key_detail::equal_to<Key>{key}));
+template <typename S>
+struct at_key_impl<S, when<hana::Sequence<S>::value>>
+{
+	template <typename Xs, typename Key>
+	static constexpr decltype(auto) apply(Xs&& xs, Key const& key)
+	{
+		using Result = decltype(hana::index_if(
+		                            static_cast<Xs&&>(xs), at_key_detail::equal_to<Key> {key}));
 
-            return hana::at(static_cast<Xs&&>(xs), Result{}.value());
-        }
-    };
+		return hana::at(static_cast<Xs&&>(xs), Result{}.value());
+	}
+};
 
-    template <typename S>
-    struct at_key_impl<S, when<hana::Struct<S>::value>> {
-        template <typename X, typename Key>
-        static constexpr decltype(auto) apply(X&& x, Key const& key) {
-            auto accessor = hana::second(*hana::find_if(hana::accessors<S>(),
-                hana::equal.to(key) ^hana::on^ hana::first
-            ));
-            return accessor(static_cast<X&&>(x));
-        }
-    };
+template <typename S>
+struct at_key_impl<S, when<hana::Struct<S>::value>>
+{
+	template <typename X, typename Key>
+	static constexpr decltype(auto) apply(X&& x, Key const& key)
+	{
+		auto accessor = hana::second(*hana::find_if(hana::accessors<S>(),
+		                             hana::equal.to(key) ^hana::on^ hana::first
+		                                           ));
+		return accessor(static_cast<X&&>(x));
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_AT_KEY_HPP

@@ -29,9 +29,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
 
 // ************************************************************************** //
 // **************              data::invoke_action             ************** //
@@ -41,7 +44,7 @@ template<typename Action, typename T>
 inline void
 invoke_action( Action const& action, T && arg, std::false_type /* is_tuple */ )
 {
-    action( std::forward<T>(arg) );
+	action( std::forward<T>(arg) );
 }
 
 //____________________________________________________________________________//
@@ -52,7 +55,7 @@ invoke_action_impl( Action const& action,
                     T && args,
                     index_sequence<I...> const& )
 {
-    action( std::get<I>(std::forward<T>(args))... );
+	action( std::get<I>(std::forward<T>(args))... );
 }
 
 //____________________________________________________________________________//
@@ -61,11 +64,11 @@ template<typename Action, typename T>
 inline void
 invoke_action( Action const& action, T&& args, std::true_type /* is_tuple */ )
 {
-    invoke_action_impl( action,
-                        std::forward<T>(args),
-                        typename make_index_sequence< 0,
-                                                      std::tuple_size<typename std::decay<T>::type>::value
-                                                    >::type{} );
+	invoke_action_impl( action,
+	                    std::forward<T>(args),
+	                    typename make_index_sequence< 0,
+	                    std::tuple_size<typename std::decay<T>::type>::value
+	                    >::type{} );
 
 }
 
@@ -81,17 +84,18 @@ for_each_sample( DataSet &&         samples,
                  Action const&      act,
                  data::size_t       number_of_samples = BOOST_TEST_DS_INFINITE_SIZE )
 {
-    data::size_t size = (std::min)( samples.size(), number_of_samples );
-    BOOST_TEST_DS_ASSERT( !size.is_inf(), "Dataset has infinite size. Please specify the number of samples" );
+	data::size_t size = (std::min)( samples.size(), number_of_samples );
+	BOOST_TEST_DS_ASSERT( !size.is_inf(), "Dataset has infinite size. Please specify the number of samples" );
 
-    auto it = samples.begin();
+	auto it = samples.begin();
 
-    while( size-- > 0 ) {
-        invoke_action( act,
-                       *it,
-                       typename monomorphic::ds_detail::is_tuple<decltype(*it)>::type());
-        ++it;
-    }
+	while( size-- > 0 )
+	{
+		invoke_action( act,
+		               *it,
+		               typename monomorphic::ds_detail::is_tuple<decltype(*it)>::type());
+		++it;
+	}
 }
 
 //____________________________________________________________________________//
@@ -102,9 +106,9 @@ for_each_sample( DataSet &&     samples,
                  Action const&      act,
                  data::size_t       number_of_samples = BOOST_TEST_DS_INFINITE_SIZE )
 {
-    data::for_each_sample( data::make( std::forward<DataSet>(samples) ),
-                           act,
-                           number_of_samples );
+	data::for_each_sample( data::make( std::forward<DataSet>(samples) ),
+	                       act,
+	                       number_of_samples );
 }
 
 } // namespace data

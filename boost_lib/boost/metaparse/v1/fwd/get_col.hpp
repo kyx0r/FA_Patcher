@@ -9,17 +9,17 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class>
-      struct get_col;
+namespace metaparse
+{
+namespace v1
+{
+template <class>
+struct get_col;
 
-      template <class>
-      struct get_col_impl;
-    }
-  }
+template <class>
+struct get_col_impl;
+}
+}
 }
 
 #endif

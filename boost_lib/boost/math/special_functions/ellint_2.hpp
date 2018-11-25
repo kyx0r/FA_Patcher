@@ -30,12 +30,16 @@
 // Elliptic integrals (complete and incomplete) of the second kind
 // Carlson, Numerische Mathematik, vol 33, 1 (1979)
 
-namespace boost { namespace math { 
-   
+namespace boost
+{
+namespace math
+{
+
 template <class T1, class T2, class Policy>
 typename tools::promote_args<T1, T2>::type ellint_2(T1 k, T2 phi, const Policy& pol);
-   
-namespace detail{
+
+namespace detail
+{
 
 template <typename T, typename Policy>
 T ellint_e_imp(T k, const Policy& pol);
@@ -44,120 +48,120 @@ T ellint_e_imp(T k, const Policy& pol);
 template <typename T, typename Policy>
 T ellint_e_imp(T phi, T k, const Policy& pol)
 {
-    BOOST_MATH_STD_USING
-    using namespace boost::math::tools;
-    using namespace boost::math::constants;
+	BOOST_MATH_STD_USING
+	using namespace boost::math::tools;
+	using namespace boost::math::constants;
 
-    bool invert = false;
-    if(phi < 0)
-    {
-       phi = fabs(phi);
-       invert = true;
-    }
+	bool invert = false;
+	if(phi < 0)
+	{
+		phi = fabs(phi);
+		invert = true;
+	}
 
-    T result;
+	T result;
 
-    if(phi >= tools::max_value<T>())
-    {
-       // Need to handle infinity as a special case:
-       result = policies::raise_overflow_error<T>("boost::math::ellint_e<%1%>(%1%,%1%)", 0, pol);
-    }
-    else if(phi > 1 / tools::epsilon<T>())
-    {
-       // Phi is so large that phi%pi is necessarily zero (or garbage),
-       // just return the second part of the duplication formula:
-       result = 2 * phi * ellint_e_imp(k, pol) / constants::pi<T>();
-    }
-    else if(k == 0)
-    {
-       return invert ? T(-phi) : phi;
-    }
-    else if(fabs(k) == 1)
-    {
-       return invert ? T(-sin(phi)) : T(sin(phi));
-    }
-    else
-    {
-       // Carlson's algorithm works only for |phi| <= pi/2,
-       // use the integrand's periodicity to normalize phi
-       //
-       // Xiaogang's original code used a cast to long long here
-       // but that fails if T has more digits than a long long,
-       // so rewritten to use fmod instead:
-       //
-       T rphi = boost::math::tools::fmod_workaround(phi, T(constants::half_pi<T>()));
-       T m = boost::math::round((phi - rphi) / constants::half_pi<T>());
-       int s = 1;
-       if(boost::math::tools::fmod_workaround(m, T(2)) > 0.5)
-       {
-          m += 1;
-          s = -1;
-          rphi = constants::half_pi<T>() - rphi;
-       }
-       T k2 = k * k;
-       if(k2 > 1)
-       {
-          return policies::raise_domain_error<T>("boost::math::ellint_2<%1%>(%1%, %1%)", "The parameter k is out of range, got k = %1%", k, pol);
-       }
-       else if(rphi < tools::root_epsilon<T>())
-       {
-          // See http://functions.wolfram.com/EllipticIntegrals/EllipticE2/06/01/03/0001/
-          result = s * rphi;
-       }
-       else
-       {
-          // http://dlmf.nist.gov/19.25#E10
-          T sinp = sin(rphi);
-          T cosp = cos(rphi);
-          T c = 1 / (sinp * sinp);
-          T cm1 = cosp * cosp / (sinp * sinp);  // c - 1
-          result = s * ((1 - k2) * ellint_rf_imp(cm1, T(c - k2), c, pol) + k2 * (1 - k2) * ellint_rd(cm1, c, T(c - k2), pol) / 3 + k2 * sqrt(cm1 / (c * (c - k2))));
-       }
-       if(m != 0)
-          result += m * ellint_e_imp(k, pol);
-    }
-    return invert ? T(-result) : result;
+	if(phi >= tools::max_value<T>())
+	{
+		// Need to handle infinity as a special case:
+		result = policies::raise_overflow_error<T>("boost::math::ellint_e<%1%>(%1%,%1%)", 0, pol);
+	}
+	else if(phi > 1 / tools::epsilon<T>())
+	{
+		// Phi is so large that phi%pi is necessarily zero (or garbage),
+		// just return the second part of the duplication formula:
+		result = 2 * phi * ellint_e_imp(k, pol) / constants::pi<T>();
+	}
+	else if(k == 0)
+	{
+		return invert ? T(-phi) : phi;
+	}
+	else if(fabs(k) == 1)
+	{
+		return invert ? T(-sin(phi)) : T(sin(phi));
+	}
+	else
+	{
+		// Carlson's algorithm works only for |phi| <= pi/2,
+		// use the integrand's periodicity to normalize phi
+		//
+		// Xiaogang's original code used a cast to long long here
+		// but that fails if T has more digits than a long long,
+		// so rewritten to use fmod instead:
+		//
+		T rphi = boost::math::tools::fmod_workaround(phi, T(constants::half_pi<T>()));
+		T m = boost::math::round((phi - rphi) / constants::half_pi<T>());
+		int s = 1;
+		if(boost::math::tools::fmod_workaround(m, T(2)) > 0.5)
+		{
+			m += 1;
+			s = -1;
+			rphi = constants::half_pi<T>() - rphi;
+		}
+		T k2 = k * k;
+		if(k2 > 1)
+		{
+			return policies::raise_domain_error<T>("boost::math::ellint_2<%1%>(%1%, %1%)", "The parameter k is out of range, got k = %1%", k, pol);
+		}
+		else if(rphi < tools::root_epsilon<T>())
+		{
+			// See http://functions.wolfram.com/EllipticIntegrals/EllipticE2/06/01/03/0001/
+			result = s * rphi;
+		}
+		else
+		{
+			// http://dlmf.nist.gov/19.25#E10
+			T sinp = sin(rphi);
+			T cosp = cos(rphi);
+			T c = 1 / (sinp * sinp);
+			T cm1 = cosp * cosp / (sinp * sinp);  // c - 1
+			result = s * ((1 - k2) * ellint_rf_imp(cm1, T(c - k2), c, pol) + k2 * (1 - k2) * ellint_rd(cm1, c, T(c - k2), pol) / 3 + k2 * sqrt(cm1 / (c * (c - k2))));
+		}
+		if(m != 0)
+			result += m * ellint_e_imp(k, pol);
+	}
+	return invert ? T(-result) : result;
 }
 
 // Complete elliptic integral (Legendre form) of the second kind
 template <typename T, typename Policy>
 T ellint_e_imp(T k, const Policy& pol)
 {
-    BOOST_MATH_STD_USING
-    using namespace boost::math::tools;
+	BOOST_MATH_STD_USING
+	using namespace boost::math::tools;
 
-    if (abs(k) > 1)
-    {
-       return policies::raise_domain_error<T>("boost::math::ellint_e<%1%>(%1%)",
-            "Got k = %1%, function requires |k| <= 1", k, pol);
-    }
-    if (abs(k) == 1)
-    {
-        return static_cast<T>(1);
-    }
+	if (abs(k) > 1)
+	{
+		return policies::raise_domain_error<T>("boost::math::ellint_e<%1%>(%1%)",
+		                                       "Got k = %1%, function requires |k| <= 1", k, pol);
+	}
+	if (abs(k) == 1)
+	{
+		return static_cast<T>(1);
+	}
 
-    T x = 0;
-    T t = k * k;
-    T y = 1 - t;
-    T z = 1;
-    T value = 2 * ellint_rg_imp(x, y, z, pol);
+	T x = 0;
+	T t = k * k;
+	T y = 1 - t;
+	T z = 1;
+	T value = 2 * ellint_rg_imp(x, y, z, pol);
 
-    return value;
+	return value;
 }
 
 template <typename T, typename Policy>
 inline typename tools::promote_args<T>::type ellint_2(T k, const Policy& pol, const mpl::true_&)
 {
-   typedef typename tools::promote_args<T>::type result_type;
-   typedef typename policies::evaluation<result_type, Policy>::type value_type;
-   return policies::checked_narrowing_cast<result_type, Policy>(detail::ellint_e_imp(static_cast<value_type>(k), pol), "boost::math::ellint_2<%1%>(%1%)");
+	typedef typename tools::promote_args<T>::type result_type;
+	typedef typename policies::evaluation<result_type, Policy>::type value_type;
+	return policies::checked_narrowing_cast<result_type, Policy>(detail::ellint_e_imp(static_cast<value_type>(k), pol), "boost::math::ellint_2<%1%>(%1%)");
 }
 
 // Elliptic integral (Legendre form) of the second kind
 template <class T1, class T2>
 inline typename tools::promote_args<T1, T2>::type ellint_2(T1 k, T2 phi, const mpl::false_&)
 {
-   return boost::math::ellint_2(k, phi, policies::policy<>());
+	return boost::math::ellint_2(k, phi, policies::policy<>());
 }
 
 } // detail
@@ -166,26 +170,27 @@ inline typename tools::promote_args<T1, T2>::type ellint_2(T1 k, T2 phi, const m
 template <typename T>
 inline typename tools::promote_args<T>::type ellint_2(T k)
 {
-   return ellint_2(k, policies::policy<>());
+	return ellint_2(k, policies::policy<>());
 }
 
 // Elliptic integral (Legendre form) of the second kind
 template <class T1, class T2>
 inline typename tools::promote_args<T1, T2>::type ellint_2(T1 k, T2 phi)
 {
-   typedef typename policies::is_policy<T2>::type tag_type;
-   return detail::ellint_2(k, phi, tag_type());
+	typedef typename policies::is_policy<T2>::type tag_type;
+	return detail::ellint_2(k, phi, tag_type());
 }
 
 template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type ellint_2(T1 k, T2 phi, const Policy& pol)
 {
-   typedef typename tools::promote_args<T1, T2>::type result_type;
-   typedef typename policies::evaluation<result_type, Policy>::type value_type;
-   return policies::checked_narrowing_cast<result_type, Policy>(detail::ellint_e_imp(static_cast<value_type>(phi), static_cast<value_type>(k), pol), "boost::math::ellint_2<%1%>(%1%,%1%)");
+	typedef typename tools::promote_args<T1, T2>::type result_type;
+	typedef typename policies::evaluation<result_type, Policy>::type value_type;
+	return policies::checked_narrowing_cast<result_type, Policy>(detail::ellint_e_imp(static_cast<value_type>(phi), static_cast<value_type>(k), pol), "boost::math::ellint_2<%1%>(%1%,%1%)");
 }
 
-}} // namespaces
+}
+} // namespaces
 
 #endif // BOOST_MATH_ELLINT_2_HPP
 

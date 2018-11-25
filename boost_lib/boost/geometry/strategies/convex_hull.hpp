@@ -17,7 +17,9 @@
 #include <boost/geometry/strategies/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -35,13 +37,14 @@ template
     typename Geometry1,
     typename Point,
     typename CsTag = typename cs_tag<Point>::type
->
+    >
 struct strategy_convex_hull
 {
-    typedef strategy::not_implemented type;
+	typedef strategy::not_implemented type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CONVEX_HULL_HPP

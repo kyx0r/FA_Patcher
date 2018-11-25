@@ -23,11 +23,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * Log record placeholder type in formatter template expressions.

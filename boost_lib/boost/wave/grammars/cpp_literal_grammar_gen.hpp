@@ -26,9 +26,12 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost {
-namespace wave {
-namespace grammars {
+namespace boost
+{
+namespace wave
+{
+namespace grammars
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -40,9 +43,10 @@ namespace grammars {
 //
 ///////////////////////////////////////////////////////////////////////////////
 template <typename TokenT>
-struct BOOST_WAVE_DECL intlit_grammar_gen {
+struct BOOST_WAVE_DECL intlit_grammar_gen
+{
 
-    static uint_literal_type evaluate(TokenT const &tok, bool &is_unsigned);
+	static uint_literal_type evaluate(TokenT const &tok, bool &is_unsigned);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,9 +59,10 @@ struct BOOST_WAVE_DECL intlit_grammar_gen {
 //
 ///////////////////////////////////////////////////////////////////////////////
 template <typename IntegralResult, typename TokenT>
-struct BOOST_WAVE_DECL chlit_grammar_gen {
+struct BOOST_WAVE_DECL chlit_grammar_gen
+{
 
-    static IntegralResult evaluate(TokenT const &tok, value_error& status);
+	static IntegralResult evaluate(TokenT const &tok, value_error& status);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

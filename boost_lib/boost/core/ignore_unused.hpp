@@ -9,7 +9,8 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 #ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
 

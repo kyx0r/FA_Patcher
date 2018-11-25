@@ -24,14 +24,17 @@
 #include <boost/type_erasure/config.hpp>
 #include <boost/type_erasure/param.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 template<class Sig>
 struct constructible;
 
-namespace detail {
-    
+namespace detail
+{
+
 template<class Sig>
 struct null_construct;
 
@@ -68,50 +71,51 @@ struct constructible {};
 template<class R, class... T>
 struct constructible<R(T...)>
 {
-    static ::boost::type_erasure::detail::storage
-    apply(T... arg)
-    {
-        ::boost::type_erasure::detail::storage result;
-        result.data = new R(::std::forward<T>(arg)...);
-        return result;
-    }
+	static ::boost::type_erasure::detail::storage
+	apply(T... arg)
+	{
+		::boost::type_erasure::detail::storage result;
+		result.data = new R(::std::forward<T>(arg)...);
+		return result;
+	}
 };
 
 /// INTERNAL ONLY
 template<class Base, class Tag, class... T>
 struct concept_interface<
-    ::boost::type_erasure::constructible<Tag(T...)>,
-    Base,
-    Tag
+	::boost::type_erasure::constructible<Tag(T...)>,
+Base,
+Tag
 > : Base
 {
     using Base::_boost_type_erasure_deduce_constructor;
     ::boost::type_erasure::constructible<Tag(T...)>*
     _boost_type_erasure_deduce_constructor(
         typename ::boost::type_erasure::as_param<Base, T>::type...) const
-    {
-        return 0;
-    }
+{
+	return 0;
+}
 };
 
-namespace detail {
+namespace detail
+{
 
 template<class... T>
 struct null_construct<void(T...)>
 {
-    static ::boost::type_erasure::detail::storage
-    value(T...)
-    {
-        ::boost::type_erasure::detail::storage result;
-        result.data = 0;
-        return result;
-    }
+	static ::boost::type_erasure::detail::storage
+	value(T...)
+	{
+		::boost::type_erasure::detail::storage result;
+		result.data = 0;
+		return result;
+	}
 };
 
 template<class T, class R, class... U>
 struct get_null_vtable_entry<vtable_adapter<constructible<T(const T&)>, R(U...)> >
 {
-    typedef null_construct<void(U...)> type;
+	typedef null_construct<void(U...)> type;
 };
 
 }
@@ -149,49 +153,50 @@ struct get_null_vtable_entry<vtable_adapter<constructible<T(const T&)>, R(U...)>
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)>
 struct constructible<R(BOOST_PP_ENUM_PARAMS(N, T))>
 {
-    static ::boost::type_erasure::detail::storage
-    apply(BOOST_PP_ENUM_BINARY_PARAMS(N, T, arg))
-    {
-        ::boost::type_erasure::detail::storage result;
-        result.data = new R(BOOST_TYPE_ERASURE_FORWARD(N));
-        return result;
-    }
+	static ::boost::type_erasure::detail::storage
+	apply(BOOST_PP_ENUM_BINARY_PARAMS(N, T, arg))
+	{
+		::boost::type_erasure::detail::storage result;
+		result.data = new R(BOOST_TYPE_ERASURE_FORWARD(N));
+		return result;
+	}
 };
 
 template<class Base BOOST_PP_ENUM_TRAILING_PARAMS(N, class T), class Tag>
 struct concept_interface<
-    ::boost::type_erasure::constructible<Tag(BOOST_PP_ENUM_PARAMS(N, T))>,
-    Base,
-    Tag
+	::boost::type_erasure::constructible<Tag(BOOST_PP_ENUM_PARAMS(N, T))>,
+Base,
+Tag
 > : Base
 {
     using Base::_boost_type_erasure_deduce_constructor;
     ::boost::type_erasure::constructible<Tag(BOOST_PP_ENUM_PARAMS(N, T))>*
     _boost_type_erasure_deduce_constructor(
         BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_ARG_DECL, ~)) const
-    {
-        return 0;
-    }
+{
+	return 0;
+}
 };
 
-namespace detail {
+namespace detail
+{
 
 template<BOOST_PP_ENUM_PARAMS(N, class T)>
 struct null_construct<void(BOOST_PP_ENUM_PARAMS(N, T))>
 {
-    static ::boost::type_erasure::detail::storage
-    value(BOOST_PP_ENUM_PARAMS(N, T))
-    {
-        ::boost::type_erasure::detail::storage result;
-        result.data = 0;
-        return result;
-    }
+	static ::boost::type_erasure::detail::storage
+	value(BOOST_PP_ENUM_PARAMS(N, T))
+	{
+		::boost::type_erasure::detail::storage result;
+		result.data = 0;
+		return result;
+	}
 };
 
 template<class T, class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)>
 struct get_null_vtable_entry<vtable_adapter<constructible<T(const T&)>, R(BOOST_PP_ENUM_PARAMS(N, T))> >
 {
-    typedef null_construct<void(BOOST_PP_ENUM_PARAMS(N, T))> type;
+	typedef null_construct<void(BOOST_PP_ENUM_PARAMS(N, T))> type;
 };
 
 }

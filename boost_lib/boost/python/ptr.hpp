@@ -16,52 +16,62 @@
 # include <boost/config.hpp>
 # include <boost/mpl/bool.hpp>
 
-namespace boost { namespace python {
+namespace boost
+{
+namespace python
+{
 
 template<class Ptr> class pointer_wrapper
-{ 
- public:
-    typedef Ptr type;
-    
-    explicit pointer_wrapper(Ptr x): p_(x) {}
-    operator Ptr() const { return p_; }
-    Ptr get() const { return p_; }
- private:
-    Ptr p_;
+{
+public:
+	typedef Ptr type;
+
+	explicit pointer_wrapper(Ptr x): p_(x) {}
+	operator Ptr() const
+	{
+		return p_;
+	}
+	Ptr get() const
+	{
+		return p_;
+	}
+private:
+	Ptr p_;
 };
 
 template<class T>
 inline pointer_wrapper<T> ptr(T t)
-{ 
-    return pointer_wrapper<T>(t);
+{
+	return pointer_wrapper<T>(t);
 }
 
 template<typename T>
 class is_pointer_wrapper
-    : public mpl::false_
+	: public mpl::false_
 {
 };
 
 template<typename T>
 class is_pointer_wrapper<pointer_wrapper<T> >
-    : public mpl::true_
+	: public mpl::true_
 {
 };
 
 template<typename T>
 class unwrap_pointer
 {
- public:
-    typedef T type;
+public:
+	typedef T type;
 };
 
 template<typename T>
 class unwrap_pointer<pointer_wrapper<T> >
 {
- public:
-    typedef T type;
+public:
+	typedef T type;
 };
 
-}} // namespace boost::python
+}
+} // namespace boost::python
 
 #endif // #ifndef PTR_DWA20020601_HPP

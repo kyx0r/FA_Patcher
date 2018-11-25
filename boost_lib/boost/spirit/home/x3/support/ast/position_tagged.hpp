@@ -10,87 +10,99 @@
 #include <boost/range.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    struct position_tagged
-    {
-        // Use this to annotate an AST with the iterator position.
-        // These ids are used as a key to the position_cache (below)
-        // and marks the start and end of an AST node.
-        int id_first = -1;
-        int id_last = -1;
-    };
+namespace spirit
+{
+namespace x3
+{
+struct position_tagged
+{
+	// Use this to annotate an AST with the iterator position.
+	// These ids are used as a key to the position_cache (below)
+	// and marks the start and end of an AST node.
+	int id_first = -1;
+	int id_last = -1;
+};
 
-    template <typename Container>
-    class position_cache
-    {
-    public:
+template <typename Container>
+class position_cache
+{
+public:
 
-        typedef typename Container::value_type iterator_type;
+	typedef typename Container::value_type iterator_type;
 
-        position_cache(
-            iterator_type first
-          , iterator_type last)
-          : first_(first), last_(last) {}
+	position_cache(
+	    iterator_type first
+	    , iterator_type last)
+		: first_(first), last_(last) {}
 
-        // This will catch all nodes inheriting from position_tagged
-        boost::iterator_range<iterator_type>
-        position_of(position_tagged const& ast) const
-        {
-            return
-                boost::iterator_range<iterator_type>(
-                    positions.at(ast.id_first) // throws if out of range
-                  , positions.at(ast.id_last)  // throws if out of range
-                );
-        }
+	// This will catch all nodes inheriting from position_tagged
+	boost::iterator_range<iterator_type>
+	position_of(position_tagged const& ast) const
+	{
+		return
+		    boost::iterator_range<iterator_type>(
+		        positions.at(ast.id_first) // throws if out of range
+		        , positions.at(ast.id_last)  // throws if out of range
+		    );
+	}
 
-        // This will catch all nodes except those inheriting from position_tagged
-        template <typename AST>
-        boost::iterator_range<iterator_type>
-        position_of(AST const& ast) const
-        {
-            // returns an empty position
-            return boost::iterator_range<iterator_type>();
-        }
-        
-        // This will catch all nodes except those inheriting from position_tagged
-        template <typename AST>
-        void annotate(AST& ast, iterator_type first, iterator_type last, mpl::false_)
-        {
-            // (no-op) no need for tags
-        }
+	// This will catch all nodes except those inheriting from position_tagged
+	template <typename AST>
+	boost::iterator_range<iterator_type>
+	position_of(AST const& ast) const
+	{
+		// returns an empty position
+		return boost::iterator_range<iterator_type>();
+	}
 
-        // This will catch all nodes inheriting from position_tagged
-        void annotate(position_tagged& ast, iterator_type first, iterator_type last, mpl::true_)
-        {
-            ast.id_first = int(positions.size());
-            positions.push_back(first);
-            ast.id_last = int(positions.size());
-            positions.push_back(last);
-        }
+	// This will catch all nodes except those inheriting from position_tagged
+	template <typename AST>
+	void annotate(AST& ast, iterator_type first, iterator_type last, mpl::false_)
+	{
+		// (no-op) no need for tags
+	}
 
-        template <typename AST>
-        void annotate(AST& ast, iterator_type first, iterator_type last)
-        {
-            annotate(ast, first, last, is_base_of<position_tagged, AST>());
-        }
+	// This will catch all nodes inheriting from position_tagged
+	void annotate(position_tagged& ast, iterator_type first, iterator_type last, mpl::true_)
+	{
+		ast.id_first = int(positions.size());
+		positions.push_back(first);
+		ast.id_last = int(positions.size());
+		positions.push_back(last);
+	}
 
-        Container const&
-        get_positions() const
-        {
-            return positions;
-        }
+	template <typename AST>
+	void annotate(AST& ast, iterator_type first, iterator_type last)
+	{
+		annotate(ast, first, last, is_base_of<position_tagged, AST>());
+	}
 
-        iterator_type first() const { return first_; }
-        iterator_type last() const { return last_; }
+	Container const&
+	get_positions() const
+	{
+		return positions;
+	}
 
-    private:
+	iterator_type first() const
+	{
+		return first_;
+	}
+	iterator_type last() const
+	{
+		return last_;
+	}
 
-        Container positions;
-        iterator_type first_;
-        iterator_type last_;
-    };
+private:
 
-}}}
+	Container positions;
+	iterator_type first_;
+	iterator_type last_;
+};
+
+}
+}
+}
 
 #endif

@@ -31,62 +31,66 @@
 #include <boost/range.hpp>
 
 
-namespace boost {
-namespace numeric {
-namespace odeint {
-    
-template< typename State1 , typename State2 , class Enabler = void >
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
+
+template< typename State1, typename State2, class Enabler = void >
 struct same_size_impl_sfinae
 {
-    static bool same_size( const State1 &x1 , const State2 &x2 )
-    {
-        return ( boost::size( x1 ) == boost::size( x2 ) );
-    }
+	static bool same_size( const State1 &x1, const State2 &x2 )
+	{
+		return ( boost::size( x1 ) == boost::size( x2 ) );
+	}
 
 };
 
 // same_size function
 // standard implementation relies on boost.range
-template< class State1 , class State2 >
+template< class State1, class State2 >
 struct same_size_impl
 {
-    static bool same_size( const State1 &x1 , const State2 &x2 )
-    {
-        return same_size_impl_sfinae< State1 , State2 >::same_size( x1 , x2 );
-    }
+	static bool same_size( const State1 &x1, const State2 &x2 )
+	{
+		return same_size_impl_sfinae< State1, State2 >::same_size( x1, x2 );
+	}
 };
 
 
 // do not overload or specialize this function, specialize resize_impl<> instead
-template< class State1 , class State2 >
-bool same_size( const State1 &x1 , const State2 &x2 )
+template< class State1, class State2 >
+bool same_size( const State1 &x1, const State2 &x2 )
 {
-    return same_size_impl< State1 , State2 >::same_size( x1 , x2 );
+	return same_size_impl< State1, State2 >::same_size( x1, x2 );
 }
 
-namespace detail {
+namespace detail
+{
 
 struct same_size_fusion
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< class S1 , class S2 >
-    bool operator()( const S1 &x1 , const S2 &x2 ) const
-    {
-        return same_size_op( x1 , x2 , typename is_resizeable< S1 >::type() );
-    }
+	template< class S1, class S2 >
+	bool operator()( const S1 &x1, const S2 &x2 ) const
+	{
+		return same_size_op( x1, x2, typename is_resizeable< S1 >::type() );
+	}
 
-    template< class S1 , class S2 >
-    bool same_size_op( const S1 &x1 , const S2 &x2 , boost::true_type ) const
-    {
-        return same_size( x1 , x2 );
-    }
+	template< class S1, class S2 >
+	bool same_size_op( const S1 &x1, const S2 &x2, boost::true_type ) const
+	{
+		return same_size( x1, x2 );
+	}
 
-    template< class S1 , class S2 >
-    bool same_size_op( const S1 &/*x1*/ , const S2 &/*x2*/ , boost::false_type ) const
-    {
-        return true;
-    }
+	template< class S1, class S2 >
+	bool same_size_op( const S1 &/*x1*/, const S2 &/*x2*/, boost::false_type ) const
+	{
+		return true;
+	}
 };
 
 } // namespace detail
@@ -94,15 +98,15 @@ struct same_size_fusion
 
 
 template< class FusionSeq >
-struct same_size_impl_sfinae< FusionSeq , FusionSeq , typename boost::enable_if< typename boost::fusion::traits::is_sequence< FusionSeq >::type >::type >
+struct same_size_impl_sfinae< FusionSeq, FusionSeq, typename boost::enable_if< typename boost::fusion::traits::is_sequence< FusionSeq >::type >::type >
 {
-    static bool same_size( const FusionSeq &x1 , const FusionSeq &x2 )
-    {
-        typedef boost::fusion::vector< const FusionSeq& , const FusionSeq& > Sequences;
-        Sequences sequences( x1 , x2 );
-        return boost::fusion::all( boost::fusion::zip_view< Sequences >( sequences ) ,
-                                   boost::fusion::make_fused( detail::same_size_fusion() ) );
-    }
+	static bool same_size( const FusionSeq &x1, const FusionSeq &x2 )
+	{
+		typedef boost::fusion::vector< const FusionSeq&, const FusionSeq& > Sequences;
+		Sequences sequences( x1, x2 );
+		return boost::fusion::all( boost::fusion::zip_view< Sequences >( sequences ),
+		                           boost::fusion::make_fused( detail::same_size_fusion() ) );
+	}
 };
 
 

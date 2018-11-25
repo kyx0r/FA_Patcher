@@ -21,50 +21,50 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      struct one_char
-      {
-      private:
-        template <class C, class Pos>
-        struct next_pos :
-          boost::mpl::eval_if<
-            boost::mpl::bool_<
-              C::type::value == '\r'
-              || (
-                C::type::value == '\n'
-                && get_prev_char<Pos>::type::value != '\r'
-              )
-            >,
-            next_line<Pos, C>,
-            next_char<Pos, C>
-          >
-        {};
+namespace metaparse
+{
+namespace v1
+{
+struct one_char
+{
+private:
+	template <class C, class Pos>
+	struct next_pos :
+		boost::mpl::eval_if<
+		boost::mpl::bool_<
+		C::type::value == '\r'
+	|| (
+	    C::type::value == '\n'
+	    && get_prev_char<Pos>::type::value != '\r'
+	)
+	>,
+	next_line<Pos, C>,
+	next_char<Pos, C>
+	>
+	{};
 
-        template <class S, class NextPos>
-        struct unchecked :
-          accept<
-            typename boost::mpl::front<S>::type,
-            boost::mpl::pop_front<S>,
-            NextPos
-          >
-        {};
-      public:
-        typedef one_char type;
-        
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::eval_if<
-            typename boost::mpl::empty<S>::type,
-            reject<error::unexpected_end_of_input, Pos>,
-            unchecked<S, next_pos<boost::mpl::front<S>, Pos> >
-          >
-        {};
-      };
-    }
-  }
+	template <class S, class NextPos>
+	struct unchecked :
+		accept<
+		typename boost::mpl::front<S>::type,
+		boost::mpl::pop_front<S>,
+		NextPos
+		>
+	{};
+public:
+	typedef one_char type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename boost::mpl::empty<S>::type,
+		reject<error::unexpected_end_of_input, Pos>,
+		unchecked<S, next_pos<boost::mpl::front<S>, Pos> >
+		>
+	{};
+};
+}
+}
 }
 
 #endif

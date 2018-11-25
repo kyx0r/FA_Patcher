@@ -164,56 +164,56 @@
 /**/
 
 namespace boost
-  {
-  namespace tti
-    {
-    namespace detail
-      {
-      
-      template<class BOOST_TTI_DETAIL_TP_T,class BOOST_TTI_DETAIL_TP_R>
-      struct ptmd
-        {
-        typedef BOOST_TTI_DETAIL_TP_R BOOST_TTI_DETAIL_TP_T::* type;
-        };
-        
-      template<class BOOST_TTI_DETAIL_TP_T>
-      struct dmem_check_ptmd :
-        boost::mpl::identity<BOOST_TTI_DETAIL_TP_T>
-        {
-        BOOST_MPL_ASSERT((boost::function_types::is_member_object_pointer<BOOST_TTI_DETAIL_TP_T>));
-        };
-        
-      template<class BOOST_TTI_DETAIL_TP_T>
-      struct dmem_check_ptec :
-        BOOST_TTI_NAMESPACE::detail::class_type<BOOST_TTI_DETAIL_TP_T>
-        {
-        BOOST_MPL_ASSERT((boost::function_types::is_member_object_pointer<BOOST_TTI_DETAIL_TP_T>));
-        };
-        
-      template<class BOOST_TTI_DETAIL_TP_T,class BOOST_TTI_DETAIL_TP_T2>
-      struct dmem_get_type :
-        boost::mpl::eval_if
-          <
-          boost::is_same<BOOST_TTI_DETAIL_TP_T2,BOOST_TTI_NAMESPACE::detail::deftype>,
-          BOOST_TTI_NAMESPACE::detail::dmem_check_ptmd<BOOST_TTI_DETAIL_TP_T>,
-          BOOST_TTI_NAMESPACE::detail::ptmd<BOOST_TTI_DETAIL_TP_T,BOOST_TTI_DETAIL_TP_T2>
-          >
-        {
-        };
-        
-      template<class BOOST_TTI_DETAIL_TP_T,class BOOST_TTI_DETAIL_TP_T2>
-      struct dmem_get_enclosing :
-        boost::mpl::eval_if
-          <
-          boost::is_same<BOOST_TTI_DETAIL_TP_T2,BOOST_TTI_NAMESPACE::detail::deftype>,
-          BOOST_TTI_NAMESPACE::detail::dmem_check_ptec<BOOST_TTI_DETAIL_TP_T>,
-          boost::mpl::identity<BOOST_TTI_DETAIL_TP_T>
-          >
-        {
-        };
-        
-      }
-    }
-  }
-  
+{
+namespace tti
+{
+namespace detail
+{
+
+template<class BOOST_TTI_DETAIL_TP_T,class BOOST_TTI_DETAIL_TP_R>
+struct ptmd
+{
+	typedef BOOST_TTI_DETAIL_TP_R BOOST_TTI_DETAIL_TP_T::* type;
+};
+
+template<class BOOST_TTI_DETAIL_TP_T>
+struct dmem_check_ptmd :
+	boost::mpl::identity<BOOST_TTI_DETAIL_TP_T>
+{
+	BOOST_MPL_ASSERT((boost::function_types::is_member_object_pointer<BOOST_TTI_DETAIL_TP_T>));
+};
+
+template<class BOOST_TTI_DETAIL_TP_T>
+struct dmem_check_ptec :
+	BOOST_TTI_NAMESPACE::detail::class_type<BOOST_TTI_DETAIL_TP_T>
+{
+	BOOST_MPL_ASSERT((boost::function_types::is_member_object_pointer<BOOST_TTI_DETAIL_TP_T>));
+};
+
+template<class BOOST_TTI_DETAIL_TP_T,class BOOST_TTI_DETAIL_TP_T2>
+struct dmem_get_type :
+	boost::mpl::eval_if
+	<
+	boost::is_same<BOOST_TTI_DETAIL_TP_T2,BOOST_TTI_NAMESPACE::detail::deftype>,
+	BOOST_TTI_NAMESPACE::detail::dmem_check_ptmd<BOOST_TTI_DETAIL_TP_T>,
+	BOOST_TTI_NAMESPACE::detail::ptmd<BOOST_TTI_DETAIL_TP_T,BOOST_TTI_DETAIL_TP_T2>
+	>
+{
+};
+
+template<class BOOST_TTI_DETAIL_TP_T,class BOOST_TTI_DETAIL_TP_T2>
+struct dmem_get_enclosing :
+	boost::mpl::eval_if
+	<
+	boost::is_same<BOOST_TTI_DETAIL_TP_T2,BOOST_TTI_NAMESPACE::detail::deftype>,
+	BOOST_TTI_NAMESPACE::detail::dmem_check_ptec<BOOST_TTI_DETAIL_TP_T>,
+	boost::mpl::identity<BOOST_TTI_DETAIL_TP_T>
+	>
+{
+};
+
+}
+}
+}
+
 #endif // BOOST_TTI_DETAIL_MEM_DATA_HPP

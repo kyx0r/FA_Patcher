@@ -10,20 +10,25 @@
 
 #include <utility>
 
-namespace boost { namespace hof {
+namespace boost
+{
+namespace hof
+{
 
 // contexpr-friendly forwarding
 
 template<typename T>
 constexpr T&& forward(typename std::remove_reference<T>::type& t) noexcept
-{ return static_cast<T&&>(t); }
+{
+	return static_cast<T&&>(t);
+}
 
 
 template<typename T>
 constexpr T&& forward(typename std::remove_reference<T>::type&& t) noexcept
 {
-  static_assert(!std::is_lvalue_reference<T>::value, "T must not be an lvalue reference type");
-  return static_cast<T&&>(t);
+	static_assert(!std::is_lvalue_reference<T>::value, "T must not be an lvalue reference type");
+	return static_cast<T&&>(t);
 }
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
@@ -32,6 +37,7 @@ constexpr T&& forward(typename std::remove_reference<T>::type&& t) noexcept
 #define BOOST_HOF_FORWARD(...) static_cast<__VA_ARGS__ &&>
 #endif
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

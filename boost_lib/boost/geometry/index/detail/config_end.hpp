@@ -7,6 +7,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #if defined BOOST_MSVC
-    #pragma warning (pop)
+#pragma warning (pop)
 #endif
 

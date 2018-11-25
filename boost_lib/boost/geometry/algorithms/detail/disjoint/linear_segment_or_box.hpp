@@ -36,12 +36,16 @@
 #include <boost/geometry/algorithms/dispatch/disjoint.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace disjoint
+namespace detail
+{
+namespace disjoint
 {
 
 
@@ -50,66 +54,66 @@ template
     typename Range,
     closure_selector Closure,
     typename SegmentOrBox
->
+    >
 struct disjoint_range_segment_or_box
 {
-    template <typename Strategy>
-    static inline bool apply(Range const& range,
-                             SegmentOrBox const& segment_or_box,
-                             Strategy const& strategy)
-    {
-        typedef typename closeable_view<Range const, Closure>::type view_type;
+	template <typename Strategy>
+	static inline bool apply(Range const& range,
+	                         SegmentOrBox const& segment_or_box,
+	                         Strategy const& strategy)
+	{
+		typedef typename closeable_view<Range const, Closure>::type view_type;
 
-        typedef typename ::boost::range_value<view_type>::type point_type;
-        typedef typename ::boost::range_iterator
-            <
-                view_type const
-            >::type const_iterator;
+		typedef typename ::boost::range_value<view_type>::type point_type;
+		typedef typename ::boost::range_iterator
+		<
+		view_type const
+		>::type const_iterator;
 
-        typedef typename ::boost::range_size<view_type>::type size_type;
+		typedef typename ::boost::range_size<view_type>::type size_type;
 
-        typedef typename geometry::model::referring_segment
-            <
-                point_type const
-            > range_segment;
+		typedef typename geometry::model::referring_segment
+		<
+		point_type const
+		> range_segment;
 
-        view_type view(range);
+		view_type view(range);
 
-        const size_type count = ::boost::size(view);
+		const size_type count = ::boost::size(view);
 
-        if ( count == 0 )
-        {
-            return false;
-        }
-        else if ( count == 1 )
-        {
-            return dispatch::disjoint
-                <
-                    point_type, SegmentOrBox
-                >::apply(geometry::range::front<view_type const>(view),
-                         segment_or_box,
-                         strategy.template get_point_in_geometry_strategy<Range, SegmentOrBox>());
-        }
-        else
-        {
-            const_iterator it0 = ::boost::begin(view);
-            const_iterator it1 = ::boost::begin(view) + 1;
-            const_iterator last = ::boost::end(view);
+		if ( count == 0 )
+		{
+			return false;
+		}
+		else if ( count == 1 )
+		{
+			return dispatch::disjoint
+			       <
+			       point_type, SegmentOrBox
+			       >::apply(geometry::range::front<view_type const>(view),
+			                segment_or_box,
+			                strategy.template get_point_in_geometry_strategy<Range, SegmentOrBox>());
+		}
+		else
+		{
+			const_iterator it0 = ::boost::begin(view);
+			const_iterator it1 = ::boost::begin(view) + 1;
+			const_iterator last = ::boost::end(view);
 
-            for ( ; it1 != last ; ++it0, ++it1 )
-            {
-                range_segment rng_segment(*it0, *it1);
-                if ( !dispatch::disjoint
-                         <
-                             range_segment, SegmentOrBox
-                         >::apply(rng_segment, segment_or_box, strategy) )
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
+			for ( ; it1 != last ; ++it0, ++it1 )
+			{
+				range_segment rng_segment(*it0, *it1);
+				if ( !dispatch::disjoint
+				        <
+				        range_segment, SegmentOrBox
+				        >::apply(rng_segment, segment_or_box, strategy) )
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+	}
 };
 
 
@@ -120,27 +124,28 @@ template
     typename Linear,
     typename SegmentOrBox,
     typename Tag = typename tag<Linear>::type
->
+    >
 struct disjoint_linear_segment_or_box
-    : not_implemented<Linear, SegmentOrBox>
+	: not_implemented<Linear, SegmentOrBox>
 {};
 
 
 template <typename Linestring, typename SegmentOrBox>
 struct disjoint_linear_segment_or_box<Linestring, SegmentOrBox, linestring_tag>
-    : disjoint_range_segment_or_box<Linestring, closed, SegmentOrBox>
+	: disjoint_range_segment_or_box<Linestring, closed, SegmentOrBox>
 {};
 
 
 template <typename MultiLinestring, typename SegmentOrBox>
 struct disjoint_linear_segment_or_box
-    <
-        MultiLinestring, SegmentOrBox, multi_linestring_tag
-    > : multirange_constant_size_geometry<MultiLinestring, SegmentOrBox>
+	<
+	MultiLinestring, SegmentOrBox, multi_linestring_tag
+	> : multirange_constant_size_geometry<MultiLinestring, SegmentOrBox>
 {};
 
 
-}} // namespace detail::disjoint
+}
+} // namespace detail::disjoint
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -151,13 +156,13 @@ namespace dispatch
 
 template <typename Linear, typename Segment>
 struct disjoint<Linear, Segment, 2, linear_tag, segment_tag, false>
-    : detail::disjoint::disjoint_linear_segment_or_box<Linear, Segment>
+	: detail::disjoint::disjoint_linear_segment_or_box<Linear, Segment>
 {};
 
 
 template <typename Linear, typename Box, std::size_t DimensionCount>
 struct disjoint<Linear, Box, DimensionCount, linear_tag, box_tag, false>
-    : detail::disjoint::disjoint_linear_segment_or_box<Linear, Box>
+	: detail::disjoint::disjoint_linear_segment_or_box<Linear, Box>
 {};
 
 
@@ -165,7 +170,8 @@ struct disjoint<Linear, Box, DimensionCount, linear_tag, box_tag, false>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISJOINT_LINEAR_SEGMENT_OR_BOX_HPP

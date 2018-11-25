@@ -16,9 +16,12 @@
 #include <boost/beast/http/message.hpp>
 #include <boost/asio/async_result.hpp>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /** Read part of a message from a stream using a parser.
 

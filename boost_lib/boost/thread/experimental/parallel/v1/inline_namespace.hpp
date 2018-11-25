@@ -12,14 +12,17 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/thread/experimental/config/inline_namespace.hpp>
-namespace boost {
-namespace experimental {
-namespace parallel {
+namespace boost
+{
+namespace experimental
+{
+namespace parallel
+{
 
-  BOOST_THREAD_INLINE_NAMESPACE(v1) {}
+BOOST_THREAD_INLINE_NAMESPACE(v1) {}
 
 #if defined(BOOST_NO_CXX11_INLINE_NAMESPACES)
-  using namespace v1;
+using namespace v1;
 #endif
 
 }

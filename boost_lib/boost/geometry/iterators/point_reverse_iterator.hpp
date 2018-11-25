@@ -17,46 +17,48 @@
 
 #include <boost/geometry/iterators/point_iterator.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 // MK:: need to add doc here
 template <typename Geometry>
 class point_reverse_iterator
-    : public std::reverse_iterator<point_iterator<Geometry> >
+	: public std::reverse_iterator<point_iterator<Geometry> >
 {
 private:
-    typedef std::reverse_iterator<point_iterator<Geometry> > base_type;
+	typedef std::reverse_iterator<point_iterator<Geometry> > base_type;
 
-    template <typename OtherGeometry> friend class point_reverse_iterator;
-    template <typename G>
-    friend inline point_reverse_iterator<G> points_rbegin(G&);
+	template <typename OtherGeometry> friend class point_reverse_iterator;
+	template <typename G>
+	friend inline point_reverse_iterator<G> points_rbegin(G&);
 
-    template <typename G>
-    friend inline point_reverse_iterator<G> points_rend(G&);
+	template <typename G>
+	friend inline point_reverse_iterator<G> points_rend(G&);
 
-    inline point_reverse_iterator(base_type const& base_it)
-        : base_type(base_it) {}
+	inline point_reverse_iterator(base_type const& base_it)
+		: base_type(base_it) {}
 
 public:
-    inline point_reverse_iterator() {}
+	inline point_reverse_iterator() {}
 
-    template <typename OtherGeometry>
-    inline
-    point_reverse_iterator(point_reverse_iterator<OtherGeometry> const& other)
-        : base_type(other.base())
-    {
-        static const bool is_conv = boost::is_convertible
-            <
-                std::reverse_iterator<point_iterator<Geometry> >,
-                std::reverse_iterator<point_iterator<OtherGeometry> >
-            >::value;
+	template <typename OtherGeometry>
+	inline
+	point_reverse_iterator(point_reverse_iterator<OtherGeometry> const& other)
+		: base_type(other.base())
+	{
+		static const bool is_conv = boost::is_convertible
+		                            <
+		                            std::reverse_iterator<point_iterator<Geometry> >,
+		                            std::reverse_iterator<point_iterator<OtherGeometry> >
+		                            >::value;
 
-        BOOST_MPL_ASSERT_MSG((is_conv),
-                             NOT_CONVERTIBLE,
-                             (point_reverse_iterator<OtherGeometry>));
-    }
+		BOOST_MPL_ASSERT_MSG((is_conv),
+		                     NOT_CONVERTIBLE,
+		                     (point_reverse_iterator<OtherGeometry>));
+	}
 };
 
 
@@ -65,10 +67,10 @@ template <typename Geometry>
 inline point_reverse_iterator<Geometry>
 points_rbegin(Geometry& geometry)
 {
-    return std::reverse_iterator
-        <
-            point_iterator<Geometry>
-        >(points_end(geometry));
+	return std::reverse_iterator
+	       <
+	       point_iterator<Geometry>
+	       >(points_end(geometry));
 }
 
 
@@ -77,13 +79,14 @@ template <typename Geometry>
 inline point_reverse_iterator<Geometry>
 points_rend(Geometry& geometry)
 {
-    return std::reverse_iterator
-        <
-            point_iterator<Geometry>
-        >(points_begin(geometry));
+	return std::reverse_iterator
+	       <
+	       point_iterator<Geometry>
+	       >(points_begin(geometry));
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ITERATORS_POINT_REVERSE_ITERATOR_HPP

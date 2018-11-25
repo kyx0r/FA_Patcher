@@ -20,25 +20,28 @@
 
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace result_of
-    {
-        template <typename ...T>
-        struct make_list
-        {
-            typedef list<typename detail::as_fusion_element<T>::type...> type;
-        };
-    }
+namespace fusion
+{
+namespace result_of
+{
+template <typename ...T>
+struct make_list
+{
+	typedef list<typename detail::as_fusion_element<T>::type...> type;
+};
+}
 
-    template <typename ...T>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline typename result_of::make_list<T...>::type
-    make_list(T const&... arg)
-    {
-        return typename result_of::make_list<T...>::type(arg...);
-    }
- }}
+template <typename ...T>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline typename result_of::make_list<T...>::type
+make_list(T const&... arg)
+{
+	return typename result_of::make_list<T...>::type(arg...);
+}
+}
+}
 
 
 #endif

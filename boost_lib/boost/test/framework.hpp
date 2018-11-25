@@ -27,10 +27,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
+namespace boost
+{
 
 /// Main namespace for the Unit Test Framework interfaces and implementation
-namespace unit_test {
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************              init_unit_test_func             ************** //
@@ -50,7 +52,8 @@ typedef test_suite* (*init_unit_test_func)( int, char* [] );
 // ************************************************************************** //
 
 /// Namespace of the Unit Test Framework mono-state
-namespace framework {
+namespace framework
+{
 
 /// @name Unit Test Framework initialization and shutdown
 /// @{
@@ -157,18 +160,19 @@ BOOST_TEST_DECL void                deregister_global_fixture( test_unit_fixture
 /// @name Assertion/uncaught exception context support
 /// @{
 /// Context accessor
-struct BOOST_TEST_DECL context_generator {
-    context_generator() : m_curr_frame( 0 ) {}
+struct BOOST_TEST_DECL context_generator
+{
+	context_generator() : m_curr_frame( 0 ) {}
 
-    /// Is there any context?
-    bool            is_empty() const;
+	/// Is there any context?
+	bool            is_empty() const;
 
-    /// Give me next frame; empty - last frame
-    const_string    next() const;
+	/// Give me next frame; empty - last frame
+	const_string    next() const;
 
 private:
-    // Data members
-    mutable unsigned m_curr_frame;
+	// Data members
+	mutable unsigned m_curr_frame;
 };
 
 /// Records context frame message.
@@ -229,7 +233,7 @@ BOOST_TEST_DECL test_unit&          get( test_unit_id tu_id, test_unit_type tu_t
 template<typename UnitType>
 inline UnitType&                    get( test_unit_id id )
 {
-    return static_cast<UnitType&>( get( id, static_cast<test_unit_type>(UnitType::type) ) );
+	return static_cast<UnitType&>( get( id, static_cast<test_unit_type>(UnitType::type) ) );
 }
 ///@}
 
@@ -260,7 +264,8 @@ BOOST_TEST_DECL void                test_unit_aborted( test_unit const& );
 BOOST_TEST_DECL void                test_aborted( );
 /// @}
 
-namespace impl {
+namespace impl
+{
 // exclusively for self test
 BOOST_TEST_DECL void                setup_for_execution( test_unit const& );
 BOOST_TEST_DECL void                setup_loggers( );
@@ -271,25 +276,28 @@ BOOST_TEST_DECL void                setup_loggers( );
 // ************************************************************************** //
 
 /// This exception type is used to report internal Boost.Test framework errors.
-struct BOOST_TEST_DECL internal_error : public std::runtime_error {
-    internal_error( const_string m ) : std::runtime_error( std::string( m.begin(), m.size() ) ) {}
+struct BOOST_TEST_DECL internal_error : public std::runtime_error
+{
+	internal_error( const_string m ) : std::runtime_error( std::string( m.begin(), m.size() ) ) {}
 };
 
 //____________________________________________________________________________//
 
 /// This exception type is used to report test module setup errors.
-struct BOOST_TEST_DECL setup_error : public std::runtime_error {
-    setup_error( const_string m ) : std::runtime_error( std::string( m.begin(), m.size() ) ) {}
+struct BOOST_TEST_DECL setup_error : public std::runtime_error
+{
+	setup_error( const_string m ) : std::runtime_error( std::string( m.begin(), m.size() ) ) {}
 };
 
 #define BOOST_TEST_SETUP_ASSERT( cond, msg ) BOOST_TEST_I_ASSRT( cond, unit_test::framework::setup_error( msg ) )
 
 //____________________________________________________________________________//
 
-struct nothing_to_test {
-    explicit    nothing_to_test( int rc ) : m_result_code( rc ) {}
+struct nothing_to_test
+{
+	explicit    nothing_to_test( int rc ) : m_result_code( rc ) {}
 
-    int         m_result_code;
+	int         m_result_code;
 };
 
 //____________________________________________________________________________//

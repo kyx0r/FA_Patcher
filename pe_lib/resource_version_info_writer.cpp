@@ -19,19 +19,19 @@ resource_version_info_writer::resource_version_info_writer(pe_resource_manager& 
 //lang_string_values_map: map of version info strings with encodings
 //translation_values_map: map of translations
 void resource_version_info_writer::set_version_info(const file_version_info& file_info,
-	const lang_string_values_map& string_values,
-	const translation_values_map& translations,
-	uint32_t language,
-	uint32_t codepage,
-	uint32_t timestamp)
+        const lang_string_values_map& string_values,
+        const translation_values_map& translations,
+        uint32_t language,
+        uint32_t codepage,
+        uint32_t timestamp)
 {
 	std::string version_data;
 
 	//Calculate total size of version resource data
 	uint32_t total_version_info_length =
-		static_cast<uint32_t>(sizeof(version_info_block) - sizeof(uint16_t) + sizeof(uint16_t) /* pading */
-		+ (resource_version_info_reader::version_info_key.length() + 1) * 2
-		+ sizeof(vs_fixedfileinfo));
+	    static_cast<uint32_t>(sizeof(version_info_block) - sizeof(uint16_t) + sizeof(uint16_t) /* pading */
+	                          + (resource_version_info_reader::version_info_key.length() + 1) * 2
+	                          + sizeof(vs_fixedfileinfo));
 
 	//If we have any strings values
 	if(!string_values.empty())

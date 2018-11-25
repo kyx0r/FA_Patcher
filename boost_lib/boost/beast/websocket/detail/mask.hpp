@@ -19,62 +19,66 @@
 #include <random>
 #include <type_traits>
 
-namespace boost {
-namespace beast {
-namespace websocket {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
+namespace detail
+{
 
 // Pseudo-random source of mask keys
 //
 template<class Generator>
 class maskgen_t
 {
-    Generator g_;
+	Generator g_;
 
 public:
-    using result_type =
-        typename Generator::result_type;
+	using result_type =
+	    typename Generator::result_type;
 
-    maskgen_t();
+	maskgen_t();
 
-    result_type
-    operator()() noexcept;
+	result_type
+	operator()() noexcept;
 
-    void
-    rekey();
+	void
+	rekey();
 };
 
 template<class Generator>
 maskgen_t<Generator>::maskgen_t()
 {
-    rekey();
+	rekey();
 }
 
 template<class Generator>
 auto
 maskgen_t<Generator>::operator()() noexcept ->
-    result_type
+result_type
 {
-    for(;;)
-        if(auto key = g_())
-            return key;
+	for(;;)
+		if(auto key = g_())
+			return key;
 }
 
 template<class _>
 void
 maskgen_t<_>::rekey()
 {
-    std::random_device rng;
+	std::random_device rng;
 #if 0
-    std::array<std::uint32_t, 32> e;
-    for(auto& i : e)
-        i = rng();
-    // VFALCO This constructor causes
-    //        address sanitizer to fail, no idea why.
-    std::seed_seq ss(e.begin(), e.end());
-    g_.seed(ss);
+	std::array<std::uint32_t, 32> e;
+	for(auto& i : e)
+		i = rng();
+	// VFALCO This constructor causes
+	//        address sanitizer to fail, no idea why.
+	std::seed_seq ss(e.begin(), e.end());
+	g_.seed(ss);
 #else
-    g_.seed(rng());
+	g_.seed(rng());
 #endif
 }
 
@@ -90,19 +94,19 @@ inline
 void
 prepare_key(prepared_key& prepared, std::uint32_t key)
 {
-    prepared[0] = (key >>  0) & 0xff;
-    prepared[1] = (key >>  8) & 0xff;
-    prepared[2] = (key >> 16) & 0xff;
-    prepared[3] = (key >> 24) & 0xff;
+	prepared[0] = (key >>  0) & 0xff;
+	prepared[1] = (key >>  8) & 0xff;
+	prepared[2] = (key >> 16) & 0xff;
+	prepared[3] = (key >> 24) & 0xff;
 }
 
 template<std::size_t N>
 void
 rol(std::array<unsigned char, N>& v, std::size_t n)
 {
-    auto v0 = v;
-    for(std::size_t i = 0; i < v.size(); ++i )
-        v[i] = v0[(i + n) % v.size()];
+	auto v0 = v;
+	for(std::size_t i = 0; i < v.size(); ++i )
+		v[i] = v0[(i + n) % v.size()];
 }
 
 // Apply mask in place
@@ -111,22 +115,22 @@ inline
 void
 mask_inplace(boost::asio::mutable_buffer& b, prepared_key& key)
 {
-    auto n = b.size();
-    auto mask = key; // avoid aliasing
-    auto p = reinterpret_cast<unsigned char*>(b.data());
-    while(n >= 4)
-    {
-        for(int i = 0; i < 4; ++i)
-            p[i] ^= mask[i];
-        p += 4;
-        n -= 4;
-    }
-    if(n > 0)
-    {
-        for(std::size_t i = 0; i < n; ++i)
-            p[i] ^= mask[i];
-        rol(key, n);
-    }
+	auto n = b.size();
+	auto mask = key; // avoid aliasing
+	auto p = reinterpret_cast<unsigned char*>(b.data());
+	while(n >= 4)
+	{
+		for(int i = 0; i < 4; ++i)
+			p[i] ^= mask[i];
+		p += 4;
+		n -= 4;
+	}
+	if(n > 0)
+	{
+		for(std::size_t i = 0; i < n; ++i)
+			p[i] ^= mask[i];
+		rol(key, n);
+	}
 }
 
 // Apply mask in place
@@ -135,9 +139,9 @@ template<class MutableBuffers, class KeyType>
 void
 mask_inplace(MutableBuffers const& bs, KeyType& key)
 {
-    for(boost::asio::mutable_buffer b :
-            beast::detail::buffers_range(bs))
-        mask_inplace(b, key);
+	for(boost::asio::mutable_buffer b :
+	        beast::detail::buffers_range(bs))
+		mask_inplace(b, key);
 }
 
 } // detail

@@ -17,19 +17,21 @@
 # pragma message("NOTE: Use of this header (ice_eq.hpp) is deprecated")
 #endif
 
-namespace boost {
-namespace type_traits {
+namespace boost
+{
+namespace type_traits
+{
 
 template <int b1, int b2>
 struct ice_eq
 {
-    BOOST_STATIC_CONSTANT(bool, value = (b1 == b2));
+	BOOST_STATIC_CONSTANT(bool, value = (b1 == b2));
 };
 
 template <int b1, int b2>
 struct ice_ne
 {
-    BOOST_STATIC_CONSTANT(bool, value = (b1 != b2));
+	BOOST_STATIC_CONSTANT(bool, value = (b1 != b2));
 };
 
 #ifndef BOOST_NO_INCLASS_MEMBER_INITIALIZATION

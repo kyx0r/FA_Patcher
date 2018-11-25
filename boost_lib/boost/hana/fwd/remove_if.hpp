@@ -15,54 +15,56 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Remove all the elements of a monadic structure that satisfy some
-    //! predicate.
-    //! @ingroup group-MonadPlus
-    //!
-    //! Given a monadic structure `xs` and a unary predicate, `remove_if`
-    //! returns a new monadic structure equal to `xs` without all its elements
-    //! that satisfy the predicate. This is equivalent to `filter` with a
-    //! negated predicate, i.e.
-    //! @code
-    //!     remove_if(xs, predicate) == filter(xs, negated predicated)
-    //! @endcode
-    //!
-    //!
-    //! Signature
-    //! ---------
-    //! Given a MonadPlus `M` and a predicate of type \f$ T \to Bool \f$ for
-    //! some compile-time Logical `Bool`, the signature is
-    //! \f$
-    //!     \mathrm{remove\_if} : M(T) \times (T \to Bool) \to M(T)
-    //! \f$
-    //!
-    //! @param xs
-    //! A monadic structure to remove some elements from.
-    //!
-    //! @param predicate
-    //! A unary predicate called as `predicate(x)`, where `x` is an element
-    //! of the structure, and returning whether `x` should be removed from
-    //! the structure. In the current version of the library, `predicate`
-    //! must return a compile-time Logical.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/remove_if.cpp
+//! Remove all the elements of a monadic structure that satisfy some
+//! predicate.
+//! @ingroup group-MonadPlus
+//!
+//! Given a monadic structure `xs` and a unary predicate, `remove_if`
+//! returns a new monadic structure equal to `xs` without all its elements
+//! that satisfy the predicate. This is equivalent to `filter` with a
+//! negated predicate, i.e.
+//! @code
+//!     remove_if(xs, predicate) == filter(xs, negated predicated)
+//! @endcode
+//!
+//!
+//! Signature
+//! ---------
+//! Given a MonadPlus `M` and a predicate of type \f$ T \to Bool \f$ for
+//! some compile-time Logical `Bool`, the signature is
+//! \f$
+//!     \mathrm{remove\_if} : M(T) \times (T \to Bool) \to M(T)
+//! \f$
+//!
+//! @param xs
+//! A monadic structure to remove some elements from.
+//!
+//! @param predicate
+//! A unary predicate called as `predicate(x)`, where `x` is an element
+//! of the structure, and returning whether `x` should be removed from
+//! the structure. In the current version of the library, `predicate`
+//! must return a compile-time Logical.
+//!
+//!
+//! Example
+//! -------
+//! @include example/remove_if.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto remove_if = [](auto&& xs, auto&& predicate) {
-        return tag-dispatched;
-    };
+constexpr auto remove_if = [](auto&& xs, auto&& predicate)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename M, typename = void>
-    struct remove_if_impl : remove_if_impl<M, when<true>> { };
+template <typename M, typename = void>
+struct remove_if_impl : remove_if_impl<M, when<true>> { };
 
-    struct remove_if_t {
-        template <typename Xs, typename Pred>
-        constexpr auto operator()(Xs&& xs, Pred&& pred) const;
-    };
+struct remove_if_t
+{
+	template <typename Xs, typename Pred>
+	constexpr auto operator()(Xs&& xs, Pred&& pred) const;
+};
 
-    constexpr remove_if_t remove_if{};
+constexpr remove_if_t remove_if{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

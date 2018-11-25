@@ -38,34 +38,39 @@ namespace boost {
 \endxmlonly
 */
 
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 
 struct cmd_
 {
-    constexpr cmd_() {}
+	constexpr cmd_() {}
 
-    template<typename Char>
-    inline api::cmd_setter_<Char> operator()(const Char *s) const
-    {
-        return api::cmd_setter_<Char>(s);
-    }
-    template<typename Char>
-    inline api::cmd_setter_<Char> operator= (const Char *s) const
-    {
-        return api::cmd_setter_<Char>(s);
-    }
+	template<typename Char>
+	inline api::cmd_setter_<Char> operator()(const Char *s) const
+	{
+		return api::cmd_setter_<Char>(s);
+	}
+	template<typename Char>
+	inline api::cmd_setter_<Char> operator= (const Char *s) const
+	{
+		return api::cmd_setter_<Char>(s);
+	}
 
-    template<typename Char>
-    inline api::cmd_setter_<Char> operator()(const std::basic_string<Char> &s) const
-    {
-        return api::cmd_setter_<Char>(s);
-    }
-    template<typename Char>
-    inline api::cmd_setter_<Char> operator= (const std::basic_string<Char> &s) const
-    {
-        return api::cmd_setter_<Char>(s);
-    }
+	template<typename Char>
+	inline api::cmd_setter_<Char> operator()(const std::basic_string<Char> &s) const
+	{
+		return api::cmd_setter_<Char>(s);
+	}
+	template<typename Char>
+	inline api::cmd_setter_<Char> operator= (const std::basic_string<Char> &s) const
+	{
+		return api::cmd_setter_<Char>(s);
+	}
 };
 
 template<> struct is_wchar_t<api::cmd_setter_<wchar_t>> : std::true_type {};
@@ -75,19 +80,19 @@ template<> struct is_wchar_t<api::cmd_setter_<wchar_t>> : std::true_type {};
 template<>
 struct char_converter<char, api::cmd_setter_<wchar_t>>
 {
-    static api::cmd_setter_<char> conv(const api::cmd_setter_<wchar_t> & in)
-    {
-        return { ::boost::process::detail::convert(in.str()) };
-    }
+	static api::cmd_setter_<char> conv(const api::cmd_setter_<wchar_t> & in)
+	{
+		return { ::boost::process::detail::convert(in.str()) };
+	}
 };
 
 template<>
 struct char_converter<wchar_t, api::cmd_setter_<char>>
 {
-    static api::cmd_setter_<wchar_t> conv(const api::cmd_setter_<char> & in)
-    {
-        return { ::boost::process::detail::convert(in.str()) };
-    }
+	static api::cmd_setter_<wchar_t> conv(const api::cmd_setter_<char> & in)
+	{
+		return { ::boost::process::detail::convert(in.str()) };
+	}
 };
 
 
@@ -117,6 +122,7 @@ The property can only be used for assignments.
  */
 constexpr static ::boost::process::detail::cmd_ cmd;
 
-}}
+}
+}
 
 #endif

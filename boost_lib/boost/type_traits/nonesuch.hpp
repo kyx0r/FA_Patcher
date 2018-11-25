@@ -12,21 +12,24 @@ or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 #if !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS)
-struct nonesuch {
-    nonesuch() = delete;
-    ~nonesuch() = delete;
-    nonesuch(const nonesuch&) = delete;
-    void operator=(const nonesuch&) = delete;
+struct nonesuch
+{
+	nonesuch() = delete;
+	~nonesuch() = delete;
+	nonesuch(const nonesuch&) = delete;
+	void operator=(const nonesuch&) = delete;
 };
 #else
-class nonesuch {
-    nonesuch();
-    ~nonesuch();
-    nonesuch(const nonesuch&);
-    void operator=(const nonesuch&);
+class nonesuch
+{
+	nonesuch();
+	~nonesuch();
+	nonesuch(const nonesuch&);
+	void operator=(const nonesuch&);
 };
 #endif
 

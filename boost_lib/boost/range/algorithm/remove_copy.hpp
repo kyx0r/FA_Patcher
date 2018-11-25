@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function remove_copy
 ///
@@ -33,12 +33,12 @@ template< class SinglePassRange, class OutputIterator, class Value >
 inline OutputIterator
 remove_copy(const SinglePassRange& rng, OutputIterator out_it, const Value& val)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
-    return std::remove_copy(boost::begin(rng), boost::end(rng), out_it, val);
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
+	return std::remove_copy(boost::begin(rng), boost::end(rng), out_it, val);
 }
 
-    } // namespace range
-    using range::remove_copy;
+} // namespace range
+using range::remove_copy;
 } // namespace boost
 
 #endif // include guard

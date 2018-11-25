@@ -13,16 +13,16 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class T, class NotErrorCase>
-      struct unless_error :
-        boost::mpl::eval_if<typename is_error<T>::type, T, NotErrorCase>
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class T, class NotErrorCase>
+struct unless_error :
+	boost::mpl::eval_if<typename is_error<T>::type, T, NotErrorCase>
+{};
+}
+}
 }
 
 #endif

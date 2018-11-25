@@ -20,8 +20,10 @@
 #include <boost/compute/detail/iterator_range_size.hpp>
 #include <boost/compute/detail/literal.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 ///
 /// \class bernoulli_distribution
@@ -39,59 +41,59 @@ class bernoulli_distribution
 {
 public:
 
-    /// Creates a new bernoulli distribution
-    bernoulli_distribution(RealType p = 0.5f)
-        : m_p(p)
-    {
-    }
+	/// Creates a new bernoulli distribution
+	bernoulli_distribution(RealType p = 0.5f)
+		: m_p(p)
+	{
+	}
 
-    /// Destroys the bernoulli_distribution object
-    ~bernoulli_distribution()
-    {
-    }
+	/// Destroys the bernoulli_distribution object
+	~bernoulli_distribution()
+	{
+	}
 
-    /// Returns the value of the parameter p
-    RealType p() const
-    {
-        return m_p;
-    }
+	/// Returns the value of the parameter p
+	RealType p() const
+	{
+		return m_p;
+	}
 
-    /// Generates bernoulli distributed booleans and stores
-    /// them in the range [\p first, \p last).
-    template<class OutputIterator, class Generator>
-    void generate(OutputIterator first,
-                  OutputIterator last,
-                  Generator &generator,
-                  command_queue &queue)
-    {
-        size_t count = detail::iterator_range_size(first, last);
+	/// Generates bernoulli distributed booleans and stores
+	/// them in the range [\p first, \p last).
+	template<class OutputIterator, class Generator>
+	void generate(OutputIterator first,
+	              OutputIterator last,
+	              Generator &generator,
+	              command_queue &queue)
+	{
+		size_t count = detail::iterator_range_size(first, last);
 
-        vector<uint_> tmp(count, queue.get_context());
-        generator.generate(tmp.begin(), tmp.end(), queue);
+		vector<uint_> tmp(count, queue.get_context());
+		generator.generate(tmp.begin(), tmp.end(), queue);
 
-        BOOST_COMPUTE_FUNCTION(bool, scale_random, (const uint_ x),
-        {
-            return (convert_RealType(x) / MAX_RANDOM) < PARAM;
-        });
+		BOOST_COMPUTE_FUNCTION(bool, scale_random, (const uint_ x),
+		{
+			return (convert_RealType(x) / MAX_RANDOM) < PARAM;
+		});
 
-        scale_random.define("PARAM", detail::make_literal(m_p));
-        scale_random.define("MAX_RANDOM", "UINT_MAX");
-        scale_random.define(
-            "convert_RealType", std::string("convert_") + type_name<RealType>()
-        );
+		scale_random.define("PARAM", detail::make_literal(m_p));
+		scale_random.define("MAX_RANDOM", "UINT_MAX");
+		scale_random.define(
+		    "convert_RealType", std::string("convert_") + type_name<RealType>()
+		);
 
-        transform(
-            tmp.begin(), tmp.end(), first, scale_random, queue
-        );
-    }
+		transform(
+		    tmp.begin(), tmp.end(), first, scale_random, queue
+		);
+	}
 
 private:
-    RealType m_p;
+	RealType m_p;
 
-    BOOST_STATIC_ASSERT_MSG(
-        boost::is_floating_point<RealType>::value,
-        "Template argument must be a floating point type"
-    );
+	BOOST_STATIC_ASSERT_MSG(
+	    boost::is_floating_point<RealType>::value,
+	    "Template argument must be a floating point type"
+	);
 };
 
 } // end compute namespace

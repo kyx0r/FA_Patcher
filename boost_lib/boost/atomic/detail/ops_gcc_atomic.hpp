@@ -46,9 +46,12 @@
 #pragma system_header
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 /*!
  * The function converts \c boost::memory_order values to the compiler-specific constants.
@@ -76,97 +79,97 @@ namespace detail {
  */
 BOOST_FORCEINLINE BOOST_CONSTEXPR int convert_memory_order_to_gcc(memory_order order) BOOST_NOEXCEPT
 {
-    return (order == memory_order_relaxed ? __ATOMIC_RELAXED : (order == memory_order_consume ? __ATOMIC_CONSUME :
-        (order == memory_order_acquire ? __ATOMIC_ACQUIRE : (order == memory_order_release ? __ATOMIC_RELEASE :
-        (order == memory_order_acq_rel ? __ATOMIC_ACQ_REL : __ATOMIC_SEQ_CST)))));
+	return (order == memory_order_relaxed ? __ATOMIC_RELAXED : (order == memory_order_consume ? __ATOMIC_CONSUME :
+	        (order == memory_order_acquire ? __ATOMIC_ACQUIRE : (order == memory_order_release ? __ATOMIC_RELEASE :
+	                (order == memory_order_acq_rel ? __ATOMIC_ACQ_REL : __ATOMIC_SEQ_CST)))));
 }
 
 template< std::size_t Size, bool Signed >
 struct gcc_atomic_operations
 {
-    typedef typename make_storage_type< Size >::type storage_type;
-    typedef typename make_storage_type< Size >::aligned aligned_storage_type;
+	typedef typename make_storage_type< Size >::type storage_type;
+	typedef typename make_storage_type< Size >::aligned aligned_storage_type;
 
-    static BOOST_CONSTEXPR_OR_CONST std::size_t storage_size = Size;
-    static BOOST_CONSTEXPR_OR_CONST bool is_signed = Signed;
-    static BOOST_CONSTEXPR_OR_CONST bool full_cas_based = false;
+	static BOOST_CONSTEXPR_OR_CONST std::size_t storage_size = Size;
+	static BOOST_CONSTEXPR_OR_CONST bool is_signed = Signed;
+	static BOOST_CONSTEXPR_OR_CONST bool full_cas_based = false;
 
-    // Note: In the current implementation, gcc_atomic_operations are used only when the particularly sized __atomic
-    // intrinsics are always lock-free (i.e. the corresponding LOCK_FREE macro is 2). Therefore it is safe to
-    // always set is_always_lock_free to true here.
-    static BOOST_CONSTEXPR_OR_CONST bool is_always_lock_free = true;
+	// Note: In the current implementation, gcc_atomic_operations are used only when the particularly sized __atomic
+	// intrinsics are always lock-free (i.e. the corresponding LOCK_FREE macro is 2). Therefore it is safe to
+	// always set is_always_lock_free to true here.
+	static BOOST_CONSTEXPR_OR_CONST bool is_always_lock_free = true;
 
-    static BOOST_FORCEINLINE void store(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        __atomic_store_n(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE void store(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		__atomic_store_n(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE storage_type load(storage_type const volatile& storage, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_load_n(&storage, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE storage_type load(storage_type const volatile& storage, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_load_n(&storage, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_add(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_fetch_add(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE storage_type fetch_add(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_fetch_add(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_sub(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_fetch_sub(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE storage_type fetch_sub(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_fetch_sub(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE storage_type exchange(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_exchange_n(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE storage_type exchange(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_exchange_n(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE bool compare_exchange_strong(
-        storage_type volatile& storage, storage_type& expected, storage_type desired, memory_order success_order, memory_order failure_order) BOOST_NOEXCEPT
-    {
-        return __atomic_compare_exchange_n
-        (
-            &storage, &expected, desired, false,
-            atomics::detail::convert_memory_order_to_gcc(success_order),
-            atomics::detail::convert_memory_order_to_gcc(failure_order)
-        );
-    }
+	static BOOST_FORCEINLINE bool compare_exchange_strong(
+	    storage_type volatile& storage, storage_type& expected, storage_type desired, memory_order success_order, memory_order failure_order) BOOST_NOEXCEPT
+	{
+		return __atomic_compare_exchange_n
+		(
+		    &storage, &expected, desired, false,
+		    atomics::detail::convert_memory_order_to_gcc(success_order),
+		    atomics::detail::convert_memory_order_to_gcc(failure_order)
+		);
+	}
 
-    static BOOST_FORCEINLINE bool compare_exchange_weak(
-        storage_type volatile& storage, storage_type& expected, storage_type desired, memory_order success_order, memory_order failure_order) BOOST_NOEXCEPT
-    {
-        return __atomic_compare_exchange_n
-        (
-            &storage, &expected, desired, true,
-            atomics::detail::convert_memory_order_to_gcc(success_order),
-            atomics::detail::convert_memory_order_to_gcc(failure_order)
-        );
-    }
+	static BOOST_FORCEINLINE bool compare_exchange_weak(
+	    storage_type volatile& storage, storage_type& expected, storage_type desired, memory_order success_order, memory_order failure_order) BOOST_NOEXCEPT
+	{
+		return __atomic_compare_exchange_n
+		(
+		    &storage, &expected, desired, true,
+		    atomics::detail::convert_memory_order_to_gcc(success_order),
+		    atomics::detail::convert_memory_order_to_gcc(failure_order)
+		);
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_and(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_fetch_and(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE storage_type fetch_and(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_fetch_and(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_or(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_fetch_or(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE storage_type fetch_or(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_fetch_or(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_xor(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_fetch_xor(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE storage_type fetch_xor(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_fetch_xor(&storage, v, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE bool test_and_set(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
-    {
-        return __atomic_test_and_set(&storage, atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE bool test_and_set(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
+	{
+		return __atomic_test_and_set(&storage, atomics::detail::convert_memory_order_to_gcc(order));
+	}
 
-    static BOOST_FORCEINLINE void clear(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
-    {
-        __atomic_clear(const_cast< storage_type* >(&storage), atomics::detail::convert_memory_order_to_gcc(order));
-    }
+	static BOOST_FORCEINLINE void clear(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
+	{
+		__atomic_clear(const_cast< storage_type* >(&storage), atomics::detail::convert_memory_order_to_gcc(order));
+	}
 };
 
 #if BOOST_ATOMIC_INT128_LOCK_FREE > 0
@@ -178,17 +181,17 @@ struct gcc_atomic_operations
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=80878
 template< bool Signed >
 struct operations< 16u, Signed > :
-    public cas_based_operations< gcc_dcas_x86_64< Signed > >
+	public cas_based_operations< gcc_dcas_x86_64< Signed > >
 {
-    static BOOST_CONSTEXPR_OR_CONST std::size_t storage_size = 16u;
-    static BOOST_CONSTEXPR_OR_CONST bool is_signed = Signed;
+	static BOOST_CONSTEXPR_OR_CONST std::size_t storage_size = 16u;
+	static BOOST_CONSTEXPR_OR_CONST bool is_signed = Signed;
 };
 
 #else
 
 template< bool Signed >
 struct operations< 16u, Signed > :
-    public gcc_atomic_operations< 16u, Signed >
+	public gcc_atomic_operations< 16u, Signed >
 {
 };
 
@@ -202,10 +205,10 @@ struct operations< 16u, Signed > :
 // Workaround for clang bug http://llvm.org/bugs/show_bug.cgi?id=19355
 template< bool Signed >
 struct operations< 8u, Signed > :
-    public cas_based_operations< gcc_dcas_x86< Signed > >
+	public cas_based_operations< gcc_dcas_x86< Signed > >
 {
-    static BOOST_CONSTEXPR_OR_CONST std::size_t storage_size = 8u;
-    static BOOST_CONSTEXPR_OR_CONST bool is_signed = Signed;
+	static BOOST_CONSTEXPR_OR_CONST std::size_t storage_size = 8u;
+	static BOOST_CONSTEXPR_OR_CONST bool is_signed = Signed;
 };
 
 #elif (BOOST_ATOMIC_DETAIL_SIZEOF_LLONG == 8 && __GCC_ATOMIC_LLONG_LOCK_FREE != BOOST_ATOMIC_LLONG_LOCK_FREE) ||\
@@ -218,7 +221,7 @@ struct operations< 8u, Signed > :
 
 template< bool Signed >
 struct operations< 8u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 8u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 8u, Signed >
 {
 };
 
@@ -226,7 +229,7 @@ struct operations< 8u, Signed > :
 
 template< bool Signed >
 struct operations< 8u, Signed > :
-    public gcc_atomic_operations< 8u, Signed >
+	public gcc_atomic_operations< 8u, Signed >
 {
 };
 
@@ -246,7 +249,7 @@ struct operations< 8u, Signed > :
 
 template< bool Signed >
 struct operations< 4u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 8u, Signed >, 4u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 8u, Signed >, 4u, Signed >
 {
 };
 
@@ -254,7 +257,7 @@ struct operations< 4u, Signed > :
 
 template< bool Signed >
 struct operations< 4u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 4u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 4u, Signed >
 {
 };
 
@@ -264,7 +267,7 @@ struct operations< 4u, Signed > :
 
 template< bool Signed >
 struct operations< 4u, Signed > :
-    public gcc_atomic_operations< 4u, Signed >
+	public gcc_atomic_operations< 4u, Signed >
 {
 };
 
@@ -284,7 +287,7 @@ struct operations< 4u, Signed > :
 
 template< bool Signed >
 struct operations< 2u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 4u, Signed >, 2u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 4u, Signed >, 2u, Signed >
 {
 };
 
@@ -292,7 +295,7 @@ struct operations< 2u, Signed > :
 
 template< bool Signed >
 struct operations< 2u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 8u, Signed >, 2u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 8u, Signed >, 2u, Signed >
 {
 };
 
@@ -300,7 +303,7 @@ struct operations< 2u, Signed > :
 
 template< bool Signed >
 struct operations< 2u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 2u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 2u, Signed >
 {
 };
 
@@ -310,7 +313,7 @@ struct operations< 2u, Signed > :
 
 template< bool Signed >
 struct operations< 2u, Signed > :
-    public gcc_atomic_operations< 2u, Signed >
+	public gcc_atomic_operations< 2u, Signed >
 {
 };
 
@@ -330,7 +333,7 @@ struct operations< 2u, Signed > :
 
 template< bool Signed >
 struct operations< 1u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 2u, Signed >, 1u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 2u, Signed >, 1u, Signed >
 {
 };
 
@@ -338,7 +341,7 @@ struct operations< 1u, Signed > :
 
 template< bool Signed >
 struct operations< 1u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 4u, Signed >, 1u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 4u, Signed >, 1u, Signed >
 {
 };
 
@@ -346,7 +349,7 @@ struct operations< 1u, Signed > :
 
 template< bool Signed >
 struct operations< 1u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 8u, Signed >, 1u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 8u, Signed >, 1u, Signed >
 {
 };
 
@@ -354,7 +357,7 @@ struct operations< 1u, Signed > :
 
 template< bool Signed >
 struct operations< 1u, Signed > :
-    public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 1u, Signed >
+	public extending_cas_based_operations< gcc_atomic_operations< 16u, Signed >, 1u, Signed >
 {
 };
 
@@ -364,7 +367,7 @@ struct operations< 1u, Signed > :
 
 template< bool Signed >
 struct operations< 1u, Signed > :
-    public gcc_atomic_operations< 1u, Signed >
+	public gcc_atomic_operations< 1u, Signed >
 {
 };
 
@@ -377,12 +380,12 @@ struct operations< 1u, Signed > :
 
 BOOST_FORCEINLINE void thread_fence(memory_order order) BOOST_NOEXCEPT
 {
-    __atomic_thread_fence(atomics::detail::convert_memory_order_to_gcc(order));
+	__atomic_thread_fence(atomics::detail::convert_memory_order_to_gcc(order));
 }
 
 BOOST_FORCEINLINE void signal_fence(memory_order order) BOOST_NOEXCEPT
 {
-    __atomic_signal_fence(atomics::detail::convert_memory_order_to_gcc(order));
+	__atomic_signal_fence(atomics::detail::convert_memory_order_to_gcc(order));
 }
 
 } // namespace detail

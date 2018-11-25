@@ -14,7 +14,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -24,7 +26,7 @@ namespace detail_dispatch
 
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct boundary_view
-    : not_implemented<Tag>
+	: not_implemented<Tag>
 {};
 
 } // namespace detail_dispatch
@@ -37,11 +39,11 @@ namespace detail
 
 template <typename Geometry>
 struct boundary_view
-    : detail_dispatch::boundary_view<Geometry>
+	: detail_dispatch::boundary_view<Geometry>
 {
-    explicit boundary_view(Geometry& geometry)
-        : detail_dispatch::boundary_view<Geometry>(geometry)
-    {}
+	explicit boundary_view(Geometry& geometry)
+		: detail_dispatch::boundary_view<Geometry>(geometry)
+	{}
 };
 
 } // namespace detail
@@ -55,16 +57,17 @@ namespace traits
 template <typename Geometry>
 struct tag< geometry::detail::boundary_view<Geometry> >
 {
-    typedef typename detail_dispatch::boundary_view
-        <
-            Geometry
-        >::tag_type type;
+	typedef typename detail_dispatch::boundary_view
+	<
+	Geometry
+	>::tag_type type;
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_VIEWS_DETAIL_BOUNDARY_VIEW_INTERFACE_HPP

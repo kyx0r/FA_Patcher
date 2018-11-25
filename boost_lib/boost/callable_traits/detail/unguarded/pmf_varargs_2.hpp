@@ -11,53 +11,57 @@ DO NOT INCLUDE THIS HEADER DIRECTLY
 
 template<typename T, typename Return, typename... Args>
 struct set_varargs_member_function_qualifiers_t <
-    flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
-    false, // IsTransactionSafe
-    false, // IsNoexcept
-    BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...> {
+	flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
+	false, // IsTransactionSafe
+	false, // IsNoexcept
+	BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...>
+{
 
-    using type =
-        Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
-        BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS;
+	using type =
+	    Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
+	    BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS;
 };
 
 template<typename T, typename Return, typename... Args>
 struct set_varargs_member_function_qualifiers_t <
-    flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
-    false,
-    true,
-    BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...> {
+	flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
+	false,
+	true,
+	BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...>
+{
 
-    using type =
-        Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
-        BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS BOOST_CLBL_TRTS_NOEXCEPT_SPECIFIER;
+	using type =
+	    Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
+	    BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS BOOST_CLBL_TRTS_NOEXCEPT_SPECIFIER;
 };
 
 template<typename T, typename Return, typename... Args>
 struct set_varargs_member_function_qualifiers_t <
-    flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
-    true,
-    false,
-    BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...> {
+	flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
+	true,
+	false,
+	BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...>
+{
 
-    using type =
-        Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
-            BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS
-            BOOST_CLBL_TRTS_TRANSACTION_SAFE_SPECIFIER;
+	using type =
+	    Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
+	    BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS
+	    BOOST_CLBL_TRTS_TRANSACTION_SAFE_SPECIFIER;
 };
 
 template<typename T, typename Return, typename... Args>
 struct set_varargs_member_function_qualifiers_t <
-    flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
-    true,
-    true,
-    BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...> {
+	flag_map<int BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS>::value,
+	true,
+	true,
+	BOOST_CLBL_TRTS_CC_TAG, T, Return, Args...>
+{
 
-    using type =
-        Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
-            BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS
-            BOOST_CLBL_TRTS_TRANSACTION_SAFE_SPECIFIER
-            BOOST_CLBL_TRTS_NOEXCEPT_SPECIFIER;
+	using type =
+	    Return(BOOST_CLBL_TRTS_VARARGS_CC T::*)(Args..., ...)
+	    BOOST_CLBL_TRTS_INCLUDE_QUALIFIERS
+	    BOOST_CLBL_TRTS_TRANSACTION_SAFE_SPECIFIER
+	    BOOST_CLBL_TRTS_NOEXCEPT_SPECIFIER;
 };
 
 #define BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE

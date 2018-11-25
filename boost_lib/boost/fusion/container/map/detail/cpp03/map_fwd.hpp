@@ -31,18 +31,21 @@
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
-    struct map_tag;
-    struct map_iterator_tag;
+namespace fusion
+{
+struct void_;
+struct map_tag;
+struct map_iterator_tag;
 
-    template <
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-            FUSION_MAX_MAP_SIZE, typename T, void_)
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        FUSION_MAX_MAP_SIZE, typename T, void_)
     >
-    struct map;
-}}
+struct map;
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)

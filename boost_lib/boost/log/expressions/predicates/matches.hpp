@@ -30,43 +30,45 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * The predicate checks if the attribute value matches a regular expression. The attribute value is assumed to be of a string type.
  */
 template< typename T, typename RegexT, typename FallbackPolicyT = fallback_to_none >
 class attribute_matches :
-    public aux::attribute_predicate< T, typename boost::log::aux::match_traits< RegexT >::compiled_type, matches_fun, FallbackPolicyT >
+	public aux::attribute_predicate< T, typename boost::log::aux::match_traits< RegexT >::compiled_type, matches_fun, FallbackPolicyT >
 {
-    typedef aux::attribute_predicate< T, typename boost::log::aux::match_traits< RegexT >::compiled_type, matches_fun, FallbackPolicyT > base_type;
+	typedef aux::attribute_predicate< T, typename boost::log::aux::match_traits< RegexT >::compiled_type, matches_fun, FallbackPolicyT > base_type;
 
 public:
-    /*!
-     * Initializing constructor
-     *
-     * \param name Attribute name
-     * \param rex The regular expression to match the attribute value against
-     */
-    attribute_matches(attribute_name const& name, RegexT const& rex) : base_type(name, boost::log::aux::match_traits< RegexT >::compile(rex))
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \param name Attribute name
+	 * \param rex The regular expression to match the attribute value against
+	 */
+	attribute_matches(attribute_name const& name, RegexT const& rex) : base_type(name, boost::log::aux::match_traits< RegexT >::compile(rex))
+	{
+	}
 
-    /*!
-     * Initializing constructor
-     *
-     * \param name Attribute name
-     * \param rex The regular expression to match the attribute value against
-     * \param arg Additional parameter for the fallback policy
-     */
-    template< typename U >
-    attribute_matches(attribute_name const& name, RegexT const& rex, U const& arg) : base_type(name, boost::log::aux::match_traits< RegexT >::compile(rex), arg)
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \param name Attribute name
+	 * \param rex The regular expression to match the attribute value against
+	 * \param arg Additional parameter for the fallback policy
+	 */
+	template< typename U >
+	attribute_matches(attribute_name const& name, RegexT const& rex, U const& arg) : base_type(name, boost::log::aux::match_traits< RegexT >::compile(rex), arg)
+	{
+	}
 };
 
 /*!
@@ -77,9 +79,9 @@ template< typename T, typename FallbackPolicyT, typename TagT, template< typenam
 BOOST_FORCEINLINE ActorT< aux::unary_function_terminal< attribute_matches< T, RegexT, FallbackPolicyT > > >
 matches(attribute_actor< T, FallbackPolicyT, TagT, ActorT > const& attr, RegexT const& rex)
 {
-    typedef aux::unary_function_terminal< attribute_matches< T, RegexT, FallbackPolicyT > > terminal_type;
-    ActorT< terminal_type > act = {{ terminal_type(attr.get_name(), rex, attr.get_fallback_policy()) }};
-    return act;
+	typedef aux::unary_function_terminal< attribute_matches< T, RegexT, FallbackPolicyT > > terminal_type;
+	ActorT< terminal_type > act = {{ terminal_type(attr.get_name(), rex, attr.get_fallback_policy()) }};
+	return act;
 }
 
 /*!
@@ -90,9 +92,9 @@ template< typename DescriptorT, template< typename > class ActorT, typename Rege
 BOOST_FORCEINLINE ActorT< aux::unary_function_terminal< attribute_matches< typename DescriptorT::value_type, RegexT > > >
 matches(attribute_keyword< DescriptorT, ActorT > const&, RegexT const& rex)
 {
-    typedef aux::unary_function_terminal< attribute_matches< typename DescriptorT::value_type, RegexT > > terminal_type;
-    ActorT< terminal_type > act = {{ terminal_type(DescriptorT::get_name(), rex) }};
-    return act;
+	typedef aux::unary_function_terminal< attribute_matches< typename DescriptorT::value_type, RegexT > > terminal_type;
+	ActorT< terminal_type > act = {{ terminal_type(DescriptorT::get_name(), rex) }};
+	return act;
 }
 
 /*!
@@ -103,9 +105,9 @@ template< typename T, typename RegexT >
 BOOST_FORCEINLINE phoenix::actor< aux::unary_function_terminal< attribute_matches< T, RegexT > > >
 matches(attribute_name const& name, RegexT const& rex)
 {
-    typedef aux::unary_function_terminal< attribute_matches< T, RegexT > > terminal_type;
-    phoenix::actor< terminal_type > act = {{ terminal_type(name, rex) }};
-    return act;
+	typedef aux::unary_function_terminal< attribute_matches< T, RegexT > > terminal_type;
+	phoenix::actor< terminal_type > act = {{ terminal_type(name, rex) }};
+	return act;
 }
 
 } // namespace expressions

@@ -11,7 +11,7 @@
 #include <thread>
 
 #include <boost/config.hpp>
-#include <boost/predef.h> 
+#include <boost/predef.h>
 
 #include <boost/fiber/detail/config.hpp>
 
@@ -23,9 +23,12 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace fibers {
-namespace detail {
+namespace boost
+{
+namespace fibers
+{
+namespace detail
+{
 
 #if BOOST_ARCH_ARM
 # if BOOST_COMP_MSVC
@@ -73,7 +76,9 @@ namespace detail {
   }
 #endif
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

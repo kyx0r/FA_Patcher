@@ -21,10 +21,14 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost {
-namespace wave {
-namespace cpplexer {
-namespace impl {
+namespace boost
+{
+namespace wave
+{
+namespace cpplexer
+{
+namespace impl
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -35,20 +39,27 @@ template <typename StringT>
 inline bool
 is_trigraph(StringT const& trigraph)
 {
-    if (trigraph.size() < 3 || '?' != trigraph[0] || '?' != trigraph[1])
-        return false;
+	if (trigraph.size() < 3 || '?' != trigraph[0] || '?' != trigraph[1])
+		return false;
 
-    switch (trigraph[2]) {
-    case '\'': case '=': case '/': case '(':
-    case ')':  case '<': case '>': case '!':
-    case '-':
-        break;
+	switch (trigraph[2])
+	{
+	case '\'':
+	case '=':
+	case '/':
+	case '(':
+	case ')':
+	case '<':
+	case '>':
+	case '!':
+	case '-':
+		break;
 
-    default:
-        return false;
-    }
+	default:
+		return false;
+	}
 
-    return true;
+	return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,22 +77,42 @@ template <typename StringT>
 inline StringT
 convert_trigraph(StringT const &trigraph)
 {
-StringT result (trigraph);
+	StringT result (trigraph);
 
-    if (is_trigraph(trigraph)) {
-        switch (trigraph[2]) {
-        case '\'':  result = "^"; break;
-        case '=':   result = "#"; break;
-        case '/':   result = "\\"; break;
-        case '(':   result = "["; break;
-        case ')':   result = "]"; break;
-        case '<':   result = "{"; break;
-        case '>':   result = "}"; break;
-        case '!':   result = "|"; break;
-        case '-':   result = "~"; break;
-        }
-    }
-    return result;
+	if (is_trigraph(trigraph))
+	{
+		switch (trigraph[2])
+		{
+		case '\'':
+			result = "^";
+			break;
+		case '=':
+			result = "#";
+			break;
+		case '/':
+			result = "\\";
+			break;
+		case '(':
+			result = "[";
+			break;
+		case ')':
+			result = "]";
+			break;
+		case '<':
+			result = "{";
+			break;
+		case '>':
+			result = "}";
+			break;
+		case '!':
+			result = "|";
+			break;
+		case '-':
+			result = "~";
+			break;
+		}
+	}
+	return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,28 +130,34 @@ template <typename StringT>
 inline StringT
 convert_trigraphs(StringT const &value)
 {
-    StringT result;
-    typename StringT::size_type pos = 0;
-    typename StringT::size_type pos1 = value.find_first_of ("?", 0);
-    if (StringT::npos != pos1) {
-        do {
-            result += value.substr(pos, pos1-pos);
-            StringT trigraph (value.substr(pos1));
-            if (is_trigraph(trigraph)) {
-                result += convert_trigraph(trigraph);
-                pos1 = value.find_first_of ("?", pos = pos1+3);
-            }
-            else {
-                result += value[pos1];
-                pos1 = value.find_first_of ("?", pos = pos1+1);
-            }
-        } while (StringT::npos != pos1);
-        result += value.substr(pos);
-    }
-    else {
-        result = value;
-    }
-    return result;
+	StringT result;
+	typename StringT::size_type pos = 0;
+	typename StringT::size_type pos1 = value.find_first_of ("?", 0);
+	if (StringT::npos != pos1)
+	{
+		do
+		{
+			result += value.substr(pos, pos1-pos);
+			StringT trigraph (value.substr(pos1));
+			if (is_trigraph(trigraph))
+			{
+				result += convert_trigraph(trigraph);
+				pos1 = value.find_first_of ("?", pos = pos1+3);
+			}
+			else
+			{
+				result += value[pos1];
+				pos1 = value.find_first_of ("?", pos = pos1+1);
+			}
+		}
+		while (StringT::npos != pos1);
+		result += value.substr(pos);
+	}
+	else
+	{
+		result = value;
+	}
+	return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

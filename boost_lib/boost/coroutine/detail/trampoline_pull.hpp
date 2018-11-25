@@ -19,29 +19,34 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
-namespace detail {
+namespace boost
+{
+namespace coroutines
+{
+namespace detail
+{
 
 template< typename Coro >
 void trampoline_pull( context::detail::transfer_t t)
 {
-    typedef typename Coro::param_type   param_type;
+	typedef typename Coro::param_type   param_type;
 
-    data_t * data = static_cast< data_t * >( t.data);
-    data->from->ctx_ = t.fctx;
-    param_type * param(
-        static_cast< param_type * >( data->data) );
-    BOOST_ASSERT( 0 != param);
+	data_t * data = static_cast< data_t * >( t.data);
+	data->from->ctx_ = t.fctx;
+	param_type * param(
+	    static_cast< param_type * >( data->data) );
+	BOOST_ASSERT( 0 != param);
 
-    Coro * coro(
-        static_cast< Coro * >( param->coro) );
-    BOOST_ASSERT( 0 != coro);
+	Coro * coro(
+	    static_cast< Coro * >( param->coro) );
+	BOOST_ASSERT( 0 != coro);
 
-    coro->run();
+	coro->run();
 }
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

@@ -31,18 +31,18 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C)>
-      struct string
-      {
-        typedef string type;
-        typedef string_tag tag;
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C)>
+struct string
+{
+	typedef string type;
+	typedef string_tag tag;
+};
+}
+}
 }
 
 /*
@@ -51,181 +51,181 @@ namespace boost
 
 namespace boost
 {
-  namespace mpl
-  {
-    // push_back
-    template <class S>
-    struct push_back_impl;
+namespace mpl
+{
+// push_back
+template <class S>
+struct push_back_impl;
 
-    template <>
-    struct push_back_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef push_back_impl type;
+template <>
+struct push_back_impl<boost::metaparse::v1::string_tag>
+{
+	typedef push_back_impl type;
 
-      template <class S, class C>
-      struct apply :
-        boost::metaparse::v1::impl::push_back_c<
-          typename S::type,
-          C::type::value
-        >
-      {};
-    };
+	template <class S, class C>
+	struct apply :
+		boost::metaparse::v1::impl::push_back_c<
+		typename S::type,
+		C::type::value
+		>
+	{};
+};
 
-    // pop_back
-    template <class S>
-    struct pop_back_impl;
+// pop_back
+template <class S>
+struct pop_back_impl;
 
-    template <>
-    struct pop_back_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef pop_back_impl type;
+template <>
+struct pop_back_impl<boost::metaparse::v1::string_tag>
+{
+	typedef pop_back_impl type;
 
-      template <class S>
-      struct apply : boost::metaparse::v1::impl::pop_back<S> {};
-    };
+	template <class S>
+	struct apply : boost::metaparse::v1::impl::pop_back<S> {};
+};
 
-    // push_front
-    template <class S>
-    struct push_front_impl;
+// push_front
+template <class S>
+struct push_front_impl;
 
-    template <>
-    struct push_front_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef push_front_impl type;
+template <>
+struct push_front_impl<boost::metaparse::v1::string_tag>
+{
+	typedef push_front_impl type;
 
-      template <class S, class C>
-      struct apply :
-        boost::metaparse::v1::impl::push_front_c<
-          typename S::type,
-          C::type::value
-        >
-      {};
-    };
+	template <class S, class C>
+	struct apply :
+		boost::metaparse::v1::impl::push_front_c<
+		typename S::type,
+		C::type::value
+		>
+	{};
+};
 
-    // pop_front
-    template <class S>
-    struct pop_front_impl;
+// pop_front
+template <class S>
+struct pop_front_impl;
 
-    template <>
-    struct pop_front_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef pop_front_impl type;
+template <>
+struct pop_front_impl<boost::metaparse::v1::string_tag>
+{
+	typedef pop_front_impl type;
 
-      template <class S>
-      struct apply : boost::metaparse::v1::impl::pop_front<S> {};
-    };
+	template <class S>
+	struct apply : boost::metaparse::v1::impl::pop_front<S> {};
+};
 
-    // clear
-    template <class S>
-    struct clear_impl;
+// clear
+template <class S>
+struct clear_impl;
 
-    template <>
-    struct clear_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef clear_impl type;
+template <>
+struct clear_impl<boost::metaparse::v1::string_tag>
+{
+	typedef clear_impl type;
 
-      template <class S>
-      struct apply : boost::metaparse::v1::string<> {};
-    };
+	template <class S>
+	struct apply : boost::metaparse::v1::string<> {};
+};
 
-    // begin
-    template <class S>
-    struct begin_impl;
+// begin
+template <class S>
+struct begin_impl;
 
-    template <>
-    struct begin_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef begin_impl type;
+template <>
+struct begin_impl<boost::metaparse::v1::string_tag>
+{
+	typedef begin_impl type;
 
-      template <class S>
-      struct apply :
-        boost::metaparse::v1::impl::string_iterator<typename S::type, 0>
-      {};
-    };
+	template <class S>
+	struct apply :
+		boost::metaparse::v1::impl::string_iterator<typename S::type, 0>
+	{};
+};
 
-    // end
-    template <class S>
-    struct end_impl;
+// end
+template <class S>
+struct end_impl;
 
-    template <>
-    struct end_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef end_impl type;
+template <>
+struct end_impl<boost::metaparse::v1::string_tag>
+{
+	typedef end_impl type;
 
-      template <class S>
-      struct apply :
-        boost::metaparse::v1::impl::string_iterator<
-          typename S::type,
-          boost::metaparse::v1::impl::size<typename S::type>::type::value
-        >
-      {};
-    };
+	template <class S>
+	struct apply :
+		boost::metaparse::v1::impl::string_iterator<
+		typename S::type,
+		boost::metaparse::v1::impl::size<typename S::type>::type::value
+		>
+	{};
+};
 
-    // equal_to
-    template <class A, class B>
-    struct equal_to_impl;
+// equal_to
+template <class A, class B>
+struct equal_to_impl;
 
-    template <>
-    struct equal_to_impl<
-      boost::metaparse::v1::string_tag,
-      boost::metaparse::v1::string_tag
-    >
-    {
-      typedef equal_to_impl type;
+template <>
+struct equal_to_impl<
+	boost::metaparse::v1::string_tag,
+	boost::metaparse::v1::string_tag
+	>
+{
+	typedef equal_to_impl type;
 
-      template <class A, class B>
-      struct apply : boost::is_same<typename A::type, typename B::type> {};
-    };
+	template <class A, class B>
+	struct apply : boost::is_same<typename A::type, typename B::type> {};
+};
 
-    template <class T>
-    struct equal_to_impl<boost::metaparse::v1::string_tag, T>
-    {
-      typedef equal_to_impl type;
-      
-      template <class, class>
-      struct apply : false_ {};
-    };
-    
-    template <class T>
-    struct equal_to_impl<T, boost::metaparse::v1::string_tag> :
-      equal_to_impl<boost::metaparse::v1::string_tag, T>
-    {};
+template <class T>
+struct equal_to_impl<boost::metaparse::v1::string_tag, T>
+{
+	typedef equal_to_impl type;
 
-    // c_str
-    template <class S>
-    struct c_str;
+	template <class, class>
+	struct apply : false_ {};
+};
 
-    template <BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C)>
-    struct c_str<
-      boost::metaparse::v1::string<
-        BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C)
-      >
-    >
-    {
-      typedef c_str type;
-      static const char value[BOOST_METAPARSE_LIMIT_STRING_SIZE + 1];
-    };
+template <class T>
+struct equal_to_impl<T, boost::metaparse::v1::string_tag> :
+	equal_to_impl<boost::metaparse::v1::string_tag, T>
+{};
 
-    template <BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C)>
-    const char
-      c_str<
-        boost::metaparse::v1::string<
-          BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C)
-        >
-      >::value[BOOST_METAPARSE_LIMIT_STRING_SIZE + 1]
-        = {BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C), 0};
+// c_str
+template <class S>
+struct c_str;
 
-    template <>
-    struct c_str<boost::metaparse::v1::string<> > :
-      boost::metaparse::v1::impl::empty_string<>
-    {
-      typedef c_str type;
-    };
+template <BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C)>
+struct c_str<
+	boost::metaparse::v1::string<
+BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C)
+>
+>
+{
+	typedef c_str type;
+	static const char value[BOOST_METAPARSE_LIMIT_STRING_SIZE + 1];
+};
 
-    #ifdef BOOST_METAPARSE_STRING_CASE
-    #  error BOOST_METAPARSE_STRING_CASE is already defined
-    #endif
-    #define BOOST_METAPARSE_STRING_CASE(z, n, unused) \
+template <BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C)>
+const char
+c_str<
+boost::metaparse::v1::string<
+BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C)
+>
+>::value[BOOST_METAPARSE_LIMIT_STRING_SIZE + 1]
+    = {BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C), 0};
+
+template <>
+struct c_str<boost::metaparse::v1::string<> > :
+	boost::metaparse::v1::impl::empty_string<>
+{
+	typedef c_str type;
+};
+
+#ifdef BOOST_METAPARSE_STRING_CASE
+#  error BOOST_METAPARSE_STRING_CASE is already defined
+#endif
+#define BOOST_METAPARSE_STRING_CASE(z, n, unused) \
       template <BOOST_PP_ENUM_PARAMS(n, int C)> \
       struct \
         c_str< \
@@ -255,15 +255,15 @@ namespace boost
         > \
       >::value[n + 1] = {BOOST_PP_ENUM_PARAMS(n, C) BOOST_PP_COMMA_IF(n) 0};
 
-    BOOST_PP_REPEAT_FROM_TO(
-      1,
-      BOOST_METAPARSE_LIMIT_STRING_SIZE,
-      BOOST_METAPARSE_STRING_CASE,
-      ~
-    )
+BOOST_PP_REPEAT_FROM_TO(
+    1,
+    BOOST_METAPARSE_LIMIT_STRING_SIZE,
+    BOOST_METAPARSE_STRING_CASE,
+    ~
+)
 
-    #undef BOOST_METAPARSE_STRING_CASE
-  }
+#undef BOOST_METAPARSE_STRING_CASE
+}
 }
 
 #define BOOST_METAPARSE_V1_CONFIG_NO_BOOST_METAPARSE_STRING 1

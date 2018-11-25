@@ -10,19 +10,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        BOOST_METAPARSE_V1_DEFINE_ERROR(
-          none_of_the_expected_cases_found,
-          "None of the expected cases found"
-        );
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+BOOST_METAPARSE_V1_DEFINE_ERROR(
+    none_of_the_expected_cases_found,
+    "None of the expected cases found"
+);
+}
+}
+}
 }
 
 #endif

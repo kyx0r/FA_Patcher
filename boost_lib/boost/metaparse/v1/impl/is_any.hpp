@@ -18,23 +18,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class Stub = int>
-        struct is_any0
-        {
-          template <class C>
-          struct apply : boost::mpl::true_ {};
-        };
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class Stub = int>
+struct is_any0
+{
+	template <class C>
+	struct apply : boost::mpl::true_ {};
+};
 
-        #ifdef BOOST_METAPARSE_DEFINE_IS_ANY
-        #  error BOOST_METAPARSE_DEFINE_IS_ANY already defined
-        #endif
-        #define BOOST_METAPARSE_DEFINE_IS_ANY(z, n, unused) \
+#ifdef BOOST_METAPARSE_DEFINE_IS_ANY
+#  error BOOST_METAPARSE_DEFINE_IS_ANY already defined
+#endif
+#define BOOST_METAPARSE_DEFINE_IS_ANY(z, n, unused) \
           template <BOOST_PP_ENUM_PARAMS(n, class T)> \
           struct BOOST_PP_CAT(is_any, n) \
           { \
@@ -53,17 +53,17 @@ namespace boost
             {}; \
           };
 
-        BOOST_PP_REPEAT_FROM_TO(
-          1,
-          BOOST_METAPARSE_LIMIT_ONE_CHAR_EXCEPT_SIZE,
-          BOOST_METAPARSE_DEFINE_IS_ANY,
-          ~
-        )
+BOOST_PP_REPEAT_FROM_TO(
+    1,
+    BOOST_METAPARSE_LIMIT_ONE_CHAR_EXCEPT_SIZE,
+    BOOST_METAPARSE_DEFINE_IS_ANY,
+    ~
+)
 
-        #undef BOOST_METAPARSE_DEFINE_IS_ANY
-      }
-    }
-  }
+#undef BOOST_METAPARSE_DEFINE_IS_ANY
+}
+}
+}
 }
 
 #endif

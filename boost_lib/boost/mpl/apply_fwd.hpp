@@ -8,8 +8,8 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
@@ -48,7 +48,10 @@
 #   define BOOST_MPL_CFG_NO_APPLY_TEMPLATE
 #endif
 
-namespace boost { namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 // local macro, #undef-ined at the end of the header
 #   define AUX778076_APPLY_DEF_PARAMS(param, value) \
@@ -57,23 +60,26 @@ namespace boost { namespace mpl {
         , param \
         , value \
         ) \
-    /**/
+
+/**/
 
 #   define AUX778076_APPLY_N_COMMA_PARAMS(n, param) \
     BOOST_PP_COMMA_IF(n) \
     BOOST_MPL_PP_PARAMS(n, param) \
-    /**/
+
+/**/
 
 #   if !defined(BOOST_MPL_CFG_NO_APPLY_TEMPLATE)
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 // forward declaration
 template<
-      typename F, AUX778076_APPLY_DEF_PARAMS(typename T, na)
+    typename F, AUX778076_APPLY_DEF_PARAMS(typename T, na)
     >
 struct apply;
 #else
-namespace aux {
+namespace aux
+{
 template< BOOST_AUX_NTTP_DECL(int, arity_) > struct apply_chooser;
 }
 #endif
@@ -88,7 +94,8 @@ template< BOOST_AUX_NTTP_DECL(int, arity_) > struct apply_chooser;
 #   undef AUX778076_APPLY_N_COMMA_PARAMS
 #   undef AUX778076_APPLY_DEF_PARAMS
 
-}}
+}
+}
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_APPLY_FWD_HPP_INCLUDED
@@ -99,7 +106,7 @@ template< BOOST_AUX_NTTP_DECL(int, arity_) > struct apply_chooser;
 #define i_ BOOST_PP_FRAME_ITERATION(1)
 
 template<
-      typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
+    typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
     >
 struct BOOST_PP_CAT(apply,i_);
 

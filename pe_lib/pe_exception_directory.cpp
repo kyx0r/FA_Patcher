@@ -8,23 +8,23 @@ using namespace pe_win;
 //Default constructor
 exception_entry::exception_entry()
 	:begin_address_(0), end_address_(0), unwind_info_address_(0),
-	unwind_info_version_(0),
-	flags_(0),
-	size_of_prolog_(0),
-	count_of_codes_(0),
-	frame_register_(0),
-	frame_offset_(0)
+	 unwind_info_version_(0),
+	 flags_(0),
+	 size_of_prolog_(0),
+	 count_of_codes_(0),
+	 frame_register_(0),
+	 frame_offset_(0)
 {}
 
 //Constructor from data
 exception_entry::exception_entry(const image_runtime_function_entry& entry, const unwind_info& unwind_info)
 	:begin_address_(entry.BeginAddress), end_address_(entry.EndAddress), unwind_info_address_(entry.UnwindInfoAddress),
-	unwind_info_version_(unwind_info.Version),
-	flags_(unwind_info.Flags),
-	size_of_prolog_(unwind_info.SizeOfProlog),
-	count_of_codes_(unwind_info.CountOfCodes),
-	frame_register_(unwind_info.FrameRegister),
-	frame_offset_(unwind_info.FrameOffset)
+	 unwind_info_version_(unwind_info.Version),
+	 flags_(unwind_info.Flags),
+	 size_of_prolog_(unwind_info.SizeOfProlog),
+	 count_of_codes_(unwind_info.CountOfCodes),
+	 frame_register_(unwind_info.FrameRegister),
+	 frame_offset_(unwind_info.FrameOffset)
 {}
 
 //Returns starting address of function, affected by exception unwinding
@@ -121,7 +121,7 @@ const exception_entry_list get_exception_directory_data(const pe_base& pe)
 
 	//Check the length in bytes of the section containing exception directory
 	if(pe.section_data_length_from_rva(pe.get_directory_rva(image_directory_entry_exception), pe.get_directory_rva(image_directory_entry_exception), section_data_virtual, true)
-		< sizeof(image_runtime_function_entry))
+	        < sizeof(image_runtime_function_entry))
 		throw pe_exception("Incorrect exception directory", pe_exception::incorrect_exception_directory);
 
 	unsigned long current_pos = pe.get_directory_rva(image_directory_entry_exception);

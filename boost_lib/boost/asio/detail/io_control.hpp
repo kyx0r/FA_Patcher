@@ -21,59 +21,63 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
-namespace io_control {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
+namespace io_control
+{
 
 // I/O control command for getting number of bytes available.
 class bytes_readable
 {
 public:
-  // Default constructor.
-  bytes_readable()
-    : value_(0)
-  {
-  }
+	// Default constructor.
+	bytes_readable()
+		: value_(0)
+	{
+	}
 
-  // Construct with a specific command value.
-  bytes_readable(std::size_t value)
-    : value_(static_cast<detail::ioctl_arg_type>(value))
-  {
-  }
+	// Construct with a specific command value.
+	bytes_readable(std::size_t value)
+		: value_(static_cast<detail::ioctl_arg_type>(value))
+	{
+	}
 
-  // Get the name of the IO control command.
-  int name() const
-  {
-    return static_cast<int>(BOOST_ASIO_OS_DEF(FIONREAD));
-  }
+	// Get the name of the IO control command.
+	int name() const
+	{
+		return static_cast<int>(BOOST_ASIO_OS_DEF(FIONREAD));
+	}
 
-  // Set the value of the I/O control command.
-  void set(std::size_t value)
-  {
-    value_ = static_cast<detail::ioctl_arg_type>(value);
-  }
+	// Set the value of the I/O control command.
+	void set(std::size_t value)
+	{
+		value_ = static_cast<detail::ioctl_arg_type>(value);
+	}
 
-  // Get the current value of the I/O control command.
-  std::size_t get() const
-  {
-    return static_cast<std::size_t>(value_);
-  }
+	// Get the current value of the I/O control command.
+	std::size_t get() const
+	{
+		return static_cast<std::size_t>(value_);
+	}
 
-  // Get the address of the command data.
-  detail::ioctl_arg_type* data()
-  {
-    return &value_;
-  }
+	// Get the address of the command data.
+	detail::ioctl_arg_type* data()
+	{
+		return &value_;
+	}
 
-  // Get the address of the command data.
-  const detail::ioctl_arg_type* data() const
-  {
-    return &value_;
-  }
+	// Get the address of the command data.
+	const detail::ioctl_arg_type* data() const
+	{
+		return &value_;
+	}
 
 private:
-  detail::ioctl_arg_type value_;
+	detail::ioctl_arg_type value_;
 };
 
 } // namespace io_control

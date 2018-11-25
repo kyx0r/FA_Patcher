@@ -31,11 +31,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief Basic attribute value implementation class
@@ -46,54 +48,60 @@ namespace attributes {
  */
 template< typename T >
 class attribute_value_impl :
-    public attribute_value::impl
+	public attribute_value::impl
 {
 public:
-    //! Value type
-    typedef T value_type;
+	//! Value type
+	typedef T value_type;
 
 private:
-    //! Attribute value
-    const value_type m_value;
+	//! Attribute value
+	const value_type m_value;
 
 public:
-    /*!
-     * Constructor with initialization of the stored value
-     */
-    explicit attribute_value_impl(value_type const& v) : m_value(v) {}
-    /*!
-     * Constructor with initialization of the stored value
-     */
-    explicit attribute_value_impl(BOOST_RV_REF(value_type) v) : m_value(boost::move(v)) {}
+	/*!
+	 * Constructor with initialization of the stored value
+	 */
+	explicit attribute_value_impl(value_type const& v) : m_value(v) {}
+	/*!
+	 * Constructor with initialization of the stored value
+	 */
+	explicit attribute_value_impl(BOOST_RV_REF(value_type) v) : m_value(boost::move(v)) {}
 
-    /*!
-     * Attribute value dispatching method.
-     *
-     * \param dispatcher The dispatcher that receives the stored value
-     *
-     * \return \c true if the value has been dispatched, \c false otherwise
-     */
-    virtual bool dispatch(type_dispatcher& dispatcher)
-    {
-        type_dispatcher::callback< value_type > callback = dispatcher.get_callback< value_type >();
-        if (callback)
-        {
-            callback(m_value);
-            return true;
-        }
-        else
-            return false;
-    }
+	/*!
+	 * Attribute value dispatching method.
+	 *
+	 * \param dispatcher The dispatcher that receives the stored value
+	 *
+	 * \return \c true if the value has been dispatched, \c false otherwise
+	 */
+	virtual bool dispatch(type_dispatcher& dispatcher)
+	{
+		type_dispatcher::callback< value_type > callback = dispatcher.get_callback< value_type >();
+		if (callback)
+		{
+			callback(m_value);
+			return true;
+		}
+		else
+			return false;
+	}
 
-    /*!
-     * \return The attribute value type
-     */
-    typeindex::type_index get_type() const { return typeindex::type_id< value_type >(); }
+	/*!
+	 * \return The attribute value type
+	 */
+	typeindex::type_index get_type() const
+	{
+		return typeindex::type_id< value_type >();
+	}
 
-    /*!
-     * \return Reference to the contained value.
-     */
-    value_type const& get() const { return m_value; }
+	/*!
+	 * \return Reference to the contained value.
+	 */
+	value_type const& get() const
+	{
+		return m_value;
+	}
 };
 
 /*!
@@ -104,8 +112,8 @@ public:
 template< typename T >
 inline attribute_value make_attribute_value(T&& v)
 {
-    typedef typename remove_cv< typename remove_reference< T >::type >::type value_type;
-    return attribute_value(new attribute_value_impl< value_type >(boost::forward< T >(v)));
+	typedef typename remove_cv< typename remove_reference< T >::type >::type value_type;
+	return attribute_value(new attribute_value_impl< value_type >(boost::forward< T >(v)));
 }
 
 #else // !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
@@ -113,15 +121,15 @@ inline attribute_value make_attribute_value(T&& v)
 template< typename T >
 inline attribute_value make_attribute_value(T const& v)
 {
-    typedef typename remove_cv< T >::type value_type;
-    return attribute_value(new attribute_value_impl< value_type >(v));
+	typedef typename remove_cv< T >::type value_type;
+	return attribute_value(new attribute_value_impl< value_type >(v));
 }
 
 template< typename T >
 inline attribute_value make_attribute_value(rv< T > const& v)
 {
-    typedef typename remove_cv< T >::type value_type;
-    return attribute_value(new attribute_value_impl< value_type >(v));
+	typedef typename remove_cv< T >::type value_type;
+	return attribute_value(new attribute_value_impl< value_type >(v));
 }
 
 #endif // !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)

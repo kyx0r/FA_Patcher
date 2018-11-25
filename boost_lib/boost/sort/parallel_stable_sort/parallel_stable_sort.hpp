@@ -46,55 +46,58 @@ using boost::sort::sample_detail::sample_sort;
 template <class Iter_t, class Compare = compare_iter <Iter_t> >
 struct parallel_stable_sort
 {
-    //-------------------------------------------------------------------------
-    //                      DEFINITIONS
-    //-------------------------------------------------------------------------
-    typedef value_iter<Iter_t> value_t;
+	//-------------------------------------------------------------------------
+	//                      DEFINITIONS
+	//-------------------------------------------------------------------------
+	typedef value_iter<Iter_t> value_t;
 
-    //-------------------------------------------------------------------------
-    //                     VARIABLES
-    //-------------------------------------------------------------------------
-    // Number of elements to sort
-    size_t nelem;
-    // Pointer to the auxiliary memory needed for the algorithm
-    value_t *ptr;
-    // Minimal number of elements for to be sorted in parallel mode
-    const size_t nelem_min = 1 << 16;
+	//-------------------------------------------------------------------------
+	//                     VARIABLES
+	//-------------------------------------------------------------------------
+	// Number of elements to sort
+	size_t nelem;
+	// Pointer to the auxiliary memory needed for the algorithm
+	value_t *ptr;
+	// Minimal number of elements for to be sorted in parallel mode
+	const size_t nelem_min = 1 << 16;
 
-    //------------------------------------------------------------------------
-    //                F U N C T I O N S
-    //------------------------------------------------------------------------
-    parallel_stable_sort (Iter_t first, Iter_t last)
-    : parallel_stable_sort (first, last, Compare(),
-                            std::thread::hardware_concurrency()) { };
+	//------------------------------------------------------------------------
+	//                F U N C T I O N S
+	//------------------------------------------------------------------------
+	parallel_stable_sort (Iter_t first, Iter_t last)
+		: parallel_stable_sort (first, last, Compare(),
+		                        std::thread::hardware_concurrency()) { };
 
-    parallel_stable_sort (Iter_t first, Iter_t last, Compare cmp)
-    : parallel_stable_sort (first, last, cmp,
-                            std::thread::hardware_concurrency()) { };
+	parallel_stable_sort (Iter_t first, Iter_t last, Compare cmp)
+		: parallel_stable_sort (first, last, cmp,
+		                        std::thread::hardware_concurrency()) { };
 
-    parallel_stable_sort (Iter_t first, Iter_t last, uint32_t num_thread)
-    : parallel_stable_sort (first, last, Compare(), num_thread) { };
+	parallel_stable_sort (Iter_t first, Iter_t last, uint32_t num_thread)
+		: parallel_stable_sort (first, last, Compare(), num_thread) { };
 
-    parallel_stable_sort (Iter_t first, Iter_t last, Compare cmp,
-                          uint32_t num_thread);
+	parallel_stable_sort (Iter_t first, Iter_t last, Compare cmp,
+	                      uint32_t num_thread);
 
-    //
-    //-----------------------------------------------------------------------------
-    //  function : destroy_all
-    /// @brief The utility is to destroy the temporary buffer used in the
-    ///        sorting process
-    //-----------------------------------------------------------------------------
-    void destroy_all()
-    {
-        if (ptr != nullptr) std::return_temporary_buffer(ptr);
-    };
-    //
-    //-----------------------------------------------------------------------------
-    //  function :~parallel_stable_sort
-    /// @brief destructor of the class. The utility is to destroy the temporary
-    ///        buffer used in the sorting process
-    //-----------------------------------------------------------------------------
-    ~parallel_stable_sort() {destroy_all(); } ;
+	//
+	//-----------------------------------------------------------------------------
+	//  function : destroy_all
+	/// @brief The utility is to destroy the temporary buffer used in the
+	///        sorting process
+	//-----------------------------------------------------------------------------
+	void destroy_all()
+	{
+		if (ptr != nullptr) std::return_temporary_buffer(ptr);
+	};
+	//
+	//-----------------------------------------------------------------------------
+	//  function :~parallel_stable_sort
+	/// @brief destructor of the class. The utility is to destroy the temporary
+	///        buffer used in the sorting process
+	//-----------------------------------------------------------------------------
+	~parallel_stable_sort()
+	{
+		destroy_all();
+	} ;
 };
 // end struct parallel_stable_sort
 
@@ -123,74 +126,76 @@ parallel_stable_sort <Iter_t, Compare>
 ::parallel_stable_sort (Iter_t first, Iter_t last, Compare comp,
                         uint32_t nthread) : nelem(0), ptr(nullptr)
 {
-    range<Iter_t> range_initial(first, last);
-    assert(range_initial.valid());
+	range<Iter_t> range_initial(first, last);
+	assert(range_initial.valid());
 
-    nelem = range_initial.size();
-    size_t nptr = (nelem + 1) >> 1;
+	nelem = range_initial.size();
+	size_t nptr = (nelem + 1) >> 1;
 
-    if (nelem < nelem_min or nthread < 2)
-    {
-        bss::spinsort<Iter_t, Compare>
-            (range_initial.first, range_initial.last, comp);
-        return;
-    };
+	if (nelem < nelem_min or nthread < 2)
+	{
+		bss::spinsort<Iter_t, Compare>
+		(range_initial.first, range_initial.last, comp);
+		return;
+	};
 
-    //------------------- check if sort --------------------------------------
-    bool sw = true;
-    for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sw = not comp(*it2, *it1)); it1 = it2++);
-    if (sw) return;
+	//------------------- check if sort --------------------------------------
+	bool sw = true;
+	for (Iter_t it1 = first, it2 = first + 1;
+	        it2 != last and (sw = not comp(*it2, *it1)); it1 = it2++);
+	if (sw) return;
 
-    //------------------- check if reverse sort ---------------------------
-    sw = true;
-    for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sw = comp(*it2, *it1)); it1 = it2++);
-    if (sw)
-    {
-        size_t nelem2 = nelem >> 1;
-        Iter_t it1 = first, it2 = last - 1;
-        for (size_t i = 0; i < nelem2; ++i)
-            std::swap(*(it1++), *(it2--));
-        return;
-    };
+	//------------------- check if reverse sort ---------------------------
+	sw = true;
+	for (Iter_t it1 = first, it2 = first + 1;
+	        it2 != last and (sw = comp(*it2, *it1)); it1 = it2++);
+	if (sw)
+	{
+		size_t nelem2 = nelem >> 1;
+		Iter_t it1 = first, it2 = last - 1;
+		for (size_t i = 0; i < nelem2; ++i)
+			std::swap(*(it1++), *(it2--));
+		return;
+	};
 
-    ptr = std::get_temporary_buffer<value_t>(nptr).first;
-    if (ptr == nullptr) throw std::bad_alloc();
+	ptr = std::get_temporary_buffer<value_t>(nptr).first;
+	if (ptr == nullptr) throw std::bad_alloc();
 
-    //---------------------------------------------------------------------
-    //     Parallel Process
-    //---------------------------------------------------------------------
-    range<Iter_t> range_first(range_initial.first, range_initial.first + nptr);
+	//---------------------------------------------------------------------
+	//     Parallel Process
+	//---------------------------------------------------------------------
+	range<Iter_t> range_first(range_initial.first, range_initial.first + nptr);
 
-    range<Iter_t> range_second(range_initial.first + nptr, range_initial.last);
+	range<Iter_t> range_second(range_initial.first + nptr, range_initial.last);
 
-    range<value_t *> range_buffer(ptr, ptr + nptr);
+	range<value_t *> range_buffer(ptr, ptr + nptr);
 
-    try
-    {
-        sample_sort<Iter_t, Compare>
-            (range_initial.first, range_initial.first + nptr,
-             comp, nthread, range_buffer);
-    } catch (std::bad_alloc &)
-    {
-        destroy_all();
-        throw std::bad_alloc();
-    };
+	try
+	{
+		sample_sort<Iter_t, Compare>
+		(range_initial.first, range_initial.first + nptr,
+		 comp, nthread, range_buffer);
+	}
+	catch (std::bad_alloc &)
+	{
+		destroy_all();
+		throw std::bad_alloc();
+	};
 
-    try
-    {
-        sample_sort<Iter_t, Compare>
-            (range_initial.first + nptr,
-             range_initial.last, comp, nthread, range_buffer);
-    } catch (std::bad_alloc &)
-    {
-        destroy_all();
-        throw std::bad_alloc();
-    };
+	try
+	{
+		sample_sort<Iter_t, Compare>
+		(range_initial.first + nptr,
+		 range_initial.last, comp, nthread, range_buffer);
+	}
+	catch (std::bad_alloc &)
+	{
+		destroy_all();
+		throw std::bad_alloc();
+	};
 
-    range_buffer = move_forward(range_buffer, range_first);
-    range_initial = merge_half(range_initial, range_buffer, range_second, comp);
+	range_buffer = move_forward(range_buffer, range_first);
+	range_initial = merge_half(range_initial, range_buffer, range_second, comp);
 }; // end of constructor
 
 //
@@ -226,8 +231,8 @@ using bsc::merge_half;
 template<class Iter_t>
 void parallel_stable_sort(Iter_t first, Iter_t last)
 {
-    typedef bscu::compare_iter<Iter_t> Compare;
-    stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last);
+	typedef bscu::compare_iter<Iter_t> Compare;
+	stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last);
 };
 //
 //-----------------------------------------------------------------------------
@@ -242,8 +247,8 @@ void parallel_stable_sort(Iter_t first, Iter_t last)
 template<class Iter_t>
 void parallel_stable_sort(Iter_t first, Iter_t last, uint32_t nthread)
 {
-    typedef bscu::compare_iter<Iter_t> Compare;
-    stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last, nthread);
+	typedef bscu::compare_iter<Iter_t> Compare;
+	stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last, nthread);
 };
 //
 //-----------------------------------------------------------------------------
@@ -259,7 +264,7 @@ template <class Iter_t, class Compare,
           bscu::enable_if_not_integral<Compare> * = nullptr>
 void parallel_stable_sort(Iter_t first, Iter_t last, Compare comp)
 {
-    stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last, comp);
+	stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last, comp);
 };
 //
 //****************************************************************************

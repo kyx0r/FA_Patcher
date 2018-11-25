@@ -12,7 +12,10 @@
 
 #include <tuple>
 
-namespace boost{ namespace math{
+namespace boost
+{
+namespace math
+{
 
 using ::std::tuple;
 
@@ -26,7 +29,8 @@ using ::std::get;
 using ::std::tuple_size;
 using ::std::tuple_element;
 
-}}
+}
+}
 
 #elif (defined(__BORLANDC__) && (__BORLANDC__ <= 0x600)) || defined(__IBMCPP__)
 
@@ -34,7 +38,10 @@ using ::std::tuple_element;
 #include <boost/tuple/tuple_comparison.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-namespace boost{ namespace math{
+namespace boost
+{
+namespace math
+{
 
 using ::boost::tuple;
 
@@ -44,16 +51,16 @@ using ::boost::make_tuple;
 using ::boost::tie;
 
 // [6.1.3.3] Tuple helper classes
-template <class T> 
-struct tuple_size 
-   : public ::boost::integral_constant
-   < ::std::size_t, ::boost::tuples::length<T>::value>
+template <class T>
+struct tuple_size
+	: public ::boost::integral_constant
+	  < ::std::size_t, ::boost::tuples::length<T>::value>
 {};
 
 template < int I, class T>
 struct tuple_element
 {
-   typedef typename boost::tuples::element<I,T>::type type;
+	typedef typename boost::tuples::element<I,T>::type type;
 };
 
 #if !BOOST_WORKAROUND(__BORLANDC__, < 0x0582)
@@ -61,14 +68,18 @@ struct tuple_element
 using ::boost::get;
 #endif
 
-} } // namespaces
+}
+} // namespaces
 
 #else
 
 #include <boost/fusion/include/tuple.hpp>
 #include <boost/fusion/include/std_pair.hpp>
 
-namespace boost{ namespace math{
+namespace boost
+{
+namespace math
+{
 
 using ::boost::fusion::tuple;
 
@@ -82,7 +93,8 @@ using ::boost::fusion::get;
 using ::boost::fusion::tuple_size;
 using ::boost::fusion::tuple_element;
 
-}}
+}
+}
 
 #endif
 

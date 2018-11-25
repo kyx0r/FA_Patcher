@@ -77,6 +77,6 @@ uint32_t calculate_checksum(std::istream& file)
 	file.clear();
 
 	//Return checksum
-	return static_cast<uint32_t>(checksum);	
+	return static_cast<uint32_t>(checksum);
 }
 }

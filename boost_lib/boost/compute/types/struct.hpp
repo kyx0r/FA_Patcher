@@ -26,25 +26,28 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/detail/variadic_macros.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Struct, class T>
 inline std::string adapt_struct_insert_member(T Struct::*, const char *name)
 {
-    std::stringstream s;
-    s << "    " << type_name<T>() << " " << name << ";\n";
-    return s.str();
+	std::stringstream s;
+	s << "    " << type_name<T>() << " " << name << ";\n";
+	return s.str();
 }
 
 
 template<class Struct, class T, int N>
 inline std::string adapt_struct_insert_member(T (Struct::*)[N], const char *name)
 {
-    std::stringstream s;
-    s << "    " << type_name<T>() << " " << name << "[" << N << "]" << ";\n";
-    return s.str();
+	std::stringstream s;
+	s << "    " << type_name<T>() << " " << name << "[" << N << "]" << ";\n";
+	return s.str();
 }
 
 } // end detail namespace

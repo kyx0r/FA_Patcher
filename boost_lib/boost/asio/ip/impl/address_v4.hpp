@@ -21,32 +21,35 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ip {
+namespace boost
+{
+namespace asio
+{
+namespace ip
+{
 
 #if !defined(BOOST_ASIO_NO_DEPRECATED)
 
 inline address_v4 address_v4::from_string(const char* str)
 {
-  return boost::asio::ip::make_address_v4(str);
+	return boost::asio::ip::make_address_v4(str);
 }
 
 inline address_v4 address_v4::from_string(
     const char* str, boost::system::error_code& ec)
 {
-  return boost::asio::ip::make_address_v4(str, ec);
+	return boost::asio::ip::make_address_v4(str, ec);
 }
 
 inline address_v4 address_v4::from_string(const std::string& str)
 {
-  return boost::asio::ip::make_address_v4(str);
+	return boost::asio::ip::make_address_v4(str);
 }
 
 inline address_v4 address_v4::from_string(
     const std::string& str, boost::system::error_code& ec)
 {
-  return boost::asio::ip::make_address_v4(str, ec);
+	return boost::asio::ip::make_address_v4(str, ec);
 }
 
 #endif // !defined(BOOST_ASIO_NO_DEPRECATED)
@@ -55,7 +58,7 @@ template <typename Elem, typename Traits>
 std::basic_ostream<Elem, Traits>& operator<<(
     std::basic_ostream<Elem, Traits>& os, const address_v4& addr)
 {
-  return os << addr.to_string().c_str();
+	return os << addr.to_string().c_str();
 }
 
 } // namespace ip

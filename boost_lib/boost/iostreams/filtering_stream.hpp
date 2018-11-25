@@ -10,7 +10,7 @@
 
 #if defined(_MSC_VER)
 # pragma once
-#endif              
+#endif
 
 #include <memory>                                     // allocator.
 #include <boost/iostreams/detail/access_control.hpp>
@@ -28,38 +28,43 @@
 // Must come last.
 #include <boost/iostreams/detail/config/disable_warnings.hpp>  // MSVC.
 
-namespace boost { namespace iostreams {
+namespace boost
+{
+namespace iostreams
+{
 
 //--------------Definition of filtered_istream--------------------------------//
 
-namespace detail {
+namespace detail
+{
 
 template<typename Mode, typename Ch, typename Tr>
-struct filtering_stream_traits {
-    typedef typename 
-            iostreams::select<  // Disambiguation for Tru64  
-                mpl::and_< 
-                    is_convertible<Mode, input>, 
-                    is_convertible<Mode, output> 
-                >,          
-                BOOST_IOSTREAMS_BASIC_IOSTREAM(Ch, Tr),
-                is_convertible<Mode, input>, 
-                BOOST_IOSTREAMS_BASIC_ISTREAM(Ch, Tr),
-                else_,        
-                BOOST_IOSTREAMS_BASIC_OSTREAM(Ch, Tr)
-            >::type stream_type;
-    typedef typename
-            iostreams::select< // Dismbiguation required for Tru64.
-                mpl::and_<
-                    is_convertible<Mode, input>,
-                    is_convertible<Mode, output>
-                >,
-                iostream_tag,
-                is_convertible<Mode, input>,
-                istream_tag,
-                else_,
-                ostream_tag
-            >::type stream_tag;
+struct filtering_stream_traits
+{
+	typedef typename
+	iostreams::select<  // Disambiguation for Tru64
+	mpl::and_<
+	is_convertible<Mode, input>,
+	               is_convertible<Mode, output>
+	               >,
+	               BOOST_IOSTREAMS_BASIC_IOSTREAM(Ch, Tr),
+	               is_convertible<Mode, input>,
+	               BOOST_IOSTREAMS_BASIC_ISTREAM(Ch, Tr),
+	               else_,
+	               BOOST_IOSTREAMS_BASIC_OSTREAM(Ch, Tr)
+	               >::type stream_type;
+	typedef typename
+	iostreams::select< // Dismbiguation required for Tru64.
+	mpl::and_<
+	is_convertible<Mode, input>,
+	               is_convertible<Mode, output>
+	               >,
+	               iostream_tag,
+	               is_convertible<Mode, input>,
+	               istream_tag,
+	               else_,
+	               ostream_tag
+	               >::type stream_tag;
 };
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
@@ -69,34 +74,40 @@ struct filtering_stream_traits {
 #endif
 
 template<typename Chain, typename Access>
-class filtering_stream_base 
-    : public access_control<
-                 boost::iostreams::detail::chain_client<Chain>,
-                 Access
-             >,
-      public filtering_stream_traits<
-                 typename Chain::mode, 
-                 typename Chain::char_type, 
-                 typename Chain::traits_type
-             >::stream_type
+class filtering_stream_base
+	: public access_control<
+	  boost::iostreams::detail::chain_client<Chain>,
+	  Access
+	  >,
+	  public filtering_stream_traits<
+	  typename Chain::mode,
+	  typename Chain::char_type,
+	  typename Chain::traits_type
+	  >::stream_type
 {
 public:
-    typedef Chain                                         chain_type;
-    typedef access_control<
-                 boost::iostreams::detail::chain_client<Chain>,
-                 Access
-             >                                            client_type;
+	typedef Chain                                         chain_type;
+	typedef access_control<
+	boost::iostreams::detail::chain_client<Chain>,
+	      Access
+	      >                                            client_type;
 protected:
-    typedef typename 
-            filtering_stream_traits<
-                 typename Chain::mode, 
-                 typename Chain::char_type, 
-                 typename Chain::traits_type
-            >::stream_type                                stream_type;
-    filtering_stream_base() : stream_type(0) { this->set_chain(&chain_); }
+	typedef typename
+	filtering_stream_traits<
+	typename Chain::mode,
+	         typename Chain::char_type,
+	         typename Chain::traits_type
+	         >::stream_type                                stream_type;
+	filtering_stream_base() : stream_type(0)
+	{
+		this->set_chain(&chain_);
+	}
 private:
-    void notify() { this->rdbuf(chain_.empty() ? 0 : &chain_.front()); }
-    Chain chain_;
+	void notify()
+	{
+		this->rdbuf(chain_.empty() ? 0 : &chain_.front());
+	}
+	Chain chain_;
 };
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
@@ -158,7 +169,7 @@ private:
         void push_impl(const T& t BOOST_IOSTREAMS_PUSH_PARAMS()) \
         { client_type::push(t BOOST_IOSTREAMS_PUSH_ARGS()); } \
     }; \
-    /**/    
+    /**/
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
 # pragma warning(push)
@@ -180,7 +191,8 @@ typedef wfiltering_stream<output>  filtering_wostream;
 
 //----------------------------------------------------------------------------//
 
-} } // End namespace iostreams, boost
+}
+} // End namespace iostreams, boost
 
 #include <boost/iostreams/detail/config/enable_warnings.hpp> // MSVC
 

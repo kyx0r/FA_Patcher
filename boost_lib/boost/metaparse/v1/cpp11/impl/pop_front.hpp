@@ -10,20 +10,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S>
-        struct pop_front;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S>
+struct pop_front;
 
-        template <char C, char... Cs>
-        struct pop_front<string<C, Cs...>> : string<Cs...> {};
-      }
-    }
-  }
+template <char C, char... Cs>
+struct pop_front<string<C, Cs...>> : string<Cs...> {};
+}
+}
+}
 }
 
 #endif

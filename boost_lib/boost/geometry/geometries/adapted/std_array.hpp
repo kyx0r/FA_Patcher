@@ -27,7 +27,9 @@
 
 #include <array>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -46,14 +48,14 @@ namespace detail
 template <bool>
 struct std_array_tag
 {
-    typedef geometry_not_recognized_tag type;
+	typedef geometry_not_recognized_tag type;
 };
 
 
 template <>
 struct std_array_tag<true>
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 
@@ -64,13 +66,13 @@ struct std_array_tag<true>
 // Assign the point-tag, preventing arrays of points getting a point-tag
 template <typename CoordinateType, std::size_t DimensionCount>
 struct tag<std::array<CoordinateType, DimensionCount> >
-    : detail::std_array_tag<boost::is_arithmetic<CoordinateType>::value> {};
+	: detail::std_array_tag<boost::is_arithmetic<CoordinateType>::value> {};
 
 
 template <typename CoordinateType, std::size_t DimensionCount>
 struct coordinate_type<std::array<CoordinateType, DimensionCount> >
 {
-    typedef CoordinateType type;
+	typedef CoordinateType type;
 };
 
 
@@ -81,16 +83,16 @@ struct dimension<std::array<CoordinateType, DimensionCount> >: boost::mpl::int_<
 template <typename CoordinateType, std::size_t DimensionCount, std::size_t Dimension>
 struct access<std::array<CoordinateType, DimensionCount>, Dimension>
 {
-    static inline CoordinateType get(std::array<CoordinateType, DimensionCount> const& a)
-    {
-        return a[Dimension];
-    }
+	static inline CoordinateType get(std::array<CoordinateType, DimensionCount> const& a)
+	{
+		return a[Dimension];
+	}
 
-    static inline void set(std::array<CoordinateType, DimensionCount>& a,
-        CoordinateType const& value)
-    {
-        a[Dimension] = value;
-    }
+	static inline void set(std::array<CoordinateType, DimensionCount>& a,
+	                       CoordinateType const& value)
+	{
+		a[Dimension] = value;
+	}
 };
 
 
@@ -98,7 +100,8 @@ struct access<std::array<CoordinateType, DimensionCount>, Dimension>
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #define BOOST_GEOMETRY_REGISTER_STD_ARRAY_CS(CoordinateSystem) \

@@ -13,13 +13,19 @@
 
 #include <boost/mpl/bool.hpp>
 
-namespace boost { namespace msm { namespace back
+namespace boost
 {
-struct favor_runtime_speed 
+namespace msm
 {
-    typedef int compile_policy;
-    typedef ::boost::mpl::true_ add_forwarding_rows;
+namespace back
+{
+struct favor_runtime_speed
+{
+	typedef int compile_policy;
+	typedef ::boost::mpl::true_ add_forwarding_rows;
 };
 
-}}}// boost::msm::back
+}
+}
+}// boost::msm::back
 #endif // BOOST_MSM_BACK_DEFAULT_COMPILE_POLICY_HPP

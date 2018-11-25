@@ -12,35 +12,40 @@
 
 #include <cstddef>
 
-namespace boost {
-namespace polygon {
+namespace boost
+{
+namespace polygon
+{
 // Represents topology type of the voronoi site.
-enum GeometryCategory {
-  GEOMETRY_CATEGORY_POINT = 0x0,
-  GEOMETRY_CATEGORY_SEGMENT = 0x1
+enum GeometryCategory
+{
+	GEOMETRY_CATEGORY_POINT = 0x0,
+	GEOMETRY_CATEGORY_SEGMENT = 0x1
 };
 
 // Represents category of the input source that forms Voronoi cell.
-enum SourceCategory {
-  // Point subtypes.
-  SOURCE_CATEGORY_SINGLE_POINT = 0x0,
-  SOURCE_CATEGORY_SEGMENT_START_POINT = 0x1,
-  SOURCE_CATEGORY_SEGMENT_END_POINT = 0x2,
+enum SourceCategory
+{
+	// Point subtypes.
+	SOURCE_CATEGORY_SINGLE_POINT = 0x0,
+	SOURCE_CATEGORY_SEGMENT_START_POINT = 0x1,
+	SOURCE_CATEGORY_SEGMENT_END_POINT = 0x2,
 
-  // Segment subtypes.
-  SOURCE_CATEGORY_INITIAL_SEGMENT = 0x8,
-  SOURCE_CATEGORY_REVERSE_SEGMENT = 0x9,
+	// Segment subtypes.
+	SOURCE_CATEGORY_INITIAL_SEGMENT = 0x8,
+	SOURCE_CATEGORY_REVERSE_SEGMENT = 0x9,
 
-  SOURCE_CATEGORY_GEOMETRY_SHIFT = 0x3,
-  SOURCE_CATEGORY_BITMASK = 0x1F
+	SOURCE_CATEGORY_GEOMETRY_SHIFT = 0x3,
+	SOURCE_CATEGORY_BITMASK = 0x1F
 };
 
 inline bool belongs(
     SourceCategory source_category,
-    GeometryCategory geometry_category) {
-  return (static_cast<std::size_t>(source_category) >>
-              SOURCE_CATEGORY_GEOMETRY_SHIFT) ==
-         static_cast<std::size_t>(geometry_category);
+    GeometryCategory geometry_category)
+{
+	return (static_cast<std::size_t>(source_category) >>
+	        SOURCE_CATEGORY_GEOMETRY_SHIFT) ==
+	       static_cast<std::size_t>(geometry_category);
 }
 }  // polygon
 }  // boost

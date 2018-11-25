@@ -7,15 +7,21 @@
 #ifndef BOOST_FIBERS_SPINLOCK_STATUS_H
 #define BOOST_FIBERS_SPINLOCK_STATUS_H
 
-namespace boost {
-namespace fibers {
-namespace detail {
+namespace boost
+{
+namespace fibers
+{
+namespace detail
+{
 
-enum class spinlock_status {
-    locked = 0,
-    unlocked
+enum class spinlock_status
+{
+	locked = 0,
+	unlocked
 };
 
-}}}
+}
+}
+}
 
 #endif // BOOST_FIBERS_SPINLOCK_STATUS_H

@@ -20,42 +20,45 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename TResult>
 class winrt_async_op
-  : public operation
+	: public operation
 {
 public:
-  // The error code to be passed to the completion handler.
-  boost::system::error_code ec_;
+	// The error code to be passed to the completion handler.
+	boost::system::error_code ec_;
 
-  // The result of the operation, to be passed to the completion handler.
-  TResult result_;
+	// The result of the operation, to be passed to the completion handler.
+	TResult result_;
 
 protected:
-  winrt_async_op(func_type complete_func)
-    : operation(complete_func),
-      result_()
-  {
-  }
+	winrt_async_op(func_type complete_func)
+		: operation(complete_func),
+		  result_()
+	{
+	}
 };
 
 template <>
 class winrt_async_op<void>
-  : public operation
+	: public operation
 {
 public:
-  // The error code to be passed to the completion handler.
-  boost::system::error_code ec_;
+	// The error code to be passed to the completion handler.
+	boost::system::error_code ec_;
 
 protected:
-  winrt_async_op(func_type complete_func)
-    : operation(complete_func)
-  {
-  }
+	winrt_async_op(func_type complete_func)
+		: operation(complete_func)
+	{
+	}
 };
 
 } // namespace detail

@@ -46,7 +46,8 @@
 // **************               prg_exec_monitor_main          ************** //
 // ************************************************************************** //
 
-namespace boost {
+namespace boost
+{
 
 /// @brief Wrapper around the main function
 ///
@@ -71,7 +72,7 @@ int cpp_main( int argc, char* argv[] );
 int BOOST_TEST_CALL_DECL
 main( int argc, char* argv[] )
 {
-    return ::boost::prg_exec_monitor_main( &cpp_main, argc, argv );
+	return ::boost::prg_exec_monitor_main( &cpp_main, argc, argv );
 }
 
 //____________________________________________________________________________//

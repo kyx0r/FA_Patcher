@@ -39,8 +39,10 @@
 #include <boost/type_erasure/config.hpp>
 #include <boost/type_erasure/require_match.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 
@@ -52,82 +54,87 @@ class binding;
 
 #endif
 
-namespace detail {
+namespace detail
+{
 
 template<class T>
 struct is_placeholder_arg :
-    ::boost::type_erasure::is_placeholder<
-        typename ::boost::remove_cv<
-            typename ::boost::remove_reference<T>::type
-        >::type
-    >
+	::boost::type_erasure::is_placeholder<
+	typename ::boost::remove_cv<
+	typename ::boost::remove_reference<T>::type
+	>::type
+	>
 {};
 
 template<class T, class Table>
 int maybe_get_table(const T& arg, const Table*& table, boost::mpl::true_)
 {
-    if(table == 0) {
-        table = &::boost::type_erasure::detail::access::table(arg);
-    }
-    return 0;
+	if(table == 0)
+	{
+		table = &::boost::type_erasure::detail::access::table(arg);
+	}
+	return 0;
 }
 
 template<class T, class Table>
-int maybe_get_table(const T&, const Table*&, boost::mpl::false_) { return 0; }
+int maybe_get_table(const T&, const Table*&, boost::mpl::false_)
+{
+	return 0;
+}
 
 template<class T>
 ::boost::type_erasure::detail::storage& convert_arg(any_base<T>& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 const ::boost::type_erasure::detail::storage&
 convert_arg(any_base<any<Concept, const T&> >& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class T>
 const ::boost::type_erasure::detail::storage&
 convert_arg(const any_base<T>& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&
 convert_arg(const any_base<any<Concept, T&> >& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 const ::boost::type_erasure::detail::storage&
 convert_arg(const any_base<any<Concept, const T&> >& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&
 convert_arg(param<Concept, T>& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 const ::boost::type_erasure::detail::storage&
 convert_arg(param<Concept, const T&>& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 const ::boost::type_erasure::detail::storage&
 convert_arg(const param<Concept, T>& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
@@ -136,79 +143,85 @@ template<class Concept, class T>
 const ::boost::type_erasure::detail::storage&
 convert_arg(any_base<any<Concept, const T&> >&& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&
 convert_arg(any_base<any<Concept, T&> >&& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&&
 convert_arg(any_base<any<Concept, T> >&& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(std::move(arg));
+	return ::boost::type_erasure::detail::access::data(std::move(arg));
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&&
 convert_arg(any_base<any<Concept, T&&> >& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&&
 convert_arg(const any_base<any<Concept, T&&> >& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 const ::boost::type_erasure::detail::storage&
 convert_arg(param<Concept, const T&>&& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&
 convert_arg(param<Concept, T&>&& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&&
 convert_arg(param<Concept, T>&& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(std::move(arg));
+	return ::boost::type_erasure::detail::access::data(std::move(arg));
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&&
 convert_arg(param<Concept, T&&>& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class Concept, class T>
 ::boost::type_erasure::detail::storage&&
 convert_arg(const param<Concept, T&&>& arg, boost::mpl::true_)
 {
-    return ::boost::type_erasure::detail::access::data(arg);
+	return ::boost::type_erasure::detail::access::data(arg);
 }
 
 template<class T>
-T&& convert_arg(T&& arg, boost::mpl::false_) { return std::forward<T>(arg); }
+T&& convert_arg(T&& arg, boost::mpl::false_)
+{
+	return std::forward<T>(arg);
+}
 
 #else
 
 template<class T>
-T& convert_arg(T& arg, boost::mpl::false_) { return arg; }
+T& convert_arg(T& arg, boost::mpl::false_)
+{
+	return arg;
+}
 
 #endif
 
@@ -266,33 +279,35 @@ call(const Op&, U&&... args);
 
 #else
 
-namespace detail {
-    
+namespace detail
+{
+
 template<class Sig, class Args, class Concept = void,
-    bool Check = ::boost::type_erasure::detail::check_call<Sig, Args>::type::value>
+         bool Check = ::boost::type_erasure::detail::check_call<Sig, Args>::type::value>
 struct call_impl {};
 
 template<class Op, class Args, class Concept = void>
 struct call_result :
-    call_impl<
-        typename ::boost::type_erasure::detail::get_signature<Op>::type,
-        Args,
-        Concept>
+	call_impl<
+	typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	Args,
+	Concept>
 {};
 
 template<class C1, class Args, class Concept>
 struct call_result<
-    ::boost::type_erasure::binding<C1>,
-    Args,
-    Concept
->
+	::boost::type_erasure::binding<C1>,
+	Args,
+	Concept
+	>
 {};
 
 }
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 
-namespace detail {
+namespace detail
+{
 
 template<class... T>
 void ignore(const T&...) {}
@@ -301,42 +316,42 @@ void ignore(const T&...) {}
 
 template<class R, class... T, class... U>
 const ::boost::type_erasure::binding<
-    typename ::boost::type_erasure::detail::extract_concept<void(T...), U...>::type>*
+typename ::boost::type_erasure::detail::extract_concept<void(T...), U...>::type>*
 extract_table(R(*)(T...), const U&... arg)
 {
-    const ::boost::type_erasure::binding<
-        typename ::boost::type_erasure::detail::extract_concept<
-            void(T...), U...>::type>* result = 0;
+	const ::boost::type_erasure::binding<
+	typename ::boost::type_erasure::detail::extract_concept<
+	void(T...), U...>::type>* result = 0;
 
-    // the order that we run maybe_get_table in doesn't matter
-    ignore(::boost::type_erasure::detail::maybe_get_table(
-        arg,
-        result,
-        ::boost::type_erasure::detail::is_placeholder_arg<T>())...);
+	// the order that we run maybe_get_table in doesn't matter
+	ignore(::boost::type_erasure::detail::maybe_get_table(
+	           arg,
+	           result,
+	           ::boost::type_erasure::detail::is_placeholder_arg<T>())...);
 
-    BOOST_ASSERT(result != 0);
-    return result;
+	BOOST_ASSERT(result != 0);
+	return result;
 }
 
 #else
 
 template<class R, class... T, class... U>
 const ::boost::type_erasure::binding<
-    ::boost::type_erasure::detail::extract_concept_t< ::boost::mp11::mp_list<T...>, ::boost::mp11::mp_list<U...> > >*
+::boost::type_erasure::detail::extract_concept_t< ::boost::mp11::mp_list<T...>, ::boost::mp11::mp_list<U...> > >*
 extract_table(R(*)(T...), const U&... arg)
 {
-    const ::boost::type_erasure::binding<
-        ::boost::type_erasure::detail::extract_concept_t<
-            ::boost::mp11::mp_list<T...>, ::boost::mp11::mp_list<U...> > >* result = 0;
+	const ::boost::type_erasure::binding<
+	::boost::type_erasure::detail::extract_concept_t<
+	::boost::mp11::mp_list<T...>, ::boost::mp11::mp_list<U...> > >* result = 0;
 
-    // the order that we run maybe_get_table in doesn't matter
-    ignore(::boost::type_erasure::detail::maybe_get_table(
-        arg,
-        result,
-        ::boost::type_erasure::detail::is_placeholder_arg<T>())...);
+	// the order that we run maybe_get_table in doesn't matter
+	ignore(::boost::type_erasure::detail::maybe_get_table(
+	           arg,
+	           result,
+	           ::boost::type_erasure::detail::is_placeholder_arg<T>())...);
 
-    BOOST_ASSERT(result != 0);
-    return result;
+	BOOST_ASSERT(result != 0);
+	return result;
 }
 
 #endif
@@ -347,39 +362,39 @@ struct call_impl_dispatch;
 template<class R, class... T, class... U, class Concept>
 struct call_impl_dispatch<R(T...), void(U...), Concept, false>
 {
-    typedef R type;
-    template<class F>
-    static R apply(const ::boost::type_erasure::binding<Concept>* table, U... arg)
-    {
-        return table->template find<F>()(
-            ::boost::type_erasure::detail::convert_arg(
-                ::std::forward<U>(arg),
-                ::boost::type_erasure::detail::is_placeholder_arg<T>())...);
-    }
+	typedef R type;
+	template<class F>
+	static R apply(const ::boost::type_erasure::binding<Concept>* table, U... arg)
+	{
+		return table->template find<F>()(
+		    ::boost::type_erasure::detail::convert_arg(
+		        ::std::forward<U>(arg),
+		        ::boost::type_erasure::detail::is_placeholder_arg<T>())...);
+	}
 };
 
 template<class R, class... T, class... U, class Concept>
 struct call_impl_dispatch<R(T...), void(U...), Concept, true>
 {
-    typedef ::boost::type_erasure::any<Concept, R> type;
-    template<class F>
-    static type apply(const ::boost::type_erasure::binding<Concept>* table, U... arg)
-    {
-        return type(table->template find<F>()(
-            ::boost::type_erasure::detail::convert_arg(
-                ::std::forward<U>(arg),
-                ::boost::type_erasure::detail::is_placeholder_arg<T>())...), *table);
-    }
+	typedef ::boost::type_erasure::any<Concept, R> type;
+	template<class F>
+	static type apply(const ::boost::type_erasure::binding<Concept>* table, U... arg)
+	{
+		return type(table->template find<F>()(
+		                ::boost::type_erasure::detail::convert_arg(
+		                    ::std::forward<U>(arg),
+		                    ::boost::type_erasure::detail::is_placeholder_arg<T>())...), *table);
+	}
 };
 
 template<class R, class... T, class... U, class Concept>
 struct call_impl<R(T...), void(U...), Concept, true> :
-    ::boost::type_erasure::detail::call_impl_dispatch<
-        R(T...),
-        void(U...),
-        Concept,
-        ::boost::type_erasure::detail::is_placeholder_arg<R>::value
-    >
+::boost::type_erasure::detail::call_impl_dispatch<
+R(T...),
+void(U...),
+Concept,
+::boost::type_erasure::detail::is_placeholder_arg<R>::value
+>
 {
 };
 
@@ -387,15 +402,15 @@ struct call_impl<R(T...), void(U...), Concept, true> :
 
 template<class R, class... T, class... U>
 struct call_impl<R(T...), void(U...), void, true> :
-    ::boost::type_erasure::detail::call_impl_dispatch<
-        R(T...),
-        void(U...),
-        typename ::boost::type_erasure::detail::extract_concept<
-            void(T...),
-            typename ::boost::remove_reference<U>::type...
-        >::type,
-        ::boost::type_erasure::detail::is_placeholder_arg<R>::value
-    >
+::boost::type_erasure::detail::call_impl_dispatch<
+R(T...),
+void(U...),
+typename ::boost::type_erasure::detail::extract_concept<
+void(T...),
+typename ::boost::remove_reference<U>::type...
+>::type,
+::boost::type_erasure::detail::is_placeholder_arg<R>::value
+>
 {
 };
 
@@ -403,15 +418,15 @@ struct call_impl<R(T...), void(U...), void, true> :
 
 template<class R, class... T, class... U>
 struct call_impl<R(T...), void(U...), void, true> :
-    ::boost::type_erasure::detail::call_impl_dispatch<
-        R(T...),
-        void(U...),
-        ::boost::type_erasure::detail::extract_concept_t<
-            ::boost::mp11::mp_list<T...>,
-            ::boost::mp11::mp_list< ::boost::remove_reference_t<U>...>
-        >,
-        ::boost::type_erasure::detail::is_placeholder_arg<R>::value
-    >
+::boost::type_erasure::detail::call_impl_dispatch<
+R(T...),
+void(U...),
+::boost::type_erasure::detail::extract_concept_t<
+::boost::mp11::mp_list<T...>,
+::boost::mp11::mp_list< ::boost::remove_reference_t<U>...>
+>,
+::boost::type_erasure::detail::is_placeholder_arg<R>::value
+>
 {
 };
 
@@ -423,71 +438,71 @@ template<
     class Concept,
     class Op,
     class... U
->
+    >
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(U&&...),
-    Concept
+Op,
+void(U&&...),
+Concept
 >::type
 unchecked_call(
     const ::boost::type_erasure::binding<Concept>& table,
     const Op&,
     U&&... arg)
 {
-    return ::boost::type_erasure::detail::call_impl<
-        typename ::boost::type_erasure::detail::get_signature<Op>::type,
-        void(U&&...),
-        Concept
-    >::template apply<
-        typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
-    >(&table, std::forward<U>(arg)...);
+	return ::boost::type_erasure::detail::call_impl<
+	       typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	       void(U&&...),
+	       Concept
+	       >::template apply<
+	           typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
+	           >(&table, std::forward<U>(arg)...);
 }
 
 template<class Concept, class Op, class... U>
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(U&&...),
-    Concept
+Op,
+void(U&&...),
+Concept
 >::type
 call(
     const ::boost::type_erasure::binding<Concept>& table,
     const Op& f,
     U&&... arg)
 {
-    ::boost::type_erasure::require_match(table, f, std::forward<U>(arg)...);
-    return ::boost::type_erasure::unchecked_call(table, f, std::forward<U>(arg)...);
+	::boost::type_erasure::require_match(table, f, std::forward<U>(arg)...);
+	return ::boost::type_erasure::unchecked_call(table, f, std::forward<U>(arg)...);
 }
 
 template<class Op, class... U>
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(U&&...)
+Op,
+void(U&&...)
 >::type
 unchecked_call(
     const Op&,
     U&&... arg)
 {
-    return ::boost::type_erasure::detail::call_impl<
-        typename ::boost::type_erasure::detail::get_signature<Op>::type,
-        void(U&&...)
-    >::template apply<
-        typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
-    >(::boost::type_erasure::detail::extract_table(
-        static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0), arg...),
-        std::forward<U>(arg)...);
+	return ::boost::type_erasure::detail::call_impl<
+	       typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	       void(U&&...)
+	       >::template apply<
+	           typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
+	           >(::boost::type_erasure::detail::extract_table(
+	                 static_cast<typename ::boost::type_erasure::detail::get_signature<Op>::type*>(0), arg...),
+	             std::forward<U>(arg)...);
 }
 
 template<class Op, class... U>
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(U&&...)
+Op,
+void(U&&...)
 >::type
 call(
     const Op& f,
     U&&... arg)
 {
-    ::boost::type_erasure::require_match(f, std::forward<U>(arg)...);
-    return ::boost::type_erasure::unchecked_call(f, std::forward<U>(arg)...);
+	::boost::type_erasure::require_match(f, std::forward<U>(arg)...);
+	return ::boost::type_erasure::unchecked_call(f, std::forward<U>(arg)...);
 }
 
 
@@ -532,7 +547,8 @@ call(
         result,                                                         \
         ::boost::type_erasure::detail::is_placeholder_arg<BOOST_PP_CAT(T, n)>());
 
-namespace detail {
+namespace detail
+{
 
 #if N != 0
 
@@ -541,18 +557,18 @@ template<
     BOOST_PP_ENUM_PARAMS(N, class T),
     BOOST_PP_ENUM_PARAMS(N, class U)>
 const ::boost::type_erasure::binding<
-    typename ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
-        BOOST_PP_ENUM_PARAMS(N, T),
-        BOOST_PP_ENUM_PARAMS(N, U)>::type>*
-BOOST_PP_CAT(extract_table, N)(R(*)(BOOST_PP_ENUM_PARAMS(N, T)), BOOST_PP_ENUM_BINARY_PARAMS(N, const U, &arg))
+typename ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
+BOOST_PP_ENUM_PARAMS(N, T),
+                     BOOST_PP_ENUM_PARAMS(N, U)>::type>*
+                     BOOST_PP_CAT(extract_table, N)(R(*)(BOOST_PP_ENUM_PARAMS(N, T)), BOOST_PP_ENUM_BINARY_PARAMS(N, const U, &arg))
 {
-    const ::boost::type_erasure::binding<
-        typename ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
-            BOOST_PP_ENUM_PARAMS(N, T),
-            BOOST_PP_ENUM_PARAMS(N, U)>::type>* result = 0;
-    BOOST_PP_REPEAT(N, BOOST_TYPE_ERASURE_GET_TABLE, ~)
-    BOOST_ASSERT(result != 0);
-    return result;
+	const ::boost::type_erasure::binding<
+	typename ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
+	BOOST_PP_ENUM_PARAMS(N, T),
+	                     BOOST_PP_ENUM_PARAMS(N, U)>::type>* result = 0;
+	BOOST_PP_REPEAT(N, BOOST_TYPE_ERASURE_GET_TABLE, ~)
+	BOOST_ASSERT(result != 0);
+	return result;
 }
 
 #endif
@@ -563,9 +579,9 @@ template<
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U),
     class Concept
 #if N != 0
-        = typename ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
-            BOOST_PP_ENUM_PARAMS(N, T),
-            BOOST_PP_ENUM_PARAMS(N, U)
+    = typename ::boost::type_erasure::detail::BOOST_PP_CAT(extract_concept, N)<
+        BOOST_PP_ENUM_PARAMS(N, T),
+        BOOST_PP_ENUM_PARAMS(N, U)
         >::type
 #endif
     ,
@@ -577,57 +593,57 @@ template<
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U),
     class Concept
->
+    >
 struct BOOST_PP_CAT(call_impl, N)<
-    R
-    BOOST_PP_ENUM_TRAILING_PARAMS(N, T)
-    BOOST_PP_ENUM_TRAILING_PARAMS(N, U),
-    Concept,
-    false
->
+R
+BOOST_PP_ENUM_TRAILING_PARAMS(N, T)
+BOOST_PP_ENUM_TRAILING_PARAMS(N, U),
+                              Concept,
+                              false
+                              >
+                              {
+                                  typedef R type;
+                                  template<class F>
+                                  static R apply(const ::boost::type_erasure::binding<Concept>* table
+                                          BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, arg))
 {
-    typedef R type;
-    template<class F>
-    static R apply(const ::boost::type_erasure::binding<Concept>* table
-        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, arg))
-    {
-        return table->template find<F>()(
-            BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_CONVERT_ARG, ~));
-    }
-};
+	return table->template find<F>()(
+	    BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_CONVERT_ARG, ~));
+}
+                           };
 
 template<
     class R
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U),
     class Concept
->
+    >
 struct BOOST_PP_CAT(call_impl, N)<
-    R
-    BOOST_PP_ENUM_TRAILING_PARAMS(N, T)
-    BOOST_PP_ENUM_TRAILING_PARAMS(N, U),
-    Concept,
-    true
->
+R
+BOOST_PP_ENUM_TRAILING_PARAMS(N, T)
+BOOST_PP_ENUM_TRAILING_PARAMS(N, U),
+                              Concept,
+                              true
+                              >
+                              {
+                                  typedef ::boost::type_erasure::any<Concept, R> type;
+                                  template<class F>
+                                  static type apply(const ::boost::type_erasure::binding<Concept>* table
+                                          BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, arg))
 {
-    typedef ::boost::type_erasure::any<Concept, R> type;
-    template<class F>
-    static type apply(const ::boost::type_erasure::binding<Concept>* table
-        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, arg))
-    {
-        return type(table->template find<F>()(
-            BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_CONVERT_ARG, ~)), *table);
-    }
-};
+	return type(table->template find<F>()(
+	                BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_CONVERT_ARG, ~)), *table);
+}
+           };
 
 template<
     class R
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U),
     class Concept
->
+    >
 struct call_impl<R(BOOST_PP_ENUM_PARAMS(N, T)), void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, u)), Concept, true>
-  : BOOST_PP_CAT(call_impl, N)<R BOOST_PP_ENUM_TRAILING_PARAMS(N, T) BOOST_PP_ENUM_TRAILING_PARAMS(N, U), Concept>
+: BOOST_PP_CAT(call_impl, N)<R BOOST_PP_ENUM_TRAILING_PARAMS(N, T) BOOST_PP_ENUM_TRAILING_PARAMS(N, U), Concept>
 {};
 
 #if N != 0
@@ -636,9 +652,9 @@ template<
     class R
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 struct call_impl<R(BOOST_PP_ENUM_PARAMS(N, T)), void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, u)), void, true>
-  : BOOST_PP_CAT(call_impl, N)<R BOOST_PP_ENUM_TRAILING_PARAMS(N, T) BOOST_PP_ENUM_TRAILING_PARAMS(N, U)>
+: BOOST_PP_CAT(call_impl, N)<R BOOST_PP_ENUM_TRAILING_PARAMS(N, T) BOOST_PP_ENUM_TRAILING_PARAMS(N, U)>
 {};
 
 #endif
@@ -658,43 +674,43 @@ template<
     class Concept,
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u)),
-    Concept
+Op,
+void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u)),
+Concept
 >::type
 unchecked_call(
     const ::boost::type_erasure::binding<Concept>& table,
     const Op&
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    return ::boost::type_erasure::detail::call_impl<
-        typename ::boost::type_erasure::detail::get_signature<Op>::type,
-        void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u)),
-        Concept
-    >::template apply<
-        typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
-    >(&table BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
+	return ::boost::type_erasure::detail::call_impl<
+	       typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	       void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u)),
+	       Concept
+	       >::template apply<
+	           typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
+	           >(&table BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
 }
 
 template<
     class Concept,
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u)),
-    Concept
+Op,
+void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u)),
+Concept
 >::type
 call(
     const ::boost::type_erasure::binding<Concept>& table,
     const Op& f
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    ::boost::type_erasure::require_match(table, f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
-    return ::boost::type_erasure::unchecked_call(table, f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
+	::boost::type_erasure::require_match(table, f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
+	return ::boost::type_erasure::unchecked_call(table, f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
 }
 
 #if N != 0
@@ -702,42 +718,42 @@ call(
 template<
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u))
+Op,
+void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u))
 >::type
 unchecked_call(
     const Op&
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    return ::boost::type_erasure::detail::call_impl<
-        typename ::boost::type_erasure::detail::get_signature<Op>::type,
-        void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u))
-    >::template apply<
-        typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
-    >(
-        ::boost::type_erasure::detail::BOOST_PP_CAT(extract_table, N)(
-            (typename ::boost::type_erasure::detail::get_signature<Op>::type*)0,
-            BOOST_PP_ENUM_PARAMS(N, arg))
-        BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg)
-    );
+	return ::boost::type_erasure::detail::call_impl<
+	       typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	       void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u))
+	       >::template apply<
+	           typename ::boost::type_erasure::detail::adapt_to_vtable<Op>::type
+	           >(
+	               ::boost::type_erasure::detail::BOOST_PP_CAT(extract_table, N)(
+	                   (typename ::boost::type_erasure::detail::get_signature<Op>::type*)0,
+	                   BOOST_PP_ENUM_PARAMS(N, arg))
+	               BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg)
+	           );
 }
 
 template<
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 typename ::boost::type_erasure::detail::call_result<
-    Op,
-    void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u))
+Op,
+void(BOOST_PP_ENUM_BINARY_PARAMS(N, U, RREF u))
 >::type
 call(
     const Op& f
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    ::boost::type_erasure::require_match(f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
-    return ::boost::type_erasure::unchecked_call(f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
+	::boost::type_erasure::require_match(f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
+	return ::boost::type_erasure::unchecked_call(f BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
 }
 
 #endif

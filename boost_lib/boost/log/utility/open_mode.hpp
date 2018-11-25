@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace open_mode {
+namespace open_mode
+{
 
 //! Create a new resource; fail if exists already
 struct create_only_tag {} const create_only = create_only_tag();

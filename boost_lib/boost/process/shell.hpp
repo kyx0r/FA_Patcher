@@ -37,21 +37,26 @@ namespace boost {
 
  */
 
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 
 struct shell_
 {
-    constexpr shell_() {}
+	constexpr shell_() {}
 
-    boost::filesystem::path operator()() const
-    {
-        return boost::process::detail::api::shell_path();
-    }
-    boost::filesystem::path operator()(std::error_code & ec) const noexcept
-    {
-        return boost::process::detail::api::shell_path(ec);
-    }
+	boost::filesystem::path operator()() const
+	{
+		return boost::process::detail::api::shell_path();
+	}
+	boost::filesystem::path operator()(std::error_code & ec) const noexcept
+	{
+		return boost::process::detail::api::shell_path(ec);
+	}
 };
 
 template<>
@@ -85,7 +90,8 @@ you will get an error via the return code.
 */
 constexpr ::boost::process::detail::shell_ shell;
 
-}}
+}
+}
 
 
 

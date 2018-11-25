@@ -61,8 +61,8 @@ BOOST_PP_EXPAND(#)   undef BOOST_FT_cc_name
 BOOST_PP_EXPAND(#)   undef BOOST_FT_cc
 BOOST_PP_EXPAND(#)   undef BOOST_FT_cc_id
 BOOST_PP_EXPAND(#) else
-BOOST_PP_EXPAND(#)   undef BOOST_FT_config_valid
-BOOST_PP_EXPAND(#) endif
+	BOOST_PP_EXPAND(#)   undef BOOST_FT_config_valid
+	BOOST_PP_EXPAND(#) endif
 
 #   else
 #     undef BOOST_FT_config_valid
@@ -121,16 +121,16 @@ BOOST_PP_EXPAND(#) define BOOST_FT_cond BOOST_FT_cc_cond_v
 BOOST_PP_EXPAND(#) if BOOST_FT_cond
 BOOST_PP_EXPAND(#)   define BOOST_FT_config_valid 1
 #define _()
-BOOST_PP_EXPAND(#)   include BOOST_FT_cc_file
+	BOOST_PP_EXPAND(#)   include BOOST_FT_cc_file
 #undef _
-BOOST_PP_EXPAND(#) endif
+	BOOST_PP_EXPAND(#) endif
 
-BOOST_PP_EXPAND(#) undef BOOST_FT_cond
+	BOOST_PP_EXPAND(#) undef BOOST_FT_cond
 
-BOOST_PP_EXPAND(#) undef BOOST_FT_cc_name
-BOOST_PP_EXPAND(#) undef BOOST_FT_cc
+	BOOST_PP_EXPAND(#) undef BOOST_FT_cc_name
+	BOOST_PP_EXPAND(#) undef BOOST_FT_cc
 
-BOOST_PP_EXPAND(#) undef BOOST_FT_cc_id
+	BOOST_PP_EXPAND(#) undef BOOST_FT_cc_id
 
 #endif
 

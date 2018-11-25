@@ -17,8 +17,10 @@
 #include <boost/compute/iterator/function_input_iterator.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Stores the result of \p generator for each element in the range
 /// [\p first, \p last).
@@ -30,19 +32,20 @@ inline void generate(OutputIterator first,
                      Generator generator,
                      command_queue &queue = system::default_queue())
 {
-    size_t count = detail::iterator_range_size(first, last);
-    if(count == 0){
-        return;
-    }
+	size_t count = detail::iterator_range_size(first, last);
+	if(count == 0)
+	{
+		return;
+	}
 
-    ::boost::compute::copy(
-        ::boost::compute::make_function_input_iterator(generator,
-                                                       first.get_index()),
-        ::boost::compute::make_function_input_iterator(generator,
-                                                       last.get_index()),
-        first,
-        queue
-    );
+	::boost::compute::copy(
+	    ::boost::compute::make_function_input_iterator(generator,
+	            first.get_index()),
+	    ::boost::compute::make_function_input_iterator(generator,
+	            last.get_index()),
+	    first,
+	    queue
+	);
 }
 
 } // end compute namespace

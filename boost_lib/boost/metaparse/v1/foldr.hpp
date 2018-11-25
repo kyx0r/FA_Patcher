@@ -11,14 +11,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class State, class BackwardOp>
-      struct foldr : foldr_start_with_parser<P, return_<State>, BackwardOp> {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class State, class BackwardOp>
+struct foldr : foldr_start_with_parser<P, return_<State>, BackwardOp> {};
+}
+}
 }
 
 #endif

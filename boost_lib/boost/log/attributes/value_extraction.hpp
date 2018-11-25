@@ -44,11 +44,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace result_of {
+namespace result_of
+{
 
 /*!
  * \brief A metafunction that allows to acquire the result of the value extraction
@@ -62,25 +64,25 @@ namespace result_of {
 template< typename T, typename DefaultT, typename TagT >
 struct extract_or_default
 {
-    typedef typename mpl::eval_if<
-        mpl::is_sequence< T >,
-        mpl::eval_if<
-            mpl::contains< T, DefaultT >,
-            mpl::identity< T >,
-            mpl::push_back< T, DefaultT >
-        >,
-        mpl::if_<
-            is_same< T, DefaultT >,
-            T,
-            mpl::vector2< T, DefaultT >
-        >
-    >::type extracted_type;
+	typedef typename mpl::eval_if<
+	mpl::is_sequence< T >,
+	    mpl::eval_if<
+	    mpl::contains< T, DefaultT >,
+	    mpl::identity< T >,
+	    mpl::push_back< T, DefaultT >
+	    >,
+	    mpl::if_<
+	    is_same< T, DefaultT >,
+	    T,
+	    mpl::vector2< T, DefaultT >
+	    >
+	    >::type extracted_type;
 
-    typedef typename mpl::if_<
-        mpl::is_sequence< extracted_type >,
-        value_ref< extracted_type, TagT >,
-        extracted_type const&
-    >::type type;
+	typedef typename mpl::if_<
+	mpl::is_sequence< extracted_type >,
+	    value_ref< extracted_type, TagT >,
+	    extracted_type const&
+	    >::type type;
 };
 
 /*!
@@ -93,11 +95,11 @@ struct extract_or_default
 template< typename T, typename TagT >
 struct extract_or_throw
 {
-    typedef typename mpl::if_<
-        mpl::is_sequence< T >,
-        value_ref< T, TagT >,
-        T const&
-    >::type type;
+	typedef typename mpl::if_<
+	mpl::is_sequence< T >,
+	    value_ref< T, TagT >,
+	    T const&
+	    >::type type;
 };
 
 /*!
@@ -108,31 +110,32 @@ struct extract_or_throw
 template< typename T, typename TagT >
 struct extract
 {
-    typedef value_ref< T, TagT > type;
+	typedef value_ref< T, TagT > type;
 };
 
 } // namespace result_of
 
-namespace aux {
+namespace aux
+{
 
 //! The function object initializes the value reference
 template< typename RefT >
 struct value_ref_initializer
 {
-    typedef void result_type;
+	typedef void result_type;
 
-    value_ref_initializer(RefT& ref) : m_ref(ref)
-    {
-    }
+	value_ref_initializer(RefT& ref) : m_ref(ref)
+	{
+	}
 
-    template< typename ArgT >
-    result_type operator() (ArgT const& arg) const
-    {
-        m_ref = RefT(arg);
-    }
+	template< typename ArgT >
+	result_type operator() (ArgT const& arg) const
+	{
+		m_ref = RefT(arg);
+	}
 
 private:
-    RefT& m_ref;
+	RefT& m_ref;
 };
 
 //! The function unwraps \c value_ref, if possible
@@ -140,14 +143,14 @@ template< typename T, typename TagT >
 BOOST_FORCEINLINE typename boost::enable_if_c< mpl::is_sequence< T >::value, value_ref< T, TagT > >::type
 unwrap_value_ref(value_ref< T, TagT > const& r)
 {
-    return r;
+	return r;
 }
 
 template< typename T, typename TagT >
 BOOST_FORCEINLINE typename boost::disable_if_c< mpl::is_sequence< T >::value, T const& >::type
 unwrap_value_ref(value_ref< T, TagT > const& r)
 {
-    return r.get();
+	return r.get();
 }
 
 } // namespace aux
@@ -161,123 +164,123 @@ unwrap_value_ref(value_ref< T, TagT > const& r)
  */
 template< typename T, typename FallbackPolicyT, typename TagT >
 class value_extractor :
-    private FallbackPolicyT
+	private FallbackPolicyT
 {
 public:
-    //! Fallback policy
-    typedef FallbackPolicyT fallback_policy;
-    //! Attribute value types
-    typedef T value_type;
-    //! Function object result type
-    typedef value_ref< value_type, TagT > result_type;
+	//! Fallback policy
+	typedef FallbackPolicyT fallback_policy;
+	//! Attribute value types
+	typedef T value_type;
+	//! Function object result type
+	typedef value_ref< value_type, TagT > result_type;
 
 public:
-    /*!
-     * Default constructor
-     */
-    BOOST_DEFAULTED_FUNCTION(value_extractor(), {})
+	/*!
+	 * Default constructor
+	 */
+	BOOST_DEFAULTED_FUNCTION(value_extractor(), {})
 
-    /*!
-     * Copy constructor
-     */
-    value_extractor(value_extractor const& that) : fallback_policy(static_cast< fallback_policy const& >(that))
-    {
-    }
+	/*!
+	 * Copy constructor
+	 */
+	value_extractor(value_extractor const& that) : fallback_policy(static_cast< fallback_policy const& >(that))
+	{
+	}
 
-    /*!
-     * Constructor
-     *
-     * \param arg Fallback policy constructor argument
-     */
-    template< typename U >
-    explicit value_extractor(U const& arg) : fallback_policy(arg) {}
+	/*!
+	 * Constructor
+	 *
+	 * \param arg Fallback policy constructor argument
+	 */
+	template< typename U >
+	explicit value_extractor(U const& arg) : fallback_policy(arg) {}
 
-    /*!
-     * Extraction operator. Attempts to acquire the stored value of one of the supported types. If extraction succeeds,
-     * the extracted value is returned.
-     *
-     * \param attr The attribute value to extract from.
-     * \return The extracted value, if extraction succeeded, an empty value otherwise.
-     */
-    result_type operator() (attribute_value const& attr) const
-    {
-        result_type res;
-        aux::value_ref_initializer< result_type > initializer(res);
-        if (!!attr)
-        {
-            static_type_dispatcher< value_type > disp(initializer);
-            if (!attr.dispatch(disp) && !fallback_policy::apply_default(initializer))
-                fallback_policy::on_invalid_type(attr.get_type());
-        }
-        else if (!fallback_policy::apply_default(initializer))
-        {
-            fallback_policy::on_missing_value();
-        }
-        return res;
-    }
+	/*!
+	 * Extraction operator. Attempts to acquire the stored value of one of the supported types. If extraction succeeds,
+	 * the extracted value is returned.
+	 *
+	 * \param attr The attribute value to extract from.
+	 * \return The extracted value, if extraction succeeded, an empty value otherwise.
+	 */
+	result_type operator() (attribute_value const& attr) const
+	{
+		result_type res;
+		aux::value_ref_initializer< result_type > initializer(res);
+		if (!!attr)
+		{
+			static_type_dispatcher< value_type > disp(initializer);
+			if (!attr.dispatch(disp) && !fallback_policy::apply_default(initializer))
+				fallback_policy::on_invalid_type(attr.get_type());
+		}
+		else if (!fallback_policy::apply_default(initializer))
+		{
+			fallback_policy::on_missing_value();
+		}
+		return res;
+	}
 
-    /*!
-     * Extraction operator. Looks for an attribute value with the specified name
-     * and tries to acquire the stored value of one of the supported types. If extraction succeeds,
-     * the extracted value is returned.
-     *
-     * \param name Attribute value name.
-     * \param attrs A set of attribute values in which to look for the specified attribute value.
-     * \return The extracted value, if extraction succeeded, an empty value otherwise.
-     */
-    result_type operator() (attribute_name const& name, attribute_value_set const& attrs) const
-    {
-        try
-        {
-            attribute_value_set::const_iterator it = attrs.find(name);
-            if (it != attrs.end())
-                return operator() (it->second);
-            else
-                return operator() (attribute_value());
-        }
-        catch (exception& e)
-        {
-            // Attach the attribute name to the exception
-            boost::log::aux::attach_attribute_name_info(e, name);
-            throw;
-        }
-    }
+	/*!
+	 * Extraction operator. Looks for an attribute value with the specified name
+	 * and tries to acquire the stored value of one of the supported types. If extraction succeeds,
+	 * the extracted value is returned.
+	 *
+	 * \param name Attribute value name.
+	 * \param attrs A set of attribute values in which to look for the specified attribute value.
+	 * \return The extracted value, if extraction succeeded, an empty value otherwise.
+	 */
+	result_type operator() (attribute_name const& name, attribute_value_set const& attrs) const
+	{
+		try
+		{
+			attribute_value_set::const_iterator it = attrs.find(name);
+			if (it != attrs.end())
+				return operator() (it->second);
+			else
+				return operator() (attribute_value());
+		}
+		catch (exception& e)
+		{
+			// Attach the attribute name to the exception
+			boost::log::aux::attach_attribute_name_info(e, name);
+			throw;
+		}
+	}
 
-    /*!
-     * Extraction operator. Looks for an attribute value with the specified name
-     * and tries to acquire the stored value of one of the supported types. If extraction succeeds,
-     * the extracted value is returned.
-     *
-     * \param name Attribute value name.
-     * \param rec A log record. The attribute value will be sought among those associated with the record.
-     * \return The extracted value, if extraction succeeded, an empty value otherwise.
-     */
-    result_type operator() (attribute_name const& name, record const& rec) const
-    {
-        return operator() (name, rec.attribute_values());
-    }
+	/*!
+	 * Extraction operator. Looks for an attribute value with the specified name
+	 * and tries to acquire the stored value of one of the supported types. If extraction succeeds,
+	 * the extracted value is returned.
+	 *
+	 * \param name Attribute value name.
+	 * \param rec A log record. The attribute value will be sought among those associated with the record.
+	 * \return The extracted value, if extraction succeeded, an empty value otherwise.
+	 */
+	result_type operator() (attribute_name const& name, record const& rec) const
+	{
+		return operator() (name, rec.attribute_values());
+	}
 
-    /*!
-     * Extraction operator. Looks for an attribute value with the specified name
-     * and tries to acquire the stored value of one of the supported types. If extraction succeeds,
-     * the extracted value is returned.
-     *
-     * \param name Attribute value name.
-     * \param rec A log record view. The attribute value will be sought among those associated with the record.
-     * \return The extracted value, if extraction succeeded, an empty value otherwise.
-     */
-    result_type operator() (attribute_name const& name, record_view const& rec) const
-    {
-        return operator() (name, rec.attribute_values());
-    }
+	/*!
+	 * Extraction operator. Looks for an attribute value with the specified name
+	 * and tries to acquire the stored value of one of the supported types. If extraction succeeds,
+	 * the extracted value is returned.
+	 *
+	 * \param name Attribute value name.
+	 * \param rec A log record view. The attribute value will be sought among those associated with the record.
+	 * \return The extracted value, if extraction succeeded, an empty value otherwise.
+	 */
+	result_type operator() (attribute_name const& name, record_view const& rec) const
+	{
+		return operator() (name, rec.attribute_values());
+	}
 
-    /*!
-     * \returns Fallback policy
-     */
-    fallback_policy const& get_fallback_policy() const
-    {
-        return *static_cast< fallback_policy const* >(this);
-    }
+	/*!
+	 * \returns Fallback policy
+	 */
+	fallback_policy const& get_fallback_policy() const
+	{
+		return *static_cast< fallback_policy const* >(this);
+	}
 };
 
 #if !defined(BOOST_LOG_DOXYGEN_PASS)
@@ -299,8 +302,8 @@ public:
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract< T, TagT >::type extract(attribute_name const& name, attribute_value_set const& attrs)
 {
-    value_extractor< T, fallback_to_none, TagT > extractor;
-    return extractor(name, attrs);
+	value_extractor< T, fallback_to_none, TagT > extractor;
+	return extractor(name, attrs);
 }
 
 /*!
@@ -314,8 +317,8 @@ inline typename result_of::extract< T, TagT >::type extract(attribute_name const
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract< T, TagT >::type extract(attribute_name const& name, record const& rec)
 {
-    value_extractor< T, fallback_to_none, TagT > extractor;
-    return extractor(name, rec);
+	value_extractor< T, fallback_to_none, TagT > extractor;
+	return extractor(name, rec);
 }
 
 /*!
@@ -329,8 +332,8 @@ inline typename result_of::extract< T, TagT >::type extract(attribute_name const
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract< T, TagT >::type extract(attribute_name const& name, record_view const& rec)
 {
-    value_extractor< T, fallback_to_none, TagT > extractor;
-    return extractor(name, rec);
+	value_extractor< T, fallback_to_none, TagT > extractor;
+	return extractor(name, rec);
 }
 
 /*!
@@ -343,8 +346,8 @@ inline typename result_of::extract< T, TagT >::type extract(attribute_name const
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract< T, TagT >::type extract(attribute_value const& value)
 {
-    value_extractor< T, fallback_to_none, TagT > extractor;
-    return extractor(value);
+	value_extractor< T, fallback_to_none, TagT > extractor;
+	return extractor(value);
 }
 
 /*!
@@ -359,8 +362,8 @@ inline typename result_of::extract< T, TagT >::type extract(attribute_value cons
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract_or_throw< T, TagT >::type extract_or_throw(attribute_name const& name, attribute_value_set const& attrs)
 {
-    value_extractor< T, fallback_to_throw, TagT > extractor;
-    return aux::unwrap_value_ref(extractor(name, attrs));
+	value_extractor< T, fallback_to_throw, TagT > extractor;
+	return aux::unwrap_value_ref(extractor(name, attrs));
 }
 
 /*!
@@ -375,8 +378,8 @@ inline typename result_of::extract_or_throw< T, TagT >::type extract_or_throw(at
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract_or_throw< T, TagT >::type extract_or_throw(attribute_name const& name, record const& rec)
 {
-    value_extractor< T, fallback_to_throw, TagT > extractor;
-    return aux::unwrap_value_ref(extractor(name, rec));
+	value_extractor< T, fallback_to_throw, TagT > extractor;
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 /*!
@@ -391,8 +394,8 @@ inline typename result_of::extract_or_throw< T, TagT >::type extract_or_throw(at
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract_or_throw< T, TagT >::type extract_or_throw(attribute_name const& name, record_view const& rec)
 {
-    value_extractor< T, fallback_to_throw, TagT > extractor;
-    return aux::unwrap_value_ref(extractor(name, rec));
+	value_extractor< T, fallback_to_throw, TagT > extractor;
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 /*!
@@ -406,8 +409,8 @@ inline typename result_of::extract_or_throw< T, TagT >::type extract_or_throw(at
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT >
 inline typename result_of::extract_or_throw< T, TagT >::type extract_or_throw(attribute_value const& value)
 {
-    value_extractor< T, fallback_to_throw, TagT > extractor;
-    return aux::unwrap_value_ref(extractor(value));
+	value_extractor< T, fallback_to_throw, TagT > extractor;
+	return aux::unwrap_value_ref(extractor(value));
 }
 
 /*!
@@ -426,9 +429,9 @@ template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT, typename Default
 inline typename result_of::extract_or_default< T, DefaultT, TagT >::type
 extract_or_default(attribute_name const& name, attribute_value_set const& attrs, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(name, attrs));
+	typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(name, attrs));
 }
 
 /*!
@@ -447,9 +450,9 @@ template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT, typename Default
 inline typename result_of::extract_or_default< T, DefaultT, TagT >::type
 extract_or_default(attribute_name const& name, record const& rec, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(name, rec));
+	typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 /*!
@@ -468,9 +471,9 @@ template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT, typename Default
 inline typename result_of::extract_or_default< T, DefaultT, TagT >::type
 extract_or_default(attribute_name const& name, record_view const& rec, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(name, rec));
+	typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 /*!
@@ -487,9 +490,9 @@ extract_or_default(attribute_name const& name, record_view const& rec, DefaultT 
 template< typename T, typename TagT BOOST_LOG_AUX_VOID_DEFAULT, typename DefaultT >
 inline typename result_of::extract_or_default< T, DefaultT, TagT >::type extract_or_default(attribute_value const& value, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(value));
+	typedef typename result_of::extract_or_default< T, DefaultT, TagT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& >, TagT > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(value));
 }
 
 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
@@ -497,92 +500,92 @@ inline typename result_of::extract_or_default< T, DefaultT, TagT >::type extract
 template< typename T >
 inline typename result_of::extract< T >::type extract(attribute_name const& name, attribute_value_set const& attrs)
 {
-    value_extractor< T, fallback_to_none > extractor;
-    return extractor(name, attrs);
+	value_extractor< T, fallback_to_none > extractor;
+	return extractor(name, attrs);
 }
 
 template< typename T >
 inline typename result_of::extract< T >::type extract(attribute_name const& name, record const& rec)
 {
-    value_extractor< T, fallback_to_none > extractor;
-    return extractor(name, rec);
+	value_extractor< T, fallback_to_none > extractor;
+	return extractor(name, rec);
 }
 
 template< typename T >
 inline typename result_of::extract< T >::type extract(attribute_name const& name, record_view const& rec)
 {
-    value_extractor< T, fallback_to_none > extractor;
-    return extractor(name, rec);
+	value_extractor< T, fallback_to_none > extractor;
+	return extractor(name, rec);
 }
 
 template< typename T >
 inline typename result_of::extract< T >::type extract(attribute_value const& value)
 {
-    value_extractor< T, fallback_to_none > extractor;
-    return extractor(value);
+	value_extractor< T, fallback_to_none > extractor;
+	return extractor(value);
 }
 
 template< typename T >
 inline typename result_of::extract_or_throw< T >::type extract_or_throw(attribute_name const& name, attribute_value_set const& attrs)
 {
-    value_extractor< T, fallback_to_throw > extractor;
-    return aux::unwrap_value_ref(extractor(name, attrs));
+	value_extractor< T, fallback_to_throw > extractor;
+	return aux::unwrap_value_ref(extractor(name, attrs));
 }
 
 template< typename T >
 inline typename result_of::extract_or_throw< T >::type extract_or_throw(attribute_name const& name, record const& rec)
 {
-    value_extractor< T, fallback_to_throw > extractor;
-    return aux::unwrap_value_ref(extractor(name, rec));
+	value_extractor< T, fallback_to_throw > extractor;
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 template< typename T >
 inline typename result_of::extract_or_throw< T >::type extract_or_throw(attribute_name const& name, record_view const& rec)
 {
-    value_extractor< T, fallback_to_throw > extractor;
-    return aux::unwrap_value_ref(extractor(name, rec));
+	value_extractor< T, fallback_to_throw > extractor;
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 template< typename T >
 inline typename result_of::extract_or_throw< T >::type extract_or_throw(attribute_value const& value)
 {
-    value_extractor< T, fallback_to_throw > extractor;
-    return aux::unwrap_value_ref(extractor(value));
+	value_extractor< T, fallback_to_throw > extractor;
+	return aux::unwrap_value_ref(extractor(value));
 }
 
 template< typename T, typename DefaultT >
 inline typename result_of::extract_or_default< T, DefaultT >::type extract_or_default(
     attribute_name const& name, attribute_value_set const& attrs, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(name, attrs));
+	typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(name, attrs));
 }
 
 template< typename T, typename DefaultT >
 inline typename result_of::extract_or_default< T, DefaultT >::type extract_or_default(
     attribute_name const& name, record const& rec, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(name, rec));
+	typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 template< typename T, typename DefaultT >
 inline typename result_of::extract_or_default< T, DefaultT >::type extract_or_default(
     attribute_name const& name, record_view const& rec, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(name, rec));
+	typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(name, rec));
 }
 
 template< typename T, typename DefaultT >
 inline typename result_of::extract_or_default< T, DefaultT >::type extract_or_default(attribute_value const& value, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(value));
+	typedef typename result_of::extract_or_default< T, DefaultT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& > > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(value));
 }
 
 #endif // defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
@@ -599,8 +602,8 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline typename result_of::extract< typename DescriptorT::value_type, DescriptorT >::type
 extract(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, attribute_value_set const& attrs)
 {
-    value_extractor< typename DescriptorT::value_type, fallback_to_none, DescriptorT > extractor;
-    return extractor(keyword.get_name(), attrs);
+	value_extractor< typename DescriptorT::value_type, fallback_to_none, DescriptorT > extractor;
+	return extractor(keyword.get_name(), attrs);
 }
 
 /*!
@@ -615,8 +618,8 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline typename result_of::extract< typename DescriptorT::value_type, DescriptorT >::type
 extract(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, record const& rec)
 {
-    value_extractor< typename DescriptorT::value_type, fallback_to_none, DescriptorT > extractor;
-    return extractor(keyword.get_name(), rec);
+	value_extractor< typename DescriptorT::value_type, fallback_to_none, DescriptorT > extractor;
+	return extractor(keyword.get_name(), rec);
 }
 
 /*!
@@ -631,8 +634,8 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline typename result_of::extract< typename DescriptorT::value_type, DescriptorT >::type
 extract(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, record_view const& rec)
 {
-    value_extractor< typename DescriptorT::value_type, fallback_to_none, DescriptorT > extractor;
-    return extractor(keyword.get_name(), rec);
+	value_extractor< typename DescriptorT::value_type, fallback_to_none, DescriptorT > extractor;
+	return extractor(keyword.get_name(), rec);
 }
 
 /*!
@@ -648,8 +651,8 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline typename result_of::extract_or_throw< typename DescriptorT::value_type, DescriptorT >::type
 extract_or_throw(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, attribute_value_set const& attrs)
 {
-    value_extractor< typename DescriptorT::value_type, fallback_to_throw, DescriptorT > extractor;
-    return aux::unwrap_value_ref(extractor(keyword.get_name(), attrs));
+	value_extractor< typename DescriptorT::value_type, fallback_to_throw, DescriptorT > extractor;
+	return aux::unwrap_value_ref(extractor(keyword.get_name(), attrs));
 }
 
 /*!
@@ -665,8 +668,8 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline typename result_of::extract_or_throw< typename DescriptorT::value_type, DescriptorT >::type
 extract_or_throw(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, record const& rec)
 {
-    value_extractor< typename DescriptorT::value_type, fallback_to_throw, DescriptorT > extractor;
-    return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
+	value_extractor< typename DescriptorT::value_type, fallback_to_throw, DescriptorT > extractor;
+	return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
 }
 
 /*!
@@ -682,8 +685,8 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline typename result_of::extract_or_throw< typename DescriptorT::value_type, DescriptorT >::type
 extract_or_throw(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, record_view const& rec)
 {
-    value_extractor< typename DescriptorT::value_type, fallback_to_throw, DescriptorT > extractor;
-    return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
+	value_extractor< typename DescriptorT::value_type, fallback_to_throw, DescriptorT > extractor;
+	return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
 }
 
 /*!
@@ -702,9 +705,9 @@ template< typename DescriptorT, template< typename > class ActorT, typename Defa
 inline typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::type
 extract_or_default(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, attribute_value_set const& attrs, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& >, DescriptorT > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(keyword.get_name(), attrs));
+	typedef typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& >, DescriptorT > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(keyword.get_name(), attrs));
 }
 
 /*!
@@ -723,9 +726,9 @@ template< typename DescriptorT, template< typename > class ActorT, typename Defa
 inline typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::type
 extract_or_default(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, record const& rec, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& >, DescriptorT > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
+	typedef typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& >, DescriptorT > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
 }
 
 /*!
@@ -744,9 +747,9 @@ template< typename DescriptorT, template< typename > class ActorT, typename Defa
 inline typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::type
 extract_or_default(expressions::attribute_keyword< DescriptorT, ActorT > const& keyword, record_view const& rec, DefaultT const& def_val)
 {
-    typedef typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::extracted_type extracted_type;
-    value_extractor< extracted_type, fallback_to_default< DefaultT const& >, DescriptorT > extractor(def_val);
-    return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
+	typedef typename result_of::extract_or_default< typename DescriptorT::value_type, DefaultT, DescriptorT >::extracted_type extracted_type;
+	value_extractor< extracted_type, fallback_to_default< DefaultT const& >, DescriptorT > extractor(def_val);
+	return aux::unwrap_value_ref(extractor(keyword.get_name(), rec));
 }
 
 #if !defined(BOOST_LOG_DOXYGEN_PASS)
@@ -754,25 +757,25 @@ extract_or_default(expressions::attribute_keyword< DescriptorT, ActorT > const& 
 template< typename T, typename TagT >
 inline typename result_of::extract< T, TagT >::type attribute_value::extract() const
 {
-    return boost::log::extract< T, TagT >(*this);
+	return boost::log::extract< T, TagT >(*this);
 }
 
 template< typename T, typename TagT >
 inline typename result_of::extract_or_throw< T, TagT >::type attribute_value::extract_or_throw() const
 {
-    return boost::log::extract_or_throw< T, TagT >(*this);
+	return boost::log::extract_or_throw< T, TagT >(*this);
 }
 
 template< typename T, typename TagT >
 inline typename result_of::extract_or_default< T, T, TagT >::type attribute_value::extract_or_default(T const& def_value) const
 {
-    return boost::log::extract_or_default< T, TagT >(*this, def_value);
+	return boost::log::extract_or_default< T, TagT >(*this, def_value);
 }
 
 template< typename T, typename TagT, typename DefaultT >
 inline typename result_of::extract_or_default< T, DefaultT, TagT >::type attribute_value::extract_or_default(DefaultT const& def_value) const
 {
-    return boost::log::extract_or_default< T, TagT >(*this, def_value);
+	return boost::log::extract_or_default< T, TagT >(*this, def_value);
 }
 
 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
@@ -780,25 +783,25 @@ inline typename result_of::extract_or_default< T, DefaultT, TagT >::type attribu
 template< typename T >
 inline typename result_of::extract< T >::type attribute_value::extract() const
 {
-    return boost::log::extract< T >(*this);
+	return boost::log::extract< T >(*this);
 }
 
 template< typename T >
 inline typename result_of::extract_or_throw< T >::type attribute_value::extract_or_throw() const
 {
-    return boost::log::extract_or_throw< T >(*this);
+	return boost::log::extract_or_throw< T >(*this);
 }
 
 template< typename T >
 inline typename result_of::extract_or_default< T, T >::type attribute_value::extract_or_default(T const& def_value) const
 {
-    return boost::log::extract_or_default< T >(*this, def_value);
+	return boost::log::extract_or_default< T >(*this, def_value);
 }
 
 template< typename T, typename DefaultT >
 inline typename result_of::extract_or_default< T, DefaultT >::type attribute_value::extract_or_default(DefaultT const& def_value) const
 {
-    return boost::log::extract_or_default< T >(*this, def_value);
+	return boost::log::extract_or_default< T >(*this, def_value);
 }
 
 #endif // defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)

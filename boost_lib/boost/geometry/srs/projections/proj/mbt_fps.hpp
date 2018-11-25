@@ -47,148 +47,161 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct mbt_fps {};
+namespace par4
+{
+struct mbt_fps {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace mbt_fps
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace mbt_fps
+{
 
-            static const int MAX_ITER = 10;
-            static const double LOOP_TOL = 1e-7;
-            static const double C1 = 0.45503;
-            static const double C2 = 1.36509;
-            static const double C3 = 1.41546;
-            static const double C_x = 0.22248;
-            static const double C_y = 1.44492;
-            //static const double C1_2 = 0.33333333333333333333333333;
+static const int MAX_ITER = 10;
+static const double LOOP_TOL = 1e-7;
+static const double C1 = 0.45503;
+static const double C2 = 1.36509;
+static const double C3 = 1.41546;
+static const double C_x = 0.22248;
+static const double C_y = 1.44492;
+//static const double C1_2 = 0.33333333333333333333333333;
 
-            template <typename T>
-            inline T C1_2() { return detail::THIRD<T>(); }
+template <typename T>
+inline T C1_2()
+{
+	return detail::THIRD<T>();
+}
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_mbt_fps_spheroid : public base_t_fi<base_mbt_fps_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_mbt_fps_spheroid : public base_t_fi<base_mbt_fps_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_mbt_fps_spheroid(const Parameters& par)
-                    : base_t_fi<base_mbt_fps_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_mbt_fps_spheroid(const Parameters& par)
+		: base_t_fi<base_mbt_fps_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType C1_2 = mbt_fps::C1_2<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType C1_2 = mbt_fps::C1_2<CalculationType>();
 
-                    CalculationType k, V, t;
-                    int i;
+		CalculationType k, V, t;
+		int i;
 
-                    k = C3 * sin(lp_lat);
-                    for (i = MAX_ITER; i ; --i) {
-                        t = lp_lat / C2;
-                        lp_lat -= V = (C1 * sin(t) + sin(lp_lat) - k) /
-                            (C1_2 * cos(t) + cos(lp_lat));
-                        if (fabs(V) < LOOP_TOL)
-                            break;
-                    }
-                    t = lp_lat / C2;
-                    xy_x = C_x * lp_lon * (1. + 3. * cos(lp_lat)/cos(t) );
-                    xy_y = C_y * sin(t);
-                }
+		k = C3 * sin(lp_lat);
+		for (i = MAX_ITER; i ; --i)
+		{
+			t = lp_lat / C2;
+			lp_lat -= V = (C1 * sin(t) + sin(lp_lat) - k) /
+			              (C1_2 * cos(t) + cos(lp_lat));
+			if (fabs(V) < LOOP_TOL)
+				break;
+		}
+		t = lp_lat / C2;
+		xy_x = C_x * lp_lon * (1. + 3. * cos(lp_lat)/cos(t) );
+		xy_y = C_y * sin(t);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType t;
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType t;
 
-                    lp_lat = C2 * (t = aasin(xy_y / C_y));
-                    lp_lon = xy_x / (C_x * (1. + 3. * cos(lp_lat)/cos(t)));
-                    lp_lat = aasin((C1 * sin(t) + sin(lp_lat)) / C3);
-                }
+		lp_lat = C2 * (t = aasin(xy_y / C_y));
+		lp_lon = xy_x / (C_x * (1. + 3. * cos(lp_lat)/cos(t)));
+		lp_lat = aasin((C1 * sin(t) + sin(lp_lat)) / C3);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "mbt_fps_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "mbt_fps_spheroid";
+	}
 
-            };
+};
 
-            // McBryde-Thomas Flat-Pole Sine (No. 2)
-            template <typename Parameters>
-            inline void setup_mbt_fps(Parameters& par)
-            {
-                par.es = 0;
-            }
+// McBryde-Thomas Flat-Pole Sine (No. 2)
+template <typename Parameters>
+inline void setup_mbt_fps(Parameters& par)
+{
+	par.es = 0;
+}
 
-    }} // namespace detail::mbt_fps
-    #endif // doxygen
+}
+} // namespace detail::mbt_fps
+#endif // doxygen
 
-    /*!
-        \brief McBryde-Thomas Flat-Pole Sine (No. 2) projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Cylindrical
-         - Spheroid
-        \par Example
-        \image html ex_mbt_fps.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct mbt_fps_spheroid : public detail::mbt_fps::base_mbt_fps_spheroid<CalculationType, Parameters>
-    {
-        inline mbt_fps_spheroid(const Parameters& par) : detail::mbt_fps::base_mbt_fps_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::mbt_fps::setup_mbt_fps(this->m_par);
-        }
-    };
+/*!
+    \brief McBryde-Thomas Flat-Pole Sine (No. 2) projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Cylindrical
+     - Spheroid
+    \par Example
+    \image html ex_mbt_fps.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct mbt_fps_spheroid : public detail::mbt_fps::base_mbt_fps_spheroid<CalculationType, Parameters>
+{
+	inline mbt_fps_spheroid(const Parameters& par) : detail::mbt_fps::base_mbt_fps_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::mbt_fps::setup_mbt_fps(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mbt_fps, mbt_fps_spheroid, mbt_fps_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mbt_fps, mbt_fps_spheroid, mbt_fps_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class mbt_fps_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<mbt_fps_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class mbt_fps_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<mbt_fps_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void mbt_fps_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("mbt_fps", new mbt_fps_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void mbt_fps_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("mbt_fps", new mbt_fps_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_MBT_FPS_HPP
 

@@ -13,8 +13,10 @@
 
 #include <boost/compute/algorithm/for_each.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Calls \p function on each element in the range [\p first, \p first
 /// \c + \p count).
@@ -28,7 +30,7 @@ inline UnaryFunction for_each_n(InputIterator first,
                                 UnaryFunction function,
                                 command_queue &queue = system::default_queue())
 {
-    return ::boost::compute::for_each(first, first + count, function, queue);
+	return ::boost::compute::for_each(first, first + count, function, queue);
 }
 
 } // end compute namespace

@@ -13,20 +13,24 @@
 #include <boost/beast/websocket/rfc6455.hpp>
 #include <boost/beast/core/detail/type_traits.hpp>
 
-namespace boost {
-namespace beast {
-namespace websocket {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
+namespace detail
+{
 
 template<class F>
 using is_request_decorator =
     typename beast::detail::is_invocable<F,
-        void(request_type&)>::type;
+    void(request_type&)>::type;
 
 template<class F>
 using is_response_decorator =
     typename beast::detail::is_invocable<F,
-        void(response_type&)>::type;
+    void(response_type&)>::type;
 
 } // detail
 } // websocket

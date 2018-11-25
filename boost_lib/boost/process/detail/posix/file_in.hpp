@@ -16,25 +16,35 @@
 #include <cstdio>
 #include <unistd.h>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 struct file_in : handler_base_ext
 {
-    file_descriptor file;
-    int handle = file.handle();
+	file_descriptor file;
+	int handle = file.handle();
 
-    template<typename T>
-    file_in(T&& t) : file(std::forward<T>(t)) {}
-    file_in(FILE * f) : handle(fileno(f)) {}
+	template<typename T>
+	file_in(T&& t) : file(std::forward<T>(t)) {}
+	file_in(FILE * f) : handle(fileno(f)) {}
 
-    template <class WindowsExecutor>
-    void on_exec_setup(WindowsExecutor &e) const
-    {
-        if (::dup2(handle, STDIN_FILENO) == -1)
-             e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
-    }
+	template <class WindowsExecutor>
+	void on_exec_setup(WindowsExecutor &e) const
+	{
+		if (::dup2(handle, STDIN_FILENO) == -1)
+			e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	}
 };
 
-}}}}
+}
+}
+}
+}
 
 #endif

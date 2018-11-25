@@ -12,22 +12,27 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 BOOST_CLBL_TRTS_DEFINE_SFINAE_ERROR_ORIGIN(add_noexcept)
 BOOST_CLBL_TRTS_SFINAE_MSG(add_noexcept, cannot_add_noexcept_to_this_type)
 
 #ifndef BOOST_CLBL_TRTS_ENABLE_NOEXCEPT_TYPES
 template<typename T>
-struct add_noexcept_t {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "noexcept types not supported by this configuration.");
+struct add_noexcept_t
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "noexcept types not supported by this configuration.");
 };
 
 template<typename T>
-struct add_noexcept {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "noexcept types not supported by this configuration.");
+struct add_noexcept
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "noexcept types not supported by this configuration.");
 };
 
 #else
@@ -44,20 +49,21 @@ template<typename T>
 using add_noexcept_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::traits<T>::add_noexcept,
-        cannot_add_noexcept_to_this_type>;
+    typename detail::traits<T>::add_noexcept,
+    cannot_add_noexcept_to_this_type>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct add_noexcept_impl {};
+template<typename T, typename = std::false_type>
+struct add_noexcept_impl {};
 
-    template<typename T>
-    struct add_noexcept_impl <T, typename std::is_same<
-        add_noexcept_t<T>, detail::dummy>::type>
-    {
-        using type = add_noexcept_t<T>;
-    };
+template<typename T>
+struct add_noexcept_impl <T, typename std::is_same<
+	add_noexcept_t<T>, detail::dummy>::type>
+{
+	using type = add_noexcept_t<T>;
+};
 }
 //->
 
@@ -66,7 +72,8 @@ struct add_noexcept : detail::add_noexcept_impl<T> {};
 
 //<-
 #endif // #ifdef BOOST_CLBL_TRTS_ENABLE_NOEXCEPT_TYPES
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

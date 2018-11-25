@@ -29,70 +29,81 @@
 
 namespace boost
 {
-    // exception used to indicate runtime lexical_cast failure
-    class BOOST_SYMBOL_VISIBLE bad_lexical_cast :
-    // workaround MSVC bug with std::bad_cast when _HAS_EXCEPTIONS == 0 
-#if defined(BOOST_MSVC) && defined(_HAS_EXCEPTIONS) && !_HAS_EXCEPTIONS 
-        public std::exception 
-#else 
-        public std::bad_cast 
-#endif 
+// exception used to indicate runtime lexical_cast failure
+class BOOST_SYMBOL_VISIBLE bad_lexical_cast :
+// workaround MSVC bug with std::bad_cast when _HAS_EXCEPTIONS == 0
+#if defined(BOOST_MSVC) && defined(_HAS_EXCEPTIONS) && !_HAS_EXCEPTIONS
+	public std::exception
+#else
+	public std::bad_cast
+#endif
 
 #if defined(__BORLANDC__) && BOOST_WORKAROUND( __BORLANDC__, < 0x560 )
-        // under bcc32 5.5.1 bad_cast doesn't derive from exception
-        , public std::exception
+// under bcc32 5.5.1 bad_cast doesn't derive from exception
+	, public std::exception
 #endif
 
-    {
-    public:
-        bad_lexical_cast() BOOST_NOEXCEPT
+{
+public:
+	bad_lexical_cast() BOOST_NOEXCEPT
 #ifndef BOOST_NO_TYPEID
-           : source(&typeid(void)), target(&typeid(void))
+:
+	source(&typeid(void)), target(&typeid(void))
 #endif
-        {}
+	{}
 
-        virtual const char *what() const BOOST_NOEXCEPT_OR_NOTHROW {
-            return "bad lexical cast: "
-                   "source type value could not be interpreted as target";
-        }
+	virtual const char *what() const BOOST_NOEXCEPT_OR_NOTHROW
+	{
+		return "bad lexical cast: "
+		       "source type value could not be interpreted as target";
+	}
 
-        virtual ~bad_lexical_cast() BOOST_NOEXCEPT_OR_NOTHROW
-        {}
+	virtual ~bad_lexical_cast() BOOST_NOEXCEPT_OR_NOTHROW
+	{}
 
 #ifndef BOOST_NO_TYPEID
-        bad_lexical_cast(
-                const std::type_info &source_type_arg,
-                const std::type_info &target_type_arg) BOOST_NOEXCEPT
-            : source(&source_type_arg), target(&target_type_arg)
-        {}
+	bad_lexical_cast(
+	    const std::type_info &source_type_arg,
+	    const std::type_info &target_type_arg) BOOST_NOEXCEPT
+:
+	source(&source_type_arg), target(&target_type_arg)
+	{}
 
-        const std::type_info &source_type() const BOOST_NOEXCEPT {
-            return *source;
-        }
+	const std::type_info &source_type() const BOOST_NOEXCEPT
+	{
+		return *source;
+	}
 
-        const std::type_info &target_type() const BOOST_NOEXCEPT {
-            return *target;
-        }
+	const std::type_info &target_type() const BOOST_NOEXCEPT
+	{
+		return *target;
+	}
 
-    private:
-        const std::type_info *source;
-        const std::type_info *target;
+private:
+	const std::type_info *source;
+	const std::type_info *target;
 #endif
-    };
+};
 
-    namespace conversion { namespace detail {
+namespace conversion
+{
+namespace detail
+{
 #ifdef BOOST_NO_TYPEID
-        template <class S, class T>
-        inline void throw_bad_cast() {
-            boost::throw_exception(bad_lexical_cast());
-        }
+template <class S, class T>
+inline void throw_bad_cast()
+{
+	boost::throw_exception(bad_lexical_cast());
+}
 #else
-        template <class S, class T>
-        inline void throw_bad_cast() {
-            boost::throw_exception(bad_lexical_cast(typeid(S), typeid(T)));
-        }
+template <class S, class T>
+inline void throw_bad_cast()
+{
+	boost::throw_exception(bad_lexical_cast(typeid(S), typeid(T)));
+}
 #endif
-    }} // namespace conversion::detail
+}
+} // namespace conversion::detail
 
 
 } // namespace boost

@@ -44,9 +44,15 @@
 
 #include <boost/geometry/core/assert.hpp>
 
-namespace boost { namespace geometry { namespace projections {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
 
-namespace detail {
+namespace detail
+{
 
 static const int APA_SIZE = 3;
 
@@ -54,42 +60,44 @@ static const int APA_SIZE = 3;
 template <typename T>
 inline bool pj_authset(T const& es, T* APA)
 {
-    BOOST_GEOMETRY_ASSERT(0 != APA);
+	BOOST_GEOMETRY_ASSERT(0 != APA);
 
-    static const T P00 = .33333333333333333333;
-    static const T P01 = .17222222222222222222;
-    static const T P02 = .10257936507936507936;
-    static const T P10 = .06388888888888888888;
-    static const T P11 = .06640211640211640211;
-    static const T P20 = .01641501294219154443;
+	static const T P00 = .33333333333333333333;
+	static const T P01 = .17222222222222222222;
+	static const T P02 = .10257936507936507936;
+	static const T P10 = .06388888888888888888;
+	static const T P11 = .06640211640211640211;
+	static const T P20 = .01641501294219154443;
 
-    T t = 0;
+	T t = 0;
 
-    // if (APA = (double *)pj_malloc(APA_SIZE * sizeof(double)))
-    {
-        APA[0] = es * P00;
-        t = es * es;
-        APA[0] += t * P01;
-        APA[1] = t * P10;
-        t *= es;
-        APA[0] += t * P02;
-        APA[1] += t * P11;
-        APA[2] = t * P20;
-    }
-    return true;
+	// if (APA = (double *)pj_malloc(APA_SIZE * sizeof(double)))
+	{
+		APA[0] = es * P00;
+		t = es * es;
+		APA[0] += t * P01;
+		APA[1] = t * P10;
+		t *= es;
+		APA[0] += t * P02;
+		APA[1] += t * P11;
+		APA[2] = t * P20;
+	}
+	return true;
 }
 
 template <typename T>
 inline T pj_authlat(T const& beta, const T* APA)
 {
-    BOOST_GEOMETRY_ASSERT(0 != APA);
+	BOOST_GEOMETRY_ASSERT(0 != APA);
 
-    T const t = beta + beta;
+	T const t = beta + beta;
 
-    return(beta + APA[0] * sin(t) + APA[1] * sin(t + t) + APA[2] * sin(t + t + t));
+	return(beta + APA[0] * sin(t) + APA[1] * sin(t + t) + APA[2] * sin(t + t + t));
 }
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_PJ_AUTH_HPP

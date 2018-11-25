@@ -16,9 +16,12 @@
 
 #include <boost/compute/type_traits/common_type.hpp>
 
-namespace boost {
-namespace compute {
-namespace lambda {
+namespace boost
+{
+namespace compute
+{
+namespace lambda
+{
 
 namespace mpl = boost::mpl;
 namespace proto = boost::proto;
@@ -35,7 +38,7 @@ struct result_of
 template<class Expr, class Args>
 struct result_of<Expr, Args, proto::tag::terminal>
 {
-    typedef typename proto::result_of::value<Expr>::type type;
+	typedef typename proto::result_of::value<Expr>::type type;
 };
 
 // binary operators
@@ -88,22 +91,22 @@ BOOST_COMPUTE_LAMBDA_RESULT_OF_COMPARISON_OPERATOR(proto::tag::logical_or)
 template<class Expr, class Args>
 struct result_of<Expr, Args, proto::tag::assign>
 {
-    typedef typename proto::result_of::child_c<Expr, 0>::type left;
-    typedef typename proto::result_of::child_c<Expr, 1>::type right;
+	typedef typename proto::result_of::child_c<Expr, 0>::type left;
+	typedef typename proto::result_of::child_c<Expr, 1>::type right;
 
-    typedef typename ::boost::compute::lambda::result_of<
-        right, Args, typename proto::tag_of<right>::type
-    >::type type;
+	typedef typename ::boost::compute::lambda::result_of<
+	right, Args, typename proto::tag_of<right>::type
+	>::type type;
 };
 
 // functions
 template<class Expr, class Args>
 struct result_of<Expr, Args, proto::tag::function>
 {
-    typedef typename proto::result_of::child_c<Expr, 0>::type func_expr;
-    typedef typename proto::result_of::value<func_expr>::type func;
+	typedef typename proto::result_of::child_c<Expr, 0>::type func_expr;
+	typedef typename proto::result_of::value<func_expr>::type func;
 
-    typedef typename func::template lambda_result<Expr, Args>::type type;
+	typedef typename func::template lambda_result<Expr, Args>::type type;
 };
 
 } // end lambda namespace

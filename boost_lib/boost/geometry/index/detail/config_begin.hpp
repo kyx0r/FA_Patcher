@@ -10,12 +10,12 @@
 
 #ifdef BOOST_MSVC
 
-    #pragma warning (push)
-    #pragma warning (disable : 4512) // assignment operator could not be generated
-    #pragma warning (disable : 4127) // conditional expression is constant
+#pragma warning (push)
+#pragma warning (disable : 4512) // assignment operator could not be generated
+#pragma warning (disable : 4127) // conditional expression is constant
 
-    // temporary?
-    #pragma warning (disable : 4180) // qualifier applied to function type has no meaning
+// temporary?
+#pragma warning (disable : 4180) // qualifier applied to function type has no meaning
 
 #endif   //BOOST_MSVC
 

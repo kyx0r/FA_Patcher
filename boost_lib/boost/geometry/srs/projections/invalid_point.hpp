@@ -16,23 +16,29 @@
 #include <boost/geometry/core/access.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 // Originally in pj_transform()
 template <typename Point>
 inline void set_invalid_point(Point & point)
 {
-    geometry::set<0>(point, HUGE_VAL);
-    geometry::set<1>(point, HUGE_VAL);
+	geometry::set<0>(point, HUGE_VAL);
+	geometry::set<1>(point, HUGE_VAL);
 }
 
 template <typename Point>
 inline bool is_invalid_point(Point const& point)
 {
-    return geometry::get<0>(point) == HUGE_VAL;
+	return geometry::get<0>(point) == HUGE_VAL;
 }
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_INVALID_POINT_HPP

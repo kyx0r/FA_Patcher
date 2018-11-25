@@ -52,10 +52,10 @@ struct vector
 };
 
 struct list // probably not from visual c++, but made by gpg
-			// considering, it's not capacity based, probably made by gpg
+// considering, it's not capacity based, probably made by gpg
 {
 	void* objects_start; // 0 if empty
-	void* objects_end; 
+	void* objects_end;
 };
 
 typedef int SOCKET;
@@ -141,7 +141,7 @@ struct moho_set
 	uint* items_begin;
 	uint* items_end;
 	uint* items_capacity_end;
-	void* unknown6; 
+	void* unknown6;
 	void* unknown7; // Used as memory for Short Set 'Optimization'
 	void* unknown8;
 
@@ -185,7 +185,7 @@ struct Unknown1 // from WLD_SetupSessionInfo
 	// at 0x88
 	bool boolean1;
 	char _pad1[3];
-	int unknown4; 
+	int unknown4;
 };
 
 struct IClientManager
@@ -231,11 +231,11 @@ struct UserArmy
 	// at 0x20
 	string nickname;
 
-	#ifndef FORGED_ALLIANCE
+#ifndef FORGED_ALLIANCE
 	char datas[0xf4];
-	#else
+#else
 	char datas[0xec];
-	#endif
+#endif
 	// at 0x130 Moho | at 0x128 FA
 	moho_set mValidCommandSources;
 	// at 0x148 FA
@@ -262,7 +262,8 @@ struct SimArmy
 	string mArmyType; //? 'human' for players
 
 	// at 0x1C4 FA
-	struct{
+	struct
+	{
 		float funknown1;
 		float funknown2;
 	} float_struct;
@@ -295,7 +296,7 @@ struct Sim
 #else
 #endif
 };
-struct CWldSession 
+struct CWldSession
 {
 	// 0x508 bytes
 	// Information about values is from constructor.
@@ -405,8 +406,8 @@ struct CLobby
 	// at 0xB0
 	struct
 	{
-	  INetConnector* first_element;
-	  INetConnector* last_element; // It will probably always be our CNetXXXConnector
+		INetConnector* first_element;
+		INetConnector* last_element; // It will probably always be our CNetXXXConnector
 	} peer_list; // Probably singly-linked list
 };
 
@@ -428,7 +429,7 @@ struct CLobbyPeer
 {
 	// 0x50 bytes
 	CLobbyPeer* next; // Doubly linked list pointers
-	CLobbyPeer* prev; 
+	CLobbyPeer* prev;
 
 	string			  playerName;
 
@@ -493,8 +494,8 @@ struct CClientBase // : IClient
 	void* vtable;
 	string mNickname;
 	// at 0x20
-	int mIndex; // client index 
-	int mUID; 
+	int mIndex; // client index
+	int mUID;
 	IClientManager* clientManager;
 
 	// at 0x30
@@ -530,7 +531,7 @@ struct CClientBase // : IClient
 	//int unknown4;
 	//int unknwon5;
 	//int unknown6;
-	
+
 	// at 0x50
 	int mCommandSource;
 	bool mReady;

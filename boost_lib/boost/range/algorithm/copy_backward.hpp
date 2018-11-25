@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function copy_backward
 ///
@@ -32,12 +32,12 @@ inline BidirectionalTraversalWriteableIterator
 copy_backward(const BidirectionalRange& rng,
               BidirectionalTraversalWriteableIterator out)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( BidirectionalRangeConcept<const BidirectionalRange> ));
-    return std::copy_backward(boost::begin(rng), boost::end(rng), out);
+	BOOST_RANGE_CONCEPT_ASSERT(( BidirectionalRangeConcept<const BidirectionalRange> ));
+	return std::copy_backward(boost::begin(rng), boost::end(rng), out);
 }
 
-    } // namespace range
-    using range::copy_backward;
+} // namespace range
+using range::copy_backward;
 } // namespace boost
 
 #endif // include guard

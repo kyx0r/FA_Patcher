@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword is used to pass severity level to the severity logger methods
 BOOST_PARAMETER_KEYWORD(tag, severity)

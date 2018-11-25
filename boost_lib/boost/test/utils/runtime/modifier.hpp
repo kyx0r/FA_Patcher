@@ -32,14 +32,17 @@
 #define BOOST_TEST_CLA_NEW_API
 #endif
 
-namespace boost {
-namespace runtime {
+namespace boost
+{
+namespace runtime
+{
 
 // ************************************************************************** //
 // **************         environment variable modifiers       ************** //
 // ************************************************************************** //
 
-namespace {
+namespace
+{
 
 #ifdef BOOST_TEST_CLA_NEW_API
 auto const& description     = unit_test::static_constant<nfp::typed_keyword<cstring,struct description_t>>::value;
@@ -54,8 +57,8 @@ auto const& callback        = unit_test::static_constant<nfp::keyword<struct cal
 
 template<typename EnumType>
 using enum_values = unit_test::static_constant<
-  nfp::typed_keyword<std::initializer_list<std::pair<const cstring,EnumType>>, struct enum_values_t>
->;
+                    nfp::typed_keyword<std::initializer_list<std::pair<const cstring,EnumType>>, struct enum_values_t>
+	                    >;
 
 #else
 
@@ -70,29 +73,33 @@ nfp::keyword<struct default_value_t> default_value;
 nfp::keyword<struct callback_t> callback;
 
 template<typename EnumType>
-struct enum_values_list {
-    typedef std::pair<cstring,EnumType> ElemT;
-    typedef std::vector<ElemT> ValuesT;
+struct enum_values_list
+{
+	typedef std::pair<cstring,EnumType> ElemT;
+	typedef std::vector<ElemT> ValuesT;
 
-    enum_values_list const&
-    operator()( cstring k, EnumType v ) const
-    {
-        const_cast<enum_values_list*>(this)->m_values.push_back( ElemT( k, v ) );
+	enum_values_list const&
+	operator()( cstring k, EnumType v ) const
+	{
+		const_cast<enum_values_list*>(this)->m_values.push_back( ElemT( k, v ) );
 
-        return *this;
-    }
+		return *this;
+	}
 
-    operator ValuesT const&() const { return m_values; }
+	operator ValuesT const&() const
+	{
+		return m_values;
+	}
 
 private:
-    ValuesT m_values;
+	ValuesT m_values;
 };
 
 template<typename EnumType>
 struct enum_values : unit_test::static_constant<
-  nfp::typed_keyword<enum_values_list<EnumType>, struct enum_values_t> >
-{
-};
+	nfp::typed_keyword<enum_values_list<EnumType>, struct enum_values_t> >
+	{
+	};
 
 #endif
 

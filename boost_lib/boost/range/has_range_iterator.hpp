@@ -22,61 +22,61 @@
 
 namespace boost
 {
-    namespace range_detail
-    {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
+namespace range_detail
+{
+BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
 
-        template<class T, class Enabler = void>
-        struct has_range_iterator_impl
-            : boost::mpl::false_
-        {
-        };
+template<class T, class Enabler = void>
+struct has_range_iterator_impl
+	: boost::mpl::false_
+{
+};
 
-        template<class T>
-        struct has_range_iterator_impl<
-            T,
-            BOOST_DEDUCED_TYPENAME ::boost::enable_if<
-                BOOST_DEDUCED_TYPENAME mpl::eval_if<is_const<T>,
-                    has_type<range_const_iterator<
-                                BOOST_DEDUCED_TYPENAME remove_const<T>::type> >,
-                    has_type<range_mutable_iterator<T> >
-                >::type
-            >::type
-        >
-            : boost::mpl::true_
-        {
-        };
+template<class T>
+struct has_range_iterator_impl<
+	T,
+	BOOST_DEDUCED_TYPENAME ::boost::enable_if<
+	BOOST_DEDUCED_TYPENAME mpl::eval_if<is_const<T>,
+	has_type<range_const_iterator<
+	BOOST_DEDUCED_TYPENAME remove_const<T>::type> >,
+	has_type<range_mutable_iterator<T> >
+	>::type
+	>::type
+	>
+	: boost::mpl::true_
+{
+};
 
-        template<class T, class Enabler = void>
-        struct has_range_const_iterator_impl
-            : boost::mpl::false_
-        {
-        };
+template<class T, class Enabler = void>
+struct has_range_const_iterator_impl
+	: boost::mpl::false_
+{
+};
 
-        template<class T>
-        struct has_range_const_iterator_impl<
-            T,
-            BOOST_DEDUCED_TYPENAME ::boost::enable_if<
-                has_type<range_const_iterator<T> >
-            >::type
-        >
-            : boost::mpl::true_
-        {
-        };
+template<class T>
+struct has_range_const_iterator_impl<
+	T,
+	BOOST_DEDUCED_TYPENAME ::boost::enable_if<
+	has_type<range_const_iterator<T> >
+	>::type
+	>
+	: boost::mpl::true_
+{
+};
 
-    } // namespace range_detail
+} // namespace range_detail
 
-    template<class T>
-    struct has_range_iterator
-        : range_detail::has_range_iterator_impl<
-            BOOST_DEDUCED_TYPENAME remove_reference<T>::type>
-    {};
+template<class T>
+struct has_range_iterator
+	: range_detail::has_range_iterator_impl<
+	  BOOST_DEDUCED_TYPENAME remove_reference<T>::type>
+{};
 
-    template<class T>
-    struct has_range_const_iterator
-        : range_detail::has_range_const_iterator_impl<
-            BOOST_DEDUCED_TYPENAME remove_reference<T>::type>
-    {};
+template<class T>
+struct has_range_const_iterator
+	: range_detail::has_range_const_iterator_impl<
+	  BOOST_DEDUCED_TYPENAME remove_reference<T>::type>
+{};
 } // namespace boost
 
 #endif // include guard

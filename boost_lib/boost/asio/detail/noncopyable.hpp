@@ -19,18 +19,21 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class noncopyable
 {
 protected:
-  noncopyable() {}
-  ~noncopyable() {}
+	noncopyable() {}
+	~noncopyable() {}
 private:
-  noncopyable(const noncopyable&);
-  const noncopyable& operator=(const noncopyable&);
+	noncopyable(const noncopyable&);
+	const noncopyable& operator=(const noncopyable&);
 };
 
 } // namespace detail

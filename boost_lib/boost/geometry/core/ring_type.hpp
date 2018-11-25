@@ -32,7 +32,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -51,21 +53,21 @@ namespace traits
 template <typename Geometry>
 struct ring_const_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 template <typename Geometry>
 struct ring_mutable_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 
@@ -84,60 +86,60 @@ struct ring_return_type
 template <typename LineString>
 struct ring_return_type<linestring_tag, LineString>
 {
-    typedef LineString& type;
+	typedef LineString& type;
 };
 
 
 template <typename Ring>
 struct ring_return_type<ring_tag, Ring>
 {
-    typedef Ring& type;
+	typedef Ring& type;
 };
 
 
 template <typename Polygon>
 struct ring_return_type<polygon_tag, Polygon>
 {
-    typedef typename boost::remove_const<Polygon>::type nc_polygon_type;
+	typedef typename boost::remove_const<Polygon>::type nc_polygon_type;
 
-    typedef typename boost::mpl::if_
-        <
-            boost::is_const<Polygon>,
-            typename traits::ring_const_type<nc_polygon_type>::type,
-            typename traits::ring_mutable_type<nc_polygon_type>::type
-        >::type type;
+	typedef typename boost::mpl::if_
+	<
+	boost::is_const<Polygon>,
+	      typename traits::ring_const_type<nc_polygon_type>::type,
+	      typename traits::ring_mutable_type<nc_polygon_type>::type
+	      >::type type;
 };
 
 
 template <typename MultiLinestring>
 struct ring_return_type<multi_linestring_tag, MultiLinestring>
 {
-    typedef typename ring_return_type
-        <
-            linestring_tag,
-            typename boost::mpl::if_
-                <
-                    boost::is_const<MultiLinestring>,
-                    typename boost::range_value<MultiLinestring>::type const,
-                    typename boost::range_value<MultiLinestring>::type
-                >::type
-        >::type type;
+	typedef typename ring_return_type
+	<
+	linestring_tag,
+	typename boost::mpl::if_
+	<
+	boost::is_const<MultiLinestring>,
+	typename boost::range_value<MultiLinestring>::type const,
+	typename boost::range_value<MultiLinestring>::type
+	>::type
+	>::type type;
 };
 
 
 template <typename MultiPolygon>
 struct ring_return_type<multi_polygon_tag, MultiPolygon>
 {
-    typedef typename ring_return_type
-        <
-            polygon_tag,
-            typename boost::mpl::if_
-                <
-                    boost::is_const<MultiPolygon>,
-                    typename boost::range_value<MultiPolygon>::type const,
-                    typename boost::range_value<MultiPolygon>::type
-                >::type
-        >::type type;
+	typedef typename ring_return_type
+	<
+	polygon_tag,
+	typename boost::mpl::if_
+	<
+	boost::is_const<MultiPolygon>,
+	typename boost::range_value<MultiPolygon>::type const,
+	typename boost::range_value<MultiPolygon>::type
+	>::type
+	>::type type;
 };
 
 
@@ -149,37 +151,37 @@ struct ring_type
 template <typename Ring>
 struct ring_type<ring_tag, Ring>
 {
-    typedef Ring type;
+	typedef Ring type;
 };
 
 
 template <typename Polygon>
 struct ring_type<polygon_tag, Polygon>
 {
-    typedef typename boost::remove_reference
-        <
-            typename ring_return_type<polygon_tag, Polygon>::type
-        >::type type;
+	typedef typename boost::remove_reference
+	<
+	typename ring_return_type<polygon_tag, Polygon>::type
+	>::type type;
 };
 
 
 template <typename MultiLinestring>
 struct ring_type<multi_linestring_tag, MultiLinestring>
 {
-    typedef typename boost::remove_reference
-        <
-            typename ring_return_type<multi_linestring_tag, MultiLinestring>::type
-        >::type type;
+	typedef typename boost::remove_reference
+	<
+	typename ring_return_type<multi_linestring_tag, MultiLinestring>::type
+	>::type type;
 };
 
 
 template <typename MultiPolygon>
 struct ring_type<multi_polygon_tag, MultiPolygon>
 {
-    typedef typename boost::remove_reference
-        <
-            typename ring_return_type<multi_polygon_tag, MultiPolygon>::type
-        >::type type;
+	typedef typename boost::remove_reference
+	<
+	typename ring_return_type<multi_polygon_tag, MultiPolygon>::type
+	>::type type;
 };
 
 
@@ -201,26 +203,27 @@ struct ring_type<multi_polygon_tag, MultiPolygon>
 template <typename Geometry>
 struct ring_type
 {
-    typedef typename core_dispatch::ring_type
-        <
-            typename tag<Geometry>::type,
-            Geometry
-        >::type type;
+	typedef typename core_dispatch::ring_type
+	<
+	typename tag<Geometry>::type,
+	         Geometry
+	         >::type type;
 };
 
 
 template <typename Geometry>
 struct ring_return_type
 {
-    typedef typename core_dispatch::ring_return_type
-        <
-            typename tag<Geometry>::type,
-            Geometry
-        >::type type;
+	typedef typename core_dispatch::ring_return_type
+	<
+	typename tag<Geometry>::type,
+	         Geometry
+	         >::type type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_RING_TYPE_HPP

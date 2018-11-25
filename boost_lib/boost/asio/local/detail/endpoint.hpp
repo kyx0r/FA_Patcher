@@ -26,97 +26,101 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace local {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace local
+{
+namespace detail
+{
 
 // Helper class for implementing a UNIX domain endpoint.
 class endpoint
 {
 public:
-  // Default constructor.
-  BOOST_ASIO_DECL endpoint();
+	// Default constructor.
+	BOOST_ASIO_DECL endpoint();
 
-  // Construct an endpoint using the specified path name.
-  BOOST_ASIO_DECL endpoint(const char* path_name);
+	// Construct an endpoint using the specified path name.
+	BOOST_ASIO_DECL endpoint(const char* path_name);
 
-  // Construct an endpoint using the specified path name.
-  BOOST_ASIO_DECL endpoint(const std::string& path_name);
+	// Construct an endpoint using the specified path name.
+	BOOST_ASIO_DECL endpoint(const std::string& path_name);
 
-  // Copy constructor.
-  endpoint(const endpoint& other)
-    : data_(other.data_),
-      path_length_(other.path_length_)
-  {
-  }
+	// Copy constructor.
+	endpoint(const endpoint& other)
+		: data_(other.data_),
+		  path_length_(other.path_length_)
+	{
+	}
 
-  // Assign from another endpoint.
-  endpoint& operator=(const endpoint& other)
-  {
-    data_ = other.data_;
-    path_length_ = other.path_length_;
-    return *this;
-  }
+	// Assign from another endpoint.
+	endpoint& operator=(const endpoint& other)
+	{
+		data_ = other.data_;
+		path_length_ = other.path_length_;
+		return *this;
+	}
 
-  // Get the underlying endpoint in the native type.
-  boost::asio::detail::socket_addr_type* data()
-  {
-    return &data_.base;
-  }
+	// Get the underlying endpoint in the native type.
+	boost::asio::detail::socket_addr_type* data()
+	{
+		return &data_.base;
+	}
 
-  // Get the underlying endpoint in the native type.
-  const boost::asio::detail::socket_addr_type* data() const
-  {
-    return &data_.base;
-  }
+	// Get the underlying endpoint in the native type.
+	const boost::asio::detail::socket_addr_type* data() const
+	{
+		return &data_.base;
+	}
 
-  // Get the underlying size of the endpoint in the native type.
-  std::size_t size() const
-  {
-    return path_length_
-      + offsetof(boost::asio::detail::sockaddr_un_type, sun_path);
-  }
+	// Get the underlying size of the endpoint in the native type.
+	std::size_t size() const
+	{
+		return path_length_
+		       + offsetof(boost::asio::detail::sockaddr_un_type, sun_path);
+	}
 
-  // Set the underlying size of the endpoint in the native type.
-  BOOST_ASIO_DECL void resize(std::size_t size);
+	// Set the underlying size of the endpoint in the native type.
+	BOOST_ASIO_DECL void resize(std::size_t size);
 
-  // Get the capacity of the endpoint in the native type.
-  std::size_t capacity() const
-  {
-    return sizeof(boost::asio::detail::sockaddr_un_type);
-  }
+	// Get the capacity of the endpoint in the native type.
+	std::size_t capacity() const
+	{
+		return sizeof(boost::asio::detail::sockaddr_un_type);
+	}
 
-  // Get the path associated with the endpoint.
-  BOOST_ASIO_DECL std::string path() const;
+	// Get the path associated with the endpoint.
+	BOOST_ASIO_DECL std::string path() const;
 
-  // Set the path associated with the endpoint.
-  BOOST_ASIO_DECL void path(const char* p);
+	// Set the path associated with the endpoint.
+	BOOST_ASIO_DECL void path(const char* p);
 
-  // Set the path associated with the endpoint.
-  BOOST_ASIO_DECL void path(const std::string& p);
+	// Set the path associated with the endpoint.
+	BOOST_ASIO_DECL void path(const std::string& p);
 
-  // Compare two endpoints for equality.
-  BOOST_ASIO_DECL friend bool operator==(
-      const endpoint& e1, const endpoint& e2);
+	// Compare two endpoints for equality.
+	BOOST_ASIO_DECL friend bool operator==(
+	    const endpoint& e1, const endpoint& e2);
 
-  // Compare endpoints for ordering.
-  BOOST_ASIO_DECL friend bool operator<(
-      const endpoint& e1, const endpoint& e2);
+	// Compare endpoints for ordering.
+	BOOST_ASIO_DECL friend bool operator<(
+	    const endpoint& e1, const endpoint& e2);
 
 private:
-  // The underlying UNIX socket address.
-  union data_union
-  {
-    boost::asio::detail::socket_addr_type base;
-    boost::asio::detail::sockaddr_un_type local;
-  } data_;
+	// The underlying UNIX socket address.
+	union data_union
+	{
+		boost::asio::detail::socket_addr_type base;
+		boost::asio::detail::sockaddr_un_type local;
+	} data_;
 
-  // The length of the path associated with the endpoint.
-  std::size_t path_length_;
+	// The length of the path associated with the endpoint.
+	std::size_t path_length_;
 
-  // Initialise with a specified path.
-  BOOST_ASIO_DECL void init(const char* path, std::size_t path_length);
+	// Initialise with a specified path.
+	BOOST_ASIO_DECL void init(const char* path, std::size_t path_length);
 };
 
 } // namespace detail

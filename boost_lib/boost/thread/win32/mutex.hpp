@@ -17,54 +17,54 @@
 
 namespace boost
 {
-    namespace detail
-    {
-        typedef ::boost::detail::basic_timed_mutex underlying_mutex;
-    }
+namespace detail
+{
+typedef ::boost::detail::basic_timed_mutex underlying_mutex;
+}
 
-    class mutex:
-        public ::boost::detail::underlying_mutex
-    {
-    public:
-        BOOST_THREAD_NO_COPYABLE(mutex)
-        mutex()
-        {
-            initialize();
-        }
-        ~mutex()
-        {
-            destroy();
-        }
-
-#if defined BOOST_THREAD_PROVIDES_NESTED_LOCKS
-        typedef unique_lock<mutex> scoped_lock;
-        typedef detail::try_lock_wrapper<mutex> scoped_try_lock;
-#endif
-    };
-
-    typedef mutex try_mutex;
-
-    class timed_mutex:
-        public ::boost::detail::basic_timed_mutex
-    {
-    public:
-        BOOST_THREAD_NO_COPYABLE(timed_mutex)
-        timed_mutex()
-        {
-            initialize();
-        }
-
-        ~timed_mutex()
-        {
-            destroy();
-        }
+class mutex:
+	public ::boost::detail::underlying_mutex
+{
+public:
+	BOOST_THREAD_NO_COPYABLE(mutex)
+	mutex()
+	{
+		initialize();
+	}
+	~mutex()
+	{
+		destroy();
+	}
 
 #if defined BOOST_THREAD_PROVIDES_NESTED_LOCKS
-        typedef unique_lock<timed_mutex> scoped_timed_lock;
-        typedef detail::try_lock_wrapper<timed_mutex> scoped_try_lock;
-        typedef scoped_timed_lock scoped_lock;
+	typedef unique_lock<mutex> scoped_lock;
+	typedef detail::try_lock_wrapper<mutex> scoped_try_lock;
 #endif
-    };
+};
+
+typedef mutex try_mutex;
+
+class timed_mutex:
+	public ::boost::detail::basic_timed_mutex
+{
+public:
+	BOOST_THREAD_NO_COPYABLE(timed_mutex)
+	timed_mutex()
+	{
+		initialize();
+	}
+
+	~timed_mutex()
+	{
+		destroy();
+	}
+
+#if defined BOOST_THREAD_PROVIDES_NESTED_LOCKS
+	typedef unique_lock<timed_mutex> scoped_timed_lock;
+	typedef detail::try_lock_wrapper<timed_mutex> scoped_try_lock;
+	typedef scoped_timed_lock scoped_lock;
+#endif
+};
 }
 
 #include <boost/config/abi_suffix.hpp>

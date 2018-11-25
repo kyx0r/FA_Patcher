@@ -13,7 +13,12 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_CLBL_TRTS_DISJUNCTION(...) \
     ::boost::callable_traits::detail::disjunction<__VA_ARGS__>
 
-namespace boost { namespace callable_traits { namespace detail {
+namespace boost
+{
+namespace callable_traits
+{
+namespace detail
+{
 
 //polyfill for C++17 std::disjunction
 template<typename...>
@@ -24,8 +29,10 @@ struct disjunction<T> : T {};
 
 template<typename T, typename... Ts>
 struct disjunction<T, Ts...>
-    : std::conditional<T::value != false, T, disjunction<Ts...>>::type {};
+	: std::conditional<T::value != false, T, disjunction<Ts...>>::type {};
 
-}}} // namespace boost::callable_traits::detail
+}
+}
+} // namespace boost::callable_traits::detail
 
 #endif // #ifndef BOOST_CLBL_TRTS_DETAIL_POLYFILLS_DISJUNCTION_HPP

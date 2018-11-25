@@ -49,179 +49,191 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct somerc {};
+namespace par4
+{
+struct somerc {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace somerc
-    {
-            static const double EPS = 1.e-10;
-            static const int NITER = 6;
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace somerc
+{
+static const double EPS = 1.e-10;
+static const int NITER = 6;
 
-            template <typename T>
-            struct par_somerc
-            {
-                T K, c, hlf_e, kR, cosp0, sinp0;
-            };
+template <typename T>
+struct par_somerc
+{
+	T K, c, hlf_e, kR, cosp0, sinp0;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_somerc_ellipsoid : public base_t_fi<base_somerc_ellipsoid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_somerc_ellipsoid : public base_t_fi<base_somerc_ellipsoid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_somerc<CalculationType> m_proj_parm;
+	par_somerc<CalculationType> m_proj_parm;
 
-                inline base_somerc_ellipsoid(const Parameters& par)
-                    : base_t_fi<base_somerc_ellipsoid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_somerc_ellipsoid(const Parameters& par)
+		: base_t_fi<base_somerc_ellipsoid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(e_forward)
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+	// FORWARD(e_forward)
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
 
-                    CalculationType phip, lamp, phipp, lampp, sp, cp;
+		CalculationType phip, lamp, phipp, lampp, sp, cp;
 
-                    sp = this->m_par.e * sin(lp_lat);
-                    phip = 2.* atan( exp( this->m_proj_parm.c * (
-                        log(tan(FORTPI + 0.5 * lp_lat)) - this->m_proj_parm.hlf_e * log((1. + sp)/(1. - sp)))
-                        + this->m_proj_parm.K)) - HALFPI;
-                    lamp = this->m_proj_parm.c * lp_lon;
-                    cp = cos(phip);
-                    phipp = aasin(this->m_proj_parm.cosp0 * sin(phip) - this->m_proj_parm.sinp0 * cp * cos(lamp));
-                    lampp = aasin(cp * sin(lamp) / cos(phipp));
-                    xy_x = this->m_proj_parm.kR * lampp;
-                    xy_y = this->m_proj_parm.kR * log(tan(FORTPI + 0.5 * phipp));
-                }
+		sp = this->m_par.e * sin(lp_lat);
+		phip = 2.* atan( exp( this->m_proj_parm.c * (
+		                          log(tan(FORTPI + 0.5 * lp_lat)) - this->m_proj_parm.hlf_e * log((1. + sp)/(1. - sp)))
+		                      + this->m_proj_parm.K)) - HALFPI;
+		lamp = this->m_proj_parm.c * lp_lon;
+		cp = cos(phip);
+		phipp = aasin(this->m_proj_parm.cosp0 * sin(phip) - this->m_proj_parm.sinp0 * cp * cos(lamp));
+		lampp = aasin(cp * sin(lamp) / cos(phipp));
+		xy_x = this->m_proj_parm.kR * lampp;
+		xy_y = this->m_proj_parm.kR * log(tan(FORTPI + 0.5 * phipp));
+	}
 
-                // INVERSE(e_inverse)  ellipsoid & spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
+	// INVERSE(e_inverse)  ellipsoid & spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
 
-                    CalculationType phip, lamp, phipp, lampp, cp, esp, con, delp;
-                    int i;
+		CalculationType phip, lamp, phipp, lampp, cp, esp, con, delp;
+		int i;
 
-                    phipp = 2. * (atan(exp(xy_y / this->m_proj_parm.kR)) - FORTPI);
-                    lampp = xy_x / this->m_proj_parm.kR;
-                    cp = cos(phipp);
-                    phip = aasin(this->m_proj_parm.cosp0 * sin(phipp) + this->m_proj_parm.sinp0 * cp * cos(lampp));
-                    lamp = aasin(cp * sin(lampp) / cos(phip));
-                    con = (this->m_proj_parm.K - log(tan(FORTPI + 0.5 * phip)))/this->m_proj_parm.c;
-                    for (i = NITER; i ; --i) {
-                        esp = this->m_par.e * sin(phip);
-                        delp = (con + log(tan(FORTPI + 0.5 * phip)) - this->m_proj_parm.hlf_e *
-                            log((1. + esp)/(1. - esp)) ) *
-                            (1. - esp * esp) * cos(phip) * this->m_par.rone_es;
-                        phip -= delp;
-                        if (fabs(delp) < EPS)
-                            break;
-                    }
-                    if (i) {
-                        lp_lat = phip;
-                        lp_lon = lamp / this->m_proj_parm.c;
-                    } else
-                        BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                }
+		phipp = 2. * (atan(exp(xy_y / this->m_proj_parm.kR)) - FORTPI);
+		lampp = xy_x / this->m_proj_parm.kR;
+		cp = cos(phipp);
+		phip = aasin(this->m_proj_parm.cosp0 * sin(phipp) + this->m_proj_parm.sinp0 * cp * cos(lampp));
+		lamp = aasin(cp * sin(lampp) / cos(phip));
+		con = (this->m_proj_parm.K - log(tan(FORTPI + 0.5 * phip)))/this->m_proj_parm.c;
+		for (i = NITER; i ; --i)
+		{
+			esp = this->m_par.e * sin(phip);
+			delp = (con + log(tan(FORTPI + 0.5 * phip)) - this->m_proj_parm.hlf_e *
+			        log((1. + esp)/(1. - esp)) ) *
+			       (1. - esp * esp) * cos(phip) * this->m_par.rone_es;
+			phip -= delp;
+			if (fabs(delp) < EPS)
+				break;
+		}
+		if (i)
+		{
+			lp_lat = phip;
+			lp_lon = lamp / this->m_proj_parm.c;
+		}
+		else
+			BOOST_THROW_EXCEPTION( projection_exception(-20) );
+	}
 
-                static inline std::string get_name()
-                {
-                    return "somerc_ellipsoid";
-                }
+	static inline std::string get_name()
+	{
+		return "somerc_ellipsoid";
+	}
 
-            };
+};
 
-            // Swiss. Obl. Mercator
-            template <typename Parameters, typename T>
-            inline void setup_somerc(Parameters& par, par_somerc<T>& proj_parm)
-            {
-                static const T FORTPI = detail::FORTPI<T>();
+// Swiss. Obl. Mercator
+template <typename Parameters, typename T>
+inline void setup_somerc(Parameters& par, par_somerc<T>& proj_parm)
+{
+	static const T FORTPI = detail::FORTPI<T>();
 
-                T cp, phip0, sp;
+	T cp, phip0, sp;
 
-                proj_parm.hlf_e = 0.5 * par.e;
-                cp = cos(par.phi0);
-                cp *= cp;
-                proj_parm.c = sqrt(1 + par.es * cp * cp * par.rone_es);
-                sp = sin(par.phi0);
-                proj_parm.cosp0 = cos( phip0 = aasin(proj_parm.sinp0 = sp / proj_parm.c) );
-                sp *= par.e;
-                proj_parm.K = log(tan(FORTPI + 0.5 * phip0)) - proj_parm.c * (
-                    log(tan(FORTPI + 0.5 * par.phi0)) - proj_parm.hlf_e *
-                    log((1. + sp) / (1. - sp)));
-                proj_parm.kR = par.k0 * sqrt(par.one_es) / (1. - sp * sp);
-            }
+	proj_parm.hlf_e = 0.5 * par.e;
+	cp = cos(par.phi0);
+	cp *= cp;
+	proj_parm.c = sqrt(1 + par.es * cp * cp * par.rone_es);
+	sp = sin(par.phi0);
+	proj_parm.cosp0 = cos( phip0 = aasin(proj_parm.sinp0 = sp / proj_parm.c) );
+	sp *= par.e;
+	proj_parm.K = log(tan(FORTPI + 0.5 * phip0)) - proj_parm.c * (
+	                  log(tan(FORTPI + 0.5 * par.phi0)) - proj_parm.hlf_e *
+	                  log((1. + sp) / (1. - sp)));
+	proj_parm.kR = par.k0 * sqrt(par.one_es) / (1. - sp * sp);
+}
 
-    }} // namespace detail::somerc
-    #endif // doxygen
+}
+} // namespace detail::somerc
+#endif // doxygen
 
-    /*!
-        \brief Swiss. Obl. Mercator projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Cylindrical
-         - Ellipsoid
-         - For CH1903
-        \par Example
-        \image html ex_somerc.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct somerc_ellipsoid : public detail::somerc::base_somerc_ellipsoid<CalculationType, Parameters>
-    {
-        inline somerc_ellipsoid(const Parameters& par) : detail::somerc::base_somerc_ellipsoid<CalculationType, Parameters>(par)
-        {
-            detail::somerc::setup_somerc(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Swiss. Obl. Mercator projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Cylindrical
+     - Ellipsoid
+     - For CH1903
+    \par Example
+    \image html ex_somerc.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct somerc_ellipsoid : public detail::somerc::base_somerc_ellipsoid<CalculationType, Parameters>
+{
+	inline somerc_ellipsoid(const Parameters& par) : detail::somerc::base_somerc_ellipsoid<CalculationType, Parameters>(par)
+	{
+		detail::somerc::setup_somerc(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::somerc, somerc_ellipsoid, somerc_ellipsoid)
-    
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class somerc_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<somerc_ellipsoid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::somerc, somerc_ellipsoid, somerc_ellipsoid)
 
-        template <typename CalculationType, typename Parameters>
-        inline void somerc_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("somerc", new somerc_entry<CalculationType, Parameters>);
-        }
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class somerc_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<somerc_ellipsoid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-    } // namespace detail
-    #endif // doxygen
+template <typename CalculationType, typename Parameters>
+inline void somerc_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("somerc", new somerc_entry<CalculationType, Parameters>);
+}
+
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_SOMERC_HPP
 

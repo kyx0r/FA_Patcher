@@ -8,7 +8,7 @@
 
 //  See library home page at http://www.boost.org/libs/filesystem
 
-//----------------------------------------------------------------------------// 
+//----------------------------------------------------------------------------//
 
 #ifndef BOOST_FILESYSTEM3_CONVENIENCE_HPP
 #define BOOST_FILESYSTEM3_CONVENIENCE_HPP
@@ -26,32 +26,32 @@
 
 namespace boost
 {
-  namespace filesystem
-  {
+namespace filesystem
+{
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
 
-    inline std::string extension(const path & p)
-    {
-      return p.extension().string();
-    }
+inline std::string extension(const path & p)
+{
+	return p.extension().string();
+}
 
-    inline std::string basename(const path & p)
-    {
-      return p.stem().string();
-    }
+inline std::string basename(const path & p)
+{
+	return p.stem().string();
+}
 
-    inline path change_extension( const path & p, const path & new_extension )
-    { 
-      path new_p( p );
-      new_p.replace_extension( new_extension );
-      return new_p;
-    }
+inline path change_extension( const path & p, const path & new_extension )
+{
+	path new_p( p );
+	new_p.replace_extension( new_extension );
+	return new_p;
+}
 
 # endif
 
 
-  } // namespace filesystem
+} // namespace filesystem
 } // namespace boost
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas

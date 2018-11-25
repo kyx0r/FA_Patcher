@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function unique_copy
 ///
@@ -31,8 +31,8 @@ template< class SinglePassRange, class OutputIterator >
 inline OutputIterator
 unique_copy( const SinglePassRange& rng, OutputIterator out_it )
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
-    return std::unique_copy(boost::begin(rng), boost::end(rng), out_it);
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
+	return std::unique_copy(boost::begin(rng), boost::end(rng), out_it);
 }
 /// \overload
 template< class SinglePassRange, class OutputIterator, class BinaryPredicate >
@@ -40,12 +40,12 @@ inline OutputIterator
 unique_copy( const SinglePassRange& rng, OutputIterator out_it,
              BinaryPredicate pred )
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
-    return std::unique_copy(boost::begin(rng), boost::end(rng), out_it, pred);
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
+	return std::unique_copy(boost::begin(rng), boost::end(rng), out_it, pred);
 }
 
-    } // namespace range
-    using range::unique_copy;
+} // namespace range
+using range::unique_copy;
 } // namespace boost
 
 #endif // include guard

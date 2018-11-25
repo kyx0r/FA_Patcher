@@ -47,10 +47,10 @@ class bad_weak_ptr: public std::exception
 {
 public:
 
-    virtual char const * what() const throw()
-    {
-        return "tr1::bad_weak_ptr";
-    }
+	virtual char const * what() const throw()
+	{
+		return "tr1::bad_weak_ptr";
+	}
 };
 
 #if defined(BOOST_CLANG)

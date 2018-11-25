@@ -33,10 +33,14 @@ namespace boost {
  *
  */
 
-namespace boost { namespace process {
+namespace boost
+{
+namespace process
+{
 
 ///Namespace containing the posix exensions.
-namespace posix {
+namespace posix
+{
 
 /** This property lets you modify file-descriptors other than the standard ones (0,1,2).
  *
@@ -70,6 +74,8 @@ constexpr ::boost::process::detail::posix::use_vfork_ use_vfork;
 
 using ::boost::process::detail::posix::sighandler_t;
 
-}}}
+}
+}
+}
 
 #endif /* BOOST_PROCESS_POSIX_HPP_ */

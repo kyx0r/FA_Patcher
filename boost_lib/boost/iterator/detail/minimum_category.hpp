@@ -6,11 +6,13 @@
 
 # include <boost/iterator/minimum_category.hpp>
 
-namespace boost {
+namespace boost
+{
 
 // This import below (as well as the whole header) is for backward compatibility
 // with boost/token_iterator.hpp. It should be removed as soon as that header is fixed.
-namespace detail {
+namespace detail
+{
 using iterators::minimum_category;
 } // namespace detail
 

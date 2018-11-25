@@ -23,57 +23,68 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    template <typename R>
-    struct one_t {
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::Ring<R>::value,
-        "hana::one<R>() requires 'R' to be a Ring");
-    #endif
+template <typename R>
+struct one_t
+{
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::Ring<R>::value,
+	              "hana::one<R>() requires 'R' to be a Ring");
+#endif
 
-        constexpr decltype(auto) operator()() const {
-            using One = BOOST_HANA_DISPATCH_IF(one_impl<R>,
-                hana::Ring<R>::value
-            );
+	constexpr decltype(auto) operator()() const
+	{
+		using One = BOOST_HANA_DISPATCH_IF(one_impl<R>,
+		                                   hana::Ring<R>::value
+		                                  );
 
-            return One::apply();
-        }
-    };
+		return One::apply();
+	}
+};
 
-    template <typename R, bool condition>
-    struct one_impl<R, when<condition>> : default_ {
-        template <typename ...Args>
-        static constexpr auto apply(Args&& ...) = delete;
-    };
+template <typename R, bool condition>
+struct one_impl<R, when<condition>> : default_
+{
+	template <typename ...Args>
+	static constexpr auto apply(Args&& ...) = delete;
+};
 
-    //////////////////////////////////////////////////////////////////////////
-    // Model for non-boolean arithmetic data types
-    //////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct one_impl<T, when<std::is_arithmetic<T>::value &&
-                            !std::is_same<bool, T>::value>> {
-        static constexpr T apply()
-        { return static_cast<T>(1); }
-    };
+//////////////////////////////////////////////////////////////////////////
+// Model for non-boolean arithmetic data types
+//////////////////////////////////////////////////////////////////////////
+template <typename T>
+struct one_impl<T, when<std::is_arithmetic<T>::value &&
+	!std::is_same<bool, T>::value>>
+{
+	static constexpr T apply()
+	{
+		return static_cast<T>(1);
+	}
+};
 
-    //////////////////////////////////////////////////////////////////////////
-    // Model for Constants over a Ring
-    //////////////////////////////////////////////////////////////////////////
-    namespace detail {
-        template <typename C>
-        struct constant_from_one {
-            static constexpr auto value = hana::one<typename C::value_type>();
-            using hana_tag = detail::CanonicalConstant<typename C::value_type>;
-        };
-    }
+//////////////////////////////////////////////////////////////////////////
+// Model for Constants over a Ring
+//////////////////////////////////////////////////////////////////////////
+namespace detail
+{
+template <typename C>
+struct constant_from_one
+{
+	static constexpr auto value = hana::one<typename C::value_type>();
+	using hana_tag = detail::CanonicalConstant<typename C::value_type>;
+};
+}
 
-    template <typename C>
-    struct one_impl<C, when<
-        hana::Constant<C>::value &&
-        Ring<typename C::value_type>::value
-    >> {
-        static constexpr decltype(auto) apply()
-        { return hana::to<C>(detail::constant_from_one<C>{}); }
-    };
+template <typename C>
+struct one_impl<C, when<
+	hana::Constant<C>::value &&
+	Ring<typename C::value_type>::value
+	        >>
+{
+	static constexpr decltype(auto) apply()
+	{
+		return hana::to<C>(detail::constant_from_one<C> {});
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_ONE_HPP

@@ -1,14 +1,14 @@
 /*
  *     [begin_description]
  *     Boost bind pull the placeholders, _1, _2, ... into global
- *     namespace. This can conflict with the C++03 TR1 and C++11 
- *     std::placeholders. This header provides a workaround for 
+ *     namespace. This can conflict with the C++03 TR1 and C++11
+ *     std::placeholders. This header provides a workaround for
  *     this problem.
  *     [end_description]
- *        
+ *
  *     Copyright 2012 Christoph Koke
  *     Copyright 2012 Karsten Ahnert
- *           
+ *
  *     Distributed under the Boost Software License, Version 1.0.
  *     (See accompanying file LICENSE_1_0.txt or
  *     copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -21,19 +21,23 @@
 #include <boost/numeric/odeint/config.hpp>
 
 
-#if BOOST_NUMERIC_ODEINT_CXX11 
-    #include <functional>
+#if BOOST_NUMERIC_ODEINT_CXX11
+#include <functional>
 #else
 #define BOOST_BIND_NO_PLACEHOLDERS
 #include <boost/bind.hpp>
 #endif
 
-namespace boost {
-namespace numeric {
-namespace odeint {
-namespace detail {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
+namespace detail
+{
 
-#if BOOST_NUMERIC_ODEINT_CXX11 
+#if BOOST_NUMERIC_ODEINT_CXX11
 
 using ::std::bind;
 using namespace ::std::placeholders;
@@ -42,7 +46,8 @@ using namespace ::std::placeholders;
 #else
 
 // unnamed namespace to avoid multiple declarations (#138)
-namespace {
+namespace
+{
 using ::boost::bind;
 boost::arg<1> _1;
 boost::arg<2> _2;
@@ -78,7 +83,7 @@ namespace numeric {
 namespace odeint {
 namespace detail {
 
-    
+
 #ifdef BOOST_NO_CXX11_HDR_FUNCTIONAL
 
 using ::boost::bind;

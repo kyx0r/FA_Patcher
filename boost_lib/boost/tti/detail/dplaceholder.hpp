@@ -12,25 +12,25 @@
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost
-  {
-  namespace tti
-    {
-    namespace detail
-      {
-      template <class BOOST_TTI_DETAIL_TP_T>
-      struct is_placeholder_expression :
-        boost::mpl::not_
-          <
-          boost::is_same
-            <
-            typename boost::mpl::lambda<BOOST_TTI_DETAIL_TP_T>::type,
-            BOOST_TTI_DETAIL_TP_T
-            >
-          >
-        {
-        };
-      }
-    }
-  }
-  
+{
+namespace tti
+{
+namespace detail
+{
+template <class BOOST_TTI_DETAIL_TP_T>
+struct is_placeholder_expression :
+	boost::mpl::not_
+	<
+	boost::is_same
+	<
+	typename boost::mpl::lambda<BOOST_TTI_DETAIL_TP_T>::type,
+	BOOST_TTI_DETAIL_TP_T
+	>
+	>
+{
+};
+}
+}
+}
+
 #endif // BOOST_TTI_DETAIL_PLACEHOLDER_HPP

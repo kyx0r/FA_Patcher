@@ -25,17 +25,20 @@
 
 #include <boost/type_traits/is_constructible.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 template<typename T,typename... Args>
 struct is_constructible:std::integral_constant<
-  bool,
-  boost::is_constructible<T,Args...>::value
->{};
+	bool,
+	boost::is_constructible<T,Args...>::value
+	> {};
 
 } /* namespace poly_collection::detail */
 
@@ -46,11 +49,14 @@ struct is_constructible:std::integral_constant<
 #else
 #include <type_traits>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 template<typename T,typename... Args>
 using is_constructible=std::is_constructible<T,Args...>;

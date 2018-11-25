@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------+    
+/*-----------------------------------------------------------------------------+
 Copyright (c) 2009-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -11,19 +11,23 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 #include <boost/concept_check.hpp>
 
 #include <boost/concept/detail/concept_def.hpp>
-namespace boost{ namespace icl
+namespace boost
+{
+namespace icl
 {
 
-    BOOST_concept(EqualComparable,(Type))
-    {
-        BOOST_CONCEPT_USAGE(EqualComparable) {
-            require_boolean_expr(_left == _right);
-        }
-    private:
-        Type _left, _right;
-    };
+BOOST_concept(EqualComparable,(Type))
+{
+	BOOST_CONCEPT_USAGE(EqualComparable)
+	{
+		require_boolean_expr(_left == _right);
+	}
+private:
+	Type _left, _right;
+};
 
-}}// namespace boost icl
+}
+}// namespace boost icl
 #include <boost/concept/detail/concept_undef.hpp>
 
 #endif

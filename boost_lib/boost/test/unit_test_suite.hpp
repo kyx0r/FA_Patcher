@@ -327,7 +327,12 @@ BOOST_TEST_APPEND_UNIQUE_ID(decorator_collector) = D;                   \
 // **************         BOOST_AUTO_TEST_CASE_FIXTURE         ************** //
 // ************************************************************************** //
 
-namespace boost { namespace unit_test { namespace ut_detail {
+namespace boost
+{
+namespace unit_test
+{
+namespace ut_detail
+{
 
 struct nil_t {};
 
@@ -343,18 +348,18 @@ typedef ::boost::unit_test::ut_detail::nil_t BOOST_AUTO_TEST_CASE_FIXTURE;
 // ************************************************************************** //
 
 // Facility for having a unique name based on __LINE__ and __COUNTER__ (later if available)
-#if defined(__COUNTER__) 
-  #define BOOST_TEST_INTERNAL_HAS_COUNTER
+#if defined(__COUNTER__)
+#define BOOST_TEST_INTERNAL_HAS_COUNTER
 #endif
 
 #if defined(BOOST_TEST_INTERNAL_HAS_COUNTER)
-  #define BOOST_TEST_APPEND_UNIQUE_ID( name ) \
+#define BOOST_TEST_APPEND_UNIQUE_ID( name ) \
   BOOST_JOIN( BOOST_JOIN( name, __LINE__ ), __COUNTER__)
-  /**/
+/**/
 #else
-  #define BOOST_TEST_APPEND_UNIQUE_ID( name ) \
+#define BOOST_TEST_APPEND_UNIQUE_ID( name ) \
   BOOST_JOIN( name, __LINE__ )
-  /**/
+/**/
 #endif
 /**/
 
@@ -372,23 +377,25 @@ BOOST_TEST_APPEND_UNIQUE_ID( BOOST_JOIN( test_name, _registrar ) ) \
 #if defined(BOOST_TEST_MAIN)
 
 #ifdef BOOST_TEST_ALTERNATIVE_INIT_API
-bool init_unit_test()                   {
+bool init_unit_test()
+{
 #else
 ::boost::unit_test::test_suite*
-init_unit_test_suite( int, char* [] )   {
+init_unit_test_suite( int, char* [] )
+{
 #endif
 
 #ifdef BOOST_TEST_MODULE
-    using namespace ::boost::unit_test;
-    assign_op( framework::master_test_suite().p_name.value, BOOST_TEST_STRINGIZE( BOOST_TEST_MODULE ).trim( "\"" ), 0 );
+	using namespace ::boost::unit_test;
+	assign_op( framework::master_test_suite().p_name.value, BOOST_TEST_STRINGIZE( BOOST_TEST_MODULE ).trim( "\"" ), 0 );
 
 #endif
 
 #ifdef BOOST_TEST_ALTERNATIVE_INIT_API
-    return true;
+	return true;
 }
 #else
-    return 0;
+	return 0;
 }
 #endif
 

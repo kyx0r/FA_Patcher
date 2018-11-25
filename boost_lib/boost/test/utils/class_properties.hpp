@@ -35,36 +35,51 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************                 class_property               ************** //
 // ************************************************************************** //
 
 template<class PropertyType>
-class class_property {
+class class_property
+{
 protected:
-    typedef typename call_traits<PropertyType>::const_reference     read_access_t;
-    typedef typename call_traits<PropertyType>::param_type          write_param_t;
-    typedef typename add_pointer<typename add_const<PropertyType>::type>::type address_res_t;
+	typedef typename call_traits<PropertyType>::const_reference     read_access_t;
+	typedef typename call_traits<PropertyType>::param_type          write_param_t;
+	typedef typename add_pointer<typename add_const<PropertyType>::type>::type address_res_t;
 public:
-    // Constructor
-                    class_property() : value( PropertyType() ) {}
-    explicit        class_property( write_param_t init_value )
-    : value( init_value ) {}
+	// Constructor
+	class_property() : value( PropertyType() ) {}
+	explicit        class_property( write_param_t init_value )
+		: value( init_value ) {}
 
-    // Access methods
-    operator        read_access_t() const   { return value; }
-    read_access_t   get() const             { return value; }
-    bool            operator!() const       { return !value; }
-    address_res_t   operator&() const       { return &value; }
+	// Access methods
+	operator        read_access_t() const
+	{
+		return value;
+	}
+	read_access_t   get() const
+	{
+		return value;
+	}
+	bool            operator!() const
+	{
+		return !value;
+	}
+	address_res_t   operator&() const
+	{
+		return &value;
+	}
 
-    // Data members
+	// Data members
 #ifndef BOOST_TEST_NO_PROTECTED_USING
 protected:
 #endif
-    PropertyType        value;
+	PropertyType        value;
 };
 
 //____________________________________________________________________________//
@@ -83,7 +98,7 @@ operator<<( std::basic_ostream<CharT1,Tr>& os, class_property<PropertyType> cons
 
 #endif
 {
-    return os << p.get();
+	return os << p.get();
 }
 
 //____________________________________________________________________________//
@@ -120,18 +135,22 @@ DEFINE_PROPERTY_FREE_BINARY_OPERATOR( != )
 // ************************************************************************** //
 
 template<class PropertyType>
-class readonly_property : public class_property<PropertyType> {
-    typedef class_property<PropertyType>         base_prop;
-    typedef typename base_prop::address_res_t    arrow_res_t;
+class readonly_property : public class_property<PropertyType>
+{
+	typedef class_property<PropertyType>         base_prop;
+	typedef typename base_prop::address_res_t    arrow_res_t;
 protected:
-    typedef typename base_prop::write_param_t    write_param_t;
+	typedef typename base_prop::write_param_t    write_param_t;
 public:
-    // Constructor
-                    readonly_property() {}
-    explicit        readonly_property( write_param_t init_value ) : base_prop( init_value ) {}
+	// Constructor
+	readonly_property() {}
+	explicit        readonly_property( write_param_t init_value ) : base_prop( init_value ) {}
 
-    // access methods
-    arrow_res_t     operator->() const      { return boost::addressof( base_prop::value ); }
+	// access methods
+	arrow_res_t     operator->() const
+	{
+		return boost::addressof( base_prop::value );
+	}
 };
 
 //____________________________________________________________________________//
@@ -164,22 +183,32 @@ public:                                                                         
 // ************************************************************************** //
 
 template<class PropertyType>
-class readwrite_property : public class_property<PropertyType> {
-    typedef class_property<PropertyType>                base_prop;
-    typedef typename add_pointer<PropertyType>::type    arrow_res_t;
-    typedef typename base_prop::address_res_t           const_arrow_res_t;
-    typedef typename base_prop::write_param_t           write_param_t;
+class readwrite_property : public class_property<PropertyType>
+{
+	typedef class_property<PropertyType>                base_prop;
+	typedef typename add_pointer<PropertyType>::type    arrow_res_t;
+	typedef typename base_prop::address_res_t           const_arrow_res_t;
+	typedef typename base_prop::write_param_t           write_param_t;
 public:
-                    readwrite_property() : base_prop() {}
-    explicit        readwrite_property( write_param_t init_value ) : base_prop( init_value ) {}
+	readwrite_property() : base_prop() {}
+	explicit        readwrite_property( write_param_t init_value ) : base_prop( init_value ) {}
 
-    // access methods
-    void            set( write_param_t v )  { base_prop::value = v; }
-    arrow_res_t     operator->()            { return boost::addressof( base_prop::value ); }
-    const_arrow_res_t operator->() const    { return boost::addressof( base_prop::value ); }
+	// access methods
+	void            set( write_param_t v )
+	{
+		base_prop::value = v;
+	}
+	arrow_res_t     operator->()
+	{
+		return boost::addressof( base_prop::value );
+	}
+	const_arrow_res_t operator->() const
+	{
+		return boost::addressof( base_prop::value );
+	}
 
 #ifndef BOOST_TEST_NO_PROTECTED_USING
-    using           base_prop::value;
+	using           base_prop::value;
 #endif
 };
 

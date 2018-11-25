@@ -22,11 +22,17 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 #include <boost/geometry/core/tag.hpp>
 
-namespace boost { namespace geometry {
+namespace boost
+{
+namespace geometry
+{
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace relate {
+namespace detail
+{
+namespace relate
+{
 
 struct implemented_tag {};
 
@@ -34,48 +40,50 @@ template <template <typename, typename> class StaticMaskTrait,
           typename Geometry1,
           typename Geometry2>
 struct relate_impl
-    : boost::mpl::if_
-        <
-            boost::mpl::or_
-                <
-                    boost::is_base_of
-                        <
-                            nyi::not_implemented_tag,
-                            StaticMaskTrait<Geometry1, Geometry2>
-                        >,
-                    boost::is_base_of
-                        <
-                            nyi::not_implemented_tag,
-                            dispatch::relate<Geometry1, Geometry2>
-                        >
-                >,
-            not_implemented
-                <
-                    typename geometry::tag<Geometry1>::type,
-                    typename geometry::tag<Geometry2>::type
-                >,
-            implemented_tag
-        >::type
+	: boost::mpl::if_
+	  <
+	  boost::mpl::or_
+	  <
+	  boost::is_base_of
+	  <
+	  nyi::not_implemented_tag,
+	  StaticMaskTrait<Geometry1, Geometry2>
+	  >,
+	  boost::is_base_of
+	  <
+	  nyi::not_implemented_tag,
+	  dispatch::relate<Geometry1, Geometry2>
+	  >
+	  >,
+	  not_implemented
+	  <
+	  typename geometry::tag<Geometry1>::type,
+	  typename geometry::tag<Geometry2>::type
+	  >,
+	  implemented_tag
+	  >::type
 {
-    template <typename Strategy>
-    static inline bool apply(Geometry1 const& g1, Geometry2 const& g2, Strategy const& strategy)
-    {
-        typename detail::relate::result_handler_type
-            <
-                Geometry1,
-                Geometry2,
-                typename StaticMaskTrait<Geometry1, Geometry2>::type
-            >::type handler;
+	template <typename Strategy>
+	static inline bool apply(Geometry1 const& g1, Geometry2 const& g2, Strategy const& strategy)
+	{
+		typename detail::relate::result_handler_type
+		<
+		Geometry1,
+		Geometry2,
+		typename StaticMaskTrait<Geometry1, Geometry2>::type
+		>::type handler;
 
-        dispatch::relate<Geometry1, Geometry2>::apply(g1, g2, handler, strategy);
+		dispatch::relate<Geometry1, Geometry2>::apply(g1, g2, handler, strategy);
 
-        return handler.result();
-    }
+		return handler.result();
+	}
 };
 
-}} // namespace detail::relate
+}
+} // namespace detail::relate
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_RELATE_RELATE_IMPL_HPP

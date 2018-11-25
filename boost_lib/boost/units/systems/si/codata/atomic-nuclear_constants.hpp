@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -21,15 +21,20 @@
 #include <boost/units/systems/si/codata/tau_constants.hpp>
 #include <boost/units/systems/si/codata/triton_constants.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units { 
+namespace units
+{
 
-namespace si {
-                            
-namespace constants {
+namespace si
+{
 
-namespace codata {
+namespace constants
+{
+
+namespace codata
+{
 
 /// CODATA recommended values of the fundamental physical constants: NIST SP 961
 
@@ -45,7 +50,7 @@ BOOST_UNITS_PHYSICAL_CONSTANT(E_h,quantity<energy>,4.35974394e-18*joules,2.2e-25
 
 } // namespace codata
 
-} // namespace constants    
+} // namespace constants
 
 } // namespace si
 

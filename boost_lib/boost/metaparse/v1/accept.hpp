@@ -11,25 +11,25 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class Result, class Remaining, class Pos>
-      struct accept
-      {
-        typedef accept_tag tag;
+namespace metaparse
+{
+namespace v1
+{
+template <class Result, class Remaining, class Pos>
+struct accept
+{
+	typedef accept_tag tag;
 
-        typedef
-          accept<Result, typename Remaining::type, typename Pos::type>
-          type;
+	typedef
+	accept<Result, typename Remaining::type, typename Pos::type>
+	type;
 
-        typedef Result result;
-        typedef Remaining remaining;
-        typedef Pos source_position;
-      };
-    }
-  }
+	typedef Result result;
+	typedef Remaining remaining;
+	typedef Pos source_position;
+};
+}
+}
 }
 
 #endif

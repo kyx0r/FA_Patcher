@@ -29,7 +29,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace srs
@@ -44,32 +46,32 @@ template <typename RadiusType>
 class sphere
 {
 public:
-    explicit sphere(RadiusType const& r)
-        : m_r(r)
-    {}
+	explicit sphere(RadiusType const& r)
+		: m_r(r)
+	{}
 
-    sphere()
-        : m_r(RadiusType((2.0 * 6378137.0 + 6356752.3142451793) / 3.0))
-    {}
+	sphere()
+		: m_r(RadiusType((2.0 * 6378137.0 + 6356752.3142451793) / 3.0))
+	{}
 
-    template <std::size_t I>
-    RadiusType get_radius() const
-    {
-        BOOST_STATIC_ASSERT(I < 3);
+	template <std::size_t I>
+	RadiusType get_radius() const
+	{
+		BOOST_STATIC_ASSERT(I < 3);
 
-        return m_r;
-    }
+		return m_r;
+	}
 
-    template <std::size_t I>
-    void set_radius(RadiusType const& radius)
-    {
-        BOOST_STATIC_ASSERT(I < 3);
+	template <std::size_t I>
+	void set_radius(RadiusType const& radius)
+	{
+		BOOST_STATIC_ASSERT(I < 3);
 
-        m_r = radius;
-    }
+		m_r = radius;
+	}
 
 private:
-    RadiusType m_r; // radius
+	RadiusType m_r; // radius
 };
 
 } // namespace srs
@@ -82,36 +84,37 @@ namespace traits
 template <typename RadiusType>
 struct tag< srs::sphere<RadiusType> >
 {
-    typedef srs_sphere_tag type;
+	typedef srs_sphere_tag type;
 };
 
 template <typename RadiusType>
 struct radius_type< srs::sphere<RadiusType> >
 {
-    typedef RadiusType type;
+	typedef RadiusType type;
 };
 
 template <typename RadiusType, std::size_t Dimension>
 struct radius_access<srs::sphere<RadiusType>, Dimension>
 {
-    typedef srs::sphere<RadiusType> sphere_type;
+	typedef srs::sphere<RadiusType> sphere_type;
 
-    static inline RadiusType get(sphere_type const& s)
-    {
-        return s.template get_radius<Dimension>();
-    }
+	static inline RadiusType get(sphere_type const& s)
+	{
+		return s.template get_radius<Dimension>();
+	}
 
-    static inline void set(sphere_type& s, RadiusType const& value)
-    {
-        s.template set_radius<Dimension>(value);
-    }
+	static inline void set(sphere_type& s, RadiusType const& value)
+	{
+		s.template set_radius<Dimension>(value);
+	}
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_SRS_SPHERE_HPP

@@ -24,7 +24,9 @@
 #include <boost/geometry/core/tags.hpp>
 #include <boost/geometry/util/bare_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -42,10 +44,10 @@ namespace traits
 template <typename Geometry>
 struct point_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE, (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE, (types<Geometry>)
+	);
 };
 
 
@@ -59,11 +61,11 @@ namespace core_dispatch
 template <typename Tag, typename Geometry>
 struct point_type
 {
-    // Default: call traits to get point type
-    typedef typename boost::remove_const
-        <
-            typename traits::point_type<Geometry>::type
-        >::type type;
+	// Default: call traits to get point type
+	typedef typename boost::remove_const
+	<
+	typename traits::point_type<Geometry>::type
+	>::type type;
 };
 
 
@@ -71,7 +73,7 @@ struct point_type
 template <typename Point>
 struct point_type<point_tag, Point>
 {
-    typedef Point type;
+	typedef Point type;
 };
 
 
@@ -79,14 +81,14 @@ struct point_type<point_tag, Point>
 template <typename Linestring>
 struct point_type<linestring_tag, Linestring>
 {
-    typedef typename boost::range_value<Linestring>::type type;
+	typedef typename boost::range_value<Linestring>::type type;
 };
 
 
 template <typename Ring>
 struct point_type<ring_tag, Ring>
 {
-    typedef typename boost::range_value<Ring>::type type;
+	typedef typename boost::range_value<Ring>::type type;
 };
 
 
@@ -94,43 +96,43 @@ struct point_type<ring_tag, Ring>
 template <typename Polygon>
 struct point_type<polygon_tag, Polygon>
 {
-    typedef typename point_type
-        <
-            ring_tag,
-            typename ring_type<polygon_tag, Polygon>::type
-        >::type type;
+	typedef typename point_type
+	<
+	ring_tag,
+	typename ring_type<polygon_tag, Polygon>::type
+	>::type type;
 };
 
 
 template <typename MultiPoint>
 struct point_type<multi_point_tag, MultiPoint>
 {
-    typedef typename boost::range_value
-        <
-            MultiPoint
-        >::type type;
+	typedef typename boost::range_value
+	<
+	MultiPoint
+	>::type type;
 };
 
 
 template <typename MultiLinestring>
 struct point_type<multi_linestring_tag, MultiLinestring>
 {
-    typedef typename point_type
-        <
-            linestring_tag,
-            typename boost::range_value<MultiLinestring>::type
-        >::type type;
+	typedef typename point_type
+	<
+	linestring_tag,
+	typename boost::range_value<MultiLinestring>::type
+	>::type type;
 };
 
 
 template <typename MultiPolygon>
 struct point_type<multi_polygon_tag, MultiPolygon>
 {
-    typedef typename point_type
-        <
-            polygon_tag,
-            typename boost::range_value<MultiPolygon>::type
-        >::type type;
+	typedef typename point_type
+	<
+	polygon_tag,
+	typename boost::range_value<MultiPolygon>::type
+	>::type type;
 };
 
 
@@ -148,15 +150,16 @@ struct point_type<multi_polygon_tag, MultiPolygon>
 template <typename Geometry>
 struct point_type
 {
-    typedef typename core_dispatch::point_type
-        <
-            typename tag<Geometry>::type,
-            typename boost::geometry::util::bare_type<Geometry>::type
-        >::type type;
+	typedef typename core_dispatch::point_type
+	<
+	typename tag<Geometry>::type,
+	         typename boost::geometry::util::bare_type<Geometry>::type
+	         >::type type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_POINT_TYPE_HPP

@@ -14,26 +14,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <
-        class K,
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-          BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-          class P,
-          boost::mpl::na
-        )
-      >
-      struct nth_of :
-        nth_of_c<
-          K::type::value,
-          BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE, P)
-        >
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <
+    class K,
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+        class P,
+        boost::mpl::na
+    )
+    >
+struct nth_of :
+	nth_of_c<
+	K::type::value,
+BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE, P)
+>
+{};
+}
+}
 }
 
 #endif

@@ -15,18 +15,19 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    // Note: This function is documented per datatype/concept only.
-    //! @cond
-    template <typename S, typename = void>
-    struct symmetric_difference_impl : symmetric_difference_impl<S, when<true>> { };
-    //! @endcond
+// Note: This function is documented per datatype/concept only.
+//! @cond
+template <typename S, typename = void>
+struct symmetric_difference_impl : symmetric_difference_impl<S, when<true>> { };
+//! @endcond
 
-    struct symmetric_difference_t {
-        template <typename Xs, typename Ys>
-        constexpr auto operator()(Xs&&, Ys&&) const;
-    };
+struct symmetric_difference_t
+{
+	template <typename Xs, typename Ys>
+	constexpr auto operator()(Xs&&, Ys&&) const;
+};
 
-    constexpr symmetric_difference_t symmetric_difference{};
+constexpr symmetric_difference_t symmetric_difference{};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_FWD_SYMMETRIC_DIFFERENCE_HPP

@@ -23,133 +23,152 @@ Distributed under the Boost Software License, Version 1.0.
 #include <utility>
 #endif
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 template<class T, std::size_t Alignment>
-class aligned_allocator {
-    BOOST_STATIC_ASSERT(detail::is_alignment_constant<Alignment>::value);
+class aligned_allocator
+{
+	BOOST_STATIC_ASSERT(detail::is_alignment_constant<Alignment>::value);
 
 public:
-    typedef T value_type;
-    typedef T* pointer;
-    typedef const T* const_pointer;
-    typedef void* void_pointer;
-    typedef const void* const_void_pointer;
-    typedef std::size_t size_type;
-    typedef std::ptrdiff_t difference_type;
-    typedef T& reference;
-    typedef const T& const_reference;
+	typedef T value_type;
+	typedef T* pointer;
+	typedef const T* const_pointer;
+	typedef void* void_pointer;
+	typedef const void* const_void_pointer;
+	typedef std::size_t size_type;
+	typedef std::ptrdiff_t difference_type;
+	typedef T& reference;
+	typedef const T& const_reference;
 
 private:
-    enum {
-        min_align = detail::max_size<Alignment,
-            alignment_of<value_type>::value>::value
-    };
+	enum
+	{
+		min_align = detail::max_size<Alignment,
+		alignment_of<value_type>::value>::value
+	};
 
 public:
-    template<class U>
-    struct rebind {
-        typedef aligned_allocator<U, Alignment> other;
-    };
+	template<class U>
+	struct rebind
+	{
+		typedef aligned_allocator<U, Alignment> other;
+	};
 
 #if !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
-    aligned_allocator() = default;
+	aligned_allocator() = default;
 #else
-    aligned_allocator() BOOST_NOEXCEPT { }
+	aligned_allocator() BOOST_NOEXCEPT { }
 #endif
 
-    template<class U>
-    aligned_allocator(const aligned_allocator<U, Alignment>&)
-        BOOST_NOEXCEPT { }
+	template<class U>
+	aligned_allocator(const aligned_allocator<U, Alignment>&)
+	BOOST_NOEXCEPT { }
 
-    pointer address(reference value) const BOOST_NOEXCEPT {
-        return detail::addressof(value);
-    }
+	pointer address(reference value) const BOOST_NOEXCEPT
+	{
+		return detail::addressof(value);
+	}
 
-    const_pointer address(const_reference value) const BOOST_NOEXCEPT {
-        return detail::addressof(value);
-    }
+	const_pointer address(const_reference value) const BOOST_NOEXCEPT
+	{
+		return detail::addressof(value);
+	}
 
-    pointer allocate(size_type size, const_void_pointer = 0) {
-        if (size == 0) {
-            return 0;
-        }
-        void* p = aligned_alloc(min_align, sizeof(T) * size);
-        if (!p) {
-            boost::throw_exception(std::bad_alloc());
-        }
-        return static_cast<T*>(p);
-    }
+	pointer allocate(size_type size, const_void_pointer = 0)
+	{
+		if (size == 0)
+		{
+			return 0;
+		}
+		void* p = aligned_alloc(min_align, sizeof(T) * size);
+		if (!p)
+		{
+			boost::throw_exception(std::bad_alloc());
+		}
+		return static_cast<T*>(p);
+	}
 
-    void deallocate(pointer ptr, size_type) {
-        boost::alignment::aligned_free(ptr);
-    }
+	void deallocate(pointer ptr, size_type)
+	{
+		boost::alignment::aligned_free(ptr);
+	}
 
-    BOOST_CONSTEXPR size_type max_size() const BOOST_NOEXCEPT {
-        return detail::max_objects<T>::value;
-    }
+	BOOST_CONSTEXPR size_type max_size() const BOOST_NOEXCEPT
+	{
+		return detail::max_objects<T>::value;
+	}
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
-    template<class U, class... Args>
-    void construct(U* ptr, Args&&... args) {
-        ::new((void*)ptr) U(std::forward<Args>(args)...);
-    }
+	template<class U, class... Args>
+	void construct(U* ptr, Args&&... args)
+	{
+		::new((void*)ptr) U(std::forward<Args>(args)...);
+	}
 #else
-    template<class U, class V>
-    void construct(U* ptr, V&& value) {
-        ::new((void*)ptr) U(std::forward<V>(value));
-    }
+	template<class U, class V>
+	void construct(U* ptr, V&& value)
+	{
+		::new((void*)ptr) U(std::forward<V>(value));
+	}
 #endif
 #else
-    template<class U, class V>
-    void construct(U* ptr, const V& value) {
-        ::new((void*)ptr) U(value);
-    }
+	template<class U, class V>
+	void construct(U* ptr, const V& value)
+	{
+		::new((void*)ptr) U(value);
+	}
 #endif
 
-    template<class U>
-    void construct(U* ptr) {
-        ::new((void*)ptr) U();
-    }
+	template<class U>
+	void construct(U* ptr)
+	{
+		::new((void*)ptr) U();
+	}
 
-    template<class U>
-    void destroy(U* ptr) {
-        (void)ptr;
-        ptr->~U();
-    }
+	template<class U>
+	void destroy(U* ptr)
+	{
+		(void)ptr;
+		ptr->~U();
+	}
 };
 
 template<std::size_t Alignment>
-class aligned_allocator<void, Alignment> {
-    BOOST_STATIC_ASSERT(detail::is_alignment_constant<Alignment>::value);
+class aligned_allocator<void, Alignment>
+{
+	BOOST_STATIC_ASSERT(detail::is_alignment_constant<Alignment>::value);
 
 public:
-    typedef void value_type;
-    typedef void* pointer;
-    typedef const void* const_pointer;
+	typedef void value_type;
+	typedef void* pointer;
+	typedef const void* const_pointer;
 
-    template<class U>
-    struct rebind {
-        typedef aligned_allocator<U, Alignment> other;
-    };
+	template<class U>
+	struct rebind
+	{
+		typedef aligned_allocator<U, Alignment> other;
+	};
 };
 
 template<class T, class U, std::size_t Alignment>
 inline bool
 operator==(const aligned_allocator<T, Alignment>&,
-    const aligned_allocator<U, Alignment>&) BOOST_NOEXCEPT
+           const aligned_allocator<U, Alignment>&) BOOST_NOEXCEPT
 {
-    return true;
+	return true;
 }
 
 template<class T, class U, std::size_t Alignment>
 inline bool
 operator!=(const aligned_allocator<T, Alignment>&,
-    const aligned_allocator<U, Alignment>&) BOOST_NOEXCEPT
+           const aligned_allocator<U, Alignment>&) BOOST_NOEXCEPT
 {
-    return false;
+	return false;
 }
 
 } /* alignment */

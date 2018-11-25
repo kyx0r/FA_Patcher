@@ -13,7 +13,9 @@
 #include <boost/geometry/core/tag.hpp>
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -25,7 +27,7 @@ namespace dispatch
 // dispatch for segments_begin
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct segments_begin
-    : not_implemented<Geometry>
+	: not_implemented<Geometry>
 {};
 
 
@@ -33,7 +35,7 @@ struct segments_begin
 // dispatch for segments_end
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct segments_end
-    : not_implemented<Geometry>
+	: not_implemented<Geometry>
 {};
 
 
@@ -42,6 +44,7 @@ struct segments_end
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ITERATORS_DISPATCH_SEGMENT_ITERATOR_HPP

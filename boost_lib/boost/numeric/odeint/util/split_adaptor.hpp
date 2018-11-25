@@ -24,26 +24,30 @@
 #include <boost/range/iterator_range.hpp>
 #include <algorithm>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
-namespace detail {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
+namespace detail
+{
 
 /** \brief Returns the begin and end offset for a sub-range */
 inline std::pair<std::size_t, std::size_t>
 split_offsets( std::size_t total_length, std::size_t index, std::size_t parts )
 {
-    BOOST_ASSERT( parts > 0 );
-    BOOST_ASSERT( index < parts );
-    const std::size_t
-        slice = total_length / parts,
-        partial = total_length % parts,
-        lo = (std::min)(index, partial),
-        hi = (std::max<std::ptrdiff_t>)(0, index - partial),
-        begin_offset = lo * (slice + 1) + hi * slice,
-        length = slice + (index < partial ? 1 : 0),
-        end_offset = begin_offset + length;
-    return std::make_pair( begin_offset, end_offset );
+	BOOST_ASSERT( parts > 0 );
+	BOOST_ASSERT( index < parts );
+	const std::size_t
+	slice = total_length / parts,
+	partial = total_length % parts,
+	lo = (std::min)(index, partial),
+	hi = (std::max<std::ptrdiff_t>)(0, index - partial),
+	begin_offset = lo * (slice + 1) + hi * slice,
+	length = slice + (index < partial ? 1 : 0),
+	end_offset = begin_offset + length;
+	return std::make_pair( begin_offset, end_offset );
 }
 
 /** \brief Return the sub-range `index` from a range which is split into `parts`.
@@ -59,38 +63,38 @@ template< class RandomAccessRange >
 inline iterator_range< typename range_iterator<RandomAccessRange>::type >
 make_split_range( RandomAccessRange& rng, std::size_t index, std::size_t parts )
 {
-    const std::pair<std::size_t, std::size_t> off = split_offsets(boost::size(rng), index, parts);
-    return make_iterator_range( boost::begin(rng) + off.first, boost::begin(rng) + off.second );
+	const std::pair<std::size_t, std::size_t> off = split_offsets(boost::size(rng), index, parts);
+	return make_iterator_range( boost::begin(rng) + off.first, boost::begin(rng) + off.second );
 }
 
 template< class RandomAccessRange >
 inline iterator_range< typename range_iterator<const RandomAccessRange>::type >
 make_split_range( const RandomAccessRange& rng, std::size_t index, std::size_t parts )
 {
-    const std::pair<std::size_t, std::size_t> off = split_offsets(boost::size(rng), index, parts);
-    return make_iterator_range( boost::begin(rng) + off.first, boost::begin(rng) + off.second );
+	const std::pair<std::size_t, std::size_t> off = split_offsets(boost::size(rng), index, parts);
+	return make_iterator_range( boost::begin(rng) + off.first, boost::begin(rng) + off.second );
 }
 
 
 struct split
 {
-    split(std::size_t index, std::size_t parts)
-        : index(index), parts(parts) {}
-    std::size_t index, parts;
+	split(std::size_t index, std::size_t parts)
+		: index(index), parts(parts) {}
+	std::size_t index, parts;
 };
 
 template< class RandomAccessRange >
 inline iterator_range< typename range_iterator<RandomAccessRange>::type >
 operator|( RandomAccessRange& rng, const split& f )
 {
-    return make_split_range( rng, f.index, f.parts );
+	return make_split_range( rng, f.index, f.parts );
 }
 
 template< class RandomAccessRange >
 inline iterator_range< typename range_iterator<const RandomAccessRange>::type >
 operator|( const RandomAccessRange& rng, const split& f )
 {
-    return make_split_range( rng, f.index, f.parts );
+	return make_split_range( rng, f.index, f.parts );
 }
 
 

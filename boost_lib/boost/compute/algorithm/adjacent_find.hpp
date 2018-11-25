@@ -22,9 +22,12 @@
 #include <boost/compute/functional/operator.hpp>
 #include <boost/compute/type_traits/vector_size.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class Compare>
 inline InputIterator
@@ -33,37 +36,38 @@ serial_adjacent_find(InputIterator first,
                      Compare compare,
                      command_queue &queue)
 {
-    if(first == last){
-        return last;
-    }
+	if(first == last)
+	{
+		return last;
+	}
 
-    const context &context = queue.get_context();
+	const context &context = queue.get_context();
 
-    detail::scalar<uint_> output(context);
+	detail::scalar<uint_> output(context);
 
-    detail::meta_kernel k("serial_adjacent_find");
+	detail::meta_kernel k("serial_adjacent_find");
 
-    size_t size_arg = k.add_arg<const uint_>("size");
-    size_t output_arg = k.add_arg<uint_ *>(memory_object::global_memory, "output");
+	size_t size_arg = k.add_arg<const uint_>("size");
+	size_t output_arg = k.add_arg<uint_ *>(memory_object::global_memory, "output");
 
-    k << k.decl<uint_>("result") << " = size;\n"
-      << "for(uint i = 0; i < size - 1; i++){\n"
-      << "    if(" << compare(first[k.expr<uint_>("i")],
-                              first[k.expr<uint_>("i+1")]) << "){\n"
-      << "        result = i;\n"
-      << "        break;\n"
-      << "    }\n"
-      << "}\n"
-      << "*output = result;\n";
+	k << k.decl<uint_>("result") << " = size;\n"
+	  << "for(uint i = 0; i < size - 1; i++){\n"
+	  << "    if(" << compare(first[k.expr<uint_>("i")],
+	                          first[k.expr<uint_>("i+1")]) << "){\n"
+	  << "        result = i;\n"
+	  << "        break;\n"
+	  << "    }\n"
+	  << "}\n"
+	  << "*output = result;\n";
 
-    k.set_arg<const uint_>(
-        size_arg, static_cast<uint_>(detail::iterator_range_size(first, last))
-    );
-    k.set_arg(output_arg, output.get_buffer());
+	k.set_arg<const uint_>(
+	    size_arg, static_cast<uint_>(detail::iterator_range_size(first, last))
+	);
+	k.set_arg(output_arg, output.get_buffer());
 
-    k.exec_1d(queue, 0, 1, 1);
+	k.exec_1d(queue, 0, 1, 1);
 
-    return first + output.read(queue);
+	return first + output.read(queue);
 }
 
 template<class InputIterator, class Compare>
@@ -73,32 +77,33 @@ adjacent_find_with_atomics(InputIterator first,
                            Compare compare,
                            command_queue &queue)
 {
-    if(first == last){
-        return last;
-    }
+	if(first == last)
+	{
+		return last;
+	}
 
-    const context &context = queue.get_context();
-    size_t count = detail::iterator_range_size(first, last);
+	const context &context = queue.get_context();
+	size_t count = detail::iterator_range_size(first, last);
 
-    // initialize output to the last index
-    detail::scalar<uint_> output(context);
-    output.write(static_cast<uint_>(count), queue);
+	// initialize output to the last index
+	detail::scalar<uint_> output(context);
+	output.write(static_cast<uint_>(count), queue);
 
-    detail::meta_kernel k("adjacent_find_with_atomics");
+	detail::meta_kernel k("adjacent_find_with_atomics");
 
-    size_t output_arg = k.add_arg<uint_ *>(memory_object::global_memory, "output");
+	size_t output_arg = k.add_arg<uint_ *>(memory_object::global_memory, "output");
 
-    k << "const uint i = get_global_id(0);\n"
-      << "if(" << compare(first[k.expr<uint_>("i")],
-                          first[k.expr<uint_>("i+1")]) << "){\n"
-      << "    atomic_min(output, i);\n"
-      << "}\n";
+	k << "const uint i = get_global_id(0);\n"
+	  << "if(" << compare(first[k.expr<uint_>("i")],
+	                      first[k.expr<uint_>("i+1")]) << "){\n"
+	  << "    atomic_min(output, i);\n"
+	  << "}\n";
 
-    k.set_arg(output_arg, output.get_buffer());
+	k.set_arg(output_arg, output.get_buffer());
 
-    k.exec_1d(queue, 0, count - 1, 1);
+	k.exec_1d(queue, 0, count - 1, 1);
 
-    return first + output.read(queue);
+	return first + output.read(queue);
 }
 
 } // end detail namespace
@@ -124,13 +129,15 @@ adjacent_find(InputIterator first,
               Compare compare,
               command_queue &queue = system::default_queue())
 {
-    size_t count = detail::iterator_range_size(first, last);
-    if(count < 32){
-        return detail::serial_adjacent_find(first, last, compare, queue);
-    }
-    else {
-        return detail::adjacent_find_with_atomics(first, last, compare, queue);
-    }
+	size_t count = detail::iterator_range_size(first, last);
+	if(count < 32)
+	{
+		return detail::serial_adjacent_find(first, last, compare, queue);
+	}
+	else
+	{
+		return detail::adjacent_find_with_atomics(first, last, compare, queue);
+	}
 }
 
 /// \overload
@@ -140,22 +147,24 @@ adjacent_find(InputIterator first,
               InputIterator last,
               command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    using ::boost::compute::lambda::_1;
-    using ::boost::compute::lambda::_2;
-    using ::boost::compute::lambda::all;
+	using ::boost::compute::lambda::_1;
+	using ::boost::compute::lambda::_2;
+	using ::boost::compute::lambda::all;
 
-    if(vector_size<value_type>::value == 1){
-        return ::boost::compute::adjacent_find(
-            first, last, _1 == _2, queue
-        );
-    }
-    else {
-        return ::boost::compute::adjacent_find(
-            first, last, all(_1 == _2), queue
-        );
-    }
+	if(vector_size<value_type>::value == 1)
+	{
+		return ::boost::compute::adjacent_find(
+		           first, last, _1 == _2, queue
+		       );
+	}
+	else
+	{
+		return ::boost::compute::adjacent_find(
+		           first, last, all(_1 == _2), queue
+		       );
+	}
 }
 
 } // end compute namespace

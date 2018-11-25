@@ -28,7 +28,9 @@
 #include <initializer_list>
 #endif
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace model
@@ -51,28 +53,28 @@ template
     typename Polygon,
     template<typename, typename> class Container = std::vector,
     template<typename> class Allocator = std::allocator
->
+    >
 class multi_polygon : public Container<Polygon, Allocator<Polygon> >
 {
-    BOOST_CONCEPT_ASSERT( (concepts::Polygon<Polygon>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Polygon<Polygon>) );
 
 #ifndef BOOST_NO_CXX11_HDR_INITIALIZER_LIST
 
-    // default constructor and base_type definitions are required only
-    // if the constructor taking std::initializer_list is defined
+	// default constructor and base_type definitions are required only
+	// if the constructor taking std::initializer_list is defined
 
-    typedef Container<Polygon, Allocator<Polygon> > base_type;
+	typedef Container<Polygon, Allocator<Polygon> > base_type;
 
 public:
-    /// \constructor_default{multi_polygon}
-    multi_polygon()
-        : base_type()
-    {}
+	/// \constructor_default{multi_polygon}
+	multi_polygon()
+		: base_type()
+	{}
 
-    /// \constructor_initializer_list{multi_polygon}
-    inline multi_polygon(std::initializer_list<Polygon> l)
-        : base_type(l.begin(), l.end())
-    {}
+	/// \constructor_initializer_list{multi_polygon}
+	inline multi_polygon(std::initializer_list<Polygon> l)
+		: base_type(l.begin(), l.end())
+	{}
 
 // Commented out for now in order to support Boost.Assign
 // Without this assignment operator first the object should be created
@@ -103,15 +105,16 @@ template
     typename Polygon,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct tag< model::multi_polygon<Polygon, Container, Allocator> >
 {
-    typedef multi_polygon_tag type;
+	typedef multi_polygon_tag type;
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_MULTI_POLYGON_HPP

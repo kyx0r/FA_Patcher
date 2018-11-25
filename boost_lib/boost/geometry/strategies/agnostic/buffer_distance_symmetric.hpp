@@ -16,10 +16,14 @@
 #include <boost/geometry/util/math.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace buffer
+namespace strategy
+{
+namespace buffer
 {
 
 
@@ -47,61 +51,63 @@ template<typename NumericType>
 class distance_symmetric
 {
 public :
-    //! \brief Constructs the strategy, a distance must be specified
-    //! \param distance The distance (or radius) of the buffer
-    explicit inline distance_symmetric(NumericType const& distance)
-        : m_distance(distance)
-    {}
+	//! \brief Constructs the strategy, a distance must be specified
+	//! \param distance The distance (or radius) of the buffer
+	explicit inline distance_symmetric(NumericType const& distance)
+		: m_distance(distance)
+	{}
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-    //! Returns the distance-value
-    template <typename Point>
-    inline NumericType apply(Point const& , Point const& ,
-                buffer_side_selector )  const
-    {
-        return negative() ? geometry::math::abs(m_distance) : m_distance;
-    }
+	//! Returns the distance-value
+	template <typename Point>
+	inline NumericType apply(Point const&, Point const&,
+	                         buffer_side_selector )  const
+	{
+		return negative() ? geometry::math::abs(m_distance) : m_distance;
+	}
 
-    //! Used internally, returns -1 for deflate, 1 for inflate
-    inline int factor() const
-    {
-        return negative() ? -1 : 1;
-    }
+	//! Used internally, returns -1 for deflate, 1 for inflate
+	inline int factor() const
+	{
+		return negative() ? -1 : 1;
+	}
 
-    //! Returns true if distance is negative (aka deflate)
-    inline bool negative() const
-    {
-        return m_distance < 0;
-    }
+	//! Returns true if distance is negative (aka deflate)
+	inline bool negative() const
+	{
+		return m_distance < 0;
+	}
 
-    //! Returns the max distance distance up to the buffer will reach
-    template <typename JoinStrategy, typename EndStrategy>
-    inline NumericType max_distance(JoinStrategy const& join_strategy,
-            EndStrategy const& end_strategy) const
-    {
-        boost::ignore_unused(join_strategy, end_strategy);
+	//! Returns the max distance distance up to the buffer will reach
+	template <typename JoinStrategy, typename EndStrategy>
+	inline NumericType max_distance(JoinStrategy const& join_strategy,
+	                                EndStrategy const& end_strategy) const
+	{
+		boost::ignore_unused(join_strategy, end_strategy);
 
-        NumericType const dist = geometry::math::abs(m_distance);
-        return (std::max)(join_strategy.max_distance(dist),
-                          end_strategy.max_distance(dist));
-    }
+		NumericType const dist = geometry::math::abs(m_distance);
+		return (std::max)(join_strategy.max_distance(dist),
+		                  end_strategy.max_distance(dist));
+	}
 
 
-    //! Returns the distance at which the input is simplified before the buffer process
-    inline NumericType simplify_distance() const
-    {
-        return geometry::math::abs(m_distance) / 1000.0;
-    }
+	//! Returns the distance at which the input is simplified before the buffer process
+	inline NumericType simplify_distance() const
+	{
+		return geometry::math::abs(m_distance) / 1000.0;
+	}
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
 private :
-    NumericType m_distance;
+	NumericType m_distance;
 };
 
 
-}} // namespace strategy::buffer
+}
+} // namespace strategy::buffer
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_AGNOSTIC_BUFFER_DISTANCE_SYMMETRIC_HPP

@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword allows enable/disable spawning a dedicated thread in the asynchronous sink frontend
 BOOST_PARAMETER_KEYWORD(tag, start_thread)

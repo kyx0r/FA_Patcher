@@ -33,11 +33,13 @@
 #include <boost/log/core/record_view.hpp>
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 /*!
  * \brief Blocking strategy for handling log record queue overflows
@@ -51,88 +53,88 @@ class block_on_overflow
 {
 #ifndef BOOST_LOG_DOXYGEN_PASS
 private:
-    typedef intrusive::list_base_hook<
-        intrusive::link_mode< intrusive::auto_unlink >
-    > thread_context_hook_t;
+	typedef intrusive::list_base_hook<
+	intrusive::link_mode< intrusive::auto_unlink >
+	> thread_context_hook_t;
 
-    struct thread_context :
-        public thread_context_hook_t
-    {
-        condition_variable cond;
-        bool result;
+	struct thread_context :
+		public thread_context_hook_t
+	{
+		condition_variable cond;
+		bool result;
 
-        thread_context() : result(true) {}
-    };
+		thread_context() : result(true) {}
+	};
 
-    typedef intrusive::list<
-        thread_context,
-        intrusive::base_hook< thread_context_hook_t >,
-        intrusive::constant_time_size< false >
-    > thread_contexts;
+	typedef intrusive::list<
+	thread_context,
+	intrusive::base_hook< thread_context_hook_t >,
+	intrusive::constant_time_size< false >
+	> thread_contexts;
 
 private:
-    //! Blocked threads
-    thread_contexts m_thread_contexts;
+	//! Blocked threads
+	thread_contexts m_thread_contexts;
 
 public:
-    /*!
-     * Default constructor.
-     */
-    BOOST_DEFAULTED_FUNCTION(block_on_overflow(), {})
+	/*!
+	 * Default constructor.
+	 */
+	BOOST_DEFAULTED_FUNCTION(block_on_overflow(), {})
 
-    /*!
-     * This method is called by the queue when overflow is detected.
-     *
-     * \param lock An internal lock that protects the queue
-     *
-     * \retval true Attempt to enqueue the record again.
-     * \retval false Discard the record.
-     */
-    template< typename LockT >
-    bool on_overflow(record_view const&, LockT& lock)
-    {
-        thread_context context;
-        m_thread_contexts.push_back(context);
-        do
-        {
-            context.cond.wait(lock);
-        }
-        while (context.is_linked());
+	/*!
+	 * This method is called by the queue when overflow is detected.
+	 *
+	 * \param lock An internal lock that protects the queue
+	 *
+	 * \retval true Attempt to enqueue the record again.
+	 * \retval false Discard the record.
+	 */
+	template< typename LockT >
+	bool on_overflow(record_view const&, LockT& lock)
+	{
+		thread_context context;
+		m_thread_contexts.push_back(context);
+		do
+		{
+			context.cond.wait(lock);
+		}
+		while (context.is_linked());
 
-        return context.result;
-    }
+		return context.result;
+	}
 
-    /*!
-     * This method is called by the queue when there appears a free space.
-     * The internal lock protecting the queue is locked when calling this method.
-     */
-    void on_queue_space_available()
-    {
-        if (!m_thread_contexts.empty())
-        {
-            m_thread_contexts.front().cond.notify_one();
-            m_thread_contexts.pop_front();
-        }
-    }
+	/*!
+	 * This method is called by the queue when there appears a free space.
+	 * The internal lock protecting the queue is locked when calling this method.
+	 */
+	void on_queue_space_available()
+	{
+		if (!m_thread_contexts.empty())
+		{
+			m_thread_contexts.front().cond.notify_one();
+			m_thread_contexts.pop_front();
+		}
+	}
 
-    /*!
-     * This method is called by the queue to interrupt any possible waits in \c on_overflow.
-     * The internal lock protecting the queue is locked when calling this method.
-     */
-    void interrupt()
-    {
-        while (!m_thread_contexts.empty())
-        {
-            thread_context& context = m_thread_contexts.front();
-            context.result = false;
-            context.cond.notify_one();
-            m_thread_contexts.pop_front();
-        }
-    }
+	/*!
+	 * This method is called by the queue to interrupt any possible waits in \c on_overflow.
+	 * The internal lock protecting the queue is locked when calling this method.
+	 */
+	void interrupt()
+	{
+		while (!m_thread_contexts.empty())
+		{
+			thread_context& context = m_thread_contexts.front();
+			context.result = false;
+			context.cond.notify_one();
+			m_thread_contexts.pop_front();
+		}
+	}
 
-    //  Copying prohibited
-    BOOST_DELETED_FUNCTION(block_on_overflow(block_on_overflow const&))
-    BOOST_DELETED_FUNCTION(block_on_overflow& operator= (block_on_overflow const&))
+	//  Copying prohibited
+	BOOST_DELETED_FUNCTION(block_on_overflow(block_on_overflow const&))
+	BOOST_DELETED_FUNCTION(block_on_overflow& operator= (block_on_overflow const&))
 #endif // BOOST_LOG_DOXYGEN_PASS
 };
 

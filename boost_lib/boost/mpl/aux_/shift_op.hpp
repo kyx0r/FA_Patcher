@@ -3,8 +3,8 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
@@ -39,15 +39,19 @@
 #   include <boost/mpl/aux_/config/integral.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
-namespace boost { namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 #if defined(BOOST_MPL_CFG_NO_NESTED_VALUE_ARITHMETIC)
-namespace aux {
+namespace aux
+{
 template< typename T, typename Shift, T n, Shift s >
 struct BOOST_PP_CAT(AUX778076_OP_PREFIX,_wknd)
 {
-    BOOST_STATIC_CONSTANT(T, value = (n AUX778076_OP_TOKEN s));
-    typedef integral_c<T,value> type;
+	BOOST_STATIC_CONSTANT(T, value = (n AUX778076_OP_TOKEN s));
+	typedef integral_c<T,value> type;
 };
 }
 #endif
@@ -55,27 +59,28 @@ struct BOOST_PP_CAT(AUX778076_OP_PREFIX,_wknd)
 template<>
 struct AUX778076_OP_IMPL_NAME<integral_c_tag,integral_c_tag>
 {
-    template< typename N, typename S > struct apply
+	template< typename N, typename S > struct apply
 #if !defined(BOOST_MPL_CFG_NO_NESTED_VALUE_ARITHMETIC)
-        : integral_c<
-              typename N::value_type
-            , ( BOOST_MPL_AUX_VALUE_WKND(N)::value
-                  AUX778076_OP_TOKEN BOOST_MPL_AUX_VALUE_WKND(S)::value
-                )
-            >
+		: integral_c<
+		  typename N::value_type
+	, ( BOOST_MPL_AUX_VALUE_WKND(N)::value
+	    AUX778076_OP_TOKEN BOOST_MPL_AUX_VALUE_WKND(S)::value
+	  )
+	  >
 #else
-        : aux::BOOST_PP_CAT(AUX778076_OP_PREFIX,_wknd)<
-              typename N::value_type
-            , typename S::value_type
-            , N::value
-            , S::value
-            >::type
+	: aux::BOOST_PP_CAT(AUX778076_OP_PREFIX,_wknd)<
+	  typename N::value_type
+	  , typename S::value_type
+	  , N::value
+	  , S::value
+	  >::type
 #endif
-    {
-    };
+	  {
+	  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 

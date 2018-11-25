@@ -56,29 +56,33 @@
 #include <boost/geometry/strategies/default_length_result.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace length
+namespace detail
+{
+namespace length
 {
 
 
 template<typename Segment>
 struct segment_length
 {
-    template <typename Strategy>
-    static inline typename default_length_result<Segment>::type apply(
-            Segment const& segment, Strategy const& strategy)
-    {
-        boost::ignore_unused(strategy);
-        typedef typename point_type<Segment>::type point_type;
-        point_type p1, p2;
-        geometry::detail::assign_point_from_index<0>(segment, p1);
-        geometry::detail::assign_point_from_index<1>(segment, p2);
-        return strategy.apply(p1, p2);
-    }
+	template <typename Strategy>
+	static inline typename default_length_result<Segment>::type apply(
+	    Segment const& segment, Strategy const& strategy)
+	{
+		boost::ignore_unused(strategy);
+		typedef typename point_type<Segment>::type point_type;
+		point_type p1, p2;
+		geometry::detail::assign_point_from_index<0>(segment, p1);
+		geometry::detail::assign_point_from_index<1>(segment, p2);
+		return strategy.apply(p1, p2);
+	}
 };
 
 /*!
@@ -90,40 +94,41 @@ struct segment_length
 template<typename Range, closure_selector Closure>
 struct range_length
 {
-    typedef typename default_length_result<Range>::type return_type;
+	typedef typename default_length_result<Range>::type return_type;
 
-    template <typename Strategy>
-    static inline return_type apply(
-            Range const& range, Strategy const& strategy)
-    {
-        boost::ignore_unused(strategy);
-        typedef typename closeable_view<Range const, Closure>::type view_type;
-        typedef typename boost::range_iterator
-            <
-                view_type const
-            >::type iterator_type;
+	template <typename Strategy>
+	static inline return_type apply(
+	    Range const& range, Strategy const& strategy)
+	{
+		boost::ignore_unused(strategy);
+		typedef typename closeable_view<Range const, Closure>::type view_type;
+		typedef typename boost::range_iterator
+		<
+		view_type const
+		>::type iterator_type;
 
-        return_type sum = return_type();
-        view_type view(range);
-        iterator_type it = boost::begin(view), end = boost::end(view);
-        if(it != end)
-        {
-            for(iterator_type previous = it++;
-                    it != end;
-                    ++previous, ++it)
-            {
-                // Add point-point distance using the return type belonging
-                // to strategy
-                sum += strategy.apply(*previous, *it);
-            }
-        }
+		return_type sum = return_type();
+		view_type view(range);
+		iterator_type it = boost::begin(view), end = boost::end(view);
+		if(it != end)
+		{
+			for(iterator_type previous = it++;
+			        it != end;
+			        ++previous, ++it)
+			{
+				// Add point-point distance using the return type belonging
+				// to strategy
+				sum += strategy.apply(*previous, *it);
+			}
+		}
 
-        return sum;
-    }
+		return sum;
+	}
 };
 
 
-}} // namespace detail::length
+}
+} // namespace detail::length
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -135,19 +140,19 @@ namespace dispatch
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct length : detail::calculate_null
 {
-    typedef typename default_length_result<Geometry>::type return_type;
+	typedef typename default_length_result<Geometry>::type return_type;
 
-    template <typename Strategy>
-    static inline return_type apply(Geometry const& geometry, Strategy const& strategy)
-    {
-        return calculate_null::apply<return_type>(geometry, strategy);
-    }
+	template <typename Strategy>
+	static inline return_type apply(Geometry const& geometry, Strategy const& strategy)
+	{
+		return calculate_null::apply<return_type>(geometry, strategy);
+	}
 };
 
 
 template <typename Geometry>
 struct length<Geometry, linestring_tag>
-    : detail::length::range_length<Geometry, closed>
+	: detail::length::range_length<Geometry, closed>
 {};
 
 
@@ -156,28 +161,28 @@ struct length<Geometry, linestring_tag>
 
 template <typename Geometry>
 struct length<Geometry, segment_tag>
-    : detail::length::segment_length<Geometry>
+	: detail::length::segment_length<Geometry>
 {};
 
 
 template <typename MultiLinestring>
 struct length<MultiLinestring, multi_linestring_tag> : detail::multi_sum
 {
-    template <typename Strategy>
-    static inline typename default_length_result<MultiLinestring>::type
-    apply(MultiLinestring const& multi, Strategy const& strategy)
-    {
-        return multi_sum::apply
-               <
-                   typename default_length_result<MultiLinestring>::type,
-                   detail::length::range_length
-                   <
-                       typename boost::range_value<MultiLinestring>::type,
-                       closed // no need to close it explicitly
-                   >
-               >(multi, strategy);
+	template <typename Strategy>
+	static inline typename default_length_result<MultiLinestring>::type
+	apply(MultiLinestring const& multi, Strategy const& strategy)
+	{
+		return multi_sum::apply
+		       <
+		       typename default_length_result<MultiLinestring>::type,
+		       detail::length::range_length
+		       <
+		       typename boost::range_value<MultiLinestring>::type,
+		       closed // no need to close it explicitly
+		       >
+		       >(multi, strategy);
 
-    }
+	}
 };
 
 
@@ -185,80 +190,82 @@ struct length<MultiLinestring, multi_linestring_tag> : detail::multi_sum
 #endif // DOXYGEN_NO_DISPATCH
 
 
-namespace resolve_strategy {
+namespace resolve_strategy
+{
 
 struct length
 {
-    template <typename Geometry, typename Strategy>
-    static inline typename default_length_result<Geometry>::type
-    apply(Geometry const& geometry, Strategy const& strategy)
-    {
-        return dispatch::length<Geometry>::apply(geometry, strategy);
-    }
+	template <typename Geometry, typename Strategy>
+	static inline typename default_length_result<Geometry>::type
+	apply(Geometry const& geometry, Strategy const& strategy)
+	{
+		return dispatch::length<Geometry>::apply(geometry, strategy);
+	}
 
-    template <typename Geometry>
-    static inline typename default_length_result<Geometry>::type
-    apply(Geometry const& geometry, default_strategy)
-    {
-        typedef typename strategy::distance::services::default_strategy
-            <
-                point_tag, point_tag, typename point_type<Geometry>::type
-            >::type strategy_type;
+	template <typename Geometry>
+	static inline typename default_length_result<Geometry>::type
+	apply(Geometry const& geometry, default_strategy)
+	{
+		typedef typename strategy::distance::services::default_strategy
+		<
+		point_tag, point_tag, typename point_type<Geometry>::type
+		>::type strategy_type;
 
-        return dispatch::length<Geometry>::apply(geometry, strategy_type());
-    }
+		return dispatch::length<Geometry>::apply(geometry, strategy_type());
+	}
 };
 
 } // namespace resolve_strategy
 
 
-namespace resolve_variant {
+namespace resolve_variant
+{
 
 template <typename Geometry>
 struct length
 {
-    template <typename Strategy>
-    static inline typename default_length_result<Geometry>::type
-    apply(Geometry const& geometry, Strategy const& strategy)
-    {
-        return resolve_strategy::length::apply(geometry, strategy);
-    }
+	template <typename Strategy>
+	static inline typename default_length_result<Geometry>::type
+	apply(Geometry const& geometry, Strategy const& strategy)
+	{
+		return resolve_strategy::length::apply(geometry, strategy);
+	}
 };
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct length<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    typedef typename default_length_result
-        <
-            boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>
-        >::type result_type;
+	typedef typename default_length_result
+	<
+	boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>
+	>::type result_type;
 
-    template <typename Strategy>
-    struct visitor
-        : static_visitor<result_type>
-    {
-        Strategy const& m_strategy;
+	template <typename Strategy>
+	struct visitor
+		: static_visitor<result_type>
+	{
+		Strategy const& m_strategy;
 
-        visitor(Strategy const& strategy)
-            : m_strategy(strategy)
-        {}
+		visitor(Strategy const& strategy)
+			: m_strategy(strategy)
+		{}
 
-        template <typename Geometry>
-        inline typename default_length_result<Geometry>::type
-        operator()(Geometry const& geometry) const
-        {
-            return length<Geometry>::apply(geometry, m_strategy);
-        }
-    };
+		template <typename Geometry>
+		inline typename default_length_result<Geometry>::type
+		operator()(Geometry const& geometry) const
+		{
+			return length<Geometry>::apply(geometry, m_strategy);
+		}
+	};
 
-    template <typename Strategy>
-    static inline result_type apply(
-        variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
-        Strategy const& strategy
-    )
-    {
-        return boost::apply_visitor(visitor<Strategy>(strategy), geometry);
-    }
+	template <typename Strategy>
+	static inline result_type apply(
+	    variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
+	    Strategy const& strategy
+	)
+	{
+		return boost::apply_visitor(visitor<Strategy>(strategy), geometry);
+	}
 };
 
 } // namespace resolve_variant
@@ -279,11 +286,11 @@ template<typename Geometry>
 inline typename default_length_result<Geometry>::type
 length(Geometry const& geometry)
 {
-    concepts::check<Geometry const>();
+	concepts::check<Geometry const>();
 
-    // detail::throw_on_empty_input(geometry);
+	// detail::throw_on_empty_input(geometry);
 
-    return resolve_variant::length<Geometry>::apply(geometry, default_strategy());
+	return resolve_variant::length<Geometry>::apply(geometry, default_strategy());
 }
 
 
@@ -305,14 +312,15 @@ template<typename Geometry, typename Strategy>
 inline typename default_length_result<Geometry>::type
 length(Geometry const& geometry, Strategy const& strategy)
 {
-    concepts::check<Geometry const>();
+	concepts::check<Geometry const>();
 
-    // detail::throw_on_empty_input(geometry);
+	// detail::throw_on_empty_input(geometry);
 
-    return resolve_variant::length<Geometry>::apply(geometry, strategy);
+	return resolve_variant::length<Geometry>::apply(geometry, strategy);
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_LENGTH_HPP

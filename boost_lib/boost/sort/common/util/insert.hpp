@@ -38,7 +38,7 @@ namespace here = boost::sort::common::util;
 //############################################################################
 //
 //          D E F I N I T I O N S    O F    F U N C T I O N S
-//    
+//
 // template < class Iter1_t, class Iter2_t, typename Compare>
 // void insert_sorted (Iter1_t first, Iter1_t mid, Iter1_t last,
 //                     Compare comp, Iter2_t  it_aux)
@@ -53,82 +53,82 @@ namespace here = boost::sort::common::util;
 ///               elements to insert
 /// @param last : iterator to the next element of the last in the range
 /// @param comp :
-/// @comments : the two ranges are sorted and in it_aux there is spave for 
+/// @comments : the two ranges are sorted and in it_aux there is spave for
 ///             to store temporally the elements to insert
 //-----------------------------------------------------------------------------
 template<class Iter1_t, class Iter2_t, typename Compare>
 static void insert_sorted(Iter1_t first, Iter1_t mid, Iter1_t last,
                           Compare comp, Iter2_t it_aux)
 {
-    //------------------------------------------------------------------------
-    //                 metaprogram
-    //------------------------------------------------------------------------
-    typedef value_iter<Iter1_t> value_t;
-    typedef value_iter<Iter2_t> value2_t;
-    static_assert (std::is_same< value_t, value2_t>::value,
-                    "Incompatible iterators\n");
+	//------------------------------------------------------------------------
+	//                 metaprogram
+	//------------------------------------------------------------------------
+	typedef value_iter<Iter1_t> value_t;
+	typedef value_iter<Iter2_t> value2_t;
+	static_assert (std::is_same< value_t, value2_t>::value,
+	               "Incompatible iterators\n");
 
-    //--------------------------------------------------------------------
-    //                   program
-    //--------------------------------------------------------------------
-    if (mid == last) return;
-    if (first == mid) return;
+	//--------------------------------------------------------------------
+	//                   program
+	//--------------------------------------------------------------------
+	if (mid == last) return;
+	if (first == mid) return;
 
-    //------------------------------------------------------------------------
-    // creation of the vector of elements to insert and their position in the
-    // sorted part
-    // the data are inserted in it_aux
-    //-----------------------------------------------------------------------
-    move_forward(it_aux, mid, last);
+	//------------------------------------------------------------------------
+	// creation of the vector of elements to insert and their position in the
+	// sorted part
+	// the data are inserted in it_aux
+	//-----------------------------------------------------------------------
+	move_forward(it_aux, mid, last);
 
-    // search of the iterators where insert the new elements
-    size_t ndata = last - mid;
-    Iter1_t mv_first = mid, mv_last = mid;
+	// search of the iterators where insert the new elements
+	size_t ndata = last - mid;
+	Iter1_t mv_first = mid, mv_last = mid;
 
-    for (size_t i = ndata; i > 0; --i)
-    {
-        mv_last = mv_first;
-        mv_first = std::upper_bound(first, mv_last, it_aux[i - 1], comp);
-        Iter1_t it1 = here::move_backward(mv_last + i, mv_first, mv_last);
-        *(it1 - 1) = std::move(it_aux[i - 1]);
-    };
+	for (size_t i = ndata; i > 0; --i)
+	{
+		mv_last = mv_first;
+		mv_first = std::upper_bound(first, mv_last, it_aux[i - 1], comp);
+		Iter1_t it1 = here::move_backward(mv_last + i, mv_first, mv_last);
+		*(it1 - 1) = std::move(it_aux[i - 1]);
+	};
 };
 
 template<class Iter1_t, class Iter2_t, typename Compare>
 static void insert_sorted_backward(Iter1_t first, Iter1_t mid, Iter1_t last,
                                    Compare comp, Iter2_t it_aux)
 {
-    //------------------------------------------------------------------------
-    //                 metaprogram
-    //------------------------------------------------------------------------
-    typedef value_iter<Iter1_t> value_t;
-    typedef value_iter<Iter2_t> value2_t;
-    static_assert (std::is_same< value_t, value2_t>::value,
-                    "Incompatible iterators\n");
+	//------------------------------------------------------------------------
+	//                 metaprogram
+	//------------------------------------------------------------------------
+	typedef value_iter<Iter1_t> value_t;
+	typedef value_iter<Iter2_t> value2_t;
+	static_assert (std::is_same< value_t, value2_t>::value,
+	               "Incompatible iterators\n");
 
-    //--------------------------------------------------------------------
-    //                   program
-    //--------------------------------------------------------------------
-    if (mid == last) return;
-    if (first == mid) return;
-    //------------------------------------------------------------------------
-    // creation of the vector of elements to insert and their position in the
-    // sorted part
-    // the data are inserted in it_aux
-    //-----------------------------------------------------------------------
-    move_forward(it_aux, first, mid);
+	//--------------------------------------------------------------------
+	//                   program
+	//--------------------------------------------------------------------
+	if (mid == last) return;
+	if (first == mid) return;
+	//------------------------------------------------------------------------
+	// creation of the vector of elements to insert and their position in the
+	// sorted part
+	// the data are inserted in it_aux
+	//-----------------------------------------------------------------------
+	move_forward(it_aux, first, mid);
 
-    // search of the iterators where insert the new elements
-    size_t ndata = mid - first;
-    Iter1_t mv_first = mid, mv_last = mid;
+	// search of the iterators where insert the new elements
+	size_t ndata = mid - first;
+	Iter1_t mv_first = mid, mv_last = mid;
 
-    for (size_t i = 0; i < ndata; ++i)
-    {
-        mv_first = mv_last;
-        mv_last = std::lower_bound(mv_first, last, it_aux[i], comp);
-        Iter1_t it1 = move_forward(mv_first - (ndata - i), mv_first, mv_last);
-        *(it1) = std::move(it_aux[i]);
-    };
+	for (size_t i = 0; i < ndata; ++i)
+	{
+		mv_first = mv_last;
+		mv_last = std::lower_bound(mv_first, last, it_aux[i], comp);
+		Iter1_t it1 = move_forward(mv_first - (ndata - i), mv_first, mv_last);
+		*(it1) = std::move(it_aux[i]);
+	};
 
 };
 //

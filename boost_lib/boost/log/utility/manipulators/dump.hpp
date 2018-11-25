@@ -24,24 +24,26 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 typedef void dump_data_char_t(const void* data, std::size_t size, std::basic_ostream< char >& strm);
 extern BOOST_LOG_API dump_data_char_t* dump_data_char;
 BOOST_FORCEINLINE void dump_data(const void* data, std::size_t size, std::basic_ostream< char >& strm)
 {
-    (dump_data_char)(data, size, strm);
+	(dump_data_char)(data, size, strm);
 }
 
 typedef void dump_data_wchar_t(const void* data, std::size_t size, std::basic_ostream< wchar_t >& strm);
 extern BOOST_LOG_API dump_data_wchar_t* dump_data_wchar;
 BOOST_FORCEINLINE void dump_data(const void* data, std::size_t size, std::basic_ostream< wchar_t >& strm)
 {
-    (dump_data_wchar)(data, size, strm);
+	(dump_data_wchar)(data, size, strm);
 }
 
 #if !defined(BOOST_NO_CXX11_CHAR16_T)
@@ -49,7 +51,7 @@ typedef void dump_data_char16_t(const void* data, std::size_t size, std::basic_o
 extern BOOST_LOG_API dump_data_char16_t* dump_data_char16;
 BOOST_FORCEINLINE void dump_data(const void* data, std::size_t size, std::basic_ostream< char16_t >& strm)
 {
-    (dump_data_char16)(data, size, strm);
+	(dump_data_char16)(data, size, strm);
 }
 #endif
 
@@ -58,7 +60,7 @@ typedef void dump_data_char32_t(const void* data, std::size_t size, std::basic_o
 extern BOOST_LOG_API dump_data_char32_t* dump_data_char32;
 BOOST_FORCEINLINE void dump_data(const void* data, std::size_t size, std::basic_ostream< char32_t >& strm)
 {
-    (dump_data_char32)(data, size, strm);
+	(dump_data_char32)(data, size, strm);
 }
 #endif
 
@@ -70,37 +72,37 @@ struct enable_dump_size_based
 template< typename R >
 struct enable_dump_size_based< 1u, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 template< typename T, typename R >
 struct enable_dump :
-    public enable_dump_size_based< sizeof(T), R >
+public enable_dump_size_based< sizeof(T), R >
 {
 };
 
 template< typename R >
 struct enable_dump< void, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 template< typename R >
 struct enable_dump< const void, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 template< typename R >
 struct enable_dump< volatile void, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 template< typename R >
 struct enable_dump< const volatile void, R >
 {
-    typedef R type;
+	typedef R type;
 };
 
 } // namespace aux
@@ -111,65 +113,78 @@ struct enable_dump< const volatile void, R >
 class dump_manip
 {
 private:
-    //! Beginning of the data
-    const void* m_data;
-    //! Size of the data, in bytes
-    std::size_t m_size;
+	//! Beginning of the data
+	const void* m_data;
+	//! Size of the data, in bytes
+	std::size_t m_size;
 
 public:
-    dump_manip(const void* data, std::size_t size) BOOST_NOEXCEPT : m_data(data), m_size(size) {}
-    dump_manip(dump_manip const& that) BOOST_NOEXCEPT : m_data(that.m_data), m_size(that.m_size) {}
+dump_manip(const void* data, std::size_t size) BOOST_NOEXCEPT :
+	m_data(data), m_size(size) {}
+dump_manip(dump_manip const& that) BOOST_NOEXCEPT :
+	m_data(that.m_data), m_size(that.m_size) {}
 
-    const void* get_data() const BOOST_NOEXCEPT { return m_data; }
-    std::size_t get_size() const BOOST_NOEXCEPT { return m_size; }
+	const void* get_data() const BOOST_NOEXCEPT
+	{
+		return m_data;
+	}
+	std::size_t get_size() const BOOST_NOEXCEPT
+	{
+		return m_size;
+	}
 };
 
 //! The operator outputs binary data to a stream
 template< typename CharT, typename TraitsT >
 inline std::basic_ostream< CharT, TraitsT >& operator<< (std::basic_ostream< CharT, TraitsT >& strm, dump_manip const& manip)
 {
-    if (strm.good())
-        aux::dump_data(manip.get_data(), manip.get_size(), strm);
+	if (strm.good())
+		aux::dump_data(manip.get_data(), manip.get_size(), strm);
 
-    return strm;
+	return strm;
 }
 
 /*!
  * \brief Manipulator for printing binary representation of the data with a size limit
  */
 class bounded_dump_manip :
-    public dump_manip
+	public dump_manip
 {
 private:
-    //! Maximum size to output, in bytes
-    std::size_t m_max_size;
+	//! Maximum size to output, in bytes
+	std::size_t m_max_size;
 
 public:
-    bounded_dump_manip(const void* data, std::size_t size, std::size_t max_size) BOOST_NOEXCEPT : dump_manip(data, size), m_max_size(max_size) {}
-    bounded_dump_manip(bounded_dump_manip const& that) BOOST_NOEXCEPT : dump_manip(static_cast< dump_manip const& >(that)), m_max_size(that.m_max_size) {}
+bounded_dump_manip(const void* data, std::size_t size, std::size_t max_size) BOOST_NOEXCEPT :
+	dump_manip(data, size), m_max_size(max_size) {}
+bounded_dump_manip(bounded_dump_manip const& that) BOOST_NOEXCEPT :
+	dump_manip(static_cast< dump_manip const& >(that)), m_max_size(that.m_max_size) {}
 
-    std::size_t get_max_size() const BOOST_NOEXCEPT { return m_max_size; }
+	std::size_t get_max_size() const BOOST_NOEXCEPT
+	{
+		return m_max_size;
+	}
 };
 
 //! The operator outputs binary data to a stream
 template< typename CharT, typename TraitsT >
 inline std::basic_ostream< CharT, TraitsT >& operator<< (std::basic_ostream< CharT, TraitsT >& strm, bounded_dump_manip const& manip)
 {
-    if (strm.good())
-    {
-        const std::size_t size = manip.get_size(), max_size = manip.get_max_size();
-        if (max_size >= size)
-        {
-            aux::dump_data(manip.get_data(), size, strm);
-        }
-        else
-        {
-            aux::dump_data(manip.get_data(), max_size, strm);
-            strm << " and " << (size - max_size) << " bytes more";
-        }
-    }
+	if (strm.good())
+	{
+		const std::size_t size = manip.get_size(), max_size = manip.get_max_size();
+		if (max_size >= size)
+		{
+			aux::dump_data(manip.get_data(), size, strm);
+		}
+		else
+		{
+			aux::dump_data(manip.get_data(), max_size, strm);
+			strm << " and " << (size - max_size) << " bytes more";
+		}
+	}
 
-    return strm;
+	return strm;
 }
 
 /*!
@@ -181,7 +196,7 @@ inline std::basic_ostream< CharT, TraitsT >& operator<< (std::basic_ostream< Cha
 template< typename T >
 inline typename aux::enable_dump< T, dump_manip >::type dump(T* data, std::size_t size) BOOST_NOEXCEPT
 {
-    return dump_manip((const void*)data, size);
+	return dump_manip((const void*)data, size);
 }
 
 /*!
@@ -193,7 +208,7 @@ inline typename aux::enable_dump< T, dump_manip >::type dump(T* data, std::size_
 template< typename T >
 inline dump_manip dump_elements(T* data, std::size_t count) BOOST_NOEXCEPT
 {
-    return dump_manip((const void*)data, count * sizeof(T));
+	return dump_manip((const void*)data, count * sizeof(T));
 }
 
 /*!
@@ -206,7 +221,7 @@ inline dump_manip dump_elements(T* data, std::size_t count) BOOST_NOEXCEPT
 template< typename T >
 inline typename aux::enable_dump< T, bounded_dump_manip >::type dump(T* data, std::size_t size, std::size_t max_size) BOOST_NOEXCEPT
 {
-    return bounded_dump_manip((const void*)data, size, max_size);
+	return bounded_dump_manip((const void*)data, size, max_size);
 }
 
 /*!
@@ -219,7 +234,7 @@ inline typename aux::enable_dump< T, bounded_dump_manip >::type dump(T* data, st
 template< typename T >
 inline bounded_dump_manip dump_elements(T* data, std::size_t count, std::size_t max_count) BOOST_NOEXCEPT
 {
-    return bounded_dump_manip((const void*)data, count * sizeof(T), max_count * sizeof(T));
+	return bounded_dump_manip((const void*)data, count * sizeof(T), max_count * sizeof(T));
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

@@ -11,19 +11,26 @@
 #include <type_traits>
 #include <functional>
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template <class T>
 struct unwrap_reference
 {
-    typedef T type;
+	typedef T type;
 };
 template <class T>
 struct unwrap_reference<std::reference_wrapper<T>>
 {
-    typedef T& type;
+	typedef T& type;
 };
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif

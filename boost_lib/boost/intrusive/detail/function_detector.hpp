@@ -30,19 +30,29 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace intrusive {
-namespace function_detector {
+namespace boost
+{
+namespace intrusive
+{
+namespace function_detector
+{
 
-    typedef char NotFoundType;
-    struct StaticFunctionType { NotFoundType x [2]; };
-    struct NonStaticFunctionType { NotFoundType x [3]; };
+typedef char NotFoundType;
+struct StaticFunctionType
+{
+	NotFoundType x [2];
+};
+struct NonStaticFunctionType
+{
+	NotFoundType x [3];
+};
 
-    enum
-         { NotFound          = 0,
-           StaticFunction    = sizeof( StaticFunctionType )    - sizeof( NotFoundType ),
-           NonStaticFunction = sizeof( NonStaticFunctionType ) - sizeof( NotFoundType )
-         };
+enum
+{
+	NotFound          = 0,
+	StaticFunction    = sizeof( StaticFunctionType )    - sizeof( NotFoundType ),
+	NonStaticFunction = sizeof( NonStaticFunctionType ) - sizeof( NotFoundType )
+};
 
 }  //namespace boost {
 }  //namespace intrusive {

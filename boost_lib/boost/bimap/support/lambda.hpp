@@ -20,10 +20,13 @@
 
 #include <boost/lambda/lambda.hpp>
 
-namespace boost {
-namespace bimaps {
+namespace boost
+{
+namespace bimaps
+{
 
-namespace {
+namespace
+{
 
 /*
 boost::lambda::placeholder1_type & _first  = boost::lambda::_1;

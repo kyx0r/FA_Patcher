@@ -23,8 +23,10 @@
 # include <boost/cstdint.hpp>
 #endif // defined(BOOST_ASIO_HAS_CSTDINT)
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 #if defined(BOOST_ASIO_HAS_CSTDINT)
 using std::int16_t;

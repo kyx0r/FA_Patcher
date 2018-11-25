@@ -8,7 +8,7 @@
 
 namespace pe_bliss
 {
-	//PE resource manager allows to read resources from PE files
+//PE resource manager allows to read resources from PE files
 class pe_resource_viewer
 {
 public:
@@ -44,7 +44,7 @@ public:
 	typedef std::vector<uint32_t> resource_id_list;
 	typedef std::vector<std::wstring> resource_name_list;
 	typedef std::vector<uint32_t> resource_language_list;
-	
+
 public:
 	//Constructor from root resource_directory from PE file
 	explicit pe_resource_viewer(const resource_directory& root_directory);

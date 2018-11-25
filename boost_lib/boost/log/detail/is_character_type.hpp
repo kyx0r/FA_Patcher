@@ -22,35 +22,37 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 template< typename T >
 struct is_character_type
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = false;
+	static BOOST_CONSTEXPR_OR_CONST bool value = false;
 };
 
 template< >
 struct is_character_type< char >
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 
 template< >
 struct is_character_type< wchar_t >
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 
 #if !defined(BOOST_NO_CXX11_CHAR16_T)
 template< >
 struct is_character_type< char16_t >
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 #endif
 
@@ -58,7 +60,7 @@ struct is_character_type< char16_t >
 template< >
 struct is_character_type< char32_t >
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 #endif
 

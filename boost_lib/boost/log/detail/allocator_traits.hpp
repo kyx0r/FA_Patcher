@@ -27,11 +27,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 // A portable name for allocator traits
 #if !defined(BOOST_NO_CXX11_ALLOCATOR)
@@ -54,16 +56,16 @@ template< typename Allocator, typename U >
 struct rebind_alloc
 {
 #if !defined(BOOST_NO_CXX11_ALLOCATOR)
-    typedef typename std::allocator_traits< Allocator >::BOOST_NESTED_TEMPLATE rebind_alloc< U > type;
+	typedef typename std::allocator_traits< Allocator >::BOOST_NESTED_TEMPLATE rebind_alloc< U > type;
 #else
-    typedef typename boost::container::allocator_traits< Allocator >::BOOST_NESTED_TEMPLATE portable_rebind_alloc< U >::type type;
+	typedef typename boost::container::allocator_traits< Allocator >::BOOST_NESTED_TEMPLATE portable_rebind_alloc< U >::type type;
 #endif
 };
 
 template< typename U >
 struct rebind_alloc< std::allocator< void >, U >
 {
-    typedef std::allocator< U > type;
+	typedef std::allocator< U > type;
 };
 
 } // namespace aux

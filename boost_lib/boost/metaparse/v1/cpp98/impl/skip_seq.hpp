@@ -14,60 +14,60 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct skip_seq
-        {
-        private:
-          template <class ParsingResult, class NewResultValue>
-          struct change_result :
-            accept<
-              NewResultValue,
-              typename get_remaining<ParsingResult>::type,
-              typename get_position<ParsingResult>::type
-            >
-          {};
-        
-          template <class Result, class P>
-          struct apply_unchecked :
-            boost::mpl::eval_if<
-              typename is_error<
-                typename P::template apply<
-                  typename get_remaining<Result>::type,
-                  typename get_position<Result>::type
-                >
-              >::type,
-              typename P::template apply<
-                typename get_remaining<Result>::type,
-                typename get_position<Result>::type
-              >,
-              change_result<
-                typename P::template apply<
-                  typename get_remaining<Result>::type,
-                  typename get_position<Result>::type
-                >,
-                typename get_result<Result>::type
-              >
-            >
-          {};
-          
-        public:
-          template <class Result, class P>
-          struct apply :
-            boost::mpl::eval_if<
-              is_error<Result>,
-              Result,
-              apply_unchecked<Result, P>
-            >
-          {};
-        };
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct skip_seq
+{
+private:
+	template <class ParsingResult, class NewResultValue>
+	struct change_result :
+		accept<
+		NewResultValue,
+		typename get_remaining<ParsingResult>::type,
+		typename get_position<ParsingResult>::type
+		>
+	{};
+
+	template <class Result, class P>
+	struct apply_unchecked :
+		boost::mpl::eval_if<
+		typename is_error<
+		typename P::template apply<
+		    typename get_remaining<Result>::type,
+		    typename get_position<Result>::type
+		    >
+	>::type,
+	typename P::template apply<
+	    typename get_remaining<Result>::type,
+	    typename get_position<Result>::type
+	    >,
+	    change_result<
+	    typename P::template apply<
+	        typename get_remaining<Result>::type,
+	        typename get_position<Result>::type
+	        >,
+	        typename get_result<Result>::type
+	        >
+	        >
+	        {};
+
+public:
+	template <class Result, class P>
+	struct apply :
+		boost::mpl::eval_if<
+		is_error<Result>,
+		Result,
+		apply_unchecked<Result, P>
+		>
+	{};
+};
+}
+}
+}
 }
 
 #endif

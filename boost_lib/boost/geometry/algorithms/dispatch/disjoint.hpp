@@ -31,7 +31,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -45,19 +47,19 @@ template
     typename Geometry1, typename Geometry2,
     std::size_t DimensionCount = dimension<Geometry1>::type::value,
     typename Tag1 = typename tag_cast
-        <
-            typename tag<Geometry1>::type,
-            segment_tag, box_tag, linear_tag, areal_tag
+    <
+        typename tag<Geometry1>::type,
+        segment_tag, box_tag, linear_tag, areal_tag
         >::type,
     typename Tag2 = typename tag_cast
-        <
-            typename tag<Geometry2>::type,
-            segment_tag, box_tag, linear_tag, areal_tag
+    <
+        typename tag<Geometry2>::type,
+        segment_tag, box_tag, linear_tag, areal_tag
         >::type,
     bool Reverse = reverse_dispatch<Geometry1, Geometry2>::type::value
->
+    >
 struct disjoint
-    : not_implemented<Geometry1, Geometry2>
+	: not_implemented<Geometry1, Geometry2>
 {};
 
 
@@ -67,19 +69,19 @@ template
     typename Geometry1, typename Geometry2,
     std::size_t DimensionCount,
     typename Tag1, typename Tag2
->
+    >
 struct disjoint<Geometry1, Geometry2, DimensionCount, Tag1, Tag2, true>
 {
-    template <typename Strategy>
-    static inline bool apply(Geometry1 const& g1, Geometry2 const& g2, Strategy const& strategy)
-    {
-        return disjoint
-            <
-                Geometry2, Geometry1,
-                DimensionCount,
-                Tag2, Tag1
-            >::apply(g2, g1, strategy);
-    }
+	template <typename Strategy>
+	static inline bool apply(Geometry1 const& g1, Geometry2 const& g2, Strategy const& strategy)
+	{
+		return disjoint
+		       <
+		       Geometry2, Geometry1,
+		       DimensionCount,
+		       Tag2, Tag1
+		       >::apply(g2, g1, strategy);
+	}
 };
 
 
@@ -87,7 +89,8 @@ struct disjoint<Geometry1, Geometry2, DimensionCount, Tag1, Tag2, true>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DISPATCH_DISJOINT_HPP

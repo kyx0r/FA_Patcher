@@ -18,7 +18,9 @@
 #include <boost/range.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -29,16 +31,16 @@ namespace detail
 template <typename MultiGeometry, typename Predicate, typename Policy>
 struct multi_modify_with_predicate
 {
-    static inline void apply(MultiGeometry& multi, Predicate const& predicate)
-    {
-        typedef typename boost::range_iterator<MultiGeometry>::type iterator_type;
-        for (iterator_type it = boost::begin(multi);
-            it != boost::end(multi);
-            ++it)
-        {
-            Policy::apply(*it, predicate);
-        }
-    }
+	static inline void apply(MultiGeometry& multi, Predicate const& predicate)
+	{
+		typedef typename boost::range_iterator<MultiGeometry>::type iterator_type;
+		for (iterator_type it = boost::begin(multi);
+		        it != boost::end(multi);
+		        ++it)
+		{
+			Policy::apply(*it, predicate);
+		}
+	}
 };
 
 
@@ -46,7 +48,8 @@ struct multi_modify_with_predicate
 #endif
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_MULTI_MODIFY_WITH_PREDICATE_HPP

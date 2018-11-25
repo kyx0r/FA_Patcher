@@ -46,130 +46,139 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct crast {};
+namespace par4
+{
+struct crast {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace crast
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace crast
+{
 
-            static const double XM = 0.97720502380583984317;
-            static const double RXM = 1.02332670794648848847;
-            static const double YM = 3.06998012383946546542;
-            static const double RYM = 0.32573500793527994772;
-            //static const double THIRD = 0.333333333333333333;
+static const double XM = 0.97720502380583984317;
+static const double RXM = 1.02332670794648848847;
+static const double YM = 3.06998012383946546542;
+static const double RYM = 0.32573500793527994772;
+//static const double THIRD = 0.333333333333333333;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_crast_spheroid : public base_t_fi<base_crast_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_crast_spheroid : public base_t_fi<base_crast_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_crast_spheroid(const Parameters& par)
-                    : base_t_fi<base_crast_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_crast_spheroid(const Parameters& par)
+		: base_t_fi<base_crast_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType THIRD = detail::THIRD<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType THIRD = detail::THIRD<CalculationType>();
 
-                    lp_lat *= THIRD;
-                    xy_x = XM * lp_lon * (2. * cos(lp_lat + lp_lat) - 1.);
-                    xy_y = YM * sin(lp_lat);
-                }
+		lp_lat *= THIRD;
+		xy_x = XM * lp_lon * (2. * cos(lp_lat + lp_lat) - 1.);
+		xy_y = YM * sin(lp_lat);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType THIRD = detail::THIRD<CalculationType>();
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType THIRD = detail::THIRD<CalculationType>();
 
-                    lp_lat = 3. * asin(xy_y * RYM);
-                    lp_lon = xy_x * RXM / (2. * cos((lp_lat + lp_lat) * THIRD) - 1);
-                }
+		lp_lat = 3. * asin(xy_y * RYM);
+		lp_lon = xy_x * RXM / (2. * cos((lp_lat + lp_lat) * THIRD) - 1);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "crast_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "crast_spheroid";
+	}
 
-            };
+};
 
-            // Craster Parabolic (Putnins P4)
-            template <typename Parameters>
-            inline void setup_crast(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Craster Parabolic (Putnins P4)
+template <typename Parameters>
+inline void setup_crast(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::crast
-    #endif // doxygen
+}
+} // namespace detail::crast
+#endif // doxygen
 
-    /*!
-        \brief Craster Parabolic (Putnins P4) projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_crast.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct crast_spheroid : public detail::crast::base_crast_spheroid<CalculationType, Parameters>
-    {
-        inline crast_spheroid(const Parameters& par) : detail::crast::base_crast_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::crast::setup_crast(this->m_par);
-        }
-    };
+/*!
+    \brief Craster Parabolic (Putnins P4) projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_crast.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct crast_spheroid : public detail::crast::base_crast_spheroid<CalculationType, Parameters>
+{
+	inline crast_spheroid(const Parameters& par) : detail::crast::base_crast_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::crast::setup_crast(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::crast, crast_spheroid, crast_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::crast, crast_spheroid, crast_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class crast_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<crast_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class crast_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<crast_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void crast_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("crast", new crast_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void crast_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("crast", new crast_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_CRAST_HPP
 

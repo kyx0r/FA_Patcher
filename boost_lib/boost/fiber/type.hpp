@@ -38,66 +38,77 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace fibers {
+namespace boost
+{
+namespace fibers
+{
 
-enum class type {
-    none               = 0,
-    main_context       = 1 << 1,
-    dispatcher_context = 1 << 2,
-    worker_context     = 1 << 3,
-    pinned_context     = main_context | dispatcher_context
+enum class type
+{
+	none               = 0,
+	main_context       = 1 << 1,
+	dispatcher_context = 1 << 2,
+	worker_context     = 1 << 3,
+	pinned_context     = main_context | dispatcher_context
 };
 
 inline
 constexpr type
-operator&( type l, type r) {
-    return static_cast< type >(
-            static_cast< unsigned int >( l) & static_cast< unsigned int >( r) );
+operator&( type l, type r)
+{
+	return static_cast< type >(
+	           static_cast< unsigned int >( l) & static_cast< unsigned int >( r) );
 }
 
 inline
 constexpr type
-operator|( type l, type r) {
-    return static_cast< type >(
-            static_cast< unsigned int >( l) | static_cast< unsigned int >( r) );
+operator|( type l, type r)
+{
+	return static_cast< type >(
+	           static_cast< unsigned int >( l) | static_cast< unsigned int >( r) );
 }
 
 inline
 constexpr type
-operator^( type l, type r) {
-    return static_cast< type >(
-            static_cast< unsigned int >( l) ^ static_cast< unsigned int >( r) );
+operator^( type l, type r)
+{
+	return static_cast< type >(
+	           static_cast< unsigned int >( l) ^ static_cast< unsigned int >( r) );
 }
 
 inline
 constexpr type
-operator~( type l) {
-    return static_cast< type >( ~static_cast< unsigned int >( l) );
+operator~( type l)
+{
+	return static_cast< type >( ~static_cast< unsigned int >( l) );
 }
 
 inline
 type &
-operator&=( type & l, type r) {
-    l = l & r;
-    return l;
+operator&=( type & l, type r)
+{
+	l = l & r;
+	return l;
 }
 
 inline
 type &
-operator|=( type & l, type r) {
-    l = l | r;
-    return l;
+operator|=( type & l, type r)
+{
+	l = l | r;
+	return l;
 }
 
 inline
 type &
-operator^=( type & l, type r) {
-    l = l ^ r;
-    return l;
+operator^=( type & l, type r)
+{
+	l = l ^ r;
+	return l;
 }
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

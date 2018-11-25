@@ -18,8 +18,10 @@
 #include <boost/compute/algorithm/copy_if.hpp>
 #include <boost/compute/container/vector.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 ///
 /// \brief Partitioning algorithm
@@ -43,29 +45,29 @@ inline Iterator stable_partition(Iterator first,
                                  UnaryPredicate predicate,
                                  command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-    // make temporary copy of the input
-    ::boost::compute::vector<value_type> tmp(first, last, queue);
+	// make temporary copy of the input
+	::boost::compute::vector<value_type> tmp(first, last, queue);
 
-    // copy true values
-    Iterator last_true =
-        ::boost::compute::copy_if(tmp.begin(),
-                                  tmp.end(),
-                                  first,
-                                  predicate,
-                                  queue);
+	// copy true values
+	Iterator last_true =
+	    ::boost::compute::copy_if(tmp.begin(),
+	                              tmp.end(),
+	                              first,
+	                              predicate,
+	                              queue);
 
-    // copy false values
-    Iterator last_false =
-        ::boost::compute::copy_if(tmp.begin(),
-                                  tmp.end(),
-                                  last_true,
-                                  not1(predicate),
-                                  queue);
+	// copy false values
+	Iterator last_false =
+	    ::boost::compute::copy_if(tmp.begin(),
+	                              tmp.end(),
+	                              last_true,
+	                              not1(predicate),
+	                              queue);
 
-    // return iterator pointing to the last true value
-    return last_true;
+	// return iterator pointing to the last true value
+	return last_true;
 }
 
 } // end compute namespace

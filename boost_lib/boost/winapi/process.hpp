@@ -24,75 +24,77 @@ extern "C" {
 
 #if BOOST_WINAPI_PARTITION_DESKTOP_SYSTEM
 
-struct _PROCESS_INFORMATION;
+	struct _PROCESS_INFORMATION;
 #if !defined( BOOST_NO_ANSI_APIS )
-struct _STARTUPINFOA;
+	struct _STARTUPINFOA;
 #endif
-struct _STARTUPINFOW;
+	struct _STARTUPINFOW;
 
 #if BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_WIN6
-struct _PROC_THREAD_ATTRIBUTE_LIST;
+	struct _PROC_THREAD_ATTRIBUTE_LIST;
 #if BOOST_WINAPI_PARTITION_DESKTOP
 #if !defined( BOOST_NO_ANSI_APIS )
-struct _STARTUPINFOEXA;
+	struct _STARTUPINFOEXA;
 #endif
-struct _STARTUPINFOEXW;
+	struct _STARTUPINFOEXW;
 #endif // BOOST_WINAPI_PARTITION_DESKTOP
 #endif
 
-BOOST_SYMBOL_IMPORT BOOST_NORETURN boost::winapi::VOID_ WINAPI
-ExitProcess(boost::winapi::UINT_ uExitCode);
+	BOOST_SYMBOL_IMPORT BOOST_NORETURN boost::winapi::VOID_ WINAPI
+	ExitProcess(boost::winapi::UINT_ uExitCode);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI GetExitCodeProcess(
-    boost::winapi::HANDLE_ hProcess,
-    boost::winapi::LPDWORD_ lpExitCode);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI GetExitCodeProcess(
+	    boost::winapi::HANDLE_ hProcess,
+	    boost::winapi::LPDWORD_ lpExitCode);
 
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI CreateProcessA(
-    boost::winapi::LPCSTR_ lpApplicationName,
-    boost::winapi::LPSTR_ lpCommandLine,
-    ::_SECURITY_ATTRIBUTES* lpProcessAttributes,
-    ::_SECURITY_ATTRIBUTES* lpThreadAttributes,
-    boost::winapi::INT_ bInheritHandles,
-    boost::winapi::DWORD_ dwCreationFlags,
-    boost::winapi::LPVOID_ lpEnvironment,
-    boost::winapi::LPCSTR_ lpCurrentDirectory,
-    ::_STARTUPINFOA* lpStartupInfo,
-    ::_PROCESS_INFORMATION* lpProcessInformation);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI CreateProcessA(
+	    boost::winapi::LPCSTR_ lpApplicationName,
+	    boost::winapi::LPSTR_ lpCommandLine,
+	    ::_SECURITY_ATTRIBUTES* lpProcessAttributes,
+	    ::_SECURITY_ATTRIBUTES* lpThreadAttributes,
+	    boost::winapi::INT_ bInheritHandles,
+	    boost::winapi::DWORD_ dwCreationFlags,
+	    boost::winapi::LPVOID_ lpEnvironment,
+	    boost::winapi::LPCSTR_ lpCurrentDirectory,
+	    ::_STARTUPINFOA* lpStartupInfo,
+	    ::_PROCESS_INFORMATION* lpProcessInformation);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI CreateProcessW(
-    boost::winapi::LPCWSTR_ lpApplicationName,
-    boost::winapi::LPWSTR_ lpCommandLine,
-    ::_SECURITY_ATTRIBUTES* lpProcessAttributes,
-    ::_SECURITY_ATTRIBUTES* lpThreadAttributes,
-    boost::winapi::INT_ bInheritHandles,
-    boost::winapi::DWORD_ dwCreationFlags,
-    boost::winapi::LPVOID_ lpEnvironment,
-    boost::winapi::LPCWSTR_ lpCurrentDirectory,
-    ::_STARTUPINFOW* lpStartupInfo,
-    ::_PROCESS_INFORMATION* lpProcessInformation);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI CreateProcessW(
+	    boost::winapi::LPCWSTR_ lpApplicationName,
+	    boost::winapi::LPWSTR_ lpCommandLine,
+	    ::_SECURITY_ATTRIBUTES* lpProcessAttributes,
+	    ::_SECURITY_ATTRIBUTES* lpThreadAttributes,
+	    boost::winapi::INT_ bInheritHandles,
+	    boost::winapi::DWORD_ dwCreationFlags,
+	    boost::winapi::LPVOID_ lpEnvironment,
+	    boost::winapi::LPCWSTR_ lpCurrentDirectory,
+	    ::_STARTUPINFOW* lpStartupInfo,
+	    ::_PROCESS_INFORMATION* lpProcessInformation);
 
 #endif // BOOST_WINAPI_PARTITION_DESKTOP_SYSTEM
 
 #if BOOST_WINAPI_PARTITION_APP_SYSTEM
 
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI OpenProcess(
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::BOOL_ bInheritHandle,
-    boost::winapi::DWORD_ dwProcessId);
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI OpenProcess(
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::BOOL_ bInheritHandle,
+	    boost::winapi::DWORD_ dwProcessId);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI TerminateProcess(
-    boost::winapi::HANDLE_ hProcess,
-    boost::winapi::UINT_ uExitCode);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI TerminateProcess(
+	    boost::winapi::HANDLE_ hProcess,
+	    boost::winapi::UINT_ uExitCode);
 
 #endif // BOOST_WINAPI_PARTITION_APP_SYSTEM
 
 } // extern "C"
 #endif // defined BOOST_WINDOWS_H
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined( BOOST_USE_WINDOWS_H )
 
@@ -264,53 +266,56 @@ const DWORD_ CREATE_IGNORE_SYSTEM_DEFAULT_     = 0x80000000;
 
 #endif // BOOST_WINAPI_PARTITION_APP_SYSTEM
 
-typedef struct BOOST_MAY_ALIAS _PROCESS_INFORMATION {
-    HANDLE_ hProcess;
-    HANDLE_ hThread;
-    DWORD_ dwProcessId;
-    DWORD_ dwThreadId;
+typedef struct BOOST_MAY_ALIAS _PROCESS_INFORMATION
+{
+	HANDLE_ hProcess;
+	HANDLE_ hThread;
+	DWORD_ dwProcessId;
+	DWORD_ dwThreadId;
 } PROCESS_INFORMATION_, *PPROCESS_INFORMATION_, *LPPROCESS_INFORMATION_;
 
-typedef struct BOOST_MAY_ALIAS _STARTUPINFOA {
-    DWORD_ cb;
-    LPSTR_ lpReserved;
-    LPSTR_ lpDesktop;
-    LPSTR_ lpTitle;
-    DWORD_ dwX;
-    DWORD_ dwY;
-    DWORD_ dwXSize;
-    DWORD_ dwYSize;
-    DWORD_ dwXCountChars;
-    DWORD_ dwYCountChars;
-    DWORD_ dwFillAttribute;
-    DWORD_ dwFlags;
-    WORD_ wShowWindow;
-    WORD_ cbReserved2;
-    LPBYTE_ lpReserved2;
-    HANDLE_ hStdInput;
-    HANDLE_ hStdOutput;
-    HANDLE_ hStdError;
+typedef struct BOOST_MAY_ALIAS _STARTUPINFOA
+{
+	DWORD_ cb;
+	LPSTR_ lpReserved;
+	LPSTR_ lpDesktop;
+	LPSTR_ lpTitle;
+	DWORD_ dwX;
+	DWORD_ dwY;
+	DWORD_ dwXSize;
+	DWORD_ dwYSize;
+	DWORD_ dwXCountChars;
+	DWORD_ dwYCountChars;
+	DWORD_ dwFillAttribute;
+	DWORD_ dwFlags;
+	WORD_ wShowWindow;
+	WORD_ cbReserved2;
+	LPBYTE_ lpReserved2;
+	HANDLE_ hStdInput;
+	HANDLE_ hStdOutput;
+	HANDLE_ hStdError;
 } STARTUPINFOA_, *LPSTARTUPINFOA_;
 
-typedef struct BOOST_MAY_ALIAS _STARTUPINFOW {
-    DWORD_ cb;
-    LPWSTR_ lpReserved;
-    LPWSTR_ lpDesktop;
-    LPWSTR_ lpTitle;
-    DWORD_ dwX;
-    DWORD_ dwY;
-    DWORD_ dwXSize;
-    DWORD_ dwYSize;
-    DWORD_ dwXCountChars;
-    DWORD_ dwYCountChars;
-    DWORD_ dwFillAttribute;
-    DWORD_ dwFlags;
-    WORD_ wShowWindow;
-    WORD_ cbReserved2;
-    LPBYTE_ lpReserved2;
-    HANDLE_ hStdInput;
-    HANDLE_ hStdOutput;
-    HANDLE_ hStdError;
+typedef struct BOOST_MAY_ALIAS _STARTUPINFOW
+{
+	DWORD_ cb;
+	LPWSTR_ lpReserved;
+	LPWSTR_ lpDesktop;
+	LPWSTR_ lpTitle;
+	DWORD_ dwX;
+	DWORD_ dwY;
+	DWORD_ dwXSize;
+	DWORD_ dwYSize;
+	DWORD_ dwXCountChars;
+	DWORD_ dwYCountChars;
+	DWORD_ dwFillAttribute;
+	DWORD_ dwFlags;
+	WORD_ wShowWindow;
+	WORD_ cbReserved2;
+	LPBYTE_ lpReserved2;
+	HANDLE_ hStdInput;
+	HANDLE_ hStdOutput;
+	HANDLE_ hStdError;
 } STARTUPINFOW_, *LPSTARTUPINFOW_;
 
 #if BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_WIN6
@@ -320,15 +325,17 @@ typedef struct _PROC_THREAD_ATTRIBUTE_LIST PROC_THREAD_ATTRIBUTE_LIST_, *PPROC_T
 #if BOOST_WINAPI_PARTITION_DESKTOP
 
 #if !defined(BOOST_NO_ANSI_APIS)
-typedef struct BOOST_MAY_ALIAS _STARTUPINFOEXA {
-    STARTUPINFOA_ StartupInfo;
-    PPROC_THREAD_ATTRIBUTE_LIST_ lpAttributeList;
+typedef struct BOOST_MAY_ALIAS _STARTUPINFOEXA
+{
+	STARTUPINFOA_ StartupInfo;
+	PPROC_THREAD_ATTRIBUTE_LIST_ lpAttributeList;
 } STARTUPINFOEXA_, *LPSTARTUPINFOEXA_;
 #endif // !defined(BOOST_NO_ANSI_APIS)
 
-typedef struct BOOST_MAY_ALIAS _STARTUPINFOEXW {
-    STARTUPINFOW_ StartupInfo;
-    PPROC_THREAD_ATTRIBUTE_LIST_ lpAttributeList;
+typedef struct BOOST_MAY_ALIAS _STARTUPINFOEXW
+{
+	STARTUPINFOW_ StartupInfo;
+	PPROC_THREAD_ATTRIBUTE_LIST_ lpAttributeList;
 } STARTUPINFOEXW_, *LPSTARTUPINFOEXW_;
 
 #endif // BOOST_WINAPI_PARTITION_DESKTOP
@@ -360,17 +367,17 @@ BOOST_FORCEINLINE BOOL_ CreateProcessA(
     LPSTARTUPINFOA_ lpStartupInfo,
     LPPROCESS_INFORMATION_ lpProcessInformation)
 {
-    return ::CreateProcessA(
-        lpApplicationName,
-        lpCommandLine,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
-        bInheritHandles,
-        dwCreationFlags,
-        lpEnvironment,
-        lpCurrentDirectory,
-        reinterpret_cast< ::_STARTUPINFOA* >(lpStartupInfo),
-        reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
+	return ::CreateProcessA(
+	           lpApplicationName,
+	           lpCommandLine,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
+	           bInheritHandles,
+	           dwCreationFlags,
+	           lpEnvironment,
+	           lpCurrentDirectory,
+	           reinterpret_cast< ::_STARTUPINFOA* >(lpStartupInfo),
+	           reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
 }
 
 BOOST_FORCEINLINE BOOL_ create_process(
@@ -385,17 +392,17 @@ BOOST_FORCEINLINE BOOL_ create_process(
     LPSTARTUPINFOA_ lpStartupInfo,
     LPPROCESS_INFORMATION_ lpProcessInformation)
 {
-    return ::CreateProcessA(
-        lpApplicationName,
-        lpCommandLine,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
-        bInheritHandles,
-        dwCreationFlags,
-        lpEnvironment,
-        lpCurrentDirectory,
-        reinterpret_cast< ::_STARTUPINFOA* >(lpStartupInfo),
-        reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
+	return ::CreateProcessA(
+	           lpApplicationName,
+	           lpCommandLine,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
+	           bInheritHandles,
+	           dwCreationFlags,
+	           lpEnvironment,
+	           lpCurrentDirectory,
+	           reinterpret_cast< ::_STARTUPINFOA* >(lpStartupInfo),
+	           reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
 }
 #endif
 
@@ -411,17 +418,17 @@ BOOST_FORCEINLINE BOOL_ CreateProcessW(
     LPSTARTUPINFOW_ lpStartupInfo,
     LPPROCESS_INFORMATION_ lpProcessInformation)
 {
-    return ::CreateProcessW(
-        lpApplicationName,
-        lpCommandLine,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
-        bInheritHandles,
-        dwCreationFlags,
-        lpEnvironment,
-        lpCurrentDirectory,
-        reinterpret_cast< ::_STARTUPINFOW* >(lpStartupInfo),
-        reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
+	return ::CreateProcessW(
+	           lpApplicationName,
+	           lpCommandLine,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
+	           bInheritHandles,
+	           dwCreationFlags,
+	           lpEnvironment,
+	           lpCurrentDirectory,
+	           reinterpret_cast< ::_STARTUPINFOW* >(lpStartupInfo),
+	           reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
 }
 
 BOOST_FORCEINLINE BOOL_ create_process(
@@ -436,17 +443,17 @@ BOOST_FORCEINLINE BOOL_ create_process(
     LPSTARTUPINFOW_ lpStartupInfo,
     LPPROCESS_INFORMATION_ lpProcessInformation)
 {
-    return ::CreateProcessW(
-        lpApplicationName,
-        lpCommandLine,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
-        bInheritHandles,
-        dwCreationFlags,
-        lpEnvironment,
-        lpCurrentDirectory,
-        reinterpret_cast< ::_STARTUPINFOW* >(lpStartupInfo),
-        reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
+	return ::CreateProcessW(
+	           lpApplicationName,
+	           lpCommandLine,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpProcessAttributes),
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpThreadAttributes),
+	           bInheritHandles,
+	           dwCreationFlags,
+	           lpEnvironment,
+	           lpCurrentDirectory,
+	           reinterpret_cast< ::_STARTUPINFOW* >(lpStartupInfo),
+	           reinterpret_cast< ::_PROCESS_INFORMATION* >(lpProcessInformation));
 }
 
 #endif // BOOST_WINAPI_PARTITION_DESKTOP_SYSTEM

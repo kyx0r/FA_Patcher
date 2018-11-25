@@ -19,10 +19,14 @@
 #include <boost/geometry/strategies/geographic/parameters.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace distance
+namespace strategy
+{
+namespace distance
 {
 
 /*!
@@ -41,26 +45,26 @@ template
 <
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class thomas
-    : public strategy::distance::geographic
-        <
-            strategy::thomas, Spheroid, CalculationType
-        >
+	: public strategy::distance::geographic
+	  <
+	  strategy::thomas, Spheroid, CalculationType
+	  >
 {
-    typedef strategy::distance::geographic
-        <
-            strategy::thomas, Spheroid, CalculationType
-        > base_type;
+	typedef strategy::distance::geographic
+	<
+	strategy::thomas, Spheroid, CalculationType
+	> base_type;
 
 public :
-    inline thomas()
-        : base_type()
-    {}
+	inline thomas()
+		: base_type()
+	{}
 
-    explicit inline thomas(Spheroid const& spheroid)
-        : base_type(spheroid)
-    {}
+	explicit inline thomas(Spheroid const& spheroid)
+		: base_type(spheroid)
+	{}
 };
 
 #ifndef DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
@@ -70,41 +74,41 @@ namespace services
 template <typename Spheroid, typename CalculationType>
 struct tag<thomas<Spheroid, CalculationType> >
 {
-    typedef strategy_tag_distance_point_point type;
+	typedef strategy_tag_distance_point_point type;
 };
 
 
 template <typename Spheroid, typename CalculationType, typename P1, typename P2>
 struct return_type<thomas<Spheroid, CalculationType>, P1, P2>
-    : thomas<Spheroid, CalculationType>::template calculation_type<P1, P2>
+	: thomas<Spheroid, CalculationType>::template calculation_type<P1, P2>
 {};
 
 
 template <typename Spheroid, typename CalculationType>
 struct comparable_type<thomas<Spheroid, CalculationType> >
 {
-    typedef thomas<Spheroid, CalculationType> type;
+	typedef thomas<Spheroid, CalculationType> type;
 };
 
 
 template <typename Spheroid, typename CalculationType>
 struct get_comparable<thomas<Spheroid, CalculationType> >
 {
-    static inline thomas<Spheroid, CalculationType> apply(thomas<Spheroid, CalculationType> const& input)
-    {
-        return input;
-    }
+	static inline thomas<Spheroid, CalculationType> apply(thomas<Spheroid, CalculationType> const& input)
+	{
+		return input;
+	}
 };
 
 template <typename Spheroid, typename CalculationType, typename P1, typename P2>
 struct result_from_distance<thomas<Spheroid, CalculationType>, P1, P2 >
 {
-    template <typename T>
-    static inline typename return_type<thomas<Spheroid, CalculationType>, P1, P2>::type
-        apply(thomas<Spheroid, CalculationType> const& , T const& value)
-    {
-        return value;
-    }
+	template <typename T>
+	static inline typename return_type<thomas<Spheroid, CalculationType>, P1, P2>::type
+	apply(thomas<Spheroid, CalculationType> const&, T const& value)
+	{
+		return value;
+	}
 };
 
 
@@ -112,10 +116,12 @@ struct result_from_distance<thomas<Spheroid, CalculationType>, P1, P2 >
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::distance
+}
+} // namespace strategy::distance
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_THOMAS_HPP

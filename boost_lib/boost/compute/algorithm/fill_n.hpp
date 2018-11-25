@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/fill.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Fills the range [\p first, \p first + count) with \p value.
 ///
@@ -29,7 +31,7 @@ inline void fill_n(BufferIterator first,
                    const T &value,
                    command_queue &queue = system::default_queue())
 {
-    ::boost::compute::fill(first, first + count, value, queue);
+	::boost::compute::fill(first, first + count, value, queue);
 }
 
 } // end compute namespace

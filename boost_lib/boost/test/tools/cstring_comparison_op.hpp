@@ -25,10 +25,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace assertion {
-namespace op {
+namespace boost
+{
+namespace test_tools
+{
+namespace assertion
+{
+namespace op
+{
 
 // ************************************************************************** //
 // **************               string_compare                 ************** //

@@ -25,7 +25,9 @@
 
 #include <boost/geometry/views/identity_view.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 // Silence warning C4512: assignment operator could not be generated
@@ -42,21 +44,33 @@ namespace detail
 template <typename Range>
 struct closing_view
 {
-    // Keep this explicit, important for nested views/ranges
-    explicit inline closing_view(Range& r)
-        : m_range(r)
-    {}
+	// Keep this explicit, important for nested views/ranges
+	explicit inline closing_view(Range& r)
+		: m_range(r)
+	{}
 
-    typedef closing_iterator<Range> iterator;
-    typedef closing_iterator<Range const> const_iterator;
+	typedef closing_iterator<Range> iterator;
+	typedef closing_iterator<Range const> const_iterator;
 
-    inline const_iterator begin() const { return const_iterator(m_range); }
-    inline const_iterator end() const { return const_iterator(m_range, true); }
+	inline const_iterator begin() const
+	{
+		return const_iterator(m_range);
+	}
+	inline const_iterator end() const
+	{
+		return const_iterator(m_range, true);
+	}
 
-    inline iterator begin() { return iterator(m_range); }
-    inline iterator end() { return iterator(m_range, true); }
+	inline iterator begin()
+	{
+		return iterator(m_range);
+	}
+	inline iterator end()
+	{
+		return iterator(m_range, true);
+	}
 private :
-    Range& m_range;
+	Range& m_range;
 };
 
 }
@@ -86,14 +100,14 @@ struct closeable_view {};
 template <typename Range>
 struct closeable_view<Range, closed>
 {
-    typedef identity_view<Range> type;
+	typedef identity_view<Range> type;
 };
 
 
 template <typename Range>
 struct closeable_view<Range, open>
 {
-    typedef detail::closing_view<Range> type;
+	typedef detail::closing_view<Range> type;
 };
 
 #endif // DOXYGEN_NO_SPECIALIZATIONS
@@ -103,7 +117,8 @@ struct closeable_view<Range, open>
 #pragma warning(pop)
 #endif
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_CLOSEABLE_VIEW_HPP

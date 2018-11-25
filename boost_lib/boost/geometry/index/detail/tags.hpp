@@ -11,15 +11,23 @@
 #ifndef BOOST_GEOMETRY_INDEX_DETAIL_TAGS_HPP
 #define BOOST_GEOMETRY_INDEX_DETAIL_TAGS_HPP
 
-namespace boost { namespace geometry { namespace index {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
 
-namespace detail {
+namespace detail
+{
 
 struct value_tag {};
 struct bounds_tag {};
 
 } // namespace detail
 
-}}} // namespace boost::geometry::index
+}
+}
+} // namespace boost::geometry::index
 
 #endif // BOOST_GEOMETRY_INDEX_RTREE_TAGS_HPP

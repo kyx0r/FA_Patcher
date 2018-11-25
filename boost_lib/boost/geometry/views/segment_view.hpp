@@ -22,7 +22,9 @@
 #include <boost/geometry/algorithms/assign.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -43,36 +45,36 @@ namespace boost { namespace geometry
 */
 template <typename Segment>
 struct segment_view
-    : public detail::points_view
-        <
-            typename geometry::point_type<Segment>::type,
-            2
-        >
+	: public detail::points_view
+	  <
+	  typename geometry::point_type<Segment>::type,
+	  2
+	  >
 {
-    typedef typename geometry::point_type<Segment>::type point_type;
+	typedef typename geometry::point_type<Segment>::type point_type;
 
-    /// Constructor accepting the segment to adapt
-    explicit segment_view(Segment const& segment)
-        : detail::points_view<point_type, 2>(copy_policy(segment))
-    {}
+	/// Constructor accepting the segment to adapt
+	explicit segment_view(Segment const& segment)
+		: detail::points_view<point_type, 2>(copy_policy(segment))
+	{}
 
 private :
 
-    class copy_policy
-    {
-    public :
-        inline copy_policy(Segment const& segment)
-            : m_segment(segment)
-        {}
+	class copy_policy
+	{
+	public :
+		inline copy_policy(Segment const& segment)
+			: m_segment(segment)
+		{}
 
-        inline void apply(point_type* points) const
-        {
-            geometry::detail::assign_point_from_index<0>(m_segment, points[0]);
-            geometry::detail::assign_point_from_index<1>(m_segment, points[1]);
-        }
-    private :
-        Segment const& m_segment;
-    };
+		inline void apply(point_type* points) const
+		{
+			geometry::detail::assign_point_from_index<0>(m_segment, points[0]);
+			geometry::detail::assign_point_from_index<1>(m_segment, points[1]);
+		}
+	private :
+		Segment const& m_segment;
+	};
 
 };
 
@@ -86,7 +88,7 @@ namespace traits
 template<typename Segment>
 struct tag<segment_view<Segment> >
 {
-    typedef linestring_tag type;
+	typedef linestring_tag type;
 };
 
 }
@@ -94,7 +96,8 @@ struct tag<segment_view<Segment> >
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_SEGMENT_VIEW_HPP

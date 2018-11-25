@@ -15,7 +15,9 @@
 #define BOOST_GEOMETRY_STRATEGIES_DEFAULT_STRATEGY_HPP
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 // This is a strategy placeholder type, which is passed by the algorithm free
@@ -27,7 +29,8 @@ namespace boost { namespace geometry
 
 struct default_strategy {};
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 

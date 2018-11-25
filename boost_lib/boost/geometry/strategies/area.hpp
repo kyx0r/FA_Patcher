@@ -22,11 +22,15 @@
 #include <boost/mpl/assert.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace area
+namespace strategy
+{
+namespace area
 {
 
 
@@ -41,27 +45,27 @@ template
 <
     typename Geometry,
     typename CalculationType
->
+    >
 struct result_type
 {
-    typedef CalculationType type;
+	typedef CalculationType type;
 };
 
 template
 <
     typename Geometry
->
+    >
 struct result_type<Geometry, void>
-    : select_most_precise
-        <
-            typename coordinate_type<Geometry>::type,
-            double
-        >
+	: select_most_precise
+	  <
+	  typename coordinate_type<Geometry>::type,
+	  double
+	  >
 {};
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
-    
+
 
 namespace services
 {
@@ -74,19 +78,21 @@ namespace services
 template <typename Tag>
 struct default_strategy
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_COORDINATE_SYSTEM
-            , (types<Tag>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_COORDINATE_SYSTEM
+	    , (types<Tag>)
+	);
 };
 
 
 } // namespace services
 
-}} // namespace strategy::area
+}
+} // namespace strategy::area
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_AREA_HPP

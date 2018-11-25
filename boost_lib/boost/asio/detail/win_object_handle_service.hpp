@@ -28,147 +28,151 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class win_object_handle_service :
-  public service_base<win_object_handle_service>
+	public service_base<win_object_handle_service>
 {
 public:
-  // The native type of an object handle.
-  typedef HANDLE native_handle_type;
+	// The native type of an object handle.
+	typedef HANDLE native_handle_type;
 
-  // The implementation type of the object handle.
-  class implementation_type
-  {
-   public:
-    // Default constructor.
-    implementation_type()
-      : handle_(INVALID_HANDLE_VALUE),
-        wait_handle_(INVALID_HANDLE_VALUE),
-        owner_(0),
-        next_(0),
-        prev_(0)
-    {
-    }
+	// The implementation type of the object handle.
+	class implementation_type
+	{
+	public:
+		// Default constructor.
+		implementation_type()
+			: handle_(INVALID_HANDLE_VALUE),
+			  wait_handle_(INVALID_HANDLE_VALUE),
+			  owner_(0),
+			  next_(0),
+			  prev_(0)
+		{
+		}
 
-  private:
-    // Only this service will have access to the internal values.
-    friend class win_object_handle_service;
+	private:
+		// Only this service will have access to the internal values.
+		friend class win_object_handle_service;
 
-    // The native object handle representation. May be accessed or modified
-    // without locking the mutex.
-    native_handle_type handle_;
+		// The native object handle representation. May be accessed or modified
+		// without locking the mutex.
+		native_handle_type handle_;
 
-    // The handle used to unregister the wait operation. The mutex must be
-    // locked when accessing or modifying this member.
-    HANDLE wait_handle_;
+		// The handle used to unregister the wait operation. The mutex must be
+		// locked when accessing or modifying this member.
+		HANDLE wait_handle_;
 
-    // The operations waiting on the object handle. If there is a registered
-    // wait then the mutex must be locked when accessing or modifying this
-    // member
-    op_queue<wait_op> op_queue_;
+		// The operations waiting on the object handle. If there is a registered
+		// wait then the mutex must be locked when accessing or modifying this
+		// member
+		op_queue<wait_op> op_queue_;
 
-    // The service instance that owns the object handle implementation.
-    win_object_handle_service* owner_;
+		// The service instance that owns the object handle implementation.
+		win_object_handle_service* owner_;
 
-    // Pointers to adjacent handle implementations in linked list. The mutex
-    // must be locked when accessing or modifying these members.
-    implementation_type* next_;
-    implementation_type* prev_;
-  };
+		// Pointers to adjacent handle implementations in linked list. The mutex
+		// must be locked when accessing or modifying these members.
+		implementation_type* next_;
+		implementation_type* prev_;
+	};
 
-  // Constructor.
-  BOOST_ASIO_DECL win_object_handle_service(
-      boost::asio::io_context& io_context);
+	// Constructor.
+	BOOST_ASIO_DECL win_object_handle_service(
+	    boost::asio::io_context& io_context);
 
-  // Destroy all user-defined handler objects owned by the service.
-  BOOST_ASIO_DECL void shutdown();
+	// Destroy all user-defined handler objects owned by the service.
+	BOOST_ASIO_DECL void shutdown();
 
-  // Construct a new handle implementation.
-  BOOST_ASIO_DECL void construct(implementation_type& impl);
+	// Construct a new handle implementation.
+	BOOST_ASIO_DECL void construct(implementation_type& impl);
 
-  // Move-construct a new handle implementation.
-  BOOST_ASIO_DECL void move_construct(implementation_type& impl,
-      implementation_type& other_impl);
+	// Move-construct a new handle implementation.
+	BOOST_ASIO_DECL void move_construct(implementation_type& impl,
+	                                    implementation_type& other_impl);
 
-  // Move-assign from another handle implementation.
-  BOOST_ASIO_DECL void move_assign(implementation_type& impl,
-      win_object_handle_service& other_service,
-      implementation_type& other_impl);
+	// Move-assign from another handle implementation.
+	BOOST_ASIO_DECL void move_assign(implementation_type& impl,
+	                                 win_object_handle_service& other_service,
+	                                 implementation_type& other_impl);
 
-  // Destroy a handle implementation.
-  BOOST_ASIO_DECL void destroy(implementation_type& impl);
+	// Destroy a handle implementation.
+	BOOST_ASIO_DECL void destroy(implementation_type& impl);
 
-  // Assign a native handle to a handle implementation.
-  BOOST_ASIO_DECL boost::system::error_code assign(implementation_type& impl,
-      const native_handle_type& handle, boost::system::error_code& ec);
+	// Assign a native handle to a handle implementation.
+	BOOST_ASIO_DECL boost::system::error_code assign(implementation_type& impl,
+	        const native_handle_type& handle, boost::system::error_code& ec);
 
-  // Determine whether the handle is open.
-  bool is_open(const implementation_type& impl) const
-  {
-    return impl.handle_ != INVALID_HANDLE_VALUE && impl.handle_ != 0;
-  }
+	// Determine whether the handle is open.
+	bool is_open(const implementation_type& impl) const
+	{
+		return impl.handle_ != INVALID_HANDLE_VALUE && impl.handle_ != 0;
+	}
 
-  // Destroy a handle implementation.
-  BOOST_ASIO_DECL boost::system::error_code close(implementation_type& impl,
-      boost::system::error_code& ec);
+	// Destroy a handle implementation.
+	BOOST_ASIO_DECL boost::system::error_code close(implementation_type& impl,
+	        boost::system::error_code& ec);
 
-  // Get the native handle representation.
-  native_handle_type native_handle(const implementation_type& impl) const
-  {
-    return impl.handle_;
-  }
+	// Get the native handle representation.
+	native_handle_type native_handle(const implementation_type& impl) const
+	{
+		return impl.handle_;
+	}
 
-  // Cancel all operations associated with the handle.
-  BOOST_ASIO_DECL boost::system::error_code cancel(implementation_type& impl,
-      boost::system::error_code& ec);
+	// Cancel all operations associated with the handle.
+	BOOST_ASIO_DECL boost::system::error_code cancel(implementation_type& impl,
+	        boost::system::error_code& ec);
 
-  // Perform a synchronous wait for the object to enter a signalled state.
-  BOOST_ASIO_DECL void wait(implementation_type& impl,
-      boost::system::error_code& ec);
+	// Perform a synchronous wait for the object to enter a signalled state.
+	BOOST_ASIO_DECL void wait(implementation_type& impl,
+	                          boost::system::error_code& ec);
 
-  /// Start an asynchronous wait.
-  template <typename Handler>
-  void async_wait(implementation_type& impl, Handler& handler)
-  {
-    // Allocate and construct an operation to wrap the handler.
-    typedef wait_handler<Handler> op;
-    typename op::ptr p = { boost::asio::detail::addressof(handler),
-      op::ptr::allocate(handler), 0 };
-    p.p = new (p.v) op(handler);
+	/// Start an asynchronous wait.
+	template <typename Handler>
+	void async_wait(implementation_type& impl, Handler& handler)
+	{
+		// Allocate and construct an operation to wrap the handler.
+		typedef wait_handler<Handler> op;
+		typename op::ptr p = { boost::asio::detail::addressof(handler),
+		                       op::ptr::allocate(handler), 0
+		                     };
+		p.p = new (p.v) op(handler);
 
-    BOOST_ASIO_HANDLER_CREATION((io_context_.context(), *p.p, "object_handle",
-          &impl, reinterpret_cast<uintmax_t>(impl.wait_handle_), "async_wait"));
+		BOOST_ASIO_HANDLER_CREATION((io_context_.context(), *p.p, "object_handle",
+		                             &impl, reinterpret_cast<uintmax_t>(impl.wait_handle_), "async_wait"));
 
-    start_wait_op(impl, p.p);
-    p.v = p.p = 0;
-  }
+		start_wait_op(impl, p.p);
+		p.v = p.p = 0;
+	}
 
 private:
-  // Helper function to start an asynchronous wait operation.
-  BOOST_ASIO_DECL void start_wait_op(implementation_type& impl, wait_op* op);
+	// Helper function to start an asynchronous wait operation.
+	BOOST_ASIO_DECL void start_wait_op(implementation_type& impl, wait_op* op);
 
-  // Helper function to register a wait operation.
-  BOOST_ASIO_DECL void register_wait_callback(
-      implementation_type& impl, mutex::scoped_lock& lock);
+	// Helper function to register a wait operation.
+	BOOST_ASIO_DECL void register_wait_callback(
+	    implementation_type& impl, mutex::scoped_lock& lock);
 
-  // Callback function invoked when the registered wait completes.
-  static BOOST_ASIO_DECL VOID CALLBACK wait_callback(
-      PVOID param, BOOLEAN timeout);
+	// Callback function invoked when the registered wait completes.
+	static BOOST_ASIO_DECL VOID CALLBACK wait_callback(
+	    PVOID param, BOOLEAN timeout);
 
-  // The io_context implementation used to post completions.
-  io_context_impl& io_context_;
+	// The io_context implementation used to post completions.
+	io_context_impl& io_context_;
 
-  // Mutex to protect access to internal state.
-  mutex mutex_;
+	// Mutex to protect access to internal state.
+	mutex mutex_;
 
-  // The head of a linked list of all implementations.
-  implementation_type* impl_list_;
+	// The head of a linked list of all implementations.
+	implementation_type* impl_list_;
 
-  // Flag to indicate that the dispatcher has been shut down.
-  bool shutdown_;
+	// Flag to indicate that the dispatcher has been shut down.
+	bool shutdown_;
 };
 
 } // namespace detail

@@ -20,7 +20,9 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #include <boost/icl/detail/element_comparer.hpp>
 #include <boost/icl/detail/interval_subset_comparer.hpp>
 
-namespace boost{namespace icl
+namespace boost
+{
+namespace icl
 {
 
 
@@ -29,28 +31,28 @@ namespace Interval_Map
 using namespace segmental;
 
 template<class IntervalMapT>
-bool is_joinable(const IntervalMapT& container, 
-                 typename IntervalMapT::const_iterator first, 
-                 typename IntervalMapT::const_iterator past) 
+bool is_joinable(const IntervalMapT& container,
+                 typename IntervalMapT::const_iterator first,
+                 typename IntervalMapT::const_iterator past)
 {
-    if(first == container.end())
-        return true;
+	if(first == container.end())
+		return true;
 
-    typename IntervalMapT::const_iterator it_ = first, next_ = first;
-    ++next_;
+	typename IntervalMapT::const_iterator it_ = first, next_ = first;
+	++next_;
 
-    const typename IntervalMapT::codomain_type& co_value 
-        = icl::co_value<IntervalMapT>(first);
-    while(it_ != past)
-    {
-        if(icl::co_value<IntervalMapT>(next_) != co_value)
-            return false;
-        if(!icl::touches(key_value<IntervalMapT>(it_++),
-                         key_value<IntervalMapT>(next_++)))
-            return false;
-    }
+	const typename IntervalMapT::codomain_type& co_value
+	    = icl::co_value<IntervalMapT>(first);
+	while(it_ != past)
+	{
+		if(icl::co_value<IntervalMapT>(next_) != co_value)
+			return false;
+		if(!icl::touches(key_value<IntervalMapT>(it_++),
+		                 key_value<IntervalMapT>(next_++)))
+			return false;
+	}
 
-    return true;
+	return true;
 }
 
 //------------------------------------------------------------------------------
@@ -60,64 +62,64 @@ bool is_joinable(const IntervalMapT& container,
 //- domain_type ----------------------------------------------------------------
 template<class IntervalMapT>
 typename enable_if<mpl::not_<is_total<IntervalMapT> >, bool>::type
-contains(const IntervalMapT& container, 
-         const typename IntervalMapT::domain_type& key) 
+contains(const IntervalMapT& container,
+         const typename IntervalMapT::domain_type& key)
 {
-    return container.find(key) != container.end();
+	return container.find(key) != container.end();
 }
 
 template<class IntervalMapT>
 typename enable_if<is_total<IntervalMapT>, bool>::type
-contains(const IntervalMapT&, 
-         const typename IntervalMapT::domain_type&) 
+contains(const IntervalMapT&,
+         const typename IntervalMapT::domain_type&)
 {
-    return true;
+	return true;
 }
 
 //- interval_type --------------------------------------------------------------
 template<class IntervalMapT>
 typename enable_if<mpl::not_<is_total<IntervalMapT> >, bool>::type
-contains(const IntervalMapT& container, 
-         const typename IntervalMapT::interval_type& sub_interval) 
+contains(const IntervalMapT& container,
+         const typename IntervalMapT::interval_type& sub_interval)
 {
-    typedef typename IntervalMapT::const_iterator const_iterator;
-    if(icl::is_empty(sub_interval)) 
-        return true;
+	typedef typename IntervalMapT::const_iterator const_iterator;
+	if(icl::is_empty(sub_interval))
+		return true;
 
-    std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
-    if(exterior.first == exterior.second)
-        return false;
+	std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
+	if(exterior.first == exterior.second)
+		return false;
 
-    const_iterator last_overlap = prior(exterior.second);
+	const_iterator last_overlap = prior(exterior.second);
 
-    return
-          icl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
-      &&  Interval_Set::is_joinable(container, exterior.first, last_overlap);
+	return
+	    icl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
+	    &&  Interval_Set::is_joinable(container, exterior.first, last_overlap);
 }
 
 template<class IntervalMapT>
 typename enable_if<is_total<IntervalMapT>, bool>::type
-contains(const IntervalMapT&, 
-         const typename IntervalMapT::interval_type&) 
+contains(const IntervalMapT&,
+         const typename IntervalMapT::interval_type&)
 {
-    return true;
+	return true;
 }
 
 //- set_type -------------------------------------------------------------------
 template<class IntervalMapT, class IntervalSetT>
 typename enable_if<mpl::and_<mpl::not_<is_total<IntervalMapT> >
-                            ,is_interval_set<IntervalSetT> >, bool>::type
-contains(const IntervalMapT& super_map, const IntervalSetT& sub_set) 
+,is_interval_set<IntervalSetT> >, bool>::type
+contains(const IntervalMapT& super_map, const IntervalSetT& sub_set)
 {
-    return Interval_Set::within(sub_set, super_map);
+	return Interval_Set::within(sub_set, super_map);
 }
 
 template<class IntervalMapT, class IntervalSetT>
 typename enable_if<mpl::and_<is_total<IntervalMapT>
-                            ,is_interval_set<IntervalSetT> >, bool>::type
-contains(const IntervalMapT&, const IntervalSetT&) 
+,is_interval_set<IntervalSetT> >, bool>::type
+contains(const IntervalMapT&, const IntervalSetT&)
 {
-    return true;
+	return true;
 }
 
 
@@ -126,46 +128,47 @@ contains(const IntervalMapT&, const IntervalSetT&)
 //------------------------------------------------------------------------------
 
 template<class IntervalMapT>
-bool contains(const IntervalMapT& container, 
-              const typename IntervalMapT::element_type& key_value_pair) 
+bool contains(const IntervalMapT& container,
+              const typename IntervalMapT::element_type& key_value_pair)
 {
-    typename IntervalMapT::const_iterator it_ = container.find(key_value_pair.key);
-    return it_ != container.end() && (*it_).second == key_value_pair.data;
+	typename IntervalMapT::const_iterator it_ = container.find(key_value_pair.key);
+	return it_ != container.end() && (*it_).second == key_value_pair.data;
 }
 
 template<class IntervalMapT>
-bool contains(const IntervalMapT& container, 
-              const typename IntervalMapT::segment_type sub_segment) 
+bool contains(const IntervalMapT& container,
+              const typename IntervalMapT::segment_type sub_segment)
 {
-    typedef typename IntervalMapT::const_iterator const_iterator;
-    typename IntervalMapT::interval_type sub_interval = sub_segment.first;
-    if(icl::is_empty(sub_interval)) 
-        return true;
+	typedef typename IntervalMapT::const_iterator const_iterator;
+	typename IntervalMapT::interval_type sub_interval = sub_segment.first;
+	if(icl::is_empty(sub_interval))
+		return true;
 
-    std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
-    if(exterior.first == exterior.second)
-        return false;
+	std::pair<const_iterator, const_iterator> exterior = container.equal_range(sub_interval);
+	if(exterior.first == exterior.second)
+		return false;
 
-    const_iterator last_overlap = prior(exterior.second);
+	const_iterator last_overlap = prior(exterior.second);
 
-    if(!(sub_segment.second == exterior.first->second) )
-        return false;
+	if(!(sub_segment.second == exterior.first->second) )
+		return false;
 
-    return
-          icl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
-      &&  Interval_Map::is_joinable(container, exterior.first, last_overlap);
+	return
+	    icl::contains(hull(exterior.first->first, last_overlap->first), sub_interval)
+	    &&  Interval_Map::is_joinable(container, exterior.first, last_overlap);
 }
 
 
 template<class IntervalMapT>
-bool contains(const IntervalMapT& super, const IntervalMapT& sub) 
+bool contains(const IntervalMapT& super, const IntervalMapT& sub)
 {
-    return Interval_Set::within(sub, super);
+	return Interval_Set::within(sub, super);
 }
 
 } // namespace Interval_Map
 
-}} // namespace icl boost
+}
+} // namespace icl boost
 
-#endif 
+#endif
 

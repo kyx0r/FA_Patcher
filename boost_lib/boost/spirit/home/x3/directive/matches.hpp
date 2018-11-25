@@ -12,40 +12,46 @@
 #include <boost/spirit/home/x3/support/traits/move_to.hpp>
 #include <boost/spirit/home/x3/support/unused.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template <typename Subject>
-    struct matches_directive : unary_parser<Subject, matches_directive<Subject>>
-    {
-        using base_type = unary_parser<Subject, matches_directive<Subject>>;
-        static bool const has_attribute = true;
-        using attribute_type = bool;
+namespace spirit
+{
+namespace x3
+{
+template <typename Subject>
+struct matches_directive : unary_parser<Subject, matches_directive<Subject>>
+{
+	using base_type = unary_parser<Subject, matches_directive<Subject>>;
+	static bool const has_attribute = true;
+	using attribute_type = bool;
 
-        matches_directive(Subject const& subject) : base_type(subject) {}
+	matches_directive(Subject const& subject) : base_type(subject) {}
 
-        template <typename Iterator, typename Context
-          , typename RContext, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, RContext& rcontext, Attribute& attr) const
-        {
-            bool const result = this->subject.parse(
-                    first, last, context, rcontext, unused);
-            traits::move_to(result, attr);
-            return true;
-        }
-    };
+	template <typename Iterator, typename Context
+	          , typename RContext, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, RContext& rcontext, Attribute& attr) const
+	{
+		bool const result = this->subject.parse(
+		                        first, last, context, rcontext, unused);
+		traits::move_to(result, attr);
+		return true;
+	}
+};
 
-    struct matches_gen
-    {
-        template <typename Subject>
-        matches_directive<typename extension::as_parser<Subject>::value_type>
-        operator[](Subject const& subject) const
-        {
-            return { as_parser(subject) };
-        }
-    };
+struct matches_gen
+{
+	template <typename Subject>
+	matches_directive<typename extension::as_parser<Subject>::value_type>
+	operator[](Subject const& subject) const
+	{
+		return { as_parser(subject) };
+	}
+};
 
-    auto const matches = matches_gen{};
-}}}
+auto const matches = matches_gen {};
+}
+}
+}
 
 #endif

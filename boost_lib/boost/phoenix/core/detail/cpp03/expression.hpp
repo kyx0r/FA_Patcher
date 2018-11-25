@@ -27,19 +27,19 @@
 #pragma wave option(preserve: 1)
 #endif
 
-    template <
-        template <typename> class Actor
-      , typename Tag
-      , BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_COMPOSITE_LIMIT)
-      , typename Dummy = void>
-    struct expr_ext;
+template <
+    template <typename> class Actor
+    , typename Tag
+    , BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_COMPOSITE_LIMIT)
+    , typename Dummy = void>
+struct expr_ext;
 
-    template <
-        typename Tag
-      , BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_COMPOSITE_LIMIT)
-      , typename Dummy = void
+template <
+    typename Tag
+    , BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_COMPOSITE_LIMIT)
+    , typename Dummy = void
     >
-    struct expr : expr_ext<actor, Tag, BOOST_PHOENIX_A(BOOST_PHOENIX_COMPOSITE_LIMIT)> {};
+struct expr : expr_ext<actor, Tag, BOOST_PHOENIX_A(BOOST_PHOENIX_COMPOSITE_LIMIT)> {};
 
 #define M0(Z, N, D)                                                             \
     BOOST_PP_COMMA_IF(N)                                                        \
@@ -52,7 +52,7 @@
     (3, (1, BOOST_PHOENIX_COMPOSITE_LIMIT,                                      \
     <boost/phoenix/core/detail/cpp03/expression.hpp>))                          \
 /**/
-    #include BOOST_PHOENIX_ITERATE()
+#include BOOST_PHOENIX_ITERATE()
 
 #undef M0
 #undef M1
@@ -64,48 +64,49 @@
 #endif // PHOENIX_DONT_USE_PREPROCESSED_FILES
 
 #else
-    template <template <typename> class Actor, typename Tag, BOOST_PHOENIX_typename_A>
-    struct expr_ext<Actor, Tag, BOOST_PHOENIX_A>
-        : proto::transform<expr_ext<Actor, Tag, BOOST_PHOENIX_A>, int>
-    {
-        typedef
-            typename proto::result_of::make_expr<
-                Tag
-              , phoenix_default_domain //proto::basic_default_domain
-              , BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M0, _)
-            >::type
-            base_type;
+template <template <typename> class Actor, typename Tag, BOOST_PHOENIX_typename_A>
+struct expr_ext<Actor, Tag, BOOST_PHOENIX_A>
+	: proto::transform<expr_ext<Actor, Tag, BOOST_PHOENIX_A>, int>
+{
+	typedef
+	typename proto::result_of::make_expr<
+	Tag
+	, phoenix_default_domain //proto::basic_default_domain
+	, BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M0, _)
+	>::type
+	base_type;
 
-        typedef Actor<base_type> type;
+	typedef Actor<base_type> type;
 
-        typedef
-            typename proto::nary_expr<Tag, BOOST_PHOENIX_A>::proto_grammar
-            proto_grammar;
+	typedef
+	typename proto::nary_expr<Tag, BOOST_PHOENIX_A>::proto_grammar
+	proto_grammar;
 
-        static type make(BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M1, _))
-      { //?? actor or Actor??
-        //Actor<base_type> const e =
-                actor<base_type> const e =
-                {
-                    proto::make_expr<
-                        Tag
-                      , phoenix_default_domain // proto::basic_default_domain
-                    >(BOOST_PHOENIX_a)
-                };
-            return e;
-        }
+	static type make(BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M1, _))
+	{
+		//?? actor or Actor??
+		//Actor<base_type> const e =
+		actor<base_type> const e =
+		{
+			proto::make_expr<
+			Tag
+			, phoenix_default_domain // proto::basic_default_domain
+			>(BOOST_PHOENIX_a)
+		};
+		return e;
+	}
 
-        template<typename Expr, typename State, typename Data>
-        struct impl
-          : proto::pass_through<expr_ext>::template impl<Expr, State, Data>
-        {};
+	template<typename Expr, typename State, typename Data>
+	struct impl
+		: proto::pass_through<expr_ext>::template impl<Expr, State, Data>
+	{};
 
-        typedef Tag proto_tag;
-    #define BOOST_PHOENIX_ENUM_CHILDREN(_, N, __)                               \
+	typedef Tag proto_tag;
+#define BOOST_PHOENIX_ENUM_CHILDREN(_, N, __)                               \
         typedef BOOST_PP_CAT(A, N) BOOST_PP_CAT(proto_child, N);                \
     /**/
-        BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, BOOST_PHOENIX_ENUM_CHILDREN, _)
-    #undef BOOST_PHOENIX_ENUM_CHILDREN
-    };
+	BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, BOOST_PHOENIX_ENUM_CHILDREN, _)
+#undef BOOST_PHOENIX_ENUM_CHILDREN
+};
 
 #endif

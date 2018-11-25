@@ -23,7 +23,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -34,7 +35,7 @@ template<
     typename CharT,
     typename TraitsT = std::char_traits< CharT >,
     typename AllocatorT = std::allocator< CharT >
->
+    >
 class basic_formatting_ostream;
 
 #ifdef BOOST_LOG_USE_CHAR

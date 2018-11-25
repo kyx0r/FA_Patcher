@@ -22,7 +22,10 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 
-namespace boost {  namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 /// \fn is_palindrome ( BidirectionalIterator begin, BidirectionalIterator end, Predicate p )
 /// \return true if the entire sequence is palindrome
@@ -37,26 +40,26 @@ namespace boost {  namespace algorithm {
 template <typename BidirectionalIterator, typename Predicate>
 bool is_palindrome(BidirectionalIterator begin, BidirectionalIterator end, Predicate p)
 {
-    if(begin == end)
-    {
-        return true;
-    }
+	if(begin == end)
+	{
+		return true;
+	}
 
-    --end;
-    while(begin != end)
-    {
-        if(!p(*begin, *end))
-        {
-            return false;
-        }
-        ++begin;
-        if(begin == end)
-        {
-            break;
-        }
-        --end;
-    }
-    return true;
+	--end;
+	while(begin != end)
+	{
+		if(!p(*begin, *end))
+		{
+			return false;
+		}
+		++begin;
+		if(begin == end)
+		{
+			break;
+		}
+		--end;
+	}
+	return true;
 }
 
 /// \fn is_palindrome ( BidirectionalIterator begin, BidirectionalIterator end )
@@ -71,8 +74,8 @@ bool is_palindrome(BidirectionalIterator begin, BidirectionalIterator end, Predi
 template <typename BidirectionalIterator>
 bool is_palindrome(BidirectionalIterator begin, BidirectionalIterator end)
 {
-    return is_palindrome(begin, end,
-                         std::equal_to<typename std::iterator_traits<BidirectionalIterator>::value_type> ());
+	return is_palindrome(begin, end,
+	                     std::equal_to<typename std::iterator_traits<BidirectionalIterator>::value_type> ());
 }
 
 /// \fn is_palindrome ( const R& range )
@@ -86,7 +89,7 @@ bool is_palindrome(BidirectionalIterator begin, BidirectionalIterator end)
 template <typename R>
 bool is_palindrome(const R& range)
 {
-    return is_palindrome(boost::begin(range), boost::end(range));
+	return is_palindrome(boost::begin(range), boost::end(range));
 }
 
 /// \fn is_palindrome ( const R& range, Predicate p )
@@ -101,7 +104,7 @@ bool is_palindrome(const R& range)
 template <typename R, typename Predicate>
 bool is_palindrome(const R& range, Predicate p)
 {
-    return is_palindrome(boost::begin(range), boost::end(range), p);
+	return is_palindrome(boost::begin(range), boost::end(range), p);
 }
 
 /// \fn is_palindrome ( const char* str )
@@ -114,9 +117,9 @@ bool is_palindrome(const R& range, Predicate p)
 ///     Complexity: O(N).
 bool is_palindrome(const char* str)
 {
-    if(!str)
-	    return true;
-    return is_palindrome(str, str + strlen(str));
+	if(!str)
+		return true;
+	return is_palindrome(str, str + strlen(str));
 }
 
 /// \fn is_palindrome ( const char* str, Predicate p )
@@ -131,10 +134,11 @@ bool is_palindrome(const char* str)
 template<typename Predicate>
 bool is_palindrome(const char* str, Predicate p)
 {
-    if(!str)
-	    return true;
-    return is_palindrome(str, str + strlen(str), p);
+	if(!str)
+		return true;
+	return is_palindrome(str, str + strlen(str), p);
 }
-}}
+}
+}
 
 #endif // BOOST_ALGORITHM_IS_PALINDROME_HPP

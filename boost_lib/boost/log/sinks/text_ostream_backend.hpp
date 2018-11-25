@@ -26,11 +26,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 /*!
  * \brief An implementation of a text output stream logging sink backend
@@ -39,71 +41,71 @@ namespace sinks {
  */
 template< typename CharT >
 class basic_text_ostream_backend :
-    public basic_formatted_sink_backend<
-        CharT,
-        combine_requirements< synchronized_feeding, flushing >::type
-    >
+	public basic_formatted_sink_backend<
+	CharT,
+	combine_requirements< synchronized_feeding, flushing >::type
+	>
 {
-    //! Base type
-    typedef basic_formatted_sink_backend<
-        CharT,
-        combine_requirements< synchronized_feeding, flushing >::type
-    > base_type;
+	//! Base type
+	typedef basic_formatted_sink_backend<
+	CharT,
+	combine_requirements< synchronized_feeding, flushing >::type
+	> base_type;
 
 public:
-    //! Character type
-    typedef typename base_type::char_type char_type;
-    //! String type to be used as a message text holder
-    typedef typename base_type::string_type string_type;
-    //! Output stream type
-    typedef std::basic_ostream< char_type > stream_type;
+	//! Character type
+	typedef typename base_type::char_type char_type;
+	//! String type to be used as a message text holder
+	typedef typename base_type::string_type string_type;
+	//! Output stream type
+	typedef std::basic_ostream< char_type > stream_type;
 
 private:
-    //! \cond
+	//! \cond
 
-    struct implementation;
-    implementation* m_pImpl;
+	struct implementation;
+	implementation* m_pImpl;
 
-    //! \endcond
+	//! \endcond
 
 public:
-    /*!
-     * Constructor. No streams attached to the constructed backend, auto flush feature disabled.
-     */
-    BOOST_LOG_API basic_text_ostream_backend();
-    /*!
-     * Destructor
-     */
-    BOOST_LOG_API ~basic_text_ostream_backend();
+	/*!
+	 * Constructor. No streams attached to the constructed backend, auto flush feature disabled.
+	 */
+	BOOST_LOG_API basic_text_ostream_backend();
+	/*!
+	 * Destructor
+	 */
+	BOOST_LOG_API ~basic_text_ostream_backend();
 
-    /*!
-     * The method adds a new stream to the sink.
-     *
-     * \param strm Pointer to the stream. Must not be NULL.
-     */
-    BOOST_LOG_API void add_stream(shared_ptr< stream_type > const& strm);
-    /*!
-     * The method removes a stream from the sink. If the stream is not attached to the sink,
-     * the method has no effect.
-     *
-     * \param strm Pointer to the stream. Must not be NULL.
-     */
-    BOOST_LOG_API void remove_stream(shared_ptr< stream_type > const& strm);
+	/*!
+	 * The method adds a new stream to the sink.
+	 *
+	 * \param strm Pointer to the stream. Must not be NULL.
+	 */
+	BOOST_LOG_API void add_stream(shared_ptr< stream_type > const& strm);
+	/*!
+	 * The method removes a stream from the sink. If the stream is not attached to the sink,
+	 * the method has no effect.
+	 *
+	 * \param strm Pointer to the stream. Must not be NULL.
+	 */
+	BOOST_LOG_API void remove_stream(shared_ptr< stream_type > const& strm);
 
-    /*!
-     * Sets the flag to automatically flush buffers of all attached streams after each log record
-     */
-    BOOST_LOG_API void auto_flush(bool f = true);
+	/*!
+	 * Sets the flag to automatically flush buffers of all attached streams after each log record
+	 */
+	BOOST_LOG_API void auto_flush(bool f = true);
 
-    /*!
-     * The method writes the message to the sink
-     */
-    BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
+	/*!
+	 * The method writes the message to the sink
+	 */
+	BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
 
-    /*!
-     * The method flushes the associated streams
-     */
-    BOOST_LOG_API void flush();
+	/*!
+	 * The method flushes the associated streams
+	 */
+	BOOST_LOG_API void flush();
 };
 
 #ifdef BOOST_LOG_USE_CHAR

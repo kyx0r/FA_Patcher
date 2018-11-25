@@ -28,32 +28,38 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace tag {
+namespace tag
+{
 
 /*!
  * Generic log message attribute descriptor.
  */
 struct message :
-    public keyword_descriptor
+	public keyword_descriptor
 {
-    // The attribute value type here is not essential since message attributes are not intended to be created via the keyword
-    typedef void attribute_type;
+	// The attribute value type here is not essential since message attributes are not intended to be created via the keyword
+	typedef void attribute_type;
 
 #if defined(BOOST_LOG_USE_CHAR) && defined(BOOST_LOG_USE_WCHAR_T)
-    typedef mpl::vector2< std::string, std::wstring > value_type;
+	typedef mpl::vector2< std::string, std::wstring > value_type;
 #elif defined(BOOST_LOG_USE_CHAR)
-    typedef std::string value_type;
+	typedef std::string value_type;
 #elif defined(BOOST_LOG_USE_WCHAR_T)
-    typedef std::wstring value_type;
+	typedef std::wstring value_type;
 #endif
 
-    static attribute_name get_name() { return boost::log::aux::default_attribute_names::message(); }
+	static attribute_name get_name()
+	{
+		return boost::log::aux::default_attribute_names::message();
+	}
 };
 
 #if defined(BOOST_LOG_USE_CHAR)
@@ -61,13 +67,16 @@ struct message :
  * Narrow character log message attribute descriptor.
  */
 struct smessage :
-    public keyword_descriptor
+	public keyword_descriptor
 {
-    // The attribute value type here is not essential since message attributes are not intended to be created via the keyword
-    typedef void attribute_type;
-    typedef std::string value_type;
+	// The attribute value type here is not essential since message attributes are not intended to be created via the keyword
+	typedef void attribute_type;
+	typedef std::string value_type;
 
-    static attribute_name get_name() { return boost::log::aux::default_attribute_names::message(); }
+	static attribute_name get_name()
+	{
+		return boost::log::aux::default_attribute_names::message();
+	}
 };
 #endif
 
@@ -76,13 +85,16 @@ struct smessage :
  * Wide character log message attribute descriptor.
  */
 struct wmessage :
-    public keyword_descriptor
+	public keyword_descriptor
 {
-    // The attribute value type here is not essential since message attributes are not intended to be created via the keyword
-    typedef void attribute_type;
-    typedef std::wstring value_type;
+	// The attribute value type here is not essential since message attributes are not intended to be created via the keyword
+	typedef void attribute_type;
+	typedef std::wstring value_type;
 
-    static attribute_name get_name() { return boost::log::aux::default_attribute_names::message(); }
+	static attribute_name get_name()
+	{
+		return boost::log::aux::default_attribute_names::message();
+	}
 };
 #endif
 

@@ -23,9 +23,12 @@
 # include <boost/asio/detail/scheduler_operation.hpp>
 #endif
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if defined(BOOST_ASIO_HAS_IOCP)
 typedef win_iocp_operation operation;

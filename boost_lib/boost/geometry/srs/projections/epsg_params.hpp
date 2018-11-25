@@ -16,33 +16,36 @@
 #include <boost/geometry/srs/spheroid.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
 {
-    
+namespace geometry
+{
+
 namespace srs
 {
 
 
 struct epsg
 {
-    explicit epsg(int c)
-        : code(c)
-    {}
+	explicit epsg(int c)
+		: code(c)
+	{}
 
-    int code;
+	int code;
 };
 
 
 template <int Code>
 struct static_epsg
 {
-    static const int code = Code;
+	static const int code = Code;
 };
 
 
 } // namespace srs
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_SRS_PROJECTIONS_EPSG_PARAMS_HPP

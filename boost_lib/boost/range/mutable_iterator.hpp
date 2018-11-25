@@ -27,19 +27,19 @@
 namespace boost
 {
 
-    //////////////////////////////////////////////////////////////////////////
-    // default
-    //////////////////////////////////////////////////////////////////////////
-    
-    namespace range_detail
-    {
+//////////////////////////////////////////////////////////////////////////
+// default
+//////////////////////////////////////////////////////////////////////////
+
+namespace range_detail
+{
 
 BOOST_RANGE_EXTRACT_OPTIONAL_TYPE( iterator )
 
 template< typename C >
 struct range_mutable_iterator
-        : range_detail::extract_iterator<
-            BOOST_DEDUCED_TYPENAME remove_reference<C>::type>
+	: range_detail::extract_iterator<
+	  BOOST_DEDUCED_TYPENAME remove_reference<C>::type>
 {};
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ struct range_mutable_iterator
 template< typename Iterator >
 struct range_mutable_iterator< std::pair<Iterator,Iterator> >
 {
-    typedef Iterator type;
+	typedef Iterator type;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,16 +59,16 @@ struct range_mutable_iterator< std::pair<Iterator,Iterator> >
 template< typename T, std::size_t sz >
 struct range_mutable_iterator< T[sz] >
 {
-    typedef T* type;
+	typedef T* type;
 };
 
-    } // namespace range_detail
+} // namespace range_detail
 
 template<typename C, typename Enabler=void>
 struct range_mutable_iterator
-        : range_detail::range_mutable_iterator<
-            BOOST_DEDUCED_TYPENAME remove_reference<C>::type
-        >
+	: range_detail::range_mutable_iterator<
+	  BOOST_DEDUCED_TYPENAME remove_reference<C>::type
+	  >
 {
 };
 

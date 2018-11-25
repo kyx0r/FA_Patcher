@@ -28,7 +28,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // macro BOOST_VARIANT_NO_TYPE_SEQUENCE_SUPPORT
 //
-// Defined if variant does not support make_variant_over (see below). 
+// Defined if variant does not support make_variant_over (see below).
 //
 #if defined(BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE)
 #   define BOOST_VARIANT_NO_TYPE_SEQUENCE_SUPPORT
@@ -55,8 +55,8 @@
 // macro BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES
 //
 
-/* 
-    GCC before 4.0 had no variadic tempaltes; 
+/*
+    GCC before 4.0 had no variadic tempaltes;
     GCC 4.6 has incomplete implementation of variadic templates.
 
     MSVC2015 Update 1 has variadic templates, but they have issues.
@@ -105,7 +105,7 @@
 //      BOOST_VARIANT_ENUM_SHIFTED_PARAMS(Something)            => SomethingN...
 //      BOOST_VARIANT_ENUM_SHIFTED_PARAMS(Something)            => SomethingN...
 //
-// Rationale: Cleaner, simpler code for clients of variant library. Minimal 
+// Rationale: Cleaner, simpler code for clients of variant library. Minimal
 // code modifications to move from C++03 to C++11.
 //
 // With BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES defined
@@ -165,13 +165,17 @@
 #endif // BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES workaround
 
 
-namespace boost {
+namespace boost
+{
 
-namespace detail { namespace variant {
+namespace detail
+{
+namespace variant
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 // (detail) class void_ and class template convert_void
-// 
+//
 // Provides the mechanism by which void(NN) types are converted to
 // mpl::void_ (and thus can be passed to mpl::list).
 //
@@ -186,13 +190,13 @@ struct void_;
 template <typename T>
 struct convert_void
 {
-    typedef T type;
+	typedef T type;
 };
 
 template <>
 struct convert_void< void_ >
 {
-    typedef mpl::na type;
+	typedef mpl::na type;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -220,16 +224,17 @@ struct convert_void< void_ >
     /**/
 
 BOOST_PP_REPEAT(
-      BOOST_VARIANT_LIMIT_TYPES
+    BOOST_VARIANT_LIMIT_TYPES
     , BOOST_VARIANT_DETAIL_DEFINE_VOID_N
     , _
-    )
+)
 
 #undef BOOST_VARIANT_DETAIL_DEFINE_VOID_N
 
 #endif // BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE workaround
 
-}} // namespace detail::variant
+}
+} // namespace detail::variant
 
 #if !defined(BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES)
 #   define BOOST_VARIANT_AUX_DECLARE_PARAMS BOOST_VARIANT_ENUM_PARAMS(typename T)
@@ -298,9 +303,9 @@ template < BOOST_VARIANT_AUX_DECLARE_PARAMS > struct make_recursive_variant;
 // Tag type indicates where recursive variant substitution should occur.
 //
 #if !defined(BOOST_VARIANT_NO_FULL_RECURSIVE_VARIANT_SUPPORT)
-    struct recursive_variant_ {};
+struct recursive_variant_ {};
 #else
-    typedef mpl::arg<1> recursive_variant_;
+typedef mpl::arg<1> recursive_variant_;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

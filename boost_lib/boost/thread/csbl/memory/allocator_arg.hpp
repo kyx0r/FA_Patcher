@@ -17,25 +17,25 @@
 
 namespace boost
 {
-  namespace csbl
-  {
-    using ::boost::container::allocator_arg_t;
-    using ::boost::container::allocator_arg;
-  }
+namespace csbl
+{
+using ::boost::container::allocator_arg_t;
+using ::boost::container::allocator_arg;
+}
 }
 #else
 namespace boost
 {
-  namespace csbl
-  {
-    using ::std::allocator_arg_t;
-    using ::std::allocator_arg;
-  }
+namespace csbl
+{
+using ::std::allocator_arg_t;
+using ::std::allocator_arg;
+}
 }
 #endif // BOOST_NO_CXX11_ALLOCATOR
 namespace boost
 {
-  using ::boost::csbl::allocator_arg_t;
-  using ::boost::csbl::allocator_arg;
+using ::boost::csbl::allocator_arg_t;
+using ::boost::csbl::allocator_arg;
 }
 #endif // header

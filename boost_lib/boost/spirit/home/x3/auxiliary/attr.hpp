@@ -21,111 +21,117 @@
 #include <string>
 #include <utility>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template <typename Value>
-    struct attr_parser : parser<attr_parser<Value>>
-    {
-        typedef Value attribute_type;
+namespace spirit
+{
+namespace x3
+{
+template <typename Value>
+struct attr_parser : parser<attr_parser<Value>>
+{
+	typedef Value attribute_type;
 
-        static bool const has_attribute =
-            !is_same<unused_type, attribute_type>::value;
-        static bool const handles_container =
-            traits::is_container<attribute_type>::value;
-        
-        attr_parser(Value const& value)
-          : value_(value) {}
-        attr_parser(Value&& value)
-          : value_(std::move(value)) {}
+	static bool const has_attribute =
+	    !is_same<unused_type, attribute_type>::value;
+	static bool const handles_container =
+	    traits::is_container<attribute_type>::value;
 
-        template <typename Iterator, typename Context
-          , typename RuleContext, typename Attribute>
-        bool parse(Iterator& /* first */, Iterator const& /* last */
-          , Context const& /* context */, RuleContext&, Attribute& attr_) const
-        {
-            // $$$ Change to copy_to once we have it $$$
-            traits::move_to(value_, attr_);
-            return true;
-        }
+	attr_parser(Value const& value)
+		: value_(value) {}
+	attr_parser(Value&& value)
+		: value_(std::move(value)) {}
 
-        Value value_;
+	template <typename Iterator, typename Context
+	          , typename RuleContext, typename Attribute>
+	bool parse(Iterator& /* first */, Iterator const& /* last */
+	           , Context const& /* context */, RuleContext&, Attribute& attr_) const
+	{
+		// $$$ Change to copy_to once we have it $$$
+		traits::move_to(value_, attr_);
+		return true;
+	}
 
-    private:
-        // silence MSVC warning C4512: assignment operator could not be generated
-        attr_parser& operator= (attr_parser const&);
-    };
-    
-    template <typename Value, std::size_t N>
-    struct attr_parser<Value[N]> : parser<attr_parser<Value[N]>>
-    {
-        typedef Value attribute_type[N];
+	Value value_;
 
-        static bool const has_attribute =
-            !is_same<unused_type, attribute_type>::value;
-        static bool const handles_container = true;
-        
-        attr_parser(Value const (&value)[N])
-        {
-            std::copy(value + 0, value + N, value_ + 0);
-        }
+private:
+	// silence MSVC warning C4512: assignment operator could not be generated
+	attr_parser& operator= (attr_parser const&);
+};
 
-        attr_parser(Value (&&value)[N])
-        {
-            std::move(value + 0, value + N, value_ + 0);
-        }
+template <typename Value, std::size_t N>
+struct attr_parser<Value[N]> : parser<attr_parser<Value[N]>>
+{
+	typedef Value attribute_type[N];
 
-        template <typename Iterator, typename Context
-          , typename RuleContext, typename Attribute>
-        bool parse(Iterator& /* first */, Iterator const& /* last */
-          , Context const& /* context */, RuleContext&, Attribute& attr_) const
-        {
-            // $$$ Change to copy_to once we have it $$$
-            traits::move_to(value_ + 0, value_ + N, attr_);
-            return true;
-        }
+	static bool const has_attribute =
+	    !is_same<unused_type, attribute_type>::value;
+	static bool const handles_container = true;
 
-        Value value_[N];
+	attr_parser(Value const (&value)[N])
+	{
+		std::copy(value + 0, value + N, value_ + 0);
+	}
 
-    private:
-        // silence MSVC warning C4512: assignment operator could not be generated
-        attr_parser& operator= (attr_parser const&);
-    };
-    
-    template <typename Value>
-    struct get_info<attr_parser<Value>>
-    {
-        typedef std::string result_type;
-        std::string operator()(attr_parser<Value> const& /*p*/) const
-        {
-            return "attr";
-        }
-    };
+	attr_parser(Value (&&value)[N])
+	{
+		std::move(value + 0, value + N, value_ + 0);
+	}
 
-    struct attr_gen
-    {
-        template <typename Value>
-        attr_parser<typename remove_cv<
-            typename remove_reference<Value>::type>::type>
-        operator()(Value&& value) const
-        {
-            return { std::forward<Value>(value) };
-        }
-        
-        template <typename Value, std::size_t N>
-        attr_parser<typename remove_cv<Value>::type[N]>
-        operator()(Value (&value)[N]) const
-        {
-            return { value };
-        }
-        template <typename Value, std::size_t N>
-        attr_parser<typename remove_cv<Value>::type[N]>
-        operator()(Value (&&value)[N]) const
-        {
-            return { value };
-        }
-    };
+	template <typename Iterator, typename Context
+	          , typename RuleContext, typename Attribute>
+	bool parse(Iterator& /* first */, Iterator const& /* last */
+	           , Context const& /* context */, RuleContext&, Attribute& attr_) const
+	{
+		// $$$ Change to copy_to once we have it $$$
+		traits::move_to(value_ + 0, value_ + N, attr_);
+		return true;
+	}
 
-    auto const attr = attr_gen{};
-}}}
+	Value value_[N];
+
+private:
+	// silence MSVC warning C4512: assignment operator could not be generated
+	attr_parser& operator= (attr_parser const&);
+};
+
+template <typename Value>
+struct get_info<attr_parser<Value>>
+{
+	typedef std::string result_type;
+	std::string operator()(attr_parser<Value> const& /*p*/) const
+	{
+		return "attr";
+	}
+};
+
+struct attr_gen
+{
+	template <typename Value>
+	attr_parser<typename remove_cv<
+	typename remove_reference<Value>::type>::type>
+	operator()(Value&& value) const
+	{
+		return { std::forward<Value>(value) };
+	}
+
+	template <typename Value, std::size_t N>
+	attr_parser<typename remove_cv<Value>::type[N]>
+	operator()(Value (&value)[N]) const
+	{
+		return { value };
+	}
+	template <typename Value, std::size_t N>
+	attr_parser<typename remove_cv<Value>::type[N]>
+	operator()(Value (&&value)[N]) const
+	{
+		return { value };
+	}
+};
+
+auto const attr = attr_gen {};
+}
+}
+}
 
 #endif

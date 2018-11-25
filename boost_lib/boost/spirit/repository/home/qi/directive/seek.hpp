@@ -23,112 +23,136 @@
 #include <boost/spirit/repository/home/support/seek.hpp>
 
 
-namespace boost { namespace spirit
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Enablers
-    ///////////////////////////////////////////////////////////////////////////
+namespace spirit
+{
+///////////////////////////////////////////////////////////////////////////
+// Enablers
+///////////////////////////////////////////////////////////////////////////
 
-    // enables seek[...]
-    template <>
-    struct use_directive<qi::domain, repository::tag::seek>
-      : mpl::true_ {};
-}} // namespace boost::spirit
+// enables seek[...]
+template <>
+struct use_directive<qi::domain, repository::tag::seek>
+	: mpl::true_ {};
+}
+} // namespace boost::spirit
 
 
-namespace boost { namespace spirit { namespace repository {namespace qi
+namespace boost
+{
+namespace spirit
+{
+namespace repository
+{
+namespace qi
 {
 #ifndef BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
-    using repository::seek;
+using repository::seek;
 #endif
-    using repository::seek_type;
+using repository::seek_type;
 
-    template <typename Subject>
-    struct seek_directive
-      : spirit::qi::unary_parser<seek_directive<Subject> >
-    {
-        typedef Subject subject_type;
-
-        template <typename Context, typename Iterator>
-        struct attribute
-        {
-            typedef typename
-                traits::attribute_of<subject_type, Context, Iterator>::type
-            type;
-        };
-
-        seek_directive(Subject const& subject)
-          : subject(subject)
-        {}
-
-        template
-        <
-            typename Iterator, typename Context
-          , typename Skipper, typename Attribute
-        >
-        bool parse
-        (
-            Iterator& first, Iterator const& last
-          , Context& context, Skipper const& skipper
-          , Attribute& attr
-        ) const
-        {
-            for (Iterator it(first); ; ++it)
-            {
-                if (subject.parse(it, last, context, skipper, attr))
-                {
-                    first = it;
-                    return true;
-                }
-                // fail only after subject fails & no input
-                if (it == last)
-                    return false;
-            }
-        }
-
-        template <typename Context>
-        info what(Context& context) const
-        {
-            return info("seek", subject.what(context));
-        }
-
-        Subject subject;
-    };
-}}}} // namespace boost::spirit::repository::qi
-
-
-namespace boost { namespace spirit { namespace qi
+template <typename Subject>
+struct seek_directive
+	: spirit::qi::unary_parser<seek_directive<Subject> >
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Parser generators: make_xxx function (objects)
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Subject, typename Modifiers>
-    struct make_directive<repository::tag::seek, Subject, Modifiers>
-    {
-        typedef repository::qi::seek_directive<Subject> result_type;
+	typedef Subject subject_type;
 
-        result_type operator()(unused_type, Subject const& subject, unused_type) const
-        {
-            return result_type(subject);
-        }
-    };
-}}} // namespace boost::spirit::qi
+	template <typename Context, typename Iterator>
+	struct attribute
+	{
+		typedef typename
+		traits::attribute_of<subject_type, Context, Iterator>::type
+		type;
+	};
+
+	seek_directive(Subject const& subject)
+		: subject(subject)
+	{}
+
+	template
+	<
+	    typename Iterator, typename Context
+	    , typename Skipper, typename Attribute
+	    >
+	bool parse
+	(
+	    Iterator& first, Iterator const& last
+	    , Context& context, Skipper const& skipper
+	    , Attribute& attr
+	) const
+	{
+		for (Iterator it(first); ; ++it)
+		{
+			if (subject.parse(it, last, context, skipper, attr))
+			{
+				first = it;
+				return true;
+			}
+			// fail only after subject fails & no input
+			if (it == last)
+				return false;
+		}
+	}
+
+	template <typename Context>
+	info what(Context& context) const
+	{
+		return info("seek", subject.what(context));
+	}
+
+	Subject subject;
+};
+}
+}
+}
+} // namespace boost::spirit::repository::qi
 
 
-namespace boost { namespace spirit { namespace traits
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Subject>
-    struct has_semantic_action<repository::qi::seek_directive<Subject> >
-      : unary_has_semantic_action<Subject> {};
+namespace spirit
+{
+namespace qi
+{
+///////////////////////////////////////////////////////////////////////////
+// Parser generators: make_xxx function (objects)
+///////////////////////////////////////////////////////////////////////////
+template <typename Subject, typename Modifiers>
+struct make_directive<repository::tag::seek, Subject, Modifiers>
+{
+	typedef repository::qi::seek_directive<Subject> result_type;
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Subject, typename Attribute, typename Context
-        , typename Iterator>
-    struct handles_container<repository::qi::seek_directive<Subject>, Attribute
-        , Context, Iterator>
-      : unary_handles_container<Subject, Attribute, Context, Iterator> {};
-}}} // namespace boost::spirit::traits
+	result_type operator()(unused_type, Subject const& subject, unused_type) const
+	{
+		return result_type(subject);
+	}
+};
+}
+}
+} // namespace boost::spirit::qi
+
+
+namespace boost
+{
+namespace spirit
+{
+namespace traits
+{
+///////////////////////////////////////////////////////////////////////////
+template <typename Subject>
+struct has_semantic_action<repository::qi::seek_directive<Subject> >
+	: unary_has_semantic_action<Subject> {};
+
+///////////////////////////////////////////////////////////////////////////
+template <typename Subject, typename Attribute, typename Context
+          , typename Iterator>
+struct handles_container<repository::qi::seek_directive<Subject>, Attribute
+	, Context, Iterator>
+	: unary_handles_container<Subject, Attribute, Context, Iterator> {};
+}
+}
+} // namespace boost::spirit::traits
 
 
 #endif

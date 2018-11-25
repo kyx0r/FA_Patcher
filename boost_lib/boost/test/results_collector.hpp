@@ -28,10 +28,13 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
-namespace {
+namespace
+{
 
 // ************************************************************************** //
 /// First failed assertion debugger hook
@@ -50,55 +53,56 @@ inline void first_failed_assertion() {}
 /// The attributes presented as public properties on
 /// an instance of the class. In addition summary conclusion methods are presented to generate simple answer to pass/fail question
 
-class BOOST_TEST_DECL test_results {
+class BOOST_TEST_DECL test_results
+{
 public:
-    test_results();
+	test_results();
 
-    /// Type representing counter like public property
-    typedef BOOST_READONLY_PROPERTY( counter_t, (results_collector_t)
-                                                (test_results)
-                                                (results_collect_helper) ) counter_prop;
-    /// Type representing boolean like public property
-    typedef BOOST_READONLY_PROPERTY( bool,      (results_collector_t)
-                                                (test_results)
-                                                (results_collect_helper) ) bool_prop;
+	/// Type representing counter like public property
+	typedef BOOST_READONLY_PROPERTY( counter_t, (results_collector_t)
+	                                 (test_results)
+	                                 (results_collect_helper) ) counter_prop;
+	/// Type representing boolean like public property
+	typedef BOOST_READONLY_PROPERTY( bool,      (results_collector_t)
+	                                 (test_results)
+	                                 (results_collect_helper) ) bool_prop;
 
-    counter_prop    p_assertions_passed;        //!< Number of successful assertions
-    counter_prop    p_assertions_failed;        //!< Number of failing assertions
-    counter_prop    p_warnings_failed;          //!< Number of warnings
-    counter_prop    p_expected_failures;
-    counter_prop    p_test_cases_passed;        //!< Number of successfull test cases
-    counter_prop    p_test_cases_warned;        //!< Number of warnings in test cases
-    counter_prop    p_test_cases_failed;        //!< Number of failing test cases
-    counter_prop    p_test_cases_skipped;       //!< Number of skipped test cases
-    counter_prop    p_test_cases_aborted;       //!< Number of aborted test cases
-    counter_prop    p_duration_microseconds;    //!< Duration of the test in microseconds
-    bool_prop       p_aborted;                  //!< Indicates that the test unit execution has been aborted
-    bool_prop       p_skipped;                  //!< Indicates that the test unit execution has been skipped
+	counter_prop    p_assertions_passed;        //!< Number of successful assertions
+	counter_prop    p_assertions_failed;        //!< Number of failing assertions
+	counter_prop    p_warnings_failed;          //!< Number of warnings
+	counter_prop    p_expected_failures;
+	counter_prop    p_test_cases_passed;        //!< Number of successfull test cases
+	counter_prop    p_test_cases_warned;        //!< Number of warnings in test cases
+	counter_prop    p_test_cases_failed;        //!< Number of failing test cases
+	counter_prop    p_test_cases_skipped;       //!< Number of skipped test cases
+	counter_prop    p_test_cases_aborted;       //!< Number of aborted test cases
+	counter_prop    p_duration_microseconds;    //!< Duration of the test in microseconds
+	bool_prop       p_aborted;                  //!< Indicates that the test unit execution has been aborted
+	bool_prop       p_skipped;                  //!< Indicates that the test unit execution has been skipped
 
-    /// Returns true if test unit passed
-    bool            passed() const;
+	/// Returns true if test unit passed
+	bool            passed() const;
 
-    /// Returns true if the test unit was aborted (hard failure)
-    bool            aborted() const;
+	/// Returns true if the test unit was aborted (hard failure)
+	bool            aborted() const;
 
-    /// Produces result code for the test unit execution
-    ///
-    /// This methhod return one of the result codes defined in @c boost/cstdlib.hpp
-    /// @returns
-    ///   - @c boost::exit_success on success,
-    ///   - @c boost::exit_exception_failure in case test unit
-    ///     was aborted for any reason (incuding uncaught exception)
-    ///   - and @c boost::exit_test_failure otherwise
-    int             result_code() const;
+	/// Produces result code for the test unit execution
+	///
+	/// This methhod return one of the result codes defined in @c boost/cstdlib.hpp
+	/// @returns
+	///   - @c boost::exit_success on success,
+	///   - @c boost::exit_exception_failure in case test unit
+	///     was aborted for any reason (incuding uncaught exception)
+	///   - and @c boost::exit_test_failure otherwise
+	int             result_code() const;
 
-    //! Combines the results of the current instance with another
-    //!
-    //! Only the counters are updated and the @c p_aborted and @c p_skipped are left unchanged.
-    void            operator+=( test_results const& );
+	//! Combines the results of the current instance with another
+	//!
+	//! Only the counters are updated and the @c p_aborted and @c p_skipped are left unchanged.
+	void            operator+=( test_results const& );
 
-    //! Resets the current state of the result
-    void            clear();
+	//! Resets the current state of the result
+	void            clear();
 };
 
 // ************************************************************************** //
@@ -109,28 +113,32 @@ public:
 /// of the test tree.
 ///
 /// @see boost::unit_test::test_observer
-class BOOST_TEST_DECL results_collector_t : public test_observer, public singleton<results_collector_t> {
+class BOOST_TEST_DECL results_collector_t : public test_observer, public singleton<results_collector_t>
+{
 public:
 
-    virtual void        test_start( counter_t );
+	virtual void        test_start( counter_t );
 
-    virtual void        test_unit_start( test_unit const& );
-    virtual void        test_unit_finish( test_unit const&, unsigned long );
-    virtual void        test_unit_skipped( test_unit const&, const_string );
-    virtual void        test_unit_aborted( test_unit const& );
+	virtual void        test_unit_start( test_unit const& );
+	virtual void        test_unit_finish( test_unit const&, unsigned long );
+	virtual void        test_unit_skipped( test_unit const&, const_string );
+	virtual void        test_unit_aborted( test_unit const& );
 
-    virtual void        assertion_result( unit_test::assertion_result );
-    virtual void        exception_caught( execution_exception const& );
+	virtual void        assertion_result( unit_test::assertion_result );
+	virtual void        exception_caught( execution_exception const& );
 
-    virtual int         priority() { return 3; }
+	virtual int         priority()
+	{
+		return 3;
+	}
 
-    /// Results access per test unit
-    ///
-    /// @param[in] tu_id id of a test unit
-    test_results const& results( test_unit_id tu_id ) const;
+	/// Results access per test unit
+	///
+	/// @param[in] tu_id id of a test unit
+	test_results const& results( test_unit_id tu_id ) const;
 
 private:
-    BOOST_TEST_SINGLETON_CONS( results_collector_t )
+	BOOST_TEST_SINGLETON_CONS( results_collector_t )
 };
 
 BOOST_TEST_SINGLETON_INST( results_collector )

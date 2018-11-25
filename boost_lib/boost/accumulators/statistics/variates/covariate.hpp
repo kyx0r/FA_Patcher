@@ -11,7 +11,9 @@
 #include <boost/parameter/keyword.hpp>
 #include <boost/accumulators/accumulators_fwd.hpp>
 
-namespace boost { namespace accumulators
+namespace boost
+{
+namespace accumulators
 {
 
 BOOST_PARAMETER_KEYWORD(tag, covariate1)
@@ -20,6 +22,7 @@ BOOST_PARAMETER_KEYWORD(tag, covariate2)
 BOOST_ACCUMULATORS_IGNORE_GLOBAL(covariate1)
 BOOST_ACCUMULATORS_IGNORE_GLOBAL(covariate2)
 
-}} // namespace boost::accumulators
+}
+} // namespace boost::accumulators
 
 #endif

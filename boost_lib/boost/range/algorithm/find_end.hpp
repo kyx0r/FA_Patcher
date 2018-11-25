@@ -18,8 +18,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function find_end
 ///
@@ -30,16 +30,16 @@ namespace boost
 /// \pre BinaryPredicate is a model of the BinaryPredicateConcept
 template< class ForwardRange1, class ForwardRange2 >
 inline BOOST_DEDUCED_TYPENAME disable_if<
-    is_const<ForwardRange1>,
-    BOOST_DEDUCED_TYPENAME range_iterator< ForwardRange1 >::type
->::type
-find_end(ForwardRange1 & rng1, const ForwardRange2& rng2)
+is_const<ForwardRange1>,
+         BOOST_DEDUCED_TYPENAME range_iterator< ForwardRange1 >::type
+         >::type
+         find_end(ForwardRange1 & rng1, const ForwardRange2& rng2)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return std::find_end(boost::begin(rng1),boost::end(rng1),
-                         boost::begin(rng2),boost::end(rng2));
+	return std::find_end(boost::begin(rng1),boost::end(rng1),
+	                     boost::begin(rng2),boost::end(rng2));
 }
 
 /// \overload
@@ -47,26 +47,26 @@ template< class ForwardRange1, class ForwardRange2 >
 inline BOOST_DEDUCED_TYPENAME range_iterator< const ForwardRange1 >::type
 find_end(const ForwardRange1 & rng1, const ForwardRange2& rng2)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return std::find_end(boost::begin(rng1),boost::end(rng1),
-                         boost::begin(rng2),boost::end(rng2));
+	return std::find_end(boost::begin(rng1),boost::end(rng1),
+	                     boost::begin(rng2),boost::end(rng2));
 }
 
 /// \overload
 template< class ForwardRange1, class ForwardRange2, class BinaryPredicate >
 inline BOOST_DEDUCED_TYPENAME disable_if<
-    is_const<ForwardRange1>,
-    BOOST_DEDUCED_TYPENAME range_iterator<ForwardRange1>::type
->::type
-find_end(ForwardRange1 & rng1, const ForwardRange2& rng2, BinaryPredicate pred)
+is_const<ForwardRange1>,
+         BOOST_DEDUCED_TYPENAME range_iterator<ForwardRange1>::type
+         >::type
+         find_end(ForwardRange1 & rng1, const ForwardRange2& rng2, BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return std::find_end(boost::begin(rng1),boost::end(rng1),
-                         boost::begin(rng2),boost::end(rng2),pred);
+	return std::find_end(boost::begin(rng1),boost::end(rng1),
+	                     boost::begin(rng2),boost::end(rng2),pred);
 }
 
 /// \overload
@@ -74,28 +74,28 @@ template< class ForwardRange1, class ForwardRange2, class BinaryPredicate >
 inline BOOST_DEDUCED_TYPENAME range_iterator<const ForwardRange1>::type
 find_end(const ForwardRange1& rng1, const ForwardRange2& rng2, BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return std::find_end(boost::begin(rng1),boost::end(rng1),
-                         boost::begin(rng2),boost::end(rng2),pred);
+	return std::find_end(boost::begin(rng1),boost::end(rng1),
+	                     boost::begin(rng2),boost::end(rng2),pred);
 }
 
 /// \overload
 template< range_return_value re, class ForwardRange1, class ForwardRange2 >
 inline BOOST_DEDUCED_TYPENAME disable_if<
-    is_const<ForwardRange1>,
-    BOOST_DEDUCED_TYPENAME range_return<ForwardRange1,re>::type
->::type
-find_end(ForwardRange1& rng1, const ForwardRange2& rng2)
+is_const<ForwardRange1>,
+         BOOST_DEDUCED_TYPENAME range_return<ForwardRange1,re>::type
+         >::type
+         find_end(ForwardRange1& rng1, const ForwardRange2& rng2)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return range_return<ForwardRange1,re>::
-        pack(std::find_end(boost::begin(rng1), boost::end(rng1),
-                           boost::begin(rng2), boost::end(rng2)),
-             rng1);
+	return range_return<ForwardRange1,re>::
+	       pack(std::find_end(boost::begin(rng1), boost::end(rng1),
+	                          boost::begin(rng2), boost::end(rng2)),
+	            rng1);
 }
 
 /// \overload
@@ -103,31 +103,31 @@ template< range_return_value re, class ForwardRange1, class ForwardRange2 >
 inline BOOST_DEDUCED_TYPENAME range_return<const ForwardRange1,re>::type
 find_end(const ForwardRange1& rng1, const ForwardRange2& rng2)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return range_return<const ForwardRange1,re>::
-        pack(std::find_end(boost::begin(rng1), boost::end(rng1),
-                           boost::begin(rng2), boost::end(rng2)),
-             rng1);
+	return range_return<const ForwardRange1,re>::
+	       pack(std::find_end(boost::begin(rng1), boost::end(rng1),
+	                          boost::begin(rng2), boost::end(rng2)),
+	            rng1);
 }
 
 /// \overload
 template< range_return_value re, class ForwardRange1, class ForwardRange2,
           class BinaryPredicate >
 inline BOOST_DEDUCED_TYPENAME disable_if<
-    is_const<ForwardRange1>,
-    BOOST_DEDUCED_TYPENAME range_return<ForwardRange1,re>::type
->::type
-find_end(ForwardRange1& rng1, const ForwardRange2& rng2, BinaryPredicate pred)
+is_const<ForwardRange1>,
+         BOOST_DEDUCED_TYPENAME range_return<ForwardRange1,re>::type
+         >::type
+         find_end(ForwardRange1& rng1, const ForwardRange2& rng2, BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return range_return<ForwardRange1,re>::
-        pack(std::find_end(boost::begin(rng1), boost::end(rng1),
-                           boost::begin(rng2), boost::end(rng2), pred),
-             rng1);
+	return range_return<ForwardRange1,re>::
+	       pack(std::find_end(boost::begin(rng1), boost::end(rng1),
+	                          boost::begin(rng2), boost::end(rng2), pred),
+	            rng1);
 }
 
 /// \overload
@@ -136,17 +136,17 @@ template< range_return_value re, class ForwardRange1, class ForwardRange2,
 inline BOOST_DEDUCED_TYPENAME range_return<const ForwardRange1,re>::type
 find_end(const ForwardRange1& rng1, const ForwardRange2& rng2, BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange2> ));
 
-    return range_return<const ForwardRange1,re>::
-        pack(std::find_end(boost::begin(rng1), boost::end(rng1),
-                           boost::begin(rng2), boost::end(rng2), pred),
-             rng1);
+	return range_return<const ForwardRange1,re>::
+	       pack(std::find_end(boost::begin(rng1), boost::end(rng1),
+	                          boost::begin(rng2), boost::end(rng2), pred),
+	            rng1);
 }
 
-    } // namespace range
-    using range::find_end;
+} // namespace range
+using range::find_end;
 } // namespace boost
 
 #endif // include guard

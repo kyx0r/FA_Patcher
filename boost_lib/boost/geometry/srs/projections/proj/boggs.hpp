@@ -48,138 +48,149 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct boggs {};
+namespace par4
+{
+struct boggs {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace boggs
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace boggs
+{
 
-            static const int NITER = 20;
-            static const double EPS = 1e-7;
-            static const double ONETOL = 1.000001;
-            static const double FXC = 2.00276;
-            static const double FXC2 = 1.11072;
-            static const double FYC = 0.49931;
-            static const double FYC2 = 1.41421356237309504880;
+static const int NITER = 20;
+static const double EPS = 1e-7;
+static const double ONETOL = 1.000001;
+static const double FXC = 2.00276;
+static const double FXC2 = 1.11072;
+static const double FYC = 0.49931;
+static const double FYC2 = 1.41421356237309504880;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_boggs_spheroid : public base_t_f<base_boggs_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_boggs_spheroid : public base_t_f<base_boggs_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_boggs_spheroid(const Parameters& par)
-                    : base_t_f<base_boggs_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_boggs_spheroid(const Parameters& par)
+		: base_t_f<base_boggs_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
-                    static const CalculationType ONEPI = detail::ONEPI<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+		static const CalculationType ONEPI = detail::ONEPI<CalculationType>();
 
-                    CalculationType theta, th1, c;
-                    int i;
+		CalculationType theta, th1, c;
+		int i;
 
-                    theta = lp_lat;
-                    if (fabs(fabs(lp_lat) - HALFPI) < EPS)
-                        xy_x = 0.;
-                    else {
-                        c = sin(theta) * ONEPI;
-                        for (i = NITER; i; --i) {
-                            theta -= th1 = (theta + sin(theta) - c) /
-                                (1. + cos(theta));
-                            if (fabs(th1) < EPS) break;
-                        }
-                        theta *= 0.5;
-                        xy_x = FXC * lp_lon / (1. / cos(lp_lat) + FXC2 / cos(theta));
-                    }
-                    xy_y = FYC * (lp_lat + FYC2 * sin(theta));
-                }
+		theta = lp_lat;
+		if (fabs(fabs(lp_lat) - HALFPI) < EPS)
+			xy_x = 0.;
+		else
+		{
+			c = sin(theta) * ONEPI;
+			for (i = NITER; i; --i)
+			{
+				theta -= th1 = (theta + sin(theta) - c) /
+				               (1. + cos(theta));
+				if (fabs(th1) < EPS) break;
+			}
+			theta *= 0.5;
+			xy_x = FXC * lp_lon / (1. / cos(lp_lat) + FXC2 / cos(theta));
+		}
+		xy_y = FYC * (lp_lat + FYC2 * sin(theta));
+	}
 
-                static inline std::string get_name()
-                {
-                    return "boggs_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "boggs_spheroid";
+	}
 
-            };
+};
 
-            // Boggs Eumorphic
-            template <typename Parameters>
-            inline void setup_boggs(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Boggs Eumorphic
+template <typename Parameters>
+inline void setup_boggs(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::boggs
-    #endif // doxygen
+}
+} // namespace detail::boggs
+#endif // doxygen
 
-    /*!
-        \brief Boggs Eumorphic projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - no inverse
-         - Spheroid
-        \par Example
-        \image html ex_boggs.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct boggs_spheroid : public detail::boggs::base_boggs_spheroid<CalculationType, Parameters>
-    {
-        inline boggs_spheroid(const Parameters& par) : detail::boggs::base_boggs_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::boggs::setup_boggs(this->m_par);
-        }
-    };
+/*!
+    \brief Boggs Eumorphic projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - no inverse
+     - Spheroid
+    \par Example
+    \image html ex_boggs.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct boggs_spheroid : public detail::boggs::base_boggs_spheroid<CalculationType, Parameters>
+{
+	inline boggs_spheroid(const Parameters& par) : detail::boggs::base_boggs_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::boggs::setup_boggs(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::boggs, boggs_spheroid, boggs_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::boggs, boggs_spheroid, boggs_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class boggs_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<boggs_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class boggs_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<boggs_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void boggs_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("boggs", new boggs_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void boggs_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("boggs", new boggs_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_BOGGS_HPP
 

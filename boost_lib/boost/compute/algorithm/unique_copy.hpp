@@ -22,55 +22,59 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/functional/operator.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class OutputIterator, class BinaryPredicate>
 inline OutputIterator serial_unique_copy(InputIterator first,
-                                         InputIterator last,
-                                         OutputIterator result,
-                                         BinaryPredicate op,
-                                         command_queue &queue)
+        InputIterator last,
+        OutputIterator result,
+        BinaryPredicate op,
+        command_queue &queue)
 {
-    if(first == last){
-        return result;
-    }
+	if(first == last)
+	{
+		return result;
+	}
 
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    const context &context = queue.get_context();
+	const context &context = queue.get_context();
 
-    size_t count = detail::iterator_range_size(first, last);
+	size_t count = detail::iterator_range_size(first, last);
 
-    detail::meta_kernel k("serial_unique_copy");
+	detail::meta_kernel k("serial_unique_copy");
 
-    vector<uint_> unique_count_vector(1, context);
+	vector<uint_> unique_count_vector(1, context);
 
-    size_t size_arg = k.add_arg<const uint_>("size");
-    size_t unique_count_arg = k.add_arg<uint_ *>(memory_object::global_memory, "unique_count");
+	size_t size_arg = k.add_arg<const uint_>("size");
+	size_t unique_count_arg = k.add_arg<uint_ *>(memory_object::global_memory, "unique_count");
 
-    k << k.decl<uint_>("index") << " = 0;\n"
-      << k.decl<value_type>("current") << " = " << first[k.var<uint_>("0")] << ";\n"
-      << result[k.var<uint_>("0")] << " = current;\n"
-      << "for(uint i = 1; i < size; i++){\n"
-      << "    " << k.decl<value_type>("next") << " = " << first[k.var<uint_>("i")] << ";\n"
-      << "    if(!" << op(k.var<value_type>("current"), k.var<value_type>("next")) << "){\n"
-      << "        " << result[k.var<uint_>("++index")] << " = next;\n"
-      << "        " << "current = next;\n"
-      << "    }\n"
-      << "}\n"
-      << "*unique_count = index + 1;\n";
+	k << k.decl<uint_>("index") << " = 0;\n"
+	  << k.decl<value_type>("current") << " = " << first[k.var<uint_>("0")] << ";\n"
+	  << result[k.var<uint_>("0")] << " = current;\n"
+	  << "for(uint i = 1; i < size; i++){\n"
+	  << "    " << k.decl<value_type>("next") << " = " << first[k.var<uint_>("i")] << ";\n"
+	  << "    if(!" << op(k.var<value_type>("current"), k.var<value_type>("next")) << "){\n"
+	  << "        " << result[k.var<uint_>("++index")] << " = next;\n"
+	  << "        " << "current = next;\n"
+	  << "    }\n"
+	  << "}\n"
+	  << "*unique_count = index + 1;\n";
 
-    k.set_arg<const uint_>(size_arg, count);
-    k.set_arg(unique_count_arg, unique_count_vector.get_buffer());
+	k.set_arg<const uint_>(size_arg, count);
+	k.set_arg(unique_count_arg, unique_count_vector.get_buffer());
 
-    k.exec_1d(queue, 0, 1, 1);
+	k.exec_1d(queue, 0, 1, 1);
 
-    uint_ unique_count;
-    copy_n(unique_count_vector.begin(), 1, &unique_count, queue);
+	uint_ unique_count;
+	copy_n(unique_count_vector.begin(), 1, &unique_count, queue);
 
-    return result + unique_count;
+	return result + unique_count;
 }
 
 template<class InputIterator, class OutputIterator, class BinaryPredicate>
@@ -80,37 +84,38 @@ inline OutputIterator unique_copy(InputIterator first,
                                   BinaryPredicate op,
                                   command_queue &queue)
 {
-    if(first == last){
-        return result;
-    }
+	if(first == last)
+	{
+		return result;
+	}
 
-    const context &context = queue.get_context();
-    size_t count = detail::iterator_range_size(first, last);
+	const context &context = queue.get_context();
+	size_t count = detail::iterator_range_size(first, last);
 
-    // flags marking unique elements
-    vector<uint_> flags(count, context);
+	// flags marking unique elements
+	vector<uint_> flags(count, context);
 
-    // find each unique element and mark it with a one
-    transform(
-        first, last - 1, first + 1, flags.begin() + 1, not2(op), queue
-    );
+	// find each unique element and mark it with a one
+	transform(
+	    first, last - 1, first + 1, flags.begin() + 1, not2(op), queue
+	);
 
-    // first element is always unique
-    fill_n(flags.begin(), 1, 1, queue);
+	// first element is always unique
+	fill_n(flags.begin(), 1, 1, queue);
 
-    // storage for desination indices
-    vector<uint_> indices(count, context);
+	// storage for desination indices
+	vector<uint_> indices(count, context);
 
-    // copy indices for each unique element
-    vector<uint_>::iterator last_index = detail::copy_index_if(
-        flags.begin(), flags.end(), indices.begin(), lambda::_1 == 1, queue
-    );
+	// copy indices for each unique element
+	vector<uint_>::iterator last_index = detail::copy_index_if(
+	        flags.begin(), flags.end(), indices.begin(), lambda::_1 == 1, queue
+	                                     );
 
-    // copy unique values from input to output using the computed indices
-    gather(indices.begin(), last_index, first, result, queue);
+	// copy unique values from input to output using the computed indices
+	gather(indices.begin(), last_index, first, result, queue);
 
-    // return an iterator to the end of the unique output range
-    return result + std::distance(indices.begin(), last_index);
+	// return an iterator to the end of the unique output range
+	return result + std::distance(indices.begin(), last_index);
 }
 
 } // end detail namespace
@@ -137,13 +142,15 @@ inline OutputIterator unique_copy(InputIterator first,
                                   BinaryPredicate op,
                                   command_queue &queue = system::default_queue())
 {
-    size_t count = detail::iterator_range_size(first, last);
-    if(count < 32){
-        return detail::serial_unique_copy(first, last, result, op, queue);
-    }
-    else {
-        return detail::unique_copy(first, last, result, op, queue);
-    }
+	size_t count = detail::iterator_range_size(first, last);
+	if(count < 32)
+	{
+		return detail::serial_unique_copy(first, last, result, op, queue);
+	}
+	else
+	{
+		return detail::unique_copy(first, last, result, op, queue);
+	}
 }
 
 /// \overload
@@ -153,11 +160,11 @@ inline OutputIterator unique_copy(InputIterator first,
                                   OutputIterator result,
                                   command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    return ::boost::compute::unique_copy(
-        first, last, result, ::boost::compute::equal_to<value_type>(), queue
-    );
+	return ::boost::compute::unique_copy(
+	           first, last, result, ::boost::compute::equal_to<value_type>(), queue
+	       );
 }
 
 } // end compute namespace

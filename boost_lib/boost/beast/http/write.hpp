@@ -26,16 +26,19 @@
 #include <type_traits>
 #include <utility>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /** Write part of a message to a stream using a serializer.
 
     This function is used to write part of a message to a stream using
     a caller-provided HTTP/1 serializer. The call will block until one
     of the following conditions is true:
-        
+
     @li One or more bytes have been transferred.
 
     @li The function @ref serializer::is_done returns `true`
@@ -77,7 +80,7 @@ write_some(
     This function is used to write part of a message to a stream using
     a caller-provided HTTP/1 serializer. The call will block until one
     of the following conditions is true:
-        
+
     @li One or more bytes have been transferred.
 
     @li The function @ref serializer::is_done returns `true`
@@ -94,7 +97,7 @@ write_some(
     reasonable timeouts. It also allows application-level flow control
     to function correctly. For example when using a TCP/IP based
     stream.
-    
+
     @param stream The stream to which the data is to be written.
     The type must support the @b SyncWriteStream concept.
 
@@ -140,7 +143,7 @@ write_some(
     reasonable timeouts. It also allows application-level flow control
     to function correctly. For example when using a TCP/IP based
     stream.
-    
+
     @param stream The stream to which the data is to be written.
     The type must support the @b AsyncWriteStream concept.
 
@@ -362,7 +365,7 @@ std::size_t
 write(
     SyncWriteStream& stream,
     serializer<isRequest, Body, Fields>& sr,
-   error_code& ec);
+    error_code& ec);
 
 /** Write a complete message to a stream asynchronously using a serializer.
 
@@ -541,7 +544,7 @@ async_write(
 template<bool isRequest, class Fields>
 std::ostream&
 operator<<(std::ostream& os,
-    header<isRequest, Fields> const& msg);
+           header<isRequest, Fields> const& msg);
 
 /** Serialize an HTTP/1 message to a `std::ostream`.
 
@@ -558,7 +561,7 @@ operator<<(std::ostream& os,
 template<bool isRequest, class Body, class Fields>
 std::ostream&
 operator<<(std::ostream& os,
-    message<isRequest, Body, Fields> const& msg);
+           message<isRequest, Body, Fields> const& msg);
 
 } // http
 } // beast

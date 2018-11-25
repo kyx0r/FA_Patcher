@@ -18,106 +18,116 @@
 #include <boost/process/detail/windows/child_handle.hpp>
 #include <chrono>
 
-namespace boost { namespace process { namespace detail { namespace windows {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace windows
+{
 
 inline void wait(child_handle &p, int & exit_code, std::error_code &ec) noexcept
 {
-    ::boost::winapi::DWORD_ _exit_code = 1;
+	::boost::winapi::DWORD_ _exit_code = 1;
 
-    if (::boost::winapi::WaitForSingleObject(p.process_handle(),
-        ::boost::winapi::infinite) == ::boost::winapi::wait_failed)
-            ec = std::error_code(
-                ::boost::winapi::GetLastError(),
-                std::system_category());
-    else if (!::boost::winapi::GetExitCodeProcess(p.process_handle(), &_exit_code))
-            ec = std::error_code(
-                ::boost::winapi::GetLastError(),
-                std::system_category());
-    else
-        ec.clear();
+	if (::boost::winapi::WaitForSingleObject(p.process_handle(),
+	        ::boost::winapi::infinite) == ::boost::winapi::wait_failed)
+		ec = std::error_code(
+		         ::boost::winapi::GetLastError(),
+		         std::system_category());
+	else if (!::boost::winapi::GetExitCodeProcess(p.process_handle(), &_exit_code))
+		ec = std::error_code(
+		         ::boost::winapi::GetLastError(),
+		         std::system_category());
+	else
+		ec.clear();
 
-    ::boost::winapi::CloseHandle(p.proc_info.hProcess);
-    p.proc_info.hProcess = ::boost::winapi::INVALID_HANDLE_VALUE_;
-    exit_code = static_cast<int>(_exit_code);
+	::boost::winapi::CloseHandle(p.proc_info.hProcess);
+	p.proc_info.hProcess = ::boost::winapi::INVALID_HANDLE_VALUE_;
+	exit_code = static_cast<int>(_exit_code);
 }
 
 inline void wait(child_handle &p, int & exit_code)
 {
-    std::error_code ec;
-    wait(p, exit_code, ec);
-    boost::process::detail::throw_error(ec, "wait error");
+	std::error_code ec;
+	wait(p, exit_code, ec);
+	boost::process::detail::throw_error(ec, "wait error");
 }
 
 template< class Clock, class Duration >
 inline bool wait_until(
-        child_handle &p,
-        int & exit_code,
-        const std::chrono::time_point<Clock, Duration>& timeout_time,
-        std::error_code &ec) noexcept
+    child_handle &p,
+    int & exit_code,
+    const std::chrono::time_point<Clock, Duration>& timeout_time,
+    std::error_code &ec) noexcept
 {
-    std::chrono::milliseconds ms =
-            std::chrono::duration_cast<std::chrono::milliseconds>(
-                    timeout_time - Clock::now());
+	std::chrono::milliseconds ms =
+	    std::chrono::duration_cast<std::chrono::milliseconds>(
+	        timeout_time - Clock::now());
 
-    ::boost::winapi::DWORD_ wait_code;
-    wait_code = ::boost::winapi::WaitForSingleObject(p.process_handle(),
-                    static_cast<::boost::winapi::DWORD_>(ms.count()));
+	::boost::winapi::DWORD_ wait_code;
+	wait_code = ::boost::winapi::WaitForSingleObject(p.process_handle(),
+	            static_cast<::boost::winapi::DWORD_>(ms.count()));
 
-    if (wait_code == ::boost::winapi::wait_failed)
-        ec = std::error_code(
-            ::boost::winapi::GetLastError(),
-            std::system_category());
-    else if (wait_code == ::boost::winapi::wait_timeout)
-        return false;
+	if (wait_code == ::boost::winapi::wait_failed)
+		ec = std::error_code(
+		         ::boost::winapi::GetLastError(),
+		         std::system_category());
+	else if (wait_code == ::boost::winapi::wait_timeout)
+		return false;
 
-    ::boost::winapi::DWORD_ _exit_code;
-    if (!::boost::winapi::GetExitCodeProcess(p.process_handle(), &_exit_code))
-        ec = std::error_code(
-            ::boost::winapi::GetLastError(),
-            std::system_category());
-    else
-        ec.clear();
+	::boost::winapi::DWORD_ _exit_code;
+	if (!::boost::winapi::GetExitCodeProcess(p.process_handle(), &_exit_code))
+		ec = std::error_code(
+		         ::boost::winapi::GetLastError(),
+		         std::system_category());
+	else
+		ec.clear();
 
-    exit_code = static_cast<int>(_exit_code);
-    ::boost::winapi::CloseHandle(p.proc_info.hProcess);
-    p.proc_info.hProcess = ::boost::winapi::INVALID_HANDLE_VALUE_;
-    return true;
+	exit_code = static_cast<int>(_exit_code);
+	::boost::winapi::CloseHandle(p.proc_info.hProcess);
+	p.proc_info.hProcess = ::boost::winapi::INVALID_HANDLE_VALUE_;
+	return true;
 }
 
 template< class Clock, class Duration >
 inline bool wait_until(
-        child_handle &p,
-        int & exit_code,
-        const std::chrono::time_point<Clock, Duration>& timeout_time)
+    child_handle &p,
+    int & exit_code,
+    const std::chrono::time_point<Clock, Duration>& timeout_time)
 {
-    std::error_code ec;
-    bool b = wait_until(p, exit_code, timeout_time, ec);
-    boost::process::detail::throw_error(ec, "wait_until error");
-    return b;
+	std::error_code ec;
+	bool b = wait_until(p, exit_code, timeout_time, ec);
+	boost::process::detail::throw_error(ec, "wait_until error");
+	return b;
 }
 
 template< class Rep, class Period >
 inline bool wait_for(
-        child_handle &p,
-        int & exit_code,
-        const std::chrono::duration<Rep, Period>& rel_time,
-        std::error_code &ec) noexcept
+    child_handle &p,
+    int & exit_code,
+    const std::chrono::duration<Rep, Period>& rel_time,
+    std::error_code &ec) noexcept
 {
-    return wait_until(p, exit_code, std::chrono::steady_clock::now() + rel_time, ec);
+	return wait_until(p, exit_code, std::chrono::steady_clock::now() + rel_time, ec);
 }
 
 template< class Rep, class Period >
 inline bool wait_for(
-        child_handle &p,
-        int & exit_code,
-        const std::chrono::duration<Rep, Period>& rel_time)
+    child_handle &p,
+    int & exit_code,
+    const std::chrono::duration<Rep, Period>& rel_time)
 {
-    std::error_code ec;
-    bool b = wait_for(p, exit_code, rel_time, ec);
-    boost::process::detail::throw_error(ec, "wait_for error");
-    return b;
+	std::error_code ec;
+	bool b = wait_for(p, exit_code, rel_time, ec);
+	boost::process::detail::throw_error(ec, "wait_for error");
+	return b;
 }
 
-}}}}
+}
+}
+}
+}
 
 #endif

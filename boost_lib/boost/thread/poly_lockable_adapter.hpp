@@ -16,74 +16,74 @@
 namespace boost
 {
 
-  //[poly_basic_lockable_adapter
-  template <typename Mutex, typename Base=poly_basic_lockable>
-  class poly_basic_lockable_adapter : public Base
-  {
-  public:
-    typedef Mutex mutex_type;
+//[poly_basic_lockable_adapter
+template <typename Mutex, typename Base=poly_basic_lockable>
+class poly_basic_lockable_adapter : public Base
+{
+public:
+	typedef Mutex mutex_type;
 
-  protected:
-    mutex_type& mtx() const
-    {
-      return mtx_;
-    }
-    mutable mutex_type mtx_; /*< mutable so that it can be modified by const functions >*/
-  public:
+protected:
+	mutex_type& mtx() const
+	{
+		return mtx_;
+	}
+	mutable mutex_type mtx_; /*< mutable so that it can be modified by const functions >*/
+public:
 
-    BOOST_THREAD_NO_COPYABLE( poly_basic_lockable_adapter) /*< no copyable >*/
+	BOOST_THREAD_NO_COPYABLE( poly_basic_lockable_adapter) /*< no copyable >*/
 
-    poly_basic_lockable_adapter()
-    {}
+	poly_basic_lockable_adapter()
+	{}
 
-    void lock()
-    {
-      mtx().lock();
-    }
-    void unlock()
-    {
-      mtx().unlock();
-    }
+	void lock()
+	{
+		mtx().lock();
+	}
+	void unlock()
+	{
+		mtx().unlock();
+	}
 
-  };
-  //]
+};
+//]
 
-  //[poly_lockable_adapter
-  template <typename Mutex, typename Base=poly_lockable>
-  class poly_lockable_adapter : public poly_basic_lockable_adapter<Mutex, Base>
-  {
-  public:
-    typedef Mutex mutex_type;
+//[poly_lockable_adapter
+template <typename Mutex, typename Base=poly_lockable>
+class poly_lockable_adapter : public poly_basic_lockable_adapter<Mutex, Base>
+{
+public:
+	typedef Mutex mutex_type;
 
-    bool try_lock()
-    {
-      return this->mtx().try_lock();
-    }
-  };
-  //]
+	bool try_lock()
+	{
+		return this->mtx().try_lock();
+	}
+};
+//]
 
-  //[poly_timed_lockable_adapter
-  template <typename Mutex, typename Base=poly_timed_lockable>
-  class poly_timed_lockable_adapter: public poly_lockable_adapter<Mutex, Base>
-  {
-  public:
-    typedef Mutex mutex_type;
+//[poly_timed_lockable_adapter
+template <typename Mutex, typename Base=poly_timed_lockable>
+class poly_timed_lockable_adapter: public poly_lockable_adapter<Mutex, Base>
+{
+public:
+	typedef Mutex mutex_type;
 
-    bool try_lock_until(chrono::system_clock::time_point const & abs_time)
-    {
-      return this->mtx().try_lock_until(abs_time);
-    }
-    bool try_lock_until(chrono::steady_clock::time_point const & abs_time)
-    {
-      return this->mtx().try_lock_until(abs_time);
-    }
-    bool try_lock_for(chrono::nanoseconds const & rel_time)
-    {
-      return this->mtx().try_lock_for(rel_time);
-    }
+	bool try_lock_until(chrono::system_clock::time_point const & abs_time)
+	{
+		return this->mtx().try_lock_until(abs_time);
+	}
+	bool try_lock_until(chrono::steady_clock::time_point const & abs_time)
+	{
+		return this->mtx().try_lock_until(abs_time);
+	}
+	bool try_lock_for(chrono::nanoseconds const & rel_time)
+	{
+		return this->mtx().try_lock_for(rel_time);
+	}
 
-  };
-  //]
+};
+//]
 
 }
 #endif

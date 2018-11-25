@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::lit;
-  }
+namespace metaparse
+{
+using v1::lit;
+}
 }
 
 #endif

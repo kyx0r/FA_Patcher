@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ args_hpp
 /*`[section:ref_args args]
@@ -24,32 +27,34 @@ template<typename T, template<class...> class Container = std::tuple>
 using args_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::traits<
-            detail::shallow_decay<T>>::template expand_args<Container>,
-        cannot_expand_the_parameter_list_of_first_template_argument>;
+    typename detail::traits<
+    detail::shallow_decay<T>>::template expand_args<Container>,
+           cannot_expand_the_parameter_list_of_first_template_argument>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, template<class...> class Container,
-        typename = std::false_type>
-    struct args_impl {};
+template<typename T, template<class...> class Container,
+         typename = std::false_type>
+struct args_impl {};
 
-    template<typename T, template<class...> class Container>
-    struct args_impl <T, Container, typename std::is_same<
-        args_t<T, Container>, detail::dummy>::type>
-    {
-        using type = args_t<T, Container>;
-    };
+template<typename T, template<class...> class Container>
+struct args_impl <T, Container, typename std::is_same<
+	args_t<T, Container>, detail::dummy>::type>
+{
+	using type = args_t<T, Container>;
+};
 }
 
 //->
 
 template<typename T,
-    template<class...> class Container = std::tuple>
+         template<class...> class Container = std::tuple>
 struct args : detail::args_impl<T, Container> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

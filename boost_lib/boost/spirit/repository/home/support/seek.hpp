@@ -15,11 +15,17 @@
 #include <boost/spirit/home/support/terminal.hpp>
 
 
-namespace boost { namespace spirit { namespace repository
+namespace boost
 {
-    // The seek terminal
-    BOOST_SPIRIT_DEFINE_TERMINALS_NAME(( seek, seek_type ))
+namespace spirit
+{
+namespace repository
+{
+// The seek terminal
+BOOST_SPIRIT_DEFINE_TERMINALS_NAME(( seek, seek_type ))
 
-}}}
+}
+}
+}
 
 #endif

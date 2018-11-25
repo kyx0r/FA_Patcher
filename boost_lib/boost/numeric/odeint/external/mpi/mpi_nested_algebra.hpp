@@ -22,9 +22,12 @@
 #include <boost/numeric/odeint/algebra/norm_result_type.hpp>
 #include <boost/numeric/odeint/util/n_ary_helper.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 /** \brief MPI-parallelized algebra, wrapping another algebra.
  */
@@ -38,19 +41,19 @@ struct mpi_nested_algebra
         BOOST_PP_ENUM_BINARY_PARAMS(n, s, () BOOST_PP_INTERCEPT) , \
         op \
     );
-BOOST_ODEINT_GEN_FOR_EACH(BOOST_ODEINT_GEN_BODY)
+	BOOST_ODEINT_GEN_FOR_EACH(BOOST_ODEINT_GEN_BODY)
 #undef BOOST_ODEINT_GEN_BODY
 
 
-    template< class NestedState >
-    static typename norm_result_type< typename NestedState::value_type >::type norm_inf( const NestedState &s )
-    {
-        typedef typename norm_result_type< typename NestedState::value_type >::type result_type;
-        // local maximum
-        result_type value = InnerAlgebra::norm_inf( s() );
-        // global maximum
-        return boost::mpi::all_reduce(s.world, value, boost::mpi::maximum<result_type>());
-    }
+	template< class NestedState >
+	static typename norm_result_type< typename NestedState::value_type >::type norm_inf( const NestedState &s )
+	{
+		typedef typename norm_result_type< typename NestedState::value_type >::type result_type;
+		// local maximum
+		result_type value = InnerAlgebra::norm_inf( s() );
+		// global maximum
+		return boost::mpi::all_reduce(s.world, value, boost::mpi::maximum<result_type>());
+	}
 
 };
 

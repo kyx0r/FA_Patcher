@@ -29,7 +29,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -99,21 +100,21 @@ BOOST_LOG_OPEN_NAMESPACE
  * An MPL-sequence of integral types of attributes, supported by default
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_INTEGRAL_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_INTEGRAL_TYPES())
 > integral_types;
 
 /*!
  * An MPL-sequence of FP types of attributes, supported by default
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_FLOATING_POINT_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_FLOATING_POINT_TYPES())
 > floating_point_types;
 
 /*!
  * An MPL-sequence of all numeric types of attributes, supported by default
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_ARITHMETIC_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_ARITHMETIC_TYPES())
 > arithmetic_types;
 
 //! Deprecated alias
@@ -123,14 +124,14 @@ typedef arithmetic_types numeric_types;
  * An MPL-sequence of string types of attributes, supported by default
  */
 typedef mpl::vector<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_STRING_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_STANDARD_STRING_TYPES())
 > string_types;
 
 /*!
  * An MPL-sequence of all attribute value types that are supported by the library by default.
  */
 typedef BOOST_PP_CAT(mpl::vector, BOOST_PP_SEQ_SIZE(BOOST_LOG_DEFAULT_ATTRIBUTE_VALUE_TYPES()))<
-    BOOST_PP_SEQ_ENUM(BOOST_LOG_DEFAULT_ATTRIBUTE_VALUE_TYPES())
+BOOST_PP_SEQ_ENUM(BOOST_LOG_DEFAULT_ATTRIBUTE_VALUE_TYPES())
 > default_attribute_value_types;
 
 //! Deprecated alias

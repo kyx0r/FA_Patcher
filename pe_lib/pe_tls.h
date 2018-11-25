@@ -87,7 +87,7 @@ const tls_info get_tls_info(const pe_base& pe);
 
 template<typename PEClassType>
 const tls_info get_tls_info_base(const pe_base& pe);
-	
+
 //Rebuilder of TLS structures
 //If write_tls_callbacks = true, TLS callbacks VAs will be written to their place
 //If write_tls_data = true, TLS data will be written to its place

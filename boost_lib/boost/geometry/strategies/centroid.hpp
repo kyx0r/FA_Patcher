@@ -23,11 +23,15 @@
 #include <boost/geometry/strategies/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace centroid
+namespace strategy
+{
+namespace centroid
 {
 
 struct not_applicable_strategy
@@ -54,19 +58,21 @@ template
     std::size_t Dimension,
     typename Point,
     typename Geometry
->
+    >
 struct default_strategy
 {
-    typedef not_applicable_strategy type;
+	typedef not_applicable_strategy type;
 };
 
 
 } // namespace services
 
 
-}} // namespace strategy::centroid
+}
+} // namespace strategy::centroid
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CENTROID_HPP

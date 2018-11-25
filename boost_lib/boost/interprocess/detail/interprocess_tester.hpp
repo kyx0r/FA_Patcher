@@ -19,16 +19,21 @@
 #  pragma once
 #endif
 
-namespace boost{
-namespace interprocess{
-namespace ipcdetail{
+namespace boost
+{
+namespace interprocess
+{
+namespace ipcdetail
+{
 
 class interprocess_tester
 {
-   public:
-   template<class T>
-   static void dont_close_on_destruction(T &t)
-   {  t.dont_close_on_destruction(); }
+public:
+	template<class T>
+	static void dont_close_on_destruction(T &t)
+	{
+		t.dont_close_on_destruction();
+	}
 };
 
 }  //namespace ipcdetail{

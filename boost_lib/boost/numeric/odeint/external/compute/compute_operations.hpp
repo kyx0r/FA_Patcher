@@ -21,11 +21,15 @@
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/compute.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
-struct compute_operations {
+struct compute_operations
+{
 
 #define BOOST_ODEINT_COMPUTE_TEMPL_FAC(z, n, unused)                           \
     , class Fac ## n = BOOST_PP_CAT(Fac, BOOST_PP_DEC(n))
@@ -92,7 +96,7 @@ struct compute_operations {
         }                                                                      \
     };
 
-BOOST_PP_REPEAT_FROM_TO(2, 8, BOOST_ODEINT_COMPUTE_OPERATIONS, ~)
+	BOOST_PP_REPEAT_FROM_TO(2, 8, BOOST_ODEINT_COMPUTE_OPERATIONS, ~)
 
 #undef BOOST_ODEINT_COMPUTE_TEMPL_FAC
 #undef BOOST_ODEINT_COMPUTE_MEMB_FAC
@@ -104,91 +108,95 @@ BOOST_PP_REPEAT_FROM_TO(2, 8, BOOST_ODEINT_COMPUTE_OPERATIONS, ~)
 #undef BOOST_ODEINT_COMPUTE_LAMBDA
 #undef BOOST_ODEINT_COMPUTE_OPERATIONS
 
-    template<class Fac1 = double, class Fac2 = Fac1>
-    struct scale_sum_swap2 {
-        const Fac1 m_alpha1;
-        const Fac2 m_alpha2;
+	template<class Fac1 = double, class Fac2 = Fac1>
+	struct scale_sum_swap2
+	{
+		const Fac1 m_alpha1;
+		const Fac2 m_alpha2;
 
-        scale_sum_swap2(const Fac1 alpha1, const Fac2 alpha2)
-            : m_alpha1(alpha1), m_alpha2(alpha2) { }
+		scale_sum_swap2(const Fac1 alpha1, const Fac2 alpha2)
+			: m_alpha1(alpha1), m_alpha2(alpha2) { }
 
-        template<class State0, class State1, class State2>
-        void operator()(State0 &s0, State1 &s1, State2 &s2) const {
-            namespace bc = boost::compute;
+		template<class State0, class State1, class State2>
+		void operator()(State0 &s0, State1 &s1, State2 &s2) const
+		{
+			namespace bc = boost::compute;
 
-            bc::command_queue &queue   = bc::system::default_queue();
-            const bc::context &context = queue.get_context();
+			bc::command_queue &queue   = bc::system::default_queue();
+			const bc::context &context = queue.get_context();
 
-            const char source[] = BOOST_COMPUTE_STRINGIZE_SOURCE(
-                    kernel void scale_sum_swap2(
-                        F1 a1, F2 a2,
-                        global T0 *x0, global T1 *x1, global T2 *x2,
-                        )
-                    {
-                        uint i = get_global_id(0);
-                        T0 tmp = x0[i];
-                        x0[i]  = a1 * x1[i] + a2 * x2[i];
-                        x1[i]  = tmp;
-                    }
-                    );
+			const char source[] = BOOST_COMPUTE_STRINGIZE_SOURCE(
+			                          kernel void scale_sum_swap2(
+			                              F1 a1, F2 a2,
+			                              global T0 *x0, global T1 *x1, global T2 *x2,
+			                          )
+			{
+				uint i = get_global_id(0);
+				T0 tmp = x0[i];
+				x0[i]  = a1 * x1[i] + a2 * x2[i];
+				x1[i]  = tmp;
+			}
+			                      );
 
-            std::stringstream options;
-            options
-                << " -DT0=" << bc::type_name<typename State0::value_type>()
-                << " -DT1=" << bc::type_name<typename State1::value_type>()
-                << " -DT2=" << bc::type_name<typename State2::value_type>()
-                << " -DF1=" << bc::type_name<Fac1>()
-                << " -DF2=" << bc::type_name<Fac2>();
+			std::stringstream options;
+			options
+			        << " -DT0=" << bc::type_name<typename State0::value_type>()
+			        << " -DT1=" << bc::type_name<typename State1::value_type>()
+			        << " -DT2=" << bc::type_name<typename State2::value_type>()
+			        << " -DF1=" << bc::type_name<Fac1>()
+			        << " -DF2=" << bc::type_name<Fac2>();
 
-            bc::program program =
-                bc::program::build_with_source(source, context, options.str());
+			bc::program program =
+			    bc::program::build_with_source(source, context, options.str());
 
-            bc::kernel kernel(program, "scale_sum_swap2");
-            kernel.set_arg(0, m_alpha1);
-            kernel.set_arg(1, m_alpha2);
-            kernel.set_arg(2, s0.get_buffer());
-            kernel.set_arg(3, s1.get_buffer());
-            kernel.set_arg(4, s2.get_buffer());
+			bc::kernel kernel(program, "scale_sum_swap2");
+			kernel.set_arg(0, m_alpha1);
+			kernel.set_arg(1, m_alpha2);
+			kernel.set_arg(2, s0.get_buffer());
+			kernel.set_arg(3, s1.get_buffer());
+			kernel.set_arg(4, s2.get_buffer());
 
-            queue.enqueue_1d_range_kernel(kernel, 0, s0.size());
+			queue.enqueue_1d_range_kernel(kernel, 0, s0.size());
 
-        }
-    };
+		}
+	};
 
-    template<class Fac1 = double>
-    struct rel_error {
-        const Fac1 m_eps_abs, m_eps_rel, m_a_x, m_a_dxdt;
+	template<class Fac1 = double>
+	struct rel_error
+	{
+		const Fac1 m_eps_abs, m_eps_rel, m_a_x, m_a_dxdt;
 
-        rel_error(const Fac1 eps_abs, const Fac1 eps_rel, const Fac1 a_x, const Fac1 a_dxdt)
-            : m_eps_abs(eps_abs), m_eps_rel(eps_rel), m_a_x(a_x), m_a_dxdt(a_dxdt) { }
+		rel_error(const Fac1 eps_abs, const Fac1 eps_rel, const Fac1 a_x, const Fac1 a_dxdt)
+			: m_eps_abs(eps_abs), m_eps_rel(eps_rel), m_a_x(a_x), m_a_dxdt(a_dxdt) { }
 
 
-        template <class State0, class State1, class State2>
-        void operator()(State0 &s0, State1 &s1, State2 &s2) const {
-            namespace bc = boost::compute;
-            using bc::_1;
-            using bc::lambda::get;
+		template <class State0, class State1, class State2>
+		void operator()(State0 &s0, State1 &s1, State2 &s2) const
+		{
+			namespace bc = boost::compute;
+			using bc::_1;
+			using bc::lambda::get;
 
-            bc::for_each(
-                    bc::make_zip_iterator(
-                        boost::make_tuple(
-                            s0.begin(),
-                            s1.begin(),
-                            s2.begin()
-                            )
-                        ),
-                    bc::make_zip_iterator(
-                        boost::make_tuple(
-                            s0.end(),
-                            s1.end(),
-                            s2.end()
-                            )
-                        ),
-                    get<0>(_1) = abs( get<0>(_1) ) /
-                        (m_eps_abs + m_eps_rel * (m_a_x * abs(get<1>(_1) + m_a_dxdt * abs(get<2>(_1)))))
-                    );
-        }
-    };
+			bc::for_each(
+			    bc::make_zip_iterator(
+			        boost::make_tuple(
+			            s0.begin(),
+			            s1.begin(),
+			            s2.begin()
+			        )
+			    ),
+			    bc::make_zip_iterator(
+			        boost::make_tuple(
+			            s0.end(),
+			            s1.end(),
+			            s2.end()
+			        )
+			    ),
+			    get<0>(_1) = abs( get<0>(_1) ) /
+			                 (m_eps_abs + m_eps_rel * (m_a_x * abs(get<1>(_1) + m_a_dxdt * abs(get<2>(_1)))))
+			);
+		}
+	};
 };
 
 } // odeint

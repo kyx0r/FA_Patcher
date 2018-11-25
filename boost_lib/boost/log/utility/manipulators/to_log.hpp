@@ -26,7 +26,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -37,39 +38,44 @@ template< typename T, typename TagT = void >
 class to_log_manip
 {
 public:
-    //! Output value type
-    typedef T value_type;
-    //! Value tag type
-    typedef TagT tag_type;
+	//! Output value type
+	typedef T value_type;
+	//! Value tag type
+	typedef TagT tag_type;
 
 private:
-    //! Reference to the value
-    value_type const& m_value;
+	//! Reference to the value
+	value_type const& m_value;
 
 public:
-    explicit to_log_manip(value_type const& value) BOOST_NOEXCEPT : m_value(value) {}
-    to_log_manip(to_log_manip const& that) BOOST_NOEXCEPT : m_value(that.m_value) {}
+explicit to_log_manip(value_type const& value) BOOST_NOEXCEPT :
+	m_value(value) {}
+to_log_manip(to_log_manip const& that) BOOST_NOEXCEPT :
+	m_value(that.m_value) {}
 
-    value_type const& get() const BOOST_NOEXCEPT { return m_value; }
+	value_type const& get() const BOOST_NOEXCEPT
+	{
+		return m_value;
+	}
 };
 
 template< typename StreamT, typename T, typename TagT >
 inline typename enable_if_c< log::aux::is_ostream< StreamT >::value, StreamT& >::type operator<< (StreamT& strm, to_log_manip< T, TagT > manip)
 {
-    strm << manip.get();
-    return strm;
+	strm << manip.get();
+	return strm;
 }
 
 template< typename T >
 inline to_log_manip< T > to_log(T const& value) BOOST_NOEXCEPT
 {
-    return to_log_manip< T >(value);
+	return to_log_manip< T >(value);
 }
 
 template< typename TagT, typename T >
 inline to_log_manip< T, TagT > to_log(T const& value) BOOST_NOEXCEPT
 {
-    return to_log_manip< T, TagT >(value);
+	return to_log_manip< T, TagT >(value);
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

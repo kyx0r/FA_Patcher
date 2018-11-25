@@ -14,14 +14,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P>
-      struct token : first_of<P, repeated<space> > {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P>
+struct token : first_of<P, repeated<space> > {};
+}
+}
 }
 
 #endif

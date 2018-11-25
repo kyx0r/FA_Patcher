@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -16,20 +16,30 @@
 #include <boost/units/scale.hpp>
 #include <boost/units/base_units/us/pint.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units {
+namespace units
+{
 
-namespace us {
+namespace us
+{
 
 typedef scaled_base_unit<pint_base_unit, scale<2, static_rational<-7> > > fluid_dram_base_unit;
 
 } // namespace us
 
 template<>
-struct base_unit_info<us::fluid_dram_base_unit> {
-    static BOOST_CONSTEXPR const char* name()   { return("fluid dram (U.S.)"); }
-    static BOOST_CONSTEXPR const char* symbol() { return("fl dr"); }
+struct base_unit_info<us::fluid_dram_base_unit>
+{
+	static BOOST_CONSTEXPR const char* name()
+	{
+		return("fluid dram (U.S.)");
+	}
+	static BOOST_CONSTEXPR const char* symbol()
+	{
+		return("fl dr");
+	}
 };
 
 } // namespace units

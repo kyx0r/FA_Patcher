@@ -15,8 +15,10 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Meta-function returning the size (number of components) of a vector type
 /// \p T. For scalar types this function returns \c 1.
@@ -29,8 +31,8 @@ namespace compute {
 template<class T>
 struct vector_size
 {
-    /// \internal_
-    BOOST_STATIC_CONSTANT(size_t, value = 1);
+	/// \internal_
+	BOOST_STATIC_CONSTANT(size_t, value = 1);
 };
 
 /// \internal_

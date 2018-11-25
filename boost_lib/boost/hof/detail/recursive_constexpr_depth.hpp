@@ -12,8 +12,12 @@
 #define BOOST_HOF_RECURSIVE_CONSTEXPR_DEPTH 16
 #endif
 
-namespace boost { namespace hof {
+namespace boost
+{
+namespace hof
+{
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

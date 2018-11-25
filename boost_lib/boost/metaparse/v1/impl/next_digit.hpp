@@ -10,26 +10,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct next_digit
-        {
-          typedef next_digit type;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct next_digit
+{
+	typedef next_digit type;
 
-          template <class PartialResult, class NextDigit>
-          struct apply :
-            boost::mpl::int_<
-              PartialResult::type::value * 10 + NextDigit::type::value
-            >
-          {};
-        };
-      }
-    }
-  }
+	template <class PartialResult, class NextDigit>
+	struct apply :
+		boost::mpl::int_<
+		PartialResult::type::value * 10 + NextDigit::type::value
+		>
+	{};
+};
+}
+}
+}
 }
 
 #endif

@@ -29,8 +29,10 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 class execution_context;
 
@@ -77,8 +79,8 @@ class deadline_timer_service;
 #define BOOST_ASIO_BASIC_WAITABLE_TIMER_FWD_DECL
 
 template <typename Clock,
-    typename WaitTraits = boost::asio::wait_traits<Clock>
-    BOOST_ASIO_SVC_TPARAM_DEF2(= waitable_timer_service<Clock, WaitTraits>)>
+          typename WaitTraits = boost::asio::wait_traits<Clock>
+          BOOST_ASIO_SVC_TPARAM_DEF2(= waitable_timer_service<Clock, WaitTraits>)>
 class basic_waitable_timer;
 
 #endif // !defined(BOOST_ASIO_BASIC_WAITABLE_TIMER_FWD_DECL)
@@ -90,7 +92,7 @@ typedef basic_waitable_timer<chrono::system_clock> system_timer;
 typedef basic_waitable_timer<chrono::steady_clock> steady_timer;
 
 typedef basic_waitable_timer<chrono::high_resolution_clock>
-  high_resolution_timer;
+high_resolution_timer;
 
 #endif // defined(BOOST_ASIO_HAS_CHRONO)
 
@@ -111,16 +113,16 @@ class basic_socket_acceptor;
 
 // Forward declaration with defaulted arguments.
 template <typename Protocol
-    BOOST_ASIO_SVC_TPARAM_DEF1(= stream_socket_service<Protocol>),
+          BOOST_ASIO_SVC_TPARAM_DEF1(= stream_socket_service<Protocol>),
 #if defined(BOOST_ASIO_HAS_BOOST_DATE_TIME) \
   || defined(GENERATING_DOCUMENTATION)
-    typename Clock = boost::posix_time::ptime,
-    typename WaitTraits = time_traits<Clock>
-    BOOST_ASIO_SVC_TPARAM1_DEF2(= deadline_timer_service<Clock, WaitTraits>)>
+          typename Clock = boost::posix_time::ptime,
+          typename WaitTraits = time_traits<Clock>
+          BOOST_ASIO_SVC_TPARAM1_DEF2(= deadline_timer_service<Clock, WaitTraits>)>
 #else
-    typename Clock = chrono::steady_clock,
-    typename WaitTraits = wait_traits<Clock>
-    BOOST_ASIO_SVC_TPARAM1_DEF1(= steady_timer::service_type)>
+          typename Clock = chrono::steady_clock,
+          typename WaitTraits = wait_traits<Clock>
+          BOOST_ASIO_SVC_TPARAM1_DEF1(= steady_timer::service_type)>
 #endif
 class basic_socket_streambuf;
 
@@ -131,22 +133,23 @@ class basic_socket_streambuf;
 
 // Forward declaration with defaulted arguments.
 template <typename Protocol
-    BOOST_ASIO_SVC_TPARAM_DEF1(= stream_socket_service<Protocol>),
+          BOOST_ASIO_SVC_TPARAM_DEF1(= stream_socket_service<Protocol>),
 #if defined(BOOST_ASIO_HAS_BOOST_DATE_TIME) \
   || defined(GENERATING_DOCUMENTATION)
-    typename Clock = boost::posix_time::ptime,
-    typename WaitTraits = time_traits<Clock>
-    BOOST_ASIO_SVC_TPARAM1_DEF2(= deadline_timer_service<Clock, WaitTraits>)>
+          typename Clock = boost::posix_time::ptime,
+          typename WaitTraits = time_traits<Clock>
+          BOOST_ASIO_SVC_TPARAM1_DEF2(= deadline_timer_service<Clock, WaitTraits>)>
 #else
-    typename Clock = chrono::steady_clock,
-    typename WaitTraits = wait_traits<Clock>
-    BOOST_ASIO_SVC_TPARAM1_DEF1(= steady_timer::service_type)>
+          typename Clock = chrono::steady_clock,
+          typename WaitTraits = wait_traits<Clock>
+          BOOST_ASIO_SVC_TPARAM1_DEF1(= steady_timer::service_type)>
 #endif
 class basic_socket_iostream;
 
 #endif // !defined(BOOST_ASIO_BASIC_SOCKET_IOSTREAM_FWD_DECL)
 
-namespace ip {
+namespace ip
+{
 
 class address;
 

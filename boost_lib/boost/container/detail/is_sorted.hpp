@@ -18,36 +18,43 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template <class ForwardIterator, class Pred>
 bool is_sorted (ForwardIterator first, ForwardIterator last, Pred pred)
 {
-   if(first != last){
-      ForwardIterator next = first;
-      while (++next != last){
-         if(pred(*next, *first))
-            return false;
-         ++first;
-      }
-   }
-   return true;
+	if(first != last)
+	{
+		ForwardIterator next = first;
+		while (++next != last)
+		{
+			if(pred(*next, *first))
+				return false;
+			++first;
+		}
+	}
+	return true;
 }
 
 template <class ForwardIterator, class Pred>
 bool is_sorted_and_unique (ForwardIterator first, ForwardIterator last, Pred pred)
 {
-   if(first != last){
-      ForwardIterator next = first;
-      while (++next != last){
-         if(!pred(*first, *next))
-            return false;
-         ++first;
-      }
-   }
-   return true;
+	if(first != last)
+	{
+		ForwardIterator next = first;
+		while (++next != last)
+		{
+			if(!pred(*first, *next))
+				return false;
+			++first;
+		}
+	}
+	return true;
 }
 
 }  //namespace dtl {

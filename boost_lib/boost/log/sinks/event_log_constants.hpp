@@ -27,51 +27,54 @@
 #include <boost/log/detail/tagged_integer.hpp>
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
-namespace event_log {
+namespace event_log
+{
 
-    struct event_id_tag;
-    //! A tagged integral type that represents event identifier for the Windows API
-    typedef boost::log::aux::tagged_integer< unsigned int, event_id_tag > event_id;
-    /*!
-     * The function constructs event identifier from an integer
-     */
-    inline event_id make_event_id(unsigned int id)
-    {
-        event_id iden = { id };
-        return iden;
-    }
+struct event_id_tag;
+//! A tagged integral type that represents event identifier for the Windows API
+typedef boost::log::aux::tagged_integer< unsigned int, event_id_tag > event_id;
+/*!
+ * The function constructs event identifier from an integer
+ */
+inline event_id make_event_id(unsigned int id)
+{
+	event_id iden = { id };
+	return iden;
+}
 
-    struct event_category_tag;
-    //! A tagged integral type that represents event category for the Windows API
-    typedef boost::log::aux::tagged_integer< unsigned short, event_category_tag > event_category;
-    /*!
-     * The function constructs event category from an integer
-     */
-    inline event_category make_event_category(unsigned short cat)
-    {
-        event_category category = { cat };
-        return category;
-    }
+struct event_category_tag;
+//! A tagged integral type that represents event category for the Windows API
+typedef boost::log::aux::tagged_integer< unsigned short, event_category_tag > event_category;
+/*!
+ * The function constructs event category from an integer
+ */
+inline event_category make_event_category(unsigned short cat)
+{
+	event_category category = { cat };
+	return category;
+}
 
-    //! Windows event types
-    enum event_type
-    {
-        success = 0,                 //!< Equivalent to EVENTLOG_SUCCESS
-        info = 4,                    //!< Equivalent to EVENTLOG_INFORMATION_TYPE
-        warning = 2,                 //!< Equivalent to EVENTLOG_WARNING_TYPE
-        error = 1                    //!< Equivalent to EVENTLOG_ERROR_TYPE
-    };
+//! Windows event types
+enum event_type
+{
+	success = 0,                 //!< Equivalent to EVENTLOG_SUCCESS
+	info = 4,                    //!< Equivalent to EVENTLOG_INFORMATION_TYPE
+	warning = 2,                 //!< Equivalent to EVENTLOG_WARNING_TYPE
+	error = 1                    //!< Equivalent to EVENTLOG_ERROR_TYPE
+};
 
-    /*!
-     * The function constructs log record level from an integer
-     */
-    BOOST_LOG_API event_type make_event_type(unsigned short lev);
+/*!
+ * The function constructs log record level from an integer
+ */
+BOOST_LOG_API event_type make_event_type(unsigned short lev);
 
 } // namespace event_log
 

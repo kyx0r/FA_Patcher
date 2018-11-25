@@ -30,57 +30,60 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename Handler>
 class winrt_socket_connect_op :
-  public winrt_async_op<void>
+	public winrt_async_op<void>
 {
 public:
-  BOOST_ASIO_DEFINE_HANDLER_PTR(winrt_socket_connect_op);
+	BOOST_ASIO_DEFINE_HANDLER_PTR(winrt_socket_connect_op);
 
-  winrt_socket_connect_op(Handler& handler)
-    : winrt_async_op<void>(&winrt_socket_connect_op::do_complete),
-      handler_(BOOST_ASIO_MOVE_CAST(Handler)(handler))
-  {
-    handler_work<Handler>::start(handler_);
-  }
+	winrt_socket_connect_op(Handler& handler)
+		: winrt_async_op<void>(&winrt_socket_connect_op::do_complete),
+		  handler_(BOOST_ASIO_MOVE_CAST(Handler)(handler))
+	{
+		handler_work<Handler>::start(handler_);
+	}
 
-  static void do_complete(void* owner, operation* base,
-      const boost::system::error_code&, std::size_t)
-  {
-    // Take ownership of the operation object.
-    winrt_socket_connect_op* o(static_cast<winrt_socket_connect_op*>(base));
-    ptr p = { boost::asio::detail::addressof(o->handler_), o, o };
-    handler_work<Handler> w(o->handler_);
+	static void do_complete(void* owner, operation* base,
+	                        const boost::system::error_code&, std::size_t)
+	{
+		// Take ownership of the operation object.
+		winrt_socket_connect_op* o(static_cast<winrt_socket_connect_op*>(base));
+		ptr p = { boost::asio::detail::addressof(o->handler_), o, o };
+		handler_work<Handler> w(o->handler_);
 
-    BOOST_ASIO_HANDLER_COMPLETION((*o));
+		BOOST_ASIO_HANDLER_COMPLETION((*o));
 
-    // Make a copy of the handler so that the memory can be deallocated before
-    // the upcall is made. Even if we're not about to make an upcall, a
-    // sub-object of the handler may be the true owner of the memory associated
-    // with the handler. Consequently, a local copy of the handler is required
-    // to ensure that any owning sub-object remains valid until after we have
-    // deallocated the memory here.
-    detail::binder1<Handler, boost::system::error_code>
-      handler(o->handler_, o->ec_);
-    p.h = boost::asio::detail::addressof(handler.handler_);
-    p.reset();
+		// Make a copy of the handler so that the memory can be deallocated before
+		// the upcall is made. Even if we're not about to make an upcall, a
+		// sub-object of the handler may be the true owner of the memory associated
+		// with the handler. Consequently, a local copy of the handler is required
+		// to ensure that any owning sub-object remains valid until after we have
+		// deallocated the memory here.
+		detail::binder1<Handler, boost::system::error_code>
+		handler(o->handler_, o->ec_);
+		p.h = boost::asio::detail::addressof(handler.handler_);
+		p.reset();
 
-    // Make the upcall if required.
-    if (owner)
-    {
-      fenced_block b(fenced_block::half);
-      BOOST_ASIO_HANDLER_INVOCATION_BEGIN((handler.arg1_));
-      w.complete(handler, handler.handler_);
-      BOOST_ASIO_HANDLER_INVOCATION_END;
-    }
-  }
+		// Make the upcall if required.
+		if (owner)
+		{
+			fenced_block b(fenced_block::half);
+			BOOST_ASIO_HANDLER_INVOCATION_BEGIN((handler.arg1_));
+			w.complete(handler, handler.handler_);
+			BOOST_ASIO_HANDLER_INVOCATION_END;
+		}
+	}
 
 private:
-  Handler handler_;
+	Handler handler_;
 };
 
 } // namespace detail

@@ -18,9 +18,11 @@
 
 #include <boost/detail/workaround.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace unit_test {
+namespace unit_test
+{
 
 template<typename CharT> class      basic_cstring;
 typedef basic_cstring<char const>   const_string;

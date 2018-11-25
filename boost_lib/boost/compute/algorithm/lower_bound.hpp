@@ -16,8 +16,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/detail/binary_find.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns an iterator pointing to the first element in the sorted
 /// range [\p first, \p last) that is not less than \p value.
@@ -32,12 +34,12 @@ lower_bound(InputIterator first,
             const T &value,
             command_queue &queue = system::default_queue())
 {
-    using ::boost::compute::_1;
+	using ::boost::compute::_1;
 
-    InputIterator position =
-        detail::binary_find(first, last, _1 >= value, queue);
+	InputIterator position =
+	    detail::binary_find(first, last, _1 >= value, queue);
 
-    return position;
+	return position;
 }
 
 } // end compute namespace

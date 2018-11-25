@@ -21,13 +21,13 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    template <typename A>
-    struct Applicative
-        : hana::integral_constant<bool,
-            !is_default<ap_impl<typename tag_of<A>::type>>::value &&
-            !is_default<lift_impl<typename tag_of<A>::type>>::value
-        >
-    { };
+template <typename A>
+struct Applicative
+	: hana::integral_constant<bool,
+	  !is_default<ap_impl<typename tag_of<A>::type>>::value &&
+	  !is_default<lift_impl<typename tag_of<A>::type>>::value
+	  >
+{ };
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CONCEPT_APPLICATIVE_HPP

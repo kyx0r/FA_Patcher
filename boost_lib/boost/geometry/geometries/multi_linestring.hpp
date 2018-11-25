@@ -28,7 +28,9 @@
 #include <initializer_list>
 #endif
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -52,28 +54,28 @@ template
     typename LineString,
     template<typename, typename> class Container = std::vector,
     template<typename> class Allocator = std::allocator
->
+    >
 class multi_linestring : public Container<LineString, Allocator<LineString> >
 {
-    BOOST_CONCEPT_ASSERT( (concepts::Linestring<LineString>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Linestring<LineString>) );
 
 #ifndef BOOST_NO_CXX11_HDR_INITIALIZER_LIST
 
-    // default constructor and base_type definitions are required only
-    // if the constructor taking std::initializer_list is defined
+	// default constructor and base_type definitions are required only
+	// if the constructor taking std::initializer_list is defined
 
-    typedef Container<LineString, Allocator<LineString> > base_type;
+	typedef Container<LineString, Allocator<LineString> > base_type;
 
 public:
-    /// \constructor_default{multi_linestring}
-    multi_linestring()
-        : base_type()
-    {}
+	/// \constructor_default{multi_linestring}
+	multi_linestring()
+		: base_type()
+	{}
 
-    /// \constructor_initializer_list{multi_linestring}
-    inline multi_linestring(std::initializer_list<LineString> l)
-        : base_type(l.begin(), l.end())
-    {}
+	/// \constructor_initializer_list{multi_linestring}
+	inline multi_linestring(std::initializer_list<LineString> l)
+		: base_type(l.begin(), l.end())
+	{}
 
 // Commented out for now in order to support Boost.Assign
 // Without this assignment operator first the object should be created
@@ -104,16 +106,17 @@ template
     typename LineString,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct tag< model::multi_linestring<LineString, Container, Allocator> >
 {
-    typedef multi_linestring_tag type;
+	typedef multi_linestring_tag type;
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_MULTI_LINESTRING_HPP

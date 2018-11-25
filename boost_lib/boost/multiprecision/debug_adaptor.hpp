@@ -9,149 +9,152 @@
 #include <boost/multiprecision/traits/extract_exponent_type.hpp>
 #include <boost/multiprecision/detail/integer_ops.hpp>
 
-namespace boost{
-namespace multiprecision{
-namespace backends{
+namespace boost
+{
+namespace multiprecision
+{
+namespace backends
+{
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4127) // conditional expression is constant
 #endif
-   
-   template <class Backend>
+
+template <class Backend>
 struct debug_adaptor
 {
-   typedef typename Backend::signed_types              signed_types;
-   typedef typename Backend::unsigned_types            unsigned_types;
-   typedef typename Backend::float_types               float_types;
-   typedef typename extract_exponent_type<
-      Backend, number_category<Backend>::value>::type  exponent_type;
+	typedef typename Backend::signed_types              signed_types;
+	typedef typename Backend::unsigned_types            unsigned_types;
+	typedef typename Backend::float_types               float_types;
+	typedef typename extract_exponent_type<
+	Backend, number_category<Backend>::value>::type  exponent_type;
 
 private:
-   std::string debug_value;
-   Backend m_value;
+	std::string debug_value;
+	Backend m_value;
 public:
-   void update_view()
-   {
+	void update_view()
+	{
 #ifndef BOOST_NO_EXCEPTIONS
-      try
-      {
+		try
+		{
 #endif
-         debug_value = m_value.str(0, static_cast<std::ios_base::fmtflags>(0));
+			debug_value = m_value.str(0, static_cast<std::ios_base::fmtflags>(0));
 #ifndef BOOST_NO_EXCEPTIONS
-      }
-      catch(const std::exception& e)
-      {
-         debug_value = "String conversion failed with message: \"";
-         debug_value += e.what();
-         debug_value += "\"";
-      }
+		}
+		catch(const std::exception& e)
+		{
+			debug_value = "String conversion failed with message: \"";
+			debug_value += e.what();
+			debug_value += "\"";
+		}
 #endif
-   }
-   debug_adaptor()
-   {
-      update_view();
-   }
-   debug_adaptor(const debug_adaptor& o) : debug_value(o.debug_value), m_value(o.m_value)
-   {
-   }
-   debug_adaptor& operator = (const debug_adaptor& o)
-   {
-      debug_value = o.debug_value;
-      m_value = o.m_value;
-      return *this;
-   }
-   template <class T>
-   debug_adaptor(const T& i, const typename enable_if_c<is_convertible<T, Backend>::value>::type* = 0)
-      : m_value(i)
-   {
-      update_view();
-   }
-   template <class T>
-   debug_adaptor(const T& i, const T& j)
-      : m_value(i, j)
-   {
-      update_view();
-   }
-   template <class T>
-   typename enable_if_c<is_arithmetic<T>::value || is_convertible<T, Backend>::value, debug_adaptor&>::type operator = (const T& i)
-   {
-      m_value = i;
-      update_view();
-      return *this;
-   }
-   debug_adaptor& operator = (const char* s)
-   {
-      m_value = s;
-      update_view();
-      return *this;
-   }
-   void swap(debug_adaptor& o)
-   {
-      std::swap(m_value, o.value());
-      std::swap(debug_value, o.debug_value);
-   }
-   std::string str(std::streamsize digits, std::ios_base::fmtflags f)const
-   {
-      return m_value.str(digits, f);
-   }
-   void negate()
-   {
-      m_value.negate();
-      update_view();
-   }
-   int compare(const debug_adaptor& o)const
-   {
-      return m_value.compare(o.value());
-   }
-   template <class T>
-   int compare(const T& i)const
-   {
-      return m_value.compare(i);
-   }
-   Backend& value()
-   {
-      return m_value;
-   }
-   const Backend& value()const
-   {
-      return m_value;
-   }
-   template <class Archive>
-   void serialize(Archive& ar, const unsigned int /*version*/)
-   {
-      ar & m_value;
-      typedef typename Archive::is_loading tag;
-      if(tag::value)
-         update_view();
-   }
-   static unsigned default_precision() BOOST_NOEXCEPT
-   {
-      return Backend::default_precision();
-   }
-   static void default_precision(unsigned v) BOOST_NOEXCEPT
-   {
-      Backend::default_precision(v);
-   }
-   unsigned precision()const BOOST_NOEXCEPT
-   {
-      return value().precision();
-   }
-   void precision(unsigned digits10) BOOST_NOEXCEPT
-   {
-      value().precision(digits10);
-   }
+	}
+	debug_adaptor()
+	{
+		update_view();
+	}
+	debug_adaptor(const debug_adaptor& o) : debug_value(o.debug_value), m_value(o.m_value)
+	{
+	}
+	debug_adaptor& operator = (const debug_adaptor& o)
+	{
+		debug_value = o.debug_value;
+		m_value = o.m_value;
+		return *this;
+	}
+	template <class T>
+	debug_adaptor(const T& i, const typename enable_if_c<is_convertible<T, Backend>::value>::type* = 0)
+		: m_value(i)
+	{
+		update_view();
+	}
+	template <class T>
+	debug_adaptor(const T& i, const T& j)
+		: m_value(i, j)
+	{
+		update_view();
+	}
+	template <class T>
+	typename enable_if_c<is_arithmetic<T>::value || is_convertible<T, Backend>::value, debug_adaptor&>::type operator = (const T& i)
+	{
+		m_value = i;
+		update_view();
+		return *this;
+	}
+	debug_adaptor& operator = (const char* s)
+	{
+		m_value = s;
+		update_view();
+		return *this;
+	}
+	void swap(debug_adaptor& o)
+	{
+		std::swap(m_value, o.value());
+		std::swap(debug_value, o.debug_value);
+	}
+	std::string str(std::streamsize digits, std::ios_base::fmtflags f)const
+	{
+		return m_value.str(digits, f);
+	}
+	void negate()
+	{
+		m_value.negate();
+		update_view();
+	}
+	int compare(const debug_adaptor& o)const
+	{
+		return m_value.compare(o.value());
+	}
+	template <class T>
+	int compare(const T& i)const
+	{
+		return m_value.compare(i);
+	}
+	Backend& value()
+	{
+		return m_value;
+	}
+	const Backend& value()const
+	{
+		return m_value;
+	}
+	template <class Archive>
+	void serialize(Archive& ar, const unsigned int /*version*/)
+	{
+		ar & m_value;
+		typedef typename Archive::is_loading tag;
+		if(tag::value)
+			update_view();
+	}
+	static unsigned default_precision() BOOST_NOEXCEPT
+	{
+		return Backend::default_precision();
+	}
+	static void default_precision(unsigned v) BOOST_NOEXCEPT
+	{
+		Backend::default_precision(v);
+	}
+	unsigned precision()const BOOST_NOEXCEPT
+	{
+		return value().precision();
+	}
+	void precision(unsigned digits10) BOOST_NOEXCEPT
+	{
+		value().precision(digits10);
+	}
 };
 
 template <class Backend>
 inline Backend const& unwrap_debug_type(debug_adaptor<Backend> const& val)
 {
-   return val.value();
+	return val.value();
 }
 template <class T>
 inline const T& unwrap_debug_type(const T& val)
 {
-   return val;
+	return val;
 }
 
 #define NON_MEMBER_OP1(name, str) \
@@ -261,37 +264,37 @@ NON_MEMBER_OP2(divide, "/=")
 template <class Backend, class R>
 inline void eval_convert_to(R* result, const debug_adaptor<Backend>& val)
 {
-   using default_ops::eval_convert_to;
-   eval_convert_to(result, val.value());
+	using default_ops::eval_convert_to;
+	eval_convert_to(result, val.value());
 }
 
 template <class Backend, class Exp>
 inline void eval_frexp(debug_adaptor<Backend>& result, const debug_adaptor<Backend>& arg, Exp* exp)
 {
-   eval_frexp(result.value(), arg.value(), exp);
-   result.update_view();
+	eval_frexp(result.value(), arg.value(), exp);
+	result.update_view();
 }
 
 template <class Backend, class Exp>
 inline void eval_ldexp(debug_adaptor<Backend>& result, const debug_adaptor<Backend>& arg, Exp exp)
 {
-   eval_ldexp(result.value(), arg.value(), exp);
-   result.update_view();
+	eval_ldexp(result.value(), arg.value(), exp);
+	result.update_view();
 }
 
 template <class Backend, class Exp>
 inline void eval_scalbn(debug_adaptor<Backend>& result, const debug_adaptor<Backend>& arg, Exp exp)
 {
-   using default_ops::eval_scalbn;
-   eval_scalbn(result.value(), arg.value(), exp);
-   result.update_view();
+	using default_ops::eval_scalbn;
+	eval_scalbn(result.value(), arg.value(), exp);
+	result.update_view();
 }
 
 template <class Backend>
 inline typename Backend::exponent_type eval_ilogb(const debug_adaptor<Backend>& arg)
 {
-   using default_ops::eval_ilogb;
-   return eval_ilogb(arg.value());
+	using default_ops::eval_ilogb;
+	return eval_ilogb(arg.value());
 }
 
 NON_MEMBER_OP2(floor, "floor")
@@ -302,8 +305,8 @@ NON_MEMBER_OP2(logb, "logb")
 template <class Backend>
 inline int eval_fpclassify(const debug_adaptor<Backend>& arg)
 {
-   using default_ops::eval_fpclassify;
-   return eval_fpclassify(arg.value());
+	using default_ops::eval_fpclassify;
+	return eval_fpclassify(arg.value());
 }
 
 /*********************************************************************
@@ -344,80 +347,87 @@ NON_MEMBER_OP2(complement, "~")
 template <class Backend>
 inline void eval_left_shift(debug_adaptor<Backend>& arg, std::size_t a)
 {
-   using default_ops::eval_left_shift;
-   eval_left_shift(arg.value(), a);
-   arg.update_view();\
+	using default_ops::eval_left_shift;
+	eval_left_shift(arg.value(), a);
+	arg.update_view();
+	\
 }
 template <class Backend>
 inline void eval_left_shift(debug_adaptor<Backend>& arg, const debug_adaptor<Backend>& a, std::size_t b)
 {
-   using default_ops::eval_left_shift;
-   eval_left_shift(arg.value(), a.value(), b);
-   arg.update_view();\
+	using default_ops::eval_left_shift;
+	eval_left_shift(arg.value(), a.value(), b);
+	arg.update_view();
+	\
 }
 template <class Backend>
 inline void eval_right_shift(debug_adaptor<Backend>& arg, std::size_t a)
 {
-   using default_ops::eval_right_shift;
-   eval_right_shift(arg.value(), a);
-   arg.update_view();\
+	using default_ops::eval_right_shift;
+	eval_right_shift(arg.value(), a);
+	arg.update_view();
+	\
 }
 template <class Backend>
 inline void eval_right_shift(debug_adaptor<Backend>& arg, const debug_adaptor<Backend>& a, std::size_t b)
 {
-   using default_ops::eval_right_shift;
-   eval_right_shift(arg.value(), a.value(), b);
-   arg.update_view();\
+	using default_ops::eval_right_shift;
+	eval_right_shift(arg.value(), a.value(), b);
+	arg.update_view();
+	\
 }
 
 template <class Backend, class T>
 inline unsigned eval_integer_modulus(const debug_adaptor<Backend>& arg, const T& a)
 {
-   using default_ops::eval_integer_modulus;
-   return eval_integer_modulus(arg.value(), a);
+	using default_ops::eval_integer_modulus;
+	return eval_integer_modulus(arg.value(), a);
 }
 
 template <class Backend>
 inline unsigned eval_lsb(const debug_adaptor<Backend>& arg)
 {
-   using default_ops::eval_lsb;
-   return eval_lsb(arg.value());
+	using default_ops::eval_lsb;
+	return eval_lsb(arg.value());
 }
 
 template <class Backend>
 inline unsigned eval_msb(const debug_adaptor<Backend>& arg)
 {
-   using default_ops::eval_msb;
-   return eval_msb(arg.value());
+	using default_ops::eval_msb;
+	return eval_msb(arg.value());
 }
 
 template <class Backend>
 inline bool eval_bit_test(const debug_adaptor<Backend>& arg, unsigned a)
 {
-   using default_ops::eval_bit_test;
-   return eval_bit_test(arg.value(), a);
+	using default_ops::eval_bit_test;
+	return eval_bit_test(arg.value(), a);
 }
 
 template <class Backend>
 inline void eval_bit_set(const debug_adaptor<Backend>& arg, unsigned a)
 {
-   using default_ops::eval_bit_set;
-   eval_bit_set(arg.value(), a);
-   arg.update_view();\
+	using default_ops::eval_bit_set;
+	eval_bit_set(arg.value(), a);
+	arg.update_view();
+	\
 }
 template <class Backend>
 inline void eval_bit_unset(const debug_adaptor<Backend>& arg, unsigned a)
 {
-   using default_ops::eval_bit_unset;
-   eval_bit_unset(arg.value(), a);
-   arg.update_view();\
+	using default_ops::eval_bit_unset;
+	eval_bit_unset(arg.value(), a);
+	arg.update_view();
+	\
 }
 template <class Backend>
 inline void eval_bit_flip(const debug_adaptor<Backend>& arg, unsigned a)
 {
-   using default_ops::eval_bit_flip;
-   eval_bit_flip(arg.value(), a);
-   arg.update_view();\
+	using default_ops::eval_bit_flip;
+	eval_bit_flip(arg.value(), a);
+	arg.update_view();
+	\
 }
 
 NON_MEMBER_OP3(gcd, "gcd")
@@ -460,13 +470,13 @@ NON_MEMBER_OP3(atan2, "atan2")
 template <class Backend>
 int eval_signbit(const debug_adaptor<Backend>& val)
 {
-   return eval_signbit(val.value());
+	return eval_signbit(val.value());
 }
 
 template <class Backend>
 std::size_t hash_value(const debug_adaptor<Backend>& val)
 {
-   return hash_value(val.value());
+	return hash_value(val.value());
 }
 
 } // namespace backends
@@ -479,37 +489,43 @@ struct number_category<backends::debug_adaptor<Backend> > : public number_catego
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
-}} // namespaces
+}
+} // namespaces
 
-namespace std{
+namespace std
+{
 
 template <class Backend, boost::multiprecision::expression_template_option ExpressionTemplates>
 class numeric_limits<boost::multiprecision::number<boost::multiprecision::backends::debug_adaptor<Backend>, ExpressionTemplates> >
-   : public std::numeric_limits<boost::multiprecision::number<Backend, ExpressionTemplates> >
+	: public std::numeric_limits<boost::multiprecision::number<Backend, ExpressionTemplates> >
 {
-   typedef std::numeric_limits<boost::multiprecision::number<Backend, ExpressionTemplates> > base_type;
-   typedef boost::multiprecision::number<boost::multiprecision::backends::debug_adaptor<Backend>, ExpressionTemplates> number_type;
+	typedef std::numeric_limits<boost::multiprecision::number<Backend, ExpressionTemplates> > base_type;
+	typedef boost::multiprecision::number<boost::multiprecision::backends::debug_adaptor<Backend>, ExpressionTemplates> number_type;
 public:
-   static number_type (min)() BOOST_NOEXCEPT { return (base_type::min)(); }
-   static number_type (max)() BOOST_NOEXCEPT { return (base_type::max)(); }
-   static number_type lowest() BOOST_NOEXCEPT { return -(max)(); }
-   static number_type epsilon() BOOST_NOEXCEPT { return base_type::epsilon(); }
-   static number_type round_error() BOOST_NOEXCEPT { return epsilon() / 2; }
-   static number_type infinity() BOOST_NOEXCEPT { return base_type::infinity(); }
-   static number_type quiet_NaN() BOOST_NOEXCEPT { return base_type::quiet_NaN(); }
-   static number_type signaling_NaN() BOOST_NOEXCEPT { return base_type::signaling_NaN(); }
-   static number_type denorm_min() BOOST_NOEXCEPT { return base_type::denorm_min(); }
+	static number_type (min)() BOOST_NOEXCEPT { return (base_type::min)(); }
+	static number_type (max)() BOOST_NOEXCEPT { return (base_type::max)(); }
+	static number_type lowest() BOOST_NOEXCEPT { return -(max)(); }
+	static number_type epsilon() BOOST_NOEXCEPT { return base_type::epsilon(); }
+	static number_type round_error() BOOST_NOEXCEPT { return epsilon() / 2; }
+	static number_type infinity() BOOST_NOEXCEPT { return base_type::infinity(); }
+	static number_type quiet_NaN() BOOST_NOEXCEPT { return base_type::quiet_NaN(); }
+	static number_type signaling_NaN() BOOST_NOEXCEPT { return base_type::signaling_NaN(); }
+	static number_type denorm_min() BOOST_NOEXCEPT { return base_type::denorm_min(); }
 };
 
 } // namespace std
 
-namespace boost{ namespace math{
+namespace boost
+{
+namespace math
+{
 
-namespace policies{
+namespace policies
+{
 
 template <class Backend, boost::multiprecision::expression_template_option ExpressionTemplates, class Policy>
 struct precision< boost::multiprecision::number<boost::multiprecision::debug_adaptor<Backend>, ExpressionTemplates>, Policy>
-   : public precision<boost::multiprecision::number<Backend, ExpressionTemplates>, Policy>
+	: public precision<boost::multiprecision::number<Backend, ExpressionTemplates>, Policy>
 {};
 
 #undef NON_MEMBER_OP1
@@ -519,7 +535,8 @@ struct precision< boost::multiprecision::number<boost::multiprecision::debug_ada
 
 } // namespace policies
 
-}} // namespaces boost::math
+}
+} // namespaces boost::math
 
 
 #endif

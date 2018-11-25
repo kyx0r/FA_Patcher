@@ -21,7 +21,9 @@
 
 #include <boost/geometry/core/exception.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace detail
@@ -31,111 +33,118 @@ namespace detail
 template <typename Point, int MaxSize>
 class points_view
 {
-    // Iterates over a series of points (indicated by pointer
-    // to have it lightweight). Probably there is already an
-    // equivalent of this within Boost. If so, TODO: use that one.
-    // This used to be "box_iterator" and "segment_iterator".
-    // ALTERNATIVE: use boost:array and its iterators
-    struct points_iterator
-        : public boost::iterator_facade
-            <
-                points_iterator,
-                Point const,
-                boost::random_access_traversal_tag
-            >
-    {
-        // Constructor: Begin iterator
-        inline points_iterator(Point const* p)
-            : m_points(p)
-            , m_index(0)
-        {}
+	// Iterates over a series of points (indicated by pointer
+	// to have it lightweight). Probably there is already an
+	// equivalent of this within Boost. If so, TODO: use that one.
+	// This used to be "box_iterator" and "segment_iterator".
+	// ALTERNATIVE: use boost:array and its iterators
+	struct points_iterator
+		: public boost::iterator_facade
+		  <
+		  points_iterator,
+		  Point const,
+		  boost::random_access_traversal_tag
+		  >
+	{
+		// Constructor: Begin iterator
+		inline points_iterator(Point const* p)
+			: m_points(p)
+			, m_index(0)
+		{}
 
-        // Constructor: End iterator
-        inline points_iterator(Point const* p, bool)
-            : m_points(p)
-            , m_index(MaxSize)
-        {}
+		// Constructor: End iterator
+		inline points_iterator(Point const* p, bool)
+			: m_points(p)
+			, m_index(MaxSize)
+		{}
 
-        // Constructor: default (for Range Concept checking).
-        inline points_iterator()
-            : m_points(NULL)
-            , m_index(MaxSize)
-        {}
+		// Constructor: default (for Range Concept checking).
+		inline points_iterator()
+			: m_points(NULL)
+			, m_index(MaxSize)
+		{}
 
-        typedef std::ptrdiff_t difference_type;
+		typedef std::ptrdiff_t difference_type;
 
-    private:
-        friend class boost::iterator_core_access;
+	private:
+		friend class boost::iterator_core_access;
 
-        inline Point const& dereference() const
-        {
-            if (m_index >= 0 && m_index < MaxSize)
-            {
-                return m_points[m_index];
-            }
+		inline Point const& dereference() const
+		{
+			if (m_index >= 0 && m_index < MaxSize)
+			{
+				return m_points[m_index];
+			}
 
-            // If it index larger (or smaller) return first point
-            // (assuming initialized)
-            return m_points[0];
-        }
+			// If it index larger (or smaller) return first point
+			// (assuming initialized)
+			return m_points[0];
+		}
 
-        inline bool equal(points_iterator const& other) const
-        {
-            return other.m_index == this->m_index;
-        }
+		inline bool equal(points_iterator const& other) const
+		{
+			return other.m_index == this->m_index;
+		}
 
-        inline void increment()
-        {
-            m_index++;
-        }
+		inline void increment()
+		{
+			m_index++;
+		}
 
-        inline void decrement()
-        {
-            m_index--;
-        }
+		inline void decrement()
+		{
+			m_index--;
+		}
 
-        inline difference_type distance_to(points_iterator const& other) const
-        {
-            return other.m_index - this->m_index;
-        }
+		inline difference_type distance_to(points_iterator const& other) const
+		{
+			return other.m_index - this->m_index;
+		}
 
-        inline void advance(difference_type n)
-        {
-            m_index += n;
-        }
+		inline void advance(difference_type n)
+		{
+			m_index += n;
+		}
 
-        Point const* m_points;
-        difference_type m_index;
-    };
+		Point const* m_points;
+		difference_type m_index;
+	};
 
 public :
 
-    typedef points_iterator const_iterator;
-    typedef points_iterator iterator; // must be defined
+	typedef points_iterator const_iterator;
+	typedef points_iterator iterator; // must be defined
 
-    const_iterator begin() const { return const_iterator(m_points); }
-    const_iterator end() const { return const_iterator(m_points, true); }
+	const_iterator begin() const
+	{
+		return const_iterator(m_points);
+	}
+	const_iterator end() const
+	{
+		return const_iterator(m_points, true);
+	}
 
-    // It may NOT be used non-const, so commented:
-    //iterator begin() { return m_begin; }
-    //iterator end() { return m_end; }
+	// It may NOT be used non-const, so commented:
+	//iterator begin() { return m_begin; }
+	//iterator end() { return m_end; }
 
 protected :
 
-    template <typename CopyPolicy>
-    explicit points_view(CopyPolicy const& copy)
-    {
-       copy.apply(m_points);
-    }
+	template <typename CopyPolicy>
+	explicit points_view(CopyPolicy const& copy)
+	{
+		copy.apply(m_points);
+	}
 
 private :
-    // Copy points here - box might define them otherwise
-    Point m_points[MaxSize];
+	// Copy points here - box might define them otherwise
+	Point m_points[MaxSize];
 };
 
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_DETAIL_POINTS_VIEW_HPP

@@ -34,35 +34,35 @@
 
 #define N BOOST_PP_ITERATION()
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static type construct(BOOST_PP_ENUM_BINARY_PARAMS(N, typename detail::call_param<T, >::type t))
-        {
-            return type(t0,
-                        deque_keyed_values_impl<
-                        next_index
-        #if N > 1
-                        , BOOST_PP_ENUM_SHIFTED_PARAMS(N, T)
-        #endif
-                        >::construct(BOOST_PP_ENUM_SHIFTED_PARAMS(N, t)));
-        }
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+static type construct(BOOST_PP_ENUM_BINARY_PARAMS(N, typename detail::call_param<T, >::type t))
+{
+	return type(t0,
+	            deque_keyed_values_impl<
+	            next_index
+#if N > 1
+	            , BOOST_PP_ENUM_SHIFTED_PARAMS(N, T)
+#endif
+	            >::construct(BOOST_PP_ENUM_SHIFTED_PARAMS(N, t)));
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #endif
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || \
     (defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES))
-        template <BOOST_PP_ENUM_PARAMS(N, typename T_)>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static type forward_(BOOST_PP_ENUM_BINARY_PARAMS(N, T_, && t))
-        {
-            return type(BOOST_FUSION_FWD_ELEM(T_0, t0),
-                        deque_keyed_values_impl<
-                        next_index
-        #if N > 1
-                        , BOOST_PP_ENUM_SHIFTED_PARAMS(N, T_)
-        #endif
-                        >::forward_(BOOST_PP_ENUM_SHIFTED(N, FUSION_DEQUE_KEYED_VALUES_FORWARD, _)));
-        }
+	template <BOOST_PP_ENUM_PARAMS(N, typename T_)>
+BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+static type forward_(BOOST_PP_ENUM_BINARY_PARAMS(N, T_, && t))
+{
+	return type(BOOST_FUSION_FWD_ELEM(T_0, t0),
+	            deque_keyed_values_impl<
+	            next_index
+#if N > 1
+	            , BOOST_PP_ENUM_SHIFTED_PARAMS(N, T_)
+#endif
+	            >::forward_(BOOST_PP_ENUM_SHIFTED(N, FUSION_DEQUE_KEYED_VALUES_FORWARD, _)));
+}
 #endif
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH endif

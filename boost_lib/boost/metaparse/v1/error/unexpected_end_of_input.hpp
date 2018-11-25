@@ -10,19 +10,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        BOOST_METAPARSE_V1_DEFINE_ERROR(
-          unexpected_end_of_input,
-          "Unexpected end of input"
-        );
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+BOOST_METAPARSE_V1_DEFINE_ERROR(
+    unexpected_end_of_input,
+    "Unexpected end of input"
+);
+}
+}
+}
 }
 
 #endif

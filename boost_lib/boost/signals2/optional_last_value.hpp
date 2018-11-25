@@ -15,54 +15,56 @@
 #include <boost/optional.hpp>
 #include <boost/signals2/expired_slot.hpp>
 
-namespace boost {
-  namespace signals2 {
+namespace boost
+{
+namespace signals2
+{
 
-    template<typename T>
-      class optional_last_value
-    {
-    public:
-      typedef optional<T> result_type;
+template<typename T>
+class optional_last_value
+{
+public:
+	typedef optional<T> result_type;
 
-      template<typename InputIterator>
-        optional<T> operator()(InputIterator first, InputIterator last) const
-      {
-        optional<T> value;
-        while (first != last)
-        {
-          BOOST_TRY
-          {
-            value = *first;
-          }
-          BOOST_CATCH(const expired_slot &) {}
-          BOOST_CATCH_END
-          ++first;
-        }
-        return value;
-      }
-    };
+	template<typename InputIterator>
+	optional<T> operator()(InputIterator first, InputIterator last) const
+	{
+		optional<T> value;
+		while (first != last)
+		{
+			BOOST_TRY
+			{
+				value = *first;
+			}
+			BOOST_CATCH(const expired_slot &) {}
+			BOOST_CATCH_END
+			++first;
+		}
+		return value;
+	}
+};
 
-    template<>
-      class optional_last_value<void>
-    {
-    public:
-      typedef void result_type;
-      template<typename InputIterator>
-        result_type operator()(InputIterator first, InputIterator last) const
-      {
-        while (first != last)
-        {
-          BOOST_TRY
-          {
-            *first;
-          }
-          BOOST_CATCH(const expired_slot &) {}
-          BOOST_CATCH_END
-          ++first;
-        }
-        return;
-      }
-    };
-  } // namespace signals2
+template<>
+class optional_last_value<void>
+{
+public:
+	typedef void result_type;
+	template<typename InputIterator>
+	result_type operator()(InputIterator first, InputIterator last) const
+	{
+		while (first != last)
+		{
+			BOOST_TRY
+			{
+				*first;
+			}
+			BOOST_CATCH(const expired_slot &) {}
+			BOOST_CATCH_END
+			++first;
+		}
+		return;
+	}
+};
+} // namespace signals2
 } // namespace boost
 #endif // BOOST_SIGNALS2_OPTIONAL_LAST_VALUE_HPP

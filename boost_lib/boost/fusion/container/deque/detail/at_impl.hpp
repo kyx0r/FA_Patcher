@@ -20,48 +20,51 @@
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct deque_tag;
+namespace fusion
+{
+struct deque_tag;
 
-    namespace extension
-    {
-        template<typename T>
-        struct at_impl;
+namespace extension
+{
+template<typename T>
+struct at_impl;
 
-        template<>
-        struct at_impl<deque_tag>
-        {
-            template<typename Sequence, typename N>
-            struct apply
-            {
-                typedef typename Sequence::next_up next_up;
-                typedef typename Sequence::next_down next_down;
-                BOOST_MPL_ASSERT_RELATION(next_down::value, !=, next_up::value);
+template<>
+struct at_impl<deque_tag>
+{
+	template<typename Sequence, typename N>
+	struct apply
+	{
+		typedef typename Sequence::next_up next_up;
+		typedef typename Sequence::next_down next_down;
+		BOOST_MPL_ASSERT_RELATION(next_down::value, !=, next_up::value);
 
-                static int const offset = next_down::value + 1;
-                typedef mpl::int_<(N::value + offset)> adjusted_index;
-                typedef typename
-                    detail::keyed_element_value_at<Sequence, adjusted_index>::type
-                element_type;
+		static int const offset = next_down::value + 1;
+		typedef mpl::int_<(N::value + offset)> adjusted_index;
+		typedef typename
+		detail::keyed_element_value_at<Sequence, adjusted_index>::type
+		element_type;
 
-                typedef typename
-                    add_reference<
-                      typename mpl::eval_if<
-                      is_const<Sequence>,
-                      add_const<element_type>,
-                      mpl::identity<element_type> >::type
-                    >::type
-                type;
+		typedef typename
+		add_reference<
+		typename mpl::eval_if<
+		is_const<Sequence>,
+		         add_const<element_type>,
+		         mpl::identity<element_type> >::type
+		         >::type
+		         type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type call(Sequence& seq)
-                {
-                    return seq.get(adjusted_index());
-                }
-            };
-        };
-    }
-}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type call(Sequence& seq)
+		{
+			return seq.get(adjusted_index());
+		}
+	};
+};
+}
+}
+}
 
 #endif

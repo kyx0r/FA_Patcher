@@ -24,24 +24,31 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************                   singleton                  ************** //
 // ************************************************************************** //
 
 template<typename Derived>
-class singleton {
+class singleton
+{
 public:
-    static Derived& instance() { static Derived the_inst; return the_inst; }
+	static Derived& instance()
+	{
+		static Derived the_inst;
+		return the_inst;
+	}
 
-    BOOST_DELETED_FUNCTION(singleton(singleton const&))
-    BOOST_DELETED_FUNCTION(singleton& operator=(singleton const&))
+	BOOST_DELETED_FUNCTION(singleton(singleton const&))
+	BOOST_DELETED_FUNCTION(singleton& operator=(singleton const&))
 
 protected:
-    BOOST_DEFAULTED_FUNCTION(singleton(), {})
-    BOOST_DEFAULTED_FUNCTION(~singleton(), {})
+	BOOST_DEFAULTED_FUNCTION(singleton(), {})
+	BOOST_DEFAULTED_FUNCTION(~singleton(), {})
 };
 
 //____________________________________________________________________________//

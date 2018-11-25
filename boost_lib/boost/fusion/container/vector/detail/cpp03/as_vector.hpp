@@ -20,39 +20,45 @@
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
+{
+namespace fusion
+{
+namespace detail
 {
 BOOST_FUSION_BARRIER_BEGIN
 
-    template <int size>
-    struct as_vector
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            size <= FUSION_MAX_VECTOR_SIZE
-          , "FUSION_MAX_VECTOR_SIZE limit is too low"
-        );
-    };
+template <int size>
+struct as_vector
+{
+	BOOST_STATIC_ASSERT_MSG(
+	    size <= FUSION_MAX_VECTOR_SIZE
+	    , "FUSION_MAX_VECTOR_SIZE limit is too low"
+	);
+};
 
-    template <>
-    struct as_vector<0>
-    {
-        template <typename Iterator>
-        struct apply
-        {
-            typedef vector0<> type;
-        };
+template <>
+struct as_vector<0>
+{
+	template <typename Iterator>
+	struct apply
+	{
+		typedef vector0<> type;
+	};
 
-        template <typename Iterator>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static typename apply<Iterator>::type
-        call(Iterator)
-        {
-            return vector0<>();
-        }
-    };
+	template <typename Iterator>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static typename apply<Iterator>::type
+	call(Iterator)
+	{
+		return vector0<>();
+	}
+};
 
 BOOST_FUSION_BARRIER_END
-}}}
+}
+}
+}
 
 #if !defined(BOOST_FUSION_DONT_USE_PREPROCESSED_FILES)
 #include <boost/fusion/container/vector/detail/cpp03/preprocessed/as_vector.hpp>
@@ -74,7 +80,11 @@ BOOST_FUSION_BARRIER_END
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
+{
+namespace fusion
+{
+namespace detail
 {
 BOOST_FUSION_BARRIER_BEGIN
 
@@ -99,7 +109,9 @@ BOOST_FUSION_BARRIER_BEGIN
 #undef BOOST_FUSION_VALUE_OF_ITERATOR
 
 BOOST_FUSION_BARRIER_END
-}}}
+}
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)
@@ -117,28 +129,28 @@ BOOST_FUSION_BARRIER_END
 
 #define N BOOST_PP_ITERATION()
 
-    template <>
-    struct as_vector<N>
-    {
-        template <typename I0>
-        struct apply
-        {
-            BOOST_PP_REPEAT(N, BOOST_FUSION_NEXT_ITERATOR, _)
-            BOOST_PP_REPEAT(N, BOOST_FUSION_VALUE_OF_ITERATOR, _)
-            typedef BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> type;
-        };
+template <>
+struct as_vector<N>
+{
+	template <typename I0>
+	struct apply
+	{
+		BOOST_PP_REPEAT(N, BOOST_FUSION_NEXT_ITERATOR, _)
+		BOOST_PP_REPEAT(N, BOOST_FUSION_VALUE_OF_ITERATOR, _)
+		typedef BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> type;
+	};
 
-        template <typename Iterator>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static typename apply<Iterator>::type
-        call(Iterator const& i0)
-        {
-            typedef apply<Iterator> gen;
-            typedef typename gen::type result;
-            BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_CALL_ITERATOR, _)
-            return result(BOOST_PP_ENUM_PARAMS(N, *i));
-        }
-    };
+	template <typename Iterator>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static typename apply<Iterator>::type
+	call(Iterator const& i0)
+	{
+		typedef apply<Iterator> gen;
+		typedef typename gen::type result;
+		BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_CALL_ITERATOR, _)
+		return result(BOOST_PP_ENUM_PARAMS(N, *i));
+	}
+};
 
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)

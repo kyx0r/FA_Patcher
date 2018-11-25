@@ -21,10 +21,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
+namespace metaparse
+{
+namespace v1
+{
 #ifdef BOOST_METAPARSE_SEQUENCE_APPLY_ARG
 #  error BOOST_METAPARSE_SEQUENCE_APPLY_ARG already defined
 #endif
@@ -63,17 +63,17 @@ namespace boost
     > \
   {};
 
-      BOOST_PP_REPEAT_FROM_TO(
-        1,
-        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-        BOOST_METAPARSE_SEQUENCE_APPLY,
-        ~
-      )
+BOOST_PP_REPEAT_FROM_TO(
+    1,
+    BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+    BOOST_METAPARSE_SEQUENCE_APPLY,
+    ~
+)
 
 #undef BOOST_METAPARSE_SEQUENCE_APPLY
 #undef BOOST_METAPARSE_SEQUENCE_APPLY_ARG
-    }
-  }
+}
+}
 }
 
 #endif

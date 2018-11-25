@@ -12,23 +12,29 @@
 #include <boost/range/empty.hpp>
 #include <boost/proto/proto_fwd.hpp>
 
-namespace boost { namespace proto { namespace functional
+namespace boost
+{
+namespace proto
+{
+namespace functional
 {
 
-    // A PolymorphicFunctionObject that wraps boost::empty()
-    struct empty
-    {
-        BOOST_PROTO_CALLABLE()
+// A PolymorphicFunctionObject that wraps boost::empty()
+struct empty
+{
+	BOOST_PROTO_CALLABLE()
 
-        typedef bool result_type;
+	typedef bool result_type;
 
-        template<typename Rng>
-        bool operator()(Rng const &rng) const
-        {
-            return boost::empty(rng);
-        }
-    };
+	template<typename Rng>
+	bool operator()(Rng const &rng) const
+	{
+		return boost::empty(rng);
+	}
+};
 
-}}}
+}
+}
+}
 
 #endif

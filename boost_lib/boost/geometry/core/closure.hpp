@@ -28,7 +28,9 @@
 #include <boost/geometry/core/tags.hpp>
 #include <boost/geometry/util/bare_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -49,14 +51,14 @@ namespace boost { namespace geometry
 */
 enum closure_selector
 {
-    /// Rings are open: first point and last point are different, algorithms
-    /// close them explicitly on the fly
-    open = 0,
-    /// Rings are closed: first point and last point must be the same
-    closed = 1,
-    /// (Not yet implemented): algorithms first figure out if ring must be
-    /// closed on the fly
-    closure_undertermined = -1
+	/// Rings are open: first point and last point are different, algorithms
+	/// close them explicitly on the fly
+	open = 0,
+	/// Rings are closed: first point and last point must be the same
+	closed = 1,
+	/// (Not yet implemented): algorithms first figure out if ring must be
+	/// closed on the fly
+	closure_undertermined = -1
 };
 
 namespace traits
@@ -74,7 +76,7 @@ namespace traits
 template <typename G>
 struct closure
 {
-    static const closure_selector value = closed;
+	static const closure_selector value = closed;
 };
 
 
@@ -82,12 +84,14 @@ struct closure
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace core_detail { namespace closure
+namespace core_detail
+{
+namespace closure
 {
 
 struct closed
 {
-    static const closure_selector value = geometry::closed;
+	static const closure_selector value = geometry::closed;
 };
 
 
@@ -103,7 +107,8 @@ template <>
 struct minimum_ring_size<geometry::open> : boost::mpl::size_t<3> {};
 
 
-}} // namespace detail::point_order
+}
+} // namespace detail::point_order
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -115,11 +120,11 @@ namespace core_dispatch
 template <typename Tag, typename Geometry>
 struct closure
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 template <typename Box>
@@ -133,44 +138,44 @@ struct closure<segment_tag, Box> : public core_detail::closure::closed {};
 
 template <typename LineString>
 struct closure<linestring_tag, LineString>
-    : public core_detail::closure::closed {};
+	: public core_detail::closure::closed {};
 
 
 template <typename Ring>
 struct closure<ring_tag, Ring>
 {
-    static const closure_selector value
-        = geometry::traits::closure<Ring>::value;
+	static const closure_selector value
+	    = geometry::traits::closure<Ring>::value;
 };
 
 // Specialization for Polygon: the closure is the closure of its rings
 template <typename Polygon>
 struct closure<polygon_tag, Polygon>
 {
-    static const closure_selector value = core_dispatch::closure
-        <
-            ring_tag,
-            typename ring_type<polygon_tag, Polygon>::type
-        >::value ;
+	static const closure_selector value = core_dispatch::closure
+	                                      <
+	                                      ring_tag,
+	                                      typename ring_type<polygon_tag, Polygon>::type
+	                                      >::value ;
 };
 
 template <typename MultiPoint>
 struct closure<multi_point_tag, MultiPoint>
-    : public core_detail::closure::closed {};
+	: public core_detail::closure::closed {};
 
 template <typename MultiLinestring>
 struct closure<multi_linestring_tag, MultiLinestring>
-    : public core_detail::closure::closed {};
+	: public core_detail::closure::closed {};
 
 // Specialization for MultiPolygon: the closure is the closure of Polygon's rings
 template <typename MultiPolygon>
 struct closure<multi_polygon_tag, MultiPolygon>
 {
-    static const closure_selector value = core_dispatch::closure
-        <
-            polygon_tag,
-            typename boost::range_value<MultiPolygon>::type
-        >::value ;
+	static const closure_selector value = core_dispatch::closure
+	                                      <
+	                                      polygon_tag,
+	                                      typename boost::range_value<MultiPolygon>::type
+	                                      >::value ;
 };
 
 } // namespace core_dispatch
@@ -188,15 +193,16 @@ struct closure<multi_polygon_tag, MultiPolygon>
 template <typename Geometry>
 struct closure
 {
-    static const closure_selector value = core_dispatch::closure
-        <
-            typename tag<Geometry>::type,
-            typename util::bare_type<Geometry>::type
-        >::value;
+	static const closure_selector value = core_dispatch::closure
+	                                      <
+	                                      typename tag<Geometry>::type,
+	                                      typename util::bare_type<Geometry>::type
+	                                      >::value;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_CLOSURE_HPP

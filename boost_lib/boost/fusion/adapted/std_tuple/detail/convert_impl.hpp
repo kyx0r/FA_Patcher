@@ -12,37 +12,40 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct std_tuple_tag;
+namespace fusion
+{
+struct std_tuple_tag;
 
-    namespace extension
-    {
-        template <typename T>
-        struct convert_impl;
+namespace extension
+{
+template <typename T>
+struct convert_impl;
 
-        template <>
-        struct convert_impl<std_tuple_tag>
-        {
-            template <typename Sequence>
-            struct apply
-            {
-                typedef detail::build_std_tuple<
-                    typename result_of::begin<Sequence>::type
-                  , typename result_of::end<Sequence>::type
-                > gen;
+template <>
+struct convert_impl<std_tuple_tag>
+{
+	template <typename Sequence>
+	struct apply
+	{
+		typedef detail::build_std_tuple<
+		typename result_of::begin<Sequence>::type
+		, typename result_of::end<Sequence>::type
+		> gen;
 
-                typedef typename gen::type type;
+		typedef typename gen::type type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type
-                call(Sequence& seq)
-                {
-                    return gen::call(begin(seq), end(seq));
-                }
-            };
-        };
-    }
-}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(Sequence& seq)
+		{
+			return gen::call(begin(seq), end(seq));
+		}
+	};
+};
+}
+}
+}
 
 #endif

@@ -24,27 +24,27 @@
 
 namespace boost
 {
-    template<class T>
-    struct is_std_hash_set
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_hash_set
+	: boost::mpl::false_
+{};
 
-    template<class T>
-    struct is_std_hash_multiset
-        : boost::mpl::false_
-    {};
+template<class T>
+struct is_std_hash_multiset
+	: boost::mpl::false_
+{};
 
 #ifdef BOOST_PHOENIX_HAS_HASH
 
-    template<class Kty,BOOST_PHOENIX_HASH_template_rest_param>
-    struct is_std_hash_set< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_set<Kty,BOOST_PHOENIX_HASH_type_rest_param> >
-        : boost::mpl::true_
-    {};
+template<class Kty,BOOST_PHOENIX_HASH_template_rest_param>
+struct is_std_hash_set< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_set<Kty,BOOST_PHOENIX_HASH_type_rest_param> >
+	: boost::mpl::true_
+{};
 
-    template<class Kty,BOOST_PHOENIX_HASH_template_rest_param>
-    struct is_std_hash_multiset< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_multiset<Kty,BOOST_PHOENIX_HASH_type_rest_param> >
-        : boost::mpl::true_
-    {};
+template<class Kty,BOOST_PHOENIX_HASH_template_rest_param>
+struct is_std_hash_multiset< ::BOOST_PHOENIX_HASH_NAMESPACE::hash_multiset<Kty,BOOST_PHOENIX_HASH_type_rest_param> >
+	: boost::mpl::true_
+{};
 
 #endif
 

@@ -22,7 +22,9 @@
 #include <boost/type_traits/remove_reference.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace util
@@ -31,22 +33,23 @@ namespace util
 template <typename T>
 struct bare_type
 {
-    typedef typename boost::remove_const
-        <
-            typename boost::remove_pointer
-                <
-                    typename boost::remove_reference
-                        <
-                            T
-                        >::type
-                >::type
-        >::type type;
+	typedef typename boost::remove_const
+	<
+	typename boost::remove_pointer
+	<
+	typename boost::remove_reference
+	<
+	T
+	>::type
+	>::type
+	>::type type;
 };
 
 
 } // namespace util
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_UTIL_BARE_TYPE_HPP

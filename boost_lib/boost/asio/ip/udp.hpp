@@ -25,9 +25,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ip {
+namespace boost
+{
+namespace asio
+{
+namespace ip
+{
 
 /// Encapsulates the flags needed for UDP.
 /**
@@ -43,65 +46,65 @@ namespace ip {
 class udp
 {
 public:
-  /// The type of a UDP endpoint.
-  typedef basic_endpoint<udp> endpoint;
+	/// The type of a UDP endpoint.
+	typedef basic_endpoint<udp> endpoint;
 
-  /// Construct to represent the IPv4 UDP protocol.
-  static udp v4()
-  {
-    return udp(BOOST_ASIO_OS_DEF(AF_INET));
-  }
+	/// Construct to represent the IPv4 UDP protocol.
+	static udp v4()
+	{
+		return udp(BOOST_ASIO_OS_DEF(AF_INET));
+	}
 
-  /// Construct to represent the IPv6 UDP protocol.
-  static udp v6()
-  {
-    return udp(BOOST_ASIO_OS_DEF(AF_INET6));
-  }
+	/// Construct to represent the IPv6 UDP protocol.
+	static udp v6()
+	{
+		return udp(BOOST_ASIO_OS_DEF(AF_INET6));
+	}
 
-  /// Obtain an identifier for the type of the protocol.
-  int type() const
-  {
-    return BOOST_ASIO_OS_DEF(SOCK_DGRAM);
-  }
+	/// Obtain an identifier for the type of the protocol.
+	int type() const
+	{
+		return BOOST_ASIO_OS_DEF(SOCK_DGRAM);
+	}
 
-  /// Obtain an identifier for the protocol.
-  int protocol() const
-  {
-    return BOOST_ASIO_OS_DEF(IPPROTO_UDP);
-  }
+	/// Obtain an identifier for the protocol.
+	int protocol() const
+	{
+		return BOOST_ASIO_OS_DEF(IPPROTO_UDP);
+	}
 
-  /// Obtain an identifier for the protocol family.
-  int family() const
-  {
-    return family_;
-  }
+	/// Obtain an identifier for the protocol family.
+	int family() const
+	{
+		return family_;
+	}
 
-  /// The UDP socket type.
-  typedef basic_datagram_socket<udp> socket;
+	/// The UDP socket type.
+	typedef basic_datagram_socket<udp> socket;
 
-  /// The UDP resolver type.
-  typedef basic_resolver<udp> resolver;
+	/// The UDP resolver type.
+	typedef basic_resolver<udp> resolver;
 
-  /// Compare two protocols for equality.
-  friend bool operator==(const udp& p1, const udp& p2)
-  {
-    return p1.family_ == p2.family_;
-  }
+	/// Compare two protocols for equality.
+	friend bool operator==(const udp& p1, const udp& p2)
+	{
+		return p1.family_ == p2.family_;
+	}
 
-  /// Compare two protocols for inequality.
-  friend bool operator!=(const udp& p1, const udp& p2)
-  {
-    return p1.family_ != p2.family_;
-  }
+	/// Compare two protocols for inequality.
+	friend bool operator!=(const udp& p1, const udp& p2)
+	{
+		return p1.family_ != p2.family_;
+	}
 
 private:
-  // Construct with a specific family.
-  explicit udp(int protocol_family)
-    : family_(protocol_family)
-  {
-  }
+	// Construct with a specific family.
+	explicit udp(int protocol_family)
+		: family_(protocol_family)
+	{
+	}
 
-  int family_;
+	int family_;
 };
 
 } // namespace ip

@@ -20,31 +20,34 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename F>
-    constexpr decltype(auto) chain_t::operator()(Xs&& xs, F&& f) const {
-        using M = typename hana::tag_of<Xs>::type;
-        using Chain = BOOST_HANA_DISPATCH_IF(chain_impl<M>,
-            hana::Monad<M>::value
-        );
+//! @cond
+template <typename Xs, typename F>
+constexpr decltype(auto) chain_t::operator()(Xs&& xs, F&& f) const
+{
+	using M = typename hana::tag_of<Xs>::type;
+	using Chain = BOOST_HANA_DISPATCH_IF(chain_impl<M>,
+	                                     hana::Monad<M>::value
+	                                    );
 
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::Monad<M>::value,
-        "hana::chain(xs, f) requires 'xs' to be a Monad");
-    #endif
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::Monad<M>::value,
+	              "hana::chain(xs, f) requires 'xs' to be a Monad");
+#endif
 
-        return Chain::apply(static_cast<Xs&&>(xs), static_cast<F&&>(f));
-    }
-    //! @endcond
+	return Chain::apply(static_cast<Xs&&>(xs), static_cast<F&&>(f));
+}
+//! @endcond
 
-    template <typename M, bool condition>
-    struct chain_impl<M, when<condition>> : default_ {
-        template <typename Xs, typename F>
-        static constexpr auto apply(Xs&& xs, F&& f) {
-            return hana::flatten(hana::transform(static_cast<Xs&&>(xs),
-                                                 static_cast<F&&>(f)));
-        }
-    };
+template <typename M, bool condition>
+struct chain_impl<M, when<condition>> : default_
+{
+	template <typename Xs, typename F>
+	static constexpr auto apply(Xs&& xs, F&& f)
+	{
+		return hana::flatten(hana::transform(static_cast<Xs&&>(xs),
+		                                     static_cast<F&&>(f)));
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CHAIN_HPP

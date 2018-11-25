@@ -6,19 +6,26 @@
 # define ARG_TO_PYTHON_BASE_DWA200237_HPP
 # include <boost/python/handle.hpp>
 
-namespace boost { namespace python { namespace converter {
+namespace boost
+{
+namespace python
+{
+namespace converter
+{
 
 struct registration;
 
 namespace detail
 {
-  struct BOOST_PYTHON_DECL arg_to_python_base
-      : handle<>
-  {
-      arg_to_python_base(void const volatile* source, registration const&);
-  };
+struct BOOST_PYTHON_DECL arg_to_python_base
+	: handle<>
+{
+	arg_to_python_base(void const volatile* source, registration const&);
+};
 }
 
-}}} // namespace boost::python::converter
+}
+}
+} // namespace boost::python::converter
 
 #endif // ARG_TO_PYTHON_BASE_DWA200237_HPP

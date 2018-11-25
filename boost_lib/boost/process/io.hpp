@@ -120,76 +120,174 @@ system("b2", std_out > null);
  *
  */
 
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 
 template<typename T> using is_streambuf    = typename std::is_same<T, boost::asio::streambuf>::type;
 template<typename T> using is_const_buffer =
-        std::integral_constant<bool,
-            std::is_same<   boost::asio::const_buffer, T>::value |
-            std::is_base_of<boost::asio::const_buffer, T>::value
-        >;
+    std::integral_constant<bool,
+    std::is_same<   boost::asio::const_buffer, T>::value |
+    std::is_base_of<boost::asio::const_buffer, T>::value
+    >;
 template<typename T> using is_mutable_buffer =
-        std::integral_constant<bool,
-            std::is_same<   boost::asio::mutable_buffer, T>::value |
-            std::is_base_of<boost::asio::mutable_buffer, T>::value
-        >;
+    std::integral_constant<bool,
+    std::is_same<   boost::asio::mutable_buffer, T>::value |
+    std::is_base_of<boost::asio::mutable_buffer, T>::value
+    >;
 
 
-struct null_t  {constexpr null_t() {}};
+struct null_t
+{
+	constexpr null_t() {}
+};
 struct close_t;
 
 template<class>
 struct std_in_
 {
-    constexpr std_in_() {}
+	constexpr std_in_() {}
 
-    api::close_in close() const {return api::close_in(); }
-    api::close_in operator=(const close_t &) const {return api::close_in();}
-    api::close_in operator<(const close_t &) const {return api::close_in();}
+	api::close_in close() const
+	{
+		return api::close_in();
+	}
+	api::close_in operator=(const close_t &) const
+	{
+		return api::close_in();
+	}
+	api::close_in operator<(const close_t &) const
+	{
+		return api::close_in();
+	}
 
-    api::null_in null() const {return api::null_in();}
-    api::null_in operator=(const null_t &) const {return api::null_in();}
-    api::null_in operator<(const null_t &) const {return api::null_in();}
+	api::null_in null() const
+	{
+		return api::null_in();
+	}
+	api::null_in operator=(const null_t &) const
+	{
+		return api::null_in();
+	}
+	api::null_in operator<(const null_t &) const
+	{
+		return api::null_in();
+	}
 
-    api::file_in operator=(const boost::filesystem::path &p) const {return p;}
-    api::file_in operator=(const std::string & p)            const {return p;}
-    api::file_in operator=(const std::wstring &p)            const {return p;}
-    api::file_in operator=(const char * p)                   const {return p;}
-    api::file_in operator=(const wchar_t * p)                const {return p;}
+	api::file_in operator=(const boost::filesystem::path &p) const
+	{
+		return p;
+	}
+	api::file_in operator=(const std::string & p)            const
+	{
+		return p;
+	}
+	api::file_in operator=(const std::wstring &p)            const
+	{
+		return p;
+	}
+	api::file_in operator=(const char * p)                   const
+	{
+		return p;
+	}
+	api::file_in operator=(const wchar_t * p)                const
+	{
+		return p;
+	}
 
-    api::file_in operator<(const boost::filesystem::path &p) const {return p;}
-    api::file_in operator<(const std::string &p)             const {return p;}
-    api::file_in operator<(const std::wstring &p)            const {return p;}
-    api::file_in operator<(const char*p)                     const {return p;}
-    api::file_in operator<(const wchar_t * p)                const {return p;}
+	api::file_in operator<(const boost::filesystem::path &p) const
+	{
+		return p;
+	}
+	api::file_in operator<(const std::string &p)             const
+	{
+		return p;
+	}
+	api::file_in operator<(const std::wstring &p)            const
+	{
+		return p;
+	}
+	api::file_in operator<(const char*p)                     const
+	{
+		return p;
+	}
+	api::file_in operator<(const wchar_t * p)                const
+	{
+		return p;
+	}
 
-    api::file_in operator=(FILE * f)                         const {return f;}
-    api::file_in operator<(FILE * f)                         const {return f;}
+	api::file_in operator=(FILE * f)                         const
+	{
+		return f;
+	}
+	api::file_in operator<(FILE * f)                         const
+	{
+		return f;
+	}
 
-    template<typename Char, typename Traits> api::pipe_in operator=(basic_pipe<Char, Traits> & p)      const {return p;}
-    template<typename Char, typename Traits> api::pipe_in operator<(basic_pipe<Char, Traits> & p)      const {return p;}
-    template<typename Char, typename Traits> api::pipe_in operator=(basic_opstream<Char, Traits> & p)  const {return p.pipe();}
-    template<typename Char, typename Traits> api::pipe_in operator<(basic_opstream<Char, Traits> & p)  const {return p.pipe();}
-    template<typename Char, typename Traits> api::pipe_in operator=(basic_pstream <Char, Traits> & p)  const {return p.pipe();}
-    template<typename Char, typename Traits> api::pipe_in operator<(basic_pstream <Char, Traits> & p)  const {return p.pipe();}
+	template<typename Char, typename Traits> api::pipe_in operator=(basic_pipe<Char, Traits> & p)      const
+	{
+		return p;
+	}
+	template<typename Char, typename Traits> api::pipe_in operator<(basic_pipe<Char, Traits> & p)      const
+	{
+		return p;
+	}
+	template<typename Char, typename Traits> api::pipe_in operator=(basic_opstream<Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
+	template<typename Char, typename Traits> api::pipe_in operator<(basic_opstream<Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
+	template<typename Char, typename Traits> api::pipe_in operator=(basic_pstream <Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
+	template<typename Char, typename Traits> api::pipe_in operator<(basic_pstream <Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
 
-    api::async_pipe_in operator=(async_pipe & p) const {return p;}
-    api::async_pipe_in operator<(async_pipe & p) const {return p;}
+	api::async_pipe_in operator=(async_pipe & p) const
+	{
+		return p;
+	}
+	api::async_pipe_in operator<(async_pipe & p) const
+	{
+		return p;
+	}
 
-    template<typename T, typename = typename std::enable_if<
-            is_const_buffer<T>::value || is_mutable_buffer<T>::value
-            >::type>
-    api::async_in_buffer<const T> operator=(const T & buf) const {return buf;}
-    template<typename T, typename = typename std::enable_if<is_streambuf<T>::value>::type >
-    api::async_in_buffer<T>       operator=(T       & buf) const {return buf;}
+	template<typename T, typename = typename std::enable_if<
+	             is_const_buffer<T>::value || is_mutable_buffer<T>::value
+	             >::type>
+	api::async_in_buffer<const T> operator=(const T & buf) const
+	{
+		return buf;
+	}
+	template<typename T, typename = typename std::enable_if<is_streambuf<T>::value>::type >
+	api::async_in_buffer<T>       operator=(T       & buf) const
+	{
+		return buf;
+	}
 
-    template<typename T, typename = typename std::enable_if<
-            is_const_buffer<T>::value || is_mutable_buffer<T>::value
-            >::type>
-    api::async_in_buffer<const T> operator<(const T & buf) const {return buf;}
-    template<typename T, typename = typename std::enable_if<is_streambuf<T>::value>::type >
-    api::async_in_buffer<T>       operator<(T       & buf) const {return buf;}
+	template<typename T, typename = typename std::enable_if<
+	             is_const_buffer<T>::value || is_mutable_buffer<T>::value
+	             >::type>
+	api::async_in_buffer<const T> operator<(const T & buf) const
+	{
+		return buf;
+	}
+	template<typename T, typename = typename std::enable_if<is_streambuf<T>::value>::type >
+	api::async_in_buffer<T>       operator<(T       & buf) const
+	{
+		return buf;
+	}
 
 };
 
@@ -199,70 +297,181 @@ struct std_in_
 template<int p1, int p2 = -1>
 struct std_out_
 {
-    constexpr std_out_() {}
+	constexpr std_out_() {}
 
-    api::close_out<p1,p2> close() const {return api::close_out<p1,p2>(); }
-    api::close_out<p1,p2> operator=(const close_t &) const {return api::close_out<p1,p2>();}
-    api::close_out<p1,p2> operator>(const close_t &) const {return api::close_out<p1,p2>();}
+	api::close_out<p1,p2> close() const
+	{
+		return api::close_out<p1,p2>();
+	}
+	api::close_out<p1,p2> operator=(const close_t &) const
+	{
+		return api::close_out<p1,p2>();
+	}
+	api::close_out<p1,p2> operator>(const close_t &) const
+	{
+		return api::close_out<p1,p2>();
+	}
 
-    api::null_out<p1,p2> null() const {return api::null_out<p1,p2>();}
-    api::null_out<p1,p2> operator=(const null_t &) const {return api::null_out<p1,p2>();}
-    api::null_out<p1,p2> operator>(const null_t &) const {return api::null_out<p1,p2>();}
+	api::null_out<p1,p2> null() const
+	{
+		return api::null_out<p1,p2>();
+	}
+	api::null_out<p1,p2> operator=(const null_t &) const
+	{
+		return api::null_out<p1,p2>();
+	}
+	api::null_out<p1,p2> operator>(const null_t &) const
+	{
+		return api::null_out<p1,p2>();
+	}
 
-    api::file_out<p1,p2> operator=(const boost::filesystem::path &p) const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator=(const std::string &p)             const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator=(const std::wstring &p)            const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator=(const char * p)                   const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator=(const wchar_t * p)                const {return api::file_out<p1,p2>(p);}
+	api::file_out<p1,p2> operator=(const boost::filesystem::path &p) const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator=(const std::string &p)             const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator=(const std::wstring &p)            const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator=(const char * p)                   const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator=(const wchar_t * p)                const
+	{
+		return api::file_out<p1,p2>(p);
+	}
 
-    api::file_out<p1,p2> operator>(const boost::filesystem::path &p) const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator>(const std::string &p)             const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator>(const std::wstring &p)            const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator>(const char * p)                   const {return api::file_out<p1,p2>(p);}
-    api::file_out<p1,p2> operator>(const wchar_t * p)                const {return api::file_out<p1,p2>(p);}
+	api::file_out<p1,p2> operator>(const boost::filesystem::path &p) const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator>(const std::string &p)             const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator>(const std::wstring &p)            const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator>(const char * p)                   const
+	{
+		return api::file_out<p1,p2>(p);
+	}
+	api::file_out<p1,p2> operator>(const wchar_t * p)                const
+	{
+		return api::file_out<p1,p2>(p);
+	}
 
-    api::file_out<p1,p2> operator=(FILE * f)  const {return f;}
-    api::file_out<p1,p2> operator>(FILE * f)  const {return f;}
+	api::file_out<p1,p2> operator=(FILE * f)  const
+	{
+		return f;
+	}
+	api::file_out<p1,p2> operator>(FILE * f)  const
+	{
+		return f;
+	}
 
-    template<typename Char, typename Traits> api::pipe_out<p1,p2> operator=(basic_pipe<Char, Traits> & p)      const {return p;}
-    template<typename Char, typename Traits> api::pipe_out<p1,p2> operator>(basic_pipe<Char, Traits> & p)      const {return p;}
-    template<typename Char, typename Traits> api::pipe_out<p1,p2> operator=(basic_ipstream<Char, Traits> & p)  const {return p.pipe();}
-    template<typename Char, typename Traits> api::pipe_out<p1,p2> operator>(basic_ipstream<Char, Traits> & p)  const {return p.pipe();}
-    template<typename Char, typename Traits> api::pipe_out<p1,p2> operator=(basic_pstream <Char, Traits> & p)  const {return p.pipe();}
-    template<typename Char, typename Traits> api::pipe_out<p1,p2> operator>(basic_pstream <Char, Traits> & p)  const {return p.pipe();}
+	template<typename Char, typename Traits> api::pipe_out<p1,p2> operator=(basic_pipe<Char, Traits> & p)      const
+	{
+		return p;
+	}
+	template<typename Char, typename Traits> api::pipe_out<p1,p2> operator>(basic_pipe<Char, Traits> & p)      const
+	{
+		return p;
+	}
+	template<typename Char, typename Traits> api::pipe_out<p1,p2> operator=(basic_ipstream<Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
+	template<typename Char, typename Traits> api::pipe_out<p1,p2> operator>(basic_ipstream<Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
+	template<typename Char, typename Traits> api::pipe_out<p1,p2> operator=(basic_pstream <Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
+	template<typename Char, typename Traits> api::pipe_out<p1,p2> operator>(basic_pstream <Char, Traits> & p)  const
+	{
+		return p.pipe();
+	}
 
-    api::async_pipe_out<p1, p2> operator=(async_pipe & p) const {return p;}
-    api::async_pipe_out<p1, p2> operator>(async_pipe & p) const {return p;}
+	api::async_pipe_out<p1, p2> operator=(async_pipe & p) const
+	{
+		return p;
+	}
+	api::async_pipe_out<p1, p2> operator>(async_pipe & p) const
+	{
+		return p;
+	}
 
-    api::async_out_buffer<p1, p2, const asio::mutable_buffer>     operator=(const asio::mutable_buffer & buf)     const {return buf;}
-    api::async_out_buffer<p1, p2, const asio::mutable_buffers_1> operator=(const asio::mutable_buffers_1 & buf) const {return buf;}
-    api::async_out_buffer<p1, p2, asio::streambuf>               operator=(asio::streambuf & os)                   const {return os ;}
+	api::async_out_buffer<p1, p2, const asio::mutable_buffer>     operator=(const asio::mutable_buffer & buf)     const
+	{
+		return buf;
+	}
+	api::async_out_buffer<p1, p2, const asio::mutable_buffers_1> operator=(const asio::mutable_buffers_1 & buf) const
+	{
+		return buf;
+	}
+	api::async_out_buffer<p1, p2, asio::streambuf>               operator=(asio::streambuf & os)                   const
+	{
+		return os ;
+	}
 
-    api::async_out_buffer<p1, p2, const asio::mutable_buffer>     operator>(const asio::mutable_buffer & buf)     const {return buf;}
-    api::async_out_buffer<p1, p2, const asio::mutable_buffers_1> operator>(const asio::mutable_buffers_1 & buf) const {return buf;}
-    api::async_out_buffer<p1, p2, asio::streambuf>               operator>(asio::streambuf & os)                   const {return os ;}
+	api::async_out_buffer<p1, p2, const asio::mutable_buffer>     operator>(const asio::mutable_buffer & buf)     const
+	{
+		return buf;
+	}
+	api::async_out_buffer<p1, p2, const asio::mutable_buffers_1> operator>(const asio::mutable_buffers_1 & buf) const
+	{
+		return buf;
+	}
+	api::async_out_buffer<p1, p2, asio::streambuf>               operator>(asio::streambuf & os)                   const
+	{
+		return os ;
+	}
 
-    api::async_out_future<p1,p2, std::string>       operator=(std::future<std::string> & fut)       const { return fut;}
-    api::async_out_future<p1,p2, std::string>       operator>(std::future<std::string> & fut)       const { return fut;}
-    api::async_out_future<p1,p2, std::vector<char>> operator=(std::future<std::vector<char>> & fut) const { return fut;}
-    api::async_out_future<p1,p2, std::vector<char>> operator>(std::future<std::vector<char>> & fut) const { return fut;}
+	api::async_out_future<p1,p2, std::string>       operator=(std::future<std::string> & fut)       const
+	{
+		return fut;
+	}
+	api::async_out_future<p1,p2, std::string>       operator>(std::future<std::string> & fut)       const
+	{
+		return fut;
+	}
+	api::async_out_future<p1,p2, std::vector<char>> operator=(std::future<std::vector<char>> & fut) const
+	{
+		return fut;
+	}
+	api::async_out_future<p1,p2, std::vector<char>> operator>(std::future<std::vector<char>> & fut) const
+	{
+		return fut;
+	}
 
-    template<int pin, typename = typename std::enable_if<
-            (((p1 == 1) && (pin == 2)) ||
-             ((p1 == 2) && (pin == 1)))
-             && (p2 == -1)>::type>
-    constexpr std_out_<1, 2> operator& (const std_out_<pin>&) const
-    {
-        return std_out_<1, 2> ();
-    }
+	template<int pin, typename = typename std::enable_if<
+	             (((p1 == 1) && (pin == 2)) ||
+	              ((p1 == 2) && (pin == 1)))
+	             && (p2 == -1)>::type>
+	constexpr std_out_<1, 2> operator& (const std_out_<pin>&) const
+	{
+		return std_out_<1, 2> ();
+	}
 
 };
 
 struct close_t
 {
-    constexpr close_t() {}
-    template<int T, int U>
-    api::close_out<T,U> operator()(std_out_<T,U>) {return api::close_out<T,U>();}
+	constexpr close_t() {}
+	template<int T, int U>
+	api::close_out<T,U> operator()(std_out_<T,U>)
+	{
+		return api::close_out<T,U>();
+	}
 };
 
 
@@ -547,5 +756,6 @@ constexpr boost::process::detail::std_out_<1> std_out;
  */
 constexpr boost::process::detail::std_out_<2> std_err;
 
-}}
+}
+}
 #endif /* INCLUDE_BOOST_PROCESS_IO_HPP_ */

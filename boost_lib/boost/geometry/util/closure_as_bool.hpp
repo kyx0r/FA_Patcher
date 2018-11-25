@@ -17,7 +17,9 @@
 #include <boost/geometry/core/closure.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -29,18 +31,19 @@ struct closure_as_bool
 template<>
 struct closure_as_bool<closed>
 {
-    static const bool value = true;
+	static const bool value = true;
 };
 
 
 template<>
 struct closure_as_bool<open>
 {
-    static const bool value = false;
+	static const bool value = false;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_UTIL_CLOSURE_AS_BOOL_HPP

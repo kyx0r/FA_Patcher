@@ -19,25 +19,28 @@
 #include <boost/mpl/end.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 template<class T>
 struct is_relaxed;
 
-namespace detail {
+namespace detail
+{
 
 template<class T>
 struct is_relaxed_impl :
-    ::boost::mpl::not_<
-        typename ::boost::is_same<
-            typename ::boost::mpl::find_if<
-                T,
-                ::boost::type_erasure::is_relaxed< ::boost::mpl::_1>
-            >::type,
-            typename ::boost::mpl::end<T>::type
-        >::type
-    >::type
+	::boost::mpl::not_<
+	typename ::boost::is_same<
+	typename ::boost::mpl::find_if<
+	T,
+	::boost::type_erasure::is_relaxed< ::boost::mpl::_1>
+	>::type,
+	typename ::boost::mpl::end<T>::type
+	>::type
+	>::type
 {};
 
 }
@@ -73,16 +76,16 @@ struct relaxed : ::boost::mpl::vector0<> {};
  */
 template<class Concept>
 struct is_relaxed :
-    ::boost::mpl::eval_if< ::boost::mpl::is_sequence<Concept>,
-        ::boost::type_erasure::detail::is_relaxed_impl<Concept>,
-        ::boost::mpl::false_
-    >::type
+	::boost::mpl::eval_if< ::boost::mpl::is_sequence<Concept>,
+	::boost::type_erasure::detail::is_relaxed_impl<Concept>,
+	::boost::mpl::false_
+	>::type
 {};
 
 /** INTERNAL ONLY */
 template<>
 struct is_relaxed< ::boost::type_erasure::relaxed> :
-    ::boost::mpl::true_
+	::boost::mpl::true_
 {};
 
 }

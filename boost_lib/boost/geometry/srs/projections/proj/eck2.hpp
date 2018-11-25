@@ -48,137 +48,148 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct eck2 {};
+namespace par4
+{
+struct eck2 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace eck2
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace eck2
+{
 
-            static const double FXC = 0.46065886596178063902;
-            static const double FYC = 1.44720250911653531871;
-            //static const double C13 = 0.33333333333333333333;
-            static const double ONEEPS = 1.0000001;
+static const double FXC = 0.46065886596178063902;
+static const double FYC = 1.44720250911653531871;
+//static const double C13 = 0.33333333333333333333;
+static const double ONEEPS = 1.0000001;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_eck2_spheroid : public base_t_fi<base_eck2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_eck2_spheroid : public base_t_fi<base_eck2_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_eck2_spheroid(const Parameters& par)
-                    : base_t_fi<base_eck2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_eck2_spheroid(const Parameters& par)
+		: base_t_fi<base_eck2_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    xy_x = FXC * lp_lon * (xy_y = sqrt(4. - 3. * sin(fabs(lp_lat))));
-                    xy_y = FYC * (2. - xy_y);
-                    if ( lp_lat < 0.) xy_y = -xy_y;
-                }
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		xy_x = FXC * lp_lon * (xy_y = sqrt(4. - 3. * sin(fabs(lp_lat))));
+		xy_y = FYC * (2. - xy_y);
+		if ( lp_lat < 0.) xy_y = -xy_y;
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
-                    static const CalculationType C13 = detail::THIRD<CalculationType>();
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+		static const CalculationType C13 = detail::THIRD<CalculationType>();
 
-                    lp_lon = xy_x / (FXC * ( lp_lat = 2. - fabs(xy_y) / FYC) );
-                    lp_lat = (4. - lp_lat * lp_lat) * C13;
-                    if (fabs(lp_lat) >= 1.) {
-                        if (fabs(lp_lat) > ONEEPS)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        else
-                            lp_lat = lp_lat < 0. ? -HALFPI : HALFPI;
-                    } else
-                        lp_lat = asin(lp_lat);
-                    if (xy_y < 0)
-                        lp_lat = -lp_lat;
-                }
+		lp_lon = xy_x / (FXC * ( lp_lat = 2. - fabs(xy_y) / FYC) );
+		lp_lat = (4. - lp_lat * lp_lat) * C13;
+		if (fabs(lp_lat) >= 1.)
+		{
+			if (fabs(lp_lat) > ONEEPS)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			else
+				lp_lat = lp_lat < 0. ? -HALFPI : HALFPI;
+		}
+		else
+			lp_lat = asin(lp_lat);
+		if (xy_y < 0)
+			lp_lat = -lp_lat;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "eck2_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "eck2_spheroid";
+	}
 
-            };
+};
 
-            // Eckert II
-            template <typename Parameters>
-            inline void setup_eck2(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Eckert II
+template <typename Parameters>
+inline void setup_eck2(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::eck2
-    #endif // doxygen
+}
+} // namespace detail::eck2
+#endif // doxygen
 
-    /*!
-        \brief Eckert II projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_eck2.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct eck2_spheroid : public detail::eck2::base_eck2_spheroid<CalculationType, Parameters>
-    {
-        inline eck2_spheroid(const Parameters& par) : detail::eck2::base_eck2_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::eck2::setup_eck2(this->m_par);
-        }
-    };
+/*!
+    \brief Eckert II projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_eck2.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct eck2_spheroid : public detail::eck2::base_eck2_spheroid<CalculationType, Parameters>
+{
+	inline eck2_spheroid(const Parameters& par) : detail::eck2::base_eck2_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::eck2::setup_eck2(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eck2, eck2_spheroid, eck2_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eck2, eck2_spheroid, eck2_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class eck2_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<eck2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class eck2_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<eck2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void eck2_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("eck2", new eck2_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void eck2_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("eck2", new eck2_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_ECK2_HPP
 

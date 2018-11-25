@@ -27,7 +27,7 @@ namespace detail
 
 template<class T> struct lsp_if_not_array
 {
-    typedef boost::local_shared_ptr<T> type;
+	typedef boost::local_shared_ptr<T> type;
 };
 
 template<class T> struct lsp_if_not_array<T[]>
@@ -44,68 +44,70 @@ template<class T, class A> class lsp_ms_deleter: public local_counted_impl_em
 {
 private:
 
-    typedef typename sp_aligned_storage<sizeof(T), ::boost::alignment_of<T>::value>::type storage_type;
+	typedef typename sp_aligned_storage<sizeof(T), ::boost::alignment_of<T>::value>::type storage_type;
 
-    storage_type storage_;
-    A a_;
-    bool initialized_;
+	storage_type storage_;
+	A a_;
+	bool initialized_;
 
 private:
 
-    void destroy() BOOST_SP_NOEXCEPT
-    {
-        if( initialized_ )
-        {
-            T * p = reinterpret_cast< T* >( storage_.data_ );
+	void destroy() BOOST_SP_NOEXCEPT
+	{
+		if( initialized_ )
+		{
+			T * p = reinterpret_cast< T* >( storage_.data_ );
 
 #if !defined( BOOST_NO_CXX11_ALLOCATOR )
 
-            std::allocator_traits<A>::destroy( a_, p );
+			std::allocator_traits<A>::destroy( a_, p );
 
 #else
 
-            p->~T();
+			p->~T();
 
 #endif
 
-            initialized_ = false;
-        }
-    }
+			initialized_ = false;
+		}
+	}
 
 public:
 
-    explicit lsp_ms_deleter( A const & a ) BOOST_SP_NOEXCEPT : a_( a ), initialized_( false )
-    {
-    }
+explicit lsp_ms_deleter( A const & a ) BOOST_SP_NOEXCEPT :
+	a_( a ), initialized_( false )
+	{
+	}
 
-    // optimization: do not copy storage_
-    lsp_ms_deleter( lsp_ms_deleter const & r ) BOOST_SP_NOEXCEPT : a_( r.a_), initialized_( false )
-    {
-    }
+	// optimization: do not copy storage_
+lsp_ms_deleter( lsp_ms_deleter const & r ) BOOST_SP_NOEXCEPT :
+	a_( r.a_), initialized_( false )
+	{
+	}
 
-    ~lsp_ms_deleter() BOOST_SP_NOEXCEPT
-    {
-        destroy();
-    }
+	~lsp_ms_deleter() BOOST_SP_NOEXCEPT
+	{
+		destroy();
+	}
 
-    void operator()( T * ) BOOST_SP_NOEXCEPT
-    {
-        destroy();
-    }
+	void operator()( T * ) BOOST_SP_NOEXCEPT
+	{
+		destroy();
+	}
 
-    static void operator_fn( T* ) BOOST_SP_NOEXCEPT // operator() can't be static
-    {
-    }
+	static void operator_fn( T* ) BOOST_SP_NOEXCEPT // operator() can't be static
+	{
+	}
 
-    void * address() BOOST_SP_NOEXCEPT
-    {
-        return storage_.data_;
-    }
+	void * address() BOOST_SP_NOEXCEPT
+	{
+		return storage_.data_;
+	}
 
-    void set_initialized() BOOST_SP_NOEXCEPT
-    {
-        initialized_ = true;
-    }
+	void set_initialized() BOOST_SP_NOEXCEPT
+	{
+		initialized_ = true;
+	}
 };
 
 } // namespace detail
@@ -114,84 +116,84 @@ template<class T, class A, class... Args> typename boost::detail::lsp_if_not_arr
 {
 #if !defined( BOOST_NO_CXX11_ALLOCATOR )
 
-    typedef typename std::allocator_traits<A>::template rebind_alloc<T> A2;
+	typedef typename std::allocator_traits<A>::template rebind_alloc<T> A2;
 
 #else
 
-    typedef typename A::template rebind<T>::other A2;
+	typedef typename A::template rebind<T>::other A2;
 
 #endif
 
-    A2 a2( a );
+	A2 a2( a );
 
-    typedef boost::detail::lsp_ms_deleter<T, A2> D;
+	typedef boost::detail::lsp_ms_deleter<T, A2> D;
 
-    boost::shared_ptr<T> pt( static_cast< T* >( 0 ), boost::detail::sp_inplace_tag<D>(), a2 );
+	boost::shared_ptr<T> pt( static_cast< T* >( 0 ), boost::detail::sp_inplace_tag<D>(), a2 );
 
-    D * pd = static_cast< D* >( pt._internal_get_untyped_deleter() );
-    void * pv = pd->address();
+	D * pd = static_cast< D* >( pt._internal_get_untyped_deleter() );
+	void * pv = pd->address();
 
 #if !defined( BOOST_NO_CXX11_ALLOCATOR )
 
-    std::allocator_traits<A2>::construct( a2, static_cast< T* >( pv ), std::forward<Args>( args )... );
+	std::allocator_traits<A2>::construct( a2, static_cast< T* >( pv ), std::forward<Args>( args )... );
 
 #else
 
-    ::new( pv ) T( std::forward<Args>( args )... );
+	::new( pv ) T( std::forward<Args>( args )... );
 
 #endif
 
-    pd->set_initialized();
+	pd->set_initialized();
 
-    T * pt2 = static_cast< T* >( pv );
-    boost::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
+	T * pt2 = static_cast< T* >( pv );
+	boost::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
 
-    pd->pn_ = pt._internal_count();
+	pd->pn_ = pt._internal_count();
 
-    return boost::local_shared_ptr<T>( boost::detail::lsp_internal_constructor_tag(), pt2, pd );
+	return boost::local_shared_ptr<T>( boost::detail::lsp_internal_constructor_tag(), pt2, pd );
 }
 
 template<class T, class A> typename boost::detail::lsp_if_not_array<T>::type allocate_local_shared_noinit( A const & a )
 {
 #if !defined( BOOST_NO_CXX11_ALLOCATOR )
 
-    typedef typename std::allocator_traits<A>::template rebind_alloc<T> A2;
+	typedef typename std::allocator_traits<A>::template rebind_alloc<T> A2;
 
 #else
 
-    typedef typename A::template rebind<T>::other A2;
+	typedef typename A::template rebind<T>::other A2;
 
 #endif
 
-    A2 a2( a );
+	A2 a2( a );
 
-    typedef boost::detail::lsp_ms_deleter< T, std::allocator<T> > D;
+	typedef boost::detail::lsp_ms_deleter< T, std::allocator<T> > D;
 
-    boost::shared_ptr<T> pt( static_cast< T* >( 0 ), boost::detail::sp_inplace_tag<D>(), a2 );
+	boost::shared_ptr<T> pt( static_cast< T* >( 0 ), boost::detail::sp_inplace_tag<D>(), a2 );
 
-    D * pd = static_cast< D* >( pt._internal_get_untyped_deleter() );
-    void * pv = pd->address();
+	D * pd = static_cast< D* >( pt._internal_get_untyped_deleter() );
+	void * pv = pd->address();
 
-    ::new( pv ) T;
+	::new( pv ) T;
 
-    pd->set_initialized();
+	pd->set_initialized();
 
-    T * pt2 = static_cast< T* >( pv );
-    boost::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
+	T * pt2 = static_cast< T* >( pv );
+	boost::detail::sp_enable_shared_from_this( &pt, pt2, pt2 );
 
-    pd->pn_ = pt._internal_count();
+	pd->pn_ = pt._internal_count();
 
-    return boost::local_shared_ptr<T>( boost::detail::lsp_internal_constructor_tag(), pt2, pd );
+	return boost::local_shared_ptr<T>( boost::detail::lsp_internal_constructor_tag(), pt2, pd );
 }
 
 template<class T, class... Args> typename boost::detail::lsp_if_not_array<T>::type make_local_shared( Args&&... args )
 {
-    return boost::allocate_local_shared<T>( std::allocator<T>(), std::forward<Args>(args)... );
+	return boost::allocate_local_shared<T>( std::allocator<T>(), std::forward<Args>(args)... );
 }
 
 template<class T> typename boost::detail::lsp_if_not_array<T>::type make_local_shared_noinit()
 {
-    return boost::allocate_shared_noinit<T>( std::allocator<T>() );
+	return boost::allocate_shared_noinit<T>( std::allocator<T>() );
 }
 
 } // namespace boost

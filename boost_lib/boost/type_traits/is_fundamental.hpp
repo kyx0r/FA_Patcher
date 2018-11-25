@@ -12,7 +12,8 @@
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_void.hpp>
 
-namespace boost {
+namespace boost
+{
 
 //* is a type T a fundamental type described in the standard (3.9.1)
 #if defined( __CODEGEARC__ )

@@ -20,105 +20,113 @@
 #include <boost/mpl/greater_equal.hpp>
 
 
-namespace boost {
-namespace math {
+namespace boost
+{
+namespace math
+{
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4702) // Unreachable code, only triggered in release mode and /W4
 #endif
 
-namespace detail {
+namespace detail
+{
 
 
 template <int N, int M = N%2>
 struct positive_power
 {
-    template <typename T>
-    static T result(T base)
-    {
-        T power = positive_power<N/2>::result(base);
-        return power * power;
-    }
+	template <typename T>
+	static T result(T base)
+	{
+		T power = positive_power<N/2>::result(base);
+		return power * power;
+	}
 };
 
 template <int N>
 struct positive_power<N, 1>
 {
-    template <typename T>
-    static T result(T base)
-    {
-        T power = positive_power<N/2>::result(base);
-        return base * power * power;
-    }
+	template <typename T>
+	static T result(T base)
+	{
+		T power = positive_power<N/2>::result(base);
+		return base * power * power;
+	}
 };
 
 template <>
 struct positive_power<1, 1>
 {
-    template <typename T>
-    static T result(T base){ return base; }
+	template <typename T>
+	static T result(T base)
+	{
+		return base;
+	}
 };
 
 
 template <int N, bool>
 struct power_if_positive
 {
-    template <typename T, class Policy>
-    static T result(T base, const Policy&)
-    { return positive_power<N>::result(base); }
+	template <typename T, class Policy>
+	static T result(T base, const Policy&)
+	{
+		return positive_power<N>::result(base);
+	}
 };
 
 template <int N>
 struct power_if_positive<N, false>
 {
-    template <typename T, class Policy>
-    static T result(T base, const Policy& policy)
-    {
-        if (base == 0)
-        {
-            return policies::raise_overflow_error<T>(
-                       "boost::math::pow(%1%)",
-                       "Attempted to compute a negative power of 0",
-                       policy
-                   );
-        }
+	template <typename T, class Policy>
+	static T result(T base, const Policy& policy)
+	{
+		if (base == 0)
+		{
+			return policies::raise_overflow_error<T>(
+			           "boost::math::pow(%1%)",
+			           "Attempted to compute a negative power of 0",
+			           policy
+			       );
+		}
 
-        return T(1) / positive_power<-N>::result(base);
-    }
+		return T(1) / positive_power<-N>::result(base);
+	}
 };
 
 template <>
 struct power_if_positive<0, true>
 {
-    template <typename T, class Policy>
-    static T result(T base, const Policy& policy)
-    {
-        if (base == 0)
-        {
-            return policies::raise_indeterminate_result_error<T>(
-                       "boost::math::pow(%1%)",
-                       "The result of pow<0>(%1%) is undetermined",
-                       base,
-                       T(1),
-                       policy
-                   );
-        }
+	template <typename T, class Policy>
+	static T result(T base, const Policy& policy)
+	{
+		if (base == 0)
+		{
+			return policies::raise_indeterminate_result_error<T>(
+			           "boost::math::pow(%1%)",
+			           "The result of pow<0>(%1%) is undetermined",
+			           base,
+			           T(1),
+			           policy
+			       );
+		}
 
-        return T(1);
-    }
+		return T(1);
+	}
 };
 
 
 template <int N>
 struct select_power_if_positive
 {
-    typedef typename mpl::greater_equal<
-                         mpl::int_<N>,
-                         mpl::int_<0>
-                     >::type is_positive;
+	typedef typename mpl::greater_equal<
+	mpl::int_<N>,
+	    mpl::int_<0>
+	    >::type is_positive;
 
-    typedef power_if_positive<N, is_positive::value> type;
+	typedef power_if_positive<N, is_positive::value> type;
 };
 
 
@@ -127,15 +135,17 @@ struct select_power_if_positive
 
 template <int N, typename T, class Policy>
 inline typename tools::promote_args<T>::type pow(T base, const Policy& policy)
-{ 
-   typedef typename tools::promote_args<T>::type result_type;
-   return detail::select_power_if_positive<N>::type::result(static_cast<result_type>(base), policy); 
+{
+	typedef typename tools::promote_args<T>::type result_type;
+	return detail::select_power_if_positive<N>::type::result(static_cast<result_type>(base), policy);
 }
 
 
 template <int N, typename T>
 inline typename tools::promote_args<T>::type pow(T base)
-{ return pow<N>(base, policies::policy<>()); }
+{
+	return pow<N>(base, policies::policy<>());
+}
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)

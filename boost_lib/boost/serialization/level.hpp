@@ -9,7 +9,7 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // level.hpp:
 
-// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
+// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com .
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -32,63 +32,67 @@
 
 #include <boost/serialization/level_enum.hpp>
 
-namespace boost {
-namespace serialization {
+namespace boost
+{
+namespace serialization
+{
 
 struct basic_traits;
 
 // default serialization implementation level
 template<class T>
-struct implementation_level_impl {
-    template<class U>
-    struct traits_class_level {
-        typedef typename U::level type;
-    };
+struct implementation_level_impl
+{
+	template<class U>
+	struct traits_class_level
+	{
+		typedef typename U::level type;
+	};
 
-    typedef mpl::integral_c_tag tag;
-    // note: at least one compiler complained w/o the full qualification
-    // on basic traits below
-    typedef
-        typename mpl::eval_if<
-            is_base_and_derived<boost::serialization::basic_traits, T>,
-            traits_class_level< T >,
-        //else
-        typename mpl::eval_if<
-            is_fundamental< T >,
-            mpl::int_<primitive_type>,
-        //else
-        typename mpl::eval_if<
-            is_class< T >,
-            mpl::int_<object_class_info>,
-        //else
-        typename mpl::eval_if<
-            is_array< T >,
-                mpl::int_<object_serializable>,
-        //else
-        typename mpl::eval_if<
-            is_enum< T >,
-                mpl::int_<primitive_type>,
-        //else
-            mpl::int_<not_serializable>
-        >
-        >
-        >
-        >
-        >::type type;
-        // vc 7.1 doesn't like enums here
-    BOOST_STATIC_CONSTANT(int, value = type::value);
+	typedef mpl::integral_c_tag tag;
+	// note: at least one compiler complained w/o the full qualification
+	// on basic traits below
+	typedef
+	typename mpl::eval_if<
+	is_base_and_derived<boost::serialization::basic_traits, T>,
+	                    traits_class_level< T >,
+	                    //else
+	                    typename mpl::eval_if<
+	                    is_fundamental< T >,
+	                    mpl::int_<primitive_type>,
+	                    //else
+	                    typename mpl::eval_if<
+	                    is_class< T >,
+	                    mpl::int_<object_class_info>,
+	                    //else
+	                    typename mpl::eval_if<
+	                    is_array< T >,
+	                    mpl::int_<object_serializable>,
+	                    //else
+	                    typename mpl::eval_if<
+	                    is_enum< T >,
+	                    mpl::int_<primitive_type>,
+	                    //else
+	                    mpl::int_<not_serializable>
+	                    >
+	                    >
+	                    >
+	                    >
+	                    >::type type;
+	// vc 7.1 doesn't like enums here
+	BOOST_STATIC_CONSTANT(int, value = type::value);
 };
 
 template<class T>
-struct implementation_level : 
-    public implementation_level_impl<const T>
+struct implementation_level :
+	public implementation_level_impl<const T>
 {
 };
 
 template<class T, int L>
 inline bool operator>=(implementation_level< T > t, enum level_type l)
 {
-    return t.value >= (int)l;
+	return t.value >= (int)l;
 }
 
 } // namespace serialization
@@ -111,6 +115,6 @@ inline bool operator>=(implementation_level< T > t, enum level_type l)
     };                                                   \
     }                                                    \
     }
-    /**/
+/**/
 
 #endif // BOOST_SERIALIZATION_LEVEL_HPP

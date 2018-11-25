@@ -26,7 +26,9 @@
 #include <boost/geometry/util/select_coordinate_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -42,17 +44,17 @@ namespace boost { namespace geometry
 template <typename Geometry1, typename Geometry2, typename CalculationType>
 struct select_calculation_type
 {
-    typedef typename
-        boost::mpl::if_
-        <
-            boost::is_void<CalculationType>,
-            typename select_coordinate_type
-                <
-                    Geometry1,
-                    Geometry2
-                >::type,
-            CalculationType
-        >::type type;
+	typedef typename
+	boost::mpl::if_
+	<
+	boost::is_void<CalculationType>,
+	      typename select_coordinate_type
+	      <
+	      Geometry1,
+	      Geometry2
+	      >::type,
+	      CalculationType
+	      >::type type;
 };
 
 // alternative version supporting more than 2 Geometries
@@ -63,22 +65,23 @@ template <typename CalculationType,
           typename Geometry3 = void>
 struct select_calculation_type_alt
 {
-    typedef typename
-        boost::mpl::if_
-        <
-            boost::is_void<CalculationType>,
-            typename select_coordinate_type
-                <
-                    Geometry1,
-                    Geometry2,
-                    Geometry3
-                >::type,
-            CalculationType
-        >::type type;
+	typedef typename
+	boost::mpl::if_
+	<
+	boost::is_void<CalculationType>,
+	      typename select_coordinate_type
+	      <
+	      Geometry1,
+	      Geometry2,
+	      Geometry3
+	      >::type,
+	      CalculationType
+	      >::type type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_UTIL_SELECT_CALCULATION_TYPE_HPP

@@ -20,14 +20,16 @@
 
 /* simple locking policy based on native recursive mutexes */
 
-namespace boost{
+namespace boost
+{
 
-namespace flyweights{
+namespace flyweights
+{
 
 struct simple_locking:locking_marker
 {
-  typedef detail::recursive_lightweight_mutex mutex_type;
-  typedef mutex_type::scoped_lock             lock_type;
+	typedef detail::recursive_lightweight_mutex mutex_type;
+	typedef mutex_type::scoped_lock             lock_type;
 };
 
 } /* namespace flyweights */

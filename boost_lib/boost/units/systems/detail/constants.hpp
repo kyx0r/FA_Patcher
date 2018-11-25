@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -23,31 +23,63 @@
 #include <boost/units/static_rational.hpp>
 #include <boost/units/detail/one.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units {
-
-template<class Base>
-struct constant 
-{ 
-    typedef typename Base::value_type value_type; 
-    BOOST_CONSTEXPR operator value_type() const    { return Base().value(); } 
-    BOOST_CONSTEXPR value_type value() const       { return Base().value(); } 
-    BOOST_CONSTEXPR value_type uncertainty() const { return Base().uncertainty(); } 
-    BOOST_CONSTEXPR value_type lower_bound() const { return Base().lower_bound(); } 
-    BOOST_CONSTEXPR value_type upper_bound() const { return Base().upper_bound(); } 
-}; 
+namespace units
+{
 
 template<class Base>
-struct physical_constant 
-{ 
-    typedef typename Base::value_type value_type; 
-    BOOST_CONSTEXPR operator value_type() const    { return Base().value(); } 
-    BOOST_CONSTEXPR value_type value() const       { return Base().value(); } 
-    BOOST_CONSTEXPR value_type uncertainty() const { return Base().uncertainty(); } 
-    BOOST_CONSTEXPR value_type lower_bound() const { return Base().lower_bound(); } 
-    BOOST_CONSTEXPR value_type upper_bound() const { return Base().upper_bound(); } 
-}; 
+struct constant
+{
+	typedef typename Base::value_type value_type;
+	BOOST_CONSTEXPR operator value_type() const
+	{
+		return Base().value();
+	}
+	BOOST_CONSTEXPR value_type value() const
+	{
+		return Base().value();
+	}
+	BOOST_CONSTEXPR value_type uncertainty() const
+	{
+		return Base().uncertainty();
+	}
+	BOOST_CONSTEXPR value_type lower_bound() const
+	{
+		return Base().lower_bound();
+	}
+	BOOST_CONSTEXPR value_type upper_bound() const
+	{
+		return Base().upper_bound();
+	}
+};
+
+template<class Base>
+struct physical_constant
+{
+	typedef typename Base::value_type value_type;
+	BOOST_CONSTEXPR operator value_type() const
+	{
+		return Base().value();
+	}
+	BOOST_CONSTEXPR value_type value() const
+	{
+		return Base().value();
+	}
+	BOOST_CONSTEXPR value_type uncertainty() const
+	{
+		return Base().uncertainty();
+	}
+	BOOST_CONSTEXPR value_type lower_bound() const
+	{
+		return Base().lower_bound();
+	}
+	BOOST_CONSTEXPR value_type upper_bound() const
+	{
+		return Base().upper_bound();
+	}
+};
 
 #define BOOST_UNITS_DEFINE_HELPER(name, symbol, template_name)  \
                                                                 \
@@ -179,12 +211,12 @@ BOOST_UNITS_DEFINE_HELPER(divide, /)
 template<class T1, long N, long D>
 struct power_typeof_helper<constant<T1>, static_rational<N,D> >
 {
-    typedef power_typeof_helper<typename T1::value_type, static_rational<N,D> > base;
-    typedef typename base::type type;
-    static BOOST_CONSTEXPR type value(const constant<T1>& arg)
-    {
-        return base::value(arg.value());
-    }
+	typedef power_typeof_helper<typename T1::value_type, static_rational<N,D> > base;
+	typedef typename base::type type;
+	static BOOST_CONSTEXPR type value(const constant<T1>& arg)
+	{
+		return base::value(arg.value());
+	}
 };
 
 #define BOOST_UNITS_DEFINE_HELPER(name, symbol)                     \
@@ -227,39 +259,39 @@ template<class Char, class Traits, class Y>
 inline
 std::basic_ostream<Char,Traits>& operator<<(std::basic_ostream<Char,Traits>& os,const physical_constant<Y>& val)
 {
-    boost::io::ios_precision_saver precision_saver(os);
-    //boost::io::ios_width_saver width_saver(os);
-    boost::io::ios_flags_saver flags_saver(os);
+	boost::io::ios_precision_saver precision_saver(os);
+	//boost::io::ios_width_saver width_saver(os);
+	boost::io::ios_flags_saver flags_saver(os);
 
-    //os << std::setw(21);
-    typedef typename Y::value_type value_type;
-    
-    if (val.uncertainty() > value_type())
-    {
-        const double relative_uncertainty = std::abs(val.uncertainty()/val.value());
-    
-        const double  exponent = std::log10(relative_uncertainty);
-        const long digits_of_precision = static_cast<long>(std::ceil(std::abs(exponent)))+3;
-        
-        // should try to replicate NIST CODATA syntax 
-        os << std::setprecision(digits_of_precision) 
-           //<< std::setw(digits_of_precision+8) 
-           //<< std::scientific
-           << val.value();
+	//os << std::setw(21);
+	typedef typename Y::value_type value_type;
+
+	if (val.uncertainty() > value_type())
+	{
+		const double relative_uncertainty = std::abs(val.uncertainty()/val.value());
+
+		const double  exponent = std::log10(relative_uncertainty);
+		const long digits_of_precision = static_cast<long>(std::ceil(std::abs(exponent)))+3;
+
+		// should try to replicate NIST CODATA syntax
+		os << std::setprecision(digits_of_precision)
+		   //<< std::setw(digits_of_precision+8)
+		   //<< std::scientific
+		   << val.value();
 //           << long(10*(relative_uncertainty/std::pow(Y(10),Y(exponent))));
 
-        os << " (rel. unc. = " 
-           << std::setprecision(1) 
-           //<< std::setw(7) 
-           << std::scientific
-           << relative_uncertainty << ")";
-    }
-    else
-    {
-        os << val.value() << " (exact)";
-    }
-    
-    return os;
+		os << " (rel. unc. = "
+		   << std::setprecision(1)
+		   //<< std::setw(7)
+		   << std::scientific
+		   << relative_uncertainty << ")";
+	}
+	else
+	{
+		os << val.value() << " (exact)";
+	}
+
+	return os;
 }
 
 // stream output
@@ -267,8 +299,8 @@ template<class Char, class Traits, class Y>
 inline
 std::basic_ostream<Char,Traits>& operator<<(std::basic_ostream<Char,Traits>& os,const constant<Y>&)
 {
-    os << Y();
-    return os;
+	os << Y();
+	return os;
 }
 
 } // namespace units

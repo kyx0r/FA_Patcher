@@ -25,7 +25,9 @@
 
 #include <boost/geometry/views/identity_view.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -50,7 +52,7 @@ struct reversible_view {};
 template <typename Range>
 struct reversible_view<Range, iterate_forward>
 {
-    typedef identity_view<Range> type;
+	typedef identity_view<Range> type;
 };
 
 
@@ -58,17 +60,18 @@ template <typename Range>
 struct reversible_view<Range, iterate_reverse>
 {
 #if BOOST_VERSION > 104500
-    typedef boost::reversed_range<Range> type;
+	typedef boost::reversed_range<Range> type;
 #else
-    // For older versions of Boost
-    typedef boost::range_detail::reverse_range<Range> type;
+	// For older versions of Boost
+	typedef boost::range_detail::reverse_range<Range> type;
 #endif
 };
 
 #endif // DOXYGEN_NO_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_REVERSIBLE_VIEW_HPP

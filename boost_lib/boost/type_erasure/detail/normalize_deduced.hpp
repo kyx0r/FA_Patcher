@@ -20,9 +20,12 @@
 
 #ifndef BOOST_TYPE_ERASURE_USE_MP11
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 template<class M, class T>
 struct normalize_deduced;
@@ -54,9 +57,9 @@ struct normalize_placeholder;
 template<class M, template<BOOST_PP_ENUM_PARAMS(N, class T)> class T, BOOST_PP_ENUM_PARAMS(N, class U)>
 struct normalize_deduced<M, T<BOOST_PP_ENUM_PARAMS(N, U)> >
 {
-    typedef typename ::boost::type_erasure::deduced<
-        T<BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_NORMALIZE_PLACEHOLDER, ~)>
-    >::type type;
+	typedef typename ::boost::type_erasure::deduced<
+	T<BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_NORMALIZE_PLACEHOLDER, ~)>
+	>::type type;
 };
 
 #undef BOOST_TYPE_ERASURE_NORMALIZE_PLACEHOLDER

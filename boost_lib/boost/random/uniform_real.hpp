@@ -22,7 +22,8 @@
 #include <boost/limits.hpp>
 #include <boost/random/uniform_real_distribution.hpp>
 
-namespace boost {
+namespace boost
+{
 
 /**
  * The distribution function uniform_real models a random distribution.
@@ -35,46 +36,52 @@ namespace boost {
 template<class RealType = double>
 class uniform_real : public random::uniform_real_distribution<RealType>
 {
-    typedef random::uniform_real_distribution<RealType> base_type;
+	typedef random::uniform_real_distribution<RealType> base_type;
 public:
 
-    class param_type : public base_type::param_type
-    {
-    public:
-        typedef uniform_real distribution_type;
-        /**
-         * Constructs the parameters of a uniform_real distribution.
-         *
-         * Requires: min <= max
-         */
-        explicit param_type(RealType min_arg = RealType(0.0),
-                            RealType max_arg = RealType(1.0))
-          : base_type::param_type(min_arg, max_arg)
-        {}
-    };
+	class param_type : public base_type::param_type
+	{
+	public:
+		typedef uniform_real distribution_type;
+		/**
+		 * Constructs the parameters of a uniform_real distribution.
+		 *
+		 * Requires: min <= max
+		 */
+		explicit param_type(RealType min_arg = RealType(0.0),
+		                    RealType max_arg = RealType(1.0))
+			: base_type::param_type(min_arg, max_arg)
+		{}
+	};
 
-    /**
-     * Constructs a uniform_real object. @c min and @c max are the
-     * parameters of the distribution.
-     *
-     * Requires: min <= max
-     */
-    explicit uniform_real(RealType min_arg = RealType(0.0),
-                          RealType max_arg = RealType(1.0))
-      : base_type(min_arg, max_arg)
-    {
-        BOOST_ASSERT(min_arg < max_arg);
-    }
+	/**
+	 * Constructs a uniform_real object. @c min and @c max are the
+	 * parameters of the distribution.
+	 *
+	 * Requires: min <= max
+	 */
+	explicit uniform_real(RealType min_arg = RealType(0.0),
+	                      RealType max_arg = RealType(1.0))
+		: base_type(min_arg, max_arg)
+	{
+		BOOST_ASSERT(min_arg < max_arg);
+	}
 
-    /** Constructs a uniform_real distribution from its parameters. */
-    explicit uniform_real(const param_type& parm)
-      : base_type(parm)
-    {}
+	/** Constructs a uniform_real distribution from its parameters. */
+	explicit uniform_real(const param_type& parm)
+		: base_type(parm)
+	{}
 
-    /** Returns the parameters of the distribution */
-    param_type param() const { return param_type(this->a(), this->b()); }
-    /** Sets the parameters of the distribution. */
-    void param(const param_type& parm) { this->base_type::param(parm); }
+	/** Returns the parameters of the distribution */
+	param_type param() const
+	{
+		return param_type(this->a(), this->b());
+	}
+	/** Sets the parameters of the distribution. */
+	void param(const param_type& parm)
+	{
+		this->base_type::param(parm);
+	}
 };
 
 } // namespace boost

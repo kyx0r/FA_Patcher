@@ -25,8 +25,10 @@
 #include <boost/container/container_fwd.hpp>
 #include <boost/intrusive/pack_options.hpp>
 
-namespace boost {
-namespace container {
+namespace boost
+{
+namespace container
+{
 
 ////////////////////////////////////////////////////////////////
 //
@@ -40,10 +42,10 @@ namespace container {
 //! with a concrete tree implementation.
 enum tree_type_enum
 {
-   red_black_tree,
-   avl_tree,
-   scapegoat_tree,
-   splay_tree
+	red_black_tree,
+	avl_tree,
+	scapegoat_tree,
+	splay_tree
 };
 
 #if !defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
@@ -51,8 +53,8 @@ enum tree_type_enum
 template<tree_type_enum TreeType, bool OptimizeSize>
 struct tree_opt
 {
-   static const boost::container::tree_type_enum tree_type = TreeType;
-   static const bool optimize_size = OptimizeSize;
+	static const boost::container::tree_type_enum tree_type = TreeType;
+	static const bool optimize_size = OptimizeSize;
 };
 
 typedef tree_opt<red_black_tree, true> tree_assoc_defaults;
@@ -78,18 +80,18 @@ template<class O1 = void, class O2 = void, class O3 = void, class O4 = void>
 #endif
 struct tree_assoc_options
 {
-   /// @cond
-   typedef typename ::boost::intrusive::pack_options
-      < tree_assoc_defaults,
-      #if !defined(BOOST_CONTAINER_VARIADIC_TEMPLATES)
-      O1, O2, O3, O4
-      #else
-      Options...
-      #endif
-      >::type packed_options;
-   typedef tree_opt<packed_options::tree_type, packed_options::optimize_size> implementation_defined;
-   /// @endcond
-   typedef implementation_defined type;
+	/// @cond
+	typedef typename ::boost::intrusive::pack_options
+	< tree_assoc_defaults,
+#if !defined(BOOST_CONTAINER_VARIADIC_TEMPLATES)
+	O1, O2, O3, O4
+#else
+	Options...
+#endif
+	>::type packed_options;
+	typedef tree_opt<packed_options::tree_type, packed_options::optimize_size> implementation_defined;
+	/// @endcond
+	typedef implementation_defined type;
 };
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
@@ -114,25 +116,25 @@ using tree_assoc_options_t = typename boost::container::tree_assoc_options<Optio
 template<class AllocTraits, class StoredSizeType>
 struct get_stored_size_type_with_alloctraits
 {
-   typedef StoredSizeType type;
+	typedef StoredSizeType type;
 };
 
 template<class AllocTraits>
 struct get_stored_size_type_with_alloctraits<AllocTraits, void>
 {
-   typedef typename AllocTraits::size_type type;
+	typedef typename AllocTraits::size_type type;
 };
 
 template<class GrowthType, class StoredSizeType>
 struct vector_opt
 {
-   typedef GrowthType      growth_factor_type;
-   typedef StoredSizeType  stored_size_type;
+	typedef GrowthType      growth_factor_type;
+	typedef StoredSizeType  stored_size_type;
 
-   template<class AllocTraits>
-   struct get_stored_size_type
-      : get_stored_size_type_with_alloctraits<AllocTraits, StoredSizeType>
-   {};
+	template<class AllocTraits>
+	struct get_stored_size_type
+		: get_stored_size_type_with_alloctraits<AllocTraits, StoredSizeType>
+	{};
 };
 
 class default_next_capacity;
@@ -143,15 +145,15 @@ typedef vector_opt<void, void> vector_null_opt;
 
 //!This growth factor argument specifies that the container should increase it's
 //!capacity a 50% when existing capacity is exhausted.
-struct growth_factor_50{};
+struct growth_factor_50 {};
 
 //!This growth factor argument specifies that the container should increase it's
 //!capacity a 60% when existing capacity is exhausted.
-struct growth_factor_60{};
+struct growth_factor_60 {};
 
 //!This growth factor argument specifies that the container should increase it's
 //!capacity a 100% (doubling its capacity) when existing capacity is exhausted.
-struct growth_factor_100{};
+struct growth_factor_100 {};
 
 #endif   //!defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
 
@@ -161,7 +163,7 @@ struct growth_factor_100{};
 //!`template<class SizeType>`<br/>
 //!`SizeType operator()(SizeType cur_cap, SizeType add_min_cap, SizeType max_cap) const;`.<br/><br/>
 //!`cur_cap` is the current capacity, `add_min_cap` is the minimum additional capacity
-//!we want to achieve and `max_cap` is the maximum capacity that the allocator or other 
+//!we want to achieve and `max_cap` is the maximum capacity that the allocator or other
 //!factors allow. The implementation should return a value between `cur_cap` + `add_min_cap`
 //!and `max_cap`. `cur_cap` + `add_min_cap` is guaranteed not to overflow/wraparound,
 //! but the implementation should handle wraparound produced by the growth factor.
@@ -180,14 +182,14 @@ BOOST_INTRUSIVE_OPTION_TYPE(growth_factor, GrowthFactor, GrowthFactor, growth_fa
 //!\tparam StoredSizeType A unsigned integer type. It shall be smaller than than the size
 //! of the size_type deduced from `allocator_traits<A>::size_type` or the same type.
 //!
-//!If the maximum capacity() to be used is limited, a user can try to use 8-bit, 16-bit 
+//!If the maximum capacity() to be used is limited, a user can try to use 8-bit, 16-bit
 //!(e.g. in 32-bit machines), or 32-bit size types (e.g. in a 64 bit machine) to see if some
 //!memory can be saved for empty vectors. This could potentially performance benefits due to better
 //!cache usage.
 //!
 //!Note that alignment requirements can disallow theoritical space savings. Example:
 //!\c vector holds a pointer and two size types (for size and capacity), in a 32 bit machine
-//!a 8 bit size type (total size: 4 byte pointer + 2 x 1 byte sizes = 6 bytes) 
+//!a 8 bit size type (total size: 4 byte pointer + 2 x 1 byte sizes = 6 bytes)
 //!will not save space when comparing two 16-bit size types because usually
 //!a 32 bit alignment is required for vector and the size will be rounded to 8 bytes. In a 64-bit
 //!machine a 16 bit size type does not usually save memory when comparing to a 32-bit size type.
@@ -211,19 +213,19 @@ template<class O1 = void, class O2 = void, class O3 = void, class O4 = void>
 #endif
 struct vector_options
 {
-   /// @cond
-   typedef typename ::boost::intrusive::pack_options
-      < vector_null_opt,
-      #if !defined(BOOST_CONTAINER_VARIADIC_TEMPLATES)
-      O1, O2, O3, O4
-      #else
-      Options...
-      #endif
-      >::type packed_options;
-   typedef vector_opt< typename packed_options::growth_factor_type
-                     , typename packed_options::stored_size_type> implementation_defined;
-   /// @endcond
-   typedef implementation_defined type;
+	/// @cond
+	typedef typename ::boost::intrusive::pack_options
+	< vector_null_opt,
+#if !defined(BOOST_CONTAINER_VARIADIC_TEMPLATES)
+	O1, O2, O3, O4
+#else
+	Options...
+#endif
+	>::type packed_options;
+	typedef vector_opt< typename packed_options::growth_factor_type
+	, typename packed_options::stored_size_type> implementation_defined;
+	/// @endcond
+	typedef implementation_defined type;
 };
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)

@@ -5,7 +5,7 @@ OBJS=$(SRCS:.cpp=.o)
 
 LIBNAME = patcher
 LIBPATH = ../lib
-CXXFLAGS = -O3 -Wall -fPIC -DPIC -I ../boost_lib
+CXXFLAGS = -O3 -w -fpermissive -fPIC -DPIC -I ../boost_lib -I ..
 
 all: $(LIBPATH)/lib$(LIBNAME).a
 

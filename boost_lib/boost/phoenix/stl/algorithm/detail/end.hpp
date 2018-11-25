@@ -15,16 +15,20 @@
 #include <boost/range/iterator.hpp>
 #include <boost/range/end.hpp>
 
-namespace boost { namespace phoenix {
+namespace boost
+{
+namespace phoenix
+{
 namespace detail
 {
-  template<class R>
-  typename range_iterator<R>::type
-  end_(R& r)
-  {
-      return boost::end(r);
-  }
+template<class R>
+typename range_iterator<R>::type
+end_(R& r)
+{
+	return boost::end(r);
 }
-}}
+}
+}
+}
 
 #endif

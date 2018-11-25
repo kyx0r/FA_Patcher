@@ -18,21 +18,25 @@
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    // external (from core)
-    struct nil_t;
+// external (from core)
+struct nil_t;
 
-    // fixed_size_queue.hpp
-    template<typename T, std::size_t N> class fixed_size_queue;
-    template<typename QueueT, typename T, typename PointerT>
-    class fsq_iterator;
+// fixed_size_queue.hpp
+template<typename T, std::size_t N> class fixed_size_queue;
+template<typename QueueT, typename T, typename PointerT>
+class fsq_iterator;
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-}} // namespace BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace BOOST_SPIRIT_CLASSIC_NS
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 

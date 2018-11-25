@@ -18,7 +18,9 @@
 
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -41,45 +43,45 @@ template
     std::size_t MaximumNumber,
     bool AllowDuplicates /* true */,
     typename NotEqualTo
->
+    >
 struct num_distinct_consecutive_points
 {
-    static inline std::size_t apply(Range const& range)
-    {
-        typedef typename boost::range_iterator<Range const>::type iterator;
+	static inline std::size_t apply(Range const& range)
+	{
+		typedef typename boost::range_iterator<Range const>::type iterator;
 
-        std::size_t const size = boost::size(range);
+		std::size_t const size = boost::size(range);
 
-        if ( size < 2u )
-        {
-            return (size < MaximumNumber) ? size : MaximumNumber;
-        }
+		if ( size < 2u )
+		{
+			return (size < MaximumNumber) ? size : MaximumNumber;
+		}
 
-        iterator current = boost::begin(range);
-        std::size_t counter(0);
-        do
-        {
-            ++counter;
-            iterator next = std::find_if(current,
-                                         boost::end(range),
-                                         NotEqualTo(*current));
-            current = next;
-        }
-        while ( current != boost::end(range) && counter <= MaximumNumber );
+		iterator current = boost::begin(range);
+		std::size_t counter(0);
+		do
+		{
+			++counter;
+			iterator next = std::find_if(current,
+			                             boost::end(range),
+			                             NotEqualTo(*current));
+			current = next;
+		}
+		while ( current != boost::end(range) && counter <= MaximumNumber );
 
-        return counter;
-    }
+		return counter;
+	}
 };
 
 
 template <typename Range, std::size_t MaximumNumber, typename NotEqualTo>
 struct num_distinct_consecutive_points<Range, MaximumNumber, false, NotEqualTo>
 {
-    static inline std::size_t apply(Range const& range)
-    {
-        std::size_t const size = boost::size(range);
-        return (size < MaximumNumber) ? size : MaximumNumber;
-    }
+	static inline std::size_t apply(Range const& range)
+	{
+		std::size_t const size = boost::size(range);
+		return (size < MaximumNumber) ? size : MaximumNumber;
+	}
 };
 
 
@@ -87,7 +89,8 @@ struct num_distinct_consecutive_points<Range, MaximumNumber, false, NotEqualTo>
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_NUM_DISTINCT_CONSECUTIVE_POINTS_HPP

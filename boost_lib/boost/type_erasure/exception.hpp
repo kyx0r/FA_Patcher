@@ -15,8 +15,10 @@
 #include <typeinfo>
 #include <string>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * Exception thrown when the arguments to a primitive concept
@@ -27,7 +29,7 @@ namespace type_erasure {
 class bad_function_call : public ::std::invalid_argument
 {
 public:
-    bad_function_call() : ::std::invalid_argument("bad_function_call") {}
+	bad_function_call() : ::std::invalid_argument("bad_function_call") {}
 };
 
 /**

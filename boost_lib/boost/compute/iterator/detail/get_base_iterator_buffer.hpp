@@ -11,9 +11,12 @@
 #ifndef BOOST_COMPUTE_ITERATOR_DETAIL_GET_BASE_ITERATOR_BUFFER_HPP
 #define BOOST_COMPUTE_ITERATOR_DETAIL_GET_BASE_ITERATOR_BUFFER_HPP
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // returns the buffer for an iterator adaptor's base iterator if
 // it exists, otherwise returns a null buffer object.
@@ -21,28 +24,28 @@ template<class Iterator>
 inline const buffer&
 get_base_iterator_buffer(const Iterator &iter,
                          typename boost::enable_if<
-                             is_buffer_iterator<
-                                 typename Iterator::base_type
-                             >
+                         is_buffer_iterator<
+                         typename Iterator::base_type
+                         >
                          >::type* = 0)
 {
-    return iter.base().get_buffer();
+	return iter.base().get_buffer();
 }
 
 template<class Iterator>
 inline const buffer&
 get_base_iterator_buffer(const Iterator &iter,
                          typename boost::disable_if<
-                             is_buffer_iterator<
-                                 typename Iterator::base_type
-                             >
+                         is_buffer_iterator<
+                         typename Iterator::base_type
+                         >
                          >::type* = 0)
 {
-    (void) iter;
+	(void) iter;
 
-    static buffer null_buffer;
+	static buffer null_buffer;
 
-    return null_buffer;
+	return null_buffer;
 }
 
 } // end detail namespace

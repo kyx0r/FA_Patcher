@@ -19,8 +19,10 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 #if !defined(BOOST_ASIO_NO_DEPRECATED)
 /// Typedef for backwards compatibility.

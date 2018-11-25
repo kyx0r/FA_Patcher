@@ -14,8 +14,10 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 BOOST_CONSTEXPR_OR_CONST DWORD_ FACILITY_XPS_ = 82;
 BOOST_CONSTEXPR_OR_CONST DWORD_ FACILITY_XAML_ = 43;

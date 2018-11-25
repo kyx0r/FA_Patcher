@@ -18,9 +18,12 @@
 #include <type_traits>
 #include <utility>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /** A @b Body using a caller provided buffer
 
@@ -31,184 +34,186 @@ namespace http {
 */
 struct buffer_body
 {
-    /// The type of the body member when used in a message.
-    struct value_type
-    {
-        /** A pointer to a contiguous area of memory of @ref size octets, else `nullptr`.
+	/// The type of the body member when used in a message.
+	struct value_type
+	{
+		/** A pointer to a contiguous area of memory of @ref size octets, else `nullptr`.
 
-            @par When Serializing
+		    @par When Serializing
 
-            If this is `nullptr` and `more` is `true`, the error
-            @ref error::need_buffer will be returned from @ref serializer::get
-            Otherwise, the serializer will use the memory pointed to
-            by `data` having `size` octets of valid storage as the
-            next buffer representing the body.
+		    If this is `nullptr` and `more` is `true`, the error
+		    @ref error::need_buffer will be returned from @ref serializer::get
+		    Otherwise, the serializer will use the memory pointed to
+		    by `data` having `size` octets of valid storage as the
+		    next buffer representing the body.
 
-            @par When Parsing
+		    @par When Parsing
 
-            If this is `nullptr`, the error @ref error::need_buffer
-            will be returned from @ref parser::put. Otherwise, the
-            parser will store body octets into the memory pointed to
-            by `data` having `size` octets of valid storage. After
-            octets are stored, the `data` and `size` members are
-            adjusted: `data` is incremented to point to the next
-            octet after the data written, while `size` is decremented
-            to reflect the remaining space at the memory location
-            pointed to by `data`.
-        */
-        void* data = nullptr;
+		    If this is `nullptr`, the error @ref error::need_buffer
+		    will be returned from @ref parser::put. Otherwise, the
+		    parser will store body octets into the memory pointed to
+		    by `data` having `size` octets of valid storage. After
+		    octets are stored, the `data` and `size` members are
+		    adjusted: `data` is incremented to point to the next
+		    octet after the data written, while `size` is decremented
+		    to reflect the remaining space at the memory location
+		    pointed to by `data`.
+		*/
+		void* data = nullptr;
 
-        /** The number of octets in the buffer pointed to by @ref data.
+		/** The number of octets in the buffer pointed to by @ref data.
 
-            @par When Serializing
+		    @par When Serializing
 
-            If `data` is `nullptr` during serialization, this value
-            is ignored. Otherwise, it represents the number of valid
-            body octets pointed to by `data`.
+		    If `data` is `nullptr` during serialization, this value
+		    is ignored. Otherwise, it represents the number of valid
+		    body octets pointed to by `data`.
 
-            @par When Parsing
+		    @par When Parsing
 
-            The value of this field will be decremented during parsing
-            to indicate the number of remaining free octets in the
-            buffer pointed to by `data`. When it reaches zero, the
-            parser will return @ref error::need_buffer, indicating to
-            the caller that the values of `data` and `size` should be
-            updated to point to a new memory buffer.
-        */
-        std::size_t size = 0;
+		    The value of this field will be decremented during parsing
+		    to indicate the number of remaining free octets in the
+		    buffer pointed to by `data`. When it reaches zero, the
+		    parser will return @ref error::need_buffer, indicating to
+		    the caller that the values of `data` and `size` should be
+		    updated to point to a new memory buffer.
+		*/
+		std::size_t size = 0;
 
-        /** `true` if this is not the last buffer.
+		/** `true` if this is not the last buffer.
 
-            @par When Serializing
-            
-            If this is `true` and `data` is `nullptr`, the error
-            @ref error::need_buffer will be returned from @ref serializer::get
+		    @par When Serializing
 
-            @par When Parsing
+		    If this is `true` and `data` is `nullptr`, the error
+		    @ref error::need_buffer will be returned from @ref serializer::get
 
-            This field is not used during parsing.
-        */
-        bool more = true;
-    };
+		    @par When Parsing
 
-    /** The algorithm for parsing the body
+		    This field is not used during parsing.
+		*/
+		bool more = true;
+	};
 
-        Meets the requirements of @b BodyReader.
-    */
+	/** The algorithm for parsing the body
+
+	    Meets the requirements of @b BodyReader.
+	*/
 #if BOOST_BEAST_DOXYGEN
-    using reader = implementation_defined;
+	using reader = implementation_defined;
 #else
-    class reader
-    {
-        value_type& body_;
+	class reader
+	{
+		value_type& body_;
 
-    public:
-        template<bool isRequest, class Fields>
-        explicit
-        reader(header<isRequest, Fields>&, value_type& b)
-            : body_(b)
-        {
-        }
+	public:
+		template<bool isRequest, class Fields>
+		explicit
+		reader(header<isRequest, Fields>&, value_type& b)
+			: body_(b)
+		{
+		}
 
-        void
-        init(boost::optional<std::uint64_t> const&, error_code& ec)
-        {
-            ec.assign(0, ec.category());
-        }
+		void
+		init(boost::optional<std::uint64_t> const&, error_code& ec)
+		{
+			ec.assign(0, ec.category());
+		}
 
-        template<class ConstBufferSequence>
-        std::size_t
-        put(ConstBufferSequence const& buffers,
-            error_code& ec)
-        {
-            using boost::asio::buffer_size;
-            using boost::asio::buffer_copy;
-            if(! body_.data)
-            {
-                ec = error::need_buffer;
-                return 0;
-            }
-            auto const bytes_transferred =
-                buffer_copy(boost::asio::buffer(
-                    body_.data, body_.size), buffers);
-            body_.data = reinterpret_cast<char*>(
-                body_.data) + bytes_transferred;
-            body_.size -= bytes_transferred;
-            if(bytes_transferred == buffer_size(buffers))
-                ec.assign(0, ec.category());
-            else
-                ec = error::need_buffer;
-            return bytes_transferred;
-        }
+		template<class ConstBufferSequence>
+		std::size_t
+		put(ConstBufferSequence const& buffers,
+		    error_code& ec)
+		{
+			using boost::asio::buffer_size;
+			using boost::asio::buffer_copy;
+			if(! body_.data)
+			{
+				ec = error::need_buffer;
+				return 0;
+			}
+			auto const bytes_transferred =
+			    buffer_copy(boost::asio::buffer(
+			                    body_.data, body_.size), buffers);
+			body_.data = reinterpret_cast<char*>(
+			                 body_.data) + bytes_transferred;
+			body_.size -= bytes_transferred;
+			if(bytes_transferred == buffer_size(buffers))
+				ec.assign(0, ec.category());
+			else
+				ec = error::need_buffer;
+			return bytes_transferred;
+		}
 
-        void
-        finish(error_code& ec)
-        {
-            ec.assign(0, ec.category());
-        }
-    };
+		void
+		finish(error_code& ec)
+		{
+			ec.assign(0, ec.category());
+		}
+	};
 #endif
 
-    /** The algorithm for serializing the body
+	/** The algorithm for serializing the body
 
-        Meets the requirements of @b BodyWriter.
-    */
+	    Meets the requirements of @b BodyWriter.
+	*/
 #if BOOST_BEAST_DOXYGEN
-    using writer = implementation_defined;
+	using writer = implementation_defined;
 #else
-    class writer
-    {
-        bool toggle_ = false;
-        value_type const& body_;
+	class writer
+	{
+		bool toggle_ = false;
+		value_type const& body_;
 
-    public:
-        using const_buffers_type =
-            boost::asio::const_buffer;
+	public:
+		using const_buffers_type =
+		    boost::asio::const_buffer;
 
-        template<bool isRequest, class Fields>
-        explicit
-        writer(header<isRequest, Fields> const&, value_type const& b)
-            : body_(b)
-        {
-        }
+		template<bool isRequest, class Fields>
+		explicit
+		writer(header<isRequest, Fields> const&, value_type const& b)
+			: body_(b)
+		{
+		}
 
-        void
-        init(error_code& ec)
-        {
-            ec.assign(0, ec.category());
-        }
+		void
+		init(error_code& ec)
+		{
+			ec.assign(0, ec.category());
+		}
 
-        boost::optional<
-            std::pair<const_buffers_type, bool>>
-        get(error_code& ec)
-        {
-            if(toggle_)
-            {
-                if(body_.more)
-                {
-                    toggle_ = false;
-                    ec = error::need_buffer;
-                }
-                else
-                {
-                    ec.assign(0, ec.category());
-                }
-                return boost::none;
-            }
-            if(body_.data)
-            {
-                ec.assign(0, ec.category());
-                toggle_ = true;
-                return {{const_buffers_type{
-                    body_.data, body_.size}, body_.more}};
-            }
-            if(body_.more)
-                ec = error::need_buffer;
-            else
-                ec.assign(0, ec.category());
-            return boost::none;
-        }
-    };
+		boost::optional<
+		std::pair<const_buffers_type, bool>>
+		                                  get(error_code& ec)
+		{
+			if(toggle_)
+			{
+				if(body_.more)
+				{
+					toggle_ = false;
+					ec = error::need_buffer;
+				}
+				else
+				{
+					ec.assign(0, ec.category());
+				}
+				return boost::none;
+			}
+			if(body_.data)
+			{
+				ec.assign(0, ec.category());
+				toggle_ = true;
+				return {{
+						const_buffers_type{
+							body_.data, body_.size}, body_.more
+					}};
+			}
+			if(body_.more)
+				ec = error::need_buffer;
+			else
+				ec.assign(0, ec.category());
+			return boost::none;
+		}
+	};
 #endif
 };
 
@@ -217,7 +222,7 @@ struct buffer_body
 template<bool isRequest, class Fields>
 std::ostream&
 operator<<(std::ostream& os, message<isRequest,
-    buffer_body, Fields> const& msg) = delete;
+           buffer_body, Fields> const& msg) = delete;
 #endif
 
 } // http

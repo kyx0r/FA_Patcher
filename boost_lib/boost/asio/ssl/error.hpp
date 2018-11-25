@@ -21,35 +21,40 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace error {
+namespace boost
+{
+namespace asio
+{
+namespace error
+{
 
 enum ssl_errors
 {
-  // Error numbers are those produced by openssl.
+	// Error numbers are those produced by openssl.
 };
 
 extern BOOST_ASIO_DECL
 const boost::system::error_category& get_ssl_category();
 
 static const boost::system::error_category&
-  ssl_category BOOST_ASIO_UNUSED_VARIABLE
-  = boost::asio::error::get_ssl_category();
+ssl_category BOOST_ASIO_UNUSED_VARIABLE
+    = boost::asio::error::get_ssl_category();
 
 } // namespace error
-namespace ssl {
-namespace error {
+namespace ssl
+{
+namespace error
+{
 
 enum stream_errors
 {
 #if defined(GENERATING_DOCUMENTATION)
-  /// The underlying stream closed before the ssl stream gracefully shut down.
-  stream_truncated
+	/// The underlying stream closed before the ssl stream gracefully shut down.
+	stream_truncated
 #elif (OPENSSL_VERSION_NUMBER < 0x10100000L) && !defined(OPENSSL_IS_BORINGSSL)
-  stream_truncated = ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)
+	stream_truncated = ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)
 #else
-  stream_truncated = 1
+	stream_truncated = 1
 #endif
 };
 
@@ -57,48 +62,55 @@ extern BOOST_ASIO_DECL
 const boost::system::error_category& get_stream_category();
 
 static const boost::system::error_category&
-  stream_category BOOST_ASIO_UNUSED_VARIABLE
-  = boost::asio::ssl::error::get_stream_category();
+stream_category BOOST_ASIO_UNUSED_VARIABLE
+    = boost::asio::ssl::error::get_stream_category();
 
 } // namespace error
 } // namespace ssl
 } // namespace asio
 } // namespace boost
 
-namespace boost {
-namespace system {
+namespace boost
+{
+namespace system
+{
 
 template<> struct is_error_code_enum<boost::asio::error::ssl_errors>
 {
-  static const bool value = true;
+	static const bool value = true;
 };
 
 template<> struct is_error_code_enum<boost::asio::ssl::error::stream_errors>
 {
-  static const bool value = true;
+	static const bool value = true;
 };
 
 } // namespace system
 } // namespace boost
 
-namespace boost {
-namespace asio {
-namespace error {
+namespace boost
+{
+namespace asio
+{
+namespace error
+{
 
 inline boost::system::error_code make_error_code(ssl_errors e)
 {
-  return boost::system::error_code(
-      static_cast<int>(e), get_ssl_category());
+	return boost::system::error_code(
+	           static_cast<int>(e), get_ssl_category());
 }
 
 } // namespace error
-namespace ssl {
-namespace error {
+namespace ssl
+{
+namespace error
+{
 
 inline boost::system::error_code make_error_code(stream_errors e)
 {
-  return boost::system::error_code(
-      static_cast<int>(e), get_stream_category());
+	return boost::system::error_code(
+	           static_cast<int>(e), get_stream_category());
 }
 
 } // namespace error

@@ -18,8 +18,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function fill_n
 ///
@@ -30,24 +30,24 @@ namespace boost
 template< class ForwardRange, class Size, class Value >
 inline ForwardRange& fill_n(ForwardRange& rng, Size n, const Value& val)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange> ));
-    BOOST_ASSERT( static_cast<Size>(std::distance(boost::begin(rng), boost::end(rng))) >= n );
-    std::fill_n(boost::begin(rng), n, val);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange> ));
+	BOOST_ASSERT( static_cast<Size>(std::distance(boost::begin(rng), boost::end(rng))) >= n );
+	std::fill_n(boost::begin(rng), n, val);
+	return rng;
 }
 
 /// \overload
 template< class ForwardRange, class Size, class Value >
 inline const ForwardRange& fill_n(const ForwardRange& rng, Size n, const Value& val)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
-    BOOST_ASSERT( static_cast<Size>(std::distance(boost::begin(rng), boost::end(rng))) >= n );
-    std::fill_n(boost::begin(rng), n, val);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
+	BOOST_ASSERT( static_cast<Size>(std::distance(boost::begin(rng), boost::end(rng))) >= n );
+	std::fill_n(boost::begin(rng), n, val);
+	return rng;
 }
 
-    } // namespace range
-    using range::fill_n;
+} // namespace range
+using range::fill_n;
 } // namespace boost
 
 #endif // include guard

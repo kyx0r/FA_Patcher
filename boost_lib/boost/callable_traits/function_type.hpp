@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ function_type_hpp
 /*`[section:ref_function_type function_type]
@@ -24,20 +27,21 @@ template<typename T>
 using function_type_t = //see below
 //<-
     detail::try_but_fail_if_invalid<typename detail::traits<
-            detail::shallow_decay<T>>::function_type,
-        cannot_determine_parameters_for_this_type>;
+    detail::shallow_decay<T>>::function_type,
+    cannot_determine_parameters_for_this_type>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct function_type_impl {};
+template<typename T, typename = std::false_type>
+struct function_type_impl {};
 
-    template<typename T>
-    struct function_type_impl <T, typename std::is_same<
-        function_type_t<T>, detail::dummy>::type>
-    {
-        using type = function_type_t<T>;
-    };
+template<typename T>
+struct function_type_impl <T, typename std::is_same<
+	function_type_t<T>, detail::dummy>::type>
+{
+	using type = function_type_t<T>;
+};
 }
 
 //->
@@ -46,7 +50,8 @@ template<typename T>
 struct function_type : detail::function_type_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

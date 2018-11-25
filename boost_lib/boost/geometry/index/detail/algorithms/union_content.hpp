@@ -15,7 +15,14 @@
 #include <boost/geometry/algorithms/expand.hpp>
 #include <boost/geometry/index/detail/algorithms/content.hpp>
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
 /**
  * \brief Compute the area of the union of b1 and b2
@@ -23,11 +30,14 @@ namespace boost { namespace geometry { namespace index { namespace detail {
 template <typename Box, typename Geometry>
 inline typename default_content_result<Box>::type union_content(Box const& b, Geometry const& g)
 {
-    Box expanded_box(b);
-    geometry::expand(expanded_box, g);
-    return detail::content(expanded_box);
+	Box expanded_box(b);
+	geometry::expand(expanded_box, g);
+	return detail::content(expanded_box);
 }
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_UNION_CONTENT_HPP

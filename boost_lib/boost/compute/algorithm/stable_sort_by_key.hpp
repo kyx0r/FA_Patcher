@@ -18,10 +18,13 @@
 #include <boost/compute/algorithm/sort_by_key.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
-namespace detail {
+namespace detail
+{
 
 template<class KeyIterator, class ValueIterator>
 inline void
@@ -31,23 +34,25 @@ dispatch_gpu_ssort_by_key(KeyIterator keys_first,
                           less<typename std::iterator_traits<KeyIterator>::value_type> compare,
                           command_queue &queue,
                           typename boost::enable_if_c<
-                              is_radix_sortable<
-                                  typename std::iterator_traits<KeyIterator>::value_type
-                              >::value
+                          is_radix_sortable<
+                          typename std::iterator_traits<KeyIterator>::value_type
+                          >::value
                           >::type* = 0)
 {
-    size_t count = detail::iterator_range_size(keys_first, keys_last);
+	size_t count = detail::iterator_range_size(keys_first, keys_last);
 
-    if(count < 32){
-        detail::serial_insertion_sort_by_key(
-            keys_first, keys_last, values_first, compare, queue
-        );
-    }
-    else {
-        detail::radix_sort_by_key(
-            keys_first, keys_last, values_first, queue
-        );
-    }
+	if(count < 32)
+	{
+		detail::serial_insertion_sort_by_key(
+		    keys_first, keys_last, values_first, compare, queue
+		);
+	}
+	else
+	{
+		detail::radix_sort_by_key(
+		    keys_first, keys_last, values_first, queue
+		);
+	}
 }
 
 template<class KeyIterator, class ValueIterator>
@@ -58,24 +63,26 @@ dispatch_gpu_ssort_by_key(KeyIterator keys_first,
                           greater<typename std::iterator_traits<KeyIterator>::value_type> compare,
                           command_queue &queue,
                           typename boost::enable_if_c<
-                              is_radix_sortable<
-                                  typename std::iterator_traits<KeyIterator>::value_type
-                              >::value
+                          is_radix_sortable<
+                          typename std::iterator_traits<KeyIterator>::value_type
+                          >::value
                           >::type* = 0)
 {
-    size_t count = detail::iterator_range_size(keys_first, keys_last);
+	size_t count = detail::iterator_range_size(keys_first, keys_last);
 
-    if(count < 32){
-        detail::serial_insertion_sort_by_key(
-            keys_first, keys_last, values_first, compare, queue
-        );
-    }
-    else {
-        // radix sorts in descending order
-        detail::radix_sort_by_key(
-            keys_first, keys_last, values_first, false, queue
-        );
-    }
+	if(count < 32)
+	{
+		detail::serial_insertion_sort_by_key(
+		    keys_first, keys_last, values_first, compare, queue
+		);
+	}
+	else
+	{
+		// radix sorts in descending order
+		detail::radix_sort_by_key(
+		    keys_first, keys_last, values_first, false, queue
+		);
+	}
 }
 
 template<class KeyIterator, class ValueIterator, class Compare>
@@ -85,19 +92,22 @@ inline void dispatch_gpu_ssort_by_key(KeyIterator keys_first,
                                       Compare compare,
                                       command_queue &queue)
 {
-    size_t count = detail::iterator_range_size(keys_first, keys_last);
+	size_t count = detail::iterator_range_size(keys_first, keys_last);
 
-    if(count < 32){
-        detail::serial_insertion_sort_by_key(
-            keys_first, keys_last, values_first,
-            compare, queue
-        );
-    } else {
-        detail::merge_sort_by_key_on_gpu(
-            keys_first, keys_last, values_first,
-            compare, true /* stable */, queue
-        );
-    }
+	if(count < 32)
+	{
+		detail::serial_insertion_sort_by_key(
+		    keys_first, keys_last, values_first,
+		    compare, queue
+		);
+	}
+	else
+	{
+		detail::merge_sort_by_key_on_gpu(
+		    keys_first, keys_last, values_first,
+		    compare, true /* stable */, queue
+		);
+	}
 }
 
 template<class KeyIterator, class ValueIterator, class Compare>
@@ -107,15 +117,16 @@ inline void dispatch_ssort_by_key(KeyIterator keys_first,
                                   Compare compare,
                                   command_queue &queue)
 {
-    if(queue.get_device().type() & device::gpu) {
-        dispatch_gpu_ssort_by_key(
-            keys_first, keys_last, values_first, compare, queue
-        );
-        return;
-    }
-    ::boost::compute::detail::merge_sort_by_key_on_cpu(
-        keys_first, keys_last, values_first, compare, queue
-    );
+	if(queue.get_device().type() & device::gpu)
+	{
+		dispatch_gpu_ssort_by_key(
+		    keys_first, keys_last, values_first, compare, queue
+		);
+		return;
+	}
+	::boost::compute::detail::merge_sort_by_key_on_cpu(
+	    keys_first, keys_last, values_first, compare, queue
+	);
 }
 
 } // end detail namespace
@@ -136,9 +147,9 @@ inline void stable_sort_by_key(KeyIterator keys_first,
                                Compare compare,
                                command_queue &queue = system::default_queue())
 {
-    ::boost::compute::detail::dispatch_ssort_by_key(
-        keys_first, keys_last, values_first, compare, queue
-    );
+	::boost::compute::detail::dispatch_ssort_by_key(
+	    keys_first, keys_last, values_first, compare, queue
+	);
 }
 
 /// \overload
@@ -148,11 +159,11 @@ inline void stable_sort_by_key(KeyIterator keys_first,
                                ValueIterator values_first,
                                command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<KeyIterator>::value_type key_type;
+	typedef typename std::iterator_traits<KeyIterator>::value_type key_type;
 
-    ::boost::compute::stable_sort_by_key(
-        keys_first, keys_last, values_first, less<key_type>(), queue
-    );
+	::boost::compute::stable_sort_by_key(
+	    keys_first, keys_last, values_first, less<key_type>(), queue
+	);
 }
 
 } // end compute namespace

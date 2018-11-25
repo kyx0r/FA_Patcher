@@ -17,65 +17,65 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <int N, class S, class Pos, class... Ps>
-        struct nth_of_c;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <int N, class S, class Pos, class... Ps>
+struct nth_of_c;
 
-        template <int N, class S, class Pos, class P, class... Ps>
-        struct nth_of_c<N, S, Pos, P, Ps...>
-        {
-        private:
-          template <class NextResult>
-          struct apply_unchecked :
-            nth_of_c<
-              N - 1,
-              typename get_remaining<NextResult>::type,
-              typename get_position<NextResult>::type,
-              Ps...
-            >
-          {};
+template <int N, class S, class Pos, class P, class... Ps>
+struct nth_of_c<N, S, Pos, P, Ps...>
+{
+private:
+	template <class NextResult>
+	struct apply_unchecked :
+		nth_of_c<
+		N - 1,
+		typename get_remaining<NextResult>::type,
+		typename get_position<NextResult>::type,
+		Ps...
+		>
+	{};
 
-        public:
-          typedef
-            typename std::conditional<
-              is_error<typename P::template apply<S, Pos>>::type::value,
-              typename P::template apply<S, Pos>,
-              apply_unchecked<typename P::template apply<S, Pos>>
-            >::type::type
-            type;
-        };
+public:
+	typedef
+	typename std::conditional<
+	is_error<typename P::template apply<S, Pos>>::type::value,
+	         typename P::template apply<S, Pos>,
+	                  apply_unchecked<typename P::template apply<S, Pos>>
+	>::type::type
+	type;
+};
 
-        template <class P, class S, class Pos, class... Ps>
-        struct nth_of_c<0, S, Pos, P, Ps...>
-        {
-        private:
-          template <class NextResult>
-          struct apply_unchecked :
-            nth_of_c_skip_remaining<
-              typename get_result<NextResult>::type,
-              typename get_remaining<NextResult>::type,
-              typename get_position<NextResult>::type,
-              Ps...
-            >
-          {};
+template <class P, class S, class Pos, class... Ps>
+struct nth_of_c<0, S, Pos, P, Ps...>
+{
+private:
+	template <class NextResult>
+	struct apply_unchecked :
+		nth_of_c_skip_remaining<
+		typename get_result<NextResult>::type,
+		typename get_remaining<NextResult>::type,
+		typename get_position<NextResult>::type,
+		Ps...
+		>
+	{};
 
-        public:
-          typedef
-            typename std::conditional<
-              is_error<typename P::template apply<S, Pos>>::type::value,
-              typename P::template apply<S, Pos>,
-              apply_unchecked<typename P::template apply<S, Pos>>
-            >::type::type
-            type;
-        };
-      }
-    }
-  }
+public:
+	typedef
+	typename std::conditional<
+	is_error<typename P::template apply<S, Pos>>::type::value,
+	         typename P::template apply<S, Pos>,
+	                  apply_unchecked<typename P::template apply<S, Pos>>
+	>::type::type
+	type;
+};
+}
+}
+}
 }
 
 #endif

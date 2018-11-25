@@ -13,7 +13,9 @@
 
 
 
-namespace boost { namespace msm
+namespace boost
+{
+namespace msm
 {
 //tags
 struct a_row_tag {};
@@ -32,22 +34,23 @@ struct sm__i_row_tag {};
 struct sm_i_row_tag {};
 
 // flags used internally to handle terminate / interrupt states
-struct TerminateFlag 
+struct TerminateFlag
 {
-    typedef int non_forwarding_flag;
-    typedef int event_blocking_flag;
+	typedef int non_forwarding_flag;
+	typedef int event_blocking_flag;
 };
 struct InterruptedFlag
 {
-    typedef int non_forwarding_flag;
-    typedef int event_blocking_flag;
+	typedef int non_forwarding_flag;
+	typedef int event_blocking_flag;
 };
 template <class EndEvent>
 struct EndInterruptFlag
 {
-    typedef int non_forwarding_flag;
+	typedef int non_forwarding_flag;
 };
 
-} } // boost::msm
+}
+} // boost::msm
 #endif //BOOST_MSM_ROW_TAGS_H
 

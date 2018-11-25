@@ -10,13 +10,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace error
-    {
-      using v1::error::end_of_input_expected;
-    }
-  }
+namespace metaparse
+{
+namespace error
+{
+using v1::error::end_of_input_expected;
+}
+}
 }
 
 #endif

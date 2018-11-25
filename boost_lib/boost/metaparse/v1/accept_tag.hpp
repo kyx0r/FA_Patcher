@@ -13,34 +13,40 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      struct accept_tag { typedef accept_tag type; };
+namespace metaparse
+{
+namespace v1
+{
+struct accept_tag
+{
+	typedef accept_tag type;
+};
 
-      template <>
-      struct get_position_impl<accept_tag>
-      {
-        template <class A>
-        struct apply : A::source_position {};
-      };
+template <>
+struct get_position_impl<accept_tag>
+{
+	template <class A>
+	struct apply : A::source_position {};
+};
 
-      template <>
-      struct get_remaining_impl<accept_tag>
-      {
-        template <class A>
-        struct apply : A::remaining {};
-      };
+template <>
+struct get_remaining_impl<accept_tag>
+{
+	template <class A>
+	struct apply : A::remaining {};
+};
 
-      template <>
-      struct get_result_impl<accept_tag>
-      {
-        template <class A>
-        struct apply { typedef typename A::result type; };
-      };
-    }
-  }
+template <>
+struct get_result_impl<accept_tag>
+{
+	template <class A>
+	struct apply
+	{
+		typedef typename A::result type;
+	};
+};
+}
+}
 }
 
 #endif

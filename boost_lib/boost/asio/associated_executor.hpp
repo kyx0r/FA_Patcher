@@ -22,37 +22,40 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename>
 struct associated_executor_check
 {
-  typedef void type;
+	typedef void type;
 };
 
 template <typename T, typename E, typename = void>
 struct associated_executor_impl
 {
-  typedef E type;
+	typedef E type;
 
-  static type get(const T&, const E& e) BOOST_ASIO_NOEXCEPT
-  {
-    return e;
-  }
+	static type get(const T&, const E& e) BOOST_ASIO_NOEXCEPT
+	{
+		return e;
+	}
 };
 
 template <typename T, typename E>
 struct associated_executor_impl<T, E,
-  typename associated_executor_check<typename T::executor_type>::type>
+	       typename associated_executor_check<typename T::executor_type>::type>
 {
-  typedef typename T::executor_type type;
+	typedef typename T::executor_type type;
 
-  static type get(const T& t, const E&) BOOST_ASIO_NOEXCEPT
-  {
-    return t.get_executor();
-  }
+	static type get(const T& t, const E&) BOOST_ASIO_NOEXCEPT
+	{
+		return t.get_executor();
+	}
 };
 
 } // namespace detail
@@ -79,21 +82,21 @@ struct associated_executor_impl<T, E,
 template <typename T, typename Executor = system_executor>
 struct associated_executor
 {
-  /// If @c T has a nested type @c executor_type, <tt>T::executor_type</tt>.
-  /// Otherwise @c Executor.
+	/// If @c T has a nested type @c executor_type, <tt>T::executor_type</tt>.
+	/// Otherwise @c Executor.
 #if defined(GENERATING_DOCUMENTATION)
-  typedef see_below type;
+	typedef see_below type;
 #else // defined(GENERATING_DOCUMENTATION)
-  typedef typename detail::associated_executor_impl<T, Executor>::type type;
+	typedef typename detail::associated_executor_impl<T, Executor>::type type;
 #endif // defined(GENERATING_DOCUMENTATION)
 
-  /// If @c T has a nested type @c executor_type, returns
-  /// <tt>t.get_executor()</tt>. Otherwise returns @c ex.
-  static type get(const T& t,
-      const Executor& ex = Executor()) BOOST_ASIO_NOEXCEPT
-  {
-    return detail::associated_executor_impl<T, Executor>::get(t, ex);
-  }
+	/// If @c T has a nested type @c executor_type, returns
+	/// <tt>t.get_executor()</tt>. Otherwise returns @c ex.
+	static type get(const T& t,
+	                const Executor& ex = Executor()) BOOST_ASIO_NOEXCEPT
+	{
+		return detail::associated_executor_impl<T, Executor>::get(t, ex);
+	}
 };
 
 /// Helper function to obtain an object's associated executor.
@@ -104,7 +107,7 @@ template <typename T>
 inline typename associated_executor<T>::type
 get_associated_executor(const T& t) BOOST_ASIO_NOEXCEPT
 {
-  return associated_executor<T>::get(t);
+	return associated_executor<T>::get(t);
 }
 
 /// Helper function to obtain an object's associated executor.
@@ -114,10 +117,10 @@ get_associated_executor(const T& t) BOOST_ASIO_NOEXCEPT
 template <typename T, typename Executor>
 inline typename associated_executor<T, Executor>::type
 get_associated_executor(const T& t, const Executor& ex,
-    typename enable_if<is_executor<
-      Executor>::value>::type* = 0) BOOST_ASIO_NOEXCEPT
+                        typename enable_if<is_executor<
+                        Executor>::value>::type* = 0) BOOST_ASIO_NOEXCEPT
 {
-  return associated_executor<T, Executor>::get(t, ex);
+	return associated_executor<T, Executor>::get(t, ex);
 }
 
 /// Helper function to obtain an object's associated executor.
@@ -127,13 +130,13 @@ get_associated_executor(const T& t, const Executor& ex,
  */
 template <typename T, typename ExecutionContext>
 inline typename associated_executor<T,
-  typename ExecutionContext::executor_type>::type
-get_associated_executor(const T& t, ExecutionContext& ctx,
-    typename enable_if<is_convertible<ExecutionContext&,
-      execution_context&>::value>::type* = 0) BOOST_ASIO_NOEXCEPT
+       typename ExecutionContext::executor_type>::type
+       get_associated_executor(const T& t, ExecutionContext& ctx,
+                               typename enable_if<is_convertible<ExecutionContext&,
+                               execution_context&>::value>::type* = 0) BOOST_ASIO_NOEXCEPT
 {
-  return associated_executor<T,
-    typename ExecutionContext::executor_type>::get(t, ctx.get_executor());
+	return associated_executor<T,
+	typename ExecutionContext::executor_type>::get(t, ctx.get_executor());
 }
 
 #if defined(BOOST_ASIO_HAS_ALIAS_TEMPLATES)

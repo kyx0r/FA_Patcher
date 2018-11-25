@@ -23,8 +23,10 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
+namespace boost
+{
+namespace test_tools
+{
 
 // ************************************************************************** //
 // **************      per element comparison manipulator      ************** //
@@ -36,18 +38,22 @@ struct lexicographic {};
 //____________________________________________________________________________//
 
 inline int
-operator<<( unit_test::lazy_ostream const&, lexicographic )   { return 0; }
+operator<<( unit_test::lazy_ostream const&, lexicographic )
+{
+	return 0;
+}
 
 //____________________________________________________________________________//
 
-namespace tt_detail {
+namespace tt_detail
+{
 
 template<typename T1, typename T2, typename OP>
 inline assertion_result
 operator<<(assertion_evaluate_t<assertion::binary_expr<T1,T2,OP> > const& ae, lexicographic )
 {
-    typedef typename OP::elem_op elem_op;
-    return assertion::op::lexicographic_compare<elem_op>( ae.m_e.lhs().value(), ae.m_e.rhs() );
+	typedef typename OP::elem_op elem_op;
+	return assertion::op::lexicographic_compare<elem_op>( ae.m_e.lhs().value(), ae.m_e.rhs() );
 }
 
 //____________________________________________________________________________//
@@ -55,7 +61,7 @@ operator<<(assertion_evaluate_t<assertion::binary_expr<T1,T2,OP> > const& ae, le
 inline check_type
 operator<<( assertion_type const&, lexicographic )
 {
-    return CHECK_BUILT_ASSERTION;
+	return CHECK_BUILT_ASSERTION;
 }
 
 //____________________________________________________________________________//

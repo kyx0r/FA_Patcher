@@ -30,8 +30,10 @@
 // container/detail
 #include <boost/container/detail/transform_iterator.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 using boost::container::make_transform_iterator;
 using boost::container::transform_iterator;

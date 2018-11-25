@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function binary_search
 ///
@@ -29,8 +29,8 @@ namespace boost
 template<class ForwardRange, class Value>
 inline bool binary_search(const ForwardRange& rng, const Value& val)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
-    return std::binary_search(boost::begin(rng), boost::end(rng), val);
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
+	return std::binary_search(boost::begin(rng), boost::end(rng), val);
 }
 
 /// \overload
@@ -38,12 +38,12 @@ template<class ForwardRange, class Value, class BinaryPredicate>
 inline bool binary_search(const ForwardRange& rng, const Value& val,
                           BinaryPredicate pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
-    return std::binary_search(boost::begin(rng), boost::end(rng), val, pred);
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
+	return std::binary_search(boost::begin(rng), boost::end(rng), val, pred);
 }
 
-    } // namespace range
-    using range::binary_search;
+} // namespace range
+using range::binary_search;
 } // namespace boost
 
 #endif // include guard

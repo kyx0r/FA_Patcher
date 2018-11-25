@@ -13,43 +13,46 @@
 #include <boost/beast/core/type_traits.hpp>
 #include <iterator>
 
-namespace boost {
-namespace beast {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace detail
+{
 
 // A very lightweight reference to a buffer sequence
 template<class BufferSequence>
 class buffers_ref
 {
-    BufferSequence const* buffers_;
+	BufferSequence const* buffers_;
 
 public:
-    using const_iterator = typename
-        buffer_sequence_iterator<BufferSequence>::type;
+	using const_iterator = typename
+	                       buffer_sequence_iterator<BufferSequence>::type;
 
-    using value_type = typename std::iterator_traits<
-        const_iterator>::value_type;
+	using value_type = typename std::iterator_traits<
+	                   const_iterator>::value_type;
 
-    buffers_ref(buffers_ref const&) = default;
-    buffers_ref& operator=(buffers_ref const&) = default;
+	buffers_ref(buffers_ref const&) = default;
+	buffers_ref& operator=(buffers_ref const&) = default;
 
-    explicit
-    buffers_ref(BufferSequence const& buffers)
-        : buffers_(std::addressof(buffers))
-    {
-    }
+	explicit
+	buffers_ref(BufferSequence const& buffers)
+		: buffers_(std::addressof(buffers))
+	{
+	}
 
-    const_iterator
-    begin() const
-    {
-        return boost::asio::buffer_sequence_begin(*buffers_);
-    }
+	const_iterator
+	begin() const
+	{
+		return boost::asio::buffer_sequence_begin(*buffers_);
+	}
 
-    const_iterator
-    end() const
-    {
-        return boost::asio::buffer_sequence_end(*buffers_);
-    }
+	const_iterator
+	end() const
+	{
+		return boost::asio::buffer_sequence_end(*buffers_);
+	}
 };
 
 // Return a reference to a buffer sequence
@@ -57,7 +60,7 @@ template<class BufferSequence>
 buffers_ref<BufferSequence>
 make_buffers_ref(BufferSequence const& buffers)
 {
-    return buffers_ref<BufferSequence>(buffers);
+	return buffers_ref<BufferSequence>(buffers);
 }
 
 } // detail

@@ -17,8 +17,10 @@
 #include <boost/type_erasure/is_placeholder.hpp>
 #include <boost/type_erasure/concept_of.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 template<class Concept, class T>
@@ -48,20 +50,20 @@ template<class Any, class T>
 struct rebind_any
 {
 #ifdef BOOST_TYPE_ERASURE_DOXYGEN
-    typedef detail::unspecified type;
+	typedef detail::unspecified type;
 #else
-    typedef typename ::boost::mpl::if_<
-        ::boost::type_erasure::is_placeholder<
-            typename ::boost::remove_cv<
-                typename ::boost::remove_reference<T>::type
-            >::type
-        >,
-        ::boost::type_erasure::any<
-            typename ::boost::type_erasure::concept_of<Any>::type,
-            T
-        >,
-        T
-    >::type type;
+	typedef typename ::boost::mpl::if_<
+	::boost::type_erasure::is_placeholder<
+	typename ::boost::remove_cv<
+	typename ::boost::remove_reference<T>::type
+	>::type
+	>,
+	::boost::type_erasure::any<
+	typename ::boost::type_erasure::concept_of<Any>::type,
+	T
+	>,
+	T
+	>::type type;
 #endif
 };
 

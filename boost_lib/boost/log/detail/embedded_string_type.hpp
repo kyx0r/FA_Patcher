@@ -25,53 +25,55 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 template< typename T, typename ArgT >
 struct make_embedded_string_type_impl
 {
-    typedef ArgT type;
+	typedef ArgT type;
 };
 
 template< typename ArgT >
 struct make_embedded_string_type_impl< char, ArgT >
 {
-    typedef std::basic_string< char > type;
+	typedef std::basic_string< char > type;
 };
 
 template< typename ArgT >
 struct make_embedded_string_type_impl< const char, ArgT >
 {
-    typedef std::basic_string< char > type;
+	typedef std::basic_string< char > type;
 };
 
 template< typename ArgT >
 struct make_embedded_string_type_impl< wchar_t, ArgT >
 {
-    typedef std::basic_string< wchar_t > type;
+	typedef std::basic_string< wchar_t > type;
 };
 
 template< typename ArgT >
 struct make_embedded_string_type_impl< const wchar_t, ArgT >
 {
-    typedef std::basic_string< wchar_t > type;
+	typedef std::basic_string< wchar_t > type;
 };
 
 #if !defined(BOOST_NO_CXX11_CHAR16_T)
 template< typename ArgT >
 struct make_embedded_string_type_impl< char16_t, ArgT >
 {
-    typedef std::basic_string< char16_t > type;
+	typedef std::basic_string< char16_t > type;
 };
 
 template< typename ArgT >
 struct make_embedded_string_type_impl< const char16_t, ArgT >
 {
-    typedef std::basic_string< char16_t > type;
+	typedef std::basic_string< char16_t > type;
 };
 #endif
 
@@ -79,38 +81,38 @@ struct make_embedded_string_type_impl< const char16_t, ArgT >
 template< typename ArgT >
 struct make_embedded_string_type_impl< char32_t, ArgT >
 {
-    typedef std::basic_string< char32_t > type;
+	typedef std::basic_string< char32_t > type;
 };
 
 template< typename ArgT >
 struct make_embedded_string_type_impl< const char32_t, ArgT >
 {
-    typedef std::basic_string< char32_t > type;
+	typedef std::basic_string< char32_t > type;
 };
 #endif
 
 //! An auxiliary type translator to store strings by value in function objects and attribute values
 template< typename ArgT >
 struct make_embedded_string_type :
-    public remove_cv< ArgT >
+	public remove_cv< ArgT >
 {
 };
 
 template< typename ArgT >
 struct make_embedded_string_type< ArgT* > :
-    public make_embedded_string_type_impl< ArgT, ArgT* >
+	public make_embedded_string_type_impl< ArgT, ArgT* >
 {
 };
 
 template< typename ArgT, unsigned int CountV >
 struct make_embedded_string_type< ArgT[CountV] > :
-    public make_embedded_string_type_impl< ArgT, ArgT[CountV] >
+	public make_embedded_string_type_impl< ArgT, ArgT[CountV] >
 {
 };
 
 template< typename ArgT, unsigned int CountV >
 struct make_embedded_string_type< ArgT(&)[CountV] > :
-    public make_embedded_string_type_impl< ArgT, ArgT(&)[CountV] >
+public make_embedded_string_type_impl< ArgT, ArgT(&)[CountV] >
 {
 };
 

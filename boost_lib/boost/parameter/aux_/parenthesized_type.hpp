@@ -7,7 +7,12 @@
 # include <boost/config.hpp>
 # include <boost/detail/workaround.hpp>
 
-namespace boost { namespace parameter { namespace aux { 
+namespace boost
+{
+namespace parameter
+{
+namespace aux
+{
 
 // A macro that takes a parenthesized C++ type name (T) and transforms
 // it into an un-parenthesized type expression equivalent to T.
@@ -21,15 +26,17 @@ struct unaryfunptr_arg_type;
 template <class Arg>
 struct unaryfunptr_arg_type<void(*)(Arg)>
 {
-    typedef Arg type;
+	typedef Arg type;
 };
 
 template <>
 struct unaryfunptr_arg_type<void(*)(void)>
 {
-    typedef void type;
+	typedef void type;
 };
-    
-}}} // namespace boost::parameter::aux
+
+}
+}
+} // namespace boost::parameter::aux
 
 #endif // BOOST_PARAMETER_AUX_PARENTHESIZED_TYPE_DWA2006414_HPP

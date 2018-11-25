@@ -23,8 +23,10 @@
 #endif
 #include <typeinfo>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * The @ref destructible concept enables forwarding to
@@ -42,18 +44,18 @@ namespace type_erasure {
 template<class T = _self>
 struct destructible
 {
-    /** INTERNAL ONLY */
-    typedef void (*type)(detail::storage&);
-    /** INTERNAL ONLY */
-    static void value(detail::storage& arg)
-    {
-        delete static_cast<T*>(arg.data);
-    }
-    /** INTERNAL ONLY */
-    static void apply(detail::storage& arg)
-    { 
-        delete static_cast<T*>(arg.data);
-    }
+	/** INTERNAL ONLY */
+	typedef void (*type)(detail::storage&);
+	/** INTERNAL ONLY */
+	static void value(detail::storage& arg)
+	{
+		delete static_cast<T*>(arg.data);
+	}
+	/** INTERNAL ONLY */
+	static void apply(detail::storage& arg)
+	{
+		delete static_cast<T*>(arg.data);
+	}
 };
 
 /**
@@ -66,7 +68,7 @@ struct destructible
  */
 template<class T = _self>
 struct copy_constructible :
-    ::boost::mpl::vector<constructible<T(const T&)>, destructible<T> >
+	::boost::mpl::vector<constructible<T(const T&)>, destructible<T> >
 {};
 
 #ifdef BOOST_TYPE_ERASURE_DOXYGEN
@@ -77,7 +79,7 @@ struct copy_constructible :
 template<class T = _self, class U = const T&>
 struct assignable
 {
-    static void apply(T& dst, U src);
+	static void apply(T& dst, U src);
 };
 
 #else
@@ -87,7 +89,7 @@ struct assignable
  */
 template<class T = _self, class U = const T&>
 struct assignable :
-    ::boost::mpl::vector<assignable<T, const U&> >
+	::boost::mpl::vector<assignable<T, const U&> >
 {};
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
@@ -96,7 +98,10 @@ struct assignable :
 template<class T, class U>
 struct assignable<T, U&&>
 {
-    static void apply(T& dst, U&& src) { dst = std::forward<U>(src); }
+	static void apply(T& dst, U&& src)
+	{
+		dst = std::forward<U>(src);
+	}
 };
 
 #endif
@@ -105,20 +110,23 @@ struct assignable<T, U&&>
 template<class T, class U>
 struct assignable<T, U&>
 {
-    static void apply(T& dst, U& src) { dst = src; }
+	static void apply(T& dst, U& src)
+	{
+		dst = src;
+	}
 };
 
 /** INTERNAL ONLY */
 template<class T, class U, class Base>
 struct concept_interface<assignable<T, U>, Base, T,
-        typename ::boost::enable_if_c< ::boost::is_reference<U>::value>::type> : Base
+	       typename ::boost::enable_if_c< ::boost::is_reference<U>::value>::type> : Base
 {
-    using Base::_boost_type_erasure_deduce_assign;
-    assignable<T, U>* _boost_type_erasure_deduce_assign(
-        typename ::boost::type_erasure::as_param<Base, U>::type)
-    {
-        return 0;
-    }
+	using Base::_boost_type_erasure_deduce_assign;
+	assignable<T, U>* _boost_type_erasure_deduce_assign(
+	    typename ::boost::type_erasure::as_param<Base, U>::type)
+	{
+		return 0;
+	}
 };
 
 #endif
@@ -137,21 +145,22 @@ struct concept_interface<assignable<T, U>, Base, T,
 template<class T = _self>
 struct typeid_
 {
-    /** INTERNAL ONLY */
-    typedef const std::type_info& (*type)();
-    /** INTERNAL ONLY */
-    static const std::type_info& value()
-    {
-        return typeid(T);
-    }
-    /** INTERNAL ONLY */
-    static const std::type_info& apply()
-    {
-        return typeid(T);
-    }
+	/** INTERNAL ONLY */
+	typedef const std::type_info& (*type)();
+	/** INTERNAL ONLY */
+	static const std::type_info& value()
+	{
+		return typeid(T);
+	}
+	/** INTERNAL ONLY */
+	static const std::type_info& apply()
+	{
+		return typeid(T);
+	}
 };
 
-namespace detail {
+namespace detail
+{
 
 template<class C>
 struct get_null_vtable_entry;
@@ -159,17 +168,18 @@ struct get_null_vtable_entry;
 template<class T>
 struct get_null_vtable_entry< ::boost::type_erasure::typeid_<T> >
 {
-    typedef typeid_<void> type;
+	typedef typeid_<void> type;
 };
 
-struct null_destroy {
-    static void value(::boost::type_erasure::detail::storage&) {}
+struct null_destroy
+{
+	static void value(::boost::type_erasure::detail::storage&) {}
 };
 
 template<class T>
 struct get_null_vtable_entry< ::boost::type_erasure::destructible<T> >
 {
-    typedef ::boost::type_erasure::detail::null_destroy type;
+	typedef ::boost::type_erasure::detail::null_destroy type;
 };
 
 }

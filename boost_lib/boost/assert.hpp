@@ -46,8 +46,8 @@
 
 namespace boost
 {
-    void assertion_failed(char const * expr, char const * function, char const * file, long line); // user defined
-    void assertion_failed_msg(char const * expr, char const * msg, char const * function, char const * file, long line); // user defined
+void assertion_failed(char const * expr, char const * function, char const * file, long line); // user defined
+void assertion_failed_msg(char const * expr, char const * msg, char const * function, char const * file, long line); // user defined
 } // namespace boost
 
 #define BOOST_ASSERT(expr) (BOOST_LIKELY(!!(expr))? ((void)0): ::boost::assertion_failed(#expr, BOOST_CURRENT_FUNCTION, __FILE__, __LINE__))

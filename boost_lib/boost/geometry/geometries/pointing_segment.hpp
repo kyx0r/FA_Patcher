@@ -23,7 +23,9 @@
 
 #include <boost/geometry/geometries/concepts/point_concept.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace model
@@ -40,30 +42,30 @@ namespace model
 template <typename ConstOrNonConstPoint>
 class pointing_segment
 {
-    BOOST_CONCEPT_ASSERT( (
-        typename boost::mpl::if_
-            <
-                boost::is_const<ConstOrNonConstPoint>,
-                concepts::Point<ConstOrNonConstPoint>,
-                concepts::ConstPoint<ConstOrNonConstPoint>
-            >
-    ) );
+	BOOST_CONCEPT_ASSERT( (
+	                          typename boost::mpl::if_
+	                          <
+	                          boost::is_const<ConstOrNonConstPoint>,
+	                          concepts::Point<ConstOrNonConstPoint>,
+	                          concepts::ConstPoint<ConstOrNonConstPoint>
+	                          >
+	                      ) );
 
-    typedef ConstOrNonConstPoint point_type;
+	typedef ConstOrNonConstPoint point_type;
 
 public:
-    point_type* first;
-    point_type* second;
+	point_type* first;
+	point_type* second;
 
-    inline pointing_segment()
-        : first(NULL)
-        , second(NULL)
-    {}
+	inline pointing_segment()
+		: first(NULL)
+		, second(NULL)
+	{}
 
-    inline pointing_segment(point_type const& p1, point_type const& p2)
-        : first(boost::addressof(p1))
-        , second(boost::addressof(p2))
-    {}
+	inline pointing_segment(point_type const& p1, point_type const& p2)
+		: first(boost::addressof(p1))
+		, second(boost::addressof(p2))
+	{}
 };
 
 
@@ -78,58 +80,58 @@ namespace traits
 template <typename Point>
 struct tag<model::pointing_segment<Point> >
 {
-    typedef segment_tag type;
+	typedef segment_tag type;
 };
 
 template <typename Point>
 struct point_type<model::pointing_segment<Point> >
 {
-    typedef Point type;
+	typedef Point type;
 };
 
 template <typename Point, std::size_t Dimension>
 struct indexed_access<model::pointing_segment<Point>, 0, Dimension>
 {
-    typedef model::pointing_segment<Point> segment_type;
-    typedef typename geometry::coordinate_type
-        <
-            segment_type
-        >::type coordinate_type;
+	typedef model::pointing_segment<Point> segment_type;
+	typedef typename geometry::coordinate_type
+	<
+	segment_type
+	>::type coordinate_type;
 
-    static inline coordinate_type get(segment_type const& s)
-    {
-        BOOST_GEOMETRY_ASSERT( s.first != NULL );
-        return geometry::get<Dimension>(*s.first);
-    }
+	static inline coordinate_type get(segment_type const& s)
+	{
+		BOOST_GEOMETRY_ASSERT( s.first != NULL );
+		return geometry::get<Dimension>(*s.first);
+	}
 
-    static inline void set(segment_type& s, coordinate_type const& value)
-    {
-        BOOST_GEOMETRY_ASSERT( s.first != NULL );
-        geometry::set<Dimension>(*s.first, value);
-    }
+	static inline void set(segment_type& s, coordinate_type const& value)
+	{
+		BOOST_GEOMETRY_ASSERT( s.first != NULL );
+		geometry::set<Dimension>(*s.first, value);
+	}
 };
 
 
 template <typename Point, std::size_t Dimension>
 struct indexed_access<model::pointing_segment<Point>, 1, Dimension>
 {
-    typedef model::pointing_segment<Point> segment_type;
-    typedef typename geometry::coordinate_type
-        <
-            segment_type
-        >::type coordinate_type;
+	typedef model::pointing_segment<Point> segment_type;
+	typedef typename geometry::coordinate_type
+	<
+	segment_type
+	>::type coordinate_type;
 
-    static inline coordinate_type get(segment_type const& s)
-    {
-        BOOST_GEOMETRY_ASSERT( s.second != NULL );
-        return geometry::get<Dimension>(*s.second);
-    }
+	static inline coordinate_type get(segment_type const& s)
+	{
+		BOOST_GEOMETRY_ASSERT( s.second != NULL );
+		return geometry::get<Dimension>(*s.second);
+	}
 
-    static inline void set(segment_type& s, coordinate_type const& value)
-    {
-        BOOST_GEOMETRY_ASSERT( s.second != NULL );
-        geometry::set<Dimension>(*s.second, value);
-    }
+	static inline void set(segment_type& s, coordinate_type const& value)
+	{
+		BOOST_GEOMETRY_ASSERT( s.second != NULL );
+		geometry::set<Dimension>(*s.second, value);
+	}
 };
 
 
@@ -137,6 +139,7 @@ struct indexed_access<model::pointing_segment<Point>, 1, Dimension>
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_POINTING_SEGMENT_HPP

@@ -10,26 +10,41 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/spirit/home/x3/support/utility/sfinae.hpp>
 
-namespace boost { namespace spirit { namespace x3 { namespace detail
+namespace boost
 {
-    template <typename Sig, typename Enable = void>
-    struct is_callable_impl : mpl::false_ {};
-
-    template <typename F, typename... A>
-    struct is_callable_impl<F(A...), typename disable_if_substitution_failure<
-        decltype(std::declval<F>()(std::declval<A>()...))>::type>
-      : mpl::true_
-    {};
-}}}}
-
-namespace boost { namespace spirit { namespace x3
+namespace spirit
 {
-    template <typename Sig>
-    struct is_callable;
+namespace x3
+{
+namespace detail
+{
+template <typename Sig, typename Enable = void>
+struct is_callable_impl : mpl::false_ {};
 
-    template <typename F, typename... A>
-    struct is_callable<F(A...)> : detail::is_callable_impl<F(A...)> {};
-}}}
+template <typename F, typename... A>
+struct is_callable_impl<F(A...), typename disable_if_substitution_failure<
+decltype(std::declval<F>()(std::declval<A>()...))>::type>
+: mpl::true_
+{};
+}
+}
+}
+}
+
+namespace boost
+{
+namespace spirit
+{
+namespace x3
+{
+template <typename Sig>
+struct is_callable;
+
+template <typename F, typename... A>
+struct is_callable<F(A...)> : detail::is_callable_impl<F(A...)> {};
+}
+}
+}
 
 
 #endif

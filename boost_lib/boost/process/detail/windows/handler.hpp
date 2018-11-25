@@ -8,12 +8,22 @@
 
 #include <boost/process/detail/handler_base.hpp>
 
-namespace boost { namespace process { namespace detail { namespace windows {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace windows
+{
 
 //does not extend anything.
 struct handler_base_ext : handler_base {};
 
-}}}}
+}
+}
+}
+}
 
 
 

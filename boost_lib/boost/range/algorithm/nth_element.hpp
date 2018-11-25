@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function nth_element
 ///
@@ -28,47 +28,47 @@ namespace boost
 /// \pre BinaryPredicate is a model of the BinaryPredicateConcept
 template<class RandomAccessRange>
 inline RandomAccessRange& nth_element(RandomAccessRange& rng,
-    BOOST_DEDUCED_TYPENAME range_iterator<RandomAccessRange>::type nth)
+                                      BOOST_DEDUCED_TYPENAME range_iterator<RandomAccessRange>::type nth)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::nth_element(boost::begin(rng), nth, boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::nth_element(boost::begin(rng), nth, boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange>
 inline const RandomAccessRange& nth_element(const RandomAccessRange& rng,
-    BOOST_DEDUCED_TYPENAME range_iterator<const RandomAccessRange>::type nth)
+        BOOST_DEDUCED_TYPENAME range_iterator<const RandomAccessRange>::type nth)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::nth_element(boost::begin(rng), nth, boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::nth_element(boost::begin(rng), nth, boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class BinaryPredicate>
 inline RandomAccessRange& nth_element(RandomAccessRange& rng,
-    BOOST_DEDUCED_TYPENAME range_iterator<RandomAccessRange>::type nth,
-    BinaryPredicate sort_pred)
+                                      BOOST_DEDUCED_TYPENAME range_iterator<RandomAccessRange>::type nth,
+                                      BinaryPredicate sort_pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::nth_element(boost::begin(rng), nth, boost::end(rng), sort_pred);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::nth_element(boost::begin(rng), nth, boost::end(rng), sort_pred);
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class BinaryPredicate>
 inline const RandomAccessRange& nth_element(const RandomAccessRange& rng,
-    BOOST_DEDUCED_TYPENAME range_iterator<const RandomAccessRange>::type nth,
-    BinaryPredicate sort_pred)
+        BOOST_DEDUCED_TYPENAME range_iterator<const RandomAccessRange>::type nth,
+        BinaryPredicate sort_pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::nth_element(boost::begin(rng), nth, boost::end(rng), sort_pred);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::nth_element(boost::begin(rng), nth, boost::end(rng), sort_pred);
+	return rng;
 }
 
-    } // namespace range
-    using range::nth_element;
+} // namespace range
+using range::nth_element;
 } // namespace boost
 
 #endif // include guard

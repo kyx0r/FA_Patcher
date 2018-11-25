@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword allows to pass maximum log file size to the file sink
 BOOST_PARAMETER_KEYWORD(tag, rotation_size)

@@ -16,7 +16,7 @@ namespace boost
 
 template<class T> struct type_identity
 {
-    typedef T type;
+	typedef T type;
 };
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)

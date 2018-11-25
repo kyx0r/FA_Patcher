@@ -20,9 +20,12 @@
 
 #include <boost/compute/config.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 namespace mpl = boost::mpl;
 
@@ -51,11 +54,11 @@ BOOST_PP_REPEAT_FROM_TO(1, BOOST_COMPUTE_MAX_ARITY, BOOST_COMPUTE_VEC2TUP, ~)
 template<class Vector>
 struct mpl_vector_to_tuple
 {
-    typedef typename
-        mpl_vector_to_tuple_impl<
-            Vector,
-            mpl::size<Vector>::value
-        >::type type;
+	typedef typename
+	mpl_vector_to_tuple_impl<
+	Vector,
+	mpl::size<Vector>::value
+	>::type type;
 };
 
 } // end detail namespace

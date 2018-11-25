@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/copy.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Copies \p count elements from \p first to \p result.
 ///
@@ -39,12 +41,12 @@ inline OutputIterator copy_n(InputIterator first,
                              OutputIterator result,
                              command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::difference_type difference_type;
+	typedef typename std::iterator_traits<InputIterator>::difference_type difference_type;
 
-    return ::boost::compute::copy(first,
-                                  first + static_cast<difference_type>(count),
-                                  result,
-                                  queue);
+	return ::boost::compute::copy(first,
+	                              first + static_cast<difference_type>(count),
+	                              result,
+	                              queue);
 }
 
 } // end compute namespace

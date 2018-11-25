@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function stable_sort
 ///
@@ -29,40 +29,40 @@ namespace boost
 template<class RandomAccessRange>
 inline RandomAccessRange& stable_sort(RandomAccessRange& rng)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::stable_sort(boost::begin(rng), boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::stable_sort(boost::begin(rng), boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange>
 inline const RandomAccessRange& stable_sort(const RandomAccessRange& rng)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::stable_sort(boost::begin(rng), boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::stable_sort(boost::begin(rng), boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class BinaryPredicate>
 inline RandomAccessRange& stable_sort(RandomAccessRange& rng, BinaryPredicate sort_pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::stable_sort(boost::begin(rng), boost::end(rng), sort_pred);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::stable_sort(boost::begin(rng), boost::end(rng), sort_pred);
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class BinaryPredicate>
 inline const RandomAccessRange& stable_sort(const RandomAccessRange& rng, BinaryPredicate sort_pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::stable_sort(boost::begin(rng), boost::end(rng), sort_pred);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::stable_sort(boost::begin(rng), boost::end(rng), sort_pred);
+	return rng;
 }
 
-    } // namespace range
-    using range::stable_sort;
+} // namespace range
+using range::stable_sort;
 } // namespace boost
 
 #endif // include guard

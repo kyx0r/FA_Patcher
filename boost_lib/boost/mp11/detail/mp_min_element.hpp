@@ -23,7 +23,7 @@ namespace detail
 
 template<template<class...> class P> struct select_min
 {
-    template<class T1, class T2> using fn = mp_if<P<T1, T2>, T1, T2>;
+	template<class T1, class T2> using fn = mp_if<P<T1, T2>, T1, T2>;
 };
 
 } // namespace detail
@@ -37,7 +37,7 @@ namespace detail
 
 template<template<class...> class P> struct select_max
 {
-    template<class T1, class T2> using fn = mp_if<P<T2, T1>, T1, T2>;
+	template<class T1, class T2> using fn = mp_if<P<T2, T1>, T1, T2>;
 };
 
 } // namespace detail

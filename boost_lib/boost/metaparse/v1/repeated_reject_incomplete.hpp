@@ -13,16 +13,16 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P>
-      struct repeated_reject_incomplete :
-        foldl_reject_incomplete<P, boost::mpl::vector<>, impl::back_inserter>
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P>
+struct repeated_reject_incomplete :
+	foldl_reject_incomplete<P, boost::mpl::vector<>, impl::back_inserter>
+{};
+}
+}
 }
 
 #endif

@@ -34,11 +34,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A base class for all scoped attribute guards
 class attribute_scope_guard
@@ -50,64 +52,65 @@ class attribute_scope_guard
 //! Scoped attribute guard type
 typedef aux::attribute_scope_guard const& scoped_attribute;
 
-namespace aux {
+namespace aux
+{
 
 //! A scoped logger attribute guard
 template< typename LoggerT >
 class scoped_logger_attribute :
-    public attribute_scope_guard
+	public attribute_scope_guard
 {
-    BOOST_COPYABLE_AND_MOVABLE_ALT(scoped_logger_attribute)
+	BOOST_COPYABLE_AND_MOVABLE_ALT(scoped_logger_attribute)
 
 private:
-    //! Logger type
-    typedef LoggerT logger_type;
+	//! Logger type
+	typedef LoggerT logger_type;
 
 private:
-    //! A reference to the logger
-    logger_type* m_pLogger;
-    //! An iterator to the added attribute
-    attribute_set::iterator m_itAttribute;
+	//! A reference to the logger
+	logger_type* m_pLogger;
+	//! An iterator to the added attribute
+	attribute_set::iterator m_itAttribute;
 
 public:
-    //! Constructor
-    scoped_logger_attribute(logger_type& l, attribute_name const& name, attribute const& attr) :
-        m_pLogger(boost::addressof(l))
-    {
-        std::pair<
-            attribute_set::iterator,
-            bool
-        > res = l.add_attribute(name, attr);
-        if (res.second)
-            m_itAttribute = res.first;
-        else
-            m_pLogger = 0; // if there already is a same-named attribute, don't register anything
-    }
-    //! Move constructor
-    scoped_logger_attribute(BOOST_RV_REF(scoped_logger_attribute) that) :
-        m_pLogger(that.m_pLogger),
-        m_itAttribute(that.m_itAttribute)
-    {
-        that.m_pLogger = 0;
-    }
+	//! Constructor
+	scoped_logger_attribute(logger_type& l, attribute_name const& name, attribute const& attr) :
+		m_pLogger(boost::addressof(l))
+	{
+		std::pair<
+		attribute_set::iterator,
+		              bool
+		              > res = l.add_attribute(name, attr);
+		if (res.second)
+			m_itAttribute = res.first;
+		else
+			m_pLogger = 0; // if there already is a same-named attribute, don't register anything
+	}
+	//! Move constructor
+	scoped_logger_attribute(BOOST_RV_REF(scoped_logger_attribute) that) :
+		m_pLogger(that.m_pLogger),
+		m_itAttribute(that.m_itAttribute)
+	{
+		that.m_pLogger = 0;
+	}
 
-    //! Destructor
-    ~scoped_logger_attribute()
-    {
-        if (m_pLogger)
-            m_pLogger->remove_attribute(m_itAttribute);
-    }
+	//! Destructor
+	~scoped_logger_attribute()
+	{
+		if (m_pLogger)
+			m_pLogger->remove_attribute(m_itAttribute);
+	}
 
 #ifndef BOOST_LOG_BROKEN_REFERENCE_FROM_RVALUE_INIT
-    BOOST_DELETED_FUNCTION(scoped_logger_attribute(scoped_logger_attribute const&))
+	BOOST_DELETED_FUNCTION(scoped_logger_attribute(scoped_logger_attribute const&))
 #else // BOOST_LOG_BROKEN_REFERENCE_FROM_RVALUE_INIT
-    scoped_logger_attribute(scoped_logger_attribute const& that) : m_pLogger(that.m_pLogger), m_itAttribute(that.m_itAttribute)
-    {
-        const_cast< scoped_logger_attribute& >(that).m_pLogger = 0;
-    }
+	scoped_logger_attribute(scoped_logger_attribute const& that) : m_pLogger(that.m_pLogger), m_itAttribute(that.m_itAttribute)
+	{
+		const_cast< scoped_logger_attribute& >(that).m_pLogger = 0;
+	}
 #endif // BOOST_LOG_BROKEN_REFERENCE_FROM_RVALUE_INIT
 
-    BOOST_DELETED_FUNCTION(scoped_logger_attribute& operator= (scoped_logger_attribute const&))
+	BOOST_DELETED_FUNCTION(scoped_logger_attribute& operator= (scoped_logger_attribute const&))
 };
 
 } // namespace aux
@@ -125,10 +128,10 @@ template< typename LoggerT >
 BOOST_FORCEINLINE aux::scoped_logger_attribute< LoggerT > add_scoped_logger_attribute(LoggerT& l, attribute_name const& name, attribute const& attr)
 {
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-    return aux::scoped_logger_attribute< LoggerT >(l, name, attr);
+	return aux::scoped_logger_attribute< LoggerT >(l, name, attr);
 #else
-    aux::scoped_logger_attribute< LoggerT > guard(l, name, attr);
-    return boost::move(guard);
+	aux::scoped_logger_attribute< LoggerT > guard(l, name, attr);
+	return boost::move(guard);
 #endif
 }
 
@@ -152,57 +155,58 @@ BOOST_FORCEINLINE aux::scoped_logger_attribute< LoggerT > add_scoped_logger_attr
 #define BOOST_LOG_SCOPED_LOGGER_TAG(logger, attr_name, attr_value)\
     BOOST_LOG_SCOPED_LOGGER_ATTR(logger, attr_name, ::boost::log::attributes::make_constant(attr_value))
 
-namespace aux {
+namespace aux
+{
 
 //! A scoped thread-specific attribute guard
 class scoped_thread_attribute :
-    public attribute_scope_guard
+	public attribute_scope_guard
 {
-    BOOST_COPYABLE_AND_MOVABLE_ALT(scoped_thread_attribute)
+	BOOST_COPYABLE_AND_MOVABLE_ALT(scoped_thread_attribute)
 
 private:
-    //! A pointer to the logging core
-    core_ptr m_pCore;
-    //! An iterator to the added attribute
-    attribute_set::iterator m_itAttribute;
+	//! A pointer to the logging core
+	core_ptr m_pCore;
+	//! An iterator to the added attribute
+	attribute_set::iterator m_itAttribute;
 
 public:
-    //! Constructor
-    scoped_thread_attribute(attribute_name const& name, attribute const& attr) :
-        m_pCore(core::get())
-    {
-        std::pair<
-            attribute_set::iterator,
-            bool
-        > res = m_pCore->add_thread_attribute(name, attr);
-        if (res.second)
-            m_itAttribute = res.first;
-        else
-            m_pCore.reset(); // if there already is a same-named attribute, don't register anything
-    }
-    //! Move constructor
-    scoped_thread_attribute(BOOST_RV_REF(scoped_thread_attribute) that) : m_itAttribute(that.m_itAttribute)
-    {
-        m_pCore.swap(that.m_pCore);
-    }
+	//! Constructor
+	scoped_thread_attribute(attribute_name const& name, attribute const& attr) :
+		m_pCore(core::get())
+	{
+		std::pair<
+		attribute_set::iterator,
+		              bool
+		              > res = m_pCore->add_thread_attribute(name, attr);
+		if (res.second)
+			m_itAttribute = res.first;
+		else
+			m_pCore.reset(); // if there already is a same-named attribute, don't register anything
+	}
+	//! Move constructor
+	scoped_thread_attribute(BOOST_RV_REF(scoped_thread_attribute) that) : m_itAttribute(that.m_itAttribute)
+	{
+		m_pCore.swap(that.m_pCore);
+	}
 
-    //! Destructor
-    ~scoped_thread_attribute()
-    {
-        if (!!m_pCore)
-            m_pCore->remove_thread_attribute(m_itAttribute);
-    }
+	//! Destructor
+	~scoped_thread_attribute()
+	{
+		if (!!m_pCore)
+			m_pCore->remove_thread_attribute(m_itAttribute);
+	}
 
 #ifndef BOOST_LOG_BROKEN_REFERENCE_FROM_RVALUE_INIT
-    BOOST_DELETED_FUNCTION(scoped_thread_attribute(scoped_thread_attribute const&))
+	BOOST_DELETED_FUNCTION(scoped_thread_attribute(scoped_thread_attribute const&))
 #else // BOOST_LOG_BROKEN_REFERENCE_FROM_RVALUE_INIT
-    scoped_thread_attribute(scoped_thread_attribute const& that) : m_itAttribute(that.m_itAttribute)
-    {
-        m_pCore.swap(const_cast< scoped_thread_attribute& >(that).m_pCore);
-    }
+	scoped_thread_attribute(scoped_thread_attribute const& that) : m_itAttribute(that.m_itAttribute)
+	{
+		m_pCore.swap(const_cast< scoped_thread_attribute& >(that).m_pCore);
+	}
 #endif // BOOST_LOG_BROKEN_REFERENCE_FROM_RVALUE_INIT
 
-    BOOST_DELETED_FUNCTION(scoped_thread_attribute& operator= (scoped_thread_attribute const&))
+	BOOST_DELETED_FUNCTION(scoped_thread_attribute& operator= (scoped_thread_attribute const&))
 };
 
 } // namespace aux
@@ -218,10 +222,10 @@ public:
 BOOST_FORCEINLINE aux::scoped_thread_attribute add_scoped_thread_attribute(attribute_name const& name, attribute const& attr)
 {
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-    return aux::scoped_thread_attribute(name, attr);
+	return aux::scoped_thread_attribute(name, attr);
 #else
-    aux::scoped_thread_attribute guard(name, attr);
-    return boost::move(guard);
+	aux::scoped_thread_attribute guard(name, attr);
+	return boost::move(guard);
 #endif
 }
 

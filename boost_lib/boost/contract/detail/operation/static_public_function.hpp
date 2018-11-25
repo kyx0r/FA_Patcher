@@ -16,88 +16,102 @@
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS))
-    #include <boost/contract/detail/checking.hpp>
+#include <boost/contract/detail/checking.hpp>
 #endif
 #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
-    #include <boost/config.hpp>
-    #include <exception>
+#include <boost/config.hpp>
+#include <exception>
 #endif
 
-namespace boost { namespace contract { namespace detail {
+namespace boost
+{
+namespace contract
+{
+namespace detail
+{
 
 // No subcontracting because static so no obj and no substitution principle.
 template<class C> // Non-copyable base.
-class static_public_function : public cond_inv</* VR = */ none, C> {
+class static_public_function : public cond_inv</* VR = */ none, C>
+{
 public:
-    explicit static_public_function() : cond_inv</* VR = */ none, C>(
-            boost::contract::from_function, /* obj = */ 0) {}
+	explicit static_public_function() : cond_inv</* VR = */ none, C>(
+		    boost::contract::from_function, /* obj = */ 0) {}
 
 private:
-    #if     !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
+#if     !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_OLDS)
-        void init() /* override */ {
-            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-                if(checking::already()) return;
-            #endif
-            #if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
+	void init() /* override */
+	{
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+		if(checking::already()) return;
+#endif
+#if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
                     !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-                { // Acquire checking guard.
-                    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-                        checking k;
-                    #endif
-                    #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-                        this->check_entry_static_inv();
-                    #endif
-                    #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-                        #ifndef \
+		{
+			// Acquire checking guard.
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+			checking k;
+#endif
+#ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+			this->check_entry_static_inv();
+#endif
+#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+#ifndef \
   BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
-                            this->check_pre();
-                            } // Release checking guard (after pre check).
-                        #else
-                            } // Release checking guard (before pre check).
-                            this->check_pre();
-                        #endif
-                    #else
-                        } // Release checking guard
-                    #endif
-            #endif
-            #ifndef BOOST_CONTRACT_NO_OLDS
-                this->copy_old();
-            #endif
-        }
-    #endif
+			this->check_pre();
+		} // Release checking guard (after pre check).
+#else
+		} // Release checking guard (before pre check).
+		this->check_pre();
+#endif
+#else
+		} // Release checking guard
+#endif
+#endif
+#ifndef BOOST_CONTRACT_NO_OLDS
+		this->copy_old();
+#endif
+	}
+#endif
 
 public:
-    #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+#if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        ~static_public_function() BOOST_NOEXCEPT_IF(false) {
-            this->assert_initialized();
-            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-                if(checking::already()) return;
-                checking k;
-            #endif
+	~static_public_function() BOOST_NOEXCEPT_IF(false)
+	{
+		this->assert_initialized();
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+		if(checking::already()) return;
+		checking k;
+#endif
 
-            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                this->check_exit_static_inv();
-            #endif
-            if(std::uncaught_exception()) {
-                #ifndef BOOST_CONTRACT_NO_EXCEPTS
-                    this->check_except();
-                #endif
-            } else {
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-                    this->check_post(none());
-                #endif
-            }
-        }
-    #endif
+#ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+		this->check_exit_static_inv();
+#endif
+		if(std::uncaught_exception())
+		{
+#ifndef BOOST_CONTRACT_NO_EXCEPTS
+			this->check_except();
+#endif
+		}
+		else
+		{
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+			this->check_post(none());
+#endif
+		}
+	}
+#endif
 };
 
-} } } // namespace
+}
+}
+} // namespace
 
 #endif // #include guard
 

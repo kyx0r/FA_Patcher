@@ -15,138 +15,142 @@
 #include <cstddef>
 #include <iterator>
 
-namespace boost {
-namespace beast {
-namespace http {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
+namespace detail
+{
 
 /** A list parser which presents the sequence as a container.
 */
 template<class Policy>
 class basic_parsed_list
 {
-    string_view s_;
+	string_view s_;
 
 public:
-    /// The type of policy this list uses for parsing.
-    using policy_type = Policy;
+	/// The type of policy this list uses for parsing.
+	using policy_type = Policy;
 
-    /// The type of each element in the list.
-    using value_type = typename Policy::value_type;
+	/// The type of each element in the list.
+	using value_type = typename Policy::value_type;
 
-    /// A constant iterator to a list element.
+	/// A constant iterator to a list element.
 #if BOOST_BEAST_DOXYGEN
-    using const_iterator = implementation_defined;
+	using const_iterator = implementation_defined;
 #else
-    class const_iterator;
+	class const_iterator;
 #endif
 
-    class const_iterator
-        : private beast::detail::
-            empty_base_optimization<Policy>
-    {
-        basic_parsed_list const* list_ = nullptr;
-        char const* it_ = nullptr;
-        typename Policy::value_type v_;
-        bool error_ = false;
+	class const_iterator
+		: private beast::detail::
+		  empty_base_optimization<Policy>
+	{
+		basic_parsed_list const* list_ = nullptr;
+		char const* it_ = nullptr;
+		typename Policy::value_type v_;
+		bool error_ = false;
 
-    public:
-        using value_type =
-            typename Policy::value_type;
-        using reference = value_type const&;
-        using pointer = value_type const*;
-        using difference_type = std::ptrdiff_t;
-        using iterator_category =
-            std::forward_iterator_tag;
+	public:
+		using value_type =
+		    typename Policy::value_type;
+		using reference = value_type const&;
+		using pointer = value_type const*;
+		using difference_type = std::ptrdiff_t;
+		using iterator_category =
+		    std::forward_iterator_tag;
 
-        const_iterator() = default;
+		const_iterator() = default;
 
-        bool
-        operator==(
-            const_iterator const& other) const
-        {
-            return
-                other.list_ == list_ &&
-                other.it_ == it_;
-        }
+		bool
+		operator==(
+		    const_iterator const& other) const
+		{
+			return
+			    other.list_ == list_ &&
+			    other.it_ == it_;
+		}
 
-        bool
-        operator!=(
-            const_iterator const& other) const
-        {
-            return ! (*this == other);
-        }
+		bool
+		operator!=(
+		    const_iterator const& other) const
+		{
+			return ! (*this == other);
+		}
 
-        reference
-        operator*() const
-        {
-            return v_;
-        }
+		reference
+		operator*() const
+		{
+			return v_;
+		}
 
-        const_iterator&
-        operator++()
-        {
-            increment();
-            return *this;
-        }
+		const_iterator&
+		operator++()
+		{
+			increment();
+			return *this;
+		}
 
-        const_iterator
-        operator++(int)
-        {
-            auto temp = *this;
-            ++(*this);
-            return temp;
-        }
+		const_iterator
+		operator++(int)
+		{
+			auto temp = *this;
+			++(*this);
+			return temp;
+		}
 
-        bool
-        error() const
-        {
-            return error_;
-        }
+		bool
+		error() const
+		{
+			return error_;
+		}
 
-    private:
-        friend class basic_parsed_list;
+	private:
+		friend class basic_parsed_list;
 
-        const_iterator(
-            basic_parsed_list const& list, bool at_end)
-            : list_(&list)
-            , it_(at_end ? nullptr :
-                list.s_.begin())
-        {
-            if(! at_end)
-                increment();
-        }
+		const_iterator(
+		    basic_parsed_list const& list, bool at_end)
+			: list_(&list)
+			, it_(at_end ? nullptr :
+			      list.s_.begin())
+		{
+			if(! at_end)
+				increment();
+		}
 
-        void
-        increment()
-        {
-            if(! this->member()(
-                    v_, it_, list_->s_))
-            {
-                it_ = nullptr;
-                error_ = true;
-            }
-        }
-    };
+		void
+		increment()
+		{
+			if(! this->member()(
+			            v_, it_, list_->s_))
+			{
+				it_ = nullptr;
+				error_ = true;
+			}
+		}
+	};
 
-    /// Construct a list from a string
-    explicit
-    basic_parsed_list(string_view s)
-        : s_(s)
-    {
-    }
+	/// Construct a list from a string
+	explicit
+	basic_parsed_list(string_view s)
+		: s_(s)
+	{
+	}
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator begin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator begin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator end() const;
+	/// Return a const iterator to the end of the list
+	const_iterator end() const;
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator cbegin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator cbegin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator cend() const;
+	/// Return a const iterator to the end of the list
+	const_iterator cend() const;
 };
 
 template<class Policy>
@@ -154,9 +158,9 @@ inline
 auto
 basic_parsed_list<Policy>::
 begin() const ->
-    const_iterator
+const_iterator
 {
-    return const_iterator{*this, false};
+	return const_iterator{*this, false};
 }
 
 template<class Policy>
@@ -164,9 +168,9 @@ inline
 auto
 basic_parsed_list<Policy>::
 end() const ->
-    const_iterator
+const_iterator
 {
-    return const_iterator{*this, true};
+	return const_iterator{*this, true};
 }
 
 template<class Policy>
@@ -174,9 +178,9 @@ inline
 auto
 basic_parsed_list<Policy>::
 cbegin() const ->
-    const_iterator
+const_iterator
 {
-    return const_iterator{*this, false};
+	return const_iterator{*this, false};
 }
 
 template<class Policy>
@@ -184,9 +188,9 @@ inline
 auto
 basic_parsed_list<Policy>::
 cend() const ->
-    const_iterator
+const_iterator
 {
-    return const_iterator{*this, true};
+	return const_iterator{*this, true};
 }
 
 } // detail

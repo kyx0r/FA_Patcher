@@ -15,7 +15,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -29,9 +31,9 @@ template
     typename Tag = typename tag<Geometry>::type,
     // for multi-geometries: determines if empty multi-geometries are allowed
     bool AllowEmptyMultiGeometries = true
->
+    >
 struct is_valid
-    : not_implemented<Geometry>
+	: not_implemented<Geometry>
 {};
 
 
@@ -39,6 +41,7 @@ struct is_valid
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DISPATCH_IS_VALID_HPP

@@ -30,7 +30,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 // Forward-declaration of an exception base class from Boost.Exception
 #if defined(__GNUC__)
@@ -53,7 +54,8 @@ class BOOST_SYMBOL_VISIBLE exception;
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! Attaches attribute name exception information
 BOOST_LOG_API void attach_attribute_name_info(exception& e, attribute_name const& name);
@@ -66,33 +68,33 @@ BOOST_LOG_API void attach_attribute_name_info(exception& e, attribute_name const
  * Exceptions derived from this class indicate problems with memory allocation.
  */
 class BOOST_LOG_API bad_alloc :
-    public std::bad_alloc
+	public std::bad_alloc
 {
 private:
-    std::string m_message;
+	std::string m_message;
 
 public:
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit bad_alloc(const char* descr);
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit bad_alloc(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~bad_alloc() throw();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit bad_alloc(const char* descr);
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit bad_alloc(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~bad_alloc() throw();
 
-    /*!
-     * Error message accessor.
-     */
-    const char* what() const throw();
+	/*!
+	 * Error message accessor.
+	 */
+	const char* what() const throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -100,25 +102,25 @@ public:
  * \brief The exception is used to indicate reaching a storage capacity limit
  */
 class BOOST_LOG_API capacity_limit_reached :
-    public bad_alloc
+	public bad_alloc
 {
 public:
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit capacity_limit_reached(const char* descr);
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit capacity_limit_reached(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~capacity_limit_reached() throw();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit capacity_limit_reached(const char* descr);
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit capacity_limit_reached(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~capacity_limit_reached() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -130,45 +132,45 @@ public:
  * errors caused by input data.
  */
 class BOOST_LOG_API runtime_error :
-    public std::runtime_error
+	public std::runtime_error
 {
 public:
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit runtime_error(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~runtime_error() throw();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit runtime_error(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~runtime_error() throw();
 };
 
 /*!
  * \brief Exception class that is used to indicate errors of missing values
  */
 class BOOST_LOG_API missing_value :
-    public runtime_error
+	public runtime_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    missing_value();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit missing_value(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~missing_value() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	missing_value();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit missing_value(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~missing_value() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name);
 #endif
 };
 
@@ -176,32 +178,32 @@ public:
  * \brief Exception class that is used to indicate errors of incorrect type of an object
  */
 class BOOST_LOG_API invalid_type :
-    public runtime_error
+	public runtime_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    invalid_type();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit invalid_type(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~invalid_type() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	invalid_type();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit invalid_type(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~invalid_type() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, typeindex::type_index const& type);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, typeindex::type_index const& type);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name, typeindex::type_index const& type);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name, typeindex::type_index const& type);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, typeindex::type_index const& type);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, typeindex::type_index const& type);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name, typeindex::type_index const& type);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name, typeindex::type_index const& type);
 #endif
 };
 
@@ -209,26 +211,26 @@ public:
  * \brief Exception class that is used to indicate errors of incorrect value of an object
  */
 class BOOST_LOG_API invalid_value :
-    public runtime_error
+	public runtime_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    invalid_value();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit invalid_value(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~invalid_value() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	invalid_value();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit invalid_value(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~invalid_value() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -236,30 +238,30 @@ public:
  * \brief Exception class that is used to indicate parsing errors
  */
 class BOOST_LOG_API parse_error :
-    public runtime_error
+	public runtime_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    parse_error();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit parse_error(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~parse_error() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	parse_error();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit parse_error(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~parse_error() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, std::size_t content_line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, std::size_t content_line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, std::size_t content_line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, std::size_t content_line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, attribute_name const& name);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, attribute_name const& name);
 #endif
 };
 
@@ -267,26 +269,26 @@ public:
  * \brief Exception class that is used to indicate conversion errors
  */
 class BOOST_LOG_API conversion_error :
-    public runtime_error
+	public runtime_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    conversion_error();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit conversion_error(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~conversion_error() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	conversion_error();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit conversion_error(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~conversion_error() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -294,23 +296,23 @@ public:
  * \brief Exception class that is used to indicate underlying OS API errors
  */
 class BOOST_LOG_API system_error :
-    public boost::system::system_error
+	public boost::system::system_error
 {
 public:
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    system_error(boost::system::error_code code, std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~system_error() throw();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	system_error(boost::system::error_code code, std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~system_error() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, int system_error_code);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, int system_error_code);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, boost::system::error_code code);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, boost::system::error_code code);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, int system_error_code);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, int system_error_code);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr, boost::system::error_code code);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr, boost::system::error_code code);
 #endif
 };
 
@@ -321,21 +323,21 @@ public:
  * incorrect library usage.
  */
 class BOOST_LOG_API logic_error :
-    public std::logic_error
+	public std::logic_error
 {
 public:
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit logic_error(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~logic_error() throw();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit logic_error(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~logic_error() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -343,26 +345,26 @@ public:
  * \brief Exception class that is used to indicate ODR violation
  */
 class BOOST_LOG_API odr_violation :
-    public logic_error
+	public logic_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    odr_violation();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit odr_violation(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~odr_violation() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	odr_violation();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit odr_violation(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~odr_violation() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -370,26 +372,26 @@ public:
  * \brief Exception class that is used to indicate invalid call sequence
  */
 class BOOST_LOG_API unexpected_call :
-    public logic_error
+	public logic_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    unexpected_call();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit unexpected_call(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~unexpected_call() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	unexpected_call();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit unexpected_call(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~unexpected_call() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -397,26 +399,26 @@ public:
  * \brief Exception class that is used to indicate invalid library setup
  */
 class BOOST_LOG_API setup_error :
-    public logic_error
+	public logic_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    setup_error();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit setup_error(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~setup_error() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	setup_error();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit setup_error(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~setup_error() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 
@@ -424,26 +426,26 @@ public:
  * \brief Exception class that is used to indicate library limitation
  */
 class BOOST_LOG_API limitation_error :
-    public logic_error
+	public logic_error
 {
 public:
-    /*!
-     * Default constructor. Creates an exception with the default error message.
-     */
-    limitation_error();
-    /*!
-     * Initializing constructor. Creates an exception with the specified error message.
-     */
-    explicit limitation_error(std::string const& descr);
-    /*!
-     * Destructor
-     */
-    ~limitation_error() throw();
+	/*!
+	 * Default constructor. Creates an exception with the default error message.
+	 */
+	limitation_error();
+	/*!
+	 * Initializing constructor. Creates an exception with the specified error message.
+	 */
+	explicit limitation_error(std::string const& descr);
+	/*!
+	 * Destructor
+	 */
+	~limitation_error() throw();
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
-    static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, const char* descr);
+	static BOOST_LOG_NORETURN void throw_(const char* file, std::size_t line, std::string const& descr);
 #endif
 };
 

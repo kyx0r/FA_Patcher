@@ -19,19 +19,21 @@
 //!   boost::container::constructible_with_allocator_suffix and
 //!   boost::container::uses_allocator. Also defines the following types:
 
-namespace boost {
-namespace container {
+namespace boost
+{
+namespace container
+{
 
 #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
-   template <int Dummy = 0>
-   struct std_allocator_arg_holder
-   {
-      static ::std::allocator_arg_t *dummy;
-   };
+template <int Dummy = 0>
+struct std_allocator_arg_holder
+{
+	static ::std::allocator_arg_t *dummy;
+};
 
-   template <int Dummy>                                             //Silence null-reference compiler warnings
-   ::std::allocator_arg_t *std_allocator_arg_holder<Dummy>::dummy = reinterpret_cast< ::std::allocator_arg_t * >(0x1234);
+template <int Dummy>                                             //Silence null-reference compiler warnings
+::std::allocator_arg_t *std_allocator_arg_holder<Dummy>::dummy = reinterpret_cast< ::std::allocator_arg_t * >(0x1234);
 
 typedef const std::allocator_arg_t & allocator_arg_t;
 
@@ -68,6 +70,7 @@ struct uses_allocator;
 
 // @endcond
 
-}} // namespace boost { namespace container {
+}
+} // namespace boost { namespace container {
 
 #endif   //BOOST_CONTAINER_USES_ALLOCATOR_HPP

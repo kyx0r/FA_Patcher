@@ -24,59 +24,83 @@
 
 #include <boost/interprocess/sync/posix/semaphore_wrapper.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-namespace ipcdetail{ class interprocess_tester; }
+namespace ipcdetail
+{
+class interprocess_tester;
+}
 #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
-namespace ipcdetail {
+namespace ipcdetail
+{
 
 class posix_named_semaphore
 {
-   posix_named_semaphore();
-   posix_named_semaphore(const posix_named_semaphore&);
-   posix_named_semaphore &operator= (const posix_named_semaphore &);
+	posix_named_semaphore();
+	posix_named_semaphore(const posix_named_semaphore&);
+	posix_named_semaphore &operator= (const posix_named_semaphore &);
 
-   public:
-   posix_named_semaphore
-      (create_only_t, const char *name, unsigned int initialCount, const permissions &perm = permissions())
-   {  semaphore_open(mp_sem, DoCreate, name, initialCount, perm);   }
+public:
+	posix_named_semaphore
+	(create_only_t, const char *name, unsigned int initialCount, const permissions &perm = permissions())
+	{
+		semaphore_open(mp_sem, DoCreate, name, initialCount, perm);
+	}
 
-   posix_named_semaphore(open_or_create_t, const char *name, unsigned int initialCount, const permissions &perm = permissions())
-   {  semaphore_open(mp_sem, DoOpenOrCreate, name, initialCount, perm);   }
+	posix_named_semaphore(open_or_create_t, const char *name, unsigned int initialCount, const permissions &perm = permissions())
+	{
+		semaphore_open(mp_sem, DoOpenOrCreate, name, initialCount, perm);
+	}
 
-   posix_named_semaphore(open_only_t, const char *name)
-   {  semaphore_open(mp_sem, DoOpen, name);   }
+	posix_named_semaphore(open_only_t, const char *name)
+	{
+		semaphore_open(mp_sem, DoOpen, name);
+	}
 
-   ~posix_named_semaphore()
-   {
-      if(mp_sem != BOOST_INTERPROCESS_POSIX_SEM_FAILED)
-         semaphore_close(mp_sem);
-   }
+	~posix_named_semaphore()
+	{
+		if(mp_sem != BOOST_INTERPROCESS_POSIX_SEM_FAILED)
+			semaphore_close(mp_sem);
+	}
 
-   void post()
-   {  semaphore_post(mp_sem); }
+	void post()
+	{
+		semaphore_post(mp_sem);
+	}
 
-   void wait()
-   {  semaphore_wait(mp_sem); }
+	void wait()
+	{
+		semaphore_wait(mp_sem);
+	}
 
-   bool try_wait()
-   {  return semaphore_try_wait(mp_sem); }
+	bool try_wait()
+	{
+		return semaphore_try_wait(mp_sem);
+	}
 
-   bool timed_wait(const boost::posix_time::ptime &abs_time)
-   {  return semaphore_timed_wait(mp_sem, abs_time); }
+	bool timed_wait(const boost::posix_time::ptime &abs_time)
+	{
+		return semaphore_timed_wait(mp_sem, abs_time);
+	}
 
-   static bool remove(const char *name)
-   {  return semaphore_unlink(name);   }
+	static bool remove(const char *name)
+	{
+		return semaphore_unlink(name);
+	}
 
-   private:
-   friend class ipcdetail::interprocess_tester;
-   void dont_close_on_destruction()
-   {  mp_sem = BOOST_INTERPROCESS_POSIX_SEM_FAILED; }
+private:
+	friend class ipcdetail::interprocess_tester;
+	void dont_close_on_destruction()
+	{
+		mp_sem = BOOST_INTERPROCESS_POSIX_SEM_FAILED;
+	}
 
-   sem_t      *mp_sem;
+	sem_t      *mp_sem;
 };
 
 }  //namespace ipcdetail {

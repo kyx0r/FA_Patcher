@@ -10,19 +10,26 @@
 #include <boost/python/detail/value_is_xxx.hpp>
 #include <boost/python/detail/is_shared_ptr.hpp>
 
-namespace boost { namespace python { namespace detail { 
+namespace boost
+{
+namespace python
+{
+namespace detail
+{
 
 template <class X_>
 struct value_is_shared_ptr
 {
-  static bool const value = is_shared_ptr<typename remove_cv<
-					    typename remove_reference<X_>
-					      ::type>
-					    ::type>
-    ::value;
-  typedef mpl::bool_<value> type;
+	static bool const value = is_shared_ptr<typename remove_cv<
+	                          typename remove_reference<X_>
+	                          ::type>
+	                          ::type>
+	                          ::value;
+	typedef mpl::bool_<value> type;
 };
 
-}}} // namespace boost::python::detail
+}
+}
+} // namespace boost::python::detail
 
 #endif // VALUE_IS_SHARED_PTR_DWA2003224_HPP

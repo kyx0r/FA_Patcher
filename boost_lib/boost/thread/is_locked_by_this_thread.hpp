@@ -13,25 +13,25 @@
 
 namespace boost
 {
-  template <typename Lockable>
-  class testable_mutex;
+template <typename Lockable>
+class testable_mutex;
 
-  /**
-   * Overloaded function used to check if the mutex is locked when it is testable and do nothing otherwise.
-   *
-   * This function is used usually to assert the pre-condition when the function can only be called when the mutex
-   * must be locked by the current thread.
-   */
-  template <typename Lockable>
-  bool is_locked_by_this_thread(testable_mutex<Lockable> const& mtx)
-  {
-    return mtx.is_locked_by_this_thread();
-  }
-  template <typename Lockable>
-  bool is_locked_by_this_thread(Lockable const&)
-  {
-    return true;
-  }
+/**
+ * Overloaded function used to check if the mutex is locked when it is testable and do nothing otherwise.
+ *
+ * This function is used usually to assert the pre-condition when the function can only be called when the mutex
+ * must be locked by the current thread.
+ */
+template <typename Lockable>
+bool is_locked_by_this_thread(testable_mutex<Lockable> const& mtx)
+{
+	return mtx.is_locked_by_this_thread();
+}
+template <typename Lockable>
+bool is_locked_by_this_thread(Lockable const&)
+{
+	return true;
+}
 }
 
 #include <boost/config/abi_suffix.hpp>

@@ -50,208 +50,225 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct ortho {};
+namespace par4
+{
+struct ortho {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace ortho
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace ortho
+{
 
-            static const double EPS10 = 1.e-10;
-            static const int N_POLE = 0;
-            static const int S_POLE = 1;
-            static const int EQUIT = 2;
-            static const int OBLIQ = 3;
+static const double EPS10 = 1.e-10;
+static const int N_POLE = 0;
+static const int S_POLE = 1;
+static const int EQUIT = 2;
+static const int OBLIQ = 3;
 
-            template <typename T>
-            struct par_ortho
-            {
-                T   sinph0;
-                T   cosph0;
-                int mode;
-            };
+template <typename T>
+struct par_ortho
+{
+	T   sinph0;
+	T   cosph0;
+	int mode;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_ortho_spheroid : public base_t_fi<base_ortho_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_ortho_spheroid : public base_t_fi<base_ortho_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_ortho<CalculationType> m_proj_parm;
+	par_ortho<CalculationType> m_proj_parm;
 
-                inline base_ortho_spheroid(const Parameters& par)
-                    : base_t_fi<base_ortho_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_ortho_spheroid(const Parameters& par)
+		: base_t_fi<base_ortho_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
 
-                    CalculationType coslam, cosphi, sinphi;
+		CalculationType coslam, cosphi, sinphi;
 
-                    cosphi = cos(lp_lat);
-                    coslam = cos(lp_lon);
-                    switch (this->m_proj_parm.mode) {
-                    case EQUIT:
-                        if (cosphi * coslam < - EPS10)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        xy_y = sin(lp_lat);
-                        break;
-                    case OBLIQ:
-                        if (this->m_proj_parm.sinph0 * (sinphi = sin(lp_lat)) +
-                           this->m_proj_parm.cosph0 * cosphi * coslam < - EPS10)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        xy_y = this->m_proj_parm.cosph0 * sinphi - this->m_proj_parm.sinph0 * cosphi * coslam;
-                        break;
-                    case N_POLE:
-                        coslam = - coslam;
-                        BOOST_FALLTHROUGH;
-                    case S_POLE:
-                        if (fabs(lp_lat - this->m_par.phi0) - EPS10 > HALFPI)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        xy_y = cosphi * coslam;
-                        break;
-                    }
-                    xy_x = cosphi * sin(lp_lon);
-                }
+		cosphi = cos(lp_lat);
+		coslam = cos(lp_lon);
+		switch (this->m_proj_parm.mode)
+		{
+		case EQUIT:
+			if (cosphi * coslam < - EPS10)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			xy_y = sin(lp_lat);
+			break;
+		case OBLIQ:
+			if (this->m_proj_parm.sinph0 * (sinphi = sin(lp_lat)) +
+			        this->m_proj_parm.cosph0 * cosphi * coslam < - EPS10)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			xy_y = this->m_proj_parm.cosph0 * sinphi - this->m_proj_parm.sinph0 * cosphi * coslam;
+			break;
+		case N_POLE:
+			coslam = - coslam;
+			BOOST_FALLTHROUGH;
+		case S_POLE:
+			if (fabs(lp_lat - this->m_par.phi0) - EPS10 > HALFPI)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			xy_y = cosphi * coslam;
+			break;
+		}
+		xy_x = cosphi * sin(lp_lon);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
 
-                    CalculationType rh, cosc, sinc;
+		CalculationType rh, cosc, sinc;
 
-                    if ((sinc = (rh = boost::math::hypot(xy_x, xy_y))) > 1.) {
-                        if ((sinc - 1.) > EPS10)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        sinc = 1.;
-                    }
-                    cosc = sqrt(1. - sinc * sinc); /* in this range OK */
-                    if (fabs(rh) <= EPS10) {
-                        lp_lat = this->m_par.phi0;
-                        lp_lon = 0.0;
-                    } else {
-                        switch (this->m_proj_parm.mode) {
-                        case N_POLE:
-                            xy_y = -xy_y;
-                            lp_lat = acos(sinc);
-                            break;
-                        case S_POLE:
-                            lp_lat = - acos(sinc);
-                            break;
-                        case EQUIT:
-                            lp_lat = xy_y * sinc / rh;
-                            xy_x *= sinc;
-                            xy_y = cosc * rh;
-                            goto sinchk;
-                        case OBLIQ:
-                            lp_lat = cosc * this->m_proj_parm.sinph0 + xy_y * sinc * this->m_proj_parm.cosph0 /rh;
-                            xy_y = (cosc - this->m_proj_parm.sinph0 * lp_lat) * rh;
-                            xy_x *= sinc * this->m_proj_parm.cosph0;
-                        sinchk:
-                            if (fabs(lp_lat) >= 1.)
-                                lp_lat = lp_lat < 0. ? -HALFPI : HALFPI;
-                            else
-                                lp_lat = asin(lp_lat);
-                            break;
-                        }
-                        lp_lon = (xy_y == 0. && (this->m_proj_parm.mode == OBLIQ || this->m_proj_parm.mode == EQUIT))
-                             ? (xy_x == 0. ? 0. : xy_x < 0. ? -HALFPI : HALFPI)
-                                           : atan2(xy_x, xy_y);
-                    }
-                }
+		if ((sinc = (rh = boost::math::hypot(xy_x, xy_y))) > 1.)
+		{
+			if ((sinc - 1.) > EPS10)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			sinc = 1.;
+		}
+		cosc = sqrt(1. - sinc * sinc); /* in this range OK */
+		if (fabs(rh) <= EPS10)
+		{
+			lp_lat = this->m_par.phi0;
+			lp_lon = 0.0;
+		}
+		else
+		{
+			switch (this->m_proj_parm.mode)
+			{
+			case N_POLE:
+				xy_y = -xy_y;
+				lp_lat = acos(sinc);
+				break;
+			case S_POLE:
+				lp_lat = - acos(sinc);
+				break;
+			case EQUIT:
+				lp_lat = xy_y * sinc / rh;
+				xy_x *= sinc;
+				xy_y = cosc * rh;
+				goto sinchk;
+			case OBLIQ:
+				lp_lat = cosc * this->m_proj_parm.sinph0 + xy_y * sinc * this->m_proj_parm.cosph0 /rh;
+				xy_y = (cosc - this->m_proj_parm.sinph0 * lp_lat) * rh;
+				xy_x *= sinc * this->m_proj_parm.cosph0;
+sinchk:
+				if (fabs(lp_lat) >= 1.)
+					lp_lat = lp_lat < 0. ? -HALFPI : HALFPI;
+				else
+					lp_lat = asin(lp_lat);
+				break;
+			}
+			lp_lon = (xy_y == 0. && (this->m_proj_parm.mode == OBLIQ || this->m_proj_parm.mode == EQUIT))
+			         ? (xy_x == 0. ? 0. : xy_x < 0. ? -HALFPI : HALFPI)
+			         : atan2(xy_x, xy_y);
+		}
+	}
 
-                static inline std::string get_name()
-                {
-                    return "ortho_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "ortho_spheroid";
+	}
 
-            };
+};
 
-            // Orthographic
-            template <typename Parameters, typename T>
-            inline void setup_ortho(Parameters& par, par_ortho<T>& proj_parm)
-            {
-                if (fabs(fabs(par.phi0) - geometry::math::half_pi<T>()) <= EPS10)
-                    proj_parm.mode = par.phi0 < 0. ? S_POLE : N_POLE;
-                else if (fabs(par.phi0) > EPS10) {
-                    proj_parm.mode = OBLIQ;
-                    proj_parm.sinph0 = sin(par.phi0);
-                    proj_parm.cosph0 = cos(par.phi0);
-                } else
-                    proj_parm.mode = EQUIT;
-                par.es = 0.;
-            }
+// Orthographic
+template <typename Parameters, typename T>
+inline void setup_ortho(Parameters& par, par_ortho<T>& proj_parm)
+{
+	if (fabs(fabs(par.phi0) - geometry::math::half_pi<T>()) <= EPS10)
+		proj_parm.mode = par.phi0 < 0. ? S_POLE : N_POLE;
+	else if (fabs(par.phi0) > EPS10)
+	{
+		proj_parm.mode = OBLIQ;
+		proj_parm.sinph0 = sin(par.phi0);
+		proj_parm.cosph0 = cos(par.phi0);
+	}
+	else
+		proj_parm.mode = EQUIT;
+	par.es = 0.;
+}
 
-    }} // namespace detail::ortho
-    #endif // doxygen
+}
+} // namespace detail::ortho
+#endif // doxygen
 
-    /*!
-        \brief Orthographic projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Azimuthal
-         - Spheroid
-        \par Example
-        \image html ex_ortho.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct ortho_spheroid : public detail::ortho::base_ortho_spheroid<CalculationType, Parameters>
-    {
-        inline ortho_spheroid(const Parameters& par) : detail::ortho::base_ortho_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::ortho::setup_ortho(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Orthographic projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Azimuthal
+     - Spheroid
+    \par Example
+    \image html ex_ortho.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct ortho_spheroid : public detail::ortho::base_ortho_spheroid<CalculationType, Parameters>
+{
+	inline ortho_spheroid(const Parameters& par) : detail::ortho::base_ortho_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::ortho::setup_ortho(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::ortho, ortho_spheroid, ortho_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::ortho, ortho_spheroid, ortho_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class ortho_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<ortho_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class ortho_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<ortho_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void ortho_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("ortho", new ortho_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void ortho_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("ortho", new ortho_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_ORTHO_HPP
 

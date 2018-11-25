@@ -52,12 +52,12 @@ inline Iter_t is_stable_sorted_forward (Iter_t first, Iter_t last,
                                         Compare comp = Compare())
 {
 #ifdef __BS_DEBUG
-    assert ( (last- first) >= 0);
+	assert ( (last- first) >= 0);
 #endif
-    if ((last - first) < 2) return first;
-    Iter_t it2 = first + 1;
-    for (Iter_t it1 = first; it2 != last and not comp(*it2, *it1); it1 = it2++);
-    return it2;
+	if ((last - first) < 2) return first;
+	Iter_t it2 = first + 1;
+	for (Iter_t it1 = first; it2 != last and not comp(*it2, *it1); it1 = it2++);
+	return it2;
 }
 //-----------------------------------------------------------------------------
 //  function : is_reverse_stable_sorted_forward
@@ -72,15 +72,15 @@ inline Iter_t is_stable_sorted_forward (Iter_t first, Iter_t last,
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Compare = std::less<value_iter<Iter_t> > >
 inline Iter_t is_reverse_stable_sorted_forward(Iter_t first, Iter_t last,
-                                               Compare comp = Compare())
+        Compare comp = Compare())
 {
 #ifdef __BS_DEBUG
-    assert ( (last- first) >= 0);
+	assert ( (last- first) >= 0);
 #endif
-    if ((last - first) < 2) return first;
-    Iter_t it2 = first + 1;
-    for (Iter_t it1 = first; it2 != last and comp(*it2, *it1); it1 = it2++);
-    return it2;
+	if ((last - first) < 2) return first;
+	Iter_t it2 = first + 1;
+	for (Iter_t it1 = first; it2 != last and comp(*it2, *it1); it1 = it2++);
+	return it2;
 };
 //-----------------------------------------------------------------------------
 //  function : number_stable_sorted_forward
@@ -95,29 +95,29 @@ inline Iter_t is_reverse_stable_sorted_forward(Iter_t first, Iter_t last,
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Compare = std::less<value_iter<Iter_t> > >
 size_t number_stable_sorted_forward (Iter_t first, Iter_t last,
-		                             size_t min_process,
+                                     size_t min_process,
                                      Compare comp = Compare())
 {
 #ifdef __BS_DEBUG
-    assert ( (last- first) >= 0);
+	assert ( (last- first) >= 0);
 #endif
-    if ((last - first) < 2) return 0;
+	if ((last - first) < 2) return 0;
 
-    // sorted elements
-    Iter_t it2 = first + 1;
-    for (Iter_t it1 = first; it2 != last and not comp(*it2, *it1); it1 = it2++);
-    size_t nsorted = size_t ( it2 - first);
-    if ( nsorted != 1)
-    	return (nsorted >= min_process) ? nsorted: 0;
+	// sorted elements
+	Iter_t it2 = first + 1;
+	for (Iter_t it1 = first; it2 != last and not comp(*it2, *it1); it1 = it2++);
+	size_t nsorted = size_t ( it2 - first);
+	if ( nsorted != 1)
+		return (nsorted >= min_process) ? nsorted: 0;
 
-    // reverse sorted elements
-    it2 = first + 1;
-    for (Iter_t it1 = first; it2 != last and comp(*it2, *it1); it1 = it2++);
-    nsorted = size_t ( it2 - first);
+	// reverse sorted elements
+	it2 = first + 1;
+	for (Iter_t it1 = first; it2 != last and comp(*it2, *it1); it1 = it2++);
+	nsorted = size_t ( it2 - first);
 
-    if ( nsorted < min_process) return 0 ;
-    util::reverse ( first , it2);
-    return nsorted;
+	if ( nsorted < min_process) return 0 ;
+	util::reverse ( first, it2);
+	return nsorted;
 };
 
 //-----------------------------------------------------------------------------
@@ -136,12 +136,15 @@ inline Iter_t is_stable_sorted_backward(Iter_t first, Iter_t last,
                                         Compare comp = Compare())
 {
 #ifdef __BS_DEBUG
-    assert ( (last- first) >= 0);
+	assert ( (last- first) >= 0);
 #endif
-    if ((last - first) < 2) return first;
-    Iter_t itaux = last - 1;
-    while (itaux != first and not comp(*itaux, *(itaux - 1))) {--itaux; };
-    return itaux;
+	if ((last - first) < 2) return first;
+	Iter_t itaux = last - 1;
+	while (itaux != first and not comp(*itaux, *(itaux - 1)))
+	{
+		--itaux;
+	};
+	return itaux;
 }
 //-----------------------------------------------------------------------------
 //  function : is_reverse_stable_sorted_backward
@@ -156,15 +159,15 @@ inline Iter_t is_stable_sorted_backward(Iter_t first, Iter_t last,
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Compare = std::less<value_iter<Iter_t> > >
 inline Iter_t is_reverse_stable_sorted_backward (Iter_t first, Iter_t last,
-                                                 Compare comp = Compare())
+        Compare comp = Compare())
 {
 #ifdef __BS_DEBUG
-    assert ( (last- first) >= 0);
+	assert ( (last- first) >= 0);
 #endif
-    if ((last - first) < 2) return first;
-    Iter_t itaux = last - 1;
-    for (; itaux != first and comp(*itaux, *(itaux - 1)); --itaux);
-    return itaux;
+	if ((last - first) < 2) return first;
+	Iter_t itaux = last - 1;
+	for (; itaux != first and comp(*itaux, *(itaux - 1)); --itaux);
+	return itaux;
 }
 
 //-----------------------------------------------------------------------------
@@ -180,25 +183,28 @@ inline Iter_t is_reverse_stable_sorted_backward (Iter_t first, Iter_t last,
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Compare = std::less<value_iter<Iter_t> > >
 size_t number_stable_sorted_backward (Iter_t first, Iter_t last,
-		                             size_t min_process,
-                                     Compare comp = Compare())
+                                      size_t min_process,
+                                      Compare comp = Compare())
 {
 #ifdef __BS_DEBUG
-    assert ( (last- first) >= 0);
+	assert ( (last- first) >= 0);
 #endif
-    if ((last - first) < 2) return 0;
-    Iter_t itaux = last - 1;
-    while (itaux != first and not comp(*itaux, *(itaux - 1))) {--itaux; };
-    size_t nsorted = size_t ( last - itaux);
-    if ( nsorted != 1)
-    	return ( nsorted >= min_process)?nsorted: 0 ;
+	if ((last - first) < 2) return 0;
+	Iter_t itaux = last - 1;
+	while (itaux != first and not comp(*itaux, *(itaux - 1)))
+	{
+		--itaux;
+	};
+	size_t nsorted = size_t ( last - itaux);
+	if ( nsorted != 1)
+		return ( nsorted >= min_process)?nsorted: 0 ;
 
-    itaux = last - 1;
-    for (; itaux != first and comp(*itaux, *(itaux - 1)); --itaux);
-    nsorted = size_t ( last - itaux);
-    if ( nsorted < min_process) return 0 ;
-    util::reverse ( itaux, last );
-    return nsorted;
+	itaux = last - 1;
+	for (; itaux != first and comp(*itaux, *(itaux - 1)); --itaux);
+	nsorted = size_t ( last - itaux);
+	if ( nsorted < min_process) return 0 ;
+	util::reverse ( itaux, last );
+	return nsorted;
 }
 //-----------------------------------------------------------------------------
 //  function : internal_sort
@@ -213,42 +219,42 @@ size_t number_stable_sorted_backward (Iter_t first, Iter_t last,
 //-----------------------------------------------------------------------------
 template <class Iter1_t, class Iter2_t, class Compare>
 inline void internal_sort (const range<Iter1_t> &rng1,
-		                   const range<Iter2_t> &rng2,
+                           const range<Iter2_t> &rng2,
                            Compare comp, uint32_t level, bool even = true)
 {
-    //-----------------------------------------------------------------------
-    //                  metaprogram
-    //-----------------------------------------------------------------------
-    typedef value_iter<Iter1_t> value_t;
-    typedef value_iter<Iter2_t> value2_t;
-    static_assert (std::is_same< value_t, value2_t>::value,
-                    "Incompatible iterators\n");
+	//-----------------------------------------------------------------------
+	//                  metaprogram
+	//-----------------------------------------------------------------------
+	typedef value_iter<Iter1_t> value_t;
+	typedef value_iter<Iter2_t> value2_t;
+	static_assert (std::is_same< value_t, value2_t>::value,
+	               "Incompatible iterators\n");
 
-    //-----------------------------------------------------------------------
-    //                  program
-    //-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
+	//                  program
+	//-----------------------------------------------------------------------
 #ifdef __BS_DEBUG
-    assert (rng1.size ( ) == rng2.size ( ) );
+	assert (rng1.size ( ) == rng2.size ( ) );
 #endif
-    size_t nelem = (rng1.size() + 1) >> 1;
+	size_t nelem = (rng1.size() + 1) >> 1;
 
-    range<Iter1_t> rng1_left(rng1.first, rng1.first + nelem), 
-                   rng1_right(rng1.first + nelem, rng1.last);
+	range<Iter1_t> rng1_left(rng1.first, rng1.first + nelem),
+	      rng1_right(rng1.first + nelem, rng1.last);
 
-    range<Iter2_t> rng2_left(rng2.first, rng2.first + nelem), 
-                   rng2_right(rng2.first + nelem, rng2.last);
+	range<Iter2_t> rng2_left(rng2.first, rng2.first + nelem),
+	      rng2_right(rng2.first + nelem, rng2.last);
 
-    if (nelem <= 32 and (level & 1) == even)
-    {
-        insert_sort(rng1_left.first, rng1_left.last, comp);
-        insert_sort(rng1_right.first, rng1_right.last, comp);
-    }
-    else
-    {
-        internal_sort(rng2_left, rng1_left, comp, level + 1, even);
-        internal_sort(rng2_right, rng1_right, comp, level + 1, even);
-    };
-    merge(rng2, rng1_left, rng1_right, comp);
+	if (nelem <= 32 and (level & 1) == even)
+	{
+		insert_sort(rng1_left.first, rng1_left.last, comp);
+		insert_sort(rng1_right.first, rng1_right.last, comp);
+	}
+	else
+	{
+		internal_sort(rng2_left, rng1_left, comp, level + 1, even);
+		internal_sort(rng2_right, rng1_right, comp, level + 1, even);
+	};
+	merge(rng2, rng1_left, rng1_right, comp);
 };
 //-----------------------------------------------------------------------------
 //  function : range_sort_data
@@ -263,29 +269,29 @@ template<class Iter1_t, class Iter2_t, class Compare>
 static void range_sort_data (const range<Iter1_t> & rng_data,
                              const range<Iter2_t> & rng_aux, Compare comp)
 {
-    //-----------------------------------------------------------------------
-    //                  metaprogram
-    //-----------------------------------------------------------------------
-    typedef value_iter<Iter1_t> value_t;
-    typedef value_iter<Iter2_t> value2_t;
-    static_assert (std::is_same< value_t, value2_t>::value,
-                    "Incompatible iterators\n");
+	//-----------------------------------------------------------------------
+	//                  metaprogram
+	//-----------------------------------------------------------------------
+	typedef value_iter<Iter1_t> value_t;
+	typedef value_iter<Iter2_t> value2_t;
+	static_assert (std::is_same< value_t, value2_t>::value,
+	               "Incompatible iterators\n");
 
-    //------------------------------------------------------------------------
-    //                    program
-    //------------------------------------------------------------------------
+	//------------------------------------------------------------------------
+	//                    program
+	//------------------------------------------------------------------------
 #ifdef __BS_DEBUG
-    assert ( rng_data.size() == rng_aux.size());
+	assert ( rng_data.size() == rng_aux.size());
 #endif
-    // minimal number of element before to jump to insertionsort
-    const uint32_t sort_min = 32;
-    if (rng_data.size() <= sort_min)
-    {
-        insert_sort(rng_data.first, rng_data.last, comp);
-        return;
-    };
+	// minimal number of element before to jump to insertionsort
+	const uint32_t sort_min = 32;
+	if (rng_data.size() <= sort_min)
+	{
+		insert_sort(rng_data.first, rng_data.last, comp);
+		return;
+	};
 
-    internal_sort(rng_aux, rng_data, comp, 0, true);
+	internal_sort(rng_aux, rng_data, comp, 0, true);
 };
 //-----------------------------------------------------------------------------
 //  function : range_sort_buffer
@@ -300,30 +306,30 @@ template<class Iter1_t, class Iter2_t, class Compare>
 static void range_sort_buffer(const range<Iter1_t> & rng_data,
                               const range<Iter2_t> & rng_aux, Compare comp)
 {
-    //-----------------------------------------------------------------------
-    //                  metaprogram
-    //-----------------------------------------------------------------------
-    typedef value_iter<Iter1_t> value_t;
-    typedef value_iter<Iter2_t> value2_t;
-    static_assert (std::is_same< value_t, value2_t>::value,
-                    "Incompatible iterators\n");
+	//-----------------------------------------------------------------------
+	//                  metaprogram
+	//-----------------------------------------------------------------------
+	typedef value_iter<Iter1_t> value_t;
+	typedef value_iter<Iter2_t> value2_t;
+	static_assert (std::is_same< value_t, value2_t>::value,
+	               "Incompatible iterators\n");
 
-    //------------------------------------------------------------------------
-    //                    program
-    //------------------------------------------------------------------------
+	//------------------------------------------------------------------------
+	//                    program
+	//------------------------------------------------------------------------
 #ifdef __BS_DEBUG
-    assert ( rng_data.size() == rng_aux.size());
+	assert ( rng_data.size() == rng_aux.size());
 #endif
-    // minimal number of element before to jump to insertionsort
-    const uint32_t sort_min = 32;
-    if (rng_data.size() <= sort_min)
-    {
-        insert_sort(rng_data.first, rng_data.last, comp);
-        move_forward(rng_aux, rng_data);
-        return;
-    };
+	// minimal number of element before to jump to insertionsort
+	const uint32_t sort_min = 32;
+	if (rng_data.size() <= sort_min)
+	{
+		insert_sort(rng_data.first, rng_data.last, comp);
+		move_forward(rng_aux, rng_data);
+		return;
+	};
 
-    internal_sort(rng_data, rng_aux, comp, 0, false);
+	internal_sort(rng_data, rng_aux, comp, 0, false);
 };
 //****************************************************************************
 };//    End namespace common

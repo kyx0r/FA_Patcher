@@ -27,9 +27,12 @@
 # include <boost/utility/addressof.hpp>
 #endif // !defined(BOOST_ASIO_HAS_STD_ADDRESSOF)
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if defined(BOOST_ASIO_HAS_STD_SHARED_PTR)
 using std::shared_ptr;
@@ -57,13 +60,13 @@ using std::allocator_arg_t;
   /**/
 # define BOOST_ASIO_REBIND_ALLOC(alloc, t) \
   typename std::allocator_traits<alloc>::template rebind_alloc<t>
-  /**/
+/**/
 #else // defined(BOOST_ASIO_HAS_CXX11_ALLOCATORS)
 struct allocator_arg_t {};
 # define BOOST_ASIO_USES_ALLOCATOR(t)
 # define BOOST_ASIO_REBIND_ALLOC(alloc, t) \
   typename alloc::template rebind<t>::other
-  /**/
+/**/
 #endif // defined(BOOST_ASIO_HAS_CXX11_ALLOCATORS)
 
 } // namespace asio

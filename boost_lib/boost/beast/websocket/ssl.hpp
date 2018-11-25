@@ -15,9 +15,12 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ssl/stream.hpp>
 
-namespace boost {
-namespace beast {
-namespace websocket {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
 
 /** Tear down a `boost::asio::ssl::stream`.
 

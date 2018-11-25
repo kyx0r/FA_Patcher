@@ -21,11 +21,11 @@
 
 namespace boost
 {
-    template<typename SinglePassRange>
-    struct range_traversal
-        : iterator_traversal<typename range_iterator<SinglePassRange>::type>
-    {
-    };
+template<typename SinglePassRange>
+struct range_traversal
+	: iterator_traversal<typename range_iterator<SinglePassRange>::type>
+{
+};
 }
 
 #endif

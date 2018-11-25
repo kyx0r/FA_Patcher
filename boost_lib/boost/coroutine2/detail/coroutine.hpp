@@ -14,9 +14,12 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines2 {
-namespace detail {
+namespace boost
+{
+namespace coroutines2
+{
+namespace detail
+{
 
 template< typename T >
 class pull_coroutine;
@@ -24,7 +27,9 @@ class pull_coroutine;
 template< typename T >
 class push_coroutine;
 
-}}}
+}
+}
+}
 
 #include <boost/coroutine2/detail/pull_coroutine.hpp>
 #include <boost/coroutine2/detail/push_coroutine.hpp>

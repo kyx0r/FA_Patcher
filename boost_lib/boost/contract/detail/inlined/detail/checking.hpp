@@ -14,36 +14,55 @@
 #include <boost/contract/detail/declspec.hpp>
 #include <boost/thread/lock_guard.hpp>
 
-namespace boost { namespace contract { namespace detail {
+namespace boost
+{
+namespace contract
+{
+namespace detail
+{
 
 BOOST_CONTRACT_DETAIL_DECLINLINE
-void checking::init_unlocked() { flag::ref() = true; }
-
-BOOST_CONTRACT_DETAIL_DECLINLINE
-void checking::init_locked() {
-    boost::lock_guard<boost::mutex> lock(mutex::ref());
-    init_unlocked();
+void checking::init_unlocked()
+{
+	flag::ref() = true;
 }
 
 BOOST_CONTRACT_DETAIL_DECLINLINE
-void checking::done_unlocked() { flag::ref() = false; }
-
-BOOST_CONTRACT_DETAIL_DECLINLINE
-void checking::done_locked() {
-    boost::lock_guard<boost::mutex> lock(mutex::ref());
-    done_unlocked();
+void checking::init_locked()
+{
+	boost::lock_guard<boost::mutex> lock(mutex::ref());
+	init_unlocked();
 }
 
 BOOST_CONTRACT_DETAIL_DECLINLINE
-bool checking::already_unlocked() { return flag::ref(); }
-    
-BOOST_CONTRACT_DETAIL_DECLINLINE
-bool checking::already_locked() {
-    boost::lock_guard<boost::mutex> lock(mutex::ref());
-    return already_unlocked();
+void checking::done_unlocked()
+{
+	flag::ref() = false;
 }
 
-} } } // namespace
+BOOST_CONTRACT_DETAIL_DECLINLINE
+void checking::done_locked()
+{
+	boost::lock_guard<boost::mutex> lock(mutex::ref());
+	done_unlocked();
+}
+
+BOOST_CONTRACT_DETAIL_DECLINLINE
+bool checking::already_unlocked()
+{
+	return flag::ref();
+}
+
+BOOST_CONTRACT_DETAIL_DECLINLINE
+bool checking::already_locked()
+{
+	boost::lock_guard<boost::mutex> lock(mutex::ref());
+	return already_unlocked();
+}
+
+}
+}
+} // namespace
 
 #endif
 

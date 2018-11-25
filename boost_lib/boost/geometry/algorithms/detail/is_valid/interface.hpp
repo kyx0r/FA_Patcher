@@ -28,35 +28,37 @@
 #include <boost/geometry/strategies/intersection.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
 {
-    
+namespace geometry
+{
+
 namespace resolve_strategy
 {
 
 struct is_valid
 {
-    template <typename Geometry, typename VisitPolicy, typename Strategy>
-    static inline bool apply(Geometry const& geometry,
-                             VisitPolicy& visitor,
-                             Strategy const& strategy)
-    {
-        return dispatch::is_valid<Geometry>::apply(geometry, visitor, strategy);
-    }
+	template <typename Geometry, typename VisitPolicy, typename Strategy>
+	static inline bool apply(Geometry const& geometry,
+	                         VisitPolicy& visitor,
+	                         Strategy const& strategy)
+	{
+		return dispatch::is_valid<Geometry>::apply(geometry, visitor, strategy);
+	}
 
-    template <typename Geometry, typename VisitPolicy>
-    static inline bool apply(Geometry const& geometry,
-                             VisitPolicy& visitor,
-                             default_strategy)
-    {
-        // NOTE: Currently the strategy is only used for Areal geometries
-        typedef typename strategy::intersection::services::default_strategy
-            <
-                typename cs_tag<Geometry>::type
-            >::type strategy_type;
+	template <typename Geometry, typename VisitPolicy>
+	static inline bool apply(Geometry const& geometry,
+	                         VisitPolicy& visitor,
+	                         default_strategy)
+	{
+		// NOTE: Currently the strategy is only used for Areal geometries
+		typedef typename strategy::intersection::services::default_strategy
+		<
+		typename cs_tag<Geometry>::type
+		>::type strategy_type;
 
-        return dispatch::is_valid<Geometry>::apply(geometry, visitor, strategy_type());
-    }
+		return dispatch::is_valid<Geometry>::apply(geometry, visitor, strategy_type());
+	}
 };
 
 } // namespace resolve_strategy
@@ -67,47 +69,47 @@ namespace resolve_variant
 template <typename Geometry>
 struct is_valid
 {
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(Geometry const& geometry,
-                             VisitPolicy& visitor,
-                             Strategy const& strategy)
-    {
-        concepts::check<Geometry const>();
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(Geometry const& geometry,
+	                         VisitPolicy& visitor,
+	                         Strategy const& strategy)
+	{
+		concepts::check<Geometry const>();
 
-        return resolve_strategy::is_valid::apply(geometry, visitor, strategy);
-    }
+		return resolve_strategy::is_valid::apply(geometry, visitor, strategy);
+	}
 };
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct is_valid<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    template <typename VisitPolicy, typename Strategy>
-    struct visitor : boost::static_visitor<bool>
-    {
-        visitor(VisitPolicy& policy, Strategy const& strategy)
-            : m_policy(policy)
-            , m_strategy(strategy)
-        {}
+	template <typename VisitPolicy, typename Strategy>
+	struct visitor : boost::static_visitor<bool>
+	{
+		visitor(VisitPolicy& policy, Strategy const& strategy)
+			: m_policy(policy)
+			, m_strategy(strategy)
+		{}
 
-        template <typename Geometry>
-        bool operator()(Geometry const& geometry) const
-        {
-            return is_valid<Geometry>::apply(geometry, m_policy, m_strategy);
-        }
+		template <typename Geometry>
+		bool operator()(Geometry const& geometry) const
+		{
+			return is_valid<Geometry>::apply(geometry, m_policy, m_strategy);
+		}
 
-        VisitPolicy& m_policy;
-        Strategy const& m_strategy;
-    };
+		VisitPolicy& m_policy;
+		Strategy const& m_strategy;
+	};
 
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool
-    apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
-          VisitPolicy& policy_visitor,
-          Strategy const& strategy)
-    {
-        return boost::apply_visitor(visitor<VisitPolicy, Strategy>(policy_visitor, strategy),
-                                    geometry);
-    }
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool
+	apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
+	      VisitPolicy& policy_visitor,
+	      Strategy const& strategy)
+	{
+		return boost::apply_visitor(visitor<VisitPolicy, Strategy>(policy_visitor, strategy),
+		                            geometry);
+	}
 };
 
 } // namespace resolve_variant
@@ -119,7 +121,7 @@ inline bool is_valid(Geometry const& geometry,
                      VisitPolicy& visitor,
                      Strategy const& strategy)
 {
-    return resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
+	return resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
 }
 
 
@@ -142,8 +144,8 @@ areal geometries with duplicate (consecutive) points}
 template <typename Geometry, typename Strategy>
 inline bool is_valid(Geometry const& geometry, Strategy const& strategy)
 {
-    is_valid_default_policy<> visitor;
-    return resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
+	is_valid_default_policy<> visitor;
+	return resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
 }
 
 /*!
@@ -162,7 +164,7 @@ inline bool is_valid(Geometry const& geometry, Strategy const& strategy)
 template <typename Geometry>
 inline bool is_valid(Geometry const& geometry)
 {
-    return is_valid(geometry, default_strategy());
+	return is_valid(geometry, default_strategy());
 }
 
 
@@ -187,10 +189,10 @@ inline bool is_valid(Geometry const& geometry)
 template <typename Geometry, typename Strategy>
 inline bool is_valid(Geometry const& geometry, validity_failure_type& failure, Strategy const& strategy)
 {
-    failure_type_policy<> visitor;
-    bool result = resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
-    failure = visitor.failure();
-    return result;
+	failure_type_policy<> visitor;
+	bool result = resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
+	failure = visitor.failure();
+	return result;
 }
 
 /*!
@@ -212,7 +214,7 @@ inline bool is_valid(Geometry const& geometry, validity_failure_type& failure, S
 template <typename Geometry>
 inline bool is_valid(Geometry const& geometry, validity_failure_type& failure)
 {
-    return is_valid(geometry, failure, default_strategy());
+	return is_valid(geometry, failure, default_strategy());
 }
 
 
@@ -237,11 +239,11 @@ inline bool is_valid(Geometry const& geometry, validity_failure_type& failure)
 template <typename Geometry, typename Strategy>
 inline bool is_valid(Geometry const& geometry, std::string& message, Strategy const& strategy)
 {
-    std::ostringstream stream;
-    failing_reason_policy<> visitor(stream);
-    bool result = resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
-    message = stream.str();
-    return result;
+	std::ostringstream stream;
+	failing_reason_policy<> visitor(stream);
+	bool result = resolve_variant::is_valid<Geometry>::apply(geometry, visitor, strategy);
+	message = stream.str();
+	return result;
 }
 
 /*!
@@ -263,10 +265,11 @@ inline bool is_valid(Geometry const& geometry, std::string& message, Strategy co
 template <typename Geometry>
 inline bool is_valid(Geometry const& geometry, std::string& message)
 {
-    return is_valid(geometry, message, default_strategy());
+	return is_valid(geometry, message, default_strategy());
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_INTERFACE_HPP

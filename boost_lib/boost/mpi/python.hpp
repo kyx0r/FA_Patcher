@@ -20,7 +20,12 @@
  *
  */
 
-namespace boost { namespace mpi { namespace python {
+namespace boost
+{
+namespace mpi
+{
+namespace python
+{
 
 /**
  * @brief Register the type T for direct serialization within Boost.MPI
@@ -64,10 +69,12 @@ register_serialized(const T& value = T(), PyTypeObject* type = 0);
  *  value.
  */
 template<typename T>
-void 
+void
 register_skeleton_and_content(const T& value = T(), PyTypeObject* type = 0);
 
-} } } // end namespace boost::mpi::python
+}
+}
+} // end namespace boost::mpi::python
 
 #ifndef BOOST_MPI_PYTHON_FORWARD_ONLY
 #  include <boost/mpi/python/serialize.hpp>

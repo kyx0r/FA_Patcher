@@ -12,9 +12,12 @@
 
 #include <boost/beast/core/detail/config.hpp>
 
-namespace boost {
-namespace beast {
-namespace websocket {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
 
 template<
     class NextLayer,

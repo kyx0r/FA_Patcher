@@ -30,7 +30,11 @@
 
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 /*!
@@ -95,41 +99,41 @@ class Point
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 
-    typedef typename coordinate_type<Geometry>::type ctype;
-    typedef typename coordinate_system<Geometry>::type csystem;
+	typedef typename coordinate_type<Geometry>::type ctype;
+	typedef typename coordinate_system<Geometry>::type csystem;
 
-    // The following enum is used to fully instantiate the coordinate
-    // system class; this is needed in order to check the units passed
-    // to it for non-Cartesian coordinate systems.
-    enum { cs_check = sizeof(csystem) };
+	// The following enum is used to fully instantiate the coordinate
+	// system class; this is needed in order to check the units passed
+	// to it for non-Cartesian coordinate systems.
+	enum { cs_check = sizeof(csystem) };
 
-    enum { ccount = dimension<Geometry>::value };
+	enum { ccount = dimension<Geometry>::value };
 
-    template <typename P, std::size_t Dimension, std::size_t DimensionCount>
-    struct dimension_checker
-    {
-        static void apply()
-        {
-            P* p = 0;
-            geometry::set<Dimension>(*p, geometry::get<Dimension>(*p));
-            dimension_checker<P, Dimension+1, DimensionCount>::apply();
-        }
-    };
+	template <typename P, std::size_t Dimension, std::size_t DimensionCount>
+	struct dimension_checker
+	{
+		static void apply()
+		{
+			P* p = 0;
+			geometry::set<Dimension>(*p, geometry::get<Dimension>(*p));
+			dimension_checker<P, Dimension+1, DimensionCount>::apply();
+		}
+	};
 
 
-    template <typename P, std::size_t DimensionCount>
-    struct dimension_checker<P, DimensionCount, DimensionCount>
-    {
-        static void apply() {}
-    };
+	template <typename P, std::size_t DimensionCount>
+	struct dimension_checker<P, DimensionCount, DimensionCount>
+	{
+		static void apply() {}
+	};
 
 public:
 
-    /// BCCL macro to apply the Point concept
-    BOOST_CONCEPT_USAGE(Point)
-    {
-        dimension_checker<Geometry, 0, ccount>::apply();
-    }
+	/// BCCL macro to apply the Point concept
+	BOOST_CONCEPT_USAGE(Point)
+	{
+		dimension_checker<Geometry, 0, ccount>::apply();
+	}
 #endif
 };
 
@@ -148,45 +152,47 @@ class ConstPoint
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 
-    typedef typename coordinate_type<Geometry>::type ctype;
-    typedef typename coordinate_system<Geometry>::type csystem;
+	typedef typename coordinate_type<Geometry>::type ctype;
+	typedef typename coordinate_system<Geometry>::type csystem;
 
-    // The following enum is used to fully instantiate the coordinate
-    // system class; this is needed in order to check the units passed
-    // to it for non-Cartesian coordinate systems.
-    enum { cs_check = sizeof(csystem) };
+	// The following enum is used to fully instantiate the coordinate
+	// system class; this is needed in order to check the units passed
+	// to it for non-Cartesian coordinate systems.
+	enum { cs_check = sizeof(csystem) };
 
-    enum { ccount = dimension<Geometry>::value };
+	enum { ccount = dimension<Geometry>::value };
 
-    template <typename P, std::size_t Dimension, std::size_t DimensionCount>
-    struct dimension_checker
-    {
-        static void apply()
-        {
-            const P* p = 0;
-            ctype coord(geometry::get<Dimension>(*p));
-            boost::ignore_unused(p, coord);
-            dimension_checker<P, Dimension+1, DimensionCount>::apply();
-        }
-    };
+	template <typename P, std::size_t Dimension, std::size_t DimensionCount>
+	struct dimension_checker
+	{
+		static void apply()
+		{
+			const P* p = 0;
+			ctype coord(geometry::get<Dimension>(*p));
+			boost::ignore_unused(p, coord);
+			dimension_checker<P, Dimension+1, DimensionCount>::apply();
+		}
+	};
 
 
-    template <typename P, std::size_t DimensionCount>
-    struct dimension_checker<P, DimensionCount, DimensionCount>
-    {
-        static void apply() {}
-    };
+	template <typename P, std::size_t DimensionCount>
+	struct dimension_checker<P, DimensionCount, DimensionCount>
+	{
+		static void apply() {}
+	};
 
 public:
 
-    /// BCCL macro to apply the ConstPoint concept
-    BOOST_CONCEPT_USAGE(ConstPoint)
-    {
-        dimension_checker<Geometry, 0, ccount>::apply();
-    }
+	/// BCCL macro to apply the ConstPoint concept
+	BOOST_CONCEPT_USAGE(ConstPoint)
+	{
+		dimension_checker<Geometry, 0, ccount>::apply();
+	}
 #endif
 };
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_CONCEPTS_POINT_CONCEPT_HPP

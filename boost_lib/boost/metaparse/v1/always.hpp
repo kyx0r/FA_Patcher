@@ -15,36 +15,36 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class Result>
-      struct always
-      {
-      private:
-        template <class Res>
-        struct apply_unchecked :
-          accept<
-            Result,
-            typename get_remaining<Res>::type,
-            typename get_position<Res>::type
-          >
-        {};
-      public:
-        typedef always type;
-      
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::eval_if<
-            typename is_error<typename P::template apply<S, Pos> >::type,
-            typename P::template apply<S, Pos>,
-            apply_unchecked<typename P::template apply<S, Pos> >
-          >
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class Result>
+struct always
+{
+private:
+	template <class Res>
+	struct apply_unchecked :
+		accept<
+		Result,
+		typename get_remaining<Res>::type,
+		typename get_position<Res>::type
+		>
+	{};
+public:
+	typedef always type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<typename P::template apply<S, Pos> >::type,
+	typename P::template apply<S, Pos>,
+	         apply_unchecked<typename P::template apply<S, Pos> >
+	>
+	{};
+};
+}
+}
 }
 
 #endif

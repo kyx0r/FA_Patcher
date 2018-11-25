@@ -28,9 +28,12 @@
 
 #include <cstddef>
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 using boost::move_detail::integral_constant;
 using boost::move_detail::true_type;
@@ -65,15 +68,19 @@ using boost::move_detail::disable_if_or;
 template <class FirstType>
 struct select1st
 {
-   typedef FirstType type;
+	typedef FirstType type;
 
-   template<class T>
-   const type& operator()(const T& x) const
-   {  return x.first;   }
+	template<class T>
+	const type& operator()(const T& x) const
+	{
+		return x.first;
+	}
 
-   template<class T>
-   type& operator()(T& x)
-   {  return const_cast<type&>(x.first);   }
+	template<class T>
+	type& operator()(T& x)
+	{
+		return const_cast<type&>(x.first);
+	}
 };
 
 }  //namespace dtl {

@@ -31,16 +31,19 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 
 
 namespace range_detail
 {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(iterator)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(const_iterator)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(const_iterator)
 }
 
 namespace detail

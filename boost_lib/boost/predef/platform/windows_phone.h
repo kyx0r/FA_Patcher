@@ -34,7 +34,7 @@ for Windows Phone development.
 #   undef BOOST_PLAT_WINDOWS_PHONE
 #   define BOOST_PLAT_WINDOWS_PHONE BOOST_VERSION_NUMBER_AVAILABLE
 #endif
- 
+
 #if BOOST_PLAT_WINDOWS_PHONE
 #   define BOOST_PLAT_WINDOWS_PHONE_AVAILABLE
 #   include <boost/predef/detail/platform_detected.h>

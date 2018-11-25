@@ -42,16 +42,16 @@
 
 #else
 
-    template <typename T, BOOST_PHOENIX_typename_A>
-    inline
-    typename expression::new_<detail::target<T>, BOOST_PHOENIX_A>::type const
-    new_(BOOST_PHOENIX_A_const_ref_a)
-    {
-        return
-            expression::
-                new_<detail::target<T>, BOOST_PHOENIX_A>::
-                    make(detail::target<T>(), BOOST_PHOENIX_a);
-    }
+template <typename T, BOOST_PHOENIX_typename_A>
+inline
+typename expression::new_<detail::target<T>, BOOST_PHOENIX_A>::type const
+new_(BOOST_PHOENIX_A_const_ref_a)
+{
+	return
+	    expression::
+	    new_<detail::target<T>, BOOST_PHOENIX_A>::
+	    make(detail::target<T>(), BOOST_PHOENIX_a);
+}
 
 #endif
 

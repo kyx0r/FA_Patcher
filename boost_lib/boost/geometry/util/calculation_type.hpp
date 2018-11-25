@@ -21,7 +21,9 @@
 #include <boost/geometry/util/select_most_precise.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace util
@@ -33,9 +35,9 @@ namespace detail
 struct default_integral
 {
 #ifdef BOOST_HAS_LONG_LONG
-    typedef boost::long_long_type type;
+	typedef boost::long_long_type type;
 #else
-    typedef int type;
+	typedef int type;
 #endif
 };
 
@@ -52,42 +54,42 @@ template
     typename CalculationType,
     typename DefaultFloatingPointCalculationType,
     typename DefaultIntegralCalculationType
->
+    >
 struct calculation_type
 {
-    BOOST_STATIC_ASSERT((
-        boost::is_fundamental
-            <
-                DefaultFloatingPointCalculationType
-            >::type::value
-        ));
-    BOOST_STATIC_ASSERT((
-        boost::is_fundamental
-            <
-                DefaultIntegralCalculationType
-            >::type::value
-        ));
+	BOOST_STATIC_ASSERT((
+	                        boost::is_fundamental
+	                        <
+	                        DefaultFloatingPointCalculationType
+	                        >::type::value
+	                    ));
+	BOOST_STATIC_ASSERT((
+	                        boost::is_fundamental
+	                        <
+	                        DefaultIntegralCalculationType
+	                        >::type::value
+	                    ));
 
 
-    typedef typename boost::mpl::if_
-        <
-            boost::is_void<CalculationType>,
-            typename boost::mpl::if_
-                <
-                    boost::is_floating_point<Type>,
-                    typename select_most_precise
-                        <
-                            DefaultFloatingPointCalculationType,
-                            Type
-                        >::type,
-                    typename select_most_precise
-                        <
-                            DefaultIntegralCalculationType,
-                            Type
-                        >::type
-                >::type,
-            CalculationType
-        >::type type;
+	typedef typename boost::mpl::if_
+	<
+	boost::is_void<CalculationType>,
+	      typename boost::mpl::if_
+	      <
+	      boost::is_floating_point<Type>,
+	      typename select_most_precise
+	      <
+	      DefaultFloatingPointCalculationType,
+	      Type
+	      >::type,
+	      typename select_most_precise
+	      <
+	      DefaultIntegralCalculationType,
+	      Type
+	      >::type
+	      >::type,
+	      CalculationType
+	      >::type type;
 };
 
 } // namespace detail
@@ -105,16 +107,16 @@ template
     typename CalculationType,
     typename DefaultFloatingPointCalculationType = double,
     typename DefaultIntegralCalculationType = detail::default_integral::type
->
+    >
 struct unary
 {
-    typedef typename detail::calculation_type
-        <
-            typename geometry::coordinate_type<Geometry>::type,
-            CalculationType,
-            DefaultFloatingPointCalculationType,
-            DefaultIntegralCalculationType
-        >::type type;
+	typedef typename detail::calculation_type
+	<
+	typename geometry::coordinate_type<Geometry>::type,
+	         CalculationType,
+	         DefaultFloatingPointCalculationType,
+	         DefaultIntegralCalculationType
+	         >::type type;
 };
 
 template
@@ -124,16 +126,16 @@ template
     typename CalculationType,
     typename DefaultFloatingPointCalculationType = double,
     typename DefaultIntegralCalculationType = detail::default_integral::type
->
+    >
 struct binary
 {
-    typedef typename detail::calculation_type
-        <
-            typename select_coordinate_type<Geometry1, Geometry2>::type,
-            CalculationType,
-            DefaultFloatingPointCalculationType,
-            DefaultIntegralCalculationType
-        >::type type;
+	typedef typename detail::calculation_type
+	<
+	typename select_coordinate_type<Geometry1, Geometry2>::type,
+	         CalculationType,
+	         DefaultFloatingPointCalculationType,
+	         DefaultIntegralCalculationType
+	         >::type type;
 };
 
 
@@ -148,31 +150,33 @@ template
     typename CalculationType,
     typename DefaultFloatingPointCalculationType = double,
     typename DefaultIntegralCalculationType = detail::default_integral::type
->
+    >
 struct ternary
 {
-    typedef typename detail::calculation_type
-        <
-            typename select_most_precise
-                <
-                    typename coordinate_type<Geometry1>::type,
-                    typename select_coordinate_type
-                        <
-                            Geometry2,
-                            Geometry3
-                        >::type
-                >::type,
-            CalculationType,
-            DefaultFloatingPointCalculationType,
-            DefaultIntegralCalculationType
-        >::type type;
+	typedef typename detail::calculation_type
+	<
+	typename select_most_precise
+	<
+	typename coordinate_type<Geometry1>::type,
+	         typename select_coordinate_type
+	         <
+	         Geometry2,
+	         Geometry3
+	         >::type
+	         >::type,
+	         CalculationType,
+	         DefaultFloatingPointCalculationType,
+	         DefaultIntegralCalculationType
+	         >::type type;
 };
 
-}} // namespace calculation_type::geometric
+}
+} // namespace calculation_type::geometric
 
 } // namespace util
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_UTIL_CALCULATION_TYPE_HPP

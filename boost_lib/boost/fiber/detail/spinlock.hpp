@@ -11,7 +11,7 @@
 
 #include <boost/fiber/detail/config.hpp>
 
-#if !defined(BOOST_FIBERS_NO_ATOMICS) 
+#if !defined(BOOST_FIBERS_NO_ATOMICS)
 # include <mutex>
 # include <boost/fiber/detail/spinlock_ttas_adaptive.hpp>
 # include <boost/fiber/detail/spinlock_ttas.hpp>
@@ -28,21 +28,26 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace fibers {
-namespace detail {
+namespace boost
+{
+namespace fibers
+{
+namespace detail
+{
 
 #if defined(BOOST_FIBERS_NO_ATOMICS)
-struct spinlock {
-    constexpr spinlock() noexcept {}
-    void lock() noexcept {}
-    void unlock() noexcept {}
+struct spinlock
+{
+	constexpr spinlock() noexcept {}
+	void lock() noexcept {}
+	void unlock() noexcept {}
 };
 
-struct spinlock_lock {
-    constexpr spinlock_lock( spinlock &) noexcept {}
-    void lock() noexcept {}
-    void unlock() noexcept {}
+struct spinlock_lock
+{
+	constexpr spinlock_lock( spinlock &) noexcept {}
+	void lock() noexcept {}
+	void unlock() noexcept {}
 };
 #else
 # if defined(BOOST_FIBERS_SPINLOCK_STD_MUTEX)
@@ -75,7 +80,9 @@ using spinlock = spinlock_ttas;
 using spinlock_lock = std::unique_lock< spinlock >;
 #endif
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

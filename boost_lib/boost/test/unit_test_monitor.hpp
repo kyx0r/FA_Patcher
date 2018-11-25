@@ -23,31 +23,38 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************               unit_test_monitor              ************** //
 // ************************************************************************** //
 
-class BOOST_TEST_DECL unit_test_monitor_t : public singleton<unit_test_monitor_t>, public execution_monitor {
+class BOOST_TEST_DECL unit_test_monitor_t : public singleton<unit_test_monitor_t>, public execution_monitor
+{
 public:
-    enum error_level {
-        test_ok                 =  0,
-        precondition_failure    = -1,
-        unexpected_exception    = -2,
-        os_exception            = -3,
-        os_timeout              = -4,
-        fatal_error             = -5  // includes both system and user
-    };
+	enum error_level
+	{
+		test_ok                 =  0,
+		precondition_failure    = -1,
+		unexpected_exception    = -2,
+		os_exception            = -3,
+		os_timeout              = -4,
+		fatal_error             = -5  // includes both system and user
+	};
 
-    static bool is_critical_error( error_level e ) { return e <= fatal_error; }
+	static bool is_critical_error( error_level e )
+	{
+		return e <= fatal_error;
+	}
 
-    // monitor method
-    error_level execute_and_translate( boost::function<void ()> const& func, unsigned timeout = 0 );
+	// monitor method
+	error_level execute_and_translate( boost::function<void ()> const& func, unsigned timeout = 0 );
 
 private:
-    BOOST_TEST_SINGLETON_CONS( unit_test_monitor_t )
+	BOOST_TEST_SINGLETON_CONS( unit_test_monitor_t )
 };
 
 BOOST_TEST_SINGLETON_INST( unit_test_monitor )

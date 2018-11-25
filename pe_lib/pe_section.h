@@ -83,7 +83,7 @@ public: //Setters
 	void set_characteristics(uint32_t characteristics);
 	//Sets raw section data from file image
 	void set_raw_data(const std::string& data);
-	//Direcly resize the raw data. 
+	//Direcly resize the raw data.
 	void resize_raw_data(uint32_t factor) const;
 
 public: //Setters, be careful

@@ -20,24 +20,24 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <
-        int N,
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-          BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-          class P,
-          boost::mpl::na
-        )
-      >
-      struct nth_of_c;
+namespace metaparse
+{
+namespace v1
+{
+template <
+    int N,
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+        class P,
+        boost::mpl::na
+    )
+    >
+struct nth_of_c;
 
-      #ifdef BOOST_METAPARSE_NTH_OF_N
-      #  error BOOST_METAPARSE_NTH_OF_N already defined
-      #endif
-      #define BOOST_METAPARSE_NTH_OF_N(z, n, unused) \
+#ifdef BOOST_METAPARSE_NTH_OF_N
+#  error BOOST_METAPARSE_NTH_OF_N already defined
+#endif
+#define BOOST_METAPARSE_NTH_OF_N(z, n, unused) \
         template <int K BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class P)> \
         struct nth_of_c< \
           K, \
@@ -54,16 +54,16 @@ namespace boost
             BOOST_PP_ENUM_PARAMS(n, P) \
           > \
         {};
-      
-      BOOST_PP_REPEAT(
-        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-        BOOST_METAPARSE_NTH_OF_N,
-        ~
-      )
-      
-      #undef BOOST_METAPARSE_NTH_OF_N
-    }
-  }
+
+BOOST_PP_REPEAT(
+    BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+    BOOST_METAPARSE_NTH_OF_N,
+    ~
+)
+
+#undef BOOST_METAPARSE_NTH_OF_N
+}
+}
 }
 
 #endif

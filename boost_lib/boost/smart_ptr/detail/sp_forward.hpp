@@ -31,14 +31,14 @@ namespace detail
 // This results in warnings 'returning reference to temporary'. Therefore we use a special version similar to std::forward.
 template< class T > T&& sp_forward( T && t ) BOOST_NOEXCEPT
 {
-    return t;
+	return t;
 }
 
 #else
 
 template< class T > T&& sp_forward( T & t ) BOOST_NOEXCEPT
 {
-    return static_cast< T&& >( t );
+	return static_cast< T&& >( t );
 }
 
 #endif

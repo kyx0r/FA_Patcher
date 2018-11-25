@@ -21,45 +21,45 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <int Line, int Col, class Msg>
-      struct x__________________PARSING_FAILED__________________x
-      {
-        BOOST_STATIC_ASSERT(Line == Line + 1);
-      };
+namespace metaparse
+{
+namespace v1
+{
+template <int Line, int Col, class Msg>
+struct x__________________PARSING_FAILED__________________x
+{
+	BOOST_STATIC_ASSERT(Line == Line + 1);
+};
 
-      template <class P, class S>
-      struct parsing_failed :
-        x__________________PARSING_FAILED__________________x<
-          get_line<
-            get_position<typename P::template apply<S, start> >
-          >::type::value,
-          get_col<
-            get_position<typename P::template apply<S, start> >
-          >::type::value,
-          typename get_message<typename P::template apply<S, start> >::type
-        >
-      {};
+template <class P, class S>
+struct parsing_failed :
+	x__________________PARSING_FAILED__________________x<
+	get_line<
+	get_position<typename P::template apply<S, start> >
+>::type::value,
+get_col<
+get_position<typename P::template apply<S, start> >
+>::type::value,
+typename get_message<typename P::template apply<S, start> >::type
+>
+{};
 
-      template <class P>
-      struct build_parser
-      {
-        typedef build_parser type;
-        
-        template <class S>
-        struct apply :
-          boost::mpl::eval_if<
-            typename is_error<typename P::template apply<S, start> >::type,
-            parsing_failed<P, S>,
-            get_result<typename P::template apply<S, start> >
-          >
-        {};
-      };
-    }
-  }
+template <class P>
+struct build_parser
+{
+	typedef build_parser type;
+
+	template <class S>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<typename P::template apply<S, start> >::type,
+	parsing_failed<P, S>,
+	               get_result<typename P::template apply<S, start> >
+	>
+	{};
+};
+}
+}
 }
 
 #endif

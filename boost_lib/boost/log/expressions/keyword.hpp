@@ -37,11 +37,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * This class implements an expression template keyword. It is used to start template expressions involving attribute values.
@@ -49,70 +51,73 @@ namespace expressions {
 template< typename DescriptorT, template< typename > class ActorT >
 struct attribute_keyword
 {
-    //! Self type
-    typedef attribute_keyword this_type;
-    //! Attribute descriptor type
-    typedef DescriptorT descriptor_type;
+	//! Self type
+	typedef attribute_keyword this_type;
+	//! Attribute descriptor type
+	typedef DescriptorT descriptor_type;
 
-    BOOST_PROTO_BASIC_EXTENDS(typename proto::terminal< descriptor_type >::type, this_type, phoenix::phoenix_domain)
+	BOOST_PROTO_BASIC_EXTENDS(typename proto::terminal< descriptor_type >::type, this_type, phoenix::phoenix_domain)
 
-    //! Attribute value type
-    typedef typename descriptor_type::value_type value_type;
+	//! Attribute value type
+	typedef typename descriptor_type::value_type value_type;
 
-    //! Returns attribute name
-    static attribute_name get_name() { return descriptor_type::get_name(); }
+	//! Returns attribute name
+	static attribute_name get_name()
+	{
+		return descriptor_type::get_name();
+	}
 
-    //! Expression with cached attribute name
-    typedef attribute_actor<
-        value_type,
-        fallback_to_none,
-        descriptor_type,
-        ActorT
-    > or_none_result_type;
+	//! Expression with cached attribute name
+	typedef attribute_actor<
+	value_type,
+	fallback_to_none,
+	descriptor_type,
+	ActorT
+	> or_none_result_type;
 
-    //! Generates an expression that extracts the attribute value or a default value
-    static or_none_result_type or_none()
-    {
-        typedef typename or_none_result_type::terminal_type result_terminal;
-        typename or_none_result_type::base_type act = {{ result_terminal(get_name()) }};
-        return or_none_result_type(act);
-    }
+	//! Generates an expression that extracts the attribute value or a default value
+	static or_none_result_type or_none()
+	{
+		typedef typename or_none_result_type::terminal_type result_terminal;
+		typename or_none_result_type::base_type act = {{ result_terminal(get_name()) }};
+		return or_none_result_type(act);
+	}
 
-    //! Expression with cached attribute name
-    typedef attribute_actor<
-        value_type,
-        fallback_to_throw,
-        descriptor_type,
-        ActorT
-    > or_throw_result_type;
+	//! Expression with cached attribute name
+	typedef attribute_actor<
+	value_type,
+	fallback_to_throw,
+	descriptor_type,
+	ActorT
+	> or_throw_result_type;
 
-    //! Generates an expression that extracts the attribute value or throws an exception
-    static or_throw_result_type or_throw()
-    {
-        typedef typename or_throw_result_type::terminal_type result_terminal;
-        typename or_throw_result_type::base_type act = {{ result_terminal(get_name()) }};
-        return or_throw_result_type(act);
-    }
+	//! Generates an expression that extracts the attribute value or throws an exception
+	static or_throw_result_type or_throw()
+	{
+		typedef typename or_throw_result_type::terminal_type result_terminal;
+		typename or_throw_result_type::base_type act = {{ result_terminal(get_name()) }};
+		return or_throw_result_type(act);
+	}
 
-    //! Generates an expression that extracts the attribute value or a default value
-    template< typename DefaultT >
-    static attribute_actor<
-        value_type,
-        fallback_to_default< DefaultT >,
-        descriptor_type,
-        ActorT
-    > or_default(DefaultT const& def_val)
-    {
-        typedef attribute_actor<
-            value_type,
-            fallback_to_default< DefaultT >,
-            descriptor_type,
-            ActorT
-        > or_default_result_type;
-        typedef typename or_default_result_type::terminal_type result_terminal;
-        typename or_default_result_type::base_type act = {{ result_terminal(get_name(), def_val) }};
-        return or_default_result_type(act);
-    }
+	//! Generates an expression that extracts the attribute value or a default value
+	template< typename DefaultT >
+	static attribute_actor<
+	value_type,
+	fallback_to_default< DefaultT >,
+	descriptor_type,
+	ActorT
+	> or_default(DefaultT const& def_val)
+	{
+		typedef attribute_actor<
+		value_type,
+		fallback_to_default< DefaultT >,
+		descriptor_type,
+		ActorT
+		> or_default_result_type;
+		typedef typename or_default_result_type::terminal_type result_terminal;
+		typename or_default_result_type::base_type act = {{ result_terminal(get_name(), def_val) }};
+		return or_default_result_type(act);
+	}
 };
 
 } // namespace expressions
@@ -121,9 +126,11 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
-namespace proto {
+namespace proto
+{
 
-namespace detail {
+namespace detail
+{
 
 // This hack is needed in order to cache attribute name into the expression terminal when the template
 // expression is constructed. The standard way through a custom domain doesn't work because phoenix::actor
@@ -131,48 +138,48 @@ namespace detail {
 template< typename DescriptorT, template< typename > class ActorT, typename DomainT >
 struct protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
 {
-    typedef boost::log::expressions::attribute_keyword< DescriptorT, ActorT > keyword_type;
-    typedef typename keyword_type::or_none_result_type result_type;
+	typedef boost::log::expressions::attribute_keyword< DescriptorT, ActorT > keyword_type;
+	typedef typename keyword_type::or_none_result_type result_type;
 
-    result_type operator() (keyword_type const& keyword) const
-    {
-        return keyword.or_none();
-    }
+	result_type operator() (keyword_type const& keyword) const
+	{
+		return keyword.or_none();
+	}
 };
 
 template< typename DescriptorT, template< typename > class ActorT, typename DomainT >
 struct protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >&, DomainT > :
-    public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
+	public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
 {
 };
 
 template< typename DescriptorT, template< typename > class ActorT, typename DomainT >
 struct protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT > const&, DomainT > :
-    public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
+	public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
 {
 };
 
 template< typename DescriptorT, template< typename > class ActorT, typename DomainT >
 struct protoify< boost::reference_wrapper< boost::log::expressions::attribute_keyword< DescriptorT, ActorT > >, DomainT > :
-    public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
+	public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
 {
 };
 
 template< typename DescriptorT, template< typename > class ActorT, typename DomainT >
 struct protoify< boost::reference_wrapper< boost::log::expressions::attribute_keyword< DescriptorT, ActorT > > const, DomainT > :
-    public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
+	public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
 {
 };
 
 template< typename DescriptorT, template< typename > class ActorT, typename DomainT >
 struct protoify< boost::reference_wrapper< const boost::log::expressions::attribute_keyword< DescriptorT, ActorT > >, DomainT > :
-    public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
+	public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
 {
 };
 
 template< typename DescriptorT, template< typename > class ActorT, typename DomainT >
 struct protoify< boost::reference_wrapper< const boost::log::expressions::attribute_keyword< DescriptorT, ActorT > > const, DomainT > :
-    public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
+	public protoify< boost::log::expressions::attribute_keyword< DescriptorT, ActorT >, DomainT >
 {
 };
 

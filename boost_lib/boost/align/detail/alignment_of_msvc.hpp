@@ -10,20 +10,24 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/align/detail/min_size.hpp>
 
-namespace boost {
-namespace alignment {
-namespace detail {
+namespace boost
+{
+namespace alignment
+{
+namespace detail
+{
 
 template<class T>
-struct offset_value {
-    T first;
-    char value;
-    T second;
+struct offset_value
+{
+	T first;
+	char value;
+	T second;
 };
 
 template<class T>
 struct alignment_of
-    : min_size<sizeof(T), sizeof(offset_value<T>) - (sizeof(T) << 1)> { };
+: min_size<sizeof(T), sizeof(offset_value<T>) - (sizeof(T) << 1)> { };
 
 } /* detail */
 } /* alignment */

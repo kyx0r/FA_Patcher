@@ -61,7 +61,7 @@ public:
 
 	//Returns SE Handler RVA list
 	const se_handler_list& get_se_handler_rvas() const;
-		
+
 	//Returns Lock Prefix RVA list
 	const lock_prefix_rva_list& get_lock_prefix_rvas() const;
 
@@ -72,12 +72,12 @@ public: //These functions do not change everything inside image, they are used b
 	void add_se_handler_rva(uint32_t rva);
 	//Clears SE Handler list
 	void clear_se_handler_list();
-		
+
 	//Adds Lock Prefix RVA to list
 	void add_lock_prefix_rva(uint32_t rva);
 	//Clears Lock Prefix list
 	void clear_lock_prefix_list();
-		
+
 	//Sets the date and time stamp value
 	void set_time_stamp(uint32_t time_stamp);
 	//Sets major version number

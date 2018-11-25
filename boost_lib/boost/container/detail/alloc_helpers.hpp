@@ -22,36 +22,45 @@
 #include <boost/move/adl_move_swap.hpp>
 #include <boost/move/utility_core.hpp>
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template<class AllocatorType>
 inline void swap_alloc(AllocatorType &, AllocatorType &, dtl::false_type)
-   BOOST_NOEXCEPT_OR_NOTHROW
+BOOST_NOEXCEPT_OR_NOTHROW
 {}
 
 template<class AllocatorType>
 inline void swap_alloc(AllocatorType &l, AllocatorType &r, dtl::true_type)
-{  boost::adl_move_swap(l, r);   }
+{
+	boost::adl_move_swap(l, r);
+}
 
 template<class AllocatorType>
 inline void assign_alloc(AllocatorType &, const AllocatorType &, dtl::false_type)
-   BOOST_NOEXCEPT_OR_NOTHROW
+BOOST_NOEXCEPT_OR_NOTHROW
 {}
 
 template<class AllocatorType>
 inline void assign_alloc(AllocatorType &l, const AllocatorType &r, dtl::true_type)
-{  l = r;   }
+{
+	l = r;
+}
 
 template<class AllocatorType>
 inline void move_alloc(AllocatorType &, AllocatorType &, dtl::false_type)
-   BOOST_NOEXCEPT_OR_NOTHROW
+BOOST_NOEXCEPT_OR_NOTHROW
 {}
 
 template<class AllocatorType>
 inline void move_alloc(AllocatorType &l, AllocatorType &r, dtl::true_type)
-{  l = ::boost::move(r);   }
+{
+	l = ::boost::move(r);
+}
 
 }  //namespace dtl {
 }  //namespace container {

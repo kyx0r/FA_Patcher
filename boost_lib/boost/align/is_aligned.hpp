@@ -11,13 +11,15 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/align/detail/is_aligned.hpp>
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 BOOST_CONSTEXPR inline bool
 is_aligned(std::size_t value, std::size_t alignment) BOOST_NOEXCEPT
 {
-    return (value & (alignment - 1)) == 0;
+	return (value & (alignment - 1)) == 0;
 }
 
 } /* alignment */

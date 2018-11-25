@@ -13,16 +13,20 @@
 
 #include <boost/geometry/core/tags.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace azimuth
+namespace strategy
+{
+namespace azimuth
 {
 
 template
 <
     typename CalculationType = void
->
+    >
 class cartesian
 {};
 
@@ -34,16 +38,18 @@ namespace services
 template <typename CalculationType>
 struct default_strategy<cartesian_tag, CalculationType>
 {
-    typedef strategy::azimuth::cartesian<CalculationType> type;
+	typedef strategy::azimuth::cartesian<CalculationType> type;
 };
 
 }
 
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
-}} // namespace strategy::azimuth
+}
+} // namespace strategy::azimuth
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_AZIMUTH_HPP

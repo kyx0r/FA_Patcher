@@ -16,7 +16,7 @@
 # include <boost/detail/workaround.hpp>
 
 # ifdef BOOST_NO_OPERATORS_IN_NAMESPACE
-   // A gcc bug forces some symbols into the global namespace
+// A gcc bug forces some symbols into the global namespace
 #  define BOOST_PYTHON_BEGIN_CONVERSION_NAMESPACE
 #  define BOOST_PYTHON_END_CONVERSION_NAMESPACE
 #  define BOOST_PYTHON_CONVERSION
@@ -98,7 +98,7 @@
 # define BOOST_PYTHON_OFFSETOF offsetof
 #endif
 
-//  enable automatic library variant selection  ------------------------------// 
+//  enable automatic library variant selection  ------------------------------//
 
 #if !defined(BOOST_PYTHON_SOURCE) && !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_PYTHON_NO_LIB)
 //

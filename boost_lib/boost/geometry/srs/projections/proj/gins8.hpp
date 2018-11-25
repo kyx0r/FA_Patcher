@@ -46,125 +46,137 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct gins8 {};
+namespace par4
+{
+struct gins8 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace gins8
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace gins8
+{
 
-            static const double Cl = 0.000952426;
-            static const double Cp = 0.162388;
-            //static const double C12 = 0.08333333333333333;
+static const double Cl = 0.000952426;
+static const double Cp = 0.162388;
+//static const double C12 = 0.08333333333333333;
 
-            template <typename T>
-            inline T C12() { return 0.083333333333333333333333333333333333; }
+template <typename T>
+inline T C12()
+{
+	return 0.083333333333333333333333333333333333;
+}
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_gins8_spheroid : public base_t_f<base_gins8_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_gins8_spheroid : public base_t_f<base_gins8_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_gins8_spheroid(const Parameters& par)
-                    : base_t_f<base_gins8_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_gins8_spheroid(const Parameters& par)
+		: base_t_f<base_gins8_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType C12 = gins8::C12<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType C12 = gins8::C12<CalculationType>();
 
-                    CalculationType t = lp_lat * lp_lat;
+		CalculationType t = lp_lat * lp_lat;
 
-                    xy_y = lp_lat * (1. + t * C12);
-                    xy_x = lp_lon * (1. - Cp * t);
-                    t = lp_lon * lp_lon;
-                    xy_x *= (0.87 - Cl * t * t);
-                }
+		xy_y = lp_lat * (1. + t * C12);
+		xy_x = lp_lon * (1. - Cp * t);
+		t = lp_lon * lp_lon;
+		xy_x *= (0.87 - Cl * t * t);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "gins8_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "gins8_spheroid";
+	}
 
-            };
+};
 
-            // Ginsburg VIII (TsNIIGAiK)
-            template <typename Parameters>
-            inline void setup_gins8(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Ginsburg VIII (TsNIIGAiK)
+template <typename Parameters>
+inline void setup_gins8(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::gins8
-    #endif // doxygen
+}
+} // namespace detail::gins8
+#endif // doxygen
 
-    /*!
-        \brief Ginsburg VIII (TsNIIGAiK) projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_gins8.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct gins8_spheroid : public detail::gins8::base_gins8_spheroid<CalculationType, Parameters>
-    {
-        inline gins8_spheroid(const Parameters& par) : detail::gins8::base_gins8_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::gins8::setup_gins8(this->m_par);
-        }
-    };
+/*!
+    \brief Ginsburg VIII (TsNIIGAiK) projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_gins8.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct gins8_spheroid : public detail::gins8::base_gins8_spheroid<CalculationType, Parameters>
+{
+	inline gins8_spheroid(const Parameters& par) : detail::gins8::base_gins8_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::gins8::setup_gins8(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::gins8, gins8_spheroid, gins8_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::gins8, gins8_spheroid, gins8_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class gins8_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<gins8_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class gins8_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<gins8_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void gins8_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("gins8", new gins8_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void gins8_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("gins8", new gins8_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_GINS8_HPP
 

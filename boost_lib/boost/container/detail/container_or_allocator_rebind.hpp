@@ -22,24 +22,27 @@
 #include <boost/container/detail/container_rebind.hpp>
 #include <boost/container/detail/is_container.hpp>
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template<class AllocatorOrContainer, class ToType, bool = is_container<AllocatorOrContainer>::value>
 struct container_or_allocator_rebind_impl
-   : container_rebind<AllocatorOrContainer, ToType>
+	: container_rebind<AllocatorOrContainer, ToType>
 {};
 
 template<class AllocatorOrContainer, class ToType>
 struct container_or_allocator_rebind_impl<AllocatorOrContainer, ToType, false>
-   : allocator_traits<AllocatorOrContainer>::template portable_rebind_alloc<ToType>
+	: allocator_traits<AllocatorOrContainer>::template portable_rebind_alloc<ToType>
 
 {};
 
 template<class AllocatorOrContainer, class ToType>
 struct container_or_allocator_rebind
-   : container_or_allocator_rebind_impl<AllocatorOrContainer, ToType>
+	: container_or_allocator_rebind_impl<AllocatorOrContainer, ToType>
 {};
 
 }  //namespace dtl {

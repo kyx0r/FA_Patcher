@@ -17,43 +17,46 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    /**
-     * rounds to nearest, to even on tie
-     */
-    template <class To, class Rep, class Period>
-    To round(const duration<Rep, Period>& d)
-    {
-        typedef typename common_type<To, duration<Rep, Period> >::type  result_type;
-        result_type diff0;
-        result_type diff1;
+/**
+ * rounds to nearest, to even on tie
+ */
+template <class To, class Rep, class Period>
+To round(const duration<Rep, Period>& d)
+{
+	typedef typename common_type<To, duration<Rep, Period> >::type  result_type;
+	result_type diff0;
+	result_type diff1;
 
-        To t0 = duration_cast<To>(d);
-        To t1 = t0;
-        if (t0>d) {
-          --t1;
-          diff0 = t0 - d;
-          diff1 = d - t1;
-        } else {
-          ++t1;
-          diff0 = d - t0;
-          diff1 = t1 - d;
-        }
+	To t0 = duration_cast<To>(d);
+	To t1 = t0;
+	if (t0>d)
+	{
+		--t1;
+		diff0 = t0 - d;
+		diff1 = d - t1;
+	}
+	else
+	{
+		++t1;
+		diff0 = d - t0;
+		diff1 = t1 - d;
+	}
 
-        if (diff0 == diff1)
-        {
-            if (t0.count() & 1)
-                return t1;
-            return t0;
-        }
-        else if (diff0 < diff1)
-            return t0;
-        return t1;
-    }
+	if (diff0 == diff1)
+	{
+		if (t0.count() & 1)
+			return t1;
+		return t0;
+	}
+	else if (diff0 < diff1)
+		return t0;
+	return t1;
+}
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 #endif

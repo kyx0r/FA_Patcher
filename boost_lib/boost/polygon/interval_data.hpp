@@ -15,102 +15,123 @@
 #include "isotropy.hpp"
 #include "interval_concept.hpp"
 
-namespace boost {
-namespace polygon {
+namespace boost
+{
+namespace polygon
+{
 
 template <typename T>
-class interval_data {
- public:
-  typedef T coordinate_type;
+class interval_data
+{
+public:
+	typedef T coordinate_type;
 
-  interval_data()
+	interval_data()
 #ifndef BOOST_POLYGON_MSVC
-    : coords_()
+		: coords_()
 #endif
-  {}
+	{}
 
-  interval_data(coordinate_type low, coordinate_type high) {
-    coords_[LOW] = low;
-    coords_[HIGH] = high;
-  }
+	interval_data(coordinate_type low, coordinate_type high)
+	{
+		coords_[LOW] = low;
+		coords_[HIGH] = high;
+	}
 
-  interval_data(const interval_data& that) {
-    coords_[0] = that.coords_[0];
-    coords_[1] = that.coords_[1];
-  }
+	interval_data(const interval_data& that)
+	{
+		coords_[0] = that.coords_[0];
+		coords_[1] = that.coords_[1];
+	}
 
-  interval_data& operator=(const interval_data& that) {
-    coords_[0] = that.coords_[0];
-    coords_[1] = that.coords_[1];
-    return *this;
-  }
+	interval_data& operator=(const interval_data& that)
+	{
+		coords_[0] = that.coords_[0];
+		coords_[1] = that.coords_[1];
+		return *this;
+	}
 
-  template <typename IntervalType>
-  interval_data& operator=(const IntervalType& that) {
-    assign(*this, that);
-    return *this;
-  }
+	template <typename IntervalType>
+	interval_data& operator=(const IntervalType& that)
+	{
+		assign(*this, that);
+		return *this;
+	}
 
-  coordinate_type get(direction_1d dir) const {
-    return coords_[dir.to_int()];
-  }
+	coordinate_type get(direction_1d dir) const
+	{
+		return coords_[dir.to_int()];
+	}
 
-  void set(direction_1d dir, coordinate_type value) {
-    coords_[dir.to_int()] = value;
-  }
+	void set(direction_1d dir, coordinate_type value)
+	{
+		coords_[dir.to_int()] = value;
+	}
 
-  coordinate_type low() const {
-    return coords_[0];
-  }
+	coordinate_type low() const
+	{
+		return coords_[0];
+	}
 
-  interval_data& low(coordinate_type value) {
-    coords_[LOW] = value;
-    return *this;
-  }
+	interval_data& low(coordinate_type value)
+	{
+		coords_[LOW] = value;
+		return *this;
+	}
 
-  coordinate_type high() const {
-    return coords_[1];
-  }
+	coordinate_type high() const
+	{
+		return coords_[1];
+	}
 
-  interval_data& high(coordinate_type value) {
-    coords_[HIGH] = value;
-    return *this;
-  }
+	interval_data& high(coordinate_type value)
+	{
+		coords_[HIGH] = value;
+		return *this;
+	}
 
-  bool operator==(const interval_data& that) const {
-    return low() == that.low() && high() == that.high();
-  }
+	bool operator==(const interval_data& that) const
+	{
+		return low() == that.low() && high() == that.high();
+	}
 
-  bool operator!=(const interval_data& that) const {
-    return low() != that.low() || high() != that.high();
-  }
+	bool operator!=(const interval_data& that) const
+	{
+		return low() != that.low() || high() != that.high();
+	}
 
-  bool operator<(const interval_data& that) const {
-    if (coords_[0] != that.coords_[0]) {
-      return coords_[0] < that.coords_[0];
-    }
-    return coords_[1] < that.coords_[1];
-  }
+	bool operator<(const interval_data& that) const
+	{
+		if (coords_[0] != that.coords_[0])
+		{
+			return coords_[0] < that.coords_[0];
+		}
+		return coords_[1] < that.coords_[1];
+	}
 
-  bool operator<=(const interval_data& that) const {
-    return !(that < *this);
-  }
+	bool operator<=(const interval_data& that) const
+	{
+		return !(that < *this);
+	}
 
-  bool operator>(const interval_data& that) const {
-    return that < *this;
-  }
+	bool operator>(const interval_data& that) const
+	{
+		return that < *this;
+	}
 
-  bool operator>=(const interval_data& that) const {
-    return !((*this) < that);
-  }
+	bool operator>=(const interval_data& that) const
+	{
+		return !((*this) < that);
+	}
 
- private:
-  coordinate_type coords_[2];
+private:
+	coordinate_type coords_[2];
 };
 
 template <typename CType>
-struct geometry_concept< interval_data<CType> > {
-  typedef interval_concept type;
+struct geometry_concept< interval_data<CType> >
+{
+	typedef interval_concept type;
 };
 }  // polygon
 }  // boost

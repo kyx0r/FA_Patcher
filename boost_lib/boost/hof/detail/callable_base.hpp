@@ -20,26 +20,31 @@
 #endif
 #endif
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class F>
 struct non_class_function
 {
-    F f;
-    BOOST_HOF_DELEGATE_CONSTRUCTOR(non_class_function, F, f)
+	F f;
+	BOOST_HOF_DELEGATE_CONSTRUCTOR(non_class_function, F, f)
 
-    template<class... Ts>
-    constexpr BOOST_HOF_SFINAE_RESULT(apply_f, id_<F>, id_<Ts>...) 
-    operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
-    (
-        boost::hof::apply(f, BOOST_HOF_FORWARD(Ts)(xs)...)
-    );
+	template<class... Ts>
+	constexpr BOOST_HOF_SFINAE_RESULT(apply_f, id_<F>, id_<Ts>...)
+	operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
+	(
+	    boost::hof::apply(f, BOOST_HOF_FORWARD(Ts)(xs)...)
+	);
 };
 
 template<class F>
 struct callable_base_type
 : std::conditional<(BOOST_HOF_IS_CLASS(F) && !BOOST_HOF_IS_FINAL(F) && !BOOST_HOF_IS_POLYMORPHIC(F)), F, non_class_function<F>>
-{};
+  {};
 
 #if BOOST_HOF_CALLABLE_BASE_USE_TEMPLATE_ALIAS
 template<class F>
@@ -47,19 +52,21 @@ using callable_base = typename callable_base_type<F>::type;
 #else
 template<class F>
 struct callable_base
-: callable_base_type<F>::type
+	: callable_base_type<F>::type
 {
-    typedef typename callable_base_type<F>::type base;
-    BOOST_HOF_INHERIT_CONSTRUCTOR(callable_base, base)
+	typedef typename callable_base_type<F>::type base;
+	BOOST_HOF_INHERIT_CONSTRUCTOR(callable_base, base)
 };
 
 template<class F>
 struct callable_base_type<callable_base<F>>
-: callable_base_type<F>
+	        : callable_base_type<F>
 {};
 
 #endif
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif

@@ -11,8 +11,10 @@
 #ifndef BOOST_TYPE_ERASURE_DERIVED_HPP_INCLUDED
 #define BOOST_TYPE_ERASURE_DERIVED_HPP_INCLUDED
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * A metafunction which returns the full @ref any type,
@@ -25,9 +27,9 @@ template<class T>
 struct derived
 {
 #ifdef BOOST_TYPE_ERASURE_DOXYGEN
-    typedef detail::unspecified type;
+	typedef detail::unspecified type;
 #else
-    typedef typename T::_boost_type_erasure_derived_type type;
+	typedef typename T::_boost_type_erasure_derived_type type;
 #endif
 };
 

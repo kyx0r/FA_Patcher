@@ -26,7 +26,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -39,9 +41,9 @@ template
     std::size_t Dimension1 = 0,
     std::size_t Dimension2 = 1,
     typename Tag = typename tag<Geometry>::type
->
+    >
 struct two_dimensional_view
-    : not_implemented<Tag>
+	: not_implemented<Tag>
 {};
 
 
@@ -50,21 +52,21 @@ struct two_dimensional_view
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct two_dimensional_view<Point, Dimension1, Dimension2, point_tag>
 {
-    BOOST_MPL_ASSERT_MSG(
-        (Dimension1 < static_cast<std::size_t>(dimension<Point>::value)),
-        COORDINATE_DIMENSION1_IS_LARGER_THAN_POINT_DIMENSION,
-        (boost::mpl::int_<Dimension1>));
+	BOOST_MPL_ASSERT_MSG(
+	    (Dimension1 < static_cast<std::size_t>(dimension<Point>::value)),
+	    COORDINATE_DIMENSION1_IS_LARGER_THAN_POINT_DIMENSION,
+	    (boost::mpl::int_<Dimension1>));
 
-    BOOST_MPL_ASSERT_MSG(
-        (Dimension2 < static_cast<std::size_t>(dimension<Point>::value)),
-        COORDINATE_DIMENSION2_IS_LARGER_THAN_POINT_DIMENSION,
-        (boost::mpl::int_<Dimension2>));
+	BOOST_MPL_ASSERT_MSG(
+	    (Dimension2 < static_cast<std::size_t>(dimension<Point>::value)),
+	    COORDINATE_DIMENSION2_IS_LARGER_THAN_POINT_DIMENSION,
+	    (boost::mpl::int_<Dimension2>));
 
-    two_dimensional_view(Point& point)
-        : m_point(point)
-    {}
+	two_dimensional_view(Point& point)
+		: m_point(point)
+	{}
 
-    Point& m_point;
+	Point& m_point;
 };
 
 
@@ -79,118 +81,119 @@ namespace traits
 
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct tag
-    <
-        geometry::detail::two_dimensional_view
-            <
-                Point, Dimension1, Dimension2, point_tag
-            >
-    >
+	<
+	geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	>
+	>
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct coordinate_system
-    <
-        geometry::detail::two_dimensional_view
-            <
-                Point, Dimension1, Dimension2, point_tag
-            >
-    > : coordinate_system<typename geometry::point_type<Point>::type>
+	<
+	geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	>
+	> : coordinate_system<typename geometry::point_type<Point>::type>
 {};
 
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct coordinate_type
-    <
-        geometry::detail::two_dimensional_view
-            <
-                Point, Dimension1, Dimension2, point_tag
-            >
-    > : coordinate_type<typename geometry::point_type<Point>::type>
+	<
+	geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	>
+	> : coordinate_type<typename geometry::point_type<Point>::type>
 {};
 
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct dimension
-    <
-        geometry::detail::two_dimensional_view
-            <
-                Point, Dimension1, Dimension2, point_tag
-            >
-    > : boost::mpl::int_<2>
+	<
+	geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	>
+	> : boost::mpl::int_<2>
 {};
 
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct point_type
-    <
-        geometry::detail::two_dimensional_view
-            <
-                Point, Dimension1, Dimension2, point_tag
-            >
-    >
+	<
+	geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	>
+	>
 {
-    typedef typename geometry::point_type<Point>::type type;
+	typedef typename geometry::point_type<Point>::type type;
 };
 
 
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct access
-    <
-        geometry::detail::two_dimensional_view
-            <
-                Point, Dimension1, Dimension2, point_tag
-            >,
-        0
-    >
+	<
+	geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	>,
+	0
+	>
 {
-    typedef typename geometry::coordinate_type<Point>::type coordinate_type;
-    typedef geometry::detail::two_dimensional_view
-        <
-            Point, Dimension1, Dimension2, point_tag
-        > view_type;
+	typedef typename geometry::coordinate_type<Point>::type coordinate_type;
+	typedef geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	> view_type;
 
-    static inline coordinate_type get(view_type const& view)
-    {
-        return geometry::get<Dimension1>(view.m_point);
-    }
+	static inline coordinate_type get(view_type const& view)
+	{
+		return geometry::get<Dimension1>(view.m_point);
+	}
 
-    static inline void set(view_type& view, coordinate_type const& value)
-    {
-        geometry::set<Dimension1>(view.m_point, value);
-    }
+	static inline void set(view_type& view, coordinate_type const& value)
+	{
+		geometry::set<Dimension1>(view.m_point, value);
+	}
 };
 
 template <typename Point, std::size_t Dimension1, std::size_t Dimension2>
 struct access
-    <
-        geometry::detail::two_dimensional_view
-            <
-                Point, Dimension1, Dimension2, point_tag
-            >,
-        1
-    >
+	<
+	geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	>,
+	1
+	>
 {
-    typedef typename geometry::coordinate_type<Point>::type coordinate_type;
-    typedef geometry::detail::two_dimensional_view
-        <
-            Point, Dimension1, Dimension2, point_tag
-        > view_type;
+	typedef typename geometry::coordinate_type<Point>::type coordinate_type;
+	typedef geometry::detail::two_dimensional_view
+	<
+	Point, Dimension1, Dimension2, point_tag
+	> view_type;
 
-    static inline coordinate_type get(view_type const& view)
-    {
-        return geometry::get<Dimension2>(view.m_point);
-    }
+	static inline coordinate_type get(view_type const& view)
+	{
+		return geometry::get<Dimension2>(view.m_point);
+	}
 
-    static inline void set(view_type& view, coordinate_type const& value)
-    {
-        geometry::set<Dimension2>(view.m_point, value);
-    }
+	static inline void set(view_type& view, coordinate_type const& value)
+	{
+		geometry::set<Dimension2>(view.m_point, value);
+	}
 };
 
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_DETAIL_TWO_DIMENSIONAL_VIEW_HPP

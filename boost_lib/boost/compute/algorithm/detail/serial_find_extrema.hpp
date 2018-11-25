@@ -17,67 +17,71 @@
 #include <boost/compute/detail/iterator_range_size.hpp>
 #include <boost/compute/container/detail/scalar.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class Compare>
 inline InputIterator serial_find_extrema(InputIterator first,
-                                         InputIterator last,
-                                         Compare compare,
-                                         const bool find_minimum,
-                                         command_queue &queue)
+        InputIterator last,
+        Compare compare,
+        const bool find_minimum,
+        command_queue &queue)
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
-    typedef typename std::iterator_traits<InputIterator>::difference_type difference_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::difference_type difference_type;
 
-    const context &context = queue.get_context();
+	const context &context = queue.get_context();
 
-    meta_kernel k("serial_find_extrema");
+	meta_kernel k("serial_find_extrema");
 
-    k <<
-        k.decl<value_type>("value") << " = " << first[k.expr<uint_>("0")] << ";\n" <<
-        k.decl<uint_>("value_index") << " = 0;\n" <<
-        "for(uint i = 1; i < size; i++){\n" <<
-        "  " << k.decl<value_type>("candidate") << "="
-             << first[k.expr<uint_>("i")] << ";\n" <<
+	k <<
+	  k.decl<value_type>("value") << " = " << first[k.expr<uint_>("0")] << ";\n" <<
+	  k.decl<uint_>("value_index") << " = 0;\n" <<
+	  "for(uint i = 1; i < size; i++){\n" <<
+	  "  " << k.decl<value_type>("candidate") << "="
+	  << first[k.expr<uint_>("i")] << ";\n" <<
 
-        "#ifndef BOOST_COMPUTE_FIND_MAXIMUM\n" <<
-        "  if(" << compare(k.var<value_type>("candidate"),
-                           k.var<value_type>("value")) << "){\n" <<
-        "#else\n" <<
-        "  if(" << compare(k.var<value_type>("value"),
-                           k.var<value_type>("candidate")) << "){\n" <<
-        "#endif\n" <<
+	  "#ifndef BOOST_COMPUTE_FIND_MAXIMUM\n" <<
+	  "  if(" << compare(k.var<value_type>("candidate"),
+	                     k.var<value_type>("value")) << "){\n" <<
+	  "#else\n" <<
+	  "  if(" << compare(k.var<value_type>("value"),
+	                     k.var<value_type>("candidate")) << "){\n" <<
+	  "#endif\n" <<
 
-        "    value = candidate;\n" <<
-        "    value_index = i;\n" <<
-        "  }\n" <<
-        "}\n" <<
-        "*index = value_index;\n";
+	  "    value = candidate;\n" <<
+	  "    value_index = i;\n" <<
+	  "  }\n" <<
+	  "}\n" <<
+	  "*index = value_index;\n";
 
-    size_t index_arg_index = k.add_arg<uint_ *>(memory_object::global_memory, "index");
-    size_t size_arg_index = k.add_arg<uint_>("size");
+	size_t index_arg_index = k.add_arg<uint_ *>(memory_object::global_memory, "index");
+	size_t size_arg_index = k.add_arg<uint_>("size");
 
-    std::string options;
-    if(!find_minimum){
-        options = "-DBOOST_COMPUTE_FIND_MAXIMUM";
-    }
-    kernel kernel = k.compile(context, options);
+	std::string options;
+	if(!find_minimum)
+	{
+		options = "-DBOOST_COMPUTE_FIND_MAXIMUM";
+	}
+	kernel kernel = k.compile(context, options);
 
-    // setup index buffer
-    scalar<uint_> index(context);
-    kernel.set_arg(index_arg_index, index.get_buffer());
+	// setup index buffer
+	scalar<uint_> index(context);
+	kernel.set_arg(index_arg_index, index.get_buffer());
 
-    // setup count
-    size_t count = iterator_range_size(first, last);
-    kernel.set_arg(size_arg_index, static_cast<uint_>(count));
+	// setup count
+	size_t count = iterator_range_size(first, last);
+	kernel.set_arg(size_arg_index, static_cast<uint_>(count));
 
-    // run kernel
-    queue.enqueue_task(kernel);
+	// run kernel
+	queue.enqueue_task(kernel);
 
-    // read index and return iterator
-    return first + static_cast<difference_type>(index.read(queue));
+	// read index and return iterator
+	return first + static_cast<difference_type>(index.read(queue));
 }
 
 } // end detail namespace

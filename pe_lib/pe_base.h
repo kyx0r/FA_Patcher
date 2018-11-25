@@ -160,7 +160,7 @@ public: //PE HEADER
 	void set_characteristics_flags(uint16_t flags);
 	//Returns true if PE characteristics flag set
 	bool check_characteristics_flag(uint16_t flag) const;
-	
+
 	//Returns DLL Characteristics
 	uint16_t get_dll_characteristics() const;
 	//Sets DLL Characteristics
@@ -229,12 +229,12 @@ public: //PE HEADER
 	uint32_t get_checksum() const;
 	//Sets checksum of PE file
 	void set_checksum(uint32_t checksum);
-	
+
 	//Returns timestamp of PE file from header
 	uint32_t get_time_date_stamp() const;
 	//Sets timestamp of PE file
 	void set_time_date_stamp(uint32_t timestamp);
-	
+
 	//Returns Machine field value of PE file from header
 	uint16_t get_machine() const;
 	//Sets Machine field value of PE file
@@ -243,26 +243,26 @@ public: //PE HEADER
 	//Returns data from the beginning of image
 	//Size = SizeOfHeaders
 	const std::string& get_full_headers_data() const;
-	
+
 	typedef std::multimap<uint32_t, std::string> debug_data_list;
 	//Returns raw list of debug data
 	const debug_data_list& get_raw_debug_data_list() const;
-	
+
 	//Reads and checks DOS header
 	static void read_dos_header(std::istream& file, pe_win::image_dos_header& header);
-	
+
 	//Returns sizeof() nt headers
 	uint32_t get_sizeof_nt_header() const;
 	//Returns sizeof() optional headers
 	uint32_t get_sizeof_opt_headers() const;
 	//Returns raw nt headers data pointer
 	const char* get_nt_headers_ptr() const;
-	
+
 	//Sets size of headers (to NT headers)
 	void set_size_of_headers(uint32_t size);
 	//Sets size of optional headers (to NT headers)
 	void set_size_of_optional_header(uint16_t size);
-	
+
 	//Sets base of code
 	void set_base_of_code(uint32_t base);
 	//Returns base of code
@@ -345,7 +345,7 @@ public: //IMAGE SECTIONS
 	//If include_headers = true, data from the beginning of PE file to SizeOfHeaders will be searched, too
 	uint32_t section_data_length_from_va(uint32_t va, uint32_t va_inside, section_data_type datatype = section_data_raw, bool include_headers = false) const;
 	uint32_t section_data_length_from_va(uint64_t va, uint64_t va_inside, section_data_type datatype = section_data_raw, bool include_headers = false) const;
-	
+
 	//If include_headers = true, data from the beginning of PE file to SizeOfHeaders will be searched, too
 	//Returns corresponding section data pointer from RVA inside section
 	char* section_data_from_rva(uint32_t rva, bool include_headers = false);
@@ -471,7 +471,7 @@ public: //IMAGE
 
 	//Realigns file (changes file alignment)
 	void realign_file(uint32_t new_file_alignment);
-	
+
 	//Helper function to recalculate RAW and virtual section sizes and strip it, if necessary
 	//auto_strip = strip section, if necessary
 	void recalculate_section_sizes(section& s, bool auto_strip);

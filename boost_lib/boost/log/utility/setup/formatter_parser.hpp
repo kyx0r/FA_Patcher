@@ -35,7 +35,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -45,38 +46,38 @@ BOOST_LOG_OPEN_NAMESPACE
 template< typename CharT >
 struct formatter_factory
 {
-    //! Character type
-    typedef CharT char_type;
-    //! String type
-    typedef std::basic_string< char_type > string_type;
-    //! The formatter function object
-    typedef basic_formatter< char_type > formatter_type;
-    /*!
-     * Type of the map of formatter factory arguments [argument name -> argument value].
-     * This type of maps will be passed to formatter factories on attempt to create a formatter.
-     */
-    typedef std::map< string_type, string_type > args_map;
+	//! Character type
+	typedef CharT char_type;
+	//! String type
+	typedef std::basic_string< char_type > string_type;
+	//! The formatter function object
+	typedef basic_formatter< char_type > formatter_type;
+	/*!
+	 * Type of the map of formatter factory arguments [argument name -> argument value].
+	 * This type of maps will be passed to formatter factories on attempt to create a formatter.
+	 */
+	typedef std::map< string_type, string_type > args_map;
 
-    /*!
-     * Default constructor
-     */
-    BOOST_DEFAULTED_FUNCTION(formatter_factory(), {})
+	/*!
+	 * Default constructor
+	 */
+	BOOST_DEFAULTED_FUNCTION(formatter_factory(), {})
 
-    /*!
-     * Virtual destructor
-     */
-    virtual ~formatter_factory() {}
+	/*!
+	 * Virtual destructor
+	 */
+	virtual ~formatter_factory() {}
 
-    /*!
-     * The function creates a formatter for the specified attribute.
-     *
-     * \param name Attribute name
-     * \param args Formatter arguments
-     */
-    virtual formatter_type create_formatter(attribute_name const& name, args_map const& args) = 0;
+	/*!
+	 * The function creates a formatter for the specified attribute.
+	 *
+	 * \param name Attribute name
+	 * \param args Formatter arguments
+	 */
+	virtual formatter_type create_formatter(attribute_name const& name, args_map const& args) = 0;
 
-    BOOST_DELETED_FUNCTION(formatter_factory(formatter_factory const&))
-    BOOST_DELETED_FUNCTION(formatter_factory& operator= (formatter_factory const&))
+	BOOST_DELETED_FUNCTION(formatter_factory(formatter_factory const&))
+	BOOST_DELETED_FUNCTION(formatter_factory& operator= (formatter_factory const&))
 };
 
 /*!
@@ -85,28 +86,28 @@ struct formatter_factory
  */
 template< typename CharT, typename AttributeValueT >
 class basic_formatter_factory :
-    public formatter_factory< CharT >
+	public formatter_factory< CharT >
 {
 private:
-    typedef formatter_factory< CharT > base_type;
+	typedef formatter_factory< CharT > base_type;
 
 public:
-    //! Attribute value type
-    typedef AttributeValueT value_type;
-    //  Type imports from the base class
-    typedef typename base_type::formatter_type formatter_type;
-    typedef typename base_type::args_map args_map;
+	//! Attribute value type
+	typedef AttributeValueT value_type;
+	//  Type imports from the base class
+	typedef typename base_type::formatter_type formatter_type;
+	typedef typename base_type::args_map args_map;
 
-    /*!
-     * The function creates a formatter for the specified attribute.
-     *
-     * \param name Attribute name
-     * \param args Formatter arguments
-     */
-    formatter_type create_formatter(attribute_name const& name, args_map const& args)
-    {
-        return formatter_type(expressions::stream << expressions::attr< value_type >(name));
-    }
+	/*!
+	 * The function creates a formatter for the specified attribute.
+	 *
+	 * \param name Attribute name
+	 * \param args Formatter arguments
+	 */
+	formatter_type create_formatter(attribute_name const& name, args_map const& args)
+	{
+		return formatter_type(expressions::stream << expressions::attr< value_type >(name));
+	}
 };
 
 /*!
@@ -137,11 +138,11 @@ BOOST_LOG_SETUP_API void register_formatter_factory(
  */
 template< typename FactoryT >
 inline typename boost::enable_if_c<
-    is_base_and_derived< formatter_factory< typename FactoryT::char_type >, FactoryT >::value
+is_base_and_derived< formatter_factory< typename FactoryT::char_type >, FactoryT >::value
 >::type register_formatter_factory(attribute_name const& attr_name, shared_ptr< FactoryT > const& factory)
 {
-    typedef formatter_factory< typename FactoryT::char_type > factory_base;
-    register_formatter_factory(attr_name, boost::static_pointer_cast< factory_base >(factory));
+	typedef formatter_factory< typename FactoryT::char_type > factory_base;
+	register_formatter_factory(attr_name, boost::static_pointer_cast< factory_base >(factory));
 }
 
 /*!
@@ -159,9 +160,9 @@ inline typename boost::enable_if_c<
 template< typename AttributeValueT, typename CharT >
 inline void register_simple_formatter_factory(attribute_name const& attr_name)
 {
-    shared_ptr< formatter_factory< CharT > > factory =
-        boost::make_shared< basic_formatter_factory< CharT, AttributeValueT > >();
-    register_formatter_factory(attr_name, factory);
+	shared_ptr< formatter_factory< CharT > > factory =
+	    boost::make_shared< basic_formatter_factory< CharT, AttributeValueT > >();
+	register_formatter_factory(attr_name, factory);
 }
 
 /*!
@@ -188,8 +189,8 @@ BOOST_LOG_SETUP_API basic_formatter< CharT > parse_formatter(const CharT* begin,
 template< typename CharT, typename TraitsT, typename AllocatorT >
 inline basic_formatter< CharT > parse_formatter(std::basic_string< CharT, TraitsT, AllocatorT > const& str)
 {
-    const CharT* p = str.c_str();
-    return parse_formatter(p, p + str.size());
+	const CharT* p = str.c_str();
+	return parse_formatter(p, p + str.size());
 }
 
 /*!
@@ -204,7 +205,7 @@ inline basic_formatter< CharT > parse_formatter(std::basic_string< CharT, Traits
 template< typename CharT >
 inline basic_formatter< CharT > parse_formatter(const CharT* str)
 {
-    return parse_formatter(str, str + std::char_traits< CharT >::length(str));
+	return parse_formatter(str, str + std::char_traits< CharT >::length(str));
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

@@ -13,138 +13,141 @@
 #include <boost/beast/core/detail/config.hpp>
 #include <boost/beast/core/error.hpp>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /// Error codes returned from HTTP algorithms and operations.
 enum class error
 {
-    /** The end of the stream was reached.
+	/** The end of the stream was reached.
 
-        This error is returned when attempting to read HTTP data,
-        and the stream returns the error `boost::asio::error::eof`
-        before any octets corresponding to a new HTTP message have
-        been received.
-    */
-    end_of_stream = 1,
+	    This error is returned when attempting to read HTTP data,
+	    and the stream returns the error `boost::asio::error::eof`
+	    before any octets corresponding to a new HTTP message have
+	    been received.
+	*/
+	end_of_stream = 1,
 
-    /** The incoming message is incomplete.
+	/** The incoming message is incomplete.
 
-        This happens when the end of stream is reached during
-        parsing and some octets have been received, but not the
-        entire message.
-    */
-    partial_message,
+	    This happens when the end of stream is reached during
+	    parsing and some octets have been received, but not the
+	    entire message.
+	*/
+	partial_message,
 
-    /** Additional buffers are required.
+	/** Additional buffers are required.
 
-        This error is returned during parsing when additional
-        octets are needed. The caller should append more data
-        to the existing buffer and retry the parse operaetion.
-    */
-    need_more,
+	    This error is returned during parsing when additional
+	    octets are needed. The caller should append more data
+	    to the existing buffer and retry the parse operaetion.
+	*/
+	need_more,
 
-    /** An unexpected body was encountered during parsing.
+	/** An unexpected body was encountered during parsing.
 
-        This error is returned when attempting to parse body
-        octets into a message container which has the
-        @ref empty_body body type.
+	    This error is returned when attempting to parse body
+	    octets into a message container which has the
+	    @ref empty_body body type.
 
-        @see @ref empty_body
-    */
-    unexpected_body,
+	    @see @ref empty_body
+	*/
+	unexpected_body,
 
-    /** Additional buffers are required.
+	/** Additional buffers are required.
 
-        This error is returned under the following conditions:
+	    This error is returned under the following conditions:
 
-        @li During serialization when using @ref buffer_body.
-        The caller should update the body to point to a new
-        buffer or indicate that there are no more octets in
-        the body.
+	    @li During serialization when using @ref buffer_body.
+	    The caller should update the body to point to a new
+	    buffer or indicate that there are no more octets in
+	    the body.
 
-        @li During parsing when using @ref buffer_body.
-        The caller should update the body to point to a new
-        storage area to receive additional body octets.
-    */
-    need_buffer,
+	    @li During parsing when using @ref buffer_body.
+	    The caller should update the body to point to a new
+	    storage area to receive additional body octets.
+	*/
+	need_buffer,
 
-    /** The end of a chunk was reached
-    */
-    end_of_chunk,
+	/** The end of a chunk was reached
+	*/
+	end_of_chunk,
 
-    /** Buffer maximum exceeded.
+	/** Buffer maximum exceeded.
 
-        This error is returned when reading HTTP content
-        into a dynamic buffer, and the operation would
-        exceed the maximum size of the buffer.
-    */
-    buffer_overflow,
+	    This error is returned when reading HTTP content
+	    into a dynamic buffer, and the operation would
+	    exceed the maximum size of the buffer.
+	*/
+	buffer_overflow,
 
-    /** Header limit exceeded.
+	/** Header limit exceeded.
 
-        The parser detected an incoming message header which
-        exceeded a configured limit.
-    */
-    header_limit,
+	    The parser detected an incoming message header which
+	    exceeded a configured limit.
+	*/
+	header_limit,
 
-    /** Body limit exceeded.
+	/** Body limit exceeded.
 
-        The parser detected an incoming message body which
-        exceeded a configured limit.
-    */
-    body_limit,
+	    The parser detected an incoming message body which
+	    exceeded a configured limit.
+	*/
+	body_limit,
 
-    /** A memory allocation failed.
+	/** A memory allocation failed.
 
-        When basic_fields throws std::bad_alloc, it is
-        converted into this error by @ref parser.
-    */
-    bad_alloc,
+	    When basic_fields throws std::bad_alloc, it is
+	    converted into this error by @ref parser.
+	*/
+	bad_alloc,
 
-    //
-    // (parser errors)
-    //
+	//
+	// (parser errors)
+	//
 
-    /// The line ending was malformed
-    bad_line_ending,
+	/// The line ending was malformed
+	bad_line_ending,
 
-    /// The method is invalid.
-    bad_method,
+	/// The method is invalid.
+	bad_method,
 
-    /// The request-target is invalid.
-    bad_target,
+	/// The request-target is invalid.
+	bad_target,
 
-    /// The HTTP-version is invalid.
-    bad_version,
+	/// The HTTP-version is invalid.
+	bad_version,
 
-    /// The status-code is invalid.
-    bad_status,
+	/// The status-code is invalid.
+	bad_status,
 
-    /// The reason-phrase is invalid.
-    bad_reason,
+	/// The reason-phrase is invalid.
+	bad_reason,
 
-    /// The field name is invalid.
-    bad_field,
+	/// The field name is invalid.
+	bad_field,
 
-    /// The field value is invalid.
-    bad_value,
+	/// The field value is invalid.
+	bad_value,
 
-    /// The Content-Length is invalid.
-    bad_content_length,
+	/// The Content-Length is invalid.
+	bad_content_length,
 
-    /// The Transfer-Encoding is invalid.
-    bad_transfer_encoding,
+	/// The Transfer-Encoding is invalid.
+	bad_transfer_encoding,
 
-    /// The chunk syntax is invalid.
-    bad_chunk,
+	/// The chunk syntax is invalid.
+	bad_chunk,
 
-    /// The chunk extension is invalid.
-    bad_chunk_extension,
+	/// The chunk extension is invalid.
+	bad_chunk_extension,
 
-    /// An obs-fold exceeded an internal limit.
-    bad_obs_fold
+	/// An obs-fold exceeded an internal limit.
+	bad_obs_fold
 };
 
 } // http

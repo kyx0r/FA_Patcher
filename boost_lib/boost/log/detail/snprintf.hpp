@@ -29,11 +29,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 #if defined(_MSC_VER) || (defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR))
 
@@ -41,45 +43,45 @@ namespace aux {
 // MinGW32, at least the older versions up until gcc 4.7, also provide the non-conforming interface.
 inline int vsnprintf(char* buf, std::size_t size, const char* format, std::va_list args)
 {
-    int n = _vsnprintf(buf, size, format, args);
-    if (static_cast< unsigned int >(n) >= size)
-    {
-        n = static_cast< int >(size);
-        buf[size - 1] = '\0';
-    }
-    return n;
+	int n = _vsnprintf(buf, size, format, args);
+	if (static_cast< unsigned int >(n) >= size)
+	{
+		n = static_cast< int >(size);
+		buf[size - 1] = '\0';
+	}
+	return n;
 }
 
 #   ifdef BOOST_LOG_USE_WCHAR_T
 inline int vswprintf(wchar_t* buf, std::size_t size, const wchar_t* format, std::va_list args)
 {
-    int n = _vsnwprintf(buf, size, format, args);
-    if (static_cast< unsigned int >(n) >= size)
-    {
-        n = static_cast< int >(size);
-        buf[size - 1] = L'\0';
-    }
-    return n;
+	int n = _vsnwprintf(buf, size, format, args);
+	if (static_cast< unsigned int >(n) >= size)
+	{
+		n = static_cast< int >(size);
+		buf[size - 1] = L'\0';
+	}
+	return n;
 }
 #   endif // BOOST_LOG_USE_WCHAR_T
 
 inline int snprintf(char* buf, std::size_t size, const char* format, ...)
 {
-    std::va_list args;
-    va_start(args, format);
-    int n = vsnprintf(buf, size, format, args);
-    va_end(args);
-    return n;
+	std::va_list args;
+	va_start(args, format);
+	int n = vsnprintf(buf, size, format, args);
+	va_end(args);
+	return n;
 }
 
 #   ifdef BOOST_LOG_USE_WCHAR_T
 inline int swprintf(wchar_t* buf, std::size_t size, const wchar_t* format, ...)
 {
-    std::va_list args;
-    va_start(args, format);
-    int n = vswprintf(buf, size, format, args);
-    va_end(args);
-    return n;
+	std::va_list args;
+	va_start(args, format);
+	int n = vswprintf(buf, size, format, args);
+	va_end(args);
+	return n;
 }
 #   endif // BOOST_LOG_USE_WCHAR_T
 

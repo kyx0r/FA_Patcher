@@ -1,6 +1,9 @@
 
 #include "hooks.hpp"
 
+namespace binPatcher
+{
+
 Hooks::Hooks(bool hook_format, string filename)
 {
 	if(hook_format)
@@ -23,7 +26,7 @@ Hooks::Hooks(bool hook_format, string filename)
 	}
 }
 
-void Hooks::align_hook(int align_sizeL ,string filename, string command)
+void Hooks::align_hook(int align_sizeL,string filename, string command)
 {
 	filename = rem_extension(filename);
 	filename.append(".o");
@@ -35,23 +38,23 @@ void Hooks::apply_Hook(string current_file, int offset, FileIO& f_out)
 	FileIO f_in(current_file, ios::in | ios::binary | ios::ate);
 	vector<char> hook_F = f_in.fReadBinaryFile();
 	Bytes_to_write = f_in.get_bytes();
-	
-	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory. 
+
+	while(Bytes_to_write == false) //in case the hook is bigger then supposable allocate more memory.
 	{
 		align_sizeL = f_in.get_bytes(Bytes_to_write) * 2;
 		align_hook(align_sizeL, current_file, make+" hook_gpp_link PRIME_NAME=");
-		Bytes_to_write = f_in.get_bytes(Bytes_to_write);	
+		Bytes_to_write = f_in.get_bytes(Bytes_to_write);
 	}
-	
-	#ifdef DEBUG
+
+#ifdef DEBUG
 	cout<<fg::magenta<<"APPLY HOOK : "<<current_file <<"    Number of instructions: "<<Bytes_to_write<<fg::reset<<endl;
-	#endif
-	
+#endif
+
 	f_out.fWriteBinaryFile(hook_F, offset, Bytes_to_write);
-	
-	#ifdef DEBUG
+
+#ifdef DEBUG
 	cout<<"\n";
-	#endif
+#endif
 }
 
 void Hooks::parse_build(int offset, string alone_Filename)
@@ -62,10 +65,10 @@ void Hooks::parse_build(int offset, string alone_Filename)
 	FileIO f_out(filename_out, ios::out |ios::in |ios::binary);
 	string current_file;
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
-    {
-		if (boost::filesystem::is_regular_file(itr->path())) 
+	{
+		if (boost::filesystem::is_regular_file(itr->path()))
 		{
-            current_file = itr->path().string();
+			current_file = itr->path().string();
 			if(boost::filesystem::extension(current_file).compare(".o")==0)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
@@ -77,15 +80,15 @@ void Hooks::parse_build(int offset, string alone_Filename)
 						debug_pause();
 					}
 					break;
-				}	
+				}
 			}
 		}
 	}
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
-    {
-		if (boost::filesystem::is_regular_file(itr->path())) 
+	{
+		if (boost::filesystem::is_regular_file(itr->path()))
 		{
-            current_file = itr->path().string();
+			current_file = itr->path().string();
 			if(boost::filesystem::extension(current_file).compare(".bin")==0)
 			{
 				if(current_file.find(alone_Filename)!=string::npos)
@@ -100,11 +103,11 @@ void Hooks::parse_build(int offset, string alone_Filename)
 
 void Hooks::build_O(string current_file, string Final_Filename, string alone_Filename)
 {
-	#ifdef DEBUG
+#ifdef DEBUG
 	cout<<fg::cyan<<"BUILDING .O FILES --------------------------------->"<<fg::reset<<endl;
-	cout<<"\n";	
-	#endif
-	
+	cout<<"\n";
+#endif
+
 	string command = make+" _hooks OBJ_NAME_=";
 	command.append(Final_Filename);
 	alone_Filename.insert(0, " OBJS=");
@@ -115,21 +118,21 @@ void Hooks::build_O(string current_file, string Final_Filename, string alone_Fil
 		cout<<"In function "<<__func__<<endl;
 		debug_pause();
 	}
-	
-	#ifdef DEBUG
-	cout<<"\n";	
-	#endif
+
+#ifdef DEBUG
+	cout<<"\n";
+#endif
 }
 
 int Hooks::compile_Hook(string current_file, string Final_Filename, string alone_Filename)
 {
 	FileIO hook(current_file);
 	int offset = parse_offset(hook, "ROffset = ");
-	
-	#ifdef DEBUG
+
+#ifdef DEBUG
 	cout<<hex<<"ROffset = "<<offset<<dec<<endl;
-	#endif
-	
+#endif
+
 	if(fast_Compile_Hooks)
 	{
 		if(system(&_fast_hooks[0]))
@@ -141,7 +144,7 @@ int Hooks::compile_Hook(string current_file, string Final_Filename, string alone
 		fast_Compile_Hooks = false;
 	}
 	else if (indiv_Compile_Hooks)
-	{	
+	{
 		build_O(current_file, Final_Filename, alone_Filename);
 	}
 	parse_build(offset, alone_Filename);
@@ -152,18 +155,18 @@ void Hooks::parse_hooks()
 {
 	boost::filesystem::path p("\hooks");
 	boost::filesystem::directory_iterator end_itr;
-	
-	#ifdef DEBUG
+
+#ifdef DEBUG
 	cout<<"\n";
 	cout<<fg::cyan<<"Available hooks : "<<fg::reset<<endl;
 	cout<<"\n";
-	#endif
-	
+#endif
+
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
-    {
-		if (boost::filesystem::is_regular_file(itr->path())) 
+	{
+		if (boost::filesystem::is_regular_file(itr->path()))
 		{
-            string current_file = itr->path().string();
+			string current_file = itr->path().string();
 			size_t pos = current_file.find("hook_");
 			if (pos!=string::npos)
 			{
@@ -171,14 +174,16 @@ void Hooks::parse_hooks()
 				string Final_Filename;
 				Final_Filename.append(end);
 				string alone_Filename = Final_Filename;
-				#ifdef DEBUG
+#ifdef DEBUG
 				cout<<style::bold<<Final_Filename<<style::reset<<endl;
-				#endif
+#endif
 				Final_Filename = rem_extension(Final_Filename);
 				Final_Filename.append(".o");
 				Final_Filename.insert(0,"../build/");
 				compile_Hook(current_file,Final_Filename,alone_Filename);
 			}
-        }
-	}	
+		}
+	}
 }
+
+} //namespace binPatcher

@@ -16,8 +16,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/copy_if.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Copies all of the elements in the range [\p first, \p last) for which
 /// \p predicate returns \c true to the range beginning at \p first_true
@@ -39,24 +41,24 @@ partition_copy(InputIterator first,
                UnaryPredicate predicate,
                command_queue &queue = system::default_queue())
 {
-    // copy true values
-    OutputIterator1 last_true =
-        ::boost::compute::copy_if(first,
-                                  last,
-                                  first_true,
-                                  predicate,
-                                  queue);
+	// copy true values
+	OutputIterator1 last_true =
+	    ::boost::compute::copy_if(first,
+	                              last,
+	                              first_true,
+	                              predicate,
+	                              queue);
 
-    // copy false values
-    OutputIterator2 last_false =
-        ::boost::compute::copy_if(first,
-                                  last,
-                                  first_false,
-                                  not1(predicate),
-                                  queue);
+	// copy false values
+	OutputIterator2 last_false =
+	    ::boost::compute::copy_if(first,
+	                              last,
+	                              first_false,
+	                              not1(predicate),
+	                              queue);
 
-    // return iterators to the end of the true and the false ranges
-    return std::make_pair(last_true, last_false);
+	// return iterators to the end of the true and the false ranges
+	return std::make_pair(last_true, last_false);
 }
 
 } // end compute namespace

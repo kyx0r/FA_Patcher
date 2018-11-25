@@ -11,14 +11,20 @@
 #pragma once
 #endif
 
-namespace boost { namespace spirit { namespace qi
+namespace boost
 {
-    enum debug_handler_state
-    {
-        pre_parse
-      , successful_parse
-      , failed_parse
-    };
-}}}
+namespace spirit
+{
+namespace qi
+{
+enum debug_handler_state
+{
+	pre_parse
+	, successful_parse
+	, failed_parse
+};
+}
+}
+}
 
 #endif

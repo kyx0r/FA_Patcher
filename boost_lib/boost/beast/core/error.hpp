@@ -14,8 +14,10 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /// The type of error code used by the library
 using error_code = boost::system::error_code;
@@ -47,7 +49,7 @@ using error_condition = boost::system::error_condition;
 
 /// The set of constants used for cross-platform error codes
 #if BOOST_BEAST_DOXYGEN
-enum errc{};
+enum errc {};
 #else
 namespace errc = boost::system::errc;
 #endif

@@ -21,13 +21,16 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/type_traits/is_device_iterator.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 // forward declaration for constant_iterator<T>
 template<class T> class constant_iterator;
 
-namespace detail {
+namespace detail
+{
 
 // helper class which defines the iterator_facade super-class
 // type for constant_iterator<T>
@@ -35,11 +38,11 @@ template<class T>
 class constant_iterator_base
 {
 public:
-    typedef ::boost::iterator_facade<
-        ::boost::compute::constant_iterator<T>,
-        T,
-        ::std::random_access_iterator_tag
-    > type;
+	typedef ::boost::iterator_facade<
+	::boost::compute::constant_iterator<T>,
+	T,
+	::std::random_access_iterator_tag
+	> type;
 };
 
 } // end detail namespace
@@ -60,92 +63,93 @@ template<class T>
 class constant_iterator : public detail::constant_iterator_base<T>::type
 {
 public:
-    typedef typename detail::constant_iterator_base<T>::type super_type;
-    typedef typename super_type::reference reference;
-    typedef typename super_type::difference_type difference_type;
+	typedef typename detail::constant_iterator_base<T>::type super_type;
+	typedef typename super_type::reference reference;
+	typedef typename super_type::difference_type difference_type;
 
-    constant_iterator(const T &value, size_t index = 0)
-        : m_value(value),
-          m_index(index)
-    {
-    }
+	constant_iterator(const T &value, size_t index = 0)
+		: m_value(value),
+		  m_index(index)
+	{
+	}
 
-    constant_iterator(const constant_iterator<T> &other)
-        : m_value(other.m_value),
-          m_index(other.m_index)
-    {
-    }
+	constant_iterator(const constant_iterator<T> &other)
+		: m_value(other.m_value),
+		  m_index(other.m_index)
+	{
+	}
 
-    constant_iterator<T>& operator=(const constant_iterator<T> &other)
-    {
-        if(this != &other){
-            m_value = other.m_value;
-            m_index = other.m_index;
-        }
+	constant_iterator<T>& operator=(const constant_iterator<T> &other)
+	{
+		if(this != &other)
+		{
+			m_value = other.m_value;
+			m_index = other.m_index;
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~constant_iterator()
-    {
-    }
+	~constant_iterator()
+	{
+	}
 
-    size_t get_index() const
-    {
-        return m_index;
-    }
+	size_t get_index() const
+	{
+		return m_index;
+	}
 
-    /// \internal_
-    template<class Expr>
-    detail::meta_kernel_literal<T> operator[](const Expr &expr) const
-    {
-        (void) expr;
+	/// \internal_
+	template<class Expr>
+	detail::meta_kernel_literal<T> operator[](const Expr &expr) const
+	{
+		(void) expr;
 
-        return detail::meta_kernel::make_lit<T>(m_value);
-    }
-
-private:
-    friend class ::boost::iterator_core_access;
-
-    /// \internal_
-    reference dereference() const
-    {
-        return m_value;
-    }
-
-    /// \internal_
-    bool equal(const constant_iterator<T> &other) const
-    {
-        return m_value == other.m_value && m_index == other.m_index;
-    }
-
-    /// \internal_
-    void increment()
-    {
-        m_index++;
-    }
-
-    /// \internal_
-    void decrement()
-    {
-        m_index--;
-    }
-
-    /// \internal_
-    void advance(difference_type n)
-    {
-        m_index = static_cast<size_t>(static_cast<difference_type>(m_index) + n);
-    }
-
-    /// \internal_
-    difference_type distance_to(const constant_iterator<T> &other) const
-    {
-        return static_cast<difference_type>(other.m_index - m_index);
-    }
+		return detail::meta_kernel::make_lit<T>(m_value);
+	}
 
 private:
-    T m_value;
-    size_t m_index;
+	friend class ::boost::iterator_core_access;
+
+	/// \internal_
+	reference dereference() const
+	{
+		return m_value;
+	}
+
+	/// \internal_
+	bool equal(const constant_iterator<T> &other) const
+	{
+		return m_value == other.m_value && m_index == other.m_index;
+	}
+
+	/// \internal_
+	void increment()
+	{
+		m_index++;
+	}
+
+	/// \internal_
+	void decrement()
+	{
+		m_index--;
+	}
+
+	/// \internal_
+	void advance(difference_type n)
+	{
+		m_index = static_cast<size_t>(static_cast<difference_type>(m_index) + n);
+	}
+
+	/// \internal_
+	difference_type distance_to(const constant_iterator<T> &other) const
+	{
+		return static_cast<difference_type>(other.m_index - m_index);
+	}
+
+private:
+	T m_value;
+	size_t m_index;
 };
 
 /// Returns a new constant_iterator with \p value at \p index.
@@ -158,7 +162,7 @@ template<class T>
 inline constant_iterator<T>
 make_constant_iterator(const T &value, size_t index = 0)
 {
-    return constant_iterator<T>(value, index);
+	return constant_iterator<T>(value, index);
 }
 
 /// \internal_ (is_device_iterator specialization for constant_iterator)

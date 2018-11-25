@@ -23,22 +23,23 @@
 #   pragma once
 #endif
 
-namespace boost 
+namespace boost
 {
-    namespace detail // '0', '-', '+', 'e', 'E' and '.' constants
-    {
-        template < typename Char >
-        struct lcast_char_constants {
-            // We check in tests assumption that static casted character is
-            // equal to correctly written C++ literal: U'0' == static_cast<char32_t>('0')
-            BOOST_STATIC_CONSTANT(Char, zero  = static_cast<Char>('0'));
-            BOOST_STATIC_CONSTANT(Char, minus = static_cast<Char>('-'));
-            BOOST_STATIC_CONSTANT(Char, plus = static_cast<Char>('+'));
-            BOOST_STATIC_CONSTANT(Char, lowercase_e = static_cast<Char>('e'));
-            BOOST_STATIC_CONSTANT(Char, capital_e = static_cast<Char>('E'));
-            BOOST_STATIC_CONSTANT(Char, c_decimal_separator = static_cast<Char>('.'));
-        };
-    }
+namespace detail // '0', '-', '+', 'e', 'E' and '.' constants
+{
+template < typename Char >
+struct lcast_char_constants
+{
+	// We check in tests assumption that static casted character is
+	// equal to correctly written C++ literal: U'0' == static_cast<char32_t>('0')
+	BOOST_STATIC_CONSTANT(Char, zero  = static_cast<Char>('0'));
+	BOOST_STATIC_CONSTANT(Char, minus = static_cast<Char>('-'));
+	BOOST_STATIC_CONSTANT(Char, plus = static_cast<Char>('+'));
+	BOOST_STATIC_CONSTANT(Char, lowercase_e = static_cast<Char>('e'));
+	BOOST_STATIC_CONSTANT(Char, capital_e = static_cast<Char>('E'));
+	BOOST_STATIC_CONSTANT(Char, c_decimal_separator = static_cast<Char>('.'));
+};
+}
 } // namespace boost
 
 

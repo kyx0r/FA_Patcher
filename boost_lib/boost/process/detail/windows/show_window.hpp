@@ -16,30 +16,40 @@
 #include <boost/process/detail/handler_base.hpp>
 
 
-namespace boost { namespace process { namespace detail { namespace windows {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace windows
+{
 
 template<::boost::winapi::WORD_ Flags>
 struct show_window : ::boost::process::detail::handler_base
 {
-    template <class WindowsExecutor>
-    void on_setup(WindowsExecutor &e) const
-    {
-        e.startup_info.dwFlags |= ::boost::winapi::STARTF_USESHOWWINDOW_;
-        e.startup_info.wShowWindow |= Flags;
-    }
+	template <class WindowsExecutor>
+	void on_setup(WindowsExecutor &e) const
+	{
+		e.startup_info.dwFlags |= ::boost::winapi::STARTF_USESHOWWINDOW_;
+		e.startup_info.wShowWindow |= Flags;
+	}
 };
 
 struct create_no_window_ : public ::boost::process::detail::handler_base
 {
-    template <class Executor>
-    void on_setup(Executor &exec) const
-    {
-        exec.creation_flags |= ::boost::detail::winapi::CREATE_NO_WINDOW_;
-    }
+	template <class Executor>
+	void on_setup(Executor &exec) const
+	{
+		exec.creation_flags |= ::boost::detail::winapi::CREATE_NO_WINDOW_;
+	}
 };
 
 
-}}}}
+}
+}
+}
+}
 
 #endif
 

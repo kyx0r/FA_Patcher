@@ -16,26 +16,29 @@
 #include <boost/fusion/support/as_const.hpp>
 #include <boost/fusion/adapted/struct/detail/extension.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace detail
-    {
-        template <typename T, typename Dummy>
-        struct get_identity
-          : remove_const<typename remove_reference<T>::type>
-        {};
-    }
+namespace fusion
+{
+namespace detail
+{
+template <typename T, typename Dummy>
+struct get_identity
+	: remove_const<typename remove_reference<T>::type>
+{};
+}
 
-    namespace extension
-    {
-        // Overload as_const() to unwrap adt_attribute_proxy.
-        template <typename T, int N, bool Const>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        typename adt_attribute_proxy<T, N, Const>::type as_const(const adt_attribute_proxy<T, N, Const>& proxy)
-        {
-            return proxy.get();
-        }
-    }
-}}
+namespace extension
+{
+// Overload as_const() to unwrap adt_attribute_proxy.
+template <typename T, int N, bool Const>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+typename adt_attribute_proxy<T, N, Const>::type as_const(const adt_attribute_proxy<T, N, Const>& proxy)
+{
+	return proxy.get();
+}
+}
+}
+}
 
 #endif

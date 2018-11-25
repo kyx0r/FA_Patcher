@@ -10,14 +10,21 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/fusion/adapted/boost_tuple/tag_of.hpp>
 
-namespace boost { namespace fusion { namespace detail {
+namespace boost
+{
+namespace fusion
+{
+namespace detail
+{
 
-  template <typename Tag>
-  struct clear;
+template <typename Tag>
+struct clear;
 
-  template <>
-  struct clear<boost_tuple_tag> : mpl::identity<boost::tuple<> > {};
+template <>
+struct clear<boost_tuple_tag> : mpl::identity<boost::tuple<> > {};
 
-}}}
+}
+}
+}
 
 #endif

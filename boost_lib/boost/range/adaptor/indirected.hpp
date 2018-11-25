@@ -17,83 +17,83 @@
 
 namespace boost
 {
-    namespace range_detail
-    {
-        template< class R >
-        struct indirected_range :
-            public boost::iterator_range<
-                        boost::indirect_iterator<
-                            BOOST_DEDUCED_TYPENAME range_iterator<R>::type
-                        >
-                    >
-        {
-        private:
-            typedef boost::iterator_range<
-                        boost::indirect_iterator<
-                            BOOST_DEDUCED_TYPENAME range_iterator<R>::type
-                        >
-                    >
-                base;
+namespace range_detail
+{
+template< class R >
+struct indirected_range :
+	public boost::iterator_range<
+	boost::indirect_iterator<
+	BOOST_DEDUCED_TYPENAME range_iterator<R>::type
+	>
+	>
+{
+private:
+	typedef boost::iterator_range<
+	boost::indirect_iterator<
+	BOOST_DEDUCED_TYPENAME range_iterator<R>::type
+	>
+	>
+	base;
 
-        public:
-            explicit indirected_range( R& r )
-                : base( r )
-            { }
-        };
+public:
+	explicit indirected_range( R& r )
+		: base( r )
+	{ }
+};
 
-        struct indirect_forwarder {};
+struct indirect_forwarder {};
 
-        template< class SinglePassRange >
-        inline indirected_range<SinglePassRange>
-        operator|( SinglePassRange& r, indirect_forwarder )
-        {
-            BOOST_RANGE_CONCEPT_ASSERT((
-                SinglePassRangeConcept<SinglePassRange>));
+template< class SinglePassRange >
+inline indirected_range<SinglePassRange>
+operator|( SinglePassRange& r, indirect_forwarder )
+{
+	BOOST_RANGE_CONCEPT_ASSERT((
+	                               SinglePassRangeConcept<SinglePassRange>));
 
-            return indirected_range<SinglePassRange>( r );
-        }
+	return indirected_range<SinglePassRange>( r );
+}
 
-        template< class SinglePassRange >
-        inline indirected_range<const SinglePassRange>
-        operator|( const SinglePassRange& r, indirect_forwarder )
-        {
-            BOOST_RANGE_CONCEPT_ASSERT((
-                SinglePassRangeConcept<const SinglePassRange>));
+template< class SinglePassRange >
+inline indirected_range<const SinglePassRange>
+operator|( const SinglePassRange& r, indirect_forwarder )
+{
+	BOOST_RANGE_CONCEPT_ASSERT((
+	                               SinglePassRangeConcept<const SinglePassRange>));
 
-            return indirected_range<const SinglePassRange>( r );
-        }
+	return indirected_range<const SinglePassRange>( r );
+}
 
-    } // 'range_detail'
+} // 'range_detail'
 
-    using range_detail::indirected_range;
+using range_detail::indirected_range;
 
-    namespace adaptors
-    {
-        namespace
-        {
-            const range_detail::indirect_forwarder indirected =
-                                            range_detail::indirect_forwarder();
-        }
+namespace adaptors
+{
+namespace
+{
+const range_detail::indirect_forwarder indirected =
+    range_detail::indirect_forwarder();
+}
 
-        template<class SinglePassRange>
-        inline indirected_range<SinglePassRange>
-        indirect(SinglePassRange& rng)
-        {
-            BOOST_RANGE_CONCEPT_ASSERT((
-                SinglePassRangeConcept<SinglePassRange>));
-            return indirected_range<SinglePassRange>(rng);
-        }
+template<class SinglePassRange>
+inline indirected_range<SinglePassRange>
+indirect(SinglePassRange& rng)
+{
+	BOOST_RANGE_CONCEPT_ASSERT((
+	                               SinglePassRangeConcept<SinglePassRange>));
+	return indirected_range<SinglePassRange>(rng);
+}
 
-        template<class SinglePassRange>
-        inline indirected_range<const SinglePassRange>
-        indirect(const SinglePassRange& rng)
-        {
-            BOOST_RANGE_CONCEPT_ASSERT((
-                SinglePassRangeConcept<const SinglePassRange>));
+template<class SinglePassRange>
+inline indirected_range<const SinglePassRange>
+indirect(const SinglePassRange& rng)
+{
+	BOOST_RANGE_CONCEPT_ASSERT((
+	                               SinglePassRangeConcept<const SinglePassRange>));
 
-            return indirected_range<const SinglePassRange>(rng);
-        }
-    } // 'adaptors'
+	return indirected_range<const SinglePassRange>(rng);
+}
+} // 'adaptors'
 
 }
 

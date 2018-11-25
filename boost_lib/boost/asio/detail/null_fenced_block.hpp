@@ -19,25 +19,28 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class null_fenced_block
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  enum half_or_full_t { half, full };
+	enum half_or_full_t { half, full };
 
-  // Constructor.
-  explicit null_fenced_block(half_or_full_t)
-  {
-  }
+	// Constructor.
+	explicit null_fenced_block(half_or_full_t)
+	{
+	}
 
-  // Destructor.
-  ~null_fenced_block()
-  {
-  }
+	// Destructor.
+	~null_fenced_block()
+	{
+	}
 };
 
 } // namespace detail

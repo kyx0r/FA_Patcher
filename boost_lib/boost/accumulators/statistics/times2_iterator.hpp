@@ -17,54 +17,57 @@
 #include <boost/iterator/counting_iterator.hpp>
 #include <boost/iterator/permutation_iterator.hpp>
 
-namespace boost { namespace accumulators
+namespace boost
+{
+namespace accumulators
 {
 
 namespace detail
 {
-    typedef transform_iterator<
+typedef transform_iterator<
 #ifdef BOOST_NO_CXX98_BINDERS
-        decltype(std::bind(std::multiplies<std::size_t>(), 2, std::placeholders::_1))
+decltype(std::bind(std::multiplies<std::size_t>(), 2, std::placeholders::_1))
 #else
-        std::binder1st<std::multiplies<std::size_t> >
+std::binder1st<std::multiplies<std::size_t> >
 #endif
-      , counting_iterator<std::size_t>
-    > times2_iterator;
+, counting_iterator<std::size_t>
+> times2_iterator;
 
-    inline times2_iterator make_times2_iterator(std::size_t i)
-    {
-        return make_transform_iterator(
-            make_counting_iterator(i)
+inline times2_iterator make_times2_iterator(std::size_t i)
+{
+	return make_transform_iterator(
+	           make_counting_iterator(i)
 #ifdef BOOST_NO_CXX98_BINDERS
-          , std::bind(std::multiplies<std::size_t>(), 2, std::placeholders::_1)
+	           , std::bind(std::multiplies<std::size_t>(), 2, std::placeholders::_1)
 #else
-          , std::bind1st(std::multiplies<std::size_t>(), 2)
+	           , std::bind1st(std::multiplies<std::size_t>(), 2)
 #endif
-        );
-    }
+	       );
+}
 
-    ///////////////////////////////////////////////////////////////////////////////
-    // lvalue_index_iterator
-    template<typename Base>
-    struct lvalue_index_iterator
-      : Base
-    {
-        lvalue_index_iterator()
-          : Base()
-        {}
+///////////////////////////////////////////////////////////////////////////////
+// lvalue_index_iterator
+template<typename Base>
+struct lvalue_index_iterator
+	: Base
+{
+	lvalue_index_iterator()
+		: Base()
+	{}
 
-        lvalue_index_iterator(Base base)
-          : Base(base)
-        {
-        }
+	lvalue_index_iterator(Base base)
+		: Base(base)
+	{
+	}
 
-        typename Base::reference operator [](typename Base::difference_type n) const
-        {
-            return *(*this + n);
-        }
-    };
+	typename Base::reference operator [](typename Base::difference_type n) const
+	{
+		return *(*this + n);
+	}
+};
 } // namespace detail
 
-}}
+}
+}
 
 #endif

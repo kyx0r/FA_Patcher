@@ -8,21 +8,26 @@
 
 #include <boost/multiprecision/number.hpp>
 
-namespace boost{
-namespace multiprecision{
-namespace backends{
+namespace boost
+{
+namespace multiprecision
+{
+namespace backends
+{
 
 template <class Backend, int cat>
 struct extract_exponent_type
 {
-   typedef int type;
+	typedef int type;
 };
 template <class Backend>
 struct extract_exponent_type<Backend, number_kind_floating_point>
 {
-   typedef typename Backend::exponent_type type;
+	typedef typename Backend::exponent_type type;
 };
 
-}}} // namespaces
+}
+}
+} // namespaces
 
 #endif

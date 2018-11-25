@@ -27,29 +27,29 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-          BOOST_METAPARSE_LIMIT_ONE_CHAR_EXCEPT_SIZE,
-          int C,
-          1024
-        )
-      >
-      struct one_char_except_c;
+namespace metaparse
+{
+namespace v1
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        BOOST_METAPARSE_LIMIT_ONE_CHAR_EXCEPT_SIZE,
+        int C,
+        1024
+    )
+    >
+struct one_char_except_c;
 
-      #ifdef BOOST_METAPARSE_WRAP
-      #  error BOOST_METAPARSE_WRAP already defined
-      #endif
-      #define BOOST_METAPARSE_WRAP(z, n, unused) \
+#ifdef BOOST_METAPARSE_WRAP
+#  error BOOST_METAPARSE_WRAP already defined
+#endif
+#define BOOST_METAPARSE_WRAP(z, n, unused) \
         boost::mpl::char_<BOOST_PP_CAT(C, n)>
 
-      #ifdef MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE
-      #  error MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE already defined
-      #endif
-      #define MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE(z, n, unused) \
+#ifdef MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE
+#  error MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE already defined
+#endif
+#define MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE(z, n, unused) \
         template <BOOST_PP_ENUM_PARAMS(n, int C)> \
         struct one_char_except_c< \
           BOOST_PP_ENUM_PARAMS(n, C) \
@@ -80,16 +80,16 @@ namespace boost
           > \
         {};
 
-      BOOST_PP_REPEAT(
-        BOOST_METAPARSE_LIMIT_ONE_CHAR_EXCEPT_SIZE,
-        MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE,
-        ~
-      )
+BOOST_PP_REPEAT(
+    BOOST_METAPARSE_LIMIT_ONE_CHAR_EXCEPT_SIZE,
+    MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE,
+    ~
+)
 
-      #undef MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE
-      #undef BOOST_METAPARSE_WRAP
-    }
-  }
+#undef MPLLBIS_METAPARSE_ONE_CHAR_EXCEPT_CASE
+#undef BOOST_METAPARSE_WRAP
+}
+}
 }
 
 #endif

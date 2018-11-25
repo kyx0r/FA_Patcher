@@ -17,17 +17,25 @@
 #include <boost/function_types/config/config.hpp>
 #include <boost/function_types/property_tags.hpp>
 
-namespace boost { namespace function_types { namespace detail {
+namespace boost
+{
+namespace function_types
+{
+namespace detail
+{
 
 template<typename T> struct classifier;
 
-template<std::size_t S> struct char_array { typedef char (&type)[S]; };
+template<std::size_t S> struct char_array
+{
+	typedef char (&type)[S];
+};
 
 template<bits_t Flags, bits_t CCID, std::size_t Arity> struct encode_charr
 {
-  typedef typename char_array<
-    ::boost::function_types::detail::encode_charr_impl<Flags,CCID,Arity>::value 
-  >::type type;
+	typedef typename char_array<
+	::boost::function_types::detail::encode_charr_impl<Flags,CCID,Arity>::value
+	>::type type;
 };
 
 #if defined(BOOST_MSVC) || (defined(__BORLANDC__) && !defined(BOOST_DISABLE_WIN32))
@@ -55,33 +63,35 @@ char BOOST_FT_DECL classifier_impl(...);
 
 template<typename T> struct classifier_bits
 {
-  static typename boost::add_reference<T>::type tester;
+	static typename boost::add_reference<T>::type tester;
 
-  BOOST_STATIC_CONSTANT(bits_t,value = (bits_t)sizeof(
-    boost::function_types::detail::classifier_impl(& tester) 
-  )-1);
+	BOOST_STATIC_CONSTANT(bits_t,value = (bits_t)sizeof(
+	        boost::function_types::detail::classifier_impl(& tester)
+	                                     )-1);
 };
 
 template<typename T> struct classifier
 {
-  typedef detail::constant<
-    ::boost::function_types::detail::decode_bits<
-      ::boost::function_types::detail::classifier_bits<T>::value
-    >::tag_bits > 
-  bits;
+	typedef detail::constant<
+	::boost::function_types::detail::decode_bits<
+	::boost::function_types::detail::classifier_bits<T>::value
+	>::tag_bits >
+	bits;
 
-  typedef detail::full_mask mask;
- 
-  typedef detail::constant<
-    ::boost::function_types::detail::decode_bits<
-      ::boost::function_types::detail::classifier_bits<T>::value
-    >::arity > 
-  function_arity;
+	typedef detail::full_mask mask;
+
+	typedef detail::constant<
+	::boost::function_types::detail::decode_bits<
+	::boost::function_types::detail::classifier_bits<T>::value
+	>::arity >
+	function_arity;
 };
 
 
 
-} } } // namespace ::boost::function_types::detail
+}
+}
+} // namespace ::boost::function_types::detail
 
 #endif
 

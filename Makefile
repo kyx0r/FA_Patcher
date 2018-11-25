@@ -18,14 +18,24 @@ else
 	echo = echo "$(1)"	
 endif
 
+ifeq ($(detected_OS),Windows)
+#WINAPI = -lmingw32 -lkernel32 -lm -ldxguid -ldxerr8 -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lgdi32 -lcomdlg32 -lwinspool 
+#WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion 
+#-lwinpthread 
+#-ldbghelp 
+#-lpthread
+endif
+
 OBJS = ./*cpp
 #HEADS = ./patcher/*.hpp
 CC = g++
 
+ASTYLE = aStyle
+
 #LIBRARY_PATHS specifies the additional library paths we'll need 
 LIBRARY_PATHS = -L ./lib
 
-INCLUDE_PATHS = -I ./boost_lib
+INCLUDE_PATHS = -I ./boost_lib -I .
 
 align_size = 0x100
 align_data = 0x1000
@@ -36,16 +46,12 @@ align_idata = 0x1000
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
 # -Wl,-subsystem,windows gets rid of the console window 
-COMPILER_FLAGS = -w -Dalign_size -O3 -s
+COMPILER_FLAGS = -static -w -Dalign_size -O3 -s
 
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++
 
-BOOST = -lfilesystem -lsystem
-
-PELIB = -lpebliss
-
-BINPATCHER = -lpatcher
+LOCAL_LIBS = -lpatcher -lfilesystem -lsystem -lpebliss -lasmjit
  
 #OBJ_NAME specifies the name of our exectuable 
 OBJ_NAME = FaPatcher.exe 
@@ -64,12 +70,16 @@ boostLib:
 	$(MAKE) all -C ./boost_lib/system
 	
 patcherLib:
-	$(MAKE) all -C ./patcher	
-	
+	$(MAKE) all -C ./patcher
+
+asmjitLib:
+	$(MAKE) all -C ./asmjit_lib
+
 cleanall:
 	$(MAKE) clean -C ./boost_lib/filesystem
 	$(MAKE) clean -C ./boost_lib/system
 	$(MAKE) clean -C ./pe_lib
+	$(MAKE) clean -C ./asmjit_lib
 	$(MAKE) clean -C ./patcher
 	rm -Rf ./build
 
@@ -105,6 +115,13 @@ rip_out_binary:
 	objcopy --strip-all -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
 
 #This is the target that compiles our executable 
-all : peLib boostLib patcherLib
-	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(BINPATCHER) $(BOOST) $(PELIB) -o $(OBJ_NAME)
+all : peLib boostLib asmjitLib patcherLib
+	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) $(WINAPI) -o $(OBJ_NAME)
 	@echo ./FaPatcher built successfully.
+	
+format:
+	$(ASTYLE) --style=allman --indent=tab --recursive ./*.cpp, *.h, *.hpp
+	
+clean_f:
+	find . -type f -name '*.orig' -delete
+	

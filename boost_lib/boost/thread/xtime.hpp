@@ -17,11 +17,12 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost {
+namespace boost
+{
 
 enum xtime_clock_types
 {
-    TIME_UTC_=1
+	TIME_UTC_=1
 //    TIME_TAI,
 //    TIME_MONOTONIC,
 //    TIME_PROCESS,
@@ -34,56 +35,56 @@ enum xtime_clock_types
 struct xtime
 {
 #if defined(BOOST_NO_INT64_T)
-    typedef int_fast32_t xtime_sec_t; //INT_FAST32_MIN <= sec <= INT_FAST32_MAX
+	typedef int_fast32_t xtime_sec_t; //INT_FAST32_MIN <= sec <= INT_FAST32_MAX
 #else
-    typedef int_fast64_t xtime_sec_t; //INT_FAST64_MIN <= sec <= INT_FAST64_MAX
+	typedef int_fast64_t xtime_sec_t; //INT_FAST64_MIN <= sec <= INT_FAST64_MAX
 #endif
 
-    typedef int_fast32_t xtime_nsec_t; //0 <= xtime.nsec < NANOSECONDS_PER_SECOND
+	typedef int_fast32_t xtime_nsec_t; //0 <= xtime.nsec < NANOSECONDS_PER_SECOND
 
-    xtime_sec_t sec;
-    xtime_nsec_t nsec;
+	xtime_sec_t sec;
+	xtime_nsec_t nsec;
 
-    operator system_time() const
-    {
-        return boost::posix_time::from_time_t(0)+
-            boost::posix_time::seconds(static_cast<long>(sec))+
+	operator system_time() const
+	{
+		return boost::posix_time::from_time_t(0)+
+		       boost::posix_time::seconds(static_cast<long>(sec))+
 #ifdef BOOST_DATE_TIME_HAS_NANOSECONDS
-            boost::posix_time::nanoseconds(nsec);
+		       boost::posix_time::nanoseconds(nsec);
 #else
-        boost::posix_time::microseconds((nsec+500)/1000);
+		       boost::posix_time::microseconds((nsec+500)/1000);
 #endif
-    }
+	}
 
 };
 
 inline xtime get_xtime(boost::system_time const& abs_time)
 {
-    xtime res;
-    boost::posix_time::time_duration const time_since_epoch=abs_time-boost::posix_time::from_time_t(0);
+	xtime res;
+	boost::posix_time::time_duration const time_since_epoch=abs_time-boost::posix_time::from_time_t(0);
 
-    res.sec=static_cast<xtime::xtime_sec_t>(time_since_epoch.total_seconds());
-    res.nsec=static_cast<xtime::xtime_nsec_t>(time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second()));
-    return res;
+	res.sec=static_cast<xtime::xtime_sec_t>(time_since_epoch.total_seconds());
+	res.nsec=static_cast<xtime::xtime_nsec_t>(time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second()));
+	return res;
 }
 
 inline int xtime_get(struct xtime* xtp, int clock_type)
 {
-    if (clock_type == TIME_UTC_)
-    {
-        *xtp=get_xtime(get_system_time());
-        return clock_type;
-    }
-    return 0;
+	if (clock_type == TIME_UTC_)
+	{
+		*xtp=get_xtime(get_system_time());
+		return clock_type;
+	}
+	return 0;
 }
 
 
 inline int xtime_cmp(const xtime& xt1, const xtime& xt2)
 {
-    if (xt1.sec == xt2.sec)
-        return (int)(xt1.nsec - xt2.nsec);
-    else
-        return (xt1.sec > xt2.sec) ? 1 : -1;
+	if (xt1.sec == xt2.sec)
+		return (int)(xt1.nsec - xt2.nsec);
+	else
+		return (xt1.sec > xt2.sec) ? 1 : -1;
 }
 
 } // namespace boost

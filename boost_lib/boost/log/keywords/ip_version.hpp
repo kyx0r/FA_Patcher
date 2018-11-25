@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword is used to indicate which version of IP protocol to use
 BOOST_PARAMETER_KEYWORD(tag, ip_version)

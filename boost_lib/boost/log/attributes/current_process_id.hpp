@@ -25,35 +25,37 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! Process identifier type used by the library
 typedef boost::log::aux::process::id process_id;
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that holds the current process identifier
  */
 class current_process_id :
-    public constant< process_id >
+	public constant< process_id >
 {
-    typedef constant< process_id > base_type;
+	typedef constant< process_id > base_type;
 
 public:
-    /*!
-     * Constructor. Initializes the attribute with the current process identifier.
-     */
-    current_process_id() : base_type(boost::log::aux::this_process::get_id()) {}
-    /*!
-     * Constructor for casting support
-     */
-    explicit current_process_id(cast_source const& source) :
-        base_type(source)
-    {
-    }
+	/*!
+	 * Constructor. Initializes the attribute with the current process identifier.
+	 */
+	current_process_id() : base_type(boost::log::aux::this_process::get_id()) {}
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit current_process_id(cast_source const& source) :
+		base_type(source)
+	{
+	}
 };
 
 } // namespace attributes

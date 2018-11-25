@@ -48,143 +48,161 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct nicol {};
+namespace par4
+{
+struct nicol {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace nocol
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace nocol
+{
 
-            static const double EPS = 1e-10;
+static const double EPS = 1e-10;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_nocol_spheroid : public base_t_f<base_nocol_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_nocol_spheroid : public base_t_f<base_nocol_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_nocol_spheroid(const Parameters& par)
-                    : base_t_f<base_nocol_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_nocol_spheroid(const Parameters& par)
+		: base_t_f<base_nocol_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
 
-                    if (fabs(lp_lon) < EPS) {
-                        xy_x = 0;
-                        xy_y = lp_lat;
-                    } else if (fabs(lp_lat) < EPS) {
-                        xy_x = lp_lon;
-                        xy_y = 0.;
-                    } else if (fabs(fabs(lp_lon) - HALFPI) < EPS) {
-                        xy_x = lp_lon * cos(lp_lat);
-                        xy_y = HALFPI * sin(lp_lat);
-                    } else if (fabs(fabs(lp_lat) - HALFPI) < EPS) {
-                        xy_x = 0;
-                        xy_y = lp_lat;
-                    } else {
-                        CalculationType tb, c, d, m, n, r2, sp;
+		if (fabs(lp_lon) < EPS)
+		{
+			xy_x = 0;
+			xy_y = lp_lat;
+		}
+		else if (fabs(lp_lat) < EPS)
+		{
+			xy_x = lp_lon;
+			xy_y = 0.;
+		}
+		else if (fabs(fabs(lp_lon) - HALFPI) < EPS)
+		{
+			xy_x = lp_lon * cos(lp_lat);
+			xy_y = HALFPI * sin(lp_lat);
+		}
+		else if (fabs(fabs(lp_lat) - HALFPI) < EPS)
+		{
+			xy_x = 0;
+			xy_y = lp_lat;
+		}
+		else
+		{
+			CalculationType tb, c, d, m, n, r2, sp;
 
-                        tb = HALFPI / lp_lon - lp_lon / HALFPI;
-                        c = lp_lat / HALFPI;
-                        d = (1 - c * c)/((sp = sin(lp_lat)) - c);
-                        r2 = tb / d;
-                        r2 *= r2;
-                        m = (tb * sp / d - 0.5 * tb)/(1. + r2);
-                        n = (sp / r2 + 0.5 * d)/(1. + 1./r2);
-                        xy_x = cos(lp_lat);
-                        xy_x = sqrt(m * m + xy_x * xy_x / (1. + r2));
-                        xy_x = HALFPI * ( m + (lp_lon < 0. ? -xy_x : xy_x));
-                        xy_y = sqrt(n * n - (sp * sp / r2 + d * sp - 1.) /
-                            (1. + 1./r2));
-                        xy_y = HALFPI * ( n + (lp_lat < 0. ? xy_y : -xy_y ));
-                    }
-                }
+			tb = HALFPI / lp_lon - lp_lon / HALFPI;
+			c = lp_lat / HALFPI;
+			d = (1 - c * c)/((sp = sin(lp_lat)) - c);
+			r2 = tb / d;
+			r2 *= r2;
+			m = (tb * sp / d - 0.5 * tb)/(1. + r2);
+			n = (sp / r2 + 0.5 * d)/(1. + 1./r2);
+			xy_x = cos(lp_lat);
+			xy_x = sqrt(m * m + xy_x * xy_x / (1. + r2));
+			xy_x = HALFPI * ( m + (lp_lon < 0. ? -xy_x : xy_x));
+			xy_y = sqrt(n * n - (sp * sp / r2 + d * sp - 1.) /
+			            (1. + 1./r2));
+			xy_y = HALFPI * ( n + (lp_lat < 0. ? xy_y : -xy_y ));
+		}
+	}
 
-                static inline std::string get_name()
-                {
-                    return "nocol_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "nocol_spheroid";
+	}
 
-            };
+};
 
-            // Nicolosi Globular
-            template <typename Parameters>
-            inline void setup_nicol(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Nicolosi Globular
+template <typename Parameters>
+inline void setup_nicol(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::nocol
-    #endif // doxygen
+}
+} // namespace detail::nocol
+#endif // doxygen
 
-    /*!
-        \brief Nicolosi Globular projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_nicol.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct nicol_spheroid : public detail::nocol::base_nocol_spheroid<CalculationType, Parameters>
-    {
-        inline nicol_spheroid(const Parameters& par) : detail::nocol::base_nocol_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::nocol::setup_nicol(this->m_par);
-        }
-    };
+/*!
+    \brief Nicolosi Globular projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_nicol.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct nicol_spheroid : public detail::nocol::base_nocol_spheroid<CalculationType, Parameters>
+{
+	inline nicol_spheroid(const Parameters& par) : detail::nocol::base_nocol_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::nocol::setup_nicol(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::nicol, nicol_spheroid, nicol_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::nicol, nicol_spheroid, nicol_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class nicol_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<nicol_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class nicol_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<nicol_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void nocol_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("nicol", new nicol_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void nocol_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("nicol", new nicol_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_NOCOL_HPP
 

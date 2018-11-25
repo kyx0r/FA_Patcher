@@ -18,8 +18,10 @@
 #include <boost/compute/iterator/buffer_iterator.hpp>
 #include <boost/compute/type_traits/type_name.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Copies \p matrix to \p buffer.
 template<class Derived>
@@ -27,7 +29,7 @@ inline void eigen_copy_matrix_to_buffer(const Eigen::PlainObjectBase<Derived> &m
                                         buffer_iterator<typename Derived::Scalar> buffer,
                                         command_queue &queue = system::default_queue())
 {
-    ::boost::compute::copy_n(matrix.data(), matrix.size(), buffer, queue);
+	::boost::compute::copy_n(matrix.data(), matrix.size(), buffer, queue);
 }
 
 /// Copies \p buffer to \p matrix.
@@ -36,23 +38,23 @@ inline void eigen_copy_buffer_to_matrix(const buffer_iterator<typename Derived::
                                         Eigen::PlainObjectBase<Derived> &matrix,
                                         command_queue &queue = system::default_queue())
 {
-    ::boost::compute::copy_n(buffer, matrix.size(), matrix.data(), queue);
+	::boost::compute::copy_n(buffer, matrix.size(), matrix.data(), queue);
 }
 
 /// Converts an \c Eigen::Matrix4f to a \c float16_.
 inline float16_ eigen_matrix4f_to_float16(const Eigen::Matrix4f &matrix)
 {
-    float16_ result;
-    std::memcpy(&result, matrix.data(), 16 * sizeof(float));
-    return result;
+	float16_ result;
+	std::memcpy(&result, matrix.data(), 16 * sizeof(float));
+	return result;
 }
 
 /// Converts an \c Eigen::Matrix4d to a \c double16_.
 inline double16_ eigen_matrix4d_to_double16(const Eigen::Matrix4d &matrix)
 {
-    double16_ result;
-    std::memcpy(&result, matrix.data(), 16 * sizeof(double));
-    return result;
+	double16_ result;
+	std::memcpy(&result, matrix.data(), 16 * sizeof(double));
+	return result;
 }
 
 } // end compute namespace

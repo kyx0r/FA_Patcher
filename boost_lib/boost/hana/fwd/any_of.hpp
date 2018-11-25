@@ -15,38 +15,40 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Returns whether any key of the structure satisfies the `predicate`.
-    //! @ingroup group-Searchable
-    //!
-    //! If the structure is not finite, `predicate` has to be satisfied
-    //! after looking at a finite number of keys for this method to finish.
-    //!
-    //!
-    //! @param xs
-    //! The structure to search.
-    //!
-    //! @param predicate
-    //! A function called as `predicate(k)`, where `k` is a key of the
-    //! structure, and returning a `Logical`.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/any_of.cpp
+//! Returns whether any key of the structure satisfies the `predicate`.
+//! @ingroup group-Searchable
+//!
+//! If the structure is not finite, `predicate` has to be satisfied
+//! after looking at a finite number of keys for this method to finish.
+//!
+//!
+//! @param xs
+//! The structure to search.
+//!
+//! @param predicate
+//! A function called as `predicate(k)`, where `k` is a key of the
+//! structure, and returning a `Logical`.
+//!
+//!
+//! Example
+//! -------
+//! @include example/any_of.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto any_of = [](auto&& xs, auto&& predicate) {
-        return tag-dispatched;
-    };
+constexpr auto any_of = [](auto&& xs, auto&& predicate)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename S, typename = void>
-    struct any_of_impl : any_of_impl<S, when<true>> { };
+template <typename S, typename = void>
+struct any_of_impl : any_of_impl<S, when<true>> { };
 
-    struct any_of_t {
-        template <typename Xs, typename Pred>
-        constexpr auto operator()(Xs&& xs, Pred&& pred) const;
-    };
+struct any_of_t
+{
+	template <typename Xs, typename Pred>
+	constexpr auto operator()(Xs&& xs, Pred&& pred) const;
+};
 
-    constexpr any_of_t any_of{};
+constexpr any_of_t any_of{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

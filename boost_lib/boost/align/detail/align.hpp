@@ -11,25 +11,29 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/align/detail/is_alignment.hpp>
 #include <boost/assert.hpp>
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 inline void*
 align(std::size_t alignment, std::size_t size, void*& ptr,
-    std::size_t& space)
+      std::size_t& space)
 {
-    BOOST_ASSERT(detail::is_alignment(alignment));
-    if (size <= space) {
-        char* p = reinterpret_cast<char*>(~(alignment - 1) &
-            (reinterpret_cast<std::size_t>(ptr) + alignment - 1));
-        std::size_t n = space - (p - static_cast<char*>(ptr));
-        if (size <= n) {
-            ptr = p;
-            space = n;
-            return p;
-        }
-    }
-    return 0;
+	BOOST_ASSERT(detail::is_alignment(alignment));
+	if (size <= space)
+	{
+		char* p = reinterpret_cast<char*>(~(alignment - 1) &
+		                                  (reinterpret_cast<std::size_t>(ptr) + alignment - 1));
+		std::size_t n = space - (p - static_cast<char*>(ptr));
+		if (size <= n)
+		{
+			ptr = p;
+			space = n;
+			return p;
+		}
+	}
+	return 0;
 }
 
 } /* alignment */

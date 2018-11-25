@@ -22,71 +22,74 @@
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
 #if defined( BOOST_WINAPI_IS_MINGW_W64 )
-struct _RTL_RUN_ONCE;
+	struct _RTL_RUN_ONCE;
 #else
-union _RTL_RUN_ONCE;
+	union _RTL_RUN_ONCE;
 #endif
 
-typedef boost::winapi::BOOL_
-(WINAPI *PINIT_ONCE_FN) (
-    ::_RTL_RUN_ONCE* InitOnce,
-    boost::winapi::PVOID_ Parameter,
-    boost::winapi::PVOID_ *Context);
+	typedef boost::winapi::BOOL_
+	(WINAPI *PINIT_ONCE_FN) (
+	    ::_RTL_RUN_ONCE* InitOnce,
+	    boost::winapi::PVOID_ Parameter,
+	    boost::winapi::PVOID_ *Context);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-InitOnceInitialize(::_RTL_RUN_ONCE* InitOnce);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	InitOnceInitialize(::_RTL_RUN_ONCE* InitOnce);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-InitOnceExecuteOnce(
-    ::_RTL_RUN_ONCE* InitOnce,
-    ::PINIT_ONCE_FN InitFn,
-    boost::winapi::PVOID_ Parameter,
-    boost::winapi::LPVOID_ *Context);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	InitOnceExecuteOnce(
+	    ::_RTL_RUN_ONCE* InitOnce,
+	    ::PINIT_ONCE_FN InitFn,
+	    boost::winapi::PVOID_ Parameter,
+	    boost::winapi::LPVOID_ *Context);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-InitOnceBeginInitialize(
-    ::_RTL_RUN_ONCE* lpInitOnce,
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::PBOOL_ fPending,
-    boost::winapi::LPVOID_ *lpContext);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	InitOnceBeginInitialize(
+	    ::_RTL_RUN_ONCE* lpInitOnce,
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::PBOOL_ fPending,
+	    boost::winapi::LPVOID_ *lpContext);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-InitOnceComplete(
-    ::_RTL_RUN_ONCE* lpInitOnce,
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::LPVOID_ lpContext);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	InitOnceComplete(
+	    ::_RTL_RUN_ONCE* lpInitOnce,
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::LPVOID_ lpContext);
 }
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
-typedef union BOOST_MAY_ALIAS _RTL_RUN_ONCE {
-    PVOID_ Ptr;
+typedef union BOOST_MAY_ALIAS _RTL_RUN_ONCE
+{
+	PVOID_ Ptr;
 } INIT_ONCE_, *PINIT_ONCE_, *LPINIT_ONCE_;
 
 extern "C" {
-typedef BOOL_ (WINAPI *PINIT_ONCE_FN_) (PINIT_ONCE_ lpInitOnce, PVOID_ Parameter, PVOID_ *Context);
+	typedef BOOL_ (WINAPI *PINIT_ONCE_FN_) (PINIT_ONCE_ lpInitOnce, PVOID_ Parameter, PVOID_ *Context);
 }
 
 BOOST_FORCEINLINE VOID_ InitOnceInitialize(PINIT_ONCE_ lpInitOnce)
 {
-    ::InitOnceInitialize(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce));
+	::InitOnceInitialize(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce));
 }
 
 BOOST_FORCEINLINE BOOL_ InitOnceExecuteOnce(PINIT_ONCE_ lpInitOnce, PINIT_ONCE_FN_ InitFn, PVOID_ Parameter, LPVOID_ *Context)
 {
-    return ::InitOnceExecuteOnce(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce), reinterpret_cast< ::PINIT_ONCE_FN >(InitFn), Parameter, Context);
+	return ::InitOnceExecuteOnce(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce), reinterpret_cast< ::PINIT_ONCE_FN >(InitFn), Parameter, Context);
 }
 
 BOOST_FORCEINLINE BOOL_ InitOnceBeginInitialize(PINIT_ONCE_ lpInitOnce, DWORD_ dwFlags, PBOOL_ fPending, LPVOID_ *lpContext)
 {
-    return ::InitOnceBeginInitialize(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce), dwFlags, fPending, lpContext);
+	return ::InitOnceBeginInitialize(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce), dwFlags, fPending, lpContext);
 }
 
 BOOST_FORCEINLINE BOOL_ InitOnceComplete(PINIT_ONCE_ lpInitOnce, DWORD_ dwFlags, LPVOID_ lpContext)
 {
-    return ::InitOnceComplete(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce), dwFlags, lpContext);
+	return ::InitOnceComplete(reinterpret_cast< ::_RTL_RUN_ONCE* >(lpInitOnce), dwFlags, lpContext);
 }
 
 #if defined( BOOST_USE_WINDOWS_H )

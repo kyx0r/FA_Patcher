@@ -33,18 +33,21 @@
 #include <boost/type_erasure/is_placeholder.hpp>
 #include <boost/type_erasure/call.hpp>
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 template<class P, template<class ...> class interface, class Sig, class Concept, class Base, class ID>
 using choose_member_interface = typename ::boost::mpl::if_c< ::boost::is_reference<P>::value,
-    typename ::boost::mpl::if_c< ::boost::type_erasure::detail::is_non_const_ref<P>::value,
-        interface<Sig, Concept, Base, const ID>,
-        Base
-    >::type,
-    interface<Sig, Concept, Base, ID>
->::type;
+      typename ::boost::mpl::if_c< ::boost::type_erasure::detail::is_non_const_ref<P>::value,
+      interface<Sig, Concept, Base, const ID>,
+	      Base
+	      >::type,
+	      interface<Sig, Concept, Base, ID>
+	      >::type;
 
 
 struct dummy {};
@@ -55,52 +58,52 @@ struct choose_member_impl;
 template<class R, class C, class... T>
 struct choose_member_impl<R (C::*)(T...) const>
 {
-    template<class P, template<class> class M, template<class,class> class S> 
-    using apply = ::boost::mpl::vector1<S<R(T...), const P> >;
+	template<class P, template<class> class M, template<class,class> class S>
+	using apply = ::boost::mpl::vector1<S<R(T...), const P> >;
 };
 
 template<class R, class C, class... T>
 struct choose_member_impl<R (C::*)(T...)>
 {
-    template<class P, template<class> class M, template<class,class> class S> 
-    using apply = M<R(P&, T...)>;
+	template<class P, template<class> class M, template<class,class> class S>
+	using apply = M<R(P&, T...)>;
 };
 
 template<class Sig, class P, template<class> class M, template<class, class> class Self>
 using choose_member_impl_t =
     typename ::boost::type_erasure::detail::choose_member_impl<
-        Sig (::boost::type_erasure::detail::dummy::*)
+    Sig (::boost::type_erasure::detail::dummy::*)
     >::template apply<P, M, Self>;
 
 template<class Sig, class T, class ID>
 struct member_interface_chooser
 {
-    template<class Base, template<class, class> class C, template<class...> class M>
-    using apply = Base;
+	template<class Base, template<class, class> class C, template<class...> class M>
+	using apply = Base;
 };
 
 template<class R, class T, class... A>
 struct member_interface_chooser<R(A...), T, T>
 {
-    template<class Base, template<class, class> class C, template<class...> class M>
-    using apply = ::boost::type_erasure::detail::choose_member_interface<
-        ::boost::type_erasure::placeholder_of_t<Base>,
-        M,
-        R(A...), C<R(A...), T>, Base, T>;
+	template<class Base, template<class, class> class C, template<class...> class M>
+	using apply = ::boost::type_erasure::detail::choose_member_interface<
+	              ::boost::type_erasure::placeholder_of_t<Base>,
+	              M,
+	              R(A...), C<R(A...), T>, Base, T>;
 };
 
 template<class R, class T, class... A>
 struct member_interface_chooser<R(A...), const T, T>
 {
-    template<class Base, template<class, class> class C, template<class...> class M>
-    using apply = M<R(A...), C<R(A...), const T>, Base, const T>;
+	template<class Base, template<class, class> class C, template<class...> class M>
+	using apply = M<R(A...), C<R(A...), const T>, Base, const T>;
 };
 
 template<class Sig, class T, template<class, class> class C, template<class...> class M>
 struct member_choose_interface
 {
-    template<class Concept, class Base, class ID>
-    using apply = typename ::boost::type_erasure::detail::member_interface_chooser<Sig, T, ID>::template apply<Base, C, M>;
+	template<class Concept, class Base, class ID>
+	using apply = typename ::boost::type_erasure::detail::member_interface_chooser<Sig, T, ID>::template apply<Base, C, M>;
 };
 
 }

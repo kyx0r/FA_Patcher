@@ -33,11 +33,13 @@
 #include <boost/log/core/record_view.hpp>
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 /*!
  * \brief Unbounded FIFO log record queueing strategy
@@ -56,78 +58,78 @@ namespace sinks {
 class unbounded_fifo_queue
 {
 private:
-    typedef boost::log::aux::threadsafe_queue< record_view > queue_type;
+	typedef boost::log::aux::threadsafe_queue< record_view > queue_type;
 
 private:
-    //! Thread-safe queue
-    queue_type m_queue;
-    //! Event object to block on
-    boost::log::aux::event m_event;
-    //! Interruption flag
-    boost::atomic< bool > m_interruption_requested;
+	//! Thread-safe queue
+	queue_type m_queue;
+	//! Event object to block on
+	boost::log::aux::event m_event;
+	//! Interruption flag
+	boost::atomic< bool > m_interruption_requested;
 
 protected:
-    //! Default constructor
-    unbounded_fifo_queue() : m_interruption_requested(false)
-    {
-    }
-    //! Initializing constructor
-    template< typename ArgsT >
-    explicit unbounded_fifo_queue(ArgsT const&) : m_interruption_requested(false)
-    {
-    }
+	//! Default constructor
+	unbounded_fifo_queue() : m_interruption_requested(false)
+	{
+	}
+	//! Initializing constructor
+	template< typename ArgsT >
+	explicit unbounded_fifo_queue(ArgsT const&) : m_interruption_requested(false)
+	{
+	}
 
-    //! Enqueues log record to the queue
-    void enqueue(record_view const& rec)
-    {
-        m_queue.push(rec);
-        m_event.set_signalled();
-    }
+	//! Enqueues log record to the queue
+	void enqueue(record_view const& rec)
+	{
+		m_queue.push(rec);
+		m_event.set_signalled();
+	}
 
-    //! Attempts to enqueue log record to the queue
-    bool try_enqueue(record_view const& rec)
-    {
-        // Assume the call never blocks
-        enqueue(rec);
-        return true;
-    }
+	//! Attempts to enqueue log record to the queue
+	bool try_enqueue(record_view const& rec)
+	{
+		// Assume the call never blocks
+		enqueue(rec);
+		return true;
+	}
 
-    //! Attempts to dequeue a log record ready for processing from the queue, does not block if the queue is empty
-    bool try_dequeue_ready(record_view& rec)
-    {
-        return m_queue.try_pop(rec);
-    }
+	//! Attempts to dequeue a log record ready for processing from the queue, does not block if the queue is empty
+	bool try_dequeue_ready(record_view& rec)
+	{
+		return m_queue.try_pop(rec);
+	}
 
-    //! Attempts to dequeue log record from the queue, does not block if the queue is empty
-    bool try_dequeue(record_view& rec)
-    {
-        return m_queue.try_pop(rec);
-    }
+	//! Attempts to dequeue log record from the queue, does not block if the queue is empty
+	bool try_dequeue(record_view& rec)
+	{
+		return m_queue.try_pop(rec);
+	}
 
-    //! Dequeues log record from the queue, blocks if the queue is empty
-    bool dequeue_ready(record_view& rec)
-    {
-        // Try the fast way first
-        if (m_queue.try_pop(rec))
-            return true;
+	//! Dequeues log record from the queue, blocks if the queue is empty
+	bool dequeue_ready(record_view& rec)
+	{
+		// Try the fast way first
+		if (m_queue.try_pop(rec))
+			return true;
 
-        // Ok, we probably have to wait for new records
-        while (true)
-        {
-            m_event.wait();
-            if (m_interruption_requested.exchange(false, boost::memory_order_acquire))
-                return false;
-            if (m_queue.try_pop(rec))
-                return true;
-        }
-    }
+		// Ok, we probably have to wait for new records
+		while (true)
+		{
+			m_event.wait();
+			if (m_interruption_requested.exchange(false, boost::memory_order_acquire))
+				return false;
+			if (m_queue.try_pop(rec))
+				return true;
+		}
+	}
 
-    //! Wakes a thread possibly blocked in the \c dequeue method
-    void interrupt_dequeue()
-    {
-        m_interruption_requested.store(true, boost::memory_order_release);
-        m_event.set_signalled();
-    }
+	//! Wakes a thread possibly blocked in the \c dequeue method
+	void interrupt_dequeue()
+	{
+		m_interruption_requested.store(true, boost::memory_order_release);
+		m_event.set_signalled();
+	}
 };
 
 } // namespace sinks

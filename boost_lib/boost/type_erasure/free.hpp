@@ -43,16 +43,20 @@
     defined(BOOST_TYPE_ERASURE_DOXYGEN) || \
     BOOST_WORKAROUND(BOOST_MSVC, == 1800)
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_TYPE_ERASURE_MAX_ARITY, class T, void)>
-struct first_placeholder {
-    typedef typename ::boost::mpl::eval_if<is_placeholder<T0>,
-        ::boost::mpl::identity<T0>,
-        first_placeholder<BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_TYPE_ERASURE_MAX_ARITY, T)>
-    >::type type;
+struct first_placeholder
+{
+	typedef typename ::boost::mpl::eval_if<is_placeholder<T0>,
+	        ::boost::mpl::identity<T0>,
+	        first_placeholder<BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_TYPE_ERASURE_MAX_ARITY, T)>
+	        >::type type;
 };
 
 template<>
@@ -60,10 +64,10 @@ struct first_placeholder<> {};
 
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_TYPE_ERASURE_MAX_ARITY, class T, void)>
 struct first_placeholder_index :
-    ::boost::mpl::eval_if<is_placeholder<T0>,
-        ::boost::mpl::int_<0>,
-        ::boost::mpl::next<first_placeholder_index<BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_TYPE_ERASURE_MAX_ARITY, T)> >
-    >::type
+	::boost::mpl::eval_if<is_placeholder<T0>,
+	::boost::mpl::int_<0>,
+::boost::mpl::next<first_placeholder_index<BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_TYPE_ERASURE_MAX_ARITY, T)> >
+>::type
 {};
 
 }
@@ -211,23 +215,27 @@ struct first_placeholder_index :
 
 #else
 
-namespace boost {
-namespace type_erasure {
-    
+namespace boost
+{
+namespace type_erasure
+{
+
 template<int... N>
 struct index_list {};
 
-namespace detail {
-    
+namespace detail
+{
+
 template<class... T>
 struct first_placeholder;
 
 template<class T0, class... T>
-struct first_placeholder<T0, T...> {
-    typedef typename ::boost::mpl::eval_if<is_placeholder<T0>,
-        ::boost::mpl::identity<T0>,
-        first_placeholder<T...>
-    >::type type;
+struct first_placeholder<T0, T...>
+{
+	typedef typename ::boost::mpl::eval_if<is_placeholder<T0>,
+	        ::boost::mpl::identity<T0>,
+	        first_placeholder<T...>
+	        >::type type;
 };
 
 template<>
@@ -238,10 +246,10 @@ struct first_placeholder_index;
 
 template<class T0, class... T>
 struct first_placeholder_index<T0, T...> :
-    ::boost::mpl::eval_if<is_placeholder<T0>,
-        ::boost::mpl::int_<0>,
-        ::boost::mpl::next<first_placeholder_index<T...> >
-    >::type
+	::boost::mpl::eval_if<is_placeholder<T0>,
+	::boost::mpl::int_<0>,
+	::boost::mpl::next<first_placeholder_index<T...> >
+	>::type
 {};
 
 template<class Sig>
@@ -253,20 +261,22 @@ struct push_back_index;
 template<int... N, int X>
 struct push_back_index<index_list<N...>, X>
 {
-    typedef index_list<N..., X> type;
+	typedef index_list<N..., X> type;
 };
 
 template<int N>
-struct make_index_list {
-    typedef typename push_back_index<
-        typename make_index_list<N-1>::type,
-        N-1
-    >::type type;
+struct make_index_list
+{
+	typedef typename push_back_index<
+	typename make_index_list<N-1>::type,
+	         N-1
+	         >::type type;
 };
 
 template<>
-struct make_index_list<0> {
-    typedef index_list<> type;
+struct make_index_list<0>
+{
+	typedef index_list<> type;
 };
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES) && \
@@ -279,9 +289,9 @@ using make_index_list_t = typename ::boost::type_erasure::detail::make_index_lis
 
 template<class... T>
 struct first_placeholder_index_ :
-    ::boost::type_erasure::detail::first_placeholder_index<
-        ::boost::remove_cv_t< ::boost::remove_reference_t<T> >...
-    >
+	::boost::type_erasure::detail::first_placeholder_index<
+	::boost::remove_cv_t< ::boost::remove_reference_t<T> >...
+	>
 {};
 template<class... T>
 using first_placeholder_index_t =
@@ -292,7 +302,7 @@ using first_placeholder_index_t =
 template<class... T>
 using first_placeholder_index_t =
     typename ::boost::type_erasure::detail::first_placeholder_index<
-        ::boost::remove_cv_t< ::boost::remove_reference_t<T> >...
+    ::boost::remove_cv_t< ::boost::remove_reference_t<T> >...
     >::type;
 
 #endif
@@ -300,32 +310,33 @@ using first_placeholder_index_t =
 template<class Base, class Tn, int I, class... T>
 using free_param_t =
     typename ::boost::mpl::eval_if_c<(::boost::type_erasure::detail::first_placeholder_index_t<T...>::value == I),
-            ::boost::type_erasure::detail::maybe_const_this_param<Tn, Base>, \
-            ::boost::type_erasure::as_param<Base, Tn>
+    ::boost::type_erasure::detail::maybe_const_this_param<Tn, Base>, \
+    ::boost::type_erasure::as_param<Base, Tn>
     >::type;
 
 template<class Sig, class ID>
 struct free_interface_chooser
 {
-    template<class Base, template<class> class C, template<class...> class F>
-    using apply = Base;
+	template<class Base, template<class> class C, template<class...> class F>
+	using apply = Base;
 };
 
 template<class R, class... A>
 struct free_interface_chooser<
-    R(A...),
-    typename ::boost::type_erasure::detail::first_placeholder<
-        ::boost::remove_cv_t< ::boost::remove_reference_t<A> >...>::type>
+R(A...),
+typename ::boost::type_erasure::detail::first_placeholder<
+::boost::remove_cv_t< ::boost::remove_reference_t<A> >...>::type>
 {
-    template<class Base, template<class> class C, template<class...> class F>
-    using apply = F<R(A...), Base,
-        ::boost::type_erasure::detail::make_index_list_t<sizeof...(A)> >;
+	template<class Base, template<class> class C, template<class...> class F>
+	using apply = F<R(A...), Base,
+	      ::boost::type_erasure::detail::make_index_list_t<sizeof...(A)> >;
 };
 
 template<class Sig, template<class> class C, template<class...> class F>
-struct free_choose_interface {
-    template<class Concept, class Base, class ID>
-    using apply = typename free_interface_chooser<Sig, ID>::template apply<Base, C, F>;
+struct free_choose_interface
+{
+	template<class Concept, class Base, class ID>
+	using apply = typename free_interface_chooser<Sig, ID>::template apply<Base, C, F>;
 };
 
 /** INTERNAL ONLY */
@@ -465,7 +476,7 @@ boost_type_erasure_find_interface(concept_name<Sig>);
     }                                                                   \
     }
 
-    
+
 /** INTERNAL ONLY */
 #define BOOST_TYPE_ERASURE_FREE_I(namespace_name, concept_name, function_name)              \
     BOOST_TYPE_ERASURE_FREE_II(namespace_name, concept_name, function_name)

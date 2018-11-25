@@ -22,47 +22,50 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename Handler>
 class work_dispatcher
 {
 public:
-  work_dispatcher(Handler& handler)
-    : work_((get_associated_executor)(handler)),
-      handler_(BOOST_ASIO_MOVE_CAST(Handler)(handler))
-  {
-  }
+	work_dispatcher(Handler& handler)
+		: work_((get_associated_executor)(handler)),
+		  handler_(BOOST_ASIO_MOVE_CAST(Handler)(handler))
+	{
+	}
 
 #if defined(BOOST_ASIO_HAS_MOVE)
-  work_dispatcher(const work_dispatcher& other)
-    : work_(other.work_),
-      handler_(other.handler_)
-  {
-  }
+	work_dispatcher(const work_dispatcher& other)
+		: work_(other.work_),
+		  handler_(other.handler_)
+	{
+	}
 
-  work_dispatcher(work_dispatcher&& other)
-    : work_(BOOST_ASIO_MOVE_CAST(executor_work_guard<
-        typename associated_executor<Handler>::type>)(other.work_)),
-      handler_(BOOST_ASIO_MOVE_CAST(Handler)(other.handler_))
-  {
-  }
+	work_dispatcher(work_dispatcher&& other)
+		: work_(BOOST_ASIO_MOVE_CAST(executor_work_guard<
+		                             typename associated_executor<Handler>::type>)(other.work_)),
+		  handler_(BOOST_ASIO_MOVE_CAST(Handler)(other.handler_))
+	{
+	}
 #endif // defined(BOOST_ASIO_HAS_MOVE)
 
-  void operator()()
-  {
-    typename associated_allocator<Handler>::type alloc(
-        (get_associated_allocator)(handler_));
-    work_.get_executor().dispatch(
-        BOOST_ASIO_MOVE_CAST(Handler)(handler_), alloc);
-    work_.reset();
-  }
+	void operator()()
+	{
+		typename associated_allocator<Handler>::type alloc(
+		    (get_associated_allocator)(handler_));
+		work_.get_executor().dispatch(
+		    BOOST_ASIO_MOVE_CAST(Handler)(handler_), alloc);
+		work_.reset();
+	}
 
 private:
-  executor_work_guard<typename associated_executor<Handler>::type> work_;
-  Handler handler_;
+	executor_work_guard<typename associated_executor<Handler>::type> work_;
+	Handler handler_;
 };
 
 } // namespace detail

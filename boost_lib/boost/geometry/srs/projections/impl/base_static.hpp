@@ -29,7 +29,11 @@
 #include <boost/mpl/assert.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 
@@ -40,9 +44,9 @@ namespace detail
 template <typename Prj, typename CSTag, typename BGP, typename CT, typename P>
 struct static_projection_type
 {
-    BOOST_MPL_ASSERT_MSG((false),
-        NOT_IMPLEMENTED_FOR_THIS_PROJECTION_OR_CSTAG,
-        (Prj, CSTag));
+	BOOST_MPL_ASSERT_MSG((false),
+	                     NOT_IMPLEMENTED_FOR_THIS_PROJECTION_OR_CSTAG,
+	                     (Prj, CSTag));
 };
 
 #define BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(PROJ, P_SPHERE, P_SPHEROID) \
@@ -63,46 +67,52 @@ struct base_t_f
 {
 public:
 
-    inline base_t_f(Prj const& prj, P const& params)
-        : m_par(params), m_prj(prj)
-    {}
+	inline base_t_f(Prj const& prj, P const& params)
+		: m_par(params), m_prj(prj)
+	{}
 
-    inline P const& params() const { return m_par; }
+	inline P const& params() const
+	{
+		return m_par;
+	}
 
-    inline P& mutable_params() { return m_par; }
+	inline P& mutable_params()
+	{
+		return m_par;
+	}
 
-    template <typename LL, typename XY>
-    inline bool forward(LL const& lp, XY& xy) const
-    {
-        try
-        {
-            pj_fwd(m_prj, m_par, lp, xy);
-            return true;
-        }
-        catch(...)
-        {
-            return false;
-        }
-    }
+	template <typename LL, typename XY>
+	inline bool forward(LL const& lp, XY& xy) const
+	{
+		try
+		{
+			pj_fwd(m_prj, m_par, lp, xy);
+			return true;
+		}
+		catch(...)
+		{
+			return false;
+		}
+	}
 
-    template <typename XY, typename LL>
-    inline bool inverse(XY const& , LL& ) const
-    {
-        BOOST_MPL_ASSERT_MSG((false),
-                             PROJECTION_IS_NOT_INVERTABLE,
-                             (Prj));
-        return false;
-    }
+	template <typename XY, typename LL>
+	inline bool inverse(XY const&, LL& ) const
+	{
+		BOOST_MPL_ASSERT_MSG((false),
+		                     PROJECTION_IS_NOT_INVERTABLE,
+		                     (Prj));
+		return false;
+	}
 
-    inline std::string name() const
-    {
-        return this->m_par.name;
-    }
+	inline std::string name() const
+	{
+		return this->m_par.name;
+	}
 
 protected:
 
-    P m_par;
-    const Prj& m_prj;
+	P m_par;
+	const Prj& m_prj;
 };
 
 // Base-template-forward/inverse
@@ -110,30 +120,32 @@ template <typename Prj, typename CT, typename P>
 struct base_t_fi : public base_t_f<Prj, CT, P>
 {
 public :
-    inline base_t_fi(Prj const& prj, P const& params)
-        : base_t_f<Prj, CT, P>(prj, params)
-    {}
+	inline base_t_fi(Prj const& prj, P const& params)
+		: base_t_f<Prj, CT, P>(prj, params)
+	{}
 
-    template <typename XY, typename LL>
-    inline bool inverse(XY const& xy, LL& lp) const
-    {
-        try
-        {
-            pj_inv(this->m_prj, this->m_par, xy, lp);
-            return true;
-        }
-        catch(...)
-        {
-            return false;
-        }
-    }
+	template <typename XY, typename LL>
+	inline bool inverse(XY const& xy, LL& lp) const
+	{
+		try
+		{
+			pj_inv(this->m_prj, this->m_par, xy, lp);
+			return true;
+		}
+		catch(...)
+		{
+			return false;
+		}
+	}
 };
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_BASE_STATIC_HPP

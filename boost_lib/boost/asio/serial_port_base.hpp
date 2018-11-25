@@ -38,117 +38,119 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 /// The serial_port_base class is used as a base for the basic_serial_port class
 /// template so that we have a common place to define the serial port options.
 class serial_port_base
 {
 public:
-  /// Serial port option to permit changing the baud rate.
-  /**
-   * Implements changing the baud rate for a given serial port.
-   */
-  class baud_rate
-  {
-  public:
-    explicit baud_rate(unsigned int rate = 0);
-    unsigned int value() const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
-        BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec) const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
-        const BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec);
-  private:
-    unsigned int value_;
-  };
+	/// Serial port option to permit changing the baud rate.
+	/**
+	 * Implements changing the baud rate for a given serial port.
+	 */
+	class baud_rate
+	{
+	public:
+		explicit baud_rate(unsigned int rate = 0);
+		unsigned int value() const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
+		    BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec) const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
+		    const BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec);
+	private:
+		unsigned int value_;
+	};
 
-  /// Serial port option to permit changing the flow control.
-  /**
-   * Implements changing the flow control for a given serial port.
-   */
-  class flow_control
-  {
-  public:
-    enum type { none, software, hardware };
-    BOOST_ASIO_DECL explicit flow_control(type t = none);
-    type value() const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
-        BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec) const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
-        const BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec);
-  private:
-    type value_;
-  };
+	/// Serial port option to permit changing the flow control.
+	/**
+	 * Implements changing the flow control for a given serial port.
+	 */
+	class flow_control
+	{
+	public:
+		enum type { none, software, hardware };
+		BOOST_ASIO_DECL explicit flow_control(type t = none);
+		type value() const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
+		    BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec) const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
+		    const BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec);
+	private:
+		type value_;
+	};
 
-  /// Serial port option to permit changing the parity.
-  /**
-   * Implements changing the parity for a given serial port.
-   */
-  class parity
-  {
-  public:
-    enum type { none, odd, even };
-    BOOST_ASIO_DECL explicit parity(type t = none);
-    type value() const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
-        BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec) const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
-        const BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec);
-  private:
-    type value_;
-  };
+	/// Serial port option to permit changing the parity.
+	/**
+	 * Implements changing the parity for a given serial port.
+	 */
+	class parity
+	{
+	public:
+		enum type { none, odd, even };
+		BOOST_ASIO_DECL explicit parity(type t = none);
+		type value() const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
+		    BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec) const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
+		    const BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec);
+	private:
+		type value_;
+	};
 
-  /// Serial port option to permit changing the number of stop bits.
-  /**
-   * Implements changing the number of stop bits for a given serial port.
-   */
-  class stop_bits
-  {
-  public:
-    enum type { one, onepointfive, two };
-    BOOST_ASIO_DECL explicit stop_bits(type t = one);
-    type value() const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
-        BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec) const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
-        const BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec);
-  private:
-    type value_;
-  };
+	/// Serial port option to permit changing the number of stop bits.
+	/**
+	 * Implements changing the number of stop bits for a given serial port.
+	 */
+	class stop_bits
+	{
+	public:
+		enum type { one, onepointfive, two };
+		BOOST_ASIO_DECL explicit stop_bits(type t = one);
+		type value() const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
+		    BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec) const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
+		    const BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec);
+	private:
+		type value_;
+	};
 
-  /// Serial port option to permit changing the character size.
-  /**
-   * Implements changing the character size for a given serial port.
-   */
-  class character_size
-  {
-  public:
-    BOOST_ASIO_DECL explicit character_size(unsigned int t = 8);
-    unsigned int value() const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
-        BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec) const;
-    BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
-        const BOOST_ASIO_OPTION_STORAGE& storage,
-        boost::system::error_code& ec);
-  private:
-    unsigned int value_;
-  };
+	/// Serial port option to permit changing the character size.
+	/**
+	 * Implements changing the character size for a given serial port.
+	 */
+	class character_size
+	{
+	public:
+		BOOST_ASIO_DECL explicit character_size(unsigned int t = 8);
+		unsigned int value() const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID store(
+		    BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec) const;
+		BOOST_ASIO_DECL BOOST_ASIO_SYNC_OP_VOID load(
+		    const BOOST_ASIO_OPTION_STORAGE& storage,
+		    boost::system::error_code& ec);
+	private:
+		unsigned int value_;
+	};
 
 protected:
-  /// Protected destructor to prevent deletion through this type.
-  ~serial_port_base()
-  {
-  }
+	/// Protected destructor to prevent deletion through this type.
+	~serial_port_base()
+	{
+	}
 };
 
 } // namespace asio
@@ -164,6 +166,6 @@ protected:
 #endif // defined(BOOST_ASIO_HEADER_ONLY)
 
 #endif // defined(BOOST_ASIO_HAS_SERIAL_PORT)
-       //   || defined(GENERATING_DOCUMENTATION)
+//   || defined(GENERATING_DOCUMENTATION)
 
 #endif // BOOST_ASIO_SERIAL_PORT_BASE_HPP

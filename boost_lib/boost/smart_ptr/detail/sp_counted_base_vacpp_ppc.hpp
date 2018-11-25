@@ -36,113 +36,114 @@ namespace detail
 
 inline void atomic_increment( int *pw )
 {
-   // ++*pw;
-   __lwsync();
-   __fetch_and_add(pw, 1);
-   __isync();
-} 
+	// ++*pw;
+	__lwsync();
+	__fetch_and_add(pw, 1);
+	__isync();
+}
 
 inline int atomic_decrement( int *pw )
 {
-   // return --*pw;
-   __lwsync();
-   int originalValue = __fetch_and_add(pw, -1);
-   __isync();
+	// return --*pw;
+	__lwsync();
+	int originalValue = __fetch_and_add(pw, -1);
+	__isync();
 
-   return (originalValue - 1);
+	return (originalValue - 1);
 }
 
 inline int atomic_conditional_increment( int *pw )
 {
-   // if( *pw != 0 ) ++*pw;
-   // return *pw;
+	// if( *pw != 0 ) ++*pw;
+	// return *pw;
 
-   __lwsync();
-   int v = *const_cast<volatile int*>(pw);
-   for (;;)
-   // loop until state is known
-   {
-      if (v == 0) return 0;
-      if (__compare_and_swap(pw, &v, v + 1))
-      {
-         __isync(); return (v + 1);
-      }
-   }
+	__lwsync();
+	int v = *const_cast<volatile int*>(pw);
+	for (;;)
+		// loop until state is known
+	{
+		if (v == 0) return 0;
+		if (__compare_and_swap(pw, &v, v + 1))
+		{
+			__isync();
+			return (v + 1);
+		}
+	}
 }
 
 class sp_counted_base
 {
 private:
 
-    sp_counted_base( sp_counted_base const & );
-    sp_counted_base & operator= ( sp_counted_base const & );
+	sp_counted_base( sp_counted_base const & );
+	sp_counted_base & operator= ( sp_counted_base const & );
 
-    int use_count_;        // #shared
-    int weak_count_;       // #weak + (#shared != 0)
-    char pad[64] __attribute__((__aligned__(64)));
-            // pad to prevent false sharing
+	int use_count_;        // #shared
+	int weak_count_;       // #weak + (#shared != 0)
+	char pad[64] __attribute__((__aligned__(64)));
+	// pad to prevent false sharing
 public:
 
-    sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
-    {
-    }
+	sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
+	{
+	}
 
-    virtual ~sp_counted_base() // nothrow
-    {
-    }
+	virtual ~sp_counted_base() // nothrow
+	{
+	}
 
-    // dispose() is called when use_count_ drops to zero, to release
-    // the resources managed by *this.
+	// dispose() is called when use_count_ drops to zero, to release
+	// the resources managed by *this.
 
-    virtual void dispose() = 0; // nothrow
+	virtual void dispose() = 0; // nothrow
 
-    // destroy() is called when weak_count_ drops to zero.
+	// destroy() is called when weak_count_ drops to zero.
 
-    virtual void destroy() // nothrow
-    {
-        delete this;
-    }
+	virtual void destroy() // nothrow
+	{
+		delete this;
+	}
 
-    virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_untyped_deleter() = 0;
+	virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_untyped_deleter() = 0;
 
-    void add_ref_copy()
-    {
-        atomic_increment( &use_count_ );
-    }
+	void add_ref_copy()
+	{
+		atomic_increment( &use_count_ );
+	}
 
-    bool add_ref_lock() // true on success
-    {
-        return atomic_conditional_increment( &use_count_ ) != 0;
-    }
+	bool add_ref_lock() // true on success
+	{
+		return atomic_conditional_increment( &use_count_ ) != 0;
+	}
 
-    void release() // nothrow
-    {
-        if( atomic_decrement( &use_count_ ) == 0 )
-        {
-            dispose();
-            weak_release();
-        }
-    }
+	void release() // nothrow
+	{
+		if( atomic_decrement( &use_count_ ) == 0 )
+		{
+			dispose();
+			weak_release();
+		}
+	}
 
-    void weak_add_ref() // nothrow
-    {
-        atomic_increment( &weak_count_ );
-    }
+	void weak_add_ref() // nothrow
+	{
+		atomic_increment( &weak_count_ );
+	}
 
-    void weak_release() // nothrow
-    {
-        if( atomic_decrement( &weak_count_ ) == 0 )
-        {
-            destroy();
-        }
-    }
+	void weak_release() // nothrow
+	{
+		if( atomic_decrement( &weak_count_ ) == 0 )
+		{
+			destroy();
+		}
+	}
 
-    long use_count() const // nothrow
-    {
-        return *const_cast<volatile int*>(&use_count_); 
-    }
+	long use_count() const // nothrow
+	{
+		return *const_cast<volatile int*>(&use_count_);
+	}
 };
 
 } // namespace detail

@@ -16,27 +16,32 @@
 #include <boost/geometry/algorithms/dispatch/is_simple.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_simple
+namespace detail
+{
+namespace is_simple
 {
 
 
 template <typename Geometry>
 struct always_simple
 {
-    template <typename Strategy>
-    static inline bool apply(Geometry const&, Strategy const&)
-    {
-        return true;
-    }
+	template <typename Strategy>
+	static inline bool apply(Geometry const&, Strategy const&)
+	{
+		return true;
+	}
 };
 
 
-}} // namespace detail::is_simple
+}
+} // namespace detail::is_simple
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -50,7 +55,7 @@ namespace dispatch
 // A point is always simple
 template <typename Point>
 struct is_simple<Point, point_tag>
-    : detail::is_simple::always_simple<Point>
+	: detail::is_simple::always_simple<Point>
 {};
 
 
@@ -62,7 +67,7 @@ struct is_simple<Point, point_tag>
 // Reference: OGC 06-103r4 (6.1.6.1)
 template <typename Segment>
 struct is_simple<Segment, segment_tag>
-    : detail::is_simple::always_simple<Segment>
+	: detail::is_simple::always_simple<Segment>
 {};
 
 
@@ -72,7 +77,7 @@ struct is_simple<Segment, segment_tag>
 // Reference (for polygon validity): OGC 06-103r4 (6.1.11.1)
 template <typename Box>
 struct is_simple<Box, box_tag>
-    : detail::is_simple::always_simple<Box>
+	: detail::is_simple::always_simple<Box>
 {};
 
 
@@ -80,6 +85,7 @@ struct is_simple<Box, box_tag>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_SIMPLE_ALWAYS_SIMPLE_HPP

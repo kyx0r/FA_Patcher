@@ -20,18 +20,19 @@
 #include <boost/config.hpp>
 #include <string>
 
-namespace boost {
+namespace boost
+{
 
-    template<typename charT, typename traits = std::char_traits<charT> > class basic_string_view;
-    typedef basic_string_view<char,     std::char_traits<char> >        string_view;
-    typedef basic_string_view<wchar_t,  std::char_traits<wchar_t> >    wstring_view;
+template<typename charT, typename traits = std::char_traits<charT> > class basic_string_view;
+typedef basic_string_view<char,     std::char_traits<char> >        string_view;
+typedef basic_string_view<wchar_t,  std::char_traits<wchar_t> >    wstring_view;
 
 #ifndef BOOST_NO_CXX11_CHAR16_T
-    typedef basic_string_view<char16_t, std::char_traits<char16_t> > u16string_view;
+typedef basic_string_view<char16_t, std::char_traits<char16_t> > u16string_view;
 #endif
 
 #ifndef BOOST_NO_CXX11_CHAR32_T
-    typedef basic_string_view<char32_t, std::char_traits<char32_t> > u32string_view;
+typedef basic_string_view<char32_t, std::char_traits<char32_t> > u32string_view;
 #endif
 
 }

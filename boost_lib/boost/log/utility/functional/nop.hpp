@@ -22,27 +22,28 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! The function object that does nothing
 struct nop
 {
-    typedef void result_type;
+	typedef void result_type;
 
-    void operator() () const BOOST_NOEXCEPT {}
+	void operator() () const BOOST_NOEXCEPT {}
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
-    template< typename... ArgsT >
-    void operator() (ArgsT const&...) const BOOST_NOEXCEPT {}
+	template< typename... ArgsT >
+	void operator() (ArgsT const&...) const BOOST_NOEXCEPT {}
 #else
-    template< typename T >
-    void operator() (T const&) const BOOST_NOEXCEPT {}
-    template< typename T1, typename T2 >
-    void operator() (T1 const&, T2 const&) const BOOST_NOEXCEPT {}
-    template< typename T1, typename T2, typename T3 >
-    void operator() (T1 const&, T2 const&, T3 const&) const BOOST_NOEXCEPT {}
+	template< typename T >
+	void operator() (T const&) const BOOST_NOEXCEPT {}
+	template< typename T1, typename T2 >
+	void operator() (T1 const&, T2 const&) const BOOST_NOEXCEPT {}
+	template< typename T1, typename T2, typename T3 >
+	void operator() (T1 const&, T2 const&, T3 const&) const BOOST_NOEXCEPT {}
 #endif
 };
 

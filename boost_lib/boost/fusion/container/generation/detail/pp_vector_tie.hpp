@@ -36,19 +36,21 @@
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
+namespace fusion
+{
+struct void_;
 
-    namespace result_of
-    {
-        template <
-            BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-                FUSION_MAX_VECTOR_SIZE, typename T, void_)
-          , typename Extra = void_
-        >
-        struct vector_tie;
-    }
+namespace result_of
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        FUSION_MAX_VECTOR_SIZE, typename T, void_)
+    , typename Extra = void_
+    >
+struct vector_tie;
+}
 
 #define BOOST_FUSION_REF(z, n, data) BOOST_PP_CAT(T, n)&
 
@@ -57,7 +59,8 @@ namespace boost { namespace fusion
 #include BOOST_PP_ITERATE()
 
 #undef BOOST_FUSION_REF
-}}
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)
@@ -75,25 +78,25 @@ namespace boost { namespace fusion
 
 #define N BOOST_PP_ITERATION()
 
-    namespace result_of
-    {
-        template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-        #define TEXT(z, n, text) , text
-        struct vector_tie< BOOST_PP_ENUM_PARAMS(N, T) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_VECTOR_SIZE, TEXT, void_) >
-        #undef TEXT
-        {
-            typedef vector<BOOST_PP_ENUM(N, BOOST_FUSION_REF, _)> type;
-        };
-    }
+namespace result_of
+{
+template <BOOST_PP_ENUM_PARAMS(N, typename T)>
+#define TEXT(z, n, text) , text
+struct vector_tie< BOOST_PP_ENUM_PARAMS(N, T) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_VECTOR_SIZE, TEXT, void_) >
+#undef TEXT
+{
+	typedef vector<BOOST_PP_ENUM(N, BOOST_FUSION_REF, _)> type;
+};
+}
 
-    template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline vector<BOOST_PP_ENUM(N, BOOST_FUSION_REF, _)>
-    vector_tie(BOOST_PP_ENUM_BINARY_PARAMS(N, T, & arg))
-    {
-        return vector<BOOST_PP_ENUM(N, BOOST_FUSION_REF, _)>(
-            BOOST_PP_ENUM_PARAMS(N, arg));
-    }
+template <BOOST_PP_ENUM_PARAMS(N, typename T)>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline vector<BOOST_PP_ENUM(N, BOOST_FUSION_REF, _)>
+vector_tie(BOOST_PP_ENUM_BINARY_PARAMS(N, T, & arg))
+{
+	return vector<BOOST_PP_ENUM(N, BOOST_FUSION_REF, _)>(
+	           BOOST_PP_ENUM_PARAMS(N, arg));
+}
 
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)

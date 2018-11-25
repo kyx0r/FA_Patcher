@@ -18,19 +18,23 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines2 {
+namespace boost
+{
+namespace coroutines2
+{
 
 template< typename T >
-struct coroutine {
-    using pull_type = detail::pull_coroutine< T >;
-    using push_type = detail::push_coroutine< T >;
+struct coroutine
+{
+	using pull_type = detail::pull_coroutine< T >;
+	using push_type = detail::push_coroutine< T >;
 };
 
 template< typename T >
 using asymmetric_coroutine = coroutine< T >;
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

@@ -25,49 +25,52 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class std_event;
 
 class std_static_mutex
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  typedef boost::asio::detail::scoped_lock<std_static_mutex> scoped_lock;
+	typedef boost::asio::detail::scoped_lock<std_static_mutex> scoped_lock;
 
-  // Constructor.
-  std_static_mutex(int)
-  {
-  }
+	// Constructor.
+	std_static_mutex(int)
+	{
+	}
 
-  // Destructor.
-  ~std_static_mutex()
-  {
-  }
+	// Destructor.
+	~std_static_mutex()
+	{
+	}
 
-  // Initialise the mutex.
-  void init()
-  {
-    // Nothing to do.
-  }
+	// Initialise the mutex.
+	void init()
+	{
+		// Nothing to do.
+	}
 
-  // Lock the mutex.
-  void lock()
-  {
-    mutex_.lock();
-  }
+	// Lock the mutex.
+	void lock()
+	{
+		mutex_.lock();
+	}
 
-  // Unlock the mutex.
-  void unlock()
-  {
-    mutex_.unlock();
-  }
+	// Unlock the mutex.
+	void unlock()
+	{
+		mutex_.unlock();
+	}
 
 private:
-  friend class std_event;
-  std::mutex mutex_;
+	friend class std_event;
+	std::mutex mutex_;
 };
 
 #define BOOST_ASIO_STD_STATIC_MUTEX_INIT 0

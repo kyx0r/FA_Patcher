@@ -50,186 +50,195 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct tpeqd {};
+namespace par4
+{
+struct tpeqd {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace tpeqd
-    {
-            template <typename T>
-            struct par_tpeqd
-            {
-                T cp1, sp1, cp2, sp2, ccs, cs, sc, r2z0, z02, dlam2;
-                T hz0, thz0, rhshz0, ca, sa, lp, lamc;
-            };
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace tpeqd
+{
+template <typename T>
+struct par_tpeqd
+{
+	T cp1, sp1, cp2, sp2, ccs, cs, sc, r2z0, z02, dlam2;
+	T hz0, thz0, rhshz0, ca, sa, lp, lamc;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_tpeqd_spheroid : public base_t_fi<base_tpeqd_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_tpeqd_spheroid : public base_t_fi<base_tpeqd_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_tpeqd<CalculationType> m_proj_parm;
+	par_tpeqd<CalculationType> m_proj_parm;
 
-                inline base_tpeqd_spheroid(const Parameters& par)
-                    : base_t_fi<base_tpeqd_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_tpeqd_spheroid(const Parameters& par)
+		: base_t_fi<base_tpeqd_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  sphere
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType t, z1, z2, dl1, dl2, sp, cp;
+	// FORWARD(s_forward)  sphere
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType t, z1, z2, dl1, dl2, sp, cp;
 
-                    sp = sin(lp_lat);
-                    cp = cos(lp_lat);
-                    z1 = aacos(this->m_proj_parm.sp1 * sp + this->m_proj_parm.cp1 * cp * cos(dl1 = lp_lon + this->m_proj_parm.dlam2));
-                    z2 = aacos(this->m_proj_parm.sp2 * sp + this->m_proj_parm.cp2 * cp * cos(dl2 = lp_lon - this->m_proj_parm.dlam2));
-                    z1 *= z1;
-                    z2 *= z2;
-                    xy_x = this->m_proj_parm.r2z0 * (t = z1 - z2);
-                    t = this->m_proj_parm.z02 - t;
-                    xy_y = this->m_proj_parm.r2z0 * asqrt(4. * this->m_proj_parm.z02 * z2 - t * t);
-                    if ((this->m_proj_parm.ccs * sp - cp * (this->m_proj_parm.cs * sin(dl1) - this->m_proj_parm.sc * sin(dl2))) < 0.)
-                        xy_y = -xy_y;
-                }
+		sp = sin(lp_lat);
+		cp = cos(lp_lat);
+		z1 = aacos(this->m_proj_parm.sp1 * sp + this->m_proj_parm.cp1 * cp * cos(dl1 = lp_lon + this->m_proj_parm.dlam2));
+		z2 = aacos(this->m_proj_parm.sp2 * sp + this->m_proj_parm.cp2 * cp * cos(dl2 = lp_lon - this->m_proj_parm.dlam2));
+		z1 *= z1;
+		z2 *= z2;
+		xy_x = this->m_proj_parm.r2z0 * (t = z1 - z2);
+		t = this->m_proj_parm.z02 - t;
+		xy_y = this->m_proj_parm.r2z0 * asqrt(4. * this->m_proj_parm.z02 * z2 - t * t);
+		if ((this->m_proj_parm.ccs * sp - cp * (this->m_proj_parm.cs * sin(dl1) - this->m_proj_parm.sc * sin(dl2))) < 0.)
+			xy_y = -xy_y;
+	}
 
-                // INVERSE(s_inverse)  sphere
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType cz1, cz2, s, d, cp, sp;
+	// INVERSE(s_inverse)  sphere
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType cz1, cz2, s, d, cp, sp;
 
-                    cz1 = cos(boost::math::hypot(xy_y, xy_x + this->m_proj_parm.hz0));
-                    cz2 = cos(boost::math::hypot(xy_y, xy_x - this->m_proj_parm.hz0));
-                    s = cz1 + cz2;
-                    d = cz1 - cz2;
-                    lp_lon = - atan2(d, (s * this->m_proj_parm.thz0));
-                    lp_lat = aacos(boost::math::hypot(this->m_proj_parm.thz0 * s, d) * this->m_proj_parm.rhshz0);
-                    if ( xy_y < 0. )
-                        lp_lat = - lp_lat;
-                    /* lam--phi now in system relative to P1--P2 base equator */
-                    sp = sin(lp_lat);
-                    cp = cos(lp_lat);
-                    lp_lat = aasin(this->m_proj_parm.sa * sp + this->m_proj_parm.ca * cp * (s = cos(lp_lon -= this->m_proj_parm.lp)));
-                    lp_lon = atan2(cp * sin(lp_lon), this->m_proj_parm.sa * cp * s - this->m_proj_parm.ca * sp) + this->m_proj_parm.lamc;
-                }
+		cz1 = cos(boost::math::hypot(xy_y, xy_x + this->m_proj_parm.hz0));
+		cz2 = cos(boost::math::hypot(xy_y, xy_x - this->m_proj_parm.hz0));
+		s = cz1 + cz2;
+		d = cz1 - cz2;
+		lp_lon = - atan2(d, (s * this->m_proj_parm.thz0));
+		lp_lat = aacos(boost::math::hypot(this->m_proj_parm.thz0 * s, d) * this->m_proj_parm.rhshz0);
+		if ( xy_y < 0. )
+			lp_lat = - lp_lat;
+		/* lam--phi now in system relative to P1--P2 base equator */
+		sp = sin(lp_lat);
+		cp = cos(lp_lat);
+		lp_lat = aasin(this->m_proj_parm.sa * sp + this->m_proj_parm.ca * cp * (s = cos(lp_lon -= this->m_proj_parm.lp)));
+		lp_lon = atan2(cp * sin(lp_lon), this->m_proj_parm.sa * cp * s - this->m_proj_parm.ca * sp) + this->m_proj_parm.lamc;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "tpeqd_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "tpeqd_spheroid";
+	}
 
-            };
+};
 
-            // Two Point Equidistant
-            template <typename Parameters, typename T>
-            inline void setup_tpeqd(Parameters& par, par_tpeqd<T>& proj_parm)
-            {
-                T lam_1, lam_2, phi_1, phi_2, A12, pp;
+// Two Point Equidistant
+template <typename Parameters, typename T>
+inline void setup_tpeqd(Parameters& par, par_tpeqd<T>& proj_parm)
+{
+	T lam_1, lam_2, phi_1, phi_2, A12, pp;
 
-                /* get control point locations */
-                phi_1 = pj_param(par.params, "rlat_1").f;
-                lam_1 = pj_param(par.params, "rlon_1").f;
-                phi_2 = pj_param(par.params, "rlat_2").f;
-                lam_2 = pj_param(par.params, "rlon_2").f;
-                if (phi_1 == phi_2 && lam_1 == lam_2)
-                    BOOST_THROW_EXCEPTION( projection_exception(-25) );
-                par.lam0 = adjlon(0.5 * (lam_1 + lam_2));
-                proj_parm.dlam2 = adjlon(lam_2 - lam_1);
-                proj_parm.cp1 = cos(phi_1);
-                proj_parm.cp2 = cos(phi_2);
-                proj_parm.sp1 = sin(phi_1);
-                proj_parm.sp2 = sin(phi_2);
-                proj_parm.cs = proj_parm.cp1 * proj_parm.sp2;
-                proj_parm.sc = proj_parm.sp1 * proj_parm.cp2;
-                proj_parm.ccs = proj_parm.cp1 * proj_parm.cp2 * sin(proj_parm.dlam2);
-                proj_parm.z02 = aacos(proj_parm.sp1 * proj_parm.sp2 + proj_parm.cp1 * proj_parm.cp2 * cos(proj_parm.dlam2));
-                proj_parm.hz0 = .5 * proj_parm.z02;
-                A12 = atan2(proj_parm.cp2 * sin(proj_parm.dlam2),
-                    proj_parm.cp1 * proj_parm.sp2 - proj_parm.sp1 * proj_parm.cp2 * cos(proj_parm.dlam2));
-                proj_parm.ca = cos(pp = aasin(proj_parm.cp1 * sin(A12)));
-                proj_parm.sa = sin(pp);
-                proj_parm.lp = adjlon(atan2(proj_parm.cp1 * cos(A12), proj_parm.sp1) - proj_parm.hz0);
-                proj_parm.dlam2 *= .5;
-                proj_parm.lamc = geometry::math::half_pi<T>() - atan2(sin(A12) * proj_parm.sp1, cos(A12)) - proj_parm.dlam2;
-                proj_parm.thz0 = tan(proj_parm.hz0);
-                proj_parm.rhshz0 = .5 / sin(proj_parm.hz0);
-                proj_parm.r2z0 = 0.5 / proj_parm.z02;
-                proj_parm.z02 *= proj_parm.z02;
-                par.es = 0.;
-            }
+	/* get control point locations */
+	phi_1 = pj_param(par.params, "rlat_1").f;
+	lam_1 = pj_param(par.params, "rlon_1").f;
+	phi_2 = pj_param(par.params, "rlat_2").f;
+	lam_2 = pj_param(par.params, "rlon_2").f;
+	if (phi_1 == phi_2 && lam_1 == lam_2)
+		BOOST_THROW_EXCEPTION( projection_exception(-25) );
+	par.lam0 = adjlon(0.5 * (lam_1 + lam_2));
+	proj_parm.dlam2 = adjlon(lam_2 - lam_1);
+	proj_parm.cp1 = cos(phi_1);
+	proj_parm.cp2 = cos(phi_2);
+	proj_parm.sp1 = sin(phi_1);
+	proj_parm.sp2 = sin(phi_2);
+	proj_parm.cs = proj_parm.cp1 * proj_parm.sp2;
+	proj_parm.sc = proj_parm.sp1 * proj_parm.cp2;
+	proj_parm.ccs = proj_parm.cp1 * proj_parm.cp2 * sin(proj_parm.dlam2);
+	proj_parm.z02 = aacos(proj_parm.sp1 * proj_parm.sp2 + proj_parm.cp1 * proj_parm.cp2 * cos(proj_parm.dlam2));
+	proj_parm.hz0 = .5 * proj_parm.z02;
+	A12 = atan2(proj_parm.cp2 * sin(proj_parm.dlam2),
+	            proj_parm.cp1 * proj_parm.sp2 - proj_parm.sp1 * proj_parm.cp2 * cos(proj_parm.dlam2));
+	proj_parm.ca = cos(pp = aasin(proj_parm.cp1 * sin(A12)));
+	proj_parm.sa = sin(pp);
+	proj_parm.lp = adjlon(atan2(proj_parm.cp1 * cos(A12), proj_parm.sp1) - proj_parm.hz0);
+	proj_parm.dlam2 *= .5;
+	proj_parm.lamc = geometry::math::half_pi<T>() - atan2(sin(A12) * proj_parm.sp1, cos(A12)) - proj_parm.dlam2;
+	proj_parm.thz0 = tan(proj_parm.hz0);
+	proj_parm.rhshz0 = .5 / sin(proj_parm.hz0);
+	proj_parm.r2z0 = 0.5 / proj_parm.z02;
+	proj_parm.z02 *= proj_parm.z02;
+	par.es = 0.;
+}
 
-    }} // namespace detail::tpeqd
-    #endif // doxygen
+}
+} // namespace detail::tpeqd
+#endif // doxygen
 
-    /*!
-        \brief Two Point Equidistant projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-        \par Projection parameters
-         - lat_1: Latitude of first standard parallel (degrees)
-         - lon_1 (degrees)
-         - lat_2: Latitude of second standard parallel (degrees)
-         - lon_2 (degrees)
-        \par Example
-        \image html ex_tpeqd.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct tpeqd_spheroid : public detail::tpeqd::base_tpeqd_spheroid<CalculationType, Parameters>
-    {
-        inline tpeqd_spheroid(const Parameters& par) : detail::tpeqd::base_tpeqd_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::tpeqd::setup_tpeqd(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Two Point Equidistant projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+    \par Projection parameters
+     - lat_1: Latitude of first standard parallel (degrees)
+     - lon_1 (degrees)
+     - lat_2: Latitude of second standard parallel (degrees)
+     - lon_2 (degrees)
+    \par Example
+    \image html ex_tpeqd.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct tpeqd_spheroid : public detail::tpeqd::base_tpeqd_spheroid<CalculationType, Parameters>
+{
+	inline tpeqd_spheroid(const Parameters& par) : detail::tpeqd::base_tpeqd_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::tpeqd::setup_tpeqd(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::tpeqd, tpeqd_spheroid, tpeqd_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::tpeqd, tpeqd_spheroid, tpeqd_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class tpeqd_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<tpeqd_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class tpeqd_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<tpeqd_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void tpeqd_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("tpeqd", new tpeqd_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void tpeqd_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("tpeqd", new tpeqd_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_TPEQD_HPP
 

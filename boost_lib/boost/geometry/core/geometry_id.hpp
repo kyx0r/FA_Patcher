@@ -23,7 +23,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -34,11 +36,11 @@ namespace core_dispatch
 template <typename GeometryTag>
 struct geometry_id
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<GeometryTag>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<GeometryTag>)
+	);
 };
 
 
@@ -97,7 +99,8 @@ struct geometry_id : core_dispatch::geometry_id<typename tag<Geometry>::type>
 {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_GEOMETRY_ID_HPP

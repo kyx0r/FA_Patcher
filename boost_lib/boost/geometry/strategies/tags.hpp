@@ -15,20 +15,22 @@
 #define BOOST_GEOMETRY_STRATEGIES_TAGS_HPP
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace strategy
 {
-    /*!
-        \brief Indicate compiler/library user that strategy is not implemented.
-        \details Strategies are defined for point types or for point type
-        combinations. If there is no implementation for that specific point type, or point type
-        combination, the calculation cannot be done. To indicate this, this not_implemented
-        class is used as a typedef stub.
+/*!
+    \brief Indicate compiler/library user that strategy is not implemented.
+    \details Strategies are defined for point types or for point type
+    combinations. If there is no implementation for that specific point type, or point type
+    combination, the calculation cannot be done. To indicate this, this not_implemented
+    class is used as a typedef stub.
 
-    */
-    struct not_implemented {};
+*/
+struct not_implemented {};
 }
 
 
@@ -38,6 +40,7 @@ struct strategy_tag_distance_point_box {};
 struct strategy_tag_distance_box_box {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_TAGS_HPP

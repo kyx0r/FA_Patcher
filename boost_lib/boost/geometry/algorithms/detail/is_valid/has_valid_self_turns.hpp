@@ -29,12 +29,16 @@
 
 #include <boost/geometry/algorithms/detail/is_valid/is_acceptable_turn.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 
@@ -42,80 +46,82 @@ template
 <
     typename Geometry,
     typename IsAcceptableTurn = is_acceptable_turn<Geometry>
->
+    >
 class has_valid_self_turns
 {
 private:
-    typedef typename point_type<Geometry>::type point_type;
+	typedef typename point_type<Geometry>::type point_type;
 
-    typedef typename geometry::rescale_policy_type
-        <
-            point_type
-        >::type rescale_policy_type;
+	typedef typename geometry::rescale_policy_type
+	<
+	point_type
+	>::type rescale_policy_type;
 
-    typedef detail::overlay::get_turn_info
-        <
-            detail::overlay::assign_null_policy
-        > turn_policy;
+	typedef detail::overlay::get_turn_info
+	<
+	detail::overlay::assign_null_policy
+	> turn_policy;
 
 public:
-    typedef detail::overlay::turn_info
-        <
-            point_type,
-            typename geometry::segment_ratio_type
-                <
-                    point_type,
-                    rescale_policy_type
-                >::type
-        > turn_type;
+	typedef detail::overlay::turn_info
+	<
+	point_type,
+	typename geometry::segment_ratio_type
+	<
+	point_type,
+	rescale_policy_type
+	>::type
+	> turn_type;
 
-    // returns true if all turns are valid
-    template <typename Turns, typename VisitPolicy, typename Strategy>
-    static inline bool apply(Geometry const& geometry,
-                             Turns& turns,
-                             VisitPolicy& visitor,
-                             Strategy const& strategy)
-    {
-        boost::ignore_unused(visitor);
+	// returns true if all turns are valid
+	template <typename Turns, typename VisitPolicy, typename Strategy>
+	static inline bool apply(Geometry const& geometry,
+	                         Turns& turns,
+	                         VisitPolicy& visitor,
+	                         Strategy const& strategy)
+	{
+		boost::ignore_unused(visitor);
 
-        rescale_policy_type robust_policy
-            = geometry::get_rescale_policy<rescale_policy_type>(geometry);
+		rescale_policy_type robust_policy
+		    = geometry::get_rescale_policy<rescale_policy_type>(geometry);
 
-        detail::overlay::stateless_predicate_based_interrupt_policy
-            <
-                IsAcceptableTurn
-            > interrupt_policy;
+		detail::overlay::stateless_predicate_based_interrupt_policy
+		<
+		IsAcceptableTurn
+		> interrupt_policy;
 
-        detail::self_get_turn_points::self_turns<false, turn_policy>(geometry,
-                                          strategy,
-                                          robust_policy,
-                                          turns,
-                                          interrupt_policy);
+		detail::self_get_turn_points::self_turns<false, turn_policy>(geometry,
+		        strategy,
+		        robust_policy,
+		        turns,
+		        interrupt_policy);
 
-        if (interrupt_policy.has_intersections)
-        {
-            BOOST_GEOMETRY_ASSERT(! boost::empty(turns));
-            return visitor.template apply<failure_self_intersections>(turns);
-        }
-        else
-        {
-            return visitor.template apply<no_failure>();
-        }
-    }
+		if (interrupt_policy.has_intersections)
+		{
+			BOOST_GEOMETRY_ASSERT(! boost::empty(turns));
+			return visitor.template apply<failure_self_intersections>(turns);
+		}
+		else
+		{
+			return visitor.template apply<no_failure>();
+		}
+	}
 
-    // returns true if all turns are valid
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(Geometry const& geometry, VisitPolicy& visitor, Strategy const& strategy)
-    {
-        std::vector<turn_type> turns;
-        return apply(geometry, turns, visitor, strategy);
-    }
+	// returns true if all turns are valid
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(Geometry const& geometry, VisitPolicy& visitor, Strategy const& strategy)
+	{
+		std::vector<turn_type> turns;
+		return apply(geometry, turns, visitor, strategy);
+	}
 };
 
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_HAS_VALID_SELF_TURNS_HPP

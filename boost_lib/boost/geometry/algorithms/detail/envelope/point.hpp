@@ -36,66 +36,71 @@
 #include <boost/geometry/algorithms/dispatch/envelope.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace envelope
+namespace detail
+{
+namespace envelope
 {
 
 
 template <std::size_t Dimension, std::size_t DimensionCount>
 struct envelope_one_point
 {
-    template <std::size_t Index, typename Point, typename Box>
-    static inline void apply(Point const& point, Box& mbr)
-    {
-        detail::indexed_point_view<Box, Index> box_corner(mbr);
-        detail::conversion::point_to_point
-            <
-                Point,
-                detail::indexed_point_view<Box, Index>,
-                Dimension,
-                DimensionCount
-            >::apply(point, box_corner);
-    }
+	template <std::size_t Index, typename Point, typename Box>
+	static inline void apply(Point const& point, Box& mbr)
+	{
+		detail::indexed_point_view<Box, Index> box_corner(mbr);
+		detail::conversion::point_to_point
+		<
+		Point,
+		detail::indexed_point_view<Box, Index>,
+		Dimension,
+		DimensionCount
+		>::apply(point, box_corner);
+	}
 
-    template <typename Point, typename Box, typename Strategy>
-    static inline void apply(Point const& point, Box& mbr, Strategy const&)
-    {
-        apply<min_corner>(point, mbr);
-        apply<max_corner>(point, mbr);
-    }
+	template <typename Point, typename Box, typename Strategy>
+	static inline void apply(Point const& point, Box& mbr, Strategy const&)
+	{
+		apply<min_corner>(point, mbr);
+		apply<max_corner>(point, mbr);
+	}
 };
 
 
 struct envelope_point_on_spheroid
 {
-    template<typename Point, typename Box, typename Strategy>
-    static inline void apply(Point const& point, Box& mbr, Strategy const& strategy)
-    {
-        Point normalized_point = detail::return_normalized<Point>(point);
+	template<typename Point, typename Box, typename Strategy>
+	static inline void apply(Point const& point, Box& mbr, Strategy const& strategy)
+	{
+		Point normalized_point = detail::return_normalized<Point>(point);
 
-        typename point_type<Box>::type box_point;
+		typename point_type<Box>::type box_point;
 
-        // transform units of input point to units of a box point
-        transform_units(normalized_point, box_point);
+		// transform units of input point to units of a box point
+		transform_units(normalized_point, box_point);
 
-        geometry::set<min_corner, 0>(mbr, geometry::get<0>(box_point));
-        geometry::set<min_corner, 1>(mbr, geometry::get<1>(box_point));
+		geometry::set<min_corner, 0>(mbr, geometry::get<0>(box_point));
+		geometry::set<min_corner, 1>(mbr, geometry::get<1>(box_point));
 
-        geometry::set<max_corner, 0>(mbr, geometry::get<0>(box_point));
-        geometry::set<max_corner, 1>(mbr, geometry::get<1>(box_point));
+		geometry::set<max_corner, 0>(mbr, geometry::get<0>(box_point));
+		geometry::set<max_corner, 1>(mbr, geometry::get<1>(box_point));
 
-        envelope_one_point
-            <
-                2, dimension<Point>::value
-            >::apply(normalized_point, mbr, strategy);
-    }
+		envelope_one_point
+		<
+		2, dimension<Point>::value
+		>::apply(normalized_point, mbr, strategy);
+	}
 };
 
 
-}} // namespace detail::envelope
+}
+} // namespace detail::envelope
 #endif // DOXYGEN_NO_DETAIL
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -105,31 +110,32 @@ namespace dispatch
 
 template <typename Point>
 struct envelope<Point, point_tag, cartesian_tag>
-    : detail::envelope::envelope_one_point<0, dimension<Point>::value>
+	: detail::envelope::envelope_one_point<0, dimension<Point>::value>
 {};
 
 
 template <typename Point>
 struct envelope<Point, point_tag, spherical_polar_tag>
-    : detail::envelope::envelope_point_on_spheroid
+	: detail::envelope::envelope_point_on_spheroid
 {};
 
 
 template <typename Point>
 struct envelope<Point, point_tag, spherical_equatorial_tag>
-    : detail::envelope::envelope_point_on_spheroid
+	: detail::envelope::envelope_point_on_spheroid
 {};
 
 
 template <typename Point>
 struct envelope<Point, point_tag, geographic_tag>
-    : detail::envelope::envelope_point_on_spheroid
+	: detail::envelope::envelope_point_on_spheroid
 {};
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_ENVELOPE_POINT_HPP

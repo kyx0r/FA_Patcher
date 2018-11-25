@@ -8,22 +8,28 @@
 #ifndef BOOST_FUSION_ADAPTED_STRUCT_DETAIL_KEY_OF_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_STRUCT_DETAIL_KEY_OF_IMPL_HPP
 
-namespace boost { namespace fusion { namespace extension
+namespace boost
 {
-    template <typename>
-    struct key_of_impl;
+namespace fusion
+{
+namespace extension
+{
+template <typename>
+struct key_of_impl;
 
-    template <>
-    struct key_of_impl<struct_iterator_tag>
-    {
-        template <typename It>
-        struct apply
-          : extension::struct_assoc_key<
-                typename remove_const<typename It::seq_type>::type
-              , It::index::value
-            >
-        {};
-    };
-}}}
+template <>
+struct key_of_impl<struct_iterator_tag>
+{
+	template <typename It>
+	struct apply
+		: extension::struct_assoc_key<
+		  typename remove_const<typename It::seq_type>::type
+		, It::index::value
+		  >
+	{};
+};
+}
+}
+}
 
 #endif

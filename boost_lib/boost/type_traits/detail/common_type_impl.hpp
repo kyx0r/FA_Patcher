@@ -34,41 +34,41 @@ template<class T, class U> struct common_type_impl;
 
 template<class T> struct common_type_impl<T, T>
 {
-    typedef T type;
+	typedef T type;
 };
 
 // one of the operands is a class type, try conversions in both directions
 
 template<class T, class U> struct ct_class
 {
-    BOOST_STATIC_CONSTANT( bool, ct = boost::is_class<T>::value || boost::is_union<T>::value );
-    BOOST_STATIC_CONSTANT( bool, cu = boost::is_class<U>::value || boost::is_union<U>::value );
+	BOOST_STATIC_CONSTANT( bool, ct = boost::is_class<T>::value || boost::is_union<T>::value );
+	BOOST_STATIC_CONSTANT( bool, cu = boost::is_class<U>::value || boost::is_union<U>::value );
 
-    BOOST_STATIC_CONSTANT( bool, value = ct || cu );
+	BOOST_STATIC_CONSTANT( bool, value = ct || cu );
 };
 
 template<class T, class U> struct common_type_impl3;
 
 template<class T, class U> struct common_type_class: public boost::conditional<
 
-    boost::is_convertible<T, U>::value && !boost::is_convertible<U, T>::value,
-    boost::type_identity<U>,
+	boost::is_convertible<T, U>::value && !boost::is_convertible<U, T>::value,
+	boost::type_identity<U>,
 
-    typename boost::conditional<
+	typename boost::conditional<
 
-        boost::is_convertible<U, T>::value && !boost::is_convertible<T, U>::value,
-        boost::type_identity<T>,
+	boost::is_convertible<U, T>::value && !boost::is_convertible<T, U>::value,
+	boost::type_identity<T>,
 
-        common_type_impl3<T, U>
-    >::type
->::type
+	common_type_impl3<T, U>
+	>::type
+	>::type
 {
 };
 
 template<class T, class U> struct common_type_impl: public boost::conditional<
-    ct_class<T, U>::value,
-    common_type_class<T, U>,
-    common_type_impl3<T, U> >::type
+	ct_class<T, U>::value,
+	common_type_class<T, U>,
+	common_type_impl3<T, U> >::type
 {
 };
 
@@ -77,9 +77,9 @@ template<class T, class U> struct common_type_impl: public boost::conditional<
 template<class T, class U> struct common_type_impl4;
 
 template<class T, class U> struct common_type_impl3: public boost::conditional<
-    boost::is_pointer<T>::value || boost::is_pointer<U>::value,
-    composite_pointer_type<T, U>,
-    common_type_impl4<T, U> >::type
+	boost::is_pointer<T>::value || boost::is_pointer<U>::value,
+	composite_pointer_type<T, U>,
+	common_type_impl4<T, U> >::type
 {
 };
 
@@ -88,9 +88,9 @@ template<class T, class U> struct common_type_impl3: public boost::conditional<
 template<class T, class U> struct common_type_impl5;
 
 template<class T, class U> struct common_type_impl4: public boost::conditional<
-    boost::is_member_pointer<T>::value || boost::is_member_pointer<U>::value,
-    composite_member_pointer_type<T, U>,
-    common_type_impl5<T, U> >::type
+	boost::is_member_pointer<T>::value || boost::is_member_pointer<U>::value,
+	composite_member_pointer_type<T, U>,
+	common_type_impl5<T, U> >::type
 {
 };
 

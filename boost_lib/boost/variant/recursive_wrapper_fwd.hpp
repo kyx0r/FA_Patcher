@@ -22,7 +22,8 @@
 #include <boost/type_traits/is_constructible.hpp>
 #include <boost/type_traits/is_nothrow_move_constructible.hpp>
 
-namespace boost {
+namespace boost
+{
 
 //////////////////////////////////////////////////////////////////////////
 // class template recursive_wrapper
@@ -48,27 +49,27 @@ template <typename T> class recursive_wrapper;
 //
 // recursive_wrapper<T> is constructible only from T and recursive_wrapper<T>.
 //
-template <class T>          struct is_constructible<recursive_wrapper<T>, T>                            : boost::true_type{};
-template <class T>          struct is_constructible<recursive_wrapper<T>, const T>                      : boost::true_type{};
-template <class T>          struct is_constructible<recursive_wrapper<T>, T&>                           : boost::true_type{};
-template <class T>          struct is_constructible<recursive_wrapper<T>, const T&>                     : boost::true_type{};
-template <class T>          struct is_constructible<recursive_wrapper<T>, recursive_wrapper<T> >        : boost::true_type{};
-template <class T>          struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<T> >  : boost::true_type{};
-template <class T>          struct is_constructible<recursive_wrapper<T>, recursive_wrapper<T>& >       : boost::true_type{};
-template <class T>          struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<T>& > : boost::true_type{};
+template <class T>          struct is_constructible<recursive_wrapper<T>, T>                            : boost::true_type {};
+template <class T>          struct is_constructible<recursive_wrapper<T>, const T>                      : boost::true_type {};
+template <class T>          struct is_constructible<recursive_wrapper<T>, T&>                           : boost::true_type {};
+template <class T>          struct is_constructible<recursive_wrapper<T>, const T&>                     : boost::true_type {};
+template <class T>          struct is_constructible<recursive_wrapper<T>, recursive_wrapper<T> >        : boost::true_type {};
+template <class T>          struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<T> >  : boost::true_type {};
+template <class T>          struct is_constructible<recursive_wrapper<T>, recursive_wrapper<T>& >       : boost::true_type {};
+template <class T>          struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<T>& > : boost::true_type {};
 
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, U >                           : boost::false_type{};
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, const U >                     : boost::false_type{};
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, U& >                          : boost::false_type{};
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, const U& >                    : boost::false_type{};
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, recursive_wrapper<U> >        : boost::false_type{};
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<U> >  : boost::false_type{};
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, recursive_wrapper<U>& >       : boost::false_type{};
-template <class T, class U> struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<U>& > : boost::false_type{};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, U >                           : boost::false_type {};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, const U >                     : boost::false_type {};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, U& >                          : boost::false_type {};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, const U& >                    : boost::false_type {};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, recursive_wrapper<U> >        : boost::false_type {};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<U> >  : boost::false_type {};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, recursive_wrapper<U>& >       : boost::false_type {};
+template <class T, class U> struct is_constructible<recursive_wrapper<T>, const recursive_wrapper<U>& > : boost::false_type {};
 
 // recursive_wrapper is not nothrow move constructible, because it's constructor does dynamic memory allocation.
 // This specialisation is required to workaround GCC6 issue: https://svn.boost.org/trac/boost/ticket/12680
-template <class T> struct is_nothrow_move_constructible<recursive_wrapper<T> > : boost::false_type{};
+template <class T> struct is_nothrow_move_constructible<recursive_wrapper<T> > : boost::false_type {};
 
 ///////////////////////////////////////////////////////////////////////////////
 // metafunction is_recursive_wrapper (modeled on code by David Abrahams)
@@ -76,18 +77,19 @@ template <class T> struct is_nothrow_move_constructible<recursive_wrapper<T> > :
 // True if specified type matches recursive_wrapper<T>.
 //
 
-namespace detail {
+namespace detail
+{
 
 
 template <typename T>
 struct is_recursive_wrapper_impl
-    : mpl::false_
+	: mpl::false_
 {
 };
 
 template <typename T>
 struct is_recursive_wrapper_impl< recursive_wrapper<T> >
-    : mpl::true_
+	: mpl::true_
 {
 };
 
@@ -95,11 +97,11 @@ struct is_recursive_wrapper_impl< recursive_wrapper<T> >
 } // namespace detail
 
 template< typename T > struct is_recursive_wrapper
-    : public ::boost::integral_constant<bool,(::boost::detail::is_recursive_wrapper_impl<T>::value)>
-{
-public:
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_recursive_wrapper,(T))
-};
+: public ::boost::integral_constant<bool,(::boost::detail::is_recursive_wrapper_impl<T>::value)>
+  {
+      public:
+      BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_recursive_wrapper,(T))
+  };
 
 ///////////////////////////////////////////////////////////////////////////////
 // metafunction unwrap_recursive
@@ -111,17 +113,17 @@ public:
 template <typename T>
 struct unwrap_recursive
 {
-    typedef T type;
+	typedef T type;
 
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,unwrap_recursive,(T))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(1,unwrap_recursive,(T))
 };
 
 template <typename T>
 struct unwrap_recursive< recursive_wrapper<T> >
 {
-    typedef T type;
+	typedef T type;
 
-    BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(1,unwrap_recursive,(T))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(1,unwrap_recursive,(T))
 };
 
 

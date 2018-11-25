@@ -20,7 +20,9 @@
 #define BOOST_GEOMETRY_CORE_TAGS_HPP
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 // Tags defining strategies linked to coordinate systems
@@ -127,24 +129,25 @@ struct single_tag_of
 template <>
 struct single_tag_of<multi_point_tag>
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 template <>
 struct single_tag_of<multi_linestring_tag>
 {
-    typedef linestring_tag type;
+	typedef linestring_tag type;
 };
 
 template <>
 struct single_tag_of<multi_polygon_tag>
 {
-    typedef polygon_tag type;
+	typedef polygon_tag type;
 };
 
 #endif
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_TAGS_HPP

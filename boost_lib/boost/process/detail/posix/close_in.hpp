@@ -13,18 +13,28 @@
 
 #include <boost/process/detail/posix/handler.hpp>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 struct close_in : handler_base_ext
 {
-    template <class Executor>
-    void on_exec_setup(Executor &e) const
-    {
-        if (::close(STDIN_FILENO) == -1)
-            e.set_error(::boost::process::detail::get_last_error(), "close() failed");
-    }
+	template <class Executor>
+	void on_exec_setup(Executor &e) const
+	{
+		if (::close(STDIN_FILENO) == -1)
+			e.set_error(::boost::process::detail::get_last_error(), "close() failed");
+	}
 };
 
-}}}}
+}
+}
+}
+}
 
 #endif

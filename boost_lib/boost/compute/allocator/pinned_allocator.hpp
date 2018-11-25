@@ -13,38 +13,41 @@
 
 #include <boost/compute/allocator/buffer_allocator.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 template<class T>
 class pinned_allocator : public buffer_allocator<T>
 {
 public:
-    explicit pinned_allocator(const context &context)
-        : buffer_allocator<T>(context)
-    {
-        buffer_allocator<T>::set_mem_flags(
-            buffer::read_write | buffer::alloc_host_ptr
-        );
-    }
+	explicit pinned_allocator(const context &context)
+		: buffer_allocator<T>(context)
+	{
+		buffer_allocator<T>::set_mem_flags(
+		    buffer::read_write | buffer::alloc_host_ptr
+		);
+	}
 
-    pinned_allocator(const pinned_allocator<T> &other)
-        : buffer_allocator<T>(other)
-    {
-    }
+	pinned_allocator(const pinned_allocator<T> &other)
+		: buffer_allocator<T>(other)
+	{
+	}
 
-    pinned_allocator<T>& operator=(const pinned_allocator<T> &other)
-    {
-        if(this != &other){
-            buffer_allocator<T>::operator=(other);
-        }
+	pinned_allocator<T>& operator=(const pinned_allocator<T> &other)
+	{
+		if(this != &other)
+		{
+			buffer_allocator<T>::operator=(other);
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~pinned_allocator()
-    {
-    }
+	~pinned_allocator()
+	{
+	}
 };
 
 } // end compute namespace

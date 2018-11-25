@@ -467,13 +467,19 @@
                                                                                 \
     BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DEFINITION_END(NAMESPACE_SEQ)
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
 {
-    template<typename A1, typename A2>
-    struct get_first_arg
-    {
-        typedef A1 type;
-    };
-}}}
+namespace fusion
+{
+namespace detail
+{
+template<typename A1, typename A2>
+struct get_first_arg
+{
+	typedef A1 type;
+};
+}
+}
+}
 
 #endif

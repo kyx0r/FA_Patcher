@@ -26,8 +26,10 @@
 #include <boost/random/detail/operators.hpp>
 #include <boost/random/normal_distribution.hpp>
 
-namespace boost {
-namespace random {
+namespace boost
+{
+namespace random
+{
 
 /**
  * Instantiations of class template lognormal_distribution model a
@@ -46,144 +48,172 @@ template<class RealType = double>
 class lognormal_distribution
 {
 public:
-    typedef typename normal_distribution<RealType>::input_type input_type;
-    typedef RealType result_type;
+	typedef typename normal_distribution<RealType>::input_type input_type;
+	typedef RealType result_type;
 
-    class param_type
-    {
-    public:
+	class param_type
+	{
+	public:
 
-        typedef lognormal_distribution distribution_type;
+		typedef lognormal_distribution distribution_type;
 
-        /** Constructs the parameters of a lognormal_distribution. */
-        explicit param_type(RealType m_arg = RealType(0.0),
-                            RealType s_arg = RealType(1.0))
-          : _m(m_arg), _s(s_arg) {}
+		/** Constructs the parameters of a lognormal_distribution. */
+		explicit param_type(RealType m_arg = RealType(0.0),
+		                    RealType s_arg = RealType(1.0))
+			: _m(m_arg), _s(s_arg) {}
 
-        /** Returns the "m" parameter of the distribution. */
-        RealType m() const { return _m; }
+		/** Returns the "m" parameter of the distribution. */
+		RealType m() const
+		{
+			return _m;
+		}
 
-        /** Returns the "s" parameter of the distribution. */
-        RealType s() const { return _s; }
+		/** Returns the "s" parameter of the distribution. */
+		RealType s() const
+		{
+			return _s;
+		}
 
-        /** Writes the parameters to a std::ostream. */
-        BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, param_type, parm)
-        {
-            os << parm._m << " " << parm._s;
-            return os;
-        }
+		/** Writes the parameters to a std::ostream. */
+		BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, param_type, parm)
+		{
+			os << parm._m << " " << parm._s;
+			return os;
+		}
 
-        /** Reads the parameters from a std::istream. */
-        BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, param_type, parm)
-        {
-            is >> parm._m >> std::ws >> parm._s;
-            return is;
-        }
+		/** Reads the parameters from a std::istream. */
+		BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, param_type, parm)
+		{
+			is >> parm._m >> std::ws >> parm._s;
+			return is;
+		}
 
-        /** Returns true if the two sets of parameters are equal. */
-        BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(param_type, lhs, rhs)
-        { return lhs._m == rhs._m && lhs._s == rhs._s; }
+		/** Returns true if the two sets of parameters are equal. */
+		BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(param_type, lhs, rhs)
+		{
+			return lhs._m == rhs._m && lhs._s == rhs._s;
+		}
 
-        /** Returns true if the two sets of parameters are different. */
-        BOOST_RANDOM_DETAIL_INEQUALITY_OPERATOR(param_type)
+		/** Returns true if the two sets of parameters are different. */
+		BOOST_RANDOM_DETAIL_INEQUALITY_OPERATOR(param_type)
 
-    private:
-        RealType _m;
-        RealType _s;
-    };
+	private:
+		RealType _m;
+		RealType _s;
+	};
 
-    /**
-     * Constructs a lognormal_distribution. @c m and @c s are the
-     * parameters of the distribution.
-     */
-    explicit lognormal_distribution(RealType m_arg = RealType(0.0),
-                                    RealType s_arg = RealType(1.0))
-      : _normal(m_arg, s_arg) {}
+	/**
+	 * Constructs a lognormal_distribution. @c m and @c s are the
+	 * parameters of the distribution.
+	 */
+	explicit lognormal_distribution(RealType m_arg = RealType(0.0),
+	                                RealType s_arg = RealType(1.0))
+		: _normal(m_arg, s_arg) {}
 
-    /**
-     * Constructs a lognormal_distribution from its parameters.
-     */
-    explicit lognormal_distribution(const param_type& parm)
-      : _normal(parm.m(), parm.s()) {}
+	/**
+	 * Constructs a lognormal_distribution from its parameters.
+	 */
+	explicit lognormal_distribution(const param_type& parm)
+		: _normal(parm.m(), parm.s()) {}
 
-    // compiler-generated copy ctor and assignment operator are fine
+	// compiler-generated copy ctor and assignment operator are fine
 
-    /** Returns the m parameter of the distribution. */
-    RealType m() const { return _normal.mean(); }
-    /** Returns the s parameter of the distribution. */
-    RealType s() const { return _normal.sigma(); }
+	/** Returns the m parameter of the distribution. */
+	RealType m() const
+	{
+		return _normal.mean();
+	}
+	/** Returns the s parameter of the distribution. */
+	RealType s() const
+	{
+		return _normal.sigma();
+	}
 
-    /** Returns the smallest value that the distribution can produce. */
-    RealType min BOOST_PREVENT_MACRO_SUBSTITUTION () const
-    { return RealType(0); }
-    /** Returns the largest value that the distribution can produce. */
-    RealType max BOOST_PREVENT_MACRO_SUBSTITUTION () const
-    { return (std::numeric_limits<RealType>::infinity)(); }
+	/** Returns the smallest value that the distribution can produce. */
+	RealType min BOOST_PREVENT_MACRO_SUBSTITUTION () const
+	{
+		return RealType(0);
+	}
+	/** Returns the largest value that the distribution can produce. */
+	RealType max BOOST_PREVENT_MACRO_SUBSTITUTION () const
+	{
+		return (std::numeric_limits<RealType>::infinity)();
+	}
 
-    /** Returns the parameters of the distribution. */
-    param_type param() const { return param_type(m(), s()); }
-    /** Sets the parameters of the distribution. */
-    void param(const param_type& parm)
-    {
-        typedef normal_distribution<RealType> normal_type;
-        typename normal_type::param_type normal_param(parm.m(), parm.s());
-        _normal.param(normal_param);
-    }
-    
-    /**
-     * Effects: Subsequent uses of the distribution do not depend
-     * on values produced by any engine prior to invoking reset.
-     */
-    void reset() { _normal.reset(); }
+	/** Returns the parameters of the distribution. */
+	param_type param() const
+	{
+		return param_type(m(), s());
+	}
+	/** Sets the parameters of the distribution. */
+	void param(const param_type& parm)
+	{
+		typedef normal_distribution<RealType> normal_type;
+		typename normal_type::param_type normal_param(parm.m(), parm.s());
+		_normal.param(normal_param);
+	}
 
-    /**
-     * Returns a random variate distributed according to the
-     * lognormal distribution.
-     */
-    template<class Engine>
-    result_type operator()(Engine& eng)
-    {
-        using std::exp;
-        return exp(_normal(eng));
-    }
+	/**
+	 * Effects: Subsequent uses of the distribution do not depend
+	 * on values produced by any engine prior to invoking reset.
+	 */
+	void reset()
+	{
+		_normal.reset();
+	}
 
-    /**
-     * Returns a random variate distributed according to the
-     * lognormal distribution with parameters specified by param.
-     */
-    template<class Engine>
-    result_type operator()(Engine& eng, const param_type& parm)
-    { return lognormal_distribution(parm)(eng); }
+	/**
+	 * Returns a random variate distributed according to the
+	 * lognormal distribution.
+	 */
+	template<class Engine>
+	result_type operator()(Engine& eng)
+	{
+		using std::exp;
+		return exp(_normal(eng));
+	}
 
-    /** Writes the distribution to a @c std::ostream. */
-    BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, lognormal_distribution, ld)
-    {
-        os << ld._normal;
-        return os;
-    }
+	/**
+	 * Returns a random variate distributed according to the
+	 * lognormal distribution with parameters specified by param.
+	 */
+	template<class Engine>
+	result_type operator()(Engine& eng, const param_type& parm)
+	{
+		return lognormal_distribution(parm)(eng);
+	}
 
-    /** Reads the distribution from a @c std::istream. */
-    BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, lognormal_distribution, ld)
-    {
-        is >> ld._normal;
-        return is;
-    }
+	/** Writes the distribution to a @c std::ostream. */
+	BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, lognormal_distribution, ld)
+	{
+		os << ld._normal;
+		return os;
+	}
 
-    /**
-     * Returns true if the two distributions will produce identical
-     * sequences of values given equal generators.
-     */
-    BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(lognormal_distribution, lhs, rhs)
-    { return lhs._normal == rhs._normal; }
+	/** Reads the distribution from a @c std::istream. */
+	BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, lognormal_distribution, ld)
+	{
+		is >> ld._normal;
+		return is;
+	}
 
-    /**
-     * Returns true if the two distributions may produce different
-     * sequences of values given equal generators.
-     */
-    BOOST_RANDOM_DETAIL_INEQUALITY_OPERATOR(lognormal_distribution)
+	/**
+	 * Returns true if the two distributions will produce identical
+	 * sequences of values given equal generators.
+	 */
+	BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(lognormal_distribution, lhs, rhs)
+	{
+		return lhs._normal == rhs._normal;
+	}
+
+	/**
+	 * Returns true if the two distributions may produce different
+	 * sequences of values given equal generators.
+	 */
+	BOOST_RANDOM_DETAIL_INEQUALITY_OPERATOR(lognormal_distribution)
 
 private:
-    normal_distribution<result_type> _normal;
+	normal_distribution<result_type> _normal;
 };
 
 } // namespace random
@@ -201,50 +231,59 @@ template<class RealType = double>
 class lognormal_distribution
 {
 public:
-    typedef typename normal_distribution<RealType>::input_type input_type;
-    typedef RealType result_type;
+	typedef typename normal_distribution<RealType>::input_type input_type;
+	typedef RealType result_type;
 
-    lognormal_distribution(RealType mean_arg = RealType(1.0),
-                           RealType sigma_arg = RealType(1.0))
-      : _mean(mean_arg), _sigma(sigma_arg)
-    {
-        init();
-    }
-    RealType mean() const { return _mean; }
-    RealType sigma() const { return _sigma; }
-    void reset() { _normal.reset(); }
-    template<class Engine>
-    RealType operator()(Engine& eng)
-    {
-        using std::exp;
-        return exp(_normal(eng) * _nsigma + _nmean);
-    }
-    BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, lognormal_distribution, ld)
-    {
-        os << ld._normal << " " << ld._mean << " " << ld._sigma;
-        return os;
-    }
-    BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, lognormal_distribution, ld)
-    {
-        is >> ld._normal >> std::ws >> ld._mean >> std::ws >> ld._sigma;
-        ld.init();
-        return is;
-    }
+	lognormal_distribution(RealType mean_arg = RealType(1.0),
+	                       RealType sigma_arg = RealType(1.0))
+		: _mean(mean_arg), _sigma(sigma_arg)
+	{
+		init();
+	}
+	RealType mean() const
+	{
+		return _mean;
+	}
+	RealType sigma() const
+	{
+		return _sigma;
+	}
+	void reset()
+	{
+		_normal.reset();
+	}
+	template<class Engine>
+	RealType operator()(Engine& eng)
+	{
+		using std::exp;
+		return exp(_normal(eng) * _nsigma + _nmean);
+	}
+	BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, lognormal_distribution, ld)
+	{
+		os << ld._normal << " " << ld._mean << " " << ld._sigma;
+		return os;
+	}
+	BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, lognormal_distribution, ld)
+	{
+		is >> ld._normal >> std::ws >> ld._mean >> std::ws >> ld._sigma;
+		ld.init();
+		return is;
+	}
 private:
-    /// \cond show_private
-    void init()
-    {
-        using std::log;
-        using std::sqrt;
-        _nmean = log(_mean*_mean/sqrt(_sigma*_sigma + _mean*_mean));
-        _nsigma = sqrt(log(_sigma*_sigma/_mean/_mean+result_type(1)));
-    }
-    RealType _mean;
-    RealType _sigma;
-    RealType _nmean;
-    RealType _nsigma;
-    normal_distribution<RealType> _normal;
-    /// \endcond
+	/// \cond show_private
+	void init()
+	{
+		using std::log;
+		using std::sqrt;
+		_nmean = log(_mean*_mean/sqrt(_sigma*_sigma + _mean*_mean));
+		_nsigma = sqrt(log(_sigma*_sigma/_mean/_mean+result_type(1)));
+	}
+	RealType _mean;
+	RealType _sigma;
+	RealType _nmean;
+	RealType _nsigma;
+	normal_distribution<RealType> _normal;
+	/// \endcond
 };
 
 /// \endcond

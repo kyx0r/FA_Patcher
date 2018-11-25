@@ -10,13 +10,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace error
-    {
-      using v1::error::index_out_of_range;
-    }
-  }
+namespace metaparse
+{
+namespace error
+{
+using v1::error::index_out_of_range;
+}
+}
 }
 
 #endif

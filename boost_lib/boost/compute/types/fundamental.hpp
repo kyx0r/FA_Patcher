@@ -21,8 +21,10 @@
 
 #include <boost/compute/cl.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 // scalar data types
 typedef cl_char char_;
@@ -49,58 +51,58 @@ template<class Scalar, size_t N>
 class vector_type
 {
 public:
-    typedef Scalar scalar_type;
+	typedef Scalar scalar_type;
 
-    vector_type()
-    {
+	vector_type()
+	{
 
-    }
+	}
 
-    explicit vector_type(const Scalar scalar)
-    {
-        for(size_t i = 0; i < N; i++)
-            m_value[i] = scalar;
-    }
+	explicit vector_type(const Scalar scalar)
+	{
+		for(size_t i = 0; i < N; i++)
+			m_value[i] = scalar;
+	}
 
-    vector_type(const vector_type<Scalar, N> &other)
-    {
-        std::memcpy(m_value, other.m_value, sizeof(m_value));
-    }
+	vector_type(const vector_type<Scalar, N> &other)
+	{
+		std::memcpy(m_value, other.m_value, sizeof(m_value));
+	}
 
-    vector_type<Scalar, N>&
-    operator=(const vector_type<Scalar, N> &other)
-    {
-        std::memcpy(m_value, other.m_value, sizeof(m_value));
-        return *this;
-    }
+	vector_type<Scalar, N>&
+	operator=(const vector_type<Scalar, N> &other)
+	{
+		std::memcpy(m_value, other.m_value, sizeof(m_value));
+		return *this;
+	}
 
-    size_t size() const
-    {
-        return N;
-    }
+	size_t size() const
+	{
+		return N;
+	}
 
-    Scalar& operator[](size_t i)
-    {
-        return m_value[i];
-    }
+	Scalar& operator[](size_t i)
+	{
+		return m_value[i];
+	}
 
-    Scalar operator[](size_t i) const
-    {
-        return m_value[i];
-    }
+	Scalar operator[](size_t i) const
+	{
+		return m_value[i];
+	}
 
-    bool operator==(const vector_type<Scalar, N> &other) const
-    {
-        return std::memcmp(m_value, other.m_value, sizeof(m_value)) == 0;
-    }
+	bool operator==(const vector_type<Scalar, N> &other) const
+	{
+		return std::memcmp(m_value, other.m_value, sizeof(m_value)) == 0;
+	}
 
-    bool operator!=(const vector_type<Scalar, N> &other) const
-    {
-        return !(*this == other);
-    }
+	bool operator!=(const vector_type<Scalar, N> &other) const
+	{
+		return !(*this == other);
+	}
 
 protected:
-    scalar_type m_value[N];
+	scalar_type m_value[N];
 };
 
 #define BOOST_COMPUTE_VECTOR_TYPE_CTOR_ARG_FUNCTION(z, i, _) \

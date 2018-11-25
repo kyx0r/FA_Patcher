@@ -17,30 +17,32 @@
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CloseHandle(boost::winapi::HANDLE_ handle);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CloseHandle(boost::winapi::HANDLE_ handle);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-DuplicateHandle(
-    boost::winapi::HANDLE_ hSourceProcessHandle,
-    boost::winapi::HANDLE_ hSourceHandle,
-    boost::winapi::HANDLE_ hTargetProcessHandle,
-    boost::winapi::HANDLE_* lpTargetHandle,
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::BOOL_ bInheritHandle,
-    boost::winapi::DWORD_ dwOptions);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	DuplicateHandle(
+	    boost::winapi::HANDLE_ hSourceProcessHandle,
+	    boost::winapi::HANDLE_ hSourceHandle,
+	    boost::winapi::HANDLE_ hTargetProcessHandle,
+	    boost::winapi::HANDLE_* lpTargetHandle,
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::BOOL_ bInheritHandle,
+	    boost::winapi::DWORD_ dwOptions);
 
 #if BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_WIN10
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CompareObjectHandles(
-    boost::winapi::HANDLE_ hFirstObjectHandle,
-    boost::winapi::HANDLE_ hSecondObjectHandle);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CompareObjectHandles(
+	    boost::winapi::HANDLE_ hFirstObjectHandle,
+	    boost::winapi::HANDLE_ hSecondObjectHandle);
 #endif
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 using ::CloseHandle;
 using ::DuplicateHandle;

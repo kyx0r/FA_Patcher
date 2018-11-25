@@ -15,29 +15,31 @@
 
 #include <boost/graph/detail/is_distributed_selector.hpp>
 
-namespace boost { 
+namespace boost
+{
 
-  /* The default local selector for a distributedS selector. */
-  struct defaultS {};
+/* The default local selector for a distributedS selector. */
+struct defaultS {};
 
-  /**
-   * Selector that specifies that the graph should be distributed
-   * among different processes organized based on the given process
-   * group.
-   */
-  template<typename ProcessGroup, typename LocalS = defaultS,
-           typename DistributionS = defaultS>
-  struct distributedS 
-  {
-    typedef ProcessGroup process_group_type;
-    typedef LocalS local_selector;
-    typedef DistributionS distribution;
-  };
+/**
+ * Selector that specifies that the graph should be distributed
+ * among different processes organized based on the given process
+ * group.
+ */
+template<typename ProcessGroup, typename LocalS = defaultS,
+         typename DistributionS = defaultS>
+struct distributedS
+{
+	typedef ProcessGroup process_group_type;
+	typedef LocalS local_selector;
+	typedef DistributionS distribution;
+};
 
-  namespace detail {
-    template<typename ProcessGroup, typename LocalS, typename DistributionS>
-    struct is_distributed_selector<distributedS<ProcessGroup, LocalS, DistributionS> >: mpl::true_ {};
-  }
+namespace detail
+{
+template<typename ProcessGroup, typename LocalS, typename DistributionS>
+struct is_distributed_selector<distributedS<ProcessGroup, LocalS, DistributionS> >: mpl::true_ {};
+}
 
 }
 

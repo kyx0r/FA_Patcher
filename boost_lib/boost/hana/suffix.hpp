@@ -22,31 +22,34 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename Sfx>
-    constexpr auto suffix_t::operator()(Xs&& xs, Sfx&& sfx) const {
-        using M = typename hana::tag_of<Xs>::type;
-        using Suffix = BOOST_HANA_DISPATCH_IF(suffix_impl<M>,
-            hana::MonadPlus<M>::value
-        );
+//! @cond
+template <typename Xs, typename Sfx>
+constexpr auto suffix_t::operator()(Xs&& xs, Sfx&& sfx) const
+{
+	using M = typename hana::tag_of<Xs>::type;
+	using Suffix = BOOST_HANA_DISPATCH_IF(suffix_impl<M>,
+	                                      hana::MonadPlus<M>::value
+	                                     );
 
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::MonadPlus<M>::value,
-        "hana::suffix(xs, sfx) requires 'xs' to be a MonadPlus");
-    #endif
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::MonadPlus<M>::value,
+	              "hana::suffix(xs, sfx) requires 'xs' to be a MonadPlus");
+#endif
 
-        return Suffix::apply(static_cast<Xs&&>(xs), static_cast<Sfx&&>(sfx));
-    }
-    //! @endcond
+	return Suffix::apply(static_cast<Xs&&>(xs), static_cast<Sfx&&>(sfx));
+}
+//! @endcond
 
-    template <typename M, bool condition>
-    struct suffix_impl<M, when<condition>> : default_ {
-        template <typename Xs, typename Z>
-        static constexpr auto apply(Xs&& xs, Z&& z) {
-            return hana::chain(static_cast<Xs&&>(xs),
-                hana::partial(hana::prepend, hana::lift<M>(static_cast<Z&&>(z))));
-        }
-    };
+template <typename M, bool condition>
+struct suffix_impl<M, when<condition>> : default_
+{
+	template <typename Xs, typename Z>
+	static constexpr auto apply(Xs&& xs, Z&& z)
+	{
+		return hana::chain(static_cast<Xs&&>(xs),
+		                   hana::partial(hana::prepend, hana::lift<M>(static_cast<Z&&>(z))));
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_SUFFIX_HPP

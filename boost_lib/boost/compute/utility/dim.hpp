@@ -14,8 +14,10 @@
 #include <boost/compute/config.hpp>
 #include <boost/compute/utility/extents.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 #ifndef BOOST_COMPUTE_NO_VARIADIC_TEMPLATES
 /// The variadic \c dim() function provides a concise syntax for creating
@@ -30,16 +32,16 @@ namespace compute {
 template<class... Args>
 inline extents<sizeof...(Args)> dim(Args... args)
 {
-    return extents<sizeof...(Args)>({ static_cast<size_t>(args)... });
+	return extents<sizeof...(Args)>({ static_cast<size_t>(args)... });
 }
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1800)
-// for some inexplicable reason passing one parameter to 'dim' variadic template 
+// for some inexplicable reason passing one parameter to 'dim' variadic template
 // generates compile error on msvc 2013 update 4
 template<class T>
 inline extents<1> dim(T arg)
 {
-    return extents<1>(static_cast<size_t>(arg));
+	return extents<1>(static_cast<size_t>(arg));
 }
 #endif // BOOST_WORKAROUND(BOOST_MSVC, <= 1800)
 
@@ -67,7 +69,7 @@ BOOST_PP_REPEAT(BOOST_COMPUTE_MAX_ARITY, BOOST_COMPUTE_DETAIL_DEFINE_DIM, ~)
 template<size_t N>
 inline extents<N> dim()
 {
-    return extents<N>();
+	return extents<N>();
 }
 
 } // end compute namespace

@@ -12,36 +12,46 @@
 #include <boost/geometry/core/tag.hpp>
 #include <boost/geometry/core/tags.hpp>
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
 template
 <
     typename Geometry,
     typename Tag = typename geometry::tag<Geometry>::type
->
+    >
 struct is_indexable
 {
-    static const bool value = false;
+	static const bool value = false;
 };
 
 template <typename Point>
 struct is_indexable<Point, geometry::point_tag>
 {
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template <typename Box>
 struct is_indexable<Box, geometry::box_tag>
 {
-    static const bool value = true;
+	static const bool value = true;
 };
 
 template <typename Segment>
 struct is_indexable<Segment, geometry::segment_tag>
 {
-    static const bool value = true;
+	static const bool value = true;
 };
 
-}}}} // namespave boost::geometry::index::detail
+}
+}
+}
+} // namespave boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_IS_INDEXABLE_HPP

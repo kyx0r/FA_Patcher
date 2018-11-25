@@ -13,7 +13,8 @@
 #ifndef BOOST_OPTIONAL_DETAIL_OPTIONAL_RELOPS_AJK_03OCT2015_HPP
 #define BOOST_OPTIONAL_DETAIL_OPTIONAL_RELOPS_AJK_03OCT2015_HPP
 
-namespace boost {
+namespace boost
+{
 
 // optional's relational operators ( ==, !=, <, >, <=, >= ) have deep-semantics (compare values).
 // WARNING: This is UNLIKE pointers. Use equal_pointees()/less_pointess() in generic code instead.
@@ -26,32 +27,44 @@ namespace boost {
 template<class T>
 inline
 bool operator == ( optional<T> const& x, optional<T> const& y )
-{ return bool(x) && bool(y) ? *x == *y : bool(x) == bool(y); }
+{
+	return bool(x) && bool(y) ? *x == *y : bool(x) == bool(y);
+}
 
 template<class T>
 inline
 bool operator < ( optional<T> const& x, optional<T> const& y )
-{ return less_pointees(x,y); }
+{
+	return less_pointees(x,y);
+}
 
 template<class T>
 inline
 bool operator != ( optional<T> const& x, optional<T> const& y )
-{ return !( x == y ) ; }
+{
+	return !( x == y ) ;
+}
 
 template<class T>
 inline
 bool operator > ( optional<T> const& x, optional<T> const& y )
-{ return y < x ; }
+{
+	return y < x ;
+}
 
 template<class T>
 inline
 bool operator <= ( optional<T> const& x, optional<T> const& y )
-{ return !( y < x ) ; }
+{
+	return !( y < x ) ;
+}
 
 template<class T>
 inline
 bool operator >= ( optional<T> const& x, optional<T> const& y )
-{ return !( x < y ) ; }
+{
+	return !( x < y ) ;
+}
 
 
 //
@@ -60,32 +73,44 @@ bool operator >= ( optional<T> const& x, optional<T> const& y )
 template<class T>
 inline
 bool operator == ( optional<T> const& x, T const& y )
-{ return equal_pointees(x, optional<T>(y)); }
+{
+	return equal_pointees(x, optional<T>(y));
+}
 
 template<class T>
 inline
 bool operator < ( optional<T> const& x, T const& y )
-{ return less_pointees(x, optional<T>(y)); }
+{
+	return less_pointees(x, optional<T>(y));
+}
 
 template<class T>
 inline
 bool operator != ( optional<T> const& x, T const& y )
-{ return !( x == y ) ; }
+{
+	return !( x == y ) ;
+}
 
 template<class T>
 inline
 bool operator > ( optional<T> const& x, T const& y )
-{ return y < x ; }
+{
+	return y < x ;
+}
 
 template<class T>
 inline
 bool operator <= ( optional<T> const& x, T const& y )
-{ return !( y < x ) ; }
+{
+	return !( y < x ) ;
+}
 
 template<class T>
 inline
 bool operator >= ( optional<T> const& x, T const& y )
-{ return !( x < y ) ; }
+{
+	return !( x < y ) ;
+}
 
 //
 // T vs optional<T> cases
@@ -94,32 +119,44 @@ bool operator >= ( optional<T> const& x, T const& y )
 template<class T>
 inline
 bool operator == ( T const& x, optional<T> const& y )
-{ return equal_pointees( optional<T>(x), y ); }
+{
+	return equal_pointees( optional<T>(x), y );
+}
 
 template<class T>
 inline
 bool operator < ( T const& x, optional<T> const& y )
-{ return less_pointees( optional<T>(x), y ); }
+{
+	return less_pointees( optional<T>(x), y );
+}
 
 template<class T>
 inline
 bool operator != ( T const& x, optional<T> const& y )
-{ return !( x == y ) ; }
+{
+	return !( x == y ) ;
+}
 
 template<class T>
 inline
 bool operator > ( T const& x, optional<T> const& y )
-{ return y < x ; }
+{
+	return y < x ;
+}
 
 template<class T>
 inline
 bool operator <= ( T const& x, optional<T> const& y )
-{ return !( y < x ) ; }
+{
+	return !( y < x ) ;
+}
 
 template<class T>
 inline
 bool operator >= ( T const& x, optional<T> const& y )
-{ return !( x < y ) ; }
+{
+	return !( x < y ) ;
+}
 
 
 //
@@ -134,7 +171,9 @@ bool operator == ( optional<T> const& x, none_t ) BOOST_NOEXCEPT
 template<class T>
 inline
 bool operator < ( optional<T> const& x, none_t )
-{ return less_pointees(x,optional<T>() ); }
+{
+	return less_pointees(x,optional<T>() );
+}
 
 template<class T>
 inline
@@ -144,17 +183,23 @@ bool operator != ( optional<T> const& x, none_t ) BOOST_NOEXCEPT
 template<class T>
 inline
 bool operator > ( optional<T> const& x, none_t y )
-{ return y < x ; }
+{
+	return y < x ;
+}
 
 template<class T>
 inline
 bool operator <= ( optional<T> const& x, none_t y )
-{ return !( y < x ) ; }
+{
+	return !( y < x ) ;
+}
 
 template<class T>
 inline
 bool operator >= ( optional<T> const& x, none_t y )
-{ return !( x < y ) ; }
+{
+	return !( x < y ) ;
+}
 
 //
 // none vs optional<T> cases
@@ -162,13 +207,15 @@ bool operator >= ( optional<T> const& x, none_t y )
 
 template<class T>
 inline
-bool operator == ( none_t , optional<T> const& y ) BOOST_NOEXCEPT
+bool operator == ( none_t, optional<T> const& y ) BOOST_NOEXCEPT
 { return !y; }
 
 template<class T>
 inline
-bool operator < ( none_t , optional<T> const& y )
-{ return less_pointees(optional<T>() ,y); }
+bool operator < ( none_t, optional<T> const& y )
+{
+	return less_pointees(optional<T>(),y);
+}
 
 template<class T>
 inline
@@ -178,17 +225,23 @@ bool operator != ( none_t, optional<T> const& y ) BOOST_NOEXCEPT
 template<class T>
 inline
 bool operator > ( none_t x, optional<T> const& y )
-{ return y < x ; }
+{
+	return y < x ;
+}
 
 template<class T>
 inline
 bool operator <= ( none_t x, optional<T> const& y )
-{ return !( y < x ) ; }
+{
+	return !( y < x ) ;
+}
 
 template<class T>
 inline
 bool operator >= ( none_t x, optional<T> const& y )
-{ return !( x < y ) ; }
+{
+	return !( x < y ) ;
+}
 
 } // namespace boost
 

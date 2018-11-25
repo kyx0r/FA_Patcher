@@ -17,33 +17,39 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename T, typename>
-    struct tag_of : tag_of<T, when<true>> { };
-    //! @endcond
+//! @cond
+template <typename T, typename>
+struct tag_of : tag_of<T, when<true>> { };
+//! @endcond
 
-    namespace core_detail {
-        template <typename ...>
-        struct is_valid { static constexpr bool value = true; };
-    }
+namespace core_detail
+{
+template <typename ...>
+struct is_valid
+{
+	static constexpr bool value = true;
+};
+}
 
-    template <typename T, bool condition>
-    struct tag_of<T, when<condition>> {
-        using type = T;
-    };
+template <typename T, bool condition>
+struct tag_of<T, when<condition>>
+{
+	using type = T;
+};
 
-    template <typename T>
-    struct tag_of<T, when<
-        core_detail::is_valid<typename T::hana_tag>::value
-    >> {
-        using type = typename T::hana_tag;
-    };
+template <typename T>
+struct tag_of<T, when<
+	core_detail::is_valid<typename T::hana_tag>::value
+	        >>
+{
+	using type = typename T::hana_tag;
+};
 
-    template <typename T> struct tag_of<T const> : tag_of<T> { };
-    template <typename T> struct tag_of<T volatile> : tag_of<T> { };
-    template <typename T> struct tag_of<T const volatile> : tag_of<T> { };
-    template <typename T> struct tag_of<T&> : tag_of<T> { };
-    template <typename T> struct tag_of<T&&> : tag_of<T> { };
+template <typename T> struct tag_of<T const> : tag_of<T> { };
+template <typename T> struct tag_of<T volatile> : tag_of<T> { };
+template <typename T> struct tag_of<T const volatile> : tag_of<T> { };
+template <typename T> struct tag_of<T&> : tag_of<T> { };
+template <typename T> struct tag_of<T&&> : tag_of<T> { };
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CORE_TAG_OF_HPP

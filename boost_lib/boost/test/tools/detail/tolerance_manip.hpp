@@ -7,7 +7,7 @@
 //
 //! @file
 //! @brief Floating point comparison tolerance manipulators
-//! 
+//!
 //! This file defines several manipulators for floating point comparison. These
 //! manipulators are intended to be used with BOOST_TEST.
 // ***************************************************************************
@@ -26,19 +26,23 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace tt_detail {
+namespace boost
+{
+namespace test_tools
+{
+namespace tt_detail
+{
 
 // ************************************************************************** //
 // **************           fpc tolerance manipulator          ************** //
 // ************************************************************************** //
 
 template<typename FPT>
-struct tolerance_manip {
-    explicit tolerance_manip( FPT const & tol ) : m_value( tol ) {}
+struct tolerance_manip
+{
+	explicit tolerance_manip( FPT const & tol ) : m_value( tol ) {}
 
-    FPT m_value;
+	FPT m_value;
 };
 
 //____________________________________________________________________________//
@@ -49,10 +53,10 @@ template<typename FPT>
 inline tolerance_manip<FPT>
 operator%( FPT v, tolerance_manip_delay const& )
 {
-    BOOST_STATIC_ASSERT_MSG( (fpc::tolerance_based<FPT>::value), 
-                             "tolerance should be specified using a floating points type" );
+	BOOST_STATIC_ASSERT_MSG( (fpc::tolerance_based<FPT>::value),
+	                         "tolerance should be specified using a floating points type" );
 
-    return tolerance_manip<FPT>( FPT(v / 100) );
+	return tolerance_manip<FPT>( FPT(v / 100) );
 }
 
 //____________________________________________________________________________//
@@ -61,22 +65,28 @@ template<typename E, typename FPT>
 inline assertion_result
 operator<<(assertion_evaluate_t<E> const& ae, tolerance_manip<FPT> const& tol)
 {
-    local_fpc_tolerance<FPT> lt( tol.m_value );
+	local_fpc_tolerance<FPT> lt( tol.m_value );
 
-    return ae.m_e.evaluate();
+	return ae.m_e.evaluate();
 }
 
 //____________________________________________________________________________//
 
 template<typename FPT>
 inline int
-operator<<( unit_test::lazy_ostream const&, tolerance_manip<FPT> const& )   { return 0; }
+operator<<( unit_test::lazy_ostream const&, tolerance_manip<FPT> const& )
+{
+	return 0;
+}
 
 //____________________________________________________________________________//
 
 template<typename FPT>
 inline check_type
-operator<<( assertion_type const& /*at*/, tolerance_manip<FPT> const& )         { return CHECK_BUILT_ASSERTION; }
+operator<<( assertion_type const& /*at*/, tolerance_manip<FPT> const& )
+{
+	return CHECK_BUILT_ASSERTION;
+}
 
 //____________________________________________________________________________//
 
@@ -92,10 +102,10 @@ template<typename FPT>
 inline tt_detail::tolerance_manip<FPT>
 tolerance( FPT v )
 {
-    BOOST_STATIC_ASSERT_MSG( (fpc::tolerance_based<FPT>::value), 
-                             "tolerance only for floating points" );
+	BOOST_STATIC_ASSERT_MSG( (fpc::tolerance_based<FPT>::value),
+	                         "tolerance only for floating points" );
 
-    return tt_detail::tolerance_manip<FPT>( v );
+	return tt_detail::tolerance_manip<FPT>( v );
 }
 
 //____________________________________________________________________________//
@@ -105,10 +115,10 @@ template<typename FPT>
 inline tt_detail::tolerance_manip<FPT>
 tolerance( fpc::percent_tolerance_t<FPT> v )
 {
-    BOOST_STATIC_ASSERT_MSG( (fpc::tolerance_based<FPT>::value), 
-                             "tolerance only for floating points" );
+	BOOST_STATIC_ASSERT_MSG( (fpc::tolerance_based<FPT>::value),
+	                         "tolerance only for floating points" );
 
-    return tt_detail::tolerance_manip<FPT>( static_cast<FPT>(v.m_value / 100) );
+	return tt_detail::tolerance_manip<FPT>( static_cast<FPT>(v.m_value / 100) );
 }
 
 //____________________________________________________________________________//
@@ -117,7 +127,7 @@ tolerance( fpc::percent_tolerance_t<FPT> v )
 inline tt_detail::tolerance_manip_delay
 tolerance()
 {
-    return tt_detail::tolerance_manip_delay();
+	return tt_detail::tolerance_manip_delay();
 }
 
 //____________________________________________________________________________//

@@ -20,8 +20,10 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 /// A special type, similar to std::nothrow_t, used to disambiguate
 /// constructors that accept executor arguments.
@@ -34,10 +36,10 @@ namespace asio {
  */
 struct executor_arg_t
 {
-  /// Constructor.
-  BOOST_ASIO_CONSTEXPR executor_arg_t() BOOST_ASIO_NOEXCEPT
-  {
-  }
+	/// Constructor.
+	BOOST_ASIO_CONSTEXPR executor_arg_t() BOOST_ASIO_NOEXCEPT
+	{
+	}
 };
 
 /// A special value, similar to std::nothrow, used to disambiguate constructors

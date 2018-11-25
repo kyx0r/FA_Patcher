@@ -23,37 +23,40 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class gcc_arm_fenced_block
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  enum half_t { half };
-  enum full_t { full };
+	enum half_t { half };
+	enum full_t { full };
 
-  // Constructor for a half fenced block.
-  explicit gcc_arm_fenced_block(half_t)
-  {
-  }
+	// Constructor for a half fenced block.
+	explicit gcc_arm_fenced_block(half_t)
+	{
+	}
 
-  // Constructor for a full fenced block.
-  explicit gcc_arm_fenced_block(full_t)
-  {
-    barrier();
-  }
+	// Constructor for a full fenced block.
+	explicit gcc_arm_fenced_block(full_t)
+	{
+		barrier();
+	}
 
-  // Destructor.
-  ~gcc_arm_fenced_block()
-  {
-    barrier();
-  }
+	// Destructor.
+	~gcc_arm_fenced_block()
+	{
+		barrier();
+	}
 
 private:
-  static void barrier()
-  {
+	static void barrier()
+	{
 #if defined(__ARM_ARCH_4__) \
     || defined(__ARM_ARCH_4T__) \
     || defined(__ARM_ARCH_5__) \
@@ -68,18 +71,18 @@ private:
     || defined(__ARM_ARCH_6ZK__) \
     || defined(__ARM_ARCH_6T2__)
 # if defined(__thumb__)
-    // This is just a placeholder and almost certainly not sufficient.
-    __asm__ __volatile__ ("" : : : "memory");
+		// This is just a placeholder and almost certainly not sufficient.
+		__asm__ __volatile__ ("" : : : "memory");
 # else // defined(__thumb__)
-    int a = 0, b = 0;
-    __asm__ __volatile__ ("swp %0, %1, [%2]"
-        : "=&r"(a) : "r"(1), "r"(&b) : "memory", "cc");
+		int a = 0, b = 0;
+		__asm__ __volatile__ ("swp %0, %1, [%2]"
+		                      : "=&r"(a) : "r"(1), "r"(&b) : "memory", "cc");
 # endif // defined(__thumb__)
 #else
-    // ARMv7 and later.
-    __asm__ __volatile__ ("dmb" : : : "memory");
+		// ARMv7 and later.
+		__asm__ __volatile__ ("dmb" : : : "memory");
 #endif
-  }
+	}
 };
 
 } // namespace detail

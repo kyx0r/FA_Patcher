@@ -16,8 +16,10 @@
 #include <boost/compute/algorithm/copy.hpp>
 #include <boost/compute/iterator/counting_iterator.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Fills the range [\p first, \p last) with sequential values starting at
 /// \p value.
@@ -34,14 +36,14 @@ inline void iota(BufferIterator first,
                  const T &value,
                  command_queue &queue = system::default_queue())
 {
-    T count = static_cast<T>(detail::iterator_range_size(first, last));
+	T count = static_cast<T>(detail::iterator_range_size(first, last));
 
-    copy(
-        ::boost::compute::make_counting_iterator(value),
-        ::boost::compute::make_counting_iterator(value + count),
-        first,
-        queue
-    );
+	copy(
+	    ::boost::compute::make_counting_iterator(value),
+	    ::boost::compute::make_counting_iterator(value + count),
+	    first,
+	    queue
+	);
 }
 
 } // end compute namespace

@@ -15,13 +15,17 @@
 /// and does not include any other Boost headers.
 
 /// @cond
-namespace boost { namespace stacktrace {
+namespace boost
+{
+namespace stacktrace
+{
 
 class frame;
 template <class Allocator = std::allocator<frame> > class basic_stacktrace;
 typedef basic_stacktrace<> stacktrace;
 
-}} // namespace boost::stacktrace
+}
+} // namespace boost::stacktrace
 /// @endcond
 
 

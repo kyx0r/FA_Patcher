@@ -20,9 +20,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace experimental {
+namespace boost
+{
+namespace asio
+{
+namespace experimental
+{
 
 /// Class used to specify that an asynchronous operation is detached.
 /**
@@ -39,10 +42,10 @@ namespace experimental {
 class detached_t
 {
 public:
-  /// Constructor. 
-  BOOST_ASIO_CONSTEXPR detached_t()
-  {
-  }
+	/// Constructor.
+	BOOST_ASIO_CONSTEXPR detached_t()
+	{
+	}
 };
 
 /// A special value, similar to std::nothrow.

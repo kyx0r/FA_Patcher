@@ -23,8 +23,10 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
+namespace boost
+{
+namespace test_tools
+{
 
 namespace fpc = math::fpc;
 
@@ -36,28 +38,29 @@ template<typename FPT>
 inline FPT&
 fpc_tolerance()
 {
-    static FPT s_value = 0;
-    return s_value;
+	static FPT s_value = 0;
+	return s_value;
 }
 
 //____________________________________________________________________________//
 
 template<typename FPT>
-struct local_fpc_tolerance {
-    local_fpc_tolerance( FPT fraction_tolerance ) : m_old_tolerance( fpc_tolerance<FPT>() )
-    {
-        fpc_tolerance<FPT>() = fraction_tolerance;
-    }
+struct local_fpc_tolerance
+{
+	local_fpc_tolerance( FPT fraction_tolerance ) : m_old_tolerance( fpc_tolerance<FPT>() )
+	{
+		fpc_tolerance<FPT>() = fraction_tolerance;
+	}
 
-    ~local_fpc_tolerance()
-    {
-        if( m_old_tolerance != (FPT)-1 )
-            fpc_tolerance<FPT>() = m_old_tolerance;
-    }
+	~local_fpc_tolerance()
+	{
+		if( m_old_tolerance != (FPT)-1 )
+			fpc_tolerance<FPT>() = m_old_tolerance;
+	}
 
 private:
-    // Data members
-    FPT         m_old_tolerance;
+	// Data members
+	FPT         m_old_tolerance;
 };
 
 //____________________________________________________________________________//
@@ -68,15 +71,17 @@ private:
 // **************             decorator::tolerance             ************** //
 // ************************************************************************** //
 
-namespace unit_test {
-namespace decorator {
+namespace unit_test
+{
+namespace decorator
+{
 
 template<typename FPT>
 inline fixture_t
 tolerance( FPT v )
 {
-    return fixture_t( test_unit_fixture_ptr(
-        new unit_test::class_based_fixture<test_tools::local_fpc_tolerance<FPT>,FPT>( v ) ) );
+	return fixture_t( test_unit_fixture_ptr(
+	                      new unit_test::class_based_fixture<test_tools::local_fpc_tolerance<FPT>,FPT>( v ) ) );
 }
 
 //____________________________________________________________________________//
@@ -85,8 +90,8 @@ template<typename FPT>
 inline fixture_t
 tolerance( test_tools::fpc::percent_tolerance_t<FPT> v )
 {
-    return fixture_t( test_unit_fixture_ptr(
-        new unit_test::class_based_fixture<test_tools::local_fpc_tolerance<FPT>,FPT>( boost::math::fpc::fpc_detail::fraction_tolerance<FPT>( v ) ) ) );
+	return fixture_t( test_unit_fixture_ptr(
+	                      new unit_test::class_based_fixture<test_tools::local_fpc_tolerance<FPT>,FPT>( boost::math::fpc::fpc_detail::fraction_tolerance<FPT>( v ) ) ) );
 }
 
 //____________________________________________________________________________//

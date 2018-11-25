@@ -17,9 +17,12 @@
 #include <boost/compute/random/default_random_engine.hpp>
 #include <boost/compute/random/uniform_real_distribution.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class OutputIterator, class Generator>
 inline void random_fill(OutputIterator first,
@@ -27,7 +30,7 @@ inline void random_fill(OutputIterator first,
                         Generator &g,
                         command_queue &queue)
 {
-    g.fill(first, last, queue);
+	g.fill(first, last, queue);
 }
 
 template<class OutputIterator>
@@ -38,16 +41,16 @@ random_fill(OutputIterator first,
             typename std::iterator_traits<OutputIterator>::value_type hi,
             command_queue &queue)
 {
-    typedef typename
-        std::iterator_traits<OutputIterator>::value_type value_type;
-    typedef typename
-        boost::compute::default_random_engine engine_type;
-    typedef typename
-        boost::compute::uniform_real_distribution<value_type> distribution_type;
+	typedef typename
+	std::iterator_traits<OutputIterator>::value_type value_type;
+	typedef typename
+	boost::compute::default_random_engine engine_type;
+	typedef typename
+	boost::compute::uniform_real_distribution<value_type> distribution_type;
 
-    engine_type engine(queue);
-    distribution_type generator(lo, hi);
-    generator.fill(first, last, engine, queue);
+	engine_type engine(queue);
+	distribution_type generator(lo, hi);
+	generator.fill(first, last, engine, queue);
 }
 
 } // end detail namespace

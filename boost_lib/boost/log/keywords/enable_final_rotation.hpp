@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword for enabling/disabling final log file rotation on sink backend destruction
 BOOST_PARAMETER_KEYWORD(tag, enable_final_rotation)

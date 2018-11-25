@@ -15,34 +15,36 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Reverse a sequence.
-    //! @ingroup group-Sequence
-    //!
-    //! Specifically, `reverse(xs)` is a new sequence containing the same
-    //! elements as `xs`, except in reverse order.
-    //!
-    //!
-    //! @param xs
-    //! The sequence to reverse.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/reverse.cpp
+//! Reverse a sequence.
+//! @ingroup group-Sequence
+//!
+//! Specifically, `reverse(xs)` is a new sequence containing the same
+//! elements as `xs`, except in reverse order.
+//!
+//!
+//! @param xs
+//! The sequence to reverse.
+//!
+//!
+//! Example
+//! -------
+//! @include example/reverse.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto reverse = [](auto&& xs) {
-        return tag-dispatched;
-    };
+constexpr auto reverse = [](auto&& xs)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename S, typename = void>
-    struct reverse_impl : reverse_impl<S, when<true>> { };
+template <typename S, typename = void>
+struct reverse_impl : reverse_impl<S, when<true>> { };
 
-    struct reverse_t {
-        template <typename Xs>
-        constexpr auto operator()(Xs&& xs) const;
-    };
+struct reverse_t
+{
+	template <typename Xs>
+	constexpr auto operator()(Xs&& xs) const;
+};
 
-    constexpr reverse_t reverse{};
+constexpr reverse_t reverse{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

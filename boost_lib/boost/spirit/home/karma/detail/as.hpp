@@ -14,61 +14,73 @@
 #include <boost/spirit/home/support/attributes_fwd.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace spirit { namespace traits
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    //  This file contains the attribute to string conversion utility. The 
-    //  utility provided also accept spirit's unused_type; all no-ops. Compiler 
-    //  optimization will easily strip these away.
-    ///////////////////////////////////////////////////////////////////////////
+namespace spirit
+{
+namespace traits
+{
+///////////////////////////////////////////////////////////////////////////
+//  This file contains the attribute to string conversion utility. The
+//  utility provided also accept spirit's unused_type; all no-ops. Compiler
+//  optimization will easily strip these away.
+///////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename Attribute>
-    inline typename spirit::result_of::attribute_as<T, Attribute>::type
-    as(Attribute const& attr)
-    {
-        return attribute_as<T, Attribute>::call(attr);
-    }
+///////////////////////////////////////////////////////////////////////////
+template <typename T, typename Attribute>
+inline typename spirit::result_of::attribute_as<T, Attribute>::type
+as(Attribute const& attr)
+{
+	return attribute_as<T, Attribute>::call(attr);
+}
 
-    template <typename T>
-    inline unused_type as(unused_type)
-    {
-        return unused;
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename Attribute>
-    inline bool valid_as(Attribute const& attr)
-    {
-        return attribute_as<T, Attribute>::is_valid(attr);
-    }
+template <typename T>
+inline unused_type as(unused_type)
+{
+	return unused;
+}
 
-    template <typename T>
-    inline bool valid_as(unused_type)
-    {
-        return true;
-    }
-}}}
+///////////////////////////////////////////////////////////////////////////
+template <typename T, typename Attribute>
+inline bool valid_as(Attribute const& attr)
+{
+	return attribute_as<T, Attribute>::is_valid(attr);
+}
+
+template <typename T>
+inline bool valid_as(unused_type)
+{
+	return true;
+}
+}
+}
+}
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace spirit { namespace result_of
+namespace boost
 {
-    template <typename T, typename Attribute>
-    struct attribute_as
-      : traits::attribute_as<T, Attribute>
-    {};
+namespace spirit
+{
+namespace result_of
+{
+template <typename T, typename Attribute>
+struct attribute_as
+	: traits::attribute_as<T, Attribute>
+{};
 
-    template <typename T>
-    struct attribute_as<T, unused_type>
-    {
-        typedef unused_type type;
-    };
+template <typename T>
+struct attribute_as<T, unused_type>
+{
+	typedef unused_type type;
+};
 
-    template <typename T>
-    struct attribute_as<T, unused_type const>
-    {
-        typedef unused_type type;
-    };
-}}}
+template <typename T>
+struct attribute_as<T, unused_type const>
+{
+	typedef unused_type type;
+};
+}
+}
+}
 
 #endif

@@ -26,13 +26,13 @@
 // should be updated w.r.t. << which in the end ruins the DocBook XML
 template<typename Char, typename Traits, typename Geometry>
 inline std::basic_ostream<Char, Traits>& operator<<
-    (
-        std::basic_ostream<Char, Traits> &os,
-        Geometry const& geom
-    )
+(
+    std::basic_ostream<Char, Traits> &os,
+    Geometry const& geom
+)
 {
-    os << boost::geometry::wkt(geom);
-    return os;
+	os << boost::geometry::wkt(geom);
+	return os;
 }
 
 #endif // BOOST_GEOMETRY_IO_WKT_STREAM_HPP

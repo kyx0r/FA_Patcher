@@ -12,21 +12,21 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class Msg = error::end_of_input_expected>
-      struct entire_input :
-        first_of<P, change_error_message<empty<void>, Msg> >
-      {};
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class Msg = error::end_of_input_expected>
+struct entire_input :
+	first_of<P, change_error_message<empty<void>, Msg> >
+{};
 
-      template <class P>
-      struct entire_input<P, error::end_of_input_expected> :
-        first_of<P, empty<void> >
-      {};
-    }
-  }
+template <class P>
+struct entire_input<P, error::end_of_input_expected> :
+	first_of<P, empty<void> >
+{};
+}
+}
 }
 
 #endif

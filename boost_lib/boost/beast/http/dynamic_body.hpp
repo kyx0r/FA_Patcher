@@ -13,9 +13,12 @@
 #include <boost/beast/core/multi_buffer.hpp>
 #include <boost/beast/http/basic_dynamic_body.hpp>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /** A dynamic message body represented by a @ref multi_buffer
 

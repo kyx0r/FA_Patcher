@@ -22,10 +22,14 @@
 #include <boost/geometry/strategies/geographic/parameters.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace envelope
+namespace strategy
+{
+namespace envelope
 {
 
 template
@@ -33,49 +37,49 @@ template
     typename FormulaPolicy = strategy::andoyer,
     typename Spheroid = geometry::srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class geographic_segment
 {
 public:
-    typedef Spheroid model_type;
+	typedef Spheroid model_type;
 
-    inline geographic_segment()
-        : m_spheroid()
-    {}
+	inline geographic_segment()
+		: m_spheroid()
+	{}
 
-    explicit inline geographic_segment(Spheroid const& spheroid)
-        : m_spheroid(spheroid)
-    {}
+	explicit inline geographic_segment(Spheroid const& spheroid)
+		: m_spheroid(spheroid)
+	{}
 
-    template <typename Point1, typename Point2, typename Box>
-    inline void apply(Point1 const& point1, Point2 const& point2, Box& box) const
-    {
-        Point1 p1_normalized = detail::return_normalized<Point1>(point1);
-        Point2 p2_normalized = detail::return_normalized<Point2>(point2);
+	template <typename Point1, typename Point2, typename Box>
+	inline void apply(Point1 const& point1, Point2 const& point2, Box& box) const
+	{
+		Point1 p1_normalized = detail::return_normalized<Point1>(point1);
+		Point2 p2_normalized = detail::return_normalized<Point2>(point2);
 
-        geometry::strategy::azimuth::geographic
-            <
-                FormulaPolicy,
-                Spheroid,
-                CalculationType
-            > azimuth_geographic(m_spheroid);
+		geometry::strategy::azimuth::geographic
+		<
+		FormulaPolicy,
+		Spheroid,
+		CalculationType
+		> azimuth_geographic(m_spheroid);
 
-        typedef typename coordinate_system<Point1>::type::units units_type;
+		typedef typename coordinate_system<Point1>::type::units units_type;
 
-        detail::envelope::envelope_segment_impl
-            <
-                geographic_tag
-            >::template apply<units_type>(geometry::get<0>(p1_normalized),
-                                          geometry::get<1>(p1_normalized),
-                                          geometry::get<0>(p2_normalized),
-                                          geometry::get<1>(p2_normalized),
-                                          box,
-                                          azimuth_geographic);
+		detail::envelope::envelope_segment_impl
+		<
+		geographic_tag
+		>::template apply<units_type>(geometry::get<0>(p1_normalized),
+		                              geometry::get<1>(p1_normalized),
+		                              geometry::get<0>(p2_normalized),
+		                              geometry::get<1>(p2_normalized),
+		                              box,
+		                              azimuth_geographic);
 
-    }
+	}
 
 private:
-    Spheroid m_spheroid;
+	Spheroid m_spheroid;
 };
 
 #ifndef DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
@@ -86,12 +90,12 @@ namespace services
 template <typename CalculationType>
 struct default_strategy<geographic_tag, CalculationType>
 {
-    typedef strategy::envelope::geographic_segment
-        <
-            strategy::andoyer,
-            srs::spheroid<double>,
-            CalculationType
-        > type;
+	typedef strategy::envelope::geographic_segment
+	<
+	strategy::andoyer,
+	         srs::spheroid<double>,
+	         CalculationType
+	         > type;
 };
 
 }
@@ -99,8 +103,10 @@ struct default_strategy<geographic_tag, CalculationType>
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::envelope
+}
+} // namespace strategy::envelope
 
-}} //namepsace boost::geometry
+}
+} //namepsace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_ENVELOPE_SEGMENT_HPP

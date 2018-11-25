@@ -12,24 +12,24 @@
 #include <boost/function_types/function_type.hpp>
 
 namespace boost
-  {
-  namespace tti
-    {
-    namespace detail
-      {
-      template
-        <
-        class BOOST_TTI_DETAIL_TP_R,
-        class BOOST_TTI_DETAIL_TP_FS,
-        class BOOST_TTI_DETAIL_TP_TAG
-        >
-      struct tfunction_seq
-        {
-        typedef typename boost::mpl::push_front<BOOST_TTI_DETAIL_TP_FS,BOOST_TTI_DETAIL_TP_R>::type ftseq;
-        typedef typename boost::function_types::function_type<ftseq,BOOST_TTI_DETAIL_TP_TAG>::type type;
-        };
-      }
-    }
-  }
-  
+{
+namespace tti
+{
+namespace detail
+{
+template
+<
+    class BOOST_TTI_DETAIL_TP_R,
+    class BOOST_TTI_DETAIL_TP_FS,
+    class BOOST_TTI_DETAIL_TP_TAG
+    >
+struct tfunction_seq
+{
+	typedef typename boost::mpl::push_front<BOOST_TTI_DETAIL_TP_FS,BOOST_TTI_DETAIL_TP_R>::type ftseq;
+	typedef typename boost::function_types::function_type<ftseq,BOOST_TTI_DETAIL_TP_TAG>::type type;
+};
+}
+}
+}
+
 #endif // BOOST_TTI_DETAIL_TFUNCTION_HPP

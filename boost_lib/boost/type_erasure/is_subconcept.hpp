@@ -24,9 +24,12 @@
 #include <boost/type_erasure/detail/rebind_placeholders.hpp>
 #include <boost/type_erasure/static_binding.hpp>
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 #ifdef BOOST_TYPE_ERASURE_USE_MP11
 
@@ -36,86 +39,87 @@ struct mp_set_has_key : ::boost::mp11::mp_set_contains<S, K> {};
 template<class Super, class Bindings>
 struct is_subconcept_f
 {
-    template<class T>
-    using apply = ::boost::mp11::mp_set_contains<Super, ::boost::type_erasure::detail::rebind_placeholders_t<T, Bindings> >;
+	template<class T>
+	using apply = ::boost::mp11::mp_set_contains<Super, ::boost::type_erasure::detail::rebind_placeholders_t<T, Bindings> >;
 };
 
 template<class Super>
 struct is_subconcept_f<Super, void>
 {
-    template<class T>
-    using apply = ::boost::mp11::mp_set_contains<Super, T>;
+	template<class T>
+	using apply = ::boost::mp11::mp_set_contains<Super, T>;
 };
 
 #endif
 
 template<class Sub, class Super, class PlaceholderMap>
-struct is_subconcept_impl {
+struct is_subconcept_impl
+{
 #ifndef BOOST_TYPE_ERASURE_USE_MP11
-    typedef typename ::boost::type_erasure::detail::normalize_concept<
-        Super>::concept_set super_set;
+	typedef typename ::boost::type_erasure::detail::normalize_concept<
+	Super>::concept_set super_set;
 
-    typedef typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
-        Super
-    >::type placeholder_subs_super;
-    
-    typedef typename ::boost::type_erasure::detail::normalize_concept<
-        Sub>::type normalized_sub;
-    typedef typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
-        Sub
-    >::type placeholder_subs_sub;
+	typedef typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
+	Super
+	>::type placeholder_subs_super;
 
-    typedef typename ::boost::mpl::eval_if< ::boost::is_same<PlaceholderMap, void>,
-        boost::mpl::identity<void>,
-        ::boost::type_erasure::detail::convert_deductions<
-            PlaceholderMap,
-            placeholder_subs_sub,
-            placeholder_subs_super
-        >
-    >::type bindings;
+	typedef typename ::boost::type_erasure::detail::normalize_concept<
+	Sub>::type normalized_sub;
+	typedef typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
+	Sub
+	>::type placeholder_subs_sub;
 
-    typedef typename ::boost::mpl::if_< ::boost::is_same<PlaceholderMap, void>,
-        ::boost::mpl::_1,
-        ::boost::type_erasure::detail::rebind_placeholders<
-            ::boost::mpl::_1,
-            bindings
-        >
-    >::type transform;
+	typedef typename ::boost::mpl::eval_if< ::boost::is_same<PlaceholderMap, void>,
+	        boost::mpl::identity<void>,
+	        ::boost::type_erasure::detail::convert_deductions<
+	        PlaceholderMap,
+	        placeholder_subs_sub,
+	        placeholder_subs_super
+	        >
+	        >::type bindings;
 
-    typedef typename ::boost::is_same<
-        typename ::boost::mpl::find_if<normalized_sub,
-            ::boost::mpl::not_<
-                ::boost::mpl::has_key<
-                    super_set,
-                    transform
-                >
-            >
-        >::type,
-        typename ::boost::mpl::end<normalized_sub>::type
-    >::type type;
+	typedef typename ::boost::mpl::if_< ::boost::is_same<PlaceholderMap, void>,
+	        ::boost::mpl::_1,
+	        ::boost::type_erasure::detail::rebind_placeholders<
+	        ::boost::mpl::_1,
+	        bindings
+	        >
+	        >::type transform;
+
+	typedef typename ::boost::is_same<
+	typename ::boost::mpl::find_if<normalized_sub,
+	         ::boost::mpl::not_<
+	         ::boost::mpl::has_key<
+	         super_set,
+	         transform
+	         >
+	         >
+	         >::type,
+	         typename ::boost::mpl::end<normalized_sub>::type
+	         >::type type;
 #else
-    typedef ::boost::type_erasure::detail::normalize_concept_t<Super> super_set;
+	typedef ::boost::type_erasure::detail::normalize_concept_t<Super> super_set;
 
-    typedef ::boost::type_erasure::detail::get_placeholder_normalization_map_t<
-        Super
-    > placeholder_subs_super;
-    
-    typedef ::boost::type_erasure::detail::normalize_concept_t<Sub> normalized_sub;
-    typedef ::boost::type_erasure::detail::get_placeholder_normalization_map_t<
-        Sub
-    > placeholder_subs_sub;
-    typedef ::boost::mp11::mp_eval_if_c< ::boost::is_same<PlaceholderMap, void>::value,
-        void,
-        ::boost::type_erasure::detail::convert_deductions_t,
-        PlaceholderMap,
-        placeholder_subs_sub,
-        placeholder_subs_super
-    > bindings;
+	typedef ::boost::type_erasure::detail::get_placeholder_normalization_map_t<
+	Super
+	> placeholder_subs_super;
 
-    typedef typename ::boost::mp11::mp_all_of<
-        normalized_sub,
-        ::boost::type_erasure::detail::is_subconcept_f<super_set, bindings>::template apply
-    > type;
+	typedef ::boost::type_erasure::detail::normalize_concept_t<Sub> normalized_sub;
+	typedef ::boost::type_erasure::detail::get_placeholder_normalization_map_t<
+	Sub
+	> placeholder_subs_sub;
+	typedef ::boost::mp11::mp_eval_if_c< ::boost::is_same<PlaceholderMap, void>::value,
+	        void,
+	        ::boost::type_erasure::detail::convert_deductions_t,
+	        PlaceholderMap,
+	        placeholder_subs_sub,
+	        placeholder_subs_super
+	        > bindings;
+
+	typedef typename ::boost::mp11::mp_all_of<
+	normalized_sub,
+	::boost::type_erasure::detail::is_subconcept_f<super_set, bindings>::template apply
+	> type;
 #endif
 };
 
@@ -142,23 +146,23 @@ struct is_subconcept_impl {
  */
 template<class Sub, class Super, class PlaceholderMap = void>
 struct is_subconcept :
-    ::boost::mpl::and_<
-        ::boost::type_erasure::detail::check_map<Sub, PlaceholderMap>,
-        ::boost::type_erasure::detail::is_subconcept_impl<Sub, Super, PlaceholderMap>
-    >::type
+	::boost::mpl::and_<
+	::boost::type_erasure::detail::check_map<Sub, PlaceholderMap>,
+	::boost::type_erasure::detail::is_subconcept_impl<Sub, Super, PlaceholderMap>
+	>::type
 {};
 
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 template<class Sub, class Super>
 struct is_subconcept<Sub, Super, void> :
-    ::boost::type_erasure::detail::is_subconcept_impl<Sub, Super, void>::type
+	::boost::type_erasure::detail::is_subconcept_impl<Sub, Super, void>::type
 {};
 template<class Sub, class Super, class PlaceholderMap>
 struct is_subconcept<Sub, Super, static_binding<PlaceholderMap> > :
-    ::boost::mpl::and_<
-        ::boost::type_erasure::detail::check_map<Sub, PlaceholderMap>,
-        ::boost::type_erasure::detail::is_subconcept_impl<Sub, Super, PlaceholderMap>
-    >::type
+	::boost::mpl::and_<
+	::boost::type_erasure::detail::check_map<Sub, PlaceholderMap>,
+	::boost::type_erasure::detail::is_subconcept_impl<Sub, Super, PlaceholderMap>
+	>::type
 {};
 #endif
 

@@ -33,7 +33,7 @@
 #pragma wave option(preserve: 1)
 #endif
 
-    #define BOOST_PHOENIX_TRY_CATCH_EVAL_R(Z, N, DATA)                          \
+#define BOOST_PHOENIX_TRY_CATCH_EVAL_R(Z, N, DATA)                          \
             catch(                                                              \
                 typename proto::result_of::value<                               \
                     typename proto::result_of::child_c<                         \
@@ -53,7 +53,7 @@
         <boost/phoenix/statement/detail/try_catch_eval.hpp>))
 #include BOOST_PHOENIX_ITERATE()
 
-    #undef BOOST_PHOENIX_TRY_CATCH_EVAL_R
+#undef BOOST_PHOENIX_TRY_CATCH_EVAL_R
 
 #if defined(__WAVE__) && defined(BOOST_PHOENIX_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)
@@ -63,51 +63,51 @@
 
 #else
 
-        template <typename Try, BOOST_PHOENIX_typename_A, typename Context>
-        typename boost::enable_if<
-            proto::matches<
-                BOOST_PP_CAT(A, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))
-              , rule::catch_
-            >
-          , result_type
-        >::type
-        operator()(Try const & try_, BOOST_PHOENIX_A_const_ref_a, Context const & ctx
-            BOOST_PHOENIX_SFINAE_AND_OVERLOADS) const
-        {
-            try
-            {
-                boost::phoenix::eval(proto::child_c<0>(try_), ctx);
-            }
-            BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, BOOST_PHOENIX_TRY_CATCH_EVAL_R, _)
-        }
+template <typename Try, BOOST_PHOENIX_typename_A, typename Context>
+typename boost::enable_if<
+proto::matches<
+BOOST_PP_CAT(A, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))
+, rule::catch_
+>
+, result_type
+>::type
+operator()(Try const & try_, BOOST_PHOENIX_A_const_ref_a, Context const & ctx
+           BOOST_PHOENIX_SFINAE_AND_OVERLOADS) const
+{
+	try
+	{
+		boost::phoenix::eval(proto::child_c<0>(try_), ctx);
+	}
+	BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, BOOST_PHOENIX_TRY_CATCH_EVAL_R, _)
+}
 
-        template <typename Try, BOOST_PHOENIX_typename_A, typename Context>
-        typename boost::disable_if<
-            proto::matches<
-                BOOST_PP_CAT(A, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))
-              , rule::catch_
-            >
-          , result_type
-        >::type
-        operator()(Try const & try_, BOOST_PHOENIX_A_const_ref_a, Context const & ctx) const
-        {
-            try
-            {
-                boost::phoenix::eval(proto::child_c<0>(try_), ctx);
-            }
-            BOOST_PP_REPEAT(
-                BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
-              , BOOST_PHOENIX_TRY_CATCH_EVAL_R, _
-            )
-            catch(...)
-            {
-                boost::phoenix::eval(
-                    proto::child_c<0>(
-                        BOOST_PP_CAT(a, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))
-                    )
-                  , ctx);
-            }
-        }
+template <typename Try, BOOST_PHOENIX_typename_A, typename Context>
+typename boost::disable_if<
+proto::matches<
+BOOST_PP_CAT(A, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))
+, rule::catch_
+>
+, result_type
+>::type
+operator()(Try const & try_, BOOST_PHOENIX_A_const_ref_a, Context const & ctx) const
+{
+	try
+	{
+		boost::phoenix::eval(proto::child_c<0>(try_), ctx);
+	}
+	BOOST_PP_REPEAT(
+	    BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
+	    , BOOST_PHOENIX_TRY_CATCH_EVAL_R, _
+	)
+	catch(...)
+	{
+		boost::phoenix::eval(
+		    proto::child_c<0>(
+		        BOOST_PP_CAT(a, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))
+		    )
+		    , ctx);
+	}
+}
 
 #endif
 

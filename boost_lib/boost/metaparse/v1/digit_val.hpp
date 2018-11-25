@@ -13,13 +13,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      typedef transform<digit, util::digit_to_int<> > digit_val;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+typedef transform<digit, util::digit_to_int<> > digit_val;
+}
+}
 }
 
 #endif

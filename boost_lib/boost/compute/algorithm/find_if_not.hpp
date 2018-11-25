@@ -16,8 +16,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/find_if.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns an iterator pointing to the first element in the range
 /// [\p first, \p last) for which \p predicate returns \c false.
@@ -31,12 +33,12 @@ inline InputIterator find_if_not(InputIterator first,
                                  UnaryPredicate predicate,
                                  command_queue &queue = system::default_queue())
 {
-    return ::boost::compute::find_if(
-               first,
-               last,
-               not1(predicate),
-               queue
-           );
+	return ::boost::compute::find_if(
+	           first,
+	           last,
+	           not1(predicate),
+	           queue
+	       );
 }
 
 } // end compute namespace

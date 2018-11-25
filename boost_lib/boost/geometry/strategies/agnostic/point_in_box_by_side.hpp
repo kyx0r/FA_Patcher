@@ -22,7 +22,11 @@
 #include <boost/geometry/strategies/within.hpp>
 
 
-namespace boost { namespace geometry { namespace strategy
+namespace boost
+{
+namespace geometry
+{
+namespace strategy
 {
 
 namespace within
@@ -30,28 +34,28 @@ namespace within
 
 struct decide_within
 {
-    static inline bool apply(int side, bool& result)
-    {
-        if (side != 1)
-        {
-            result = false;
-            return false;
-        }
-        return true; // continue
-    }
+	static inline bool apply(int side, bool& result)
+	{
+		if (side != 1)
+		{
+			result = false;
+			return false;
+		}
+		return true; // continue
+	}
 };
 
 struct decide_covered_by
 {
-    static inline bool apply(int side, bool& result)
-    {
-        if (side != 1)
-        {
-            result = side >= 0;
-            return false;
-        }
-        return true; // continue
-    }
+	static inline bool apply(int side, bool& result)
+	{
+		if (side != 1)
+		{
+			result = side >= 0;
+			return false;
+		}
+		return true; // continue
+	}
 };
 
 
@@ -62,42 +66,44 @@ struct decide_covered_by
 template <typename Point, typename Box, typename Decide = decide_within>
 struct point_in_box_by_side
 {
-    typedef typename strategy::side::services::default_strategy
-    <
-        typename cs_tag<Box>::type
-    >::type side_strategy_type;
+	typedef typename strategy::side::services::default_strategy
+	<
+	typename cs_tag<Box>::type
+	>::type side_strategy_type;
 
-    static inline bool apply(Point const& point, Box const& box)
-    {
-        // Create (counterclockwise) array of points, the fifth one closes it
-        // Every point should be on the LEFT side (=1), or ON the border (=0),
-        // So >= 1 or >= 0
-        boost::array<typename point_type<Box>::type, 5> bp;
-        geometry::detail::assign_box_corners_oriented<true>(box, bp);
-        bp[4] = bp[0];
+	static inline bool apply(Point const& point, Box const& box)
+	{
+		// Create (counterclockwise) array of points, the fifth one closes it
+		// Every point should be on the LEFT side (=1), or ON the border (=0),
+		// So >= 1 or >= 0
+		boost::array<typename point_type<Box>::type, 5> bp;
+		geometry::detail::assign_box_corners_oriented<true>(box, bp);
+		bp[4] = bp[0];
 
-        bool result = true;
-        side_strategy_type strategy;
-        boost::ignore_unused_variable_warning(strategy);
+		bool result = true;
+		side_strategy_type strategy;
+		boost::ignore_unused_variable_warning(strategy);
 
-        for (int i = 1; i < 5; i++)
-        {
-            int const side = strategy.apply(point, bp[i - 1], bp[i]);
-            if (! Decide::apply(side, result))
-            {
-                return result;
-            }
-        }
+		for (int i = 1; i < 5; i++)
+		{
+			int const side = strategy.apply(point, bp[i - 1], bp[i]);
+			if (! Decide::apply(side, result))
+			{
+				return result;
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 };
 
 
 } // namespace within
 
 
-}}} // namespace boost::geometry::strategy
+}
+}
+} // namespace boost::geometry::strategy
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_AGNOSTIC_POINT_IN_BOX_BY_SIDE_HPP

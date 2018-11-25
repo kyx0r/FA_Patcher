@@ -30,93 +30,98 @@
 #include <boost/process/posix.hpp>
 #endif
 
-namespace boost {
+namespace boost
+{
 
-namespace process {
+namespace process
+{
 
 namespace detail
 {
 
 struct system_impl_success_check : handler
 {
-    bool succeeded = false;
+	bool succeeded = false;
 
-    template<typename Exec>
-    void on_success(Exec &) { succeeded = true; }
+	template<typename Exec>
+	void on_success(Exec &)
+	{
+		succeeded = true;
+	}
 };
 
 template<typename IoService, typename ...Args>
 inline int system_impl(
-        std::true_type, /*needs ios*/
-        std::true_type, /*has io_context*/
-        Args && ...args)
+    std::true_type, /*needs ios*/
+    std::true_type, /*has io_context*/
+    Args && ...args)
 {
-    IoService & ios = ::boost::process::detail::get_io_context_var(args...);
+	IoService & ios = ::boost::process::detail::get_io_context_var(args...);
 
-    system_impl_success_check check;
+	system_impl_success_check check;
 
-    std::atomic_bool exited{false};
+	std::atomic_bool exited{false};
 
-    child c(std::forward<Args>(args)...,
-            check,
-            ::boost::process::on_exit(
-                [&](int, const std::error_code&)
-                {
-                    ios.post([&]{exited.store(true);});
-                }));
-    if (!c.valid() || !check.succeeded)
-        return -1;
+	child c(std::forward<Args>(args)...,
+	        check,
+	        ::boost::process::on_exit(
+	            [&](int, const std::error_code&)
+	{
+		ios.post([&] {exited.store(true);});
+	}));
+	if (!c.valid() || !check.succeeded)
+		return -1;
 
-    while (!exited.load())
-        ios.poll();
+	while (!exited.load())
+		ios.poll();
 
-    return c.exit_code();
+	return c.exit_code();
 }
 
 template<typename IoService, typename ...Args>
 inline int system_impl(
-        std::true_type,  /*needs ios */
-        std::false_type, /*has io_context*/
-        Args && ...args)
+    std::true_type,  /*needs ios */
+    std::false_type, /*has io_context*/
+    Args && ...args)
 {
-    IoService ios;
-    child c(ios, std::forward<Args>(args)...);
-    if (!c.valid())
-        return -1;
+	IoService ios;
+	child c(ios, std::forward<Args>(args)...);
+	if (!c.valid())
+		return -1;
 
-    ios.run();
-    return c.exit_code();
+	ios.run();
+	return c.exit_code();
 }
 
 
 template<typename IoService, typename ...Args>
 inline int system_impl(
-        std::false_type, /*needs ios*/
-        std::true_type, /*has io_context*/
-        Args && ...args)
+    std::false_type, /*needs ios*/
+    std::true_type, /*has io_context*/
+    Args && ...args)
 {
-    child c(std::forward<Args>(args)...);
-    if (!c.valid())
-        return -1;
-    c.wait();
-    return c.exit_code();
+	child c(std::forward<Args>(args)...);
+	if (!c.valid())
+		return -1;
+	c.wait();
+	return c.exit_code();
 }
 
 template<typename IoService, typename ...Args>
 inline int system_impl(
-        std::false_type, /*has async */
-        std::false_type, /*has io_context*/
-        Args && ...args)
+    std::false_type, /*has async */
+    std::false_type, /*has io_context*/
+    Args && ...args)
 {
-    child c(std::forward<Args>(args)...
+	child c(std::forward<Args>(args)...
 #if defined(BOOST_POSIX_API)
-            ,::boost::process::posix::sig.dfl()
+	        ,::boost::process::posix::sig.dfl()
 #endif
-            );
-    if (!c.valid())
-        return -1;
-    c.wait();
-    return c.exit_code();
+	       );
+	if (!c.valid())
+		return -1;
+	c.wait();
+	return c.exit_code();
 }
 
 }
@@ -139,16 +144,17 @@ the system function will check if it is active, and call the io_context::run fun
 template<typename ...Args>
 inline int system(Args && ...args)
 {
-    typedef typename ::boost::process::detail::needs_io_context<Args...>::type
-            need_ios;
-    typedef typename ::boost::process::detail::has_io_context<Args...>::type
-            has_ios;
-    return ::boost::process::detail::system_impl<boost::asio::io_context>(
-            need_ios(), has_ios(),
-            std::forward<Args>(args)...);
+	typedef typename ::boost::process::detail::needs_io_context<Args...>::type
+	need_ios;
+	typedef typename ::boost::process::detail::has_io_context<Args...>::type
+	has_ios;
+	return ::boost::process::detail::system_impl<boost::asio::io_context>(
+	           need_ios(), has_ios(),
+	           std::forward<Args>(args)...);
 }
 
 
-}}
+}
+}
 #endif
 

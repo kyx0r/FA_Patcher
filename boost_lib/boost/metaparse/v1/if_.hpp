@@ -13,30 +13,30 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class T, class F>
-      struct if_
-      {
-        typedef if_ type;
-        
-        template <class S, class Pos>
-        struct apply :
-          accept<
-            typename boost::mpl::if_<
-              is_error<typename P::template apply<S, Pos> >,
-              F,
-              T
-            >::type,
-            S,
-            Pos
-          >
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class T, class F>
+struct if_
+{
+	typedef if_ type;
+
+	template <class S, class Pos>
+	struct apply :
+		accept<
+		typename boost::mpl::if_<
+		is_error<typename P::template apply<S, Pos> >,
+	F,
+	T
+	>::type,
+	S,
+	Pos
+	>
+	{};
+};
+}
+}
 }
 
 #endif

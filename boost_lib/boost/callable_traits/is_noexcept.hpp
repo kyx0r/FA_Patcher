@@ -12,7 +12,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ is_noexcept_hpp
 /*`[section:ref_is_noexcept is_noexcept]
@@ -27,17 +30,19 @@ struct is_noexcept;
 
 //<-
 template<typename T>
-struct is_noexcept : detail::traits<detail::shallow_decay<T>>::is_noexcept {
-    using type = typename detail::traits<
-        detail::shallow_decay<T>>::is_noexcept;
+struct is_noexcept : detail::traits<detail::shallow_decay<T>>::is_noexcept
+{
+	using type = typename detail::traits<
+	             detail::shallow_decay<T>>::is_noexcept;
 };
 
 #ifdef BOOST_CLBL_TRTS_DISABLE_VARIABLE_TEMPLATES
 
 template<typename T>
-struct is_noexcept_v {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "Variable templates not supported on this compiler.");
+struct is_noexcept_v
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "Variable templates not supported on this compiler.");
 };
 
 #else
@@ -53,7 +58,8 @@ constexpr bool is_noexcept_v = //see below
 
 #endif
 
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`
@@ -61,7 +67,7 @@ constexpr bool is_noexcept_v = //see below
 * none
 *
 [heading Behavior]
-* `is_noexcept<T>::value` is `true` when either: 
+* `is_noexcept<T>::value` is `true` when either:
   * `T` is a function type, function pointer type, function reference type, or member function pointer type where the function has a `noexcept` specifier
   * `T` is a function object with a non-overloaded `operator()`, where the `operator()` has a `noexcept` specifier
 * On compilers that support variable templates, `is_noexcept_v<T>` is equivalent to `is_noexcept<T>::value`.

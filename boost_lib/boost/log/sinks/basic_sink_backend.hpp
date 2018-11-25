@@ -27,11 +27,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 /*!
  * \brief Base class for a logging sink backend
@@ -42,13 +44,13 @@ namespace sinks {
 template< typename FrontendRequirementsT >
 struct basic_sink_backend
 {
-    //! Frontend requirements tag
-    typedef FrontendRequirementsT frontend_requirements;
+	//! Frontend requirements tag
+	typedef FrontendRequirementsT frontend_requirements;
 
-    BOOST_DEFAULTED_FUNCTION(basic_sink_backend(), {})
+	BOOST_DEFAULTED_FUNCTION(basic_sink_backend(), {})
 
-    BOOST_DELETED_FUNCTION(basic_sink_backend(basic_sink_backend const&))
-    BOOST_DELETED_FUNCTION(basic_sink_backend& operator= (basic_sink_backend const&))
+	BOOST_DELETED_FUNCTION(basic_sink_backend(basic_sink_backend const&))
+	BOOST_DELETED_FUNCTION(basic_sink_backend& operator= (basic_sink_backend const&))
 };
 
 /*!
@@ -66,24 +68,24 @@ struct basic_sink_backend
 template<
     typename CharT,
     typename FrontendRequirementsT = synchronized_feeding
->
-struct basic_formatted_sink_backend :
-    public basic_sink_backend<
-        typename combine_requirements< FrontendRequirementsT, formatted_records >::type
     >
+struct basic_formatted_sink_backend :
+	public basic_sink_backend<
+	typename combine_requirements< FrontendRequirementsT, formatted_records >::type
+	>
 {
 private:
-    typedef basic_sink_backend<
-        typename combine_requirements< FrontendRequirementsT, formatted_records >::type
-    > base_type;
+	typedef basic_sink_backend<
+	typename combine_requirements< FrontendRequirementsT, formatted_records >::type
+	> base_type;
 
 public:
-    //! Character type
-    typedef CharT char_type;
-    //! Formatted string type
-    typedef std::basic_string< char_type > string_type;
-    //! Frontend requirements
-    typedef typename base_type::frontend_requirements frontend_requirements;
+	//! Character type
+	typedef CharT char_type;
+	//! Formatted string type
+	typedef std::basic_string< char_type > string_type;
+	//! Frontend requirements
+	typedef typename base_type::frontend_requirements frontend_requirements;
 };
 
 } // namespace sinks

@@ -30,10 +30,14 @@
 #include <boost/geometry/util/select_most_precise.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace area
+namespace strategy
+{
+namespace area
 {
 
 /*!
@@ -51,73 +55,73 @@ namespace strategy { namespace area
 template
 <
     typename CalculationType = void
->
+    >
 class cartesian
 {
 public :
-    template <typename Geometry>
-    struct result_type
-        : strategy::area::detail::result_type
-            <
-                Geometry,
-                CalculationType
-            >
-    {};
-    
-    template <typename Geometry>
-    class state
-    {
-        friend class cartesian;
+	template <typename Geometry>
+	struct result_type
+		: strategy::area::detail::result_type
+		  <
+		  Geometry,
+		  CalculationType
+		  >
+	{};
 
-        typedef typename result_type<Geometry>::type return_type;
+	template <typename Geometry>
+	class state
+	{
+		friend class cartesian;
 
-    public:        
-        inline state()
-            : sum(0)
-        {
-            // Strategy supports only 2D areas
-            assert_dimension<Geometry, 2>();
-        }
+		typedef typename result_type<Geometry>::type return_type;
 
-    private:
-        inline return_type area() const
-        {
-            return_type const two = 2;
-            return sum / two;
-        }
+	public:
+		inline state()
+			: sum(0)
+		{
+			// Strategy supports only 2D areas
+			assert_dimension<Geometry, 2>();
+		}
 
-        return_type sum;
-    };
+	private:
+		inline return_type area() const
+		{
+			return_type const two = 2;
+			return sum / two;
+		}
 
-    template <typename PointOfSegment, typename Geometry>
-    static inline void apply(PointOfSegment const& p1,
-                             PointOfSegment const& p2,
-                             state<Geometry>& st)
-    {
-        typedef typename state<Geometry>::return_type return_type;
+		return_type sum;
+	};
 
-        // Below formulas are equivalent, however the two lower ones
-        // suffer less from accuracy loss for great values of coordinates.
-        // See: https://svn.boost.org/trac/boost/ticket/11928
+	template <typename PointOfSegment, typename Geometry>
+	static inline void apply(PointOfSegment const& p1,
+	                         PointOfSegment const& p2,
+	                         state<Geometry>& st)
+	{
+		typedef typename state<Geometry>::return_type return_type;
 
-        // SUM += x2 * y1 - x1 * y2;
-        // state.sum += detail::determinant<return_type>(p2, p1);
+		// Below formulas are equivalent, however the two lower ones
+		// suffer less from accuracy loss for great values of coordinates.
+		// See: https://svn.boost.org/trac/boost/ticket/11928
 
-        // SUM += (x2 - x1) * (y2 + y1)
-        //state.sum += (return_type(get<0>(p2)) - return_type(get<0>(p1)))
-        //           * (return_type(get<1>(p2)) + return_type(get<1>(p1)));
+		// SUM += x2 * y1 - x1 * y2;
+		// state.sum += detail::determinant<return_type>(p2, p1);
 
-        // SUM += (x1 + x2) * (y1 - y2)
-        st.sum += (return_type(get<0>(p1)) + return_type(get<0>(p2)))
-                * (return_type(get<1>(p1)) - return_type(get<1>(p2)));
-    }
+		// SUM += (x2 - x1) * (y2 + y1)
+		//state.sum += (return_type(get<0>(p2)) - return_type(get<0>(p1)))
+		//           * (return_type(get<1>(p2)) + return_type(get<1>(p1)));
 
-    template <typename Geometry>
-    static inline typename result_type<Geometry>::type
-        result(state<Geometry>& st)
-    {
-        return st.area();
-    }
+		// SUM += (x1 + x2) * (y1 - y2)
+		st.sum += (return_type(get<0>(p1)) + return_type(get<0>(p2)))
+		          * (return_type(get<1>(p1)) - return_type(get<1>(p2)));
+	}
+
+	template <typename Geometry>
+	static inline typename result_type<Geometry>::type
+	result(state<Geometry>& st)
+	{
+		return st.area();
+	}
 
 };
 
@@ -125,22 +129,24 @@ public :
 
 namespace services
 {
-    template <>
-    struct default_strategy<cartesian_tag>
-    {
-        typedef strategy::area::cartesian<> type;
-    };
+template <>
+struct default_strategy<cartesian_tag>
+{
+	typedef strategy::area::cartesian<> type;
+};
 
 } // namespace services
 
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::area
+}
+} // namespace strategy::area
 
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_AREA_HPP

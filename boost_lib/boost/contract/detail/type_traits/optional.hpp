@@ -11,7 +11,12 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-namespace boost { namespace contract { namespace detail {
+namespace boost
+{
+namespace contract
+{
+namespace detail
+{
 
 template<typename T>
 struct is_optional : boost::false_type {};
@@ -19,24 +24,46 @@ template<typename T>
 struct is_optional<boost::optional<T> > : boost::true_type {};
 
 template<typename T>
-struct optional_value_type { typedef T type; };
+struct optional_value_type
+{
+	typedef T type;
+};
 template<typename T>
-struct optional_value_type<boost::optional<T> > { typedef T type; };
+struct optional_value_type<boost::optional<T> >
+{
+	typedef T type;
+};
 
 template<typename T>
-struct remove_value_reference_if_optional { typedef T type; };
+struct remove_value_reference_if_optional
+{
+	typedef T type;
+};
 template<typename T>
 struct remove_value_reference_if_optional<boost::optional<T> >
-        { typedef typename boost::remove_reference<T>::type type; };
+{
+	typedef typename boost::remove_reference<T>::type type;
+};
 
 template<typename T>
-T& optional_get(T& x) { return x; }
+T& optional_get(T& x)
+{
+	return x;
+}
 template<typename T>
-T& optional_get(boost::optional<T>& x) { return x.get(); }
+T& optional_get(boost::optional<T>& x)
+{
+	return x.get();
+}
 template<typename T>
-T& optional_get(boost::optional<T&>& x) { return x.get(); }
+T& optional_get(boost::optional<T&>& x)
+{
+	return x.get();
+}
 
-} } } // namespace
+}
+}
+} // namespace
 
 #endif // #include guard
 

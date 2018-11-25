@@ -46,122 +46,131 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct mill {};
+namespace par4
+{
+struct mill {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace mill
-    {
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_mill_spheroid : public base_t_fi<base_mill_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace mill
+{
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_mill_spheroid : public base_t_fi<base_mill_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_mill_spheroid(const Parameters& par)
-                    : base_t_fi<base_mill_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_mill_spheroid(const Parameters& par)
+		: base_t_fi<base_mill_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
 
-                    xy_x = lp_lon;
-                    xy_y = log(tan(FORTPI + lp_lat * .4)) * 1.25;
-                }
+		xy_x = lp_lon;
+		xy_y = log(tan(FORTPI + lp_lat * .4)) * 1.25;
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
 
-                    lp_lon = xy_x;
-                    lp_lat = 2.5 * (atan(exp(.8 * xy_y)) - FORTPI);
-                }
+		lp_lon = xy_x;
+		lp_lat = 2.5 * (atan(exp(.8 * xy_y)) - FORTPI);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "mill_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "mill_spheroid";
+	}
 
-            };
+};
 
-            // Miller Cylindrical
-            template <typename Parameters>
-            inline void setup_mill(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Miller Cylindrical
+template <typename Parameters>
+inline void setup_mill(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::mill
-    #endif // doxygen
+}
+} // namespace detail::mill
+#endif // doxygen
 
-    /*!
-        \brief Miller Cylindrical projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Cylindrical
-         - Spheroid
-        \par Example
-        \image html ex_mill.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct mill_spheroid : public detail::mill::base_mill_spheroid<CalculationType, Parameters>
-    {
-        inline mill_spheroid(const Parameters& par) : detail::mill::base_mill_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::mill::setup_mill(this->m_par);
-        }
-    };
+/*!
+    \brief Miller Cylindrical projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Cylindrical
+     - Spheroid
+    \par Example
+    \image html ex_mill.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct mill_spheroid : public detail::mill::base_mill_spheroid<CalculationType, Parameters>
+{
+	inline mill_spheroid(const Parameters& par) : detail::mill::base_mill_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::mill::setup_mill(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mill, mill_spheroid, mill_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mill, mill_spheroid, mill_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class mill_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<mill_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class mill_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<mill_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void mill_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("mill", new mill_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void mill_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("mill", new mill_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_MILL_HPP
 

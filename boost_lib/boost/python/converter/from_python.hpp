@@ -8,7 +8,12 @@
 # include <boost/python/detail/prefix.hpp>
 # include <boost/python/converter/rvalue_from_python_data.hpp>
 
-namespace boost { namespace python { namespace converter { 
+namespace boost
+{
+namespace python
+{
+namespace converter
+{
 
 struct registration;
 
@@ -36,6 +41,8 @@ BOOST_PYTHON_DECL void void_result_from_python(PyObject*);
 BOOST_PYTHON_DECL void throw_no_pointer_from_python(PyObject*, registration const&);
 BOOST_PYTHON_DECL void throw_no_reference_from_python(PyObject*, registration const&);
 
-}}} // namespace boost::python::converter
+}
+}
+} // namespace boost::python::converter
 
 #endif // FIND_FROM_PYTHON_DWA2002223_HPP

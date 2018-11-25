@@ -19,7 +19,10 @@
 #include <boost/range/end.hpp>
 #include <boost/range/value_type.hpp>
 
-namespace boost { namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 template<class InputIterator, class OutputIterator, class T,
          class BinaryOperation, class UnaryOperation>
@@ -27,20 +30,22 @@ OutputIterator transform_exclusive_scan(InputIterator first, InputIterator last,
                                         OutputIterator result, T init,
                                         BinaryOperation bOp, UnaryOperation uOp)
 {
-    if (first != last)
-    {
-        T saved = init;
-        do
-        {
-            init = bOp(init, uOp(*first));
-            *result = saved;
-            saved = init;
-            ++result;
-        } while (++first != last);
-    }
-    return result;
+	if (first != last)
+	{
+		T saved = init;
+		do
+		{
+			init = bOp(init, uOp(*first));
+			*result = saved;
+			saved = init;
+			++result;
+		}
+		while (++first != last);
+	}
+	return result;
 }
 
-}} // namespace boost and algorithm
+}
+} // namespace boost and algorithm
 
 #endif // BOOST_ALGORITHM_TRANSFORM_EXCLUSIVE_SCAN_HPP

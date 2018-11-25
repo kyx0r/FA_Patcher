@@ -20,10 +20,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
-namespace monomorphic {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
+namespace monomorphic
+{
 
 // ************************************************************************** //
 // **************                     array                    ************** //
@@ -31,28 +35,35 @@ namespace monomorphic {
 
 /// Dataset view of a C array
 template<typename T>
-class array {
+class array
+{
 public:
-    typedef T sample;
+	typedef T sample;
 
-    enum { arity = 1 };
+	enum { arity = 1 };
 
-    typedef T const* iterator;
+	typedef T const* iterator;
 
-    // Constructor
-    array( T const* arr_, std::size_t size_ )
-    : m_arr( arr_ )
-    , m_size( size_ )
-    {}
+	// Constructor
+	array( T const* arr_, std::size_t size_ )
+		: m_arr( arr_ )
+		, m_size( size_ )
+	{}
 
-    // dataset interface
-    data::size_t    size() const    { return m_size; }
-    iterator        begin() const   { return m_arr; }
+	// dataset interface
+	data::size_t    size() const
+	{
+		return m_size;
+	}
+	iterator        begin() const
+	{
+		return m_arr;
+	}
 
 private:
-    // Data members
-    T const*        m_arr;
-    std::size_t     m_size;
+	// Data members
+	T const*        m_arr;
+	std::size_t     m_size;
 };
 
 //____________________________________________________________________________//
@@ -70,7 +81,7 @@ template<typename T, std::size_t size>
 inline monomorphic::array<typename boost::remove_const<T>::type>
 make( T (&a)[size] )
 {
-    return monomorphic::array<typename boost::remove_const<T>::type>( a, size );
+	return monomorphic::array<typename boost::remove_const<T>::type>( a, size );
 }
 
 } // namespace data

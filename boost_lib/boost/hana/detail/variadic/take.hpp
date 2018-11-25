@@ -18,34 +18,44 @@ Distributed under the Boost Software License, Version 1.0.
 #include <cstddef>
 
 
-BOOST_HANA_NAMESPACE_BEGIN namespace detail { namespace variadic {
-    struct take_impl2 {
-        template <typename F, typename ...Xs>
-        constexpr decltype(auto) operator()(F&& f, Xs&& ...xs) const {
-            return static_cast<F&&>(f)(static_cast<Xs&&>(xs)...);
-        }
-    };
+BOOST_HANA_NAMESPACE_BEGIN namespace detail
+{
+namespace variadic
+{
+struct take_impl2
+{
+	template <typename F, typename ...Xs>
+	constexpr decltype(auto) operator()(F&& f, Xs&& ...xs) const
+	{
+		return static_cast<F&&>(f)(static_cast<Xs&&>(xs)...);
+	}
+};
 
-    struct take_impl1 {
-        template <typename ...Xs>
-        constexpr auto operator()(Xs&& ...xs) const {
-            return hana::always(
-                reverse_partial(take_impl2{},
-                    static_cast<Xs&&>(xs)...)
-            );
-        }
-    };
+struct take_impl1
+{
+	template <typename ...Xs>
+	constexpr auto operator()(Xs&& ...xs) const
+	{
+		return hana::always(
+		           reverse_partial(take_impl2{},
+		                           static_cast<Xs&&>(xs)...)
+		       );
+	}
+};
 
-    template <std::size_t n>
-    struct take_t {
-        template <typename ...Xs>
-        constexpr decltype(auto) operator()(Xs&& ...xs) const {
-            return variadic::split_at<n>(static_cast<Xs&&>(xs)...)(take_impl1{});
-        }
-    };
+template <std::size_t n>
+struct take_t
+{
+	template <typename ...Xs>
+	constexpr decltype(auto) operator()(Xs&& ...xs) const
+	{
+		return variadic::split_at<n>(static_cast<Xs&&>(xs)...)(take_impl1{});
+	}
+};
 
-    template <std::size_t n>
-    constexpr take_t<n> take{};
-}} BOOST_HANA_NAMESPACE_END
+template <std::size_t n>
+constexpr take_t<n> take{};
+}
+} BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_VARIADIC_TAKE_HPP

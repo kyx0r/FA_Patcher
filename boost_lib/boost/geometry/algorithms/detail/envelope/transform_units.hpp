@@ -25,11 +25,15 @@
 #include <boost/geometry/algorithms/transform.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace envelope
+namespace detail
+{
+namespace envelope
 {
 
 
@@ -39,46 +43,46 @@ template
     typename GeometryOut,
     typename TagIn = typename tag<GeometryIn>::type,
     typename TagOut = typename tag<GeometryOut>::type
->
+    >
 struct transform_units_impl
-    : not_implemented<TagIn, TagOut>
+	: not_implemented<TagIn, TagOut>
 {};
 
 template <typename PointIn, typename PointOut>
 struct transform_units_impl<PointIn, PointOut, point_tag, point_tag>
 {
-    static inline void apply(PointIn const& point_in, PointOut& point_out)
-    {
-        detail::two_dimensional_view<PointIn const> view_in(point_in);
-        detail::two_dimensional_view<PointOut> view_out(point_out);
+	static inline void apply(PointIn const& point_in, PointOut& point_out)
+	{
+		detail::two_dimensional_view<PointIn const> view_in(point_in);
+		detail::two_dimensional_view<PointOut> view_out(point_out);
 
-        geometry::transform(view_in, view_out);
-    }
+		geometry::transform(view_in, view_out);
+	}
 };
 
 template <typename BoxIn, typename BoxOut>
 struct transform_units_impl<BoxIn, BoxOut, box_tag, box_tag>
 {
-    template <std::size_t Index>
-    static inline void apply(BoxIn const& box_in, BoxOut& box_out)
-    {
-        typedef detail::indexed_point_view<BoxIn const, Index> view_in_type;
-        typedef detail::indexed_point_view<BoxOut, Index> view_out_type;
+	template <std::size_t Index>
+	static inline void apply(BoxIn const& box_in, BoxOut& box_out)
+	{
+		typedef detail::indexed_point_view<BoxIn const, Index> view_in_type;
+		typedef detail::indexed_point_view<BoxOut, Index> view_out_type;
 
-        view_in_type view_in(box_in);
-        view_out_type view_out(box_out);
+		view_in_type view_in(box_in);
+		view_out_type view_out(box_out);
 
-        transform_units_impl
-            <
-                view_in_type, view_out_type
-            >::apply(view_in, view_out);
-    }
+		transform_units_impl
+		<
+		view_in_type, view_out_type
+		>::apply(view_in, view_out);
+	}
 
-    static inline void apply(BoxIn const& box_in, BoxOut& box_out)
-    {
-        apply<min_corner>(box_in, box_out);
-        apply<max_corner>(box_in, box_out);
-    }
+	static inline void apply(BoxIn const& box_in, BoxOut& box_out)
+	{
+		apply<min_corner>(box_in, box_out);
+		apply<max_corner>(box_in, box_out);
+	}
 };
 
 
@@ -88,16 +92,18 @@ template <typename GeometryIn, typename GeometryOut>
 inline void transform_units(GeometryIn const& geometry_in,
                             GeometryOut& geometry_out)
 {
-    transform_units_impl
-        <
-            GeometryIn, GeometryOut
-        >::apply(geometry_in, geometry_out);
+	transform_units_impl
+	<
+	GeometryIn, GeometryOut
+	>::apply(geometry_in, geometry_out);
 }
 
 
-}} // namespace detail::envelope
+}
+} // namespace detail::envelope
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost:geometry
+}
+} // namespace boost:geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_ENVELOPE_TRANSFORM_UNITS_HPP

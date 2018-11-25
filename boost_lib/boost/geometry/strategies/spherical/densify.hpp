@@ -29,10 +29,14 @@
 #include <boost/geometry/util/select_most_precise.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace densify
+namespace strategy
+{
+namespace densify
 {
 
 
@@ -51,118 +55,118 @@ template
 <
     typename RadiusTypeOrSphere = double,
     typename CalculationType = void
->
+    >
 class spherical
 {
 public:
-    // For consistency with area strategy the radius is set to 1
-    inline spherical()
-        : m_radius(1.0)
-    {}
+	// For consistency with area strategy the radius is set to 1
+	inline spherical()
+		: m_radius(1.0)
+	{}
 
-    template <typename RadiusOrSphere>
-    explicit inline spherical(RadiusOrSphere const& radius_or_sphere)
-        : m_radius(strategy_detail::get_radius
-                    <
-                        RadiusOrSphere
-                    >::apply(radius_or_sphere))
-    {}
+	template <typename RadiusOrSphere>
+	explicit inline spherical(RadiusOrSphere const& radius_or_sphere)
+		: m_radius(strategy_detail::get_radius
+		           <
+		           RadiusOrSphere
+		           >::apply(radius_or_sphere))
+	{}
 
-    template <typename Point, typename AssignPolicy, typename T>
-    inline void apply(Point const& p0, Point const& p1, AssignPolicy & policy, T const& length_threshold) const
-    {
-        typedef typename AssignPolicy::point_type out_point_t;
-        typedef typename select_most_precise
-            <
-                typename coordinate_type<Point>::type,
-                typename coordinate_type<out_point_t>::type,
-                CalculationType
-            >::type calc_t;
+	template <typename Point, typename AssignPolicy, typename T>
+	inline void apply(Point const& p0, Point const& p1, AssignPolicy & policy, T const& length_threshold) const
+	{
+		typedef typename AssignPolicy::point_type out_point_t;
+		typedef typename select_most_precise
+		<
+		typename coordinate_type<Point>::type,
+		         typename coordinate_type<out_point_t>::type,
+		         CalculationType
+		         >::type calc_t;
 
-        calc_t const c0 = 0;
-        calc_t const c1 = 1;
-        calc_t const pi = math::pi<calc_t>();
+		calc_t const c0 = 0;
+		calc_t const c1 = 1;
+		calc_t const pi = math::pi<calc_t>();
 
-        typedef model::point<calc_t, 3, cs::cartesian> point3d_t;
-        point3d_t const xyz0 = formula::sph_to_cart3d<point3d_t>(p0);
-        point3d_t const xyz1 = formula::sph_to_cart3d<point3d_t>(p1);
-        calc_t const dot01 = geometry::dot_product(xyz0, xyz1);
-        calc_t const angle01 = acos(dot01);
+		typedef model::point<calc_t, 3, cs::cartesian> point3d_t;
+		point3d_t const xyz0 = formula::sph_to_cart3d<point3d_t>(p0);
+		point3d_t const xyz1 = formula::sph_to_cart3d<point3d_t>(p1);
+		calc_t const dot01 = geometry::dot_product(xyz0, xyz1);
+		calc_t const angle01 = acos(dot01);
 
-        BOOST_GEOMETRY_ASSERT(length_threshold > T(0));
+		BOOST_GEOMETRY_ASSERT(length_threshold > T(0));
 
-        signed_size_type n = signed_size_type(angle01 * m_radius / length_threshold);
-        if (n <= 0)
-            return;
+		signed_size_type n = signed_size_type(angle01 * m_radius / length_threshold);
+		if (n <= 0)
+			return;
 
-        point3d_t axis;
-        if (! math::equals(angle01, pi))
-        {
-            axis = geometry::cross_product(xyz0, xyz1);
-            geometry::detail::vec_normalize(axis);
-        }
-        else // antipodal
-        {
-            calc_t const half_pi = math::half_pi<calc_t>();
-            calc_t const lat = geometry::get_as_radian<1>(p0);
+		point3d_t axis;
+		if (! math::equals(angle01, pi))
+		{
+			axis = geometry::cross_product(xyz0, xyz1);
+			geometry::detail::vec_normalize(axis);
+		}
+		else // antipodal
+		{
+			calc_t const half_pi = math::half_pi<calc_t>();
+			calc_t const lat = geometry::get_as_radian<1>(p0);
 
-            if (math::equals(lat, half_pi))
-            {
-                // pointing east, segment lies on prime meridian, going south
-                axis = point3d_t(c0, c1, c0);
-            }
-            else if (math::equals(lat, -half_pi))
-            {
-                // pointing west, segment lies on prime meridian, going north
-                axis = point3d_t(c0, -c1, c0);
-            }
-            else
-            {
-                // lon rotated west by pi/2 at equator
-                calc_t const lon = geometry::get_as_radian<0>(p0);
-                axis = point3d_t(sin(lon), -cos(lon), c0);
-            }
-        }
+			if (math::equals(lat, half_pi))
+			{
+				// pointing east, segment lies on prime meridian, going south
+				axis = point3d_t(c0, c1, c0);
+			}
+			else if (math::equals(lat, -half_pi))
+			{
+				// pointing west, segment lies on prime meridian, going north
+				axis = point3d_t(c0, -c1, c0);
+			}
+			else
+			{
+				// lon rotated west by pi/2 at equator
+				calc_t const lon = geometry::get_as_radian<0>(p0);
+				axis = point3d_t(sin(lon), -cos(lon), c0);
+			}
+		}
 
-        calc_t step = angle01 / (n + 1);
+		calc_t step = angle01 / (n + 1);
 
-        calc_t a = step;
-        for (signed_size_type i = 0 ; i < n ; ++i, a += step)
-        {
-            // Axis-Angle rotation
-            // see: https://en.wikipedia.org/wiki/Axis-angle_representation
-            calc_t const cos_a = cos(a);
-            calc_t const sin_a = sin(a);
-            // cos_a * v
-            point3d_t s1 = xyz0;
-            geometry::multiply_value(s1, cos_a);
-            // sin_a * (n x v)
-            point3d_t s2 = geometry::cross_product(axis, xyz0);
-            geometry::multiply_value(s2, sin_a);
-            // (1 - cos_a)(n.v) * n
-            point3d_t s3 = axis;
-            geometry::multiply_value(s3, (c1 - cos_a) * geometry::dot_product(axis, xyz0));
-            // v_rot = cos_a * v + sin_a * (n x v) + (1 - cos_a)(n.v) * e
-            point3d_t v_rot = s1;
-            geometry::add_point(v_rot, s2);
-            geometry::add_point(v_rot, s3);
-            
-            out_point_t p = formula::cart3d_to_sph<out_point_t>(v_rot);
-            geometry::detail::conversion::point_to_point
-                <
-                    Point, out_point_t,
-                    2, dimension<out_point_t>::value
-                >::apply(p0, p);
+		calc_t a = step;
+		for (signed_size_type i = 0 ; i < n ; ++i, a += step)
+		{
+			// Axis-Angle rotation
+			// see: https://en.wikipedia.org/wiki/Axis-angle_representation
+			calc_t const cos_a = cos(a);
+			calc_t const sin_a = sin(a);
+			// cos_a * v
+			point3d_t s1 = xyz0;
+			geometry::multiply_value(s1, cos_a);
+			// sin_a * (n x v)
+			point3d_t s2 = geometry::cross_product(axis, xyz0);
+			geometry::multiply_value(s2, sin_a);
+			// (1 - cos_a)(n.v) * n
+			point3d_t s3 = axis;
+			geometry::multiply_value(s3, (c1 - cos_a) * geometry::dot_product(axis, xyz0));
+			// v_rot = cos_a * v + sin_a * (n x v) + (1 - cos_a)(n.v) * e
+			point3d_t v_rot = s1;
+			geometry::add_point(v_rot, s2);
+			geometry::add_point(v_rot, s3);
 
-            policy.apply(p);
-        }
-    }
+			out_point_t p = formula::cart3d_to_sph<out_point_t>(v_rot);
+			geometry::detail::conversion::point_to_point
+			<
+			Point, out_point_t,
+			       2, dimension<out_point_t>::value
+			       >::apply(p0, p);
+
+			policy.apply(p);
+		}
+	}
 
 private:
-    typename strategy_detail::get_radius
-        <
-            RadiusTypeOrSphere
-        >::type m_radius;
+	typename strategy_detail::get_radius
+	<
+	RadiusTypeOrSphere
+	>::type m_radius;
 };
 
 
@@ -173,7 +177,7 @@ namespace services
 template <>
 struct default_strategy<spherical_equatorial_tag>
 {
-    typedef strategy::densify::spherical<> type;
+	typedef strategy::densify::spherical<> type;
 };
 
 
@@ -181,9 +185,11 @@ struct default_strategy<spherical_equatorial_tag>
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::densify
+}
+} // namespace strategy::densify
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DENSIFY_HPP

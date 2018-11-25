@@ -21,11 +21,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
-namespace phoenix {
+namespace phoenix
+{
 
 template< typename >
 struct actor;
@@ -36,7 +38,8 @@ struct actor;
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * \brief This class implements an expression template keyword

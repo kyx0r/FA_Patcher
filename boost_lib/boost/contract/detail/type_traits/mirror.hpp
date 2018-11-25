@@ -95,17 +95,27 @@
         func_name) \
     BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION_( \
             /* is_static = */ 1, trait, func_name)
-        
+
 /* CODE */
 
-namespace boost { namespace contract { namespace detail { namespace mirror {
+namespace boost
+{
+namespace contract
+{
+namespace detail
+{
+namespace mirror
+{
 
 typedef class {} yes;
 typedef yes no[2];
 
 template<typename F, F> class check_function;
 
-} } } } // namespace
+}
+}
+}
+} // namespace
 
 #endif // #include guard
 

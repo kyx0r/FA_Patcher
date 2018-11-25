@@ -12,28 +12,34 @@
 #define BOOST_GEOMETRY_FORMULAS_RESULT_DIRECT_HPP
 
 
-namespace boost { namespace geometry { namespace formula
+namespace boost
+{
+namespace geometry
+{
+namespace formula
 {
 
 template <typename T>
 struct result_direct
 {
-    result_direct()
-        : lon2(0)
-        , lat2(0)
-        , reverse_azimuth(0)
-        , reduced_length(0)
-        , geodesic_scale(1)
-    {}
+	result_direct()
+		: lon2(0)
+		, lat2(0)
+		, reverse_azimuth(0)
+		, reduced_length(0)
+		, geodesic_scale(1)
+	{}
 
-    T lon2;
-    T lat2;
-    T reverse_azimuth;
-    T reduced_length;
-    T geodesic_scale;
+	T lon2;
+	T lat2;
+	T reverse_azimuth;
+	T reduced_length;
+	T geodesic_scale;
 };
 
-}}} // namespace boost::geometry::formula
+}
+}
+} // namespace boost::geometry::formula
 
 
 #endif // BOOST_GEOMETRY_FORMULAS_RESULT_DIRECT_HPP

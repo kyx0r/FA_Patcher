@@ -46,135 +46,144 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct wag3 {};
+namespace par4
+{
+struct wag3 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace wag3
-    {
-            template <typename T>
-            struct par_wag3
-            {
-                T    C_x;
-            };
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace wag3
+{
+template <typename T>
+struct par_wag3
+{
+	T    C_x;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_wag3_spheroid : public base_t_fi<base_wag3_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_wag3_spheroid : public base_t_fi<base_wag3_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_wag3<CalculationType> m_proj_parm;
+	par_wag3<CalculationType> m_proj_parm;
 
-                inline base_wag3_spheroid(const Parameters& par)
-                    : base_t_fi<base_wag3_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_wag3_spheroid(const Parameters& par)
+		: base_t_fi<base_wag3_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType TWOTHIRD = detail::TWOTHIRD<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType TWOTHIRD = detail::TWOTHIRD<CalculationType>();
 
-                    xy_x = this->m_proj_parm.C_x * lp_lon * cos(TWOTHIRD * lp_lat);
-                    xy_y = lp_lat;
-                }
+		xy_x = this->m_proj_parm.C_x * lp_lon * cos(TWOTHIRD * lp_lat);
+		xy_y = lp_lat;
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType TWOTHIRD = detail::TWOTHIRD<CalculationType>();
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType TWOTHIRD = detail::TWOTHIRD<CalculationType>();
 
-                    lp_lat = xy_y;
-                    lp_lon = xy_x / (this->m_proj_parm.C_x * cos(TWOTHIRD * lp_lat));
-                }
+		lp_lat = xy_y;
+		lp_lon = xy_x / (this->m_proj_parm.C_x * cos(TWOTHIRD * lp_lat));
+	}
 
-                static inline std::string get_name()
-                {
-                    return "wag3_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "wag3_spheroid";
+	}
 
-            };
+};
 
-            // Wagner III
-            template <typename Parameters, typename T>
-            inline void setup_wag3(Parameters& par, par_wag3<T>& proj_parm)
-            {
-                T ts;
+// Wagner III
+template <typename Parameters, typename T>
+inline void setup_wag3(Parameters& par, par_wag3<T>& proj_parm)
+{
+	T ts;
 
-                ts = pj_param(par.params, "rlat_ts").f;
-                proj_parm.C_x = cos(ts) / cos(2.*ts/3.);
-                par.es = 0.;
-            }
+	ts = pj_param(par.params, "rlat_ts").f;
+	proj_parm.C_x = cos(ts) / cos(2.*ts/3.);
+	par.es = 0.;
+}
 
-    }} // namespace detail::wag3
-    #endif // doxygen
+}
+} // namespace detail::wag3
+#endif // doxygen
 
-    /*!
-        \brief Wagner III projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Projection parameters
-         - lat_ts: Latitude of true scale (degrees)
-        \par Example
-        \image html ex_wag3.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct wag3_spheroid : public detail::wag3::base_wag3_spheroid<CalculationType, Parameters>
-    {
-        inline wag3_spheroid(const Parameters& par) : detail::wag3::base_wag3_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::wag3::setup_wag3(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Wagner III projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Projection parameters
+     - lat_ts: Latitude of true scale (degrees)
+    \par Example
+    \image html ex_wag3.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct wag3_spheroid : public detail::wag3::base_wag3_spheroid<CalculationType, Parameters>
+{
+	inline wag3_spheroid(const Parameters& par) : detail::wag3::base_wag3_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::wag3::setup_wag3(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wag3, wag3_spheroid, wag3_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wag3, wag3_spheroid, wag3_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class wag3_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<wag3_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class wag3_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<wag3_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void wag3_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("wag3", new wag3_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void wag3_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("wag3", new wag3_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_WAG3_HPP
 

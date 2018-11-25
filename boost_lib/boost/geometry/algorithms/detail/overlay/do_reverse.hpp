@@ -12,12 +12,16 @@
 
 #include <boost/geometry/core/point_order.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace overlay
+namespace detail
+{
+namespace overlay
 {
 
 // Metafunction helper for intersection and union
@@ -37,11 +41,13 @@ template <>
 struct do_reverse<counterclockwise, true> : boost::false_type {};
 
 
-}} // namespace detail::overlay
+}
+} // namespace detail::overlay
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_DO_REVERSE_HPP

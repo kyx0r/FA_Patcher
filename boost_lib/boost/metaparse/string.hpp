@@ -18,10 +18,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::string;
-  }
+namespace metaparse
+{
+using v1::string;
+}
 }
 
 #endif

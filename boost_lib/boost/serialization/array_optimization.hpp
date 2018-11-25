@@ -9,8 +9,9 @@
 #include <boost/config.hpp> // msvc 6.0 needs this for warning suppression
 
 #if defined(BOOST_NO_STDC_NAMESPACE)
-namespace std{ 
-    using ::size_t; 
+namespace std
+{
+using ::size_t;
 } // namespace std
 #endif
 
@@ -18,12 +19,16 @@ namespace std{
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-namespace boost { namespace serialization {
+namespace boost
+{
+namespace serialization
+{
 
 template <class Archive>
 struct use_array_optimization : boost::mpl::always<boost::mpl::false_> {};
 
-} } // end namespace boost::serialization
+}
+} // end namespace boost::serialization
 
 #define BOOST_SERIALIZATION_USE_ARRAY_OPTIMIZATION(Archive)           \
 namespace boost { namespace serialization {                           \

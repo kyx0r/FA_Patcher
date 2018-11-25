@@ -10,20 +10,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class A, class B>
-        struct concat;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class A, class B>
+struct concat;
 
-        template <char... As, char... Bs>
-        struct concat<string<As...>, string<Bs...>> : string<As..., Bs...> {};
-      }
-    }
-  }
+template <char... As, char... Bs>
+struct concat<string<As...>, string<Bs...>> : string<As..., Bs...> {};
+}
+}
+}
 }
 
 #endif

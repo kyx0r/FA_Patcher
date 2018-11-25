@@ -13,17 +13,20 @@
 #pragma once
 #endif
 
-namespace boost{
+namespace boost
+{
 
-namespace multi_index{
+namespace multi_index
+{
 
-namespace detail{
+namespace detail
+{
 
 /* Used to mark a special ctor variant that copies the internal objects of
  * a container but not its elements.
  */
 
-struct do_not_copy_elements_tag{};
+struct do_not_copy_elements_tag {};
 
 } /* namespace multi_index::detail */
 

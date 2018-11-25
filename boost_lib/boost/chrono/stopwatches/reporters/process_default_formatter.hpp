@@ -21,18 +21,18 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 #if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
 
-    template <typename CharT>
-    struct basic_clock_default_formatter<CharT, process_cpu_clock>
-    {
-      typedef basic_times_formatter<milli, CharT> type;
-    };
+template <typename CharT>
+struct basic_clock_default_formatter<CharT, process_cpu_clock>
+{
+	typedef basic_times_formatter<milli, CharT> type;
+};
 
 #endif
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 

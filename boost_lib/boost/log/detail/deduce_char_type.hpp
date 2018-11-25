@@ -23,11 +23,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 template< typename T >
 struct deduced_char_type;
@@ -35,55 +37,55 @@ struct deduced_char_type;
 template< >
 struct deduced_char_type< char >
 {
-    typedef char type;
+	typedef char type;
 };
 
 template< >
 struct deduced_char_type< const char >
 {
-    typedef char type;
+	typedef char type;
 };
 
 template< >
 struct deduced_char_type< wchar_t >
 {
-    typedef wchar_t type;
+	typedef wchar_t type;
 };
 
 template< >
 struct deduced_char_type< const wchar_t >
 {
-    typedef wchar_t type;
+	typedef wchar_t type;
 };
 
 //! Auxiliary traits to detect character type from a string
 template< typename RangeT >
 struct deduce_char_type :
-    public deduced_char_type< typename RangeT::value_type >
+	public deduced_char_type< typename RangeT::value_type >
 {
 };
 
 template< typename T >
 struct deduce_char_type< T* > :
-    public deduced_char_type< T >
+	public deduced_char_type< T >
 {
 };
 
 template< typename T >
 struct deduce_char_type< T* const > :
-    public deduced_char_type< T >
+	public deduced_char_type< T >
 {
 };
 
 template< typename T, unsigned int CountV >
 struct deduce_char_type< T[CountV] > :
-    public deduced_char_type< T >
+	public deduced_char_type< T >
 {
 };
 
 template< typename T >
 struct deduce_char_type< T& > :
-    public deduce_char_type< T >
+	public deduce_char_type< T >
 {
 };
 
@@ -91,7 +93,7 @@ struct deduce_char_type< T& > :
 
 template< typename T >
 struct deduce_char_type< T&& > :
-    public deduce_char_type< T >
+	public deduce_char_type< T >
 {
 };
 

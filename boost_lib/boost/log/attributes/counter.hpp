@@ -31,11 +31,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that counts an integral value
@@ -46,65 +48,65 @@ namespace attributes {
  */
 template< typename T >
 class counter :
-    public attribute
+	public attribute
 {
-    BOOST_STATIC_ASSERT_MSG(is_integral< T >::value, "Boost.Log: Only integral types are supported by the counter attribute");
+	BOOST_STATIC_ASSERT_MSG(is_integral< T >::value, "Boost.Log: Only integral types are supported by the counter attribute");
 
 public:
-    //! A counter value type
-    typedef T value_type;
+	//! A counter value type
+	typedef T value_type;
 
 protected:
-    //! Factory implementation
-    class BOOST_SYMBOL_VISIBLE impl :
-        public attribute::impl
-    {
-    private:
+	//! Factory implementation
+	class BOOST_SYMBOL_VISIBLE impl :
+		public attribute::impl
+	{
+	private:
 #ifndef BOOST_LOG_NO_THREADS
-        boost::atomic< value_type > m_counter;
+		boost::atomic< value_type > m_counter;
 #else
-        value_type m_counter;
+		value_type m_counter;
 #endif
-        const value_type m_step;
+		const value_type m_step;
 
-    public:
-        impl(value_type initial, value_type step) BOOST_NOEXCEPT :
-            m_counter(initial), m_step(step)
-        {
-        }
+	public:
+	impl(value_type initial, value_type step) BOOST_NOEXCEPT :
+		m_counter(initial), m_step(step)
+		{
+		}
 
-        attribute_value get_value()
-        {
+		attribute_value get_value()
+		{
 #ifndef BOOST_LOG_NO_THREADS
-            value_type value = m_counter.fetch_add(m_step, boost::memory_order_relaxed);
+			value_type value = m_counter.fetch_add(m_step, boost::memory_order_relaxed);
 #else
-            value_type value = m_counter;
-            m_counter += m_step;
+			value_type value = m_counter;
+			m_counter += m_step;
 #endif
-            return make_attribute_value(value);
-        }
-    };
+			return make_attribute_value(value);
+		}
+	};
 
 public:
-    /*!
-     * Constructor
-     *
-     * \param initial Initial value of the counter
-     * \param step Changing step of the counter. Each value acquired from the attribute
-     *        will be greater than the previous one by this amount.
-     */
-    explicit counter(value_type initial = (value_type)0, value_type step = (value_type)1) :
-        attribute(new impl(initial, step))
-    {
-    }
+	/*!
+	 * Constructor
+	 *
+	 * \param initial Initial value of the counter
+	 * \param step Changing step of the counter. Each value acquired from the attribute
+	 *        will be greater than the previous one by this amount.
+	 */
+	explicit counter(value_type initial = (value_type)0, value_type step = (value_type)1) :
+		attribute(new impl(initial, step))
+	{
+	}
 
-    /*!
-     * Constructor for casting support
-     */
-    explicit counter(cast_source const& source) :
-        attribute(source.as< impl >())
-    {
-    }
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit counter(cast_source const& source) :
+		attribute(source.as< impl >())
+	{
+	}
 };
 
 } // namespace attributes

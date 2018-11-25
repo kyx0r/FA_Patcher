@@ -15,68 +15,75 @@
 #include <boost/process/detail/posix/handler.hpp>
 #include <unistd.h>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 template<int p1, int p2>
 struct pipe_out : handler_base_ext
 {
-    int sink;
-    int source; //opposite end
+	int sink;
+	int source; //opposite end
 
-    pipe_out(int sink, int source) : sink(sink), source(source) {}
+	pipe_out(int sink, int source) : sink(sink), source(source) {}
 
-    template<typename T>
-    pipe_out(T & p) : sink(p.native_sink()), source(p.native_source())
-    {
-        p.assign_sink(-1);
-    }
+	template<typename T>
+	pipe_out(T & p) : sink(p.native_sink()), source(p.native_source())
+	{
+		p.assign_sink(-1);
+	}
 
-    template<typename Executor>
-    void on_error(Executor &, const std::error_code &) const
-    {
-        ::close(sink);
-    }
+	template<typename Executor>
+	void on_error(Executor &, const std::error_code &) const
+	{
+		::close(sink);
+	}
 
-    template<typename Executor>
-    void on_success(Executor &) const
-    {
-        ::close(sink);
-    }
+	template<typename Executor>
+	void on_success(Executor &) const
+	{
+		::close(sink);
+	}
 
-    template <typename Executor>
-    void on_exec_setup(Executor &e) const;
+	template <typename Executor>
+	void on_exec_setup(Executor &e) const;
 };
 
 template<>
 template<typename Executor>
 void pipe_out<1,-1>::on_exec_setup(Executor &e) const
 {
-    if (::dup2(sink, STDOUT_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup3() failed");
-    ::close(sink);
-    ::close(source);
+	if (::dup2(sink, STDOUT_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup3() failed");
+	::close(sink);
+	::close(source);
 }
 
 template<>
 template<typename Executor>
 void pipe_out<2,-1>::on_exec_setup(Executor &e) const
 {
-    if (::dup2(sink, STDERR_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
-    ::close(sink);
-    ::close(source);
+	if (::dup2(sink, STDERR_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	::close(sink);
+	::close(source);
 }
 
 template<>
 template<typename Executor>
 void pipe_out<1,2>::on_exec_setup(Executor &e) const
 {
-    if (::dup2(sink, STDOUT_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
-    if (::dup2(sink, STDERR_FILENO) == -1)
-         e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
-    ::close(sink);
-    ::close(source);
+	if (::dup2(sink, STDOUT_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	if (::dup2(sink, STDERR_FILENO) == -1)
+		e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	::close(sink);
+	::close(source);
 }
 
 class async_pipe;
@@ -84,33 +91,36 @@ class async_pipe;
 template<int p1, int p2>
 struct async_pipe_out : public pipe_out<p1, p2>
 {
-    async_pipe &pipe;
-    template<typename AsyncPipe>
-    async_pipe_out(AsyncPipe & p) : pipe_out<p1, p2>(p.native_sink(), p.native_source()), pipe(p)
-    {
-    }
+	async_pipe &pipe;
+	template<typename AsyncPipe>
+	async_pipe_out(AsyncPipe & p) : pipe_out<p1, p2>(p.native_sink(), p.native_source()), pipe(p)
+	{
+	}
 
-    template<typename Pipe, typename Executor>
-    static void close(Pipe & pipe, Executor &)
-    {
-        boost::system::error_code ec;
-        std::move(pipe).sink().close(ec);
-    }
+	template<typename Pipe, typename Executor>
+	static void close(Pipe & pipe, Executor &)
+	{
+		boost::system::error_code ec;
+		std::move(pipe).sink().close(ec);
+	}
 
-    template<typename Executor>
-    void on_error(Executor & exec, const std::error_code &)
-    {
-        close(pipe, exec);
-    }
+	template<typename Executor>
+	void on_error(Executor & exec, const std::error_code &)
+	{
+		close(pipe, exec);
+	}
 
-    template<typename Executor>
-    void on_success(Executor &exec)
-    {
-        close(pipe, exec);
-    }
+	template<typename Executor>
+	void on_success(Executor &exec)
+	{
+		close(pipe, exec);
+	}
 };
 
 
-}}}}
+}
+}
+}
+}
 
 #endif

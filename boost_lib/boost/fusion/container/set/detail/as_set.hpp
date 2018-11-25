@@ -27,40 +27,46 @@
 #include <boost/fusion/iterator/advance.hpp>
 #include <cstddef>
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
+{
+namespace fusion
+{
+namespace detail
 {
 BOOST_FUSION_BARRIER_BEGIN
 
-    template <int size
-            , typename = typename detail::make_index_sequence<size>::type>
-    struct as_set;
+template <int size
+          , typename = typename detail::make_index_sequence<size>::type>
+struct as_set;
 
-    template <int size, std::size_t ...Indices>
-    struct as_set<size, detail::index_sequence<Indices...> >
-    {
-        template <typename I>
-        struct apply
-        {
-            typedef set<
-                typename result_of::value_of<
-                    typename result_of::advance_c<I, Indices>::type
-                >::type...
-            > type;
-        };
+template <int size, std::size_t ...Indices>
+struct as_set<size, detail::index_sequence<Indices...> >
+{
+	template <typename I>
+	struct apply
+	{
+		typedef set<
+		typename result_of::value_of<
+		typename result_of::advance_c<I, Indices>::type
+		>::type...
+		> type;
+	};
 
-        template <typename Iterator>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static typename apply<Iterator>::type
-        call(Iterator const& i)
-        {
-            typedef apply<Iterator> gen;
-            typedef typename gen::type result;
-            return result(*advance_c<Indices>(i)...);
-        }
-    };
+	template <typename Iterator>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static typename apply<Iterator>::type
+	call(Iterator const& i)
+	{
+		typedef apply<Iterator> gen;
+		typedef typename gen::type result;
+		return result(*advance_c<Indices>(i)...);
+	}
+};
 
 BOOST_FUSION_BARRIER_END
-}}}
+}
+}
+}
 
 #endif
 #endif

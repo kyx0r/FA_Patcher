@@ -11,19 +11,22 @@
 #ifndef BOOST_COMPUTE_FUNCTIONAL_AS_HPP
 #define BOOST_COMPUTE_FUNCTIONAL_AS_HPP
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T, class Arg>
 struct invoked_as
 {
-    invoked_as(const Arg &arg)
-        : m_arg(arg)
-    {
-    }
+	invoked_as(const Arg &arg)
+		: m_arg(arg)
+	{
+	}
 
-    Arg m_arg;
+	Arg m_arg;
 };
 
 } // end detail namespace
@@ -35,14 +38,14 @@ struct invoked_as
 template<class T>
 struct as
 {
-    typedef T result_type;
+	typedef T result_type;
 
-    /// \internal_
-    template<class Arg>
-    detail::invoked_as<T, Arg> operator()(const Arg &arg) const
-    {
-        return detail::invoked_as<T, Arg>(arg);
-    }
+	/// \internal_
+	template<class Arg>
+	detail::invoked_as<T, Arg> operator()(const Arg &arg) const
+	{
+		return detail::invoked_as<T, Arg>(arg);
+	}
 };
 
 } // end compute namespace

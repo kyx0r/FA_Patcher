@@ -23,7 +23,11 @@
 #include <boost/geometry/geometries/concepts/polygon_concept.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -42,22 +46,22 @@ template <typename Geometry>
 class MultiPolygon
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename boost::range_value<Geometry>::type polygon_type;
+	typedef typename boost::range_value<Geometry>::type polygon_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::Polygon<polygon_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Polygon<polygon_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 
 public :
 
-    BOOST_CONCEPT_USAGE(MultiPolygon)
-    {
-        Geometry* mp = 0;
-        traits::clear<Geometry>::apply(*mp);
-        traits::resize<Geometry>::apply(*mp, 0);
-        polygon_type* poly = 0;
-        traits::push_back<Geometry>::apply(*mp, *poly);
-    }
+	BOOST_CONCEPT_USAGE(MultiPolygon)
+	{
+		Geometry* mp = 0;
+		traits::clear<Geometry>::apply(*mp);
+		traits::resize<Geometry>::apply(*mp, 0);
+		polygon_type* poly = 0;
+		traits::push_back<Geometry>::apply(*mp, *poly);
+	}
 #endif
 };
 
@@ -70,22 +74,24 @@ template <typename Geometry>
 class ConstMultiPolygon
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename boost::range_value<Geometry>::type polygon_type;
+	typedef typename boost::range_value<Geometry>::type polygon_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPolygon<polygon_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPolygon<polygon_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 
 public :
 
-    BOOST_CONCEPT_USAGE(ConstMultiPolygon)
-    {
-    }
+	BOOST_CONCEPT_USAGE(ConstMultiPolygon)
+	{
+	}
 #endif
 };
 
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_CONCEPTS_MULTI_POLYGON_CONCEPT_HPP

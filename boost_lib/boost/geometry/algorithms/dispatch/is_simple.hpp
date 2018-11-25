@@ -15,7 +15,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -25,7 +27,7 @@ namespace dispatch
 
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct is_simple
-    : not_implemented<Geometry>
+	: not_implemented<Geometry>
 {};
 
 
@@ -33,6 +35,7 @@ struct is_simple
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DISPATCH_IS_SIMPLE_HPP

@@ -27,9 +27,9 @@
 
 BOOST_PHOENIX_DEFINE_EXPRESSION_VARARG(
     (boost)(phoenix)(detail)(function_eval)
-  , (meta_grammar)
+    , (meta_grammar)
     (meta_grammar)
-  , BOOST_PP_DEC(BOOST_PHOENIX_COMPOSITE_LIMIT)
+    , BOOST_PP_DEC(BOOST_PHOENIX_COMPOSITE_LIMIT)
 )
 
 #if defined(__WAVE__) && defined(BOOST_PHOENIX_CREATE_PREPROCESSED_FILES)

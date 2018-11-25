@@ -8,25 +8,25 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class Ignore = int>
-        struct empty_string
-        {
-          typedef empty_string type;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class Ignore = int>
+struct empty_string
+{
+	typedef empty_string type;
 
-          static const char value[1];
-        };
+	static const char value[1];
+};
 
-        template <class Ignore>
-        const char empty_string<Ignore>::value[1] = {0};
-      }
-    }
-  }
+template <class Ignore>
+const char empty_string<Ignore>::value[1] = {0};
+}
+}
+}
 }
 
 #endif

@@ -20,36 +20,39 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename Value, typename F>
-    constexpr auto adjust_t::operator()(Xs&& xs, Value&& value, F&& f) const {
-        using S = typename hana::tag_of<Xs>::type;
-        using Adjust = BOOST_HANA_DISPATCH_IF(adjust_impl<S>,
-            hana::Functor<S>::value
-        );
+//! @cond
+template <typename Xs, typename Value, typename F>
+constexpr auto adjust_t::operator()(Xs&& xs, Value&& value, F&& f) const
+{
+	using S = typename hana::tag_of<Xs>::type;
+	using Adjust = BOOST_HANA_DISPATCH_IF(adjust_impl<S>,
+	                                      hana::Functor<S>::value
+	                                     );
 
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::Functor<S>::value,
-        "hana::adjust(xs, value, f) requires 'xs' to be a Functor");
-    #endif
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::Functor<S>::value,
+	              "hana::adjust(xs, value, f) requires 'xs' to be a Functor");
+#endif
 
-        return Adjust::apply(static_cast<Xs&&>(xs),
-                             static_cast<Value&&>(value),
-                             static_cast<F&&>(f));
-    }
-    //! @endcond
+	return Adjust::apply(static_cast<Xs&&>(xs),
+	                     static_cast<Value&&>(value),
+	                     static_cast<F&&>(f));
+}
+//! @endcond
 
-    template <typename Fun, bool condition>
-    struct adjust_impl<Fun, when<condition>> : default_ {
-        template <typename Xs, typename Value, typename F>
-        static constexpr auto apply(Xs&& xs, Value&& value, F&& f) {
-            return hana::adjust_if(
-                static_cast<Xs&&>(xs),
-                hana::equal.to(static_cast<Value&&>(value)),
-                static_cast<F&&>(f)
-            );
-        }
-    };
+template <typename Fun, bool condition>
+struct adjust_impl<Fun, when<condition>> : default_
+{
+	template <typename Xs, typename Value, typename F>
+	static constexpr auto apply(Xs&& xs, Value&& value, F&& f)
+	{
+		return hana::adjust_if(
+		           static_cast<Xs&&>(xs),
+		           hana::equal.to(static_cast<Value&&>(value)),
+		           static_cast<F&&>(f)
+		       );
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_ADJUST_HPP

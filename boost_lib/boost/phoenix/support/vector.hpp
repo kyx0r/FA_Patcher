@@ -62,27 +62,30 @@
     (BOOST_PP_CAT(A, N), BOOST_PP_CAT(a, N))                                    \
 /**/
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    template <typename Dummy = void>
-    struct vector0
-    {
-        typedef mpl::int_<0> size_type;
-        static const int size_value = 0;
-    };
+namespace phoenix
+{
+template <typename Dummy = void>
+struct vector0
+{
+	typedef mpl::int_<0> size_type;
+	static const int size_value = 0;
+};
 
-    template <int> struct vector_chooser;
+template <int> struct vector_chooser;
 
-    template <>
-    struct vector_chooser<0>
-    {
-        template <typename Dummy = void>
-        struct apply
-        {
-            typedef vector0<> type;
-        };
-    };
-}}
+template <>
+struct vector_chooser<0>
+{
+	template <typename Dummy = void>
+	struct apply
+	{
+		typedef vector0<> type;
+	};
+};
+}
+}
 
 
 #define BOOST_PHOENIX_ITERATION_PARAMS                                          \
@@ -103,37 +106,40 @@ namespace boost { namespace phoenix
 
 #else
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    template <BOOST_PHOENIX_typename_A>
-    struct BOOST_PP_CAT(vector, BOOST_PHOENIX_ITERATION)
-    {
-        BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M0, _)
-        
-        typedef mpl::int_<BOOST_PHOENIX_ITERATION> size_type;
-        static const int size_value = BOOST_PHOENIX_ITERATION;
+namespace phoenix
+{
+template <BOOST_PHOENIX_typename_A>
+struct BOOST_PP_CAT(vector, BOOST_PHOENIX_ITERATION)
+{
+	BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M0, _)
 
-        typedef
-            BOOST_PP_CAT(vector, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))<BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PHOENIX_ITERATION, A)>
-            args_type;
+	typedef mpl::int_<BOOST_PHOENIX_ITERATION> size_type;
+	static const int size_value = BOOST_PHOENIX_ITERATION;
 
-        args_type args() const
-        {
-            args_type r = {BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PHOENIX_ITERATION, a)};
-            return r;
-        }
-    };
+	typedef
+	BOOST_PP_CAT(vector, BOOST_PP_DEC(BOOST_PHOENIX_ITERATION))<BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PHOENIX_ITERATION, A)>
+	args_type;
 
-    template <>
-    struct vector_chooser<BOOST_PHOENIX_ITERATION>
-    {
-        template <BOOST_PHOENIX_typename_A>
-        struct apply
-        {
-            typedef BOOST_PP_CAT(vector, BOOST_PHOENIX_ITERATION)<BOOST_PHOENIX_A> type;
-        };
-    };
-}}
+	args_type args() const
+	{
+		args_type r = {BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PHOENIX_ITERATION, a)};
+		return r;
+	}
+};
+
+template <>
+struct vector_chooser<BOOST_PHOENIX_ITERATION>
+{
+	template <BOOST_PHOENIX_typename_A>
+	struct apply
+	{
+		typedef BOOST_PP_CAT(vector, BOOST_PHOENIX_ITERATION)<BOOST_PHOENIX_A> type;
+	};
+};
+}
+}
 
 #define BOOST_PHOENIX_SUPPORT_VECTOR_ADAT_PARAM0                                \
     BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M1, _)                             \
@@ -153,8 +159,8 @@ namespace boost { namespace phoenix
 
 BOOST_FUSION_ADAPT_TPL_STRUCT_NO_PARTIAL(
     BOOST_PHOENIX_SUPPORT_VECTOR_ADAT_PARAM0
-  , BOOST_PHOENIX_SUPPORT_VECTOR_ADAT_PARAM1
-  , BOOST_PHOENIX_SUPPORT_VECTOR_ADAT_PARAM2
+    , BOOST_PHOENIX_SUPPORT_VECTOR_ADAT_PARAM1
+    , BOOST_PHOENIX_SUPPORT_VECTOR_ADAT_PARAM2
 )
 
 #endif

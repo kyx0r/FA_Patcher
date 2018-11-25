@@ -31,13 +31,16 @@
 #include <boost/type_erasure/rebind_any.hpp>
 #include <boost/type_erasure/param.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 template<class Sig, class F = _self>
 struct callable;
 
-namespace detail {
+namespace detail
+{
 
 template<class Sig>
 struct result_of_callable;
@@ -61,11 +64,11 @@ struct result_of_callable;
 template<class Sig, class F = _self>
 struct callable
 {
-    /**
-     * @c R is the result type of @c Sig and @c T is the argument
-     * types of @c Sig.
-     */
-    static R apply(F& f, T... arg);
+	/**
+	 * @c R is the result type of @c Sig and @c T is the argument
+	 * types of @c Sig.
+	 */
+	static R apply(F& f, T... arg);
 };
 
 #elif !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && \
@@ -75,80 +78,80 @@ struct callable
 template<class R, class... T, class F>
 struct callable<R(T...), F>
 {
-    static R apply(F& f, T... arg)
-    {
-        return f(std::forward<T>(arg)...);
-    }
+	static R apply(F& f, T... arg)
+	{
+		return f(std::forward<T>(arg)...);
+	}
 };
 
 template<class... T, class F>
 struct callable<void(T...), F>
 {
-    static void apply(F& f, T... arg)
-    {
-        f(std::forward<T>(arg)...);
-    }
+	static void apply(F& f, T... arg)
+	{
+		f(std::forward<T>(arg)...);
+	}
 };
 
 template<class R, class F, class Base, class Enable, class... T>
 struct concept_interface<callable<R(T...), F>, Base, F, Enable>
-  : Base
+: Base
 {
-    template<class Sig>
-    struct result :
-        ::boost::type_erasure::detail::result_of_callable<Sig>
-    {};
-    typedef void _boost_type_erasure_is_callable;
-    typedef ::boost::mpl::vector<R> _boost_type_erasure_callable_results;
-    typedef char (&_boost_type_erasure_callable_size)[1];
-    _boost_type_erasure_callable_size
-    _boost_type_erasure_deduce_callable(
-        typename ::boost::type_erasure::as_param<Base, T>::type...);
-    typename ::boost::type_erasure::rebind_any<Base, R>::type
-    operator()(typename ::boost::type_erasure::as_param<Base, T>::type... arg)
-    {
-        return ::boost::type_erasure::call(callable<R(T...), F>(), *this,
-            ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
-    }
+	template<class Sig>
+	struct result :
+		::boost::type_erasure::detail::result_of_callable<Sig>
+	{};
+	typedef void _boost_type_erasure_is_callable;
+	typedef ::boost::mpl::vector<R> _boost_type_erasure_callable_results;
+	typedef char (&_boost_type_erasure_callable_size)[1];
+	_boost_type_erasure_callable_size
+	_boost_type_erasure_deduce_callable(
+	    typename ::boost::type_erasure::as_param<Base, T>::type...);
+	typename ::boost::type_erasure::rebind_any<Base, R>::type
+	operator()(typename ::boost::type_erasure::as_param<Base, T>::type... arg)
+	{
+		return ::boost::type_erasure::call(callable<R(T...), F>(), *this,
+		                                   ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
+	}
 };
 
 template<class R, class F, class Base, class Enable, class... T>
 struct concept_interface<callable<R(T...), const F>, Base, F, Enable>
-  : Base
+: Base
 {
-    template<class Sig>
-    struct result :
-        ::boost::type_erasure::detail::result_of_callable<Sig>
-    {};
-    typedef void _boost_type_erasure_is_callable;
-    typedef ::boost::mpl::vector<R> _boost_type_erasure_callable_results;
-    typedef char (&_boost_type_erasure_callable_size)[1];
-    _boost_type_erasure_callable_size
-    _boost_type_erasure_deduce_callable(
-        typename ::boost::type_erasure::as_param<Base, T>::type...) const;
-    typename ::boost::type_erasure::rebind_any<Base, R>::type operator()(
-        typename ::boost::type_erasure::as_param<Base, T>::type... arg) const
-    {
-        return ::boost::type_erasure::call(callable<R(T...), const F>(), *this,
-            ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
-    }
+	template<class Sig>
+	struct result :
+		::boost::type_erasure::detail::result_of_callable<Sig>
+	{};
+	typedef void _boost_type_erasure_is_callable;
+	typedef ::boost::mpl::vector<R> _boost_type_erasure_callable_results;
+	typedef char (&_boost_type_erasure_callable_size)[1];
+	_boost_type_erasure_callable_size
+	_boost_type_erasure_deduce_callable(
+	    typename ::boost::type_erasure::as_param<Base, T>::type...) const;
+	typename ::boost::type_erasure::rebind_any<Base, R>::type operator()(
+	    typename ::boost::type_erasure::as_param<Base, T>::type... arg) const
+	{
+		return ::boost::type_erasure::call(callable<R(T...), const F>(), *this,
+		                                   ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
+	}
 };
 
 template<class R, class F, class Base, class... T>
 struct concept_interface<
-    callable<R(T...), F>,
-    Base,
-    F,
-    typename Base::_boost_type_erasure_is_callable
+callable<R(T...), F>,
+Base,
+F,
+typename Base::_boost_type_erasure_is_callable
 >
-  : Base
+: Base
 {
     typedef typename ::boost::mpl::push_back<
-        typename Base::_boost_type_erasure_callable_results,
-        R
+    typename Base::_boost_type_erasure_callable_results,
+    R
     >::type _boost_type_erasure_callable_results;
     typedef char (&_boost_type_erasure_callable_size)[
-        ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
+         ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
     using Base::_boost_type_erasure_deduce_callable;
     _boost_type_erasure_callable_size
     _boost_type_erasure_deduce_callable(
@@ -156,27 +159,27 @@ struct concept_interface<
     using Base::operator();
     typename ::boost::type_erasure::rebind_any<Base, R>::type
     operator()(typename ::boost::type_erasure::as_param<Base, T>::type... arg)
-    {
-        return ::boost::type_erasure::call(callable<R(T...), F>(), *this,
-            ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
-    }
+{
+	return ::boost::type_erasure::call(callable<R(T...), F>(), *this,
+	                                   ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
+}
 };
 
 template<class R, class F, class Base, class... T>
 struct concept_interface<
-    callable<R(T...), const F>,
-    Base,
-    F,
-    typename Base::_boost_type_erasure_is_callable
+callable<R(T...), const F>,
+Base,
+F,
+typename Base::_boost_type_erasure_is_callable
 >
-  : Base
+: Base
 {
     typedef typename ::boost::mpl::push_back<
-        typename Base::_boost_type_erasure_callable_results,
-        R
+    typename Base::_boost_type_erasure_callable_results,
+    R
     >::type _boost_type_erasure_callable_results;
     typedef char (&_boost_type_erasure_callable_size)[
-        ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
+         ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
     using Base::_boost_type_erasure_deduce_callable;
     _boost_type_erasure_callable_size
     _boost_type_erasure_deduce_callable(
@@ -184,22 +187,23 @@ struct concept_interface<
     using Base::operator();
     typename ::boost::type_erasure::rebind_any<Base, R>::type
     operator()(typename ::boost::type_erasure::as_param<Base, T>::type... arg) const
-    {
-        return ::boost::type_erasure::call(callable<R(T...), const F>(), *this,
-            ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
-    }
+{
+	return ::boost::type_erasure::call(callable<R(T...), const F>(), *this,
+	                                   ::std::forward<typename ::boost::type_erasure::as_param<Base, T>::type>(arg)...);
+}
 };
 
-namespace detail {
+namespace detail
+{
 
 template<class This, class... T>
 struct result_of_callable<This(T...)>
 {
-    typedef typename ::boost::mpl::at_c<
-        typename This::_boost_type_erasure_callable_results,
-        sizeof(::boost::declval<This>().
-            _boost_type_erasure_deduce_callable(::boost::declval<T>()...)) - 1
-    >::type type;
+	typedef typename ::boost::mpl::at_c<
+	typename This::_boost_type_erasure_callable_results,
+	         sizeof(::boost::declval<This>().
+	                _boost_type_erasure_deduce_callable(::boost::declval<T>()...)) - 1
+	         >::type type;
 };
 
 }
@@ -238,33 +242,33 @@ struct result_of_callable<This(T...)>
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T), class F>
 struct callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>
 {
-    static R apply(F& f BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, arg))
-    {
-        return f(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_FORWARD, (T, arg)));
-    }
+	static R apply(F& f BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, arg))
+	{
+		return f(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_FORWARD, (T, arg)));
+	}
 };
 
 template<BOOST_PP_ENUM_PARAMS(N, class T) BOOST_PP_COMMA_IF(N) class F>
 struct callable<void(BOOST_PP_ENUM_PARAMS(N, T)), F>
 {
-    static void apply(F& f BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, arg))
-    {
-        f(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_FORWARD, (T, arg)));
-    }
+	static void apply(F& f BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, arg))
+	{
+		f(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_FORWARD, (T, arg)));
+	}
 };
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T), class F, class Base, class Enable>
 struct concept_interface<
-    callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>,
-    Base,
-    F,
-    Enable
+callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>,
+Base,
+F,
+Enable
 >
-  : Base
+: Base
 {
     template<class Sig>
     struct result :
-        ::boost::type_erasure::detail::result_of_callable<Sig>
+    ::boost::type_erasure::detail::result_of_callable<Sig>
     {};
     typedef void _boost_type_erasure_is_callable;
     typedef ::boost::mpl::vector<R> _boost_type_erasure_callable_results;
@@ -274,25 +278,25 @@ struct concept_interface<
         BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_REBIND, ~));
     typename ::boost::type_erasure::rebind_any<Base, R>::type
     operator()(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_REBIND, ~))
-    {
-        return ::boost::type_erasure::call(
-            callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>(),
-            *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
-    }
-};
+{
+	return ::boost::type_erasure::call(
+	           callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>(),
+	           *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
+}
+            };
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T), class F, class Base, class Enable>
 struct concept_interface<
-    callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>,
-    Base,
-    F,
-    Enable
+callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>,
+Base,
+F,
+Enable
 >
-  : Base
+: Base
 {
     template<class Sig>
     struct result :
-        ::boost::type_erasure::detail::result_of_callable<Sig>
+    ::boost::type_erasure::detail::result_of_callable<Sig>
     {};
     typedef void _boost_type_erasure_is_callable;
     typedef ::boost::mpl::vector<R> _boost_type_erasure_callable_results;
@@ -302,28 +306,28 @@ struct concept_interface<
         BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_REBIND, ~)) const;
     typename ::boost::type_erasure::rebind_any<Base, R>::type
     operator()(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_REBIND, ~)) const
-    {
-        return ::boost::type_erasure::call(
-            callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>(),
-            *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
-    }
-};
+{
+	return ::boost::type_erasure::call(
+	           callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>(),
+	           *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
+}
+            };
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T), class F, class Base>
 struct concept_interface<
-    callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>,
-    Base,
-    F,
-    typename Base::_boost_type_erasure_is_callable
+callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>,
+Base,
+F,
+typename Base::_boost_type_erasure_is_callable
 >
-  : Base
+: Base
 {
     typedef typename ::boost::mpl::push_back<
-        typename Base::_boost_type_erasure_callable_results,
-        R
+    typename Base::_boost_type_erasure_callable_results,
+    R
     >::type _boost_type_erasure_callable_results;
     typedef char (&_boost_type_erasure_callable_size)[
-        ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
+         ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
     using Base::_boost_type_erasure_deduce_callable;
     _boost_type_erasure_callable_size
     _boost_type_erasure_deduce_callable(
@@ -331,28 +335,28 @@ struct concept_interface<
     using Base::operator();
     typename ::boost::type_erasure::rebind_any<Base, R>::type
     operator()(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_REBIND, ~))
-    {
-        return ::boost::type_erasure::call(
-            callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>(),
-            *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
-    }
+{
+	return ::boost::type_erasure::call(
+	           callable<R(BOOST_PP_ENUM_PARAMS(N, T)), F>(),
+	           *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
+}
 };
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T), class F, class Base>
 struct concept_interface<
-    callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>,
-    Base,
-    F,
-    typename Base::_boost_type_erasure_is_callable
+callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>,
+Base,
+F,
+typename Base::_boost_type_erasure_is_callable
 >
-  : Base
+: Base
 {
     typedef typename ::boost::mpl::push_back<
-        typename Base::_boost_type_erasure_callable_results,
-        R
+    typename Base::_boost_type_erasure_callable_results,
+    R
     >::type _boost_type_erasure_callable_results;
     typedef char (&_boost_type_erasure_callable_size)[
-        ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
+         ::boost::mpl::size<_boost_type_erasure_callable_results>::value];
     using Base::_boost_type_erasure_deduce_callable;
     _boost_type_erasure_callable_size
     _boost_type_erasure_deduce_callable(
@@ -360,24 +364,25 @@ struct concept_interface<
     using Base::operator();
     typename ::boost::type_erasure::rebind_any<Base, R>::type
     operator()(BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_REBIND, ~)) const
-    {
-        return ::boost::type_erasure::call(
-            callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>(),
-            *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
-    }
+{
+	return ::boost::type_erasure::call(
+	           callable<R(BOOST_PP_ENUM_PARAMS(N, T)), const F>(),
+	           *this BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_REBIND, ~));
+}
 };
 
-namespace detail {
+namespace detail
+{
 
 template<class This BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)>
 struct result_of_callable<This(BOOST_PP_ENUM_PARAMS(N, T))>
 {
-    typedef typename ::boost::mpl::at_c<
-        typename This::_boost_type_erasure_callable_results,
-        sizeof(::boost::declval<This>().
-            _boost_type_erasure_deduce_callable(
-                BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_DECLVAL, ~))) - 1
-    >::type type;
+	typedef typename ::boost::mpl::at_c<
+	typename This::_boost_type_erasure_callable_results,
+	         sizeof(::boost::declval<This>().
+	                _boost_type_erasure_deduce_callable(
+	                    BOOST_PP_ENUM(N, BOOST_TYPE_ERASURE_DECLVAL, ~))) - 1
+	         >::type type;
 };
 
 }

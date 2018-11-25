@@ -24,7 +24,13 @@
 #include <boost/geometry/strategies/relate.hpp>
 
 
-namespace boost { namespace geometry { namespace strategy { namespace disjoint
+namespace boost
+{
+namespace geometry
+{
+namespace strategy
+{
+namespace disjoint
 {
 
 #ifndef DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
@@ -41,53 +47,56 @@ template
     int TopDim2 = geometry::topological_dimension<Geometry2>::value,
     typename CsTag1 = typename cs_tag<Geometry1>::type,
     typename CsTag2 = typename cs_tag<Geometry2>::type
->
+    >
 struct default_strategy
-    : relate::services::default_strategy
-        <
-            Geometry1, Geometry2
-        >
+	: relate::services::default_strategy
+	  <
+	  Geometry1, Geometry2
+	  >
 {};
 
 template <typename Point, typename Box>
 struct default_strategy<Point, Box, point_tag, box_tag, 0, 2>
-    : strategy::covered_by::services::default_strategy<Point, Box>
+	: strategy::covered_by::services::default_strategy<Point, Box>
 {};
 
 template <typename Box, typename Point>
 struct default_strategy<Box, Point, box_tag, point_tag, 2, 0>
-    : strategy::covered_by::services::default_strategy<Point, Box>
+	: strategy::covered_by::services::default_strategy<Point, Box>
 {};
 
 template <typename MultiPoint, typename Box>
 struct default_strategy<MultiPoint, Box, multi_point_tag, box_tag, 0, 2>
-    : strategy::covered_by::services::default_strategy
-        <
-            typename point_type<MultiPoint>::type,
-            Box
-        >
+	: strategy::covered_by::services::default_strategy
+	  <
+	  typename point_type<MultiPoint>::type,
+	  Box
+	  >
 {};
 
 template <typename Box, typename MultiPoint>
 struct default_strategy<Box, MultiPoint, box_tag, multi_point_tag, 2, 0>
-    : strategy::covered_by::services::default_strategy
-        <
-            typename point_type<MultiPoint>::type,
-            Box
-        >
+	: strategy::covered_by::services::default_strategy
+	  <
+	  typename point_type<MultiPoint>::type,
+	  Box
+	  >
 {};
 
 template <typename Box1, typename Box2>
 struct default_strategy<Box1, Box2, box_tag, box_tag, 2, 2>
 {
-    // dummy strategy which will be ignored
-    typedef geometry::default_strategy type;
+	// dummy strategy which will be ignored
+	typedef geometry::default_strategy type;
 };
 
 } // namespace services
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
-}}}} // namespace boost::geometry::strategy::disjoint
+}
+}
+}
+} // namespace boost::geometry::strategy::disjoint
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_DISJOINT_HPP

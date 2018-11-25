@@ -20,18 +20,18 @@
 
 namespace boost
 {
-    namespace range
-    {
-        template<class Type, class Elem, class Traits> inline
-            iterator_range<std::istream_iterator<Type, Elem, Traits> >
-        istream_range(std::basic_istream<Elem, Traits>& in)
-        {
-            return iterator_range<std::istream_iterator<Type, Elem, Traits> >(
-                std::istream_iterator<Type, Elem, Traits>(in),
-                std::istream_iterator<Type, Elem, Traits>());
-        }
-    } // namespace range
-    using range::istream_range;
+namespace range
+{
+template<class Type, class Elem, class Traits> inline
+iterator_range<std::istream_iterator<Type, Elem, Traits> >
+istream_range(std::basic_istream<Elem, Traits>& in)
+{
+	return iterator_range<std::istream_iterator<Type, Elem, Traits> >(
+	           std::istream_iterator<Type, Elem, Traits>(in),
+	           std::istream_iterator<Type, Elem, Traits>());
+}
+} // namespace range
+using range::istream_range;
 } // namespace boost
 
 #endif // include guard

@@ -8,20 +8,27 @@
 #ifndef BOOST_HOF_GUARD_HOLDER_H
 #define BOOST_HOF_GUARD_HOLDER_H
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class... Ts>
 struct holder
 {
-    typedef void type;
+	typedef void type;
 };
 
 template<template<class...> class T>
 struct template_holder
 {
-    typedef void type;
+	typedef void type;
 };
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif

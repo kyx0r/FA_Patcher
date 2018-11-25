@@ -14,47 +14,50 @@
 #include <boost/phoenix/core/expression.hpp>
 #include <boost/phoenix/core/value.hpp>
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    /////////////////////////////////////////////////////////////////////////////
-    //
-    //  null_actor
-    //
-    //      An actor that does nothing (a "bum", if you will :-).
-    //
-    /////////////////////////////////////////////////////////////////////////////
-    
-    namespace detail
-    {
-        struct nothing {};
-    }
-    
-    namespace expression
-    {
-        struct null
-            : expression::value<detail::nothing>
-        {};
-    }
-    
-    template<typename Dummy>
-    struct is_custom_terminal<detail::nothing, Dummy>
-      : mpl::true_
-    {};
+namespace phoenix
+{
+/////////////////////////////////////////////////////////////////////////////
+//
+//  null_actor
+//
+//      An actor that does nothing (a "bum", if you will :-).
+//
+/////////////////////////////////////////////////////////////////////////////
 
-    template<typename Dummy>
-    struct custom_terminal<detail::nothing, Dummy>
-    {
-        typedef void result_type;
-        template <typename Context>
-        void operator()(detail::nothing, Context &) const
-        {
-        }
-    };
+namespace detail
+{
+struct nothing {};
+}
 
-    typedef expression::null::type nothing_type BOOST_ATTRIBUTE_UNUSED;
+namespace expression
+{
+struct null
+	: expression::value<detail::nothing>
+{};
+}
+
+template<typename Dummy>
+struct is_custom_terminal<detail::nothing, Dummy>
+	: mpl::true_
+{};
+
+template<typename Dummy>
+struct custom_terminal<detail::nothing, Dummy>
+{
+	typedef void result_type;
+	template <typename Context>
+	void operator()(detail::nothing, Context &) const
+	{
+	}
+};
+
+typedef expression::null::type nothing_type BOOST_ATTRIBUTE_UNUSED;
 #ifndef BOOST_PHOENIX_NO_PREDEFINED_TERMINALS
-    nothing_type const BOOST_ATTRIBUTE_UNUSED nothing = {{{}}};
+nothing_type const BOOST_ATTRIBUTE_UNUSED nothing = {{{}}};
 #endif
-}}
+}
+}
 
 #endif

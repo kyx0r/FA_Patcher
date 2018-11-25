@@ -23,16 +23,19 @@
 #include <boost/numeric/odeint/stepper/generation/make_controlled.hpp>
 
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 // Specializations for runge_kutta_cash_karp54
-template< class State , class Value , class Deriv , class Time , class Algebra , class Operations , class Resize >
-struct get_controller< runge_kutta_cash_karp54< State , Value , Deriv , Time , Algebra , Operations , Resize > >
+template< class State, class Value, class Deriv, class Time, class Algebra, class Operations, class Resize >
+struct get_controller< runge_kutta_cash_karp54< State, Value, Deriv, Time, Algebra, Operations, Resize > >
 {
-    typedef runge_kutta_cash_karp54< State , Value , Deriv , Time , Algebra , Operations , Resize > stepper_type;
-    typedef controlled_runge_kutta< stepper_type > type;
+	typedef runge_kutta_cash_karp54< State, Value, Deriv, Time, Algebra, Operations, Resize > stepper_type;
+	typedef controlled_runge_kutta< stepper_type > type;
 };
 
 

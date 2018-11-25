@@ -31,13 +31,16 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 /*!
  * \brief An adapter for a unary function to be used as a terminal in a Boost.Phoenix expression
@@ -50,65 +53,65 @@ template< typename FunT >
 class unary_function_terminal
 {
 private:
-    //! Adopted function type
-    typedef FunT function_type;
-    //! Self type
-    typedef unary_function_terminal< function_type > this_type;
+	//! Adopted function type
+	typedef FunT function_type;
+	//! Self type
+	typedef unary_function_terminal< function_type > this_type;
 
 public:
-    //! Internal typedef for type categorization
-    typedef void _is_boost_log_terminal;
+	//! Internal typedef for type categorization
+	typedef void _is_boost_log_terminal;
 
-    //! Function result type
-    template< typename >
-    struct result;
+	//! Function result type
+	template< typename >
+	struct result;
 
-    template< typename ThisT, typename ContextT >
-    struct result< ThisT(ContextT) >
-    {
-        typedef typename remove_cv<
-            typename remove_reference< typename phoenix::result_of::env< ContextT >::type >::type
-        >::type env_type;
-        typedef typename env_type::args_type args_type;
-        typedef typename boost::log::aux::copy_cv< ThisT, function_type >::type cv_function_type;
+	template< typename ThisT, typename ContextT >
+	struct result< ThisT(ContextT) >
+	{
+		typedef typename remove_cv<
+		typename remove_reference< typename phoenix::result_of::env< ContextT >::type >::type
+		>::type env_type;
+		typedef typename env_type::args_type args_type;
+		typedef typename boost::log::aux::copy_cv< ThisT, function_type >::type cv_function_type;
 
-        typedef typename boost::result_of< cv_function_type(typename fusion::result_of::at_c< args_type, 0 >::type) >::type type;
-    };
+		typedef typename boost::result_of< cv_function_type(typename fusion::result_of::at_c< args_type, 0 >::type) >::type type;
+	};
 
 private:
-    //! Adopted function
-    function_type m_fun;
+	//! Adopted function
+	function_type m_fun;
 
 public:
-    //! Default constructor
-    BOOST_DEFAULTED_FUNCTION(unary_function_terminal(), {})
-    //! Copy constructor
-    unary_function_terminal(unary_function_terminal const& that) : m_fun(that.m_fun) {}
-    //! Initializing constructor
-    template< typename ArgT1 >
-    explicit unary_function_terminal(ArgT1 const& arg1) : m_fun(arg1) {}
-    //! Initializing constructor
-    template< typename ArgT1, typename ArgT2 >
-    unary_function_terminal(ArgT1 const& arg1, ArgT2 const& arg2) : m_fun(arg1, arg2) {}
-    //! Initializing constructor
-    template< typename ArgT1, typename ArgT2, typename ArgT3 >
-    unary_function_terminal(ArgT1 const& arg1, ArgT2 const& arg2, ArgT3 const& arg3) : m_fun(arg1, arg2, arg3) {}
+	//! Default constructor
+	BOOST_DEFAULTED_FUNCTION(unary_function_terminal(), {})
+	//! Copy constructor
+	unary_function_terminal(unary_function_terminal const& that) : m_fun(that.m_fun) {}
+	//! Initializing constructor
+	template< typename ArgT1 >
+	explicit unary_function_terminal(ArgT1 const& arg1) : m_fun(arg1) {}
+	//! Initializing constructor
+	template< typename ArgT1, typename ArgT2 >
+	unary_function_terminal(ArgT1 const& arg1, ArgT2 const& arg2) : m_fun(arg1, arg2) {}
+	//! Initializing constructor
+	template< typename ArgT1, typename ArgT2, typename ArgT3 >
+	unary_function_terminal(ArgT1 const& arg1, ArgT2 const& arg2, ArgT3 const& arg3) : m_fun(arg1, arg2, arg3) {}
 
-    //! The operator forwards the call to the base function
-    template< typename ContextT >
-    typename result< this_type(ContextT const&) >::type
-    operator() (ContextT const& ctx)
-    {
-        return m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()));
-    }
+	//! The operator forwards the call to the base function
+	template< typename ContextT >
+	typename result< this_type(ContextT const&) >::type
+	operator() (ContextT const& ctx)
+	{
+		return m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()));
+	}
 
-    //! The operator forwards the call to the base function
-    template< typename ContextT >
-    typename result< const this_type(ContextT const&) >::type
-    operator() (ContextT const& ctx) const
-    {
-        return m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()));
-    }
+	//! The operator forwards the call to the base function
+	template< typename ContextT >
+	typename result< const this_type(ContextT const&) >::type
+	operator() (ContextT const& ctx) const
+	{
+		return m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()));
+	}
 };
 
 } // namespace aux
@@ -119,13 +122,15 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
-namespace phoenix {
+namespace phoenix
+{
 
-namespace result_of {
+namespace result_of
+{
 
 template< typename FunT >
 struct is_nullary< custom_terminal< boost::log::expressions::aux::unary_function_terminal< FunT > > > :
-    public mpl::false_
+	public mpl::false_
 {
 };
 

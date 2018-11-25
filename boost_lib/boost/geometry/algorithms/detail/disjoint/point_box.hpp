@@ -30,11 +30,15 @@
 #include <boost/geometry/algorithms/dispatch/disjoint.hpp>
 #include <boost/geometry/strategies/disjoint.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace disjoint
+namespace detail
+{
+namespace disjoint
 {
 
 
@@ -44,17 +48,18 @@ namespace detail { namespace disjoint
 template <typename Point, typename Box>
 inline bool disjoint_point_box(Point const& point, Box const& box)
 {
-    typedef typename strategy::disjoint::services::default_strategy
-        <
-            Point, Box
-        >::type strategy_type;
+	typedef typename strategy::disjoint::services::default_strategy
+	<
+	Point, Box
+	>::type strategy_type;
 
-    // ! covered_by(point, box)
-    return ! strategy_type::apply(point, box);
+	// ! covered_by(point, box)
+	return ! strategy_type::apply(point, box);
 }
 
 
-}} // namespace detail::disjoint
+}
+} // namespace detail::disjoint
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -66,18 +71,19 @@ namespace dispatch
 template <typename Point, typename Box, std::size_t DimensionCount>
 struct disjoint<Point, Box, DimensionCount, point_tag, box_tag, false>
 {
-    template <typename Strategy>
-    static inline bool apply(Point const& point, Box const& box, Strategy const& )
-    {
-        // ! covered_by(point, box)
-        return ! Strategy::apply(point, box);
-    }
+	template <typename Strategy>
+	static inline bool apply(Point const& point, Box const& box, Strategy const& )
+	{
+		// ! covered_by(point, box)
+		return ! Strategy::apply(point, box);
+	}
 };
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISJOINT_POINT_BOX_HPP

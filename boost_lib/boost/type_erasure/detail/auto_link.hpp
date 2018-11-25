@@ -14,24 +14,24 @@
 #include <boost/config.hpp>
 
 #if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_TYPE_ERASURE_DYN_LINK)
-    #ifdef BOOST_TYPE_ERASURE_SOURCE
-        #define BOOST_TYPE_ERASURE_DECL BOOST_SYMBOL_EXPORT
-    #else
-        #define BOOST_TYPE_ERASURE_DECL BOOST_SYMBOL_IMPORT
-    #endif
+#ifdef BOOST_TYPE_ERASURE_SOURCE
+#define BOOST_TYPE_ERASURE_DECL BOOST_SYMBOL_EXPORT
 #else
-    #define BOOST_TYPE_ERASURE_DECL
+#define BOOST_TYPE_ERASURE_DECL BOOST_SYMBOL_IMPORT
+#endif
+#else
+#define BOOST_TYPE_ERASURE_DECL
 #endif
 
 #if !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_TYPE_ERASURE_NO_LIB) && !defined(BOOST_TYPE_ERASURE_SOURCE)
 
-    #define BOOST_LIB_NAME boost_type_erasure
+#define BOOST_LIB_NAME boost_type_erasure
 
-    #if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_TYPE_ERASURE_DYN_LINK)
-        #define BOOST_DYN_LINK
-    #endif
+#if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_TYPE_ERASURE_DYN_LINK)
+#define BOOST_DYN_LINK
+#endif
 
-    #include <boost/config/auto_link.hpp>
+#include <boost/config/auto_link.hpp>
 
 #endif
 

@@ -15,36 +15,39 @@
 
 BOOST_PHOENIX_DEFINE_EXPRESSION(
     (boost)(phoenix)(delete_)
-  , (meta_grammar)
+    , (meta_grammar)
 )
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    struct delete_eval
-    {
-        typedef void result_type;
+namespace phoenix
+{
+struct delete_eval
+{
+	typedef void result_type;
 
-        template <typename P, typename Context>
-        result_type
-        operator()(P const& p, Context const &ctx) const
-        {
-            delete boost::phoenix::eval(p, ctx);
-        }
-    };
+	template <typename P, typename Context>
+	result_type
+	operator()(P const& p, Context const &ctx) const
+	{
+		delete boost::phoenix::eval(p, ctx);
+	}
+};
 
-    template <typename Dummy>
-    struct default_actions::when<rule::delete_, Dummy>
-        : call<delete_eval>
-    {};
+template <typename Dummy>
+struct default_actions::when<rule::delete_, Dummy>
+	: call<delete_eval>
+{};
 
-    template <typename P>
-    inline
-    typename expression::delete_<P>::type const
-    delete_(P const& p)
-    {
-        return expression::delete_<P>::make(p);
-    }
+template <typename P>
+inline
+typename expression::delete_<P>::type const
+delete_(P const& p)
+{
+	return expression::delete_<P>::make(p);
+}
 
-}}
+}
+}
 
 #endif

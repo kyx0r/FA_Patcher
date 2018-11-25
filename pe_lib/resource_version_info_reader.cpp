@@ -20,9 +20,9 @@ uint32_t resource_version_info_reader::get_version_block_value_pos(uint32_t base
 {
 	uint32_t string_length = static_cast<uint32_t>(u16string(key).length());
 	uint32_t ret = pe_utils::align_up(static_cast<uint32_t>(sizeof(uint16_t) * 3 /* headers before Key data */
-		+ base_pos
-		+ (string_length + 1 /* nullbyte */) * 2),
-		sizeof(uint32_t));
+	                                  + base_pos
+	                                  + (string_length + 1 /* nullbyte */) * 2),
+	                                  sizeof(uint32_t));
 
 	//Check possible overflows
 	if(ret < base_pos || ret < sizeof(uint16_t) * 3 || ret < (string_length + 1) * 2)
@@ -36,10 +36,10 @@ uint32_t resource_version_info_reader::get_version_block_first_child_pos(uint32_
 {
 	uint32_t string_length = static_cast<uint32_t>(u16string(key).length());
 	uint32_t ret =  pe_utils::align_up(static_cast<uint32_t>(sizeof(uint16_t) * 3 /* headers before Key data */
-		+ base_pos
-		+ (string_length + 1 /* nullbyte */) * 2),
-		sizeof(uint32_t))
-		+ pe_utils::align_up(value_length, sizeof(uint32_t));
+	                                   + base_pos
+	                                   + (string_length + 1 /* nullbyte */) * 2),
+	                                   sizeof(uint32_t))
+	                + pe_utils::align_up(value_length, sizeof(uint32_t));
 
 	//Check possible overflows
 	if(ret < base_pos || ret < value_length || ret < sizeof(uint16_t) * 3 || ret < (string_length + 1) * 2)
@@ -72,7 +72,7 @@ const file_version_info resource_version_info_reader::get_version_info(lang_stri
 
 	//Check root block key for null-termination and its name
 	if(!pe_utils::is_null_terminated(root_block->Key, resource_data.length() - sizeof(uint16_t) * 3 /* headers before Key data */)
-		|| version_info_key != reinterpret_cast<const unicode16_t*>(root_block->Key))
+	        || version_info_key != reinterpret_cast<const unicode16_t*>(root_block->Key))
 		throw_incorrect_version_info();
 
 	//If file has fixed version info
@@ -96,11 +96,11 @@ const file_version_info resource_version_info_reader::get_version_info(lang_stri
 
 	//Iterate over child elements of VS_VERSIONINFO (StringFileInfo or VarFileInfo)
 	for(uint32_t child_pos = get_version_block_first_child_pos(0, root_block->ValueLength, reinterpret_cast<const unicode16_t*>(root_block->Key));
-		child_pos < root_block->Length;)
+	        child_pos < root_block->Length;)
 	{
 		//Check block position
 		if(!pe_utils::is_sum_safe(child_pos, sizeof(version_info_block))
-			|| resource_data.length() < child_pos + sizeof(version_info_block))
+		        || resource_data.length() < child_pos + sizeof(version_info_block))
 			throw_incorrect_version_info();
 
 		//Get VERSION_INFO_BLOCK structure pointer
@@ -120,7 +120,7 @@ const file_version_info resource_version_info_reader::get_version_info(lang_stri
 		{
 			//Enumerate all string tables
 			for(uint32_t string_table_pos = get_version_block_first_child_pos(child_pos, block->ValueLength, reinterpret_cast<const unicode16_t*>(block->Key));
-				string_table_pos - child_pos < block->Length;)
+			        string_table_pos - child_pos < block->Length;)
 			{
 				//Check string table block position
 				if(resource_data.length() < string_table_pos + sizeof(version_info_block))
@@ -134,14 +134,14 @@ const file_version_info resource_version_info_reader::get_version_info(lang_stri
 					throw_incorrect_version_info();
 
 				//Check string table key for null-termination
-				if(!pe_utils::is_null_terminated(string_table->Key, resource_data.length() - string_table_pos - sizeof(uint16_t) * 3 /* headers before Key data */))	
+				if(!pe_utils::is_null_terminated(string_table->Key, resource_data.length() - string_table_pos - sizeof(uint16_t) * 3 /* headers before Key data */))
 					throw_incorrect_version_info();
 
 				string_values_map new_values;
 
 				//Enumerate all strings in the string table
 				for(uint32_t string_pos = get_version_block_first_child_pos(string_table_pos, string_table->ValueLength, reinterpret_cast<const unicode16_t*>(string_table->Key));
-					string_pos - string_table_pos < string_table->Length;)
+				        string_pos - string_table_pos < string_table->Length;)
 				{
 					//Check string block position
 					if(resource_data.length() < string_pos + sizeof(version_info_block))
@@ -178,7 +178,7 @@ const file_version_info resource_version_info_reader::get_version_info(lang_stri
 					new_values.insert(std::make_pair(reinterpret_cast<const unicode16_t*>(string_block->Key), data));
 #else
 					new_values.insert(std::make_pair(pe_utils::from_ucs2(reinterpret_cast<const unicode16_t*>(string_block->Key)),
-						pe_utils::from_ucs2(data)));
+					                                 pe_utils::from_ucs2(data)));
 #endif
 
 					//Navigate to next string block
@@ -198,7 +198,7 @@ const file_version_info resource_version_info_reader::get_version_info(lang_stri
 		else if(info_type == VarFileInfo) //If we encountered VarFileInfo
 		{
 			for(uint32_t var_table_pos = get_version_block_first_child_pos(child_pos, block->ValueLength, reinterpret_cast<const unicode16_t*>(block->Key));
-				var_table_pos - child_pos < block->Length;)
+			        var_table_pos - child_pos < block->Length;)
 			{
 				//Check var block position
 				if(resource_data.length() < var_table_pos + sizeof(version_info_block))
@@ -258,13 +258,13 @@ const file_version_info resource_version_info_reader::get_version_info(lang_stri
 const file_version_info resource_version_info_reader::get_version_info_by_lang(lang_string_values_map& string_values, translation_values_map& translations, uint32_t language) const
 {
 	const std::string& resource_data = res_.get_root_directory() //Type directory
-		.entry_by_id(pe_resource_viewer::resource_version)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(1)
-		.get_resource_directory() //Language directory
-		.entry_by_id(language)
-		.get_data_entry() //Data directory
-		.get_data();
+	                                   .entry_by_id(pe_resource_viewer::resource_version)
+	                                   .get_resource_directory() //Name/ID directory
+	                                   .entry_by_id(1)
+	                                   .get_resource_directory() //Language directory
+	                                   .entry_by_id(language)
+	                                   .get_data_entry() //Data directory
+	                                   .get_data();
 
 	return get_version_info(string_values, translations, resource_data);
 }
@@ -276,11 +276,11 @@ const file_version_info resource_version_info_reader::get_version_info_by_lang(l
 const file_version_info resource_version_info_reader::get_version_info(lang_string_values_map& string_values, translation_values_map& translations, uint32_t index) const
 {
 	const resource_directory::entry_list& entries = res_.get_root_directory() //Type directory
-		.entry_by_id(pe_resource_viewer::resource_version)
-		.get_resource_directory() //Name/ID directory
-		.entry_by_id(1)
-		.get_resource_directory() //Language directory
-		.get_entry_list();
+	        .entry_by_id(pe_resource_viewer::resource_version)
+	        .get_resource_directory() //Name/ID directory
+	        .entry_by_id(1)
+	        .get_resource_directory() //Language directory
+	        .get_entry_list();
 
 	if(entries.size() <= index)
 		throw pe_exception("Resource data entry not found", pe_exception::resource_data_entry_not_found);

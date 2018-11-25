@@ -61,43 +61,43 @@ namespace detail
 
 #if !defined( BOOST_USE_WINDOWS_H ) && !BOOST_PLAT_WINDOWS_RUNTIME
 #if !BOOST_COMP_CLANG || !defined __MINGW32__
-  extern "C" void __stdcall Sleep( unsigned long ms );
+extern "C" void __stdcall Sleep( unsigned long ms );
 #else
 #include <_mingw.h>
 #if !defined __MINGW64_VERSION_MAJOR
-  extern "C" void __stdcall Sleep( unsigned long ms );
+extern "C" void __stdcall Sleep( unsigned long ms );
 #else
-  extern "C" __declspec(dllimport) void __stdcall Sleep( unsigned long ms );
+extern "C" __declspec(dllimport) void __stdcall Sleep( unsigned long ms );
 #endif
 #endif
 #endif
 
 inline void yield( unsigned k )
 {
-    if( k < 4 )
-    {
-    }
+	if( k < 4 )
+	{
+	}
 #if defined( BOOST_SMT_PAUSE )
-    else if( k < 16 )
-    {
-        BOOST_SMT_PAUSE
-    }
+	else if( k < 16 )
+	{
+		BOOST_SMT_PAUSE
+	}
 #endif
 #if !BOOST_PLAT_WINDOWS_RUNTIME
-    else if( k < 32 )
-    {
-        Sleep( 0 );
-    }
-    else
-    {
-        Sleep( 1 );
-    }
+	else if( k < 32 )
+	{
+		Sleep( 0 );
+	}
+	else
+	{
+		Sleep( 1 );
+	}
 #else
-    else
-    {
-        // Sleep isn't supported on the Windows Runtime.
-        std::this_thread::yield();
-    }
+	else
+	{
+		// Sleep isn't supported on the Windows Runtime.
+		std::this_thread::yield();
+	}
 #endif
 }
 
@@ -110,8 +110,8 @@ inline void yield( unsigned k )
 #ifndef _AIX
 #include <sched.h>
 #else
-   // AIX's sched.h defines ::var which sometimes conflicts with Lambda's var
-       extern "C" int sched_yield(void);
+// AIX's sched.h defines ::var which sometimes conflicts with Lambda's var
+extern "C" int sched_yield(void);
 #endif
 
 #include <time.h>
@@ -124,32 +124,32 @@ namespace detail
 
 inline void yield( unsigned k )
 {
-    if( k < 4 )
-    {
-    }
+	if( k < 4 )
+	{
+	}
 #if defined( BOOST_SMT_PAUSE )
-    else if( k < 16 )
-    {
-        BOOST_SMT_PAUSE
-    }
+	else if( k < 16 )
+	{
+		BOOST_SMT_PAUSE
+	}
 #endif
-    else if( k < 32 || k & 1 )
-    {
-        sched_yield();
-    }
-    else
-    {
-        // g++ -Wextra warns on {} or {0}
-        struct timespec rqtp = { 0, 0 };
+	else if( k < 32 || k & 1 )
+	{
+		sched_yield();
+	}
+	else
+	{
+		// g++ -Wextra warns on {} or {0}
+		struct timespec rqtp = { 0, 0 };
 
-        // POSIX says that timespec has tv_sec and tv_nsec
-        // But it doesn't guarantee order or placement
+		// POSIX says that timespec has tv_sec and tv_nsec
+		// But it doesn't guarantee order or placement
 
-        rqtp.tv_sec = 0;
-        rqtp.tv_nsec = 1000;
+		rqtp.tv_sec = 0;
+		rqtp.tv_nsec = 1000;
 
-        nanosleep( &rqtp, 0 );
-    }
+		nanosleep( &rqtp, 0 );
+	}
 }
 
 } // namespace detail

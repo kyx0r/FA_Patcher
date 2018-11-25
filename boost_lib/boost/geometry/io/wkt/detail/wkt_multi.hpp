@@ -18,39 +18,57 @@
 #include <boost/geometry/domains/gis/io/wkt/write.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace wkt
+namespace detail
+{
+namespace wkt
 {
 
 struct prefix_null
 {
-    static inline const char* apply() { return ""; }
+	static inline const char* apply()
+	{
+		return "";
+	}
 };
 
 struct prefix_multipoint
 {
-    static inline const char* apply() { return "MULTIPOINT"; }
+	static inline const char* apply()
+	{
+		return "MULTIPOINT";
+	}
 };
 
 struct prefix_multilinestring
 {
-    static inline const char* apply() { return "MULTILINESTRING"; }
+	static inline const char* apply()
+	{
+		return "MULTILINESTRING";
+	}
 };
 
 struct prefix_multipolygon
 {
-    static inline const char* apply() { return "MULTIPOLYGON"; }
+	static inline const char* apply()
+	{
+		return "MULTIPOLYGON";
+	}
 };
 
 
 
-}} // namespace wkt::impl
+}
+} // namespace wkt::impl
 #endif
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_DOMAINS_GIS_IO_WKT_DETAIL_WKT_MULTI_HPP

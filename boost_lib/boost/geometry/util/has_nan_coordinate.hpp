@@ -23,20 +23,22 @@
 #include <boost/math/special_functions/fpclassify.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
 {
-    
+namespace geometry
+{
+
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail
 {
 
 struct isnan
 {
-    template <typename T>
-    static inline bool apply(T const& t)
-    {
-        return boost::math::isnan(t);
-    }
+	template <typename T>
+	static inline bool apply(T const& t)
+	{
+		return boost::math::isnan(t);
+	}
 };
 
 template
@@ -46,35 +48,35 @@ template
     bool Enable,
     std::size_t I = 0,
     std::size_t N = geometry::dimension<Point>::value
->
+    >
 struct has_coordinate_with_property
 {
-    static bool apply(Point const& point)
-    {
-        return Predicate::apply(geometry::get<I>(point))
-            || has_coordinate_with_property
-                <
-                    Point, Predicate, Enable, I+1, N
-                >::apply(point);
-    }
+	static bool apply(Point const& point)
+	{
+		return Predicate::apply(geometry::get<I>(point))
+		       || has_coordinate_with_property
+		       <
+		       Point, Predicate, Enable, I+1, N
+		       >::apply(point);
+	}
 };
 
 template <typename Point, typename Predicate, std::size_t I, std::size_t N>
 struct has_coordinate_with_property<Point, Predicate, false, I, N>
 {
-    static inline bool apply(Point const&)
-    {
-        return false;
-    }
+	static inline bool apply(Point const&)
+	{
+		return false;
+	}
 };
 
 template <typename Point, typename Predicate, std::size_t N>
 struct has_coordinate_with_property<Point, Predicate, true, N, N>
 {
-    static bool apply(Point const& )
-    {
-        return false;
-    }
+	static bool apply(Point const& )
+	{
+		return false;
+	}
 };
 
 } // namespace detail
@@ -83,17 +85,18 @@ struct has_coordinate_with_property<Point, Predicate, true, N, N>
 template <typename Point>
 bool has_nan_coordinate(Point const& point)
 {
-    return detail::has_coordinate_with_property
-        <
-            Point,
-            detail::isnan,
-            boost::is_floating_point
-                <
-                    typename coordinate_type<Point>::type
-                >::value
-        >::apply(point);
+	return detail::has_coordinate_with_property
+	       <
+	       Point,
+	       detail::isnan,
+	       boost::is_floating_point
+	       <
+	       typename coordinate_type<Point>::type
+	       >::value
+	       >::apply(point);
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_UTIL_HAS_NAN_COORDINATE_HPP

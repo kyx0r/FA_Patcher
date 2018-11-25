@@ -31,10 +31,14 @@
 #include <boost/geometry/strategies/centroid.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace centroid
+namespace strategy
+{
+namespace centroid
 {
 
 
@@ -46,47 +50,47 @@ template
 <
     typename PointCentroid,
     typename Point = PointCentroid
->
+    >
 class average
 {
 private :
 
-    /*! subclass to keep state */
-    class sum
-    {
-        friend class average;
-        signed_size_type count;
-        PointCentroid centroid;
+	/*! subclass to keep state */
+	class sum
+	{
+		friend class average;
+		signed_size_type count;
+		PointCentroid centroid;
 
-    public :
-        inline sum()
-            : count(0)
-        {
-            assign_zero(centroid);
-        }
-    };
+	public :
+		inline sum()
+			: count(0)
+		{
+			assign_zero(centroid);
+		}
+	};
 
 public :
-    typedef sum state_type;
-    typedef PointCentroid centroid_point_type;
-    typedef Point point_type;
+	typedef sum state_type;
+	typedef PointCentroid centroid_point_type;
+	typedef Point point_type;
 
-    static inline void apply(Point const& p, sum& state)
-    {
-        add_point(state.centroid, p);
-        state.count++;
-    }
+	static inline void apply(Point const& p, sum& state)
+	{
+		add_point(state.centroid, p);
+		state.count++;
+	}
 
-    static inline bool result(sum const& state, PointCentroid& centroid)
-    {
-        centroid = state.centroid;
-        if ( state.count > 0 )
-        {
-            divide_value(centroid, state.count);
-            return true;
-        }
-        return false;
-    }
+	static inline bool result(sum const& state, PointCentroid& centroid)
+	{
+		centroid = state.centroid;
+		if ( state.count > 0 )
+		{
+			divide_value(centroid, state.count);
+			return true;
+		}
+		return false;
+	}
 
 };
 
@@ -99,19 +103,19 @@ namespace services
 
 template <typename Point, std::size_t DimensionCount, typename Geometry>
 struct default_strategy
-<
-    cartesian_tag,
-    pointlike_tag,
-    DimensionCount,
-    Point,
-    Geometry
->
+	<
+	cartesian_tag,
+	pointlike_tag,
+	DimensionCount,
+	Point,
+	Geometry
+	>
 {
-    typedef average
-        <
-            Point,
-            typename point_type<Geometry>::type
-        > type;
+	typedef average
+	<
+	Point,
+	typename point_type<Geometry>::type
+	> type;
 };
 
 } // namespace services
@@ -119,10 +123,12 @@ struct default_strategy
 #endif
 
 
-}} // namespace strategy::centroid
+}
+} // namespace strategy::centroid
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_CENTROID_AVERAGE_HPP

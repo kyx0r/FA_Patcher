@@ -77,10 +77,10 @@
 // Extended checks for supporting aCC on PA-RISC
 #if __HP_aCC > 30000 && __HP_aCC < 50000
 #  if __HP_aCC < 38000
-      // versions prior to version A.03.80 not supported
+// versions prior to version A.03.80 not supported
 #     error "Compiler version not supported - version A.03.80 or higher is required"
 #  elif !defined(__hpxstd98)
-      // must compile using the option +hpxstd98 with version A.03.80 and above
+// must compile using the option +hpxstd98 with version A.03.80 and above
 #     error "Compiler option '+hpxstd98' is required for proper support"
 #  endif //PA-RISC
 #endif
@@ -132,7 +132,7 @@
 */
 
 #if (__HP_aCC < 62500) || !defined(HP_CXX0x_SOURCE)
-  #define BOOST_NO_CXX11_VARIADIC_MACROS
+#define BOOST_NO_CXX11_VARIADIC_MACROS
 #endif
 
 #endif

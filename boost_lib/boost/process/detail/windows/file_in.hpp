@@ -16,29 +16,39 @@
 #include <boost/process/detail/windows/file_descriptor.hpp>
 #include <io.h>
 
-namespace boost { namespace process { namespace detail { namespace windows {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace windows
+{
 
 struct file_in : public ::boost::process::detail::handler_base
 {
-    file_descriptor file;
-    ::boost::winapi::HANDLE_ handle = file.handle();
+	file_descriptor file;
+	::boost::winapi::HANDLE_ handle = file.handle();
 
-    template<typename T>
-    file_in(T&& t) : file(std::forward<T>(t), file_descriptor::read) {}
-    file_in(FILE * f) : handle(reinterpret_cast<::boost::winapi::HANDLE_>(_get_osfhandle(_fileno(f)))) {}
+	template<typename T>
+	file_in(T&& t) : file(std::forward<T>(t), file_descriptor::read) {}
+	file_in(FILE * f) : handle(reinterpret_cast<::boost::winapi::HANDLE_>(_get_osfhandle(_fileno(f)))) {}
 
-    template <class WindowsExecutor>
-    void on_setup(WindowsExecutor &e) const
-    {
-        boost::winapi::SetHandleInformation(handle,
-                boost::winapi::HANDLE_FLAG_INHERIT_,
-                boost::winapi::HANDLE_FLAG_INHERIT_);
-        e.startup_info.hStdInput = handle;
-        e.startup_info.dwFlags  |= boost::winapi::STARTF_USESTDHANDLES_;
-        e.inherit_handles = true;
-    }
+	template <class WindowsExecutor>
+	void on_setup(WindowsExecutor &e) const
+	{
+		boost::winapi::SetHandleInformation(handle,
+		                                    boost::winapi::HANDLE_FLAG_INHERIT_,
+		                                    boost::winapi::HANDLE_FLAG_INHERIT_);
+		e.startup_info.hStdInput = handle;
+		e.startup_info.dwFlags  |= boost::winapi::STARTF_USESTDHANDLES_;
+		e.inherit_handles = true;
+	}
 };
 
-}}}}
+}
+}
+}
+}
 
 #endif

@@ -27,21 +27,23 @@
 #if !defined( BOOST_USE_WINDOWS_H ) || (defined(_MSC_VER) && (_MSC_VER+0) < 1500)
 extern "C" {
 
-BOOST_SYMBOL_IMPORT
-boost::winapi::WORD_
-NTAPI
-RtlCaptureStackBackTrace(
-    boost::winapi::DWORD_ FramesToSkip,
-    boost::winapi::DWORD_ FramesToCapture,
-    boost::winapi::PVOID_* BackTrace,
-    boost::winapi::PDWORD_ BackTraceHash
-    );
+	BOOST_SYMBOL_IMPORT
+	boost::winapi::WORD_
+	NTAPI
+	RtlCaptureStackBackTrace(
+	    boost::winapi::DWORD_ FramesToSkip,
+	    boost::winapi::DWORD_ FramesToCapture,
+	    boost::winapi::PVOID_* BackTrace,
+	    boost::winapi::PDWORD_ BackTraceHash
+	);
 
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 using ::RtlCaptureStackBackTrace;
 

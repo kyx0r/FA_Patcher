@@ -29,8 +29,10 @@
 #include <boost/type_erasure/check_match.hpp>
 #include <boost/type_erasure/exception.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 template<class Concept>
@@ -64,7 +66,8 @@ void require_match(const Op& f, U&&... args);
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 
-namespace detail {
+namespace detail
+{
 
 template<class Concept, class Op, class... U>
 void require_match_impl(
@@ -73,9 +76,10 @@ void require_match_impl(
     const Op& op,
     U&&... arg)
 {
-    if(!::boost::type_erasure::check_match(table, op, std::forward<U>(arg)...)) {
-        BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
-    }
+	if(!::boost::type_erasure::check_match(table, op, std::forward<U>(arg)...))
+	{
+		BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
+	}
 }
 
 template<class Concept, class Op, class... U>
@@ -92,9 +96,10 @@ void require_match_impl(
     const Op& op,
     U&&... arg)
 {
-    if(!::boost::type_erasure::check_match(op, ::std::forward<U>(arg)...)) {
-        BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
-    }
+	if(!::boost::type_erasure::check_match(op, ::std::forward<U>(arg)...))
+	{
+		BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
+	}
 }
 
 template<class Op, class... U>
@@ -112,8 +117,8 @@ void require_match(
     const Op& op,
     U&&... arg)
 {
-    ::boost::type_erasure::is_relaxed<Concept> cond;
-    ::boost::type_erasure::detail::require_match_impl(cond, table, op, ::std::forward<U>(arg)...);
+	::boost::type_erasure::is_relaxed<Concept> cond;
+	::boost::type_erasure::detail::require_match_impl(cond, table, op, ::std::forward<U>(arg)...);
 }
 
 #ifndef BOOST_TYPE_ERASURE_USE_MP11
@@ -123,12 +128,12 @@ void require_match(
     const Op& op,
     U&&... arg)
 {
-    ::boost::type_erasure::is_relaxed<
-        typename ::boost::type_erasure::detail::extract_concept<
-            typename ::boost::type_erasure::detail::get_signature<Op>::type,
-            U...>::type
-    > cond;
-    ::boost::type_erasure::detail::require_match_impl(cond, op, ::std::forward<U>(arg)...);
+	::boost::type_erasure::is_relaxed<
+	typename ::boost::type_erasure::detail::extract_concept<
+	typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	         U...>::type
+	         > cond;
+	::boost::type_erasure::detail::require_match_impl(cond, op, ::std::forward<U>(arg)...);
 }
 
 #else
@@ -138,14 +143,14 @@ void require_match(
     const Op& op,
     U&&... arg)
 {
-    ::boost::type_erasure::is_relaxed<
-        ::boost::type_erasure::detail::extract_concept_t<
-            ::boost::type_erasure::detail::get_args_t<
-                typename ::boost::type_erasure::detail::get_signature<Op>::type
-            >,
-            ::boost::mp11::mp_list< ::boost::remove_reference_t<U>...> >
-    > cond;
-    ::boost::type_erasure::detail::require_match_impl(cond, op, ::std::forward<U>(arg)...);
+	::boost::type_erasure::is_relaxed<
+	::boost::type_erasure::detail::extract_concept_t<
+	::boost::type_erasure::detail::get_args_t<
+	typename ::boost::type_erasure::detail::get_signature<Op>::type
+	>,
+	::boost::mp11::mp_list< ::boost::remove_reference_t<U>...> >
+	> cond;
+	::boost::type_erasure::detail::require_match_impl(cond, op, ::std::forward<U>(arg)...);
 }
 
 #endif
@@ -178,30 +183,32 @@ void require_match(
 #define BOOST_TYPE_ERASURE_FORWARD_ARGS(N, X, x) BOOST_PP_ENUM_TRAILING(N, BOOST_TYPE_ERASURE_FORWARD_ARGS_I, (X, x))
 #endif
 
-namespace detail {
+namespace detail
+{
 
 template<
     class Concept,
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 void require_match_impl(
     ::boost::mpl::true_,
     const ::boost::type_erasure::binding<Concept>& table,
     const Op& op
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    if(!::boost::type_erasure::check_match
-        (table, op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg))) {
-        BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
-    }
+	if(!::boost::type_erasure::check_match
+	        (table, op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg)))
+	{
+		BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
+	}
 }
 
 template<
     class Concept,
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 void require_match_impl(
     ::boost::mpl::false_,
     const ::boost::type_erasure::binding<Concept>&,
@@ -214,22 +221,23 @@ void require_match_impl(
 template<
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 void require_match_impl(
     ::boost::mpl::true_,
     const Op& op
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    if(!::boost::type_erasure::check_match
-        (op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg))) {
-        BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
-    }
+	if(!::boost::type_erasure::check_match
+	        (op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg)))
+	{
+		BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
+	}
 }
 
 template<
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 void require_match_impl(
     ::boost::mpl::false_,
     const Op&
@@ -244,15 +252,15 @@ template<
     class Concept,
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 void require_match(
     const ::boost::type_erasure::binding<Concept>& table,
     const Op& op
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    ::boost::type_erasure::is_relaxed<Concept> cond;
-    ::boost::type_erasure::detail::require_match_impl
-        (cond, table, op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
+	::boost::type_erasure::is_relaxed<Concept> cond;
+	::boost::type_erasure::detail::require_match_impl
+	(cond, table, op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
 }
 
 #if N != 0
@@ -260,22 +268,22 @@ void require_match(
 template<
     class Op
     BOOST_PP_ENUM_TRAILING_PARAMS(N, class U)
->
+    >
 void require_match(
     const Op& op
     BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, U, RREF arg))
 {
-    ::boost::type_erasure::is_relaxed<
-        typename ::boost::type_erasure::detail::BOOST_PP_CAT(do_extract_concept, N)<
-        typename ::boost::type_erasure::detail::get_signature<Op>::type,
-        BOOST_PP_ENUM_PARAMS(N, U)>::type
-    > cond;
-    ::boost::type_erasure::detail::require_match_impl
-        (cond, op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
+	::boost::type_erasure::is_relaxed<
+	typename ::boost::type_erasure::detail::BOOST_PP_CAT(do_extract_concept, N)<
+	typename ::boost::type_erasure::detail::get_signature<Op>::type,
+	         BOOST_PP_ENUM_PARAMS(N, U)>::type
+	         > cond;
+	::boost::type_erasure::detail::require_match_impl
+	(cond, op BOOST_TYPE_ERASURE_FORWARD_ARGS(N, U, arg));
 }
 
 #endif
-    
+
 #undef RREF
 #undef BOOST_TYPE_ERASURE_FORWARD_ARGS
 #undef BOOST_TYPE_ERASURE_FORWARD_ARGS_I

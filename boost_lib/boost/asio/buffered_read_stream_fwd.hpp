@@ -15,8 +15,10 @@
 # pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 template <typename Stream>
 class buffered_read_stream;

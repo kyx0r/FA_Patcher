@@ -11,13 +11,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      typedef repeated1<space> spaces;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+typedef repeated1<space> spaces;
+}
+}
 }
 
 #endif

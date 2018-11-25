@@ -20,22 +20,25 @@
 #include <boost/random/subtract_with_carry.hpp>
 #include <boost/random/discard_block.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace random {
+namespace random
+{
 
-namespace detail {
+namespace detail
+{
 /**
  * The ranlux family of generators are described in
  *
  *  @blockquote
  *  "A portable high-quality random number generator for lattice field theory
  *  calculations", M. Luescher, Computer Physics Communications, 79 (1994)
- *  pp 100-110. 
+ *  pp 100-110.
  *  @endblockquote
  *
  * The levels are given in
- * 
+ *
  *  @blockquote
  *  "RANLUX: A Fortran implementation of the high-quality
  *  pseudorandom number generator of Luescher", F. James,

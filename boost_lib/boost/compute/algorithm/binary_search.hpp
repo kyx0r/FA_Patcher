@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/lower_bound.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns \c true if \p value is in the sorted range [\p first,
 /// \p last).
@@ -28,9 +30,9 @@ inline bool binary_search(InputIterator first,
                           const T &value,
                           command_queue &queue = system::default_queue())
 {
-    InputIterator position = lower_bound(first, last, value, queue);
+	InputIterator position = lower_bound(first, last, value, queue);
 
-    return position != last && position.read(queue) == value;
+	return position != last && position.read(queue) == value;
 }
 
 } // end compute namespace

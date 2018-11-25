@@ -11,15 +11,18 @@
 #ifndef BOOST_MSM_COMMON_H
 #define BOOST_MSM_COMMON_H
 
-namespace boost { namespace msm
+namespace boost
+{
+namespace msm
 {
 // wrapper for mpl::for_each as showed in the C++ Template Metaprogramming ch. 9
 template <class T>
-struct wrap{};
+struct wrap {};
 
 // tag to use in grammars where states are seen (init_<<, states_<<...)
-struct state_tag{};
+struct state_tag {};
 
-} } // boost::msm
+}
+} // boost::msm
 #endif //BOOST_MSM_COMMON_H
 

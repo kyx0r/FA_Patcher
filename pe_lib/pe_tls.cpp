@@ -10,7 +10,7 @@ using namespace pe_win;
 //Default constructor
 tls_info::tls_info()
 	:start_rva_(0), end_rva_(0), index_rva_(0), callbacks_rva_(0),
-	size_of_zero_fill_(0), characteristics_(0)
+	 size_of_zero_fill_(0), characteristics_(0)
 {}
 
 //Returns start RVA of TLS raw data
@@ -131,16 +131,16 @@ void tls_info::set_raw_data(const std::string& data)
 const tls_info get_tls_info(const pe_base& pe)
 {
 	return pe.get_pe_type() == pe_type_32
-		? get_tls_info_base<pe_types_class_32>(pe)
-		: get_tls_info_base<pe_types_class_64>(pe);
+	       ? get_tls_info_base<pe_types_class_32>(pe)
+	       : get_tls_info_base<pe_types_class_64>(pe);
 }
 
 //TLS Rebuilder
 const image_directory rebuild_tls(pe_base& pe, const tls_info& info, section& tls_section, uint32_t offset_from_section_start, bool write_tls_callbacks, bool write_tls_data, tls_data_expand_type expand, bool save_to_pe_header, bool auto_strip_last_section)
 {
 	return pe.get_pe_type() == pe_type_32
-		? rebuild_tls_base<pe_types_class_32>(pe, info, tls_section, offset_from_section_start, write_tls_callbacks, write_tls_data, expand, save_to_pe_header, auto_strip_last_section)
-		: rebuild_tls_base<pe_types_class_64>(pe, info, tls_section, offset_from_section_start, write_tls_callbacks, write_tls_data, expand, save_to_pe_header, auto_strip_last_section);
+	       ? rebuild_tls_base<pe_types_class_32>(pe, info, tls_section, offset_from_section_start, write_tls_callbacks, write_tls_data, expand, save_to_pe_header, auto_strip_last_section)
+	       : rebuild_tls_base<pe_types_class_64>(pe, info, tls_section, offset_from_section_start, write_tls_callbacks, write_tls_data, expand, save_to_pe_header, auto_strip_last_section);
 }
 
 //Get TLS info
@@ -172,9 +172,9 @@ const tls_info get_tls_info_base(const pe_base& pe)
 	}
 
 	if(tls_directory_data.StartAddressOfRawData &&
-		pe.section_data_length_from_va(static_cast<typename PEClassType::BaseSize>(tls_directory_data.StartAddressOfRawData),
-		static_cast<typename PEClassType::BaseSize>(tls_directory_data.StartAddressOfRawData), section_data_virtual, true)
-		< (tls_directory_data.EndAddressOfRawData - tls_directory_data.StartAddressOfRawData))
+	        pe.section_data_length_from_va(static_cast<typename PEClassType::BaseSize>(tls_directory_data.StartAddressOfRawData),
+	                                       static_cast<typename PEClassType::BaseSize>(tls_directory_data.StartAddressOfRawData), section_data_virtual, true)
+	        < (tls_directory_data.EndAddressOfRawData - tls_directory_data.StartAddressOfRawData))
 		throw pe_exception("Incorrect TLS directory", pe_exception::incorrect_tls_directory);
 
 	//Fill TLS info
@@ -190,8 +190,8 @@ const tls_info get_tls_info_base(const pe_base& pe)
 	{
 		//Read and save TLS RAW data
 		ret.set_raw_data(std::string(
-			pe.section_data_from_va(static_cast<typename PEClassType::BaseSize>(tls_directory_data.StartAddressOfRawData), section_data_virtual, true),
-			static_cast<uint32_t>(tls_directory_data.EndAddressOfRawData - tls_directory_data.StartAddressOfRawData)));
+		                     pe.section_data_from_va(static_cast<typename PEClassType::BaseSize>(tls_directory_data.StartAddressOfRawData), section_data_virtual, true),
+		                     static_cast<uint32_t>(tls_directory_data.EndAddressOfRawData - tls_directory_data.StartAddressOfRawData)));
 	}
 
 	//If file has TLS callbacks
@@ -231,13 +231,13 @@ const image_directory rebuild_tls_base(pe_base& pe, const tls_info& info, sectio
 	//Check that tls_section is attached to this PE image
 	if(!pe.section_attached(tls_section))
 		throw pe_exception("TLS section must be attached to PE file", pe_exception::section_is_not_attached);
-	
+
 	uint32_t tls_data_pos = pe_utils::align_up(offset_from_section_start, sizeof(typename PEClassType::BaseSize));
 	uint32_t needed_size = sizeof(typename PEClassType::TLSStruct); //Calculate needed size for TLS table
-	
+
 	//Check if tls_section is last one. If it's not, check if there's enough place for TLS data
-	if(&tls_section != &*(pe.get_image_sections().end() - 1) && 
-		(tls_section.empty() || pe_utils::align_up(tls_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + tls_data_pos))
+	if(&tls_section != &*(pe.get_image_sections().end() - 1) &&
+	        (tls_section.empty() || pe_utils::align_up(tls_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + tls_data_pos))
 		throw pe_exception("Insufficient space for TLS directory", pe_exception::insufficient_space);
 
 	//Check raw data positions
@@ -252,7 +252,7 @@ const image_directory rebuild_tls_base(pe_base& pe, const tls_info& info, sectio
 
 	//Create and fill TLS structure
 	typename PEClassType::TLSStruct tls_struct = {0};
-	
+
 	typename PEClassType::BaseSize va;
 	if(info.get_raw_data_start_rva())
 	{
@@ -300,11 +300,11 @@ const image_directory rebuild_tls_base(pe_base& pe, const tls_info& info, sectio
 
 		//Check if there's enough RAW space to write raw TLS data...
 		if((available_raw_length = pe.section_data_length_from_rva(info.get_raw_data_start_rva(), info.get_raw_data_start_rva(), section_data_raw, true))
-			< info.get_raw_data_end_rva() - info.get_raw_data_start_rva())
+		        < info.get_raw_data_end_rva() - info.get_raw_data_start_rva())
 		{
 			//Check if there's enough virtual space for it...
 			if(pe.section_data_length_from_rva(info.get_raw_data_start_rva(), info.get_raw_data_start_rva(), section_data_virtual, true)
-				< info.get_raw_data_end_rva() - info.get_raw_data_start_rva())
+			        < info.get_raw_data_end_rva() - info.get_raw_data_start_rva())
 				throw pe_exception("Insufficient space for TLS raw data", pe_exception::insufficient_space);
 			else
 				write_raw_data_size = available_raw_length; //We'll write just a part of full raw data
@@ -333,11 +333,11 @@ const image_directory rebuild_tls_base(pe_base& pe, const tls_info& info, sectio
 
 		//Check if there's enough space to write callbacks TLS data...
 		if(pe.section_data_length_from_rva(info.get_callbacks_rva(), info.get_callbacks_rva(), section_data_raw, true)
-			< needed_callback_size - sizeof(typename PEClassType::BaseSize) /* last zero element can be virtual only */)
+		        < needed_callback_size - sizeof(typename PEClassType::BaseSize) /* last zero element can be virtual only */)
 			throw pe_exception("Insufficient space for TLS callbacks data", pe_exception::insufficient_space);
-		
+
 		if(pe.section_data_length_from_rva(info.get_callbacks_rva(), info.get_callbacks_rva(), section_data_virtual, true)
-			< needed_callback_size /* check here full virtual data length available */)
+		        < needed_callback_size /* check here full virtual data length available */)
 			throw pe_exception("Insufficient space for TLS callbacks data", pe_exception::insufficient_space);
 
 		std::vector<typename PEClassType::BaseSize> callbacks_virtual_addresses;
@@ -357,7 +357,7 @@ const image_directory rebuild_tls_base(pe_base& pe, const tls_info& info, sectio
 		//Write callbacks TLS data
 		memcpy(pe.section_data_from_rva(info.get_callbacks_rva(), true), &callbacks_virtual_addresses[0], needed_callback_size);
 	}
-	
+
 	//Adjust section raw and virtual sizes
 	pe.recalculate_section_sizes(tls_section, auto_strip_last_section);
 

@@ -25,44 +25,47 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class win_mutex
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  typedef boost::asio::detail::scoped_lock<win_mutex> scoped_lock;
+	typedef boost::asio::detail::scoped_lock<win_mutex> scoped_lock;
 
-  // Constructor.
-  BOOST_ASIO_DECL win_mutex();
+	// Constructor.
+	BOOST_ASIO_DECL win_mutex();
 
-  // Destructor.
-  ~win_mutex()
-  {
-    ::DeleteCriticalSection(&crit_section_);
-  }
+	// Destructor.
+	~win_mutex()
+	{
+		::DeleteCriticalSection(&crit_section_);
+	}
 
-  // Lock the mutex.
-  void lock()
-  {
-    ::EnterCriticalSection(&crit_section_);
-  }
+	// Lock the mutex.
+	void lock()
+	{
+		::EnterCriticalSection(&crit_section_);
+	}
 
-  // Unlock the mutex.
-  void unlock()
-  {
-    ::LeaveCriticalSection(&crit_section_);
-  }
+	// Unlock the mutex.
+	void unlock()
+	{
+		::LeaveCriticalSection(&crit_section_);
+	}
 
 private:
-  // Initialisation must be performed in a separate function to the constructor
-  // since the compiler does not support the use of structured exceptions and
-  // C++ exceptions in the same function.
-  BOOST_ASIO_DECL int do_init();
+	// Initialisation must be performed in a separate function to the constructor
+	// since the compiler does not support the use of structured exceptions and
+	// C++ exceptions in the same function.
+	BOOST_ASIO_DECL int do_init();
 
-  ::CRITICAL_SECTION crit_section_;
+	::CRITICAL_SECTION crit_section_;
 };
 
 } // namespace detail

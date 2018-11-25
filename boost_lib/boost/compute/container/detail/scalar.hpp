@@ -15,9 +15,12 @@
 #include <boost/compute/event.hpp>
 #include <boost/compute/detail/read_write_single_value.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // scalar<T> provides a trivial "container" that stores a
 // single value in a memory buffer on a compute device
@@ -25,34 +28,34 @@ template<class T>
 class scalar
 {
 public:
-    typedef T value_type;
+	typedef T value_type;
 
-    scalar(const context &context)
-        : m_buffer(context, sizeof(T))
-    {
-    }
+	scalar(const context &context)
+		: m_buffer(context, sizeof(T))
+	{
+	}
 
-    ~scalar()
-    {
-    }
+	~scalar()
+	{
+	}
 
-    T read(command_queue &queue) const
-    {
-        return read_single_value<T>(m_buffer, 0, queue);
-    }
+	T read(command_queue &queue) const
+	{
+		return read_single_value<T>(m_buffer, 0, queue);
+	}
 
-    event write(const T &value, command_queue &queue)
-    {
-        return write_single_value<T>(value, m_buffer, 0, queue);
-    }
+	event write(const T &value, command_queue &queue)
+	{
+		return write_single_value<T>(value, m_buffer, 0, queue);
+	}
 
-    const buffer& get_buffer() const
-    {
-        return m_buffer;
-    }
+	const buffer& get_buffer() const
+	{
+		return m_buffer;
+	}
 
 private:
-    buffer m_buffer;
+	buffer m_buffer;
 };
 
 } // end detail namespace

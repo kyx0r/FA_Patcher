@@ -16,21 +16,23 @@ Distributed under the Boost Software License, Version 1.0.
 #include <utility>
 
 
-BOOST_HANA_NAMESPACE_BEGIN namespace detail {
-    //! @ingroup group-details
-    //! Equivalent to `std::common_type`, except it is SFINAE-friendly and
-    //! does not support custom specializations.
-    template <typename T, typename U, typename = void>
-    struct std_common_type { };
+BOOST_HANA_NAMESPACE_BEGIN namespace detail
+{
+//! @ingroup group-details
+//! Equivalent to `std::common_type`, except it is SFINAE-friendly and
+//! does not support custom specializations.
+template <typename T, typename U, typename = void>
+struct std_common_type { };
 
-    template <typename T, typename U>
-    struct std_common_type<T, U, decltype((void)(
+template <typename T, typename U>
+struct std_common_type<T, U, decltype((void)(
         true ? std::declval<T>() : std::declval<U>()
-    ))> {
-        using type = typename detail::decay<
-            decltype(true ? std::declval<T>() : std::declval<U>())
-        >::type;
-    };
+                                      ))>
+{
+	using type = typename detail::decay<
+	             decltype(true ? std::declval<T>() : std::declval<U>())
+	             >::type;
+};
 } BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_STD_COMMON_TYPE_HPP

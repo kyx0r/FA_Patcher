@@ -18,12 +18,16 @@
 #include <boost/geometry/strategies/intersection_strategies.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace overlay
+namespace detail
+{
+namespace overlay
 {
 
 
@@ -38,66 +42,68 @@ namespace detail { namespace overlay
  */
 struct get_relative_order
 {
-    template <typename Point, typename SideStrategy>
-    static inline int value_via_product(Point const& ti, Point const& tj,
-                                        Point const& ui, Point const& uj, int factor,
-                                        SideStrategy const& strategy)
-    {
-        int const side_ti_u = strategy.apply(ti, tj, ui);
-        int const side_tj_u = strategy.apply(ti, tj, uj);
+	template <typename Point, typename SideStrategy>
+	static inline int value_via_product(Point const& ti, Point const& tj,
+	                                    Point const& ui, Point const& uj, int factor,
+	                                    SideStrategy const& strategy)
+	{
+		int const side_ti_u = strategy.apply(ti, tj, ui);
+		int const side_tj_u = strategy.apply(ti, tj, uj);
 
 #ifdef BOOST_GEOMETRY_DEBUG_RELATIVE_ORDER
-        std::cout << (factor == 1  ? " r//s " :  " s//r ")
-            << side_ti_u << " / " << side_tj_u;
+		std::cout << (factor == 1  ? " r//s " :  " s//r ")
+		          << side_ti_u << " / " << side_tj_u;
 #endif
 
-        return side_ti_u * side_tj_u >= 0
-            ? factor * (side_ti_u != 0 ? side_ti_u : side_tj_u)
-            : 0;
-    }
+		return side_ti_u * side_tj_u >= 0
+		       ? factor * (side_ti_u != 0 ? side_ti_u : side_tj_u)
+		       : 0;
+	}
 
 
-    template <typename Point1, typename SideStrategy>
-    static inline int apply(
-                Point1 const& pi, Point1 const& pj,
-                Point1 const& ri, Point1 const& rj,
-                Point1 const& si, Point1 const& sj,
-                SideStrategy const& strategy)
-    {
-        int const side_ri_p = strategy.apply(pi, pj, ri);
-        int const side_si_p = strategy.apply(pi, pj, si);
+	template <typename Point1, typename SideStrategy>
+	static inline int apply(
+	    Point1 const& pi, Point1 const& pj,
+	    Point1 const& ri, Point1 const& rj,
+	    Point1 const& si, Point1 const& sj,
+	    SideStrategy const& strategy)
+	{
+		int const side_ri_p = strategy.apply(pi, pj, ri);
+		int const side_si_p = strategy.apply(pi, pj, si);
 
 #ifdef BOOST_GEOMETRY_DEBUG_RELATIVE_ORDER
-        int const side_rj_p = strategy::apply(pi, pj, rj);
-        int const side_sj_p = strategy::apply(pi, pj, sj);
-        std::cout << "r//p: " << side_ri_p << " / " << side_rj_p;
-        std::cout << " s//p: " << side_si_p << " / " << side_sj_p;
+		int const side_rj_p = strategy::apply(pi, pj, rj);
+		int const side_sj_p = strategy::apply(pi, pj, sj);
+		std::cout << "r//p: " << side_ri_p << " / " << side_rj_p;
+		std::cout << " s//p: " << side_si_p << " / " << side_sj_p;
 #endif
 
-        int value = value_via_product(si, sj, ri, rj, 1, strategy);
-        if (value == 0)
-        {
-            value = value_via_product(ri, rj, si, sj, -1, strategy);
-        }
+		int value = value_via_product(si, sj, ri, rj, 1, strategy);
+		if (value == 0)
+		{
+			value = value_via_product(ri, rj, si, sj, -1, strategy);
+		}
 
-        int const order = side_ri_p * side_ri_p * side_si_p * value;
+		int const order = side_ri_p * side_ri_p * side_si_p * value;
 
 #ifdef BOOST_GEOMETRY_DEBUG_RELATIVE_ORDER
-        std::cout
-            << " o: " << order
-            << std::endl << std::endl;
+		std::cout
+		        << " o: " << order
+		        << std::endl << std::endl;
 #endif
 
-        return order;
-    }
+		return order;
+	}
 };
 
 
-}} // namespace detail::overlay
+}
+} // namespace detail::overlay
 #endif //DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_GET_RELATIVE_ORDER_HPP

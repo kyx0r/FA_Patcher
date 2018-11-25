@@ -23,11 +23,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace trivial {
+namespace trivial
+{
 
 //! Trivial severity keyword
 BOOST_LOG_ATTRIBUTE_KEYWORD(severity, "Severity", severity_level)

@@ -4,13 +4,13 @@ namespace pe_bliss
 {
 //Helper class to reduce code size and ease its editing
 template<
-	typename NtHeadersType,
-	typename OptHeadersType,
-	uint16_t IdVal,
-	typename BaseSizeType,
-	BaseSizeType ImportSnapFlagVal,
-	typename TLSStructType,
-	typename ConfigStructType>
+    typename NtHeadersType,
+    typename OptHeadersType,
+    uint16_t IdVal,
+    typename BaseSizeType,
+    BaseSizeType ImportSnapFlagVal,
+    typename TLSStructType,
+    typename ConfigStructType>
 class pe_types
 {
 public:
@@ -56,7 +56,7 @@ public: //DIRECTORIES
 	virtual void set_directory_rva(uint32_t id, uint32_t rva);
 	//Sets directory size (just a value of PE header, no moving occurs)
 	virtual void set_directory_size(uint32_t id, uint32_t size);
-	
+
 	//Strips only zero DATA_DIRECTORY entries to count = min_count
 	//Returns resulting number of data directories
 	//strip_iat_directory - if true, even not empty IAT directory will be stripped
@@ -100,7 +100,7 @@ public: //PE HEADER
 	//Sets stack size reserve for PE32 and PE64 respectively
 	virtual void set_stack_size_reserve(uint32_t size);
 	virtual void set_stack_size_reserve(uint64_t size);
-	
+
 	//Returns heap size commit for PE32 and PE64 respectively
 	virtual uint32_t get_heap_size_commit_32() const;
 	virtual uint64_t get_heap_size_commit_64() const;
@@ -126,7 +126,7 @@ public: //PE HEADER
 	virtual uint16_t get_characteristics() const;
 	//Sets PE characteristics
 	virtual void set_characteristics(uint16_t ch);
-	
+
 	//Returns size of headers
 	virtual uint32_t get_size_of_headers() const;
 
@@ -147,16 +147,16 @@ public: //PE HEADER
 
 	//Returns checksum of PE file from header
 	virtual uint32_t get_checksum() const;
-	
+
 	//Sets checksum of PE file
 	virtual void set_checksum(uint32_t checksum);
-	
+
 	//Returns timestamp of PE file from header
 	virtual uint32_t get_time_date_stamp() const;
-	
+
 	//Sets timestamp of PE file
 	virtual void set_time_date_stamp(uint32_t timestamp);
-	
+
 	//Returns Machine field value of PE file from header
 	virtual uint16_t get_machine() const;
 
@@ -165,10 +165,10 @@ public: //PE HEADER
 
 	//Returns DLL Characteristics
 	virtual uint16_t get_dll_characteristics() const;
-	
+
 	//Sets DLL Characteristics
 	virtual void set_dll_characteristics(uint16_t characteristics);
-	
+
 	//Sets required operation system version
 	virtual void set_os_version(uint16_t major, uint16_t minor);
 
@@ -193,7 +193,7 @@ public: //ADDRESS CONVERTIONS
 	//bound_check checks integer overflow
 	virtual uint32_t va_to_rva(uint32_t va, bool bound_check = true) const;
 	virtual uint32_t va_to_rva(uint64_t va, bool bound_check = true) const;
-	
+
 	//Relative Virtual Address (RVA) to Virtual Address (VA) convertions
 	//for PE32 and PE64 respectively
 	virtual uint32_t rva_to_va_32(uint32_t rva) const;
@@ -206,7 +206,7 @@ public: //SECTIONS
 
 protected:
 	typename PEClassType::NtHeaders nt_headers_; //NT headers (PE32 or PE64)
-	
+
 public:
 	//Sets number of sections
 	virtual void set_number_of_sections(uint16_t number);
@@ -236,20 +236,20 @@ public:
 
 //Two used typedefs for PE32 (PE) and PE64 (PE+)
 typedef pe_types<pe_win::image_nt_headers32,
-	pe_win::image_optional_header32,
-	pe_win::image_nt_optional_hdr32_magic,
-	uint32_t,
-	pe_win::image_ordinal_flag32,
-	pe_win::image_tls_directory32,
-	pe_win::image_load_config_directory32> pe_types_class_32;
+        pe_win::image_optional_header32,
+        pe_win::image_nt_optional_hdr32_magic,
+        uint32_t,
+        pe_win::image_ordinal_flag32,
+        pe_win::image_tls_directory32,
+        pe_win::image_load_config_directory32> pe_types_class_32;
 
 typedef pe_types<pe_win::image_nt_headers64,
-	pe_win::image_optional_header64,
-	pe_win::image_nt_optional_hdr64_magic,
-	uint64_t,
-	pe_win::image_ordinal_flag64,
-	pe_win::image_tls_directory64,
-	pe_win::image_load_config_directory64> pe_types_class_64;
+        pe_win::image_optional_header64,
+        pe_win::image_nt_optional_hdr64_magic,
+        uint64_t,
+        pe_win::image_ordinal_flag64,
+        pe_win::image_tls_directory64,
+        pe_win::image_load_config_directory64> pe_types_class_64;
 
 typedef pe_properties_generic<pe_types_class_32> pe_properties_32;
 typedef pe_properties_generic<pe_types_class_64> pe_properties_64;

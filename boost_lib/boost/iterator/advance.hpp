@@ -10,70 +10,79 @@
 #include <boost/config.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 
-namespace boost {
-namespace iterators {
+namespace boost
+{
+namespace iterators
+{
 
-    namespace detail {
-        template <typename InputIterator, typename Distance>
-        inline BOOST_CXX14_CONSTEXPR void
-        advance_impl(
-            InputIterator& it
-          , Distance n
-          , incrementable_traversal_tag
-        )
-        {
-            while (n > 0) {
-                ++it;
-                --n;
-            }
-        }
+namespace detail
+{
+template <typename InputIterator, typename Distance>
+inline BOOST_CXX14_CONSTEXPR void
+advance_impl(
+    InputIterator& it
+    , Distance n
+    , incrementable_traversal_tag
+)
+{
+	while (n > 0)
+	{
+		++it;
+		--n;
+	}
+}
 
-        template <typename BidirectionalIterator, typename Distance>
-        inline BOOST_CXX14_CONSTEXPR void
-        advance_impl(
-            BidirectionalIterator& it
-          , Distance n
-          , bidirectional_traversal_tag
-        )
-        {
-            if (n >= 0) {
-                while (n > 0) {
-                    ++it;
-                    --n;
-                }
-            }
-            else {
-                while (n < 0) {
-                    --it;
-                    ++n;
-                }
-            }
-        }
+template <typename BidirectionalIterator, typename Distance>
+inline BOOST_CXX14_CONSTEXPR void
+advance_impl(
+    BidirectionalIterator& it
+    , Distance n
+    , bidirectional_traversal_tag
+)
+{
+	if (n >= 0)
+	{
+		while (n > 0)
+		{
+			++it;
+			--n;
+		}
+	}
+	else
+	{
+		while (n < 0)
+		{
+			--it;
+			++n;
+		}
+	}
+}
 
-        template <typename RandomAccessIterator, typename Distance>
-        inline BOOST_CXX14_CONSTEXPR void
-        advance_impl(
-            RandomAccessIterator& it
-          , Distance n
-          , random_access_traversal_tag
-        )
-        {
-            it += n;
-        }
-    }
+template <typename RandomAccessIterator, typename Distance>
+inline BOOST_CXX14_CONSTEXPR void
+advance_impl(
+    RandomAccessIterator& it
+    , Distance n
+    , random_access_traversal_tag
+)
+{
+	it += n;
+}
+}
 
-    namespace advance_adl_barrier {
-        template <typename InputIterator, typename Distance>
-        inline BOOST_CXX14_CONSTEXPR void
-        advance(InputIterator& it, Distance n)
-        {
-            detail::advance_impl(
-                it, n, typename iterator_traversal<InputIterator>::type()
-            );
-        }
-    }
+namespace advance_adl_barrier
+{
+template <typename InputIterator, typename Distance>
+inline BOOST_CXX14_CONSTEXPR void
+advance(InputIterator& it, Distance n)
+{
+	detail::advance_impl(
+	    it, n, typename iterator_traversal<InputIterator>::type()
+	);
+}
+}
 
-    using namespace advance_adl_barrier;
+using namespace advance_adl_barrier;
 
 } // namespace iterators
 

@@ -24,7 +24,9 @@
 #include <boost/geometry/core/coordinate_type.hpp>
 #include <boost/geometry/core/tags.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -43,14 +45,14 @@ namespace detail
 template <bool>
 struct c_array_tag
 {
-    typedef geometry_not_recognized_tag type;
+	typedef geometry_not_recognized_tag type;
 };
 
 
 template <>
 struct c_array_tag<true>
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 
@@ -61,13 +63,13 @@ struct c_array_tag<true>
 // Assign the point-tag, preventing arrays of points getting a point-tag
 template <typename CoordinateType, std::size_t DimensionCount>
 struct tag<CoordinateType[DimensionCount]>
-    : detail::c_array_tag<boost::is_arithmetic<CoordinateType>::value> {};
+	: detail::c_array_tag<boost::is_arithmetic<CoordinateType>::value> {};
 
 
 template <typename CoordinateType, std::size_t DimensionCount>
 struct coordinate_type<CoordinateType[DimensionCount]>
 {
-    typedef CoordinateType type;
+	typedef CoordinateType type;
 };
 
 
@@ -78,16 +80,16 @@ struct dimension<CoordinateType[DimensionCount]>: boost::mpl::int_<DimensionCoun
 template <typename CoordinateType, std::size_t DimensionCount, std::size_t Dimension>
 struct access<CoordinateType[DimensionCount], Dimension>
 {
-    static inline CoordinateType get(CoordinateType const p[DimensionCount])
-    {
-        return p[Dimension];
-    }
+	static inline CoordinateType get(CoordinateType const p[DimensionCount])
+	{
+		return p[Dimension];
+	}
 
-    static inline void set(CoordinateType p[DimensionCount],
-        CoordinateType const& value)
-    {
-        p[Dimension] = value;
-    }
+	static inline void set(CoordinateType p[DimensionCount],
+	                       CoordinateType const& value)
+	{
+		p[Dimension] = value;
+	}
 };
 
 
@@ -95,7 +97,8 @@ struct access<CoordinateType[DimensionCount], Dimension>
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #define BOOST_GEOMETRY_REGISTER_C_ARRAY_CS(CoordinateSystem) \

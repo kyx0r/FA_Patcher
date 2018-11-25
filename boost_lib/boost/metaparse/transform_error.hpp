@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::transform_error;
-  }
+namespace metaparse
+{
+using v1::transform_error;
+}
 }
 
 #endif

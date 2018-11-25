@@ -14,8 +14,10 @@
 #include <boost/beast/core/detail/type_traits.hpp>
 #include <tuple>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** A buffer sequence representing a concatenation of buffer sequences.
 
@@ -24,55 +26,55 @@ namespace beast {
 template<class... Buffers>
 class buffers_cat_view
 {
-    std::tuple<Buffers...> bn_;
+	std::tuple<Buffers...> bn_;
 
 public:
-    /** The type of buffer returned when dereferencing an iterator.
+	/** The type of buffer returned when dereferencing an iterator.
 
-        If every buffer sequence in the view is a @b MutableBufferSequence,
-        then `value_type` will be `boost::asio::mutable_buffer`.
-        Otherwise, `value_type` will be `boost::asio::const_buffer`.
-    */
+	    If every buffer sequence in the view is a @b MutableBufferSequence,
+	    then `value_type` will be `boost::asio::mutable_buffer`.
+	    Otherwise, `value_type` will be `boost::asio::const_buffer`.
+	*/
 #if BOOST_BEAST_DOXYGEN
-    using value_type = implementation_defined;
+	using value_type = implementation_defined;
 #else
-    using value_type = typename
-        detail::common_buffers_type<Buffers...>::type;
+	using value_type = typename
+	                   detail::common_buffers_type<Buffers...>::type;
 #endif
 
-    /// The type of iterator used by the concatenated sequence
-    class const_iterator;
+	/// The type of iterator used by the concatenated sequence
+	class const_iterator;
 
-    /// Constructor
-    buffers_cat_view(buffers_cat_view&&) = default;
+	/// Constructor
+	buffers_cat_view(buffers_cat_view&&) = default;
 
-    /// Assignment
-    buffers_cat_view& operator=(buffers_cat_view&&) = default;
+	/// Assignment
+	buffers_cat_view& operator=(buffers_cat_view&&) = default;
 
-    /// Assignment
-    buffers_cat_view& operator=(buffers_cat_view const&) = default;
+	/// Assignment
+	buffers_cat_view& operator=(buffers_cat_view const&) = default;
 
-    /** Constructor
+	/** Constructor
 
-        @param buffers The list of buffer sequences to concatenate.
-        Copies of the arguments will be made; however, the ownership
-        of memory is not transferred.
-    */
-    explicit
-    buffers_cat_view(Buffers const&... buffers);
+	    @param buffers The list of buffer sequences to concatenate.
+	    Copies of the arguments will be made; however, the ownership
+	    of memory is not transferred.
+	*/
+	explicit
+	buffers_cat_view(Buffers const&... buffers);
 
-    //-----
+	//-----
 
-    /// Required for @b BufferSequence
-    buffers_cat_view(buffers_cat_view const&) = default;
+	/// Required for @b BufferSequence
+	buffers_cat_view(buffers_cat_view const&) = default;
 
-    /// Required for @b BufferSequence
-    const_iterator
-    begin() const;
+	/// Required for @b BufferSequence
+	const_iterator
+	begin() const;
 
-    /// Required for @b BufferSequence
-    const_iterator
-    end() const;
+	/// Required for @b BufferSequence
+	const_iterator
+	end() const;
 };
 
 /** Concatenate 2 or more buffer sequences.
@@ -105,10 +107,10 @@ buffers_cat_view<B1, B2, Bn...>
 buffers_cat(B1 const& b1, B2 const& b2, Bn const&... bn)
 #endif
 {
-    static_assert(
-        detail::is_all_const_buffer_sequence<B1, B2, Bn...>::value,
-            "BufferSequence requirements not met");
-    return buffers_cat_view<B1, B2, Bn...>{b1, b2, bn...};
+	static_assert(
+	    detail::is_all_const_buffer_sequence<B1, B2, Bn...>::value,
+	    "BufferSequence requirements not met");
+	return buffers_cat_view<B1, B2, Bn...> {b1, b2, bn...};
 }
 
 } // beast

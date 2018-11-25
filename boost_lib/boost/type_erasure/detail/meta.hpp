@@ -28,30 +28,33 @@
 #include <boost/mp11/function.hpp>
 #include <boost/mp11/mpl.hpp>
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 struct mp11_list_inserter
 {
-    template<class L, class T>
-    using apply = ::boost::mpl::identity< ::boost::mp11::mp_push_back<L, T> >;
+	template<class L, class T>
+	using apply = ::boost::mpl::identity< ::boost::mp11::mp_push_back<L, T> >;
 };
 
 template<class T>
 struct make_mp_list_impl
 {
-    typedef typename ::boost::mpl::fold<
-        T,
-        ::boost::mp11::mp_list<>,
-        ::boost::type_erasure::detail::mp11_list_inserter
-    >::type type;
+	typedef typename ::boost::mpl::fold<
+	T,
+	::boost::mp11::mp_list<>,
+	::boost::type_erasure::detail::mp11_list_inserter
+	>::type type;
 };
 
 template<class... T>
 struct make_mp_list_impl< ::boost::mp11::mp_list<T...> >
 {
-    typedef ::boost::mp11::mp_list<T...> type;
+	typedef ::boost::mp11::mp_list<T...> type;
 };
 
 template<class T>
@@ -63,15 +66,15 @@ struct eval_if_impl;
 template<>
 struct eval_if_impl<true>
 {
-    template<template<class...> class T, template<class...> class F, class... A>
-    using apply = T<A...>;
+	template<template<class...> class T, template<class...> class F, class... A>
+	using apply = T<A...>;
 };
 
 template<>
 struct eval_if_impl<false>
 {
-    template<template<class...> class T, template<class...> class F, class... A>
-    using apply = F<A...>;
+	template<template<class...> class T, template<class...> class F, class... A>
+	using apply = F<A...>;
 };
 
 template<bool B, template<class...> class T, template<class...> class F, class... A>

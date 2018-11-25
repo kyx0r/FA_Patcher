@@ -23,8 +23,10 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace intrusive {
+namespace boost
+{
+namespace intrusive
+{
 
 /// @cond
 
@@ -36,25 +38,25 @@ void priority_order();
 template <class T = void>
 struct priority_compare
 {
-   //Compatibility with std::binary_function
-   typedef T      first_argument_type;
-   typedef T      second_argument_type;
-   typedef bool   result_type;
+	//Compatibility with std::binary_function
+	typedef T      first_argument_type;
+	typedef T      second_argument_type;
+	typedef bool   result_type;
 
-   BOOST_INTRUSIVE_FORCEINLINE bool operator()(const T &val, const T &val2) const
-   {
-      return priority_order(val, val2);
-   }
+	BOOST_INTRUSIVE_FORCEINLINE bool operator()(const T &val, const T &val2) const
+	{
+		return priority_order(val, val2);
+	}
 };
 
 template <>
 struct priority_compare<void>
 {
-   template<class T, class U>
-   BOOST_INTRUSIVE_FORCEINLINE bool operator()(const T &t, const U &u) const
-   {
-      return priority_order(t, u);
-   }
+	template<class T, class U>
+	BOOST_INTRUSIVE_FORCEINLINE bool operator()(const T &t, const U &u) const
+	{
+		return priority_order(t, u);
+	}
 };
 
 /// @cond
@@ -62,14 +64,14 @@ struct priority_compare<void>
 template<class PrioComp, class T>
 struct get_prio
 {
-   typedef PrioComp type;
+	typedef PrioComp type;
 };
 
 
 template<class T>
 struct get_prio<void, T>
 {
-   typedef ::boost::intrusive::priority_compare<T> type;
+	typedef ::boost::intrusive::priority_compare<T> type;
 };
 
 /// @endcond

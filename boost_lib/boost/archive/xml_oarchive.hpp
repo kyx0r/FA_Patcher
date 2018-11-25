@@ -9,7 +9,7 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // xml_oarchive.hpp
 
-// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
+// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com .
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -21,8 +21,9 @@
 #include <cstddef> // size_t
 #include <boost/config.hpp>
 #if defined(BOOST_NO_STDC_NAMESPACE)
-namespace std{ 
-    using ::size_t; 
+namespace std
+{
+using ::size_t;
 } // namespace std
 #endif
 
@@ -39,57 +40,63 @@ namespace std{
 #  pragma warning(disable : 4511 4512)
 #endif
 
-namespace boost {
-namespace archive {
+namespace boost
+{
+namespace archive
+{
 
-namespace detail {
-    template<class Archive> class interface_oarchive;
+namespace detail
+{
+template<class Archive> class interface_oarchive;
 } // namespace detail
 
 template<class Archive>
-class BOOST_SYMBOL_VISIBLE xml_oarchive_impl : 
-    public basic_text_oprimitive<std::ostream>,
-    public basic_xml_oarchive<Archive>
+class BOOST_SYMBOL_VISIBLE xml_oarchive_impl :
+	public basic_text_oprimitive<std::ostream>,
+	public basic_xml_oarchive<Archive>
 {
 #ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 public:
 #else
 protected:
-    friend class detail::interface_oarchive<Archive>;
-    friend class basic_xml_oarchive<Archive>;
-    friend class save_access;
+	friend class detail::interface_oarchive<Archive>;
+	friend class basic_xml_oarchive<Archive>;
+	friend class save_access;
 #endif
-    template<class T>
-    void save(const T & t){
-        basic_text_oprimitive<std::ostream>::save(t);
-    }
-    void 
-    save(const version_type & t){
-        save(static_cast<const unsigned int>(t));
-    }
-    void 
-    save(const boost::serialization::item_version_type & t){
-        save(static_cast<const unsigned int>(t));
-    }
-    BOOST_ARCHIVE_DECL void 
-    save(const char * t);
-    #ifndef BOOST_NO_INTRINSIC_WCHAR_T
-    BOOST_ARCHIVE_DECL void
-    save(const wchar_t * t);
-    #endif
-    BOOST_ARCHIVE_DECL void
-    save(const std::string &s);
-    #ifndef BOOST_NO_STD_WSTRING
-    BOOST_ARCHIVE_DECL void
-    save(const std::wstring &ws);
-    #endif
-    BOOST_ARCHIVE_DECL 
-    xml_oarchive_impl(std::ostream & os, unsigned int flags);
-    BOOST_ARCHIVE_DECL 
-    ~xml_oarchive_impl();
+	template<class T>
+	void save(const T & t)
+	{
+		basic_text_oprimitive<std::ostream>::save(t);
+	}
+	void
+	save(const version_type & t)
+	{
+		save(static_cast<const unsigned int>(t));
+	}
+	void
+	save(const boost::serialization::item_version_type & t)
+	{
+		save(static_cast<const unsigned int>(t));
+	}
+	BOOST_ARCHIVE_DECL void
+	save(const char * t);
+#ifndef BOOST_NO_INTRINSIC_WCHAR_T
+	BOOST_ARCHIVE_DECL void
+	save(const wchar_t * t);
+#endif
+	BOOST_ARCHIVE_DECL void
+	save(const std::string &s);
+#ifndef BOOST_NO_STD_WSTRING
+	BOOST_ARCHIVE_DECL void
+	save(const std::wstring &ws);
+#endif
+	BOOST_ARCHIVE_DECL
+	xml_oarchive_impl(std::ostream & os, unsigned int flags);
+	BOOST_ARCHIVE_DECL
+	~xml_oarchive_impl();
 public:
-    BOOST_ARCHIVE_DECL
-    void save_binary(const void *address, std::size_t count);
+	BOOST_ARCHIVE_DECL
+	void save_binary(const void *address, std::size_t count);
 };
 
 } // namespace archive
@@ -105,8 +112,10 @@ public:
 #  pragma warning(disable : 4511 4512)
 #endif
 
-namespace boost { 
-namespace archive {
+namespace boost
+{
+namespace archive
+{
 
 // we use the following because we can't use
 // typedef xml_oarchive_impl<xml_oarchive_impl<...> > xml_oarchive;
@@ -114,14 +123,14 @@ namespace archive {
 // do not derive from this class.  If you want to extend this functionality
 // via inhertance, derived from xml_oarchive_impl instead.  This will
 // preserve correct static polymorphism.
-class BOOST_SYMBOL_VISIBLE xml_oarchive : 
-    public xml_oarchive_impl<xml_oarchive>
+class BOOST_SYMBOL_VISIBLE xml_oarchive :
+	public xml_oarchive_impl<xml_oarchive>
 {
 public:
-    xml_oarchive(std::ostream & os, unsigned int flags = 0) :
-        xml_oarchive_impl<xml_oarchive>(os, flags)
-    {}
-    ~xml_oarchive(){}
+	xml_oarchive(std::ostream & os, unsigned int flags = 0) :
+		xml_oarchive_impl<xml_oarchive>(os, flags)
+	{}
+	~xml_oarchive() {}
 };
 
 } // namespace archive

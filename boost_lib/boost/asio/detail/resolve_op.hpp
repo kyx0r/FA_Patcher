@@ -21,21 +21,24 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class resolve_op : public operation
 {
 public:
-  // The error code to be passed to the completion handler.
-  boost::system::error_code ec_;
+	// The error code to be passed to the completion handler.
+	boost::system::error_code ec_;
 
 protected:
-  resolve_op(func_type complete_func)
-    : operation(complete_func)
-  {
-  }
+	resolve_op(func_type complete_func)
+		: operation(complete_func)
+	{
+	}
 };
 
 } // namespace detail

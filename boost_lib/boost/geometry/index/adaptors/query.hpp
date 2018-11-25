@@ -15,33 +15,52 @@
 \defgroup adaptors Adaptors (boost::geometry::index::adaptors::)
 */
 
-namespace boost { namespace geometry { namespace index {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
 
-namespace adaptors {
+namespace adaptors
+{
 
-namespace detail {
+namespace detail
+{
 
 template <typename Index>
 class query_range
 {
-    BOOST_MPL_ASSERT_MSG(
-        (false),
-        NOT_IMPLEMENTED_FOR_THIS_INDEX,
-        (query_range));
+	BOOST_MPL_ASSERT_MSG(
+	    (false),
+	    NOT_IMPLEMENTED_FOR_THIS_INDEX,
+	    (query_range));
 
-    typedef int* iterator;
-    typedef const int* const_iterator;
+	typedef int* iterator;
+	typedef const int* const_iterator;
 
-    template <typename Predicates>
-    inline query_range(
-        Index const&,
-        Predicates const&)
-    {}
+	template <typename Predicates>
+	inline query_range(
+	    Index const&,
+	    Predicates const&)
+	{}
 
-    inline iterator begin() { return 0; }
-    inline iterator end() { return 0; }
-    inline const_iterator begin() const { return 0; }
-    inline const_iterator end() const { return 0; }
+	inline iterator begin()
+	{
+		return 0;
+	}
+	inline iterator end()
+	{
+		return 0;
+	}
+	inline const_iterator begin() const
+	{
+		return 0;
+	}
+	inline const_iterator end() const
+	{
+		return 0;
+	}
 };
 
 // TODO: awulkiew - consider removing reference from predicates
@@ -49,11 +68,11 @@ class query_range
 template<typename Predicates>
 struct query
 {
-    inline explicit query(Predicates const& pred)
-        : predicates(pred)
-    {}
+	inline explicit query(Predicates const& pred)
+		: predicates(pred)
+	{}
 
-    Predicates const& predicates;
+	Predicates const& predicates;
 };
 
 template<typename Index, typename Predicates>
@@ -62,7 +81,7 @@ operator|(
     Index const& si,
     index::adaptors::detail::query<Predicates> const& f)
 {
-    return index::adaptors::detail::query_range<Index>(si, f.predicates);
+	return index::adaptors::detail::query_range<Index>(si, f.predicates);
 }
 
 } // namespace detail
@@ -78,11 +97,13 @@ template <typename Predicates>
 detail::query<Predicates>
 queried(Predicates const& pred)
 {
-    return detail::query<Predicates>(pred);
+	return detail::query<Predicates>(pred);
 }
 
 } // namespace adaptors
 
-}}} // namespace boost::geometry::index
+}
+}
+} // namespace boost::geometry::index
 
 #endif // BOOST_GEOMETRY_INDEX_ADAPTORS_QUERY_HPP

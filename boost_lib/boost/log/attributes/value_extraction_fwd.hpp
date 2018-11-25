@@ -23,11 +23,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace result_of {
+namespace result_of
+{
 
 /*!
  * \brief A metafunction that allows to acquire the result of the value extraction

@@ -23,8 +23,10 @@
 #include <boost/container/set.hpp>
 #include <boost/interprocess/containers/containers_fwd.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 using boost::container::set;
 using boost::container::multiset;

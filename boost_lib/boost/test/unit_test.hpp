@@ -40,7 +40,10 @@
 // **************                  unit_test_main              ************** //
 // ************************************************************************** //
 
-namespace boost { namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 int BOOST_TEST_DECL unit_test_main( init_unit_test_func init_func, int argc, char* argv[] );
 
@@ -60,7 +63,7 @@ namespace unit_test_framework=unit_test;
 int BOOST_TEST_CALL_DECL
 main( int argc, char* argv[] )
 {
-    return ::boost::unit_test::unit_test_main( &init_unit_test, argc, argv );
+	return ::boost::unit_test::unit_test_main( &init_unit_test, argc, argv );
 }
 
 //____________________________________________________________________________//

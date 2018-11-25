@@ -10,13 +10,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace util
-    {
-      using v1::util::is_letter;
-    }
-  }
+namespace metaparse
+{
+namespace util
+{
+using v1::util::is_letter;
+}
+}
 }
 
 #endif

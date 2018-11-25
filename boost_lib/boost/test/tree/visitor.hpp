@@ -24,23 +24,35 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************               test_tree_visitor              ************** //
 // ************************************************************************** //
 
-class BOOST_TEST_DECL test_tree_visitor {
+class BOOST_TEST_DECL test_tree_visitor
+{
 public:
-    // test tree visitor interface
-    virtual bool    visit( test_unit const& )               { return true; }
-    virtual void    visit( test_case const& tc )            { visit( (test_unit const&)tc ); }
-    virtual bool    test_suite_start( test_suite const& ts ){ return visit( (test_unit const&)ts ); }
-    virtual void    test_suite_finish( test_suite const& )  {}
+	// test tree visitor interface
+	virtual bool    visit( test_unit const& )
+	{
+		return true;
+	}
+	virtual void    visit( test_case const& tc )
+	{
+		visit( (test_unit const&)tc );
+	}
+	virtual bool    test_suite_start( test_suite const& ts )
+	{
+		return visit( (test_unit const&)ts );
+	}
+	virtual void    test_suite_finish( test_suite const& )  {}
 
 protected:
-    BOOST_TEST_PROTECTED_VIRTUAL ~test_tree_visitor() {}
+	BOOST_TEST_PROTECTED_VIRTUAL ~test_tree_visitor() {}
 };
 
 } // namespace unit_test

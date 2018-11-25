@@ -12,26 +12,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <class C = boost::mpl::na>
-        struct is_digit : in_range_c<char, '0', '9'>::apply<C> {};
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <class C = boost::mpl::na>
+struct is_digit : in_range_c<char, '0', '9'>::apply<C> {};
 
-        template <>
-        struct is_digit<boost::mpl::na>
-        {
-          typedef is_digit type;
+template <>
+struct is_digit<boost::mpl::na>
+{
+	typedef is_digit type;
 
-          template <class C = boost::mpl::na>
-          struct apply : is_digit<C> {};
-        };
-      }
-    }
-  }
+	template <class C = boost::mpl::na>
+	struct apply : is_digit<C> {};
+};
+}
+}
+}
 }
 
 #endif

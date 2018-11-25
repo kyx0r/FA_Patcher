@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2014 Erik Erlandson
@@ -20,9 +20,12 @@
     typedef make_scaled_unit<dimensionless, scale<2, static_rational<exponent> > >::type name ## _pf_type; \
     BOOST_UNITS_STATIC_CONSTANT(name, name ## _pf_type)
 
-namespace boost {
-namespace units {
-namespace information {
+namespace boost
+{
+namespace units
+{
+namespace information
+{
 
 // Note, these are defined (somewhat arbitrarily) against the 'byte' system.
 // They work smoothly with bit_information, nat_information, etc, so it is

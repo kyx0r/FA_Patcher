@@ -14,19 +14,29 @@
 #include <boost/system/error_code.hpp>
 #include <boost/filesystem/path.hpp>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 inline boost::filesystem::path shell_path()
 {
-    return "/bin/sh";
+	return "/bin/sh";
 }
 
 inline boost::filesystem::path shell_path(std::error_code &ec)
 {
-    ec.clear();
-    return "/bin/sh";
+	ec.clear();
+	return "/bin/sh";
 }
 
-}}}}
+}
+}
+}
+}
 
 #endif

@@ -36,30 +36,32 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 // The function creates a filter functional object from the provided argument
 template< typename CharT >
 inline filter acquire_filter(const CharT* filter)
 {
-    return boost::log::parse_filter(filter);
+	return boost::log::parse_filter(filter);
 }
 template< typename CharT, typename TraitsT, typename AllocatorT >
 inline filter acquire_filter(std::basic_string< CharT, TraitsT, AllocatorT > const& filter)
 {
-    return boost::log::parse_filter(filter);
+	return boost::log::parse_filter(filter);
 }
 template< typename FilterT >
 inline typename boost::enable_if_c<
-    phoenix::is_actor< FilterT >::value,
-    FilterT const&
->::type acquire_filter(FilterT const& filter)
+phoenix::is_actor< FilterT >::value,
+        FilterT const&
+        >::type acquire_filter(FilterT const& filter)
 {
-    return filter;
+	return filter;
 }
 
 // The function installs filter into the sink, if provided in the arguments pack
@@ -71,7 +73,7 @@ inline void setup_filter(SinkT&, ArgsT const&, mpl::true_)
 template< typename SinkT, typename ArgsT >
 inline void setup_filter(SinkT& s, ArgsT const& args, mpl::false_)
 {
-    s.set_filter(aux::acquire_filter(args[keywords::filter]));
+	s.set_filter(aux::acquire_filter(args[keywords::filter]));
 }
 
 
@@ -79,20 +81,20 @@ inline void setup_filter(SinkT& s, ArgsT const& args, mpl::false_)
 template< typename CharT >
 inline basic_formatter< CharT > acquire_formatter(const CharT* formatter)
 {
-    return boost::log::parse_formatter(formatter);
+	return boost::log::parse_formatter(formatter);
 }
 template< typename CharT, typename TraitsT, typename AllocatorT >
 inline basic_formatter< CharT > acquire_formatter(std::basic_string< CharT, TraitsT, AllocatorT > const& formatter)
 {
-    return boost::log::parse_formatter(formatter);
+	return boost::log::parse_formatter(formatter);
 }
 template< typename FormatterT >
 inline typename boost::enable_if_c<
-    phoenix::is_actor< FormatterT >::value,
-    FormatterT const&
->::type acquire_formatter(FormatterT const& formatter)
+phoenix::is_actor< FormatterT >::value,
+        FormatterT const&
+        >::type acquire_formatter(FormatterT const& formatter)
 {
-    return formatter;
+	return formatter;
 }
 
 // The function installs filter into the sink, if provided in the arguments pack
@@ -104,7 +106,7 @@ inline void setup_formatter(SinkT&, ArgsT const&, mpl::true_)
 template< typename SinkT, typename ArgsT >
 inline void setup_formatter(SinkT& s, ArgsT const& args, mpl::false_)
 {
-    s.set_formatter(aux::acquire_formatter(args[keywords::format]));
+	s.set_formatter(aux::acquire_formatter(args[keywords::format]));
 }
 
 } // namespace aux

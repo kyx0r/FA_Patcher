@@ -29,27 +29,29 @@
 //!\file
 //!Describes sequential fit algorithm used to allocate objects in shared memory.
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 //!This class implements the simple sequential fit algorithm with a simply
 //!linked list of free buffers.
 template<class MutexFamily, class VoidPointer>
 class simple_seq_fit
-   : public ipcdetail::simple_seq_fit_impl<MutexFamily, VoidPointer>
+	: public ipcdetail::simple_seq_fit_impl<MutexFamily, VoidPointer>
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-   typedef ipcdetail::simple_seq_fit_impl<MutexFamily, VoidPointer> base_t;
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+	typedef ipcdetail::simple_seq_fit_impl<MutexFamily, VoidPointer> base_t;
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 
-   public:
-   typedef typename base_t::size_type                            size_type;
+public:
+	typedef typename base_t::size_type                            size_type;
 
-   //!Constructor. "size" is the total size of the managed memory segment,
-   //!"extra_hdr_bytes" indicates the extra bytes beginning in the sizeof(simple_seq_fit)
-   //!offset that the allocator should not use at all.*/
-   simple_seq_fit(size_type segment_size, size_type extra_hdr_bytes)
-      : base_t(segment_size, extra_hdr_bytes){}
+	//!Constructor. "size" is the total size of the managed memory segment,
+	//!"extra_hdr_bytes" indicates the extra bytes beginning in the sizeof(simple_seq_fit)
+	//!offset that the allocator should not use at all.*/
+	simple_seq_fit(size_type segment_size, size_type extra_hdr_bytes)
+		: base_t(segment_size, extra_hdr_bytes) {}
 };
 
 }  //namespace interprocess {

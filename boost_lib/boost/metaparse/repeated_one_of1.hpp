@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::repeated_one_of1;
-  }
+namespace metaparse
+{
+using v1::repeated_one_of1;
+}
 }
 
 #endif

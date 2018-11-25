@@ -19,18 +19,24 @@
 # pragma once
 #endif
 
-namespace boost { namespace typeindex {
+namespace boost
+{
+namespace typeindex
+{
 
-namespace detail {
+namespace detail
+{
 
 template<typename T>
-inline type_index runtime_class_construct_type_id(T const*) {
-    return type_id<T>();
+inline type_index runtime_class_construct_type_id(T const*)
+{
+	return type_id<T>();
 }
 
 } // namespace detail
 
-}} // namespace boost::typeindex
+}
+} // namespace boost::typeindex
 
 /// @cond
 

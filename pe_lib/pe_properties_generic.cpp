@@ -6,7 +6,7 @@
 namespace pe_bliss
 {
 using namespace pe_win;
-	
+
 //Constructor
 template<typename PEClassType>
 std::auto_ptr<pe_properties> pe_properties_generic<PEClassType>::duplicate() const
@@ -45,7 +45,7 @@ template<typename PEClassType>
 bool pe_properties_generic<PEClassType>::directory_exists(uint32_t id) const
 {
 	return (nt_headers_.OptionalHeader.NumberOfRvaAndSizes - 1) >= id &&
-		nt_headers_.OptionalHeader.DataDirectory[id].VirtualAddress;
+	       nt_headers_.OptionalHeader.DataDirectory[id].VirtualAddress;
 }
 
 //Removes directory
@@ -585,7 +585,7 @@ uint32_t pe_properties_generic<PEClassType>::get_sizeof_opt_headers() const
 
 //Sets file alignment (no checks)
 template<typename PEClassType>
-void pe_properties_generic<PEClassType>::set_file_alignment_unchecked(uint32_t alignment) 
+void pe_properties_generic<PEClassType>::set_file_alignment_unchecked(uint32_t alignment)
 {
 	nt_headers_.OptionalHeader.FileAlignment = alignment;
 }

@@ -15,16 +15,18 @@
 
 #include <boost/compute/interop/opencv/core.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 inline void opencv_imshow(const std::string &winname,
                           const image2d &image,
                           command_queue &queue = system::default_queue())
 {
-    const cv::Mat mat = opencv_create_mat_with_image2d(image, queue);
+	const cv::Mat mat = opencv_create_mat_with_image2d(image, queue);
 
-    cv::imshow(winname, mat);
+	cv::imshow(winname, mat);
 }
 
 } // end compute namespace

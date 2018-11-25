@@ -25,39 +25,47 @@ typedef void * (__cdecl * allocation_function)(std::size_t);
 typedef void   (__cdecl * free_function)(void *);
 
 extern "C" char* __unDName( char* outputString,
-        const char* name,
-        int maxStringLength,    // Note, COMMA is leading following optional arguments
-        allocation_function pAlloc,
-        free_function pFree,
-        unsigned short disableFlags
-        );
+                            const char* name,
+                            int maxStringLength,    // Note, COMMA is leading following optional arguments
+                            allocation_function pAlloc,
+                            free_function pFree,
+                            unsigned short disableFlags
+                          );
 
 
 inline std::string demangle_symbol(const char *mangled_name)
 {
 
-    allocation_function alloc =  [](std::size_t size){return static_cast<void*>(new char[size]);};
-    free_function free_f      = [](void* p){delete [] static_cast<char*>(p);};
+	allocation_function alloc =  [](std::size_t size)
+	{
+		return static_cast<void*>(new char[size]);
+	};
+	free_function free_f      = [](void* p)
+	{
+		delete [] static_cast<char*>(p);
+	};
 
 
 
-    std::unique_ptr<char> name { __unDName(
-            nullptr,
-            mangled_name,
-            0,
-            alloc,
-            free_f,
-            static_cast<unsigned short>(0))};
+	std::unique_ptr<char> name { __unDName(
+	                                 nullptr,
+	                                 mangled_name,
+	                                 0,
+	                                 alloc,
+	                                 free_f,
+	                                 static_cast<unsigned short>(0))};
 
-    return std::string(name.get());
+	return std::string(name.get());
 }
 inline std::string demangle_symbol(const std::string& mangled_name)
 {
-    return demangle_symbol(mangled_name.c_str());
+	return demangle_symbol(mangled_name.c_str());
 }
 
 
-}}}
+}
+}
+}
 #else
 
 #include <boost/core/demangle.hpp>
@@ -72,18 +80,18 @@ namespace detail
 inline std::string demangle_symbol(const char *mangled_name)
 {
 
-    if (*mangled_name == '_')
-    {
-        //because it start's with an underline _
-        auto dm = boost::core::demangle(mangled_name);
-        if (!dm.empty())
-            return dm;
-        else
-            return (mangled_name);
-    }
+	if (*mangled_name == '_')
+	{
+		//because it start's with an underline _
+		auto dm = boost::core::demangle(mangled_name);
+		if (!dm.empty())
+			return dm;
+		else
+			return (mangled_name);
+	}
 
-    //could not demangled
-    return "";
+	//could not demangled
+	return "";
 
 
 }
@@ -91,7 +99,7 @@ inline std::string demangle_symbol(const char *mangled_name)
 //for my personal convinience
 inline std::string demangle_symbol(const std::string& mangled_name)
 {
-    return demangle_symbol(mangled_name.c_str());
+	return demangle_symbol(mangled_name.c_str());
 }
 
 
@@ -101,7 +109,8 @@ namespace experimental
 using ::boost::dll::detail::demangle_symbol;
 }
 
-}}
+}
+}
 
 #endif
 

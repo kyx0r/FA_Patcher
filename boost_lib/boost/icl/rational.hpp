@@ -15,12 +15,12 @@ itl_rational provides adapter code for boost::rational.
 
 #include <boost/config.hpp> // For BOOST_MSVC and more
 
-#ifdef BOOST_MSVC 
+#ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4127) // conditional expression is constant
 #pragma warning(disable:4512) // 'boost::detail::resetter' : assignment operator could not be generated
 #pragma warning(disable:4800) // 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)
-#endif                        
+#endif
 
 #include <boost/rational.hpp>
 
@@ -32,37 +32,40 @@ itl_rational provides adapter code for boost::rational.
 #include <boost/icl/type_traits/has_inverse.hpp>
 #include <boost/icl/type_traits/is_numeric.hpp>
 
-namespace boost{namespace icl
+namespace boost
 {
-    template<class Integral> 
-    struct is_numeric<boost::rational<Integral> >
-    {
-        typedef is_numeric type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
+namespace icl
+{
+template<class Integral>
+struct is_numeric<boost::rational<Integral> >
+{
+	typedef is_numeric type;
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 
-    template<class Integral> 
-    struct is_continuous<boost::rational<Integral> >
-    {
-        typedef is_continuous type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
+template<class Integral>
+struct is_continuous<boost::rational<Integral> >
+{
+	typedef is_continuous type;
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 
-    template<class Integral> 
-    struct is_discrete<boost::rational<Integral> >
-    {
-        typedef is_discrete type;
-        BOOST_STATIC_CONSTANT(bool, value = false);
-    };
+template<class Integral>
+struct is_discrete<boost::rational<Integral> >
+{
+	typedef is_discrete type;
+	BOOST_STATIC_CONSTANT(bool, value = false);
+};
 
-    template<class Integral> 
-    struct has_inverse<boost::rational<Integral> >
-    {
-        typedef has_inverse type;
-        BOOST_STATIC_CONSTANT(bool, value = (boost::is_signed<Integral>::value));
-    };
+template<class Integral>
+struct has_inverse<boost::rational<Integral> >
+{
+	typedef has_inverse type;
+	BOOST_STATIC_CONSTANT(bool, value = (boost::is_signed<Integral>::value));
+};
 
-}} // namespace icl boost
+}
+} // namespace icl boost
 
 
 #endif

@@ -15,29 +15,29 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class Parsers>
-        struct one_of
-        {
-          typedef one_of type;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class Parsers>
+struct one_of
+{
+	typedef one_of type;
 
-          template <class S, class Pos>
-          struct apply :
-            boost::mpl::fold<
-              Parsers,
-              fail<error::none_of_the_expected_cases_found>::apply<S, Pos>,
-              one_of_fwd_op<S, Pos>
-            >::type
-          {};
-        };
-      }
-    }
-  }
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::fold<
+		Parsers,
+		fail<error::none_of_the_expected_cases_found>::apply<S, Pos>,
+		one_of_fwd_op<S, Pos>
+		>::type
+	{};
+};
+}
+}
+}
 }
 
 #endif

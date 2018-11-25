@@ -46,118 +46,127 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct tcc {};
+namespace par4
+{
+struct tcc {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace tcc
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace tcc
+{
 
-            static const double EPS10 = 1.e-10;
+static const double EPS10 = 1.e-10;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_tcc_spheroid : public base_t_f<base_tcc_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_tcc_spheroid : public base_t_f<base_tcc_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                inline base_tcc_spheroid(const Parameters& par)
-                    : base_t_f<base_tcc_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_tcc_spheroid(const Parameters& par)
+		: base_t_f<base_tcc_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType b, bt;
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType b, bt;
 
-                    b = cos(lp_lat) * sin(lp_lon);
-                    if ((bt = 1. - b * b) < EPS10)
-                        BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                    xy_x = b / sqrt(bt);
-                    xy_y = atan2(tan(lp_lat) , cos(lp_lon));
-                }
+		b = cos(lp_lat) * sin(lp_lon);
+		if ((bt = 1. - b * b) < EPS10)
+			BOOST_THROW_EXCEPTION( projection_exception(-20) );
+		xy_x = b / sqrt(bt);
+		xy_y = atan2(tan(lp_lat), cos(lp_lon));
+	}
 
-                static inline std::string get_name()
-                {
-                    return "tcc_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "tcc_spheroid";
+	}
 
-            };
+};
 
-            // Transverse Central Cylindrical
-            template <typename Parameters>
-            inline void setup_tcc(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Transverse Central Cylindrical
+template <typename Parameters>
+inline void setup_tcc(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::tcc
-    #endif // doxygen
+}
+} // namespace detail::tcc
+#endif // doxygen
 
-    /*!
-        \brief Transverse Central Cylindrical projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Cylindrical
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_tcc.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct tcc_spheroid : public detail::tcc::base_tcc_spheroid<CalculationType, Parameters>
-    {
-        inline tcc_spheroid(const Parameters& par) : detail::tcc::base_tcc_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::tcc::setup_tcc(this->m_par);
-        }
-    };
+/*!
+    \brief Transverse Central Cylindrical projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Cylindrical
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_tcc.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct tcc_spheroid : public detail::tcc::base_tcc_spheroid<CalculationType, Parameters>
+{
+	inline tcc_spheroid(const Parameters& par) : detail::tcc::base_tcc_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::tcc::setup_tcc(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::tcc, tcc_spheroid, tcc_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::tcc, tcc_spheroid, tcc_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class tcc_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<tcc_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class tcc_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<tcc_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void tcc_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("tcc", new tcc_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void tcc_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("tcc", new tcc_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_TCC_HPP
 

@@ -13,66 +13,69 @@
 
 #include <boost/compute/container/vector.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 template<class T>
 class stack
 {
 public:
-    typedef vector<T> container_type;
-    typedef typename container_type::size_type size_type;
-    typedef typename container_type::value_type value_type;
+	typedef vector<T> container_type;
+	typedef typename container_type::size_type size_type;
+	typedef typename container_type::value_type value_type;
 
-    stack()
-    {
-    }
+	stack()
+	{
+	}
 
-    stack(const stack<T> &other)
-        : m_vector(other.m_vector)
-    {
-    }
+	stack(const stack<T> &other)
+		: m_vector(other.m_vector)
+	{
+	}
 
-    stack<T>& operator=(const stack<T> &other)
-    {
-        if(this != &other){
-            m_vector = other.m_vector;
-        }
+	stack<T>& operator=(const stack<T> &other)
+	{
+		if(this != &other)
+		{
+			m_vector = other.m_vector;
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~stack()
-    {
-    }
+	~stack()
+	{
+	}
 
-    bool empty() const
-    {
-        return m_vector.empty();
-    }
+	bool empty() const
+	{
+		return m_vector.empty();
+	}
 
-    size_type size() const
-    {
-        return m_vector.size();
-    }
+	size_type size() const
+	{
+		return m_vector.size();
+	}
 
-    value_type top() const
-    {
-        return m_vector.back();
-    }
+	value_type top() const
+	{
+		return m_vector.back();
+	}
 
-    void push(const T &value)
-    {
-        m_vector.push_back(value);
-    }
+	void push(const T &value)
+	{
+		m_vector.push_back(value);
+	}
 
-    void pop()
-    {
-        m_vector.pop_back();
-    }
+	void pop()
+	{
+		m_vector.pop_back();
+	}
 
 private:
-    container_type m_vector;
+	container_type m_vector;
 };
 
 } // end compute namespace

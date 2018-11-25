@@ -34,41 +34,46 @@
 #include <boost/geometry/algorithms/dispatch/expand.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace expand
+namespace detail
+{
+namespace expand
 {
 
 struct segment
 {
-    template <typename Box, typename Segment, typename Strategy>
-    static inline void apply(Box& box,
-                             Segment const& segment,
-                             Strategy const& strategy)
-    {
-        Box mbrs[2];
+	template <typename Box, typename Segment, typename Strategy>
+	static inline void apply(Box& box,
+	                         Segment const& segment,
+	                         Strategy const& strategy)
+	{
+		Box mbrs[2];
 
-        // compute the envelope of the segment
-        typename point_type<Segment>::type p[2];
-        detail::assign_point_from_index<0>(segment, p[0]);
-        detail::assign_point_from_index<1>(segment, p[1]);
-        detail::envelope::envelope_segment
-            <
-                dimension<Segment>::value
-            >::apply(p[0], p[1], mbrs[0], strategy);
+		// compute the envelope of the segment
+		typename point_type<Segment>::type p[2];
+		detail::assign_point_from_index<0>(segment, p[0]);
+		detail::assign_point_from_index<1>(segment, p[1]);
+		detail::envelope::envelope_segment
+		<
+		dimension<Segment>::value
+		>::apply(p[0], p[1], mbrs[0], strategy);
 
-        // normalize the box
-        detail::envelope::envelope_box_on_spheroid::apply(box, mbrs[1], strategy);
+		// normalize the box
+		detail::envelope::envelope_box_on_spheroid::apply(box, mbrs[1], strategy);
 
-        // compute the envelope of the two boxes
-        detail::envelope::envelope_range_of_boxes::apply(mbrs, box, strategy);
-    }
+		// compute the envelope of the two boxes
+		detail::envelope::envelope_range_of_boxes::apply(mbrs, box, strategy);
+	}
 };
 
 
-}} // namespace detail::expand
+}
+} // namespace detail::expand
 #endif // DOXYGEN_NO_DETAIL
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -79,65 +84,66 @@ template
 <
     typename Box, typename Segment,
     typename CSTagOut, typename CSTag
->
-struct expand
-    <
-        Box, Segment,
-        box_tag, segment_tag,
-        CSTagOut, CSTag
     >
+struct expand
+	<
+	Box, Segment,
+	box_tag, segment_tag,
+	CSTagOut, CSTag
+	>
 {
-    BOOST_MPL_ASSERT_MSG((false),
-                         NOT_IMPLEMENTED_FOR_THESE_COORDINATE_SYSTEMS,
-                         (types<CSTagOut, CSTag>()));
+	BOOST_MPL_ASSERT_MSG((false),
+	                     NOT_IMPLEMENTED_FOR_THESE_COORDINATE_SYSTEMS,
+	                     (types<CSTagOut, CSTag>()));
 };
 
 template
 <
     typename Box, typename Segment
->
+    >
 struct expand
-    <
-        Box, Segment,
-        box_tag, segment_tag,
-        cartesian_tag, cartesian_tag
-    > : detail::expand::expand_indexed
-        <
-            0, dimension<Segment>::value
-        >
+	<
+	Box, Segment,
+	box_tag, segment_tag,
+	cartesian_tag, cartesian_tag
+	> : detail::expand::expand_indexed
+	<
+	0, dimension<Segment>::value
+	>
 {};
 
 template <typename Box, typename Segment>
 struct expand
-    <
-        Box, Segment,
-        box_tag, segment_tag,
-        spherical_polar_tag, spherical_polar_tag
-    > : detail::expand::segment
+	<
+	Box, Segment,
+	box_tag, segment_tag,
+	spherical_polar_tag, spherical_polar_tag
+	> : detail::expand::segment
 {};
 
 template <typename Box, typename Segment>
 struct expand
-    <
-        Box, Segment,
-        box_tag, segment_tag,
-        spherical_equatorial_tag, spherical_equatorial_tag
-    > : detail::expand::segment
+	<
+	Box, Segment,
+	box_tag, segment_tag,
+	spherical_equatorial_tag, spherical_equatorial_tag
+	> : detail::expand::segment
 {};
 
 template <typename Box, typename Segment>
 struct expand
-    <
-        Box, Segment,
-        box_tag, segment_tag,
-        geographic_tag, geographic_tag
-    > : detail::expand::segment
+	<
+	Box, Segment,
+	box_tag, segment_tag,
+	geographic_tag, geographic_tag
+	> : detail::expand::segment
 {};
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_EXPAND_SEGMENT_HPP

@@ -9,6 +9,7 @@
 #include <limits>
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <vector>
 
 #include <assert.h>
@@ -33,13 +34,13 @@ int debug_pause();
 
 class Patcher
 {
-	public:
-	
+public:
+
 	Patcher(const string& filename_in, const string& filename_out);
-	
-	private:
+
+private:
 	bool check_system();
 	bool check_make();
-	
+
 
 };

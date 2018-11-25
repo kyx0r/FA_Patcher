@@ -23,8 +23,10 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace intrusive {
+namespace boost
+{
+namespace intrusive
+{
 
 #ifndef BOOST_INTRUSIVE_DOXYGEN_INVOKED
 
@@ -119,8 +121,8 @@ BOOST_INTRUSIVE_OPTION_TYPE(value_traits, ValueTraits, ValueTraits, proto_value_
 //!This option setter specifies the member hook the
 //!container must use.
 template< typename Parent
-        , typename MemberHook
-        , MemberHook Parent::* PtrToMember>
+          , typename MemberHook
+          , MemberHook Parent::* PtrToMember>
 struct member_hook
 {
 // @cond
@@ -137,12 +139,12 @@ struct member_hook
 //      //quite a lot of symbol stuff.
 //      , (Ptr2MemNode)PtrToMember
 //      , MemberHook::hooktags::link_mode> member_value_traits;
-   typedef mhtraits <Parent, MemberHook, PtrToMember> member_value_traits;
-   template<class Base>
-   struct pack : Base
-   {
-      typedef member_value_traits proto_value_traits;
-   };
+	typedef mhtraits <Parent, MemberHook, PtrToMember> member_value_traits;
+	template<class Base>
+	struct pack : Base
+	{
+		typedef member_value_traits proto_value_traits;
+	};
 /// @endcond
 };
 
@@ -237,13 +239,13 @@ BOOST_INTRUSIVE_OPTION_CONSTANT(incremental, bool, Enabled, incremental)
 
 struct hook_defaults
 {
-   typedef void* void_pointer;
-   static const link_mode_type link_mode = safe_link;
-   typedef dft_tag tag;
-   static const bool optimize_size = false;
-   static const bool store_hash = false;
-   static const bool linear = false;
-   static const bool optimize_multikey = false;
+	typedef void* void_pointer;
+	static const link_mode_type link_mode = safe_link;
+	typedef dft_tag tag;
+	static const bool optimize_size = false;
+	static const bool store_hash = false;
+	static const bool linear = false;
+	static const bool optimize_multikey = false;
 };
 
 /// @endcond

@@ -34,18 +34,21 @@
 #define BOOST_INTRUSIVE_HAS_MEMBER_FUNCTION_CALLABLE_WITH_MAX 0
 #include <boost/intrusive/detail/has_member_function_callable_with.hpp>
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template <class Container>
 struct is_container
 {
-   static const bool value =
-      boost::container::is_container_detail::
-         has_member_function_callable_with_size <const Container>::value &&
-      boost::container::is_container_detail::
-         has_member_function_callable_with_empty<const Container>::value;
+	static const bool value =
+	    boost::container::is_container_detail::
+	    has_member_function_callable_with_size <const Container>::value &&
+	    boost::container::is_container_detail::
+	    has_member_function_callable_with_empty<const Container>::value;
 };
 
 }  //namespace dtl {

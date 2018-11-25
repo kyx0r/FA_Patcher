@@ -24,11 +24,15 @@
 // C Runtime
 #include <stdlib.h>
 
-namespace boost {
-namespace runtime {
-namespace env {
+namespace boost
+{
+namespace runtime
+{
+namespace env
+{
 
-namespace env_detail {
+namespace env_detail
+{
 
 #ifndef UNDER_CE
 
@@ -40,10 +44,10 @@ namespace env_detail {
 inline std::pair<cstring,bool>
 sys_read_var( cstring var_name )
 {
-    using namespace std;
-    char const* res = getenv( var_name.begin() );
+	using namespace std;
+	char const* res = getenv( var_name.begin() );
 
-    return std::make_pair( cstring(res), res != NULL );
+	return std::make_pair( cstring(res), res != NULL );
 }
 
 #ifdef BOOST_MSVC
@@ -55,7 +59,7 @@ sys_read_var( cstring var_name )
 inline std::pair<cstring,bool>
 sys_read_var( cstring var_name )
 {
-    return std::make_pair( cstring(), false );
+	return std::make_pair( cstring(), false );
 }
 
 #endif
@@ -66,27 +70,28 @@ template<typename ReadFunc>
 inline void
 fetch_absent( parameters_store const& params, runtime::arguments_store& args, ReadFunc read_func )
 {
-    BOOST_TEST_FOREACH( parameters_store::storage_type::value_type const&, v, params.all() ) {
-        basic_param_ptr param = v.second;
+	BOOST_TEST_FOREACH( parameters_store::storage_type::value_type const&, v, params.all() )
+	{
+		basic_param_ptr param = v.second;
 
-        if( args.has( param->p_name ) || param->p_env_var.empty() )
-            continue;
+		if( args.has( param->p_name ) || param->p_env_var.empty() )
+			continue;
 
-        std::pair<cstring,bool> value = read_func( param->p_env_var );
+		std::pair<cstring,bool> value = read_func( param->p_env_var );
 
-        if( !value.second )
-            continue;
+		if( !value.second )
+			continue;
 
-        // Validate against unexpected empty value
-        BOOST_TEST_I_ASSRT( !value.first.is_empty() || param->p_has_optional_value,
-            format_error( param->p_name ) 
-                << "Missing an argument value for the parameter " << param->p_name
-                << " in the environment." );
+		// Validate against unexpected empty value
+		BOOST_TEST_I_ASSRT( !value.first.is_empty() || param->p_has_optional_value,
+		                    format_error( param->p_name )
+		                    << "Missing an argument value for the parameter " << param->p_name
+		                    << " in the environment." );
 
-        // Produce argument value
-        param->produce_argument( value.first, false, args );
+		// Produce argument value
+		param->produce_argument( value.first, false, args );
 
-    }
+	}
 }
 
 //____________________________________________________________________________//
@@ -96,7 +101,7 @@ fetch_absent( parameters_store const& params, runtime::arguments_store& args, Re
 inline void
 fetch_absent( parameters_store const& params, runtime::arguments_store& args )
 {
-    env_detail::fetch_absent( params, args, &env_detail::sys_read_var );
+	env_detail::fetch_absent( params, args, &env_detail::sys_read_var );
 }
 
 } // namespace env

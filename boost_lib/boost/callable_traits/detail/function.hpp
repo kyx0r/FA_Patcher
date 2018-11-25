@@ -15,7 +15,12 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/callable_traits/detail/set_function_qualifiers.hpp>
 #include <boost/callable_traits/detail/default_callable_traits.hpp>
 
-namespace boost { namespace callable_traits { namespace detail {
+namespace boost
+{
+namespace callable_traits
+{
+namespace detail
+{
 
 template<typename T>
 struct function : default_callable_traits<T> {};
@@ -140,53 +145,56 @@ struct function : default_callable_traits<T> {};
 
 template<typename T>
 struct function<T&> : std::conditional<function<T>::value,
-    function<T>, default_callable_traits<T&>>::type {
+	function<T>, default_callable_traits<T&>>::type
+{
 
-    static constexpr const bool value = !std::is_pointer<T>::value;
+	static constexpr const bool value = !std::is_pointer<T>::value;
 
-    using traits = function;
-    using base = function<T>;
-    using type = T&;
-    using remove_varargs = typename base::remove_varargs&;
-    using add_varargs = typename base::add_varargs&;
+	using traits = function;
+	using base = function<T>;
+	using type = T&;
+	using remove_varargs = typename base::remove_varargs&;
+	using add_varargs = typename base::add_varargs&;
 
-    using remove_member_reference = reference_error;
-    using add_member_lvalue_reference = reference_error;
-    using add_member_rvalue_reference = reference_error;
-    using add_member_const = reference_error;
-    using add_member_volatile = reference_error;
-    using add_member_cv = reference_error;
-    using remove_member_const = reference_error;
-    using remove_member_volatile = reference_error;
-    using remove_member_cv = reference_error;
+	using remove_member_reference = reference_error;
+	using add_member_lvalue_reference = reference_error;
+	using add_member_rvalue_reference = reference_error;
+	using add_member_const = reference_error;
+	using add_member_volatile = reference_error;
+	using add_member_cv = reference_error;
+	using remove_member_const = reference_error;
+	using remove_member_volatile = reference_error;
+	using remove_member_cv = reference_error;
 
-    template<typename NewReturn>
-    using apply_return = typename base::template apply_return<NewReturn>&;
-    
-    using clear_args = typename base::clear_args&;
-    
-    template<typename... NewArgs>
-    using push_front = typename base::template push_front<NewArgs...>&;
+	template<typename NewReturn>
+	using apply_return = typename base::template apply_return<NewReturn>&;
 
-    template<typename... NewArgs>
-    using push_back = typename base::template push_back<NewArgs...>&;
+	using clear_args = typename base::clear_args&;
 
-    template<std::size_t Count>
-    using pop_back = typename base::template pop_back<Count>&;
+	template<typename... NewArgs>
+	using push_front = typename base::template push_front<NewArgs...>&;
 
-    template<std::size_t Count>
-    using pop_front = typename base::template pop_front<Count>&;
+	template<typename... NewArgs>
+	using push_back = typename base::template push_back<NewArgs...>&;
 
-    template<std::size_t Index, typename... NewArgs>
-    using insert_args = typename base::template insert_args<Index, NewArgs...>&;
+	template<std::size_t Count>
+	using pop_back = typename base::template pop_back<Count>&;
 
-    template<std::size_t Index, std::size_t Count>
-    using remove_args = typename base::template remove_args<Index, Count>&;
+	template<std::size_t Count>
+	using pop_front = typename base::template pop_front<Count>&;
 
-    template<std::size_t Index, typename... NewArgs>
-    using replace_args = typename base::template replace_args<Index, NewArgs...>&;
+	template<std::size_t Index, typename... NewArgs>
+	using insert_args = typename base::template insert_args<Index, NewArgs...>&;
+
+	template<std::size_t Index, std::size_t Count>
+	using remove_args = typename base::template remove_args<Index, Count>&;
+
+	template<std::size_t Index, typename... NewArgs>
+	using replace_args = typename base::template replace_args<Index, NewArgs...>&;
 };
 
-}}} // namespace boost::callable_traits::detail
+}
+}
+} // namespace boost::callable_traits::detail
 
 #endif // #ifndef BOOST_CLBL_TRTS_DETAIL_FUNCTION_HPP

@@ -11,7 +11,12 @@
 # include <boost/mpl/bool.hpp>
 # include <boost/detail/workaround.hpp>
 
-namespace boost { namespace python { namespace detail { 
+namespace boost
+{
+namespace python
+{
+namespace detail
+{
 
 template <class T>
 struct is_string_literal : mpl::false_
@@ -39,11 +44,13 @@ struct is_string_literal<char* const> : mpl::true_
 // CWPro7 has trouble with the array type deduction above
 template <class T, std::size_t n>
 struct is_string_literal<T[n]>
-    : is_same<T, char const>
+	: is_same<T, char const>
 {
 };
-#  endif 
+#  endif
 
-}}} // namespace boost::python::detail
+}
+}
+} // namespace boost::python::detail
 
 #endif // STRING_LITERAL_DWA2002629_HPP

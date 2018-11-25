@@ -24,7 +24,11 @@
 #include <boost/geometry/geometries/concepts/linestring_concept.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -43,22 +47,22 @@ template <typename Geometry>
 class MultiLinestring
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename boost::range_value<Geometry>::type linestring_type;
+	typedef typename boost::range_value<Geometry>::type linestring_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::Linestring<linestring_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Linestring<linestring_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 
 public :
 
-    BOOST_CONCEPT_USAGE(MultiLinestring)
-    {
-        Geometry* mls = 0;
-        traits::clear<Geometry>::apply(*mls);
-        traits::resize<Geometry>::apply(*mls, 0);
-        linestring_type* ls = 0;
-        traits::push_back<Geometry>::apply(*mls, *ls);
-    }
+	BOOST_CONCEPT_USAGE(MultiLinestring)
+	{
+		Geometry* mls = 0;
+		traits::clear<Geometry>::apply(*mls);
+		traits::resize<Geometry>::apply(*mls, 0);
+		linestring_type* ls = 0;
+		traits::push_back<Geometry>::apply(*mls, *ls);
+	}
 #endif
 };
 
@@ -71,21 +75,23 @@ template <typename Geometry>
 class ConstMultiLinestring
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename boost::range_value<Geometry>::type linestring_type;
+	typedef typename boost::range_value<Geometry>::type linestring_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::ConstLinestring<linestring_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstLinestring<linestring_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 
 public :
 
-    BOOST_CONCEPT_USAGE(ConstMultiLinestring)
-    {
-    }
+	BOOST_CONCEPT_USAGE(ConstMultiLinestring)
+	{
+	}
 #endif
 };
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_CONCEPTS_MULTI_LINESTRING_CONCEPT_HPP

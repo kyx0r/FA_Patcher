@@ -36,63 +36,81 @@ namespace common
 template <class Iter_t>
 struct range
 {
-    Iter_t first, last;
-    //
-    //------------------------------------------------------------------------
-    //  function : range
-    /// @brief  empty constructor
-    //------------------------------------------------------------------------
-    range(void) { };
-    //
-    //------------------------------------------------------------------------
-    //  function : range
-    /// @brief  constructor with two parameters
-    /// @param frs : iterator to the first element
-    /// @param lst : iterator to the last element
-    //-----------------------------------------------------------------------
-    range(const Iter_t &frs, const Iter_t &lst): first(frs), last(lst) { };
-    //
-    //-----------------------------------------------------------------------
-    //  function : empty
-    /// @brief indicate if the range is empty
-    /// @return  true : empty false : not empty
-    //-----------------------------------------------------------------------
-    bool empty(void) const { return (first == last); };
-    //
-    //-----------------------------------------------------------------------
-    //  function : not_empty
-    /// @brief indicate if the range is not empty
-    /// @return  true : not empty false : empty
-    //-----------------------------------------------------------------------
-    bool not_empty(void) const {return (first != last); };
-    //
-    //-----------------------------------------------------------------------
-    //  function : valid
-    /// @brief  Indicate if the range is well constructed, and valid
-    /// @return true : valid,  false : not valid
-    //-----------------------------------------------------------------------
-    bool valid(void) const { return ((last - first) >= 0); };
-    //
-    //-----------------------------------------------------------------------
-    //  function : size
-    /// @brief  return the size of the range
-    /// @return size
-    //-----------------------------------------------------------------------
-    size_t size(void) const { return (last - first); };
-    //
-    //------------------------------------------------------------------------
-    //  function : front
-    /// @brief return an iterator to the first element of the range
-    /// @return iterator
-    //-----------------------------------------------------------------------
-    Iter_t front(void) const { return first; };
-    //
-    //-------------------------------------------------------------------------
-    //  function : back
-    /// @brief return an iterator to the last element of the range
-    /// @return iterator
-    //-------------------------------------------------------------------------
-    Iter_t back(void) const {return (last - 1); };
+	Iter_t first, last;
+	//
+	//------------------------------------------------------------------------
+	//  function : range
+	/// @brief  empty constructor
+	//------------------------------------------------------------------------
+	range(void) { };
+	//
+	//------------------------------------------------------------------------
+	//  function : range
+	/// @brief  constructor with two parameters
+	/// @param frs : iterator to the first element
+	/// @param lst : iterator to the last element
+	//-----------------------------------------------------------------------
+	range(const Iter_t &frs, const Iter_t &lst): first(frs), last(lst) { };
+	//
+	//-----------------------------------------------------------------------
+	//  function : empty
+	/// @brief indicate if the range is empty
+	/// @return  true : empty false : not empty
+	//-----------------------------------------------------------------------
+	bool empty(void) const
+	{
+		return (first == last);
+	};
+	//
+	//-----------------------------------------------------------------------
+	//  function : not_empty
+	/// @brief indicate if the range is not empty
+	/// @return  true : not empty false : empty
+	//-----------------------------------------------------------------------
+	bool not_empty(void) const
+	{
+		return (first != last);
+	};
+	//
+	//-----------------------------------------------------------------------
+	//  function : valid
+	/// @brief  Indicate if the range is well constructed, and valid
+	/// @return true : valid,  false : not valid
+	//-----------------------------------------------------------------------
+	bool valid(void) const
+	{
+		return ((last - first) >= 0);
+	};
+	//
+	//-----------------------------------------------------------------------
+	//  function : size
+	/// @brief  return the size of the range
+	/// @return size
+	//-----------------------------------------------------------------------
+	size_t size(void) const
+	{
+		return (last - first);
+	};
+	//
+	//------------------------------------------------------------------------
+	//  function : front
+	/// @brief return an iterator to the first element of the range
+	/// @return iterator
+	//-----------------------------------------------------------------------
+	Iter_t front(void) const
+	{
+		return first;
+	};
+	//
+	//-------------------------------------------------------------------------
+	//  function : back
+	/// @brief return an iterator to the last element of the range
+	/// @return iterator
+	//-------------------------------------------------------------------------
+	Iter_t back(void) const
+	{
+		return (last - 1);
+	};
 };
 
 //
@@ -106,7 +124,7 @@ struct range
 template<class Iter_t>
 inline range<Iter_t> concat(const range<Iter_t> &it1, const range<Iter_t> &it2)
 {
-    return range<Iter_t>(it1.first, it2.last);
+	return range<Iter_t>(it1.first, it2.last);
 }
 ;
 //
@@ -121,9 +139,9 @@ template <class Iter1_t, class Iter2_t>
 inline range<Iter2_t> move_forward(const range<Iter2_t> &dest,
                                    const range<Iter1_t> &src)
 {
-    assert(dest.size() >= src.size());
-    Iter2_t it_aux = util::move_forward(dest.first, src.first, src.last);
-    return range<Iter2_t>(dest.first, it_aux);
+	assert(dest.size() >= src.size());
+	Iter2_t it_aux = util::move_forward(dest.first, src.first, src.last);
+	return range<Iter2_t>(dest.first, it_aux);
 };
 //
 //-----------------------------------------------------------------------------
@@ -137,10 +155,10 @@ template <class Iter1_t, class Iter2_t>
 inline range<Iter2_t> move_backward(const range<Iter2_t> &dest,
                                     const range<Iter1_t> &src)
 {
-    assert(dest.size() >= src.size());
-    Iter2_t it_aux = util::move_backward(dest.first + src.size(), src.first,
-                    src.last);
-    return range<Iter2_t>(dest.first, dest.src.size());
+	assert(dest.size() >= src.size());
+	Iter2_t it_aux = util::move_backward(dest.first + src.size(), src.first,
+	                                     src.last);
+	return range<Iter2_t>(dest.first, dest.src.size());
 };
 
 //-----------------------------------------------------------------------------
@@ -155,8 +173,8 @@ template<class Iter_t, class Value_t = util::value_iter<Iter_t> >
 inline range<Value_t*> move_construct(const range<Value_t*> &dest,
                                       const range<Iter_t> &src)
 {
-    Value_t *ptr_aux = util::move_construct(dest.first, src.first, src.last);
-    return range<Value_t*>(dest.first, ptr_aux);
+	Value_t *ptr_aux = util::move_construct(dest.first, src.first, src.last);
+	return range<Value_t*>(dest.first, ptr_aux);
 };
 //
 //-----------------------------------------------------------------------------
@@ -167,7 +185,7 @@ inline range<Value_t*> move_construct(const range<Value_t*> &dest,
 template<class Iter_t>
 inline void destroy(range<Iter_t> rng)
 {
-    util::destroy(rng.first, rng.last);
+	util::destroy(rng.first, rng.last);
 };
 //
 //-----------------------------------------------------------------------------
@@ -180,8 +198,8 @@ inline void destroy(range<Iter_t> rng)
 template<class Iter_t, class Value_t = util::value_iter<Iter_t> >
 inline range<Iter_t> initialize(const range<Iter_t> &rng, Value_t &val)
 {
-    util::initialize(rng.first, rng.last, val);
-    return rng;
+	util::initialize(rng.first, rng.last, val);
+	return rng;
 };
 //
 //-----------------------------------------------------------------------------
@@ -197,17 +215,17 @@ template<class Iter1_t, class Iter2_t, class Compare>
 inline bool is_mergeable(const range<Iter1_t> &src1, const range<Iter2_t> &src2,
                          Compare comp)
 {
-    //------------------------------------------------------------------------
-    //                  Metaprogramming
-    //------------------------------------------------------------------------
-    typedef util::value_iter<Iter1_t> type1;
-    typedef util::value_iter<Iter2_t> type2;
-    static_assert (std::is_same< type1, type2 >::value,
-                    "Incompatible iterators\n");
-    //------------------------------------------------------------------------
-    //                 Code
-    //------------------------------------------------------------------------
-    return comp(*(src2.front()), *(src1.back()));
+	//------------------------------------------------------------------------
+	//                  Metaprogramming
+	//------------------------------------------------------------------------
+	typedef util::value_iter<Iter1_t> type1;
+	typedef util::value_iter<Iter2_t> type2;
+	static_assert (std::is_same< type1, type2 >::value,
+	               "Incompatible iterators\n");
+	//------------------------------------------------------------------------
+	//                 Code
+	//------------------------------------------------------------------------
+	return comp(*(src2.front()), *(src1.back()));
 };
 //
 //-----------------------------------------------------------------------------
@@ -223,17 +241,17 @@ template<class Iter1_t, class Iter2_t, class Compare>
 inline bool is_mergeable_stable(const range<Iter1_t> &src1,
                                 const range<Iter2_t> &src2, Compare comp)
 {
-    //------------------------------------------------------------------------
-    //                  Metaprogramming
-    //------------------------------------------------------------------------
-    typedef util::value_iter<Iter1_t> type1;
-    typedef util::value_iter<Iter2_t> type2;
-    static_assert (std::is_same< type1, type2 >::value,
-                    "Incompatible iterators\n");
-    //------------------------------------------------------------------------
-    //                 Code
-    //------------------------------------------------------------------------
-    return not comp(*(src1.back()), *(src2.front()));
+	//------------------------------------------------------------------------
+	//                  Metaprogramming
+	//------------------------------------------------------------------------
+	typedef util::value_iter<Iter1_t> type1;
+	typedef util::value_iter<Iter2_t> type2;
+	static_assert (std::is_same< type1, type2 >::value,
+	               "Incompatible iterators\n");
+	//------------------------------------------------------------------------
+	//                 Code
+	//------------------------------------------------------------------------
+	return not comp(*(src1.back()), *(src2.front()));
 };
 //
 //-----------------------------------------------------------------------------
@@ -254,9 +272,9 @@ inline range<Iter3_t> merge(const range<Iter3_t> &dest,
                             const range<Iter1_t> &src1,
                             const range<Iter2_t> &src2, Compare comp)
 {
-    Iter3_t it_aux = util::merge(src1.first, src1.last, src2.first, src2.last,
-                    dest.first, comp);
-    return range<Iter3_t>(dest.first, it_aux);
+	Iter3_t it_aux = util::merge(src1.first, src1.last, src2.first, src2.last,
+	                             dest.first, comp);
+	return range<Iter3_t>(dest.first, it_aux);
 };
 
 //-----------------------------------------------------------------------------
@@ -279,9 +297,9 @@ inline range<Value_t *> merge_construct(const range<Value_t *> &dest,
                                         const range<Iter2_t> &src2,
                                         Compare comp)
 {
-    Value_t * ptr_aux = util::merge_construct(src1.first, src1.last, src2.first,
-                    src2.last, dest.first, comp);
-    return range<Value_t*>(dest.first, ptr_aux);
+	Value_t * ptr_aux = util::merge_construct(src1.first, src1.last, src2.first,
+	                    src2.last, dest.first, comp);
+	return range<Value_t*>(dest.first, ptr_aux);
 };
 //
 //---------------------------------------------------------------------------
@@ -302,9 +320,9 @@ inline range<Iter2_t> merge_half(const range<Iter2_t> &dest,
                                  const range<Iter1_t> &src1,
                                  const range<Iter2_t> &src2, Compare comp)
 {
-    Iter2_t it_aux = util::merge_half(src1.first, src1.last, src2.first,
-                    src2.last, dest.first, comp);
-    return range<Iter2_t>(dest.first, it_aux);
+	Iter2_t it_aux = util::merge_half(src1.first, src1.last, src2.first,
+	                                  src2.last, dest.first, comp);
+	return range<Iter2_t>(dest.first, it_aux);
 };
 //
 //-----------------------------------------------------------------------------
@@ -323,8 +341,8 @@ inline bool merge_uncontiguous(const range<Iter1_t> &src1,
                                const range<Iter2_t> &src2,
                                const range<Iter3_t> &aux, Compare comp)
 {
-    return util::merge_uncontiguous(src1.first, src1.last, src2.first,
-                    src2.last, aux.first, comp);
+	return util::merge_uncontiguous(src1.first, src1.last, src2.first,
+	                                src2.last, aux.first, comp);
 };
 //
 //-----------------------------------------------------------------------------
@@ -342,8 +360,8 @@ inline range<Iter1_t> merge_contiguous(const range<Iter1_t> &src1,
                                        const range<Iter1_t> &src2,
                                        const range<Iter2_t> &buf, Compare comp)
 {
-    util::merge_contiguous(src1.first, src1.last, src2.last, buf.first, comp);
-    return concat(src1, src2);
+	util::merge_contiguous(src1.first, src1.last, src2.last, buf.first, comp);
+	return concat(src1, src2);
 };
 //
 //-----------------------------------------------------------------------------
@@ -365,29 +383,29 @@ template<class Iter1_t, class Iter2_t, class Compare>
 static void merge_flow(range<Iter1_t> rng1, range<Iter2_t> rbuf,
                        range<Iter1_t> rng2, Compare cmp)
 {
-    //-------------------------------------------------------------------------
-    //                       Metaprogramming
-    //-------------------------------------------------------------------------
-    typedef util::value_iter<Iter1_t> type1;
-    typedef util::value_iter<Iter2_t> type2;
-    static_assert (std::is_same< type1, type2 >::value,
-                    "Incompatible iterators\n");
+	//-------------------------------------------------------------------------
+	//                       Metaprogramming
+	//-------------------------------------------------------------------------
+	typedef util::value_iter<Iter1_t> type1;
+	typedef util::value_iter<Iter2_t> type2;
+	static_assert (std::is_same< type1, type2 >::value,
+	               "Incompatible iterators\n");
 
-    //-------------------------------------------------------------------------
-    //                       Code
-    //-------------------------------------------------------------------------
-    range<Iter2_t> rbx(rbuf);
-    range<Iter1_t> rx1(rng1), rx2(rng2);
-    assert(rbx.size() == rx1.size() and rx1.size() == rx2.size());
-    while (rx1.first != rx1.last)
-    {
-        *(rx1.first++) = (cmp(*rbx.first, *rx2.first)) ?
-                                                    std::move(*(rbx.first++)):
-                                                    std::move(*(rx2.first++));
-    };
-    if (rx2.first == rx2.last) return;
-    if (rbx.first == rbx.last) move_forward(rbuf, rng2);
-    else                       merge_half(rbuf, rx2, rbx, cmp);
+	//-------------------------------------------------------------------------
+	//                       Code
+	//-------------------------------------------------------------------------
+	range<Iter2_t> rbx(rbuf);
+	range<Iter1_t> rx1(rng1), rx2(rng2);
+	assert(rbx.size() == rx1.size() and rx1.size() == rx2.size());
+	while (rx1.first != rx1.last)
+	{
+		*(rx1.first++) = (cmp(*rbx.first, *rx2.first)) ?
+		                 std::move(*(rbx.first++)):
+		                 std::move(*(rx2.first++));
+	};
+	if (rx2.first == rx2.last) return;
+	if (rbx.first == rbx.last) move_forward(rbuf, rng2);
+	else                       merge_half(rbuf, rx2, rbx, cmp);
 };
 
 //****************************************************************************

@@ -18,39 +18,41 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 inline serial_port_base::baud_rate::baud_rate(unsigned int rate)
-  : value_(rate)
+	: value_(rate)
 {
 }
 
 inline unsigned int serial_port_base::baud_rate::value() const
 {
-  return value_;
+	return value_;
 }
 
 inline serial_port_base::flow_control::type
 serial_port_base::flow_control::value() const
 {
-  return value_;
+	return value_;
 }
 
 inline serial_port_base::parity::type serial_port_base::parity::value() const
 {
-  return value_;
+	return value_;
 }
 
 inline serial_port_base::stop_bits::type
 serial_port_base::stop_bits::value() const
 {
-  return value_;
+	return value_;
 }
 
 inline unsigned int serial_port_base::character_size::value() const
 {
-  return value_;
+	return value_;
 }
 
 } // namespace asio

@@ -14,23 +14,27 @@ Handle virtual public functions with contracts (for subcontracting).
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_CONDITIONS
-    #include <boost/contract/detail/decl.hpp>
+#include <boost/contract/detail/decl.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-    #include <boost/any.hpp>
+#include <boost/any.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_OLDS
-    #include <boost/shared_ptr.hpp>
-    #include <queue>
+#include <boost/shared_ptr.hpp>
+#include <queue>
 #endif
 
-namespace boost { namespace contract {
-        
+namespace boost
+{
+namespace contract
+{
+
 #ifndef BOOST_CONTRACT_NO_CONDITIONS
-    namespace detail {
-        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-                /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
-    }
+namespace detail
+{
+BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+        /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
+}
 #endif
 
 /**
@@ -61,101 +65,105 @@ copyable).
         @RefSect{tutorial.public_function_overrides__subcontracting_,
         Public Function Overrides}
 */
-class virtual_ { // Non-copyable (see below) to avoid copy queue, stack, etc.
-/** @cond */
+class virtual_   // Non-copyable (see below) to avoid copy queue, stack, etc.
+{
+	/** @cond */
 private: // No public API (so users cannot use it directly by mistake).
 
-    // No boost::noncopyable to avoid its overhead when contracts disabled.
-    virtual_(virtual_&);
-    virtual_& operator=(virtual_&);
+	// No boost::noncopyable to avoid its overhead when contracts disabled.
+	virtual_(virtual_&);
+	virtual_& operator=(virtual_&);
 
-    #ifndef BOOST_CONTRACT_NO_CONDITIONS
-        enum action_enum {
-            // virtual_ always held/passed as ptr so nullptr used for user call.
-            no_action,
-            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-                check_entry_inv,
-            #endif
-            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-                check_pre,
-            #endif
-            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                check_exit_inv,
-            #endif
-            #ifndef BOOST_CONTRACT_NO_OLDS
-                // For outside .old(...).
-                push_old_init_copy,
-                // pop_old_init_copy as static function below.
-                // For inside .old(...).
-                call_old_ftor,
-                push_old_ftor_copy,
-                pop_old_ftor_copy,
-            #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-                check_post,
-            #endif
-            #ifndef BOOST_CONTRACT_NO_EXCEPTS
-                check_except,
-            #endif
-        };
-    #endif
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
+	enum action_enum
+	{
+		// virtual_ always held/passed as ptr so nullptr used for user call.
+		no_action,
+#ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+		check_entry_inv,
+#endif
+#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+		check_pre,
+#endif
+#ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+		check_exit_inv,
+#endif
+#ifndef BOOST_CONTRACT_NO_OLDS
+		// For outside .old(...).
+		push_old_init_copy,
+		// pop_old_init_copy as static function below.
+		// For inside .old(...).
+		call_old_ftor,
+		push_old_ftor_copy,
+		pop_old_ftor_copy,
+#endif
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+		check_post,
+#endif
+#ifndef BOOST_CONTRACT_NO_EXCEPTS
+		check_except,
+#endif
+	};
+#endif
 
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        // Not just an enum value because the logical combination of two values.
-        inline static bool pop_old_init_copy(action_enum a) {
-            return
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-                    a == check_post
-                #endif
-                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+#ifndef BOOST_CONTRACT_NO_OLDS
+	// Not just an enum value because the logical combination of two values.
+	inline static bool pop_old_init_copy(action_enum a)
+	{
+		return
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+		    a == check_post
+#endif
+#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
                         !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                    ||
-                #endif
-                #ifndef BOOST_CONTRACT_NO_EXCEPTS
-                    a == check_except
-                #endif
-            ;
-        }
-    #endif
+		    ||
+#endif
+#ifndef BOOST_CONTRACT_NO_EXCEPTS
+		    a == check_except
+#endif
+		    ;
+	}
+#endif
 
-    #ifndef BOOST_CONTRACT_NO_CONDITIONS
-        explicit virtual_(action_enum a) :
-              action_(a)
-            , failed_(false)
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-                , result_type_name_()
-                , result_optional_()
-            #endif
-        {}
-    #endif
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
+	explicit virtual_(action_enum a) :
+		action_(a)
+		, failed_(false)
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+		, result_type_name_()
+		, result_optional_()
+#endif
+	{}
+#endif
 
-    #ifndef BOOST_CONTRACT_NO_CONDITIONS
-        action_enum action_;
-        bool failed_;
-    #endif
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        std::queue<boost::shared_ptr<void> > old_init_copies_;
-        std::queue<boost::shared_ptr<void> > old_ftor_copies_;
-    #endif
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::any result_ptr_; // Result for virtual and overriding functions.
-        char const* result_type_name_;
-        bool result_optional_;
-    #endif
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
+	action_enum action_;
+	bool failed_;
+#endif
+#ifndef BOOST_CONTRACT_NO_OLDS
+	std::queue<boost::shared_ptr<void> > old_init_copies_;
+	std::queue<boost::shared_ptr<void> > old_ftor_copies_;
+#endif
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+	boost::any result_ptr_; // Result for virtual and overriding functions.
+	char const* result_type_name_;
+	bool result_optional_;
+#endif
 
-    // Friends (used to limit library's public API).
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        friend bool copy_old(virtual_*);
-        friend class old_pointer;
-    #endif
-    #ifndef BOOST_CONTRACT_NO_CONDITIONS
-        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-                /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
-    #endif
-/** @endcond */
+	// Friends (used to limit library's public API).
+#ifndef BOOST_CONTRACT_NO_OLDS
+	friend bool copy_old(virtual_*);
+	friend class old_pointer;
+#endif
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
+	BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+	        /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
+#endif
+	/** @endcond */
 };
 
-} } // namespace
+}
+} // namespace
 
 #endif // #include guard
 

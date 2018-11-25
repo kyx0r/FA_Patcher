@@ -17,9 +17,12 @@
 #include <boost/compute/algorithm/detail/find_extrema_with_atomics.hpp>
 #include <boost/compute/algorithm/detail/serial_find_extrema.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class Compare>
 inline InputIterator find_extrema(InputIterator first,
@@ -28,39 +31,41 @@ inline InputIterator find_extrema(InputIterator first,
                                   const bool find_minimum,
                                   command_queue &queue)
 {
-    size_t count = iterator_range_size(first, last);
+	size_t count = iterator_range_size(first, last);
 
-    // handle trivial cases
-    if(count == 0 || count == 1){
-        return first;
-    }
+	// handle trivial cases
+	if(count == 0 || count == 1)
+	{
+		return first;
+	}
 
-    const device &device = queue.get_device();
+	const device &device = queue.get_device();
 
-    // CPU
-    if(device.type() & device::cpu) {
-        return find_extrema_on_cpu(first, last, compare, find_minimum, queue);
-    }
+	// CPU
+	if(device.type() & device::cpu)
+	{
+		return find_extrema_on_cpu(first, last, compare, find_minimum, queue);
+	}
 
-    // GPU
-    // use serial method for small inputs
-    if(count < 512)
-    {
-        return serial_find_extrema(first, last, compare, find_minimum, queue);
-    }
-    // find_extrema_with_reduce() is used only if requirements are met
-    if(find_extrema_with_reduce_requirements_met(first, last, queue))
-    {
-        return find_extrema_with_reduce(first, last, compare, find_minimum, queue);
-    }
+	// GPU
+	// use serial method for small inputs
+	if(count < 512)
+	{
+		return serial_find_extrema(first, last, compare, find_minimum, queue);
+	}
+	// find_extrema_with_reduce() is used only if requirements are met
+	if(find_extrema_with_reduce_requirements_met(first, last, queue))
+	{
+		return find_extrema_with_reduce(first, last, compare, find_minimum, queue);
+	}
 
-    // use serial method for OpenCL version 1.0 due to
-    // problems with atomic_cmpxchg()
-    #ifndef BOOST_COMPUTE_CL_VERSION_1_1
-        return serial_find_extrema(first, last, compare, find_minimum, queue);
-    #endif
+	// use serial method for OpenCL version 1.0 due to
+	// problems with atomic_cmpxchg()
+#ifndef BOOST_COMPUTE_CL_VERSION_1_1
+	return serial_find_extrema(first, last, compare, find_minimum, queue);
+#endif
 
-    return find_extrema_with_atomics(first, last, compare, find_minimum, queue);
+	return find_extrema_with_atomics(first, last, compare, find_minimum, queue);
 }
 
 } // end detail namespace

@@ -14,8 +14,10 @@
 #include <boost/compute/types/fundamental.hpp>
 #include <boost/compute/container/basic_string.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 typedef basic_string<char_> string;
 

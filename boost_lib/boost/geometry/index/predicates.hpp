@@ -18,7 +18,12 @@
 \defgroup predicates Predicates (boost::geometry::index::)
 */
 
-namespace boost { namespace geometry { namespace index {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
 
 /*!
 \brief Generate \c contains() predicate.
@@ -43,12 +48,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::contains_tag, false>
 contains(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::contains_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::contains_tag,
+	       false
+	       >(g);
 }
 
 /*!
@@ -74,12 +79,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::covered_by_tag, false>
 covered_by(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::covered_by_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::covered_by_tag,
+	       false
+	       >(g);
 }
 
 /*!
@@ -105,12 +110,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::covers_tag, false>
 covers(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::covers_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::covers_tag,
+	       false
+	       >(g);
 }
 
 /*!
@@ -136,12 +141,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::disjoint_tag, false>
 disjoint(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::disjoint_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::disjoint_tag,
+	       false
+	       >(g);
 }
 
 /*!
@@ -169,12 +174,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::intersects_tag, false>
 intersects(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::intersects_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::intersects_tag,
+	       false
+	       >(g);
 }
 
 /*!
@@ -200,12 +205,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::overlaps_tag, false>
 overlaps(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::overlaps_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::overlaps_tag,
+	       false
+	       >(g);
 }
 
 #ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
@@ -228,12 +233,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::touches_tag, false>
 touches(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::touches_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::touches_tag,
+	       false
+	       >(g);
 }
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
@@ -261,12 +266,12 @@ template <typename Geometry> inline
 detail::predicates::spatial_predicate<Geometry, detail::predicates::within_tag, false>
 within(Geometry const& g)
 {
-    return detail::predicates::spatial_predicate
-                <
-                    Geometry,
-                    detail::predicates::within_tag,
-                    false
-                >(g);
+	return detail::predicates::spatial_predicate
+	       <
+	       Geometry,
+	       detail::predicates::within_tag,
+	       false
+	       >(g);
 }
 
 /*!
@@ -306,7 +311,7 @@ template <typename UnaryPredicate> inline
 detail::predicates::satisfies<UnaryPredicate, false>
 satisfies(UnaryPredicate const& pred)
 {
-    return detail::predicates::satisfies<UnaryPredicate, false>(pred);
+	return detail::predicates::satisfies<UnaryPredicate, false>(pred);
 }
 
 /*!
@@ -336,7 +341,7 @@ template <typename Geometry> inline
 detail::predicates::nearest<Geometry>
 nearest(Geometry const& geometry, unsigned k)
 {
-    return detail::predicates::nearest<Geometry>(geometry, k);
+	return detail::predicates::nearest<Geometry>(geometry, k);
 }
 
 #ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
@@ -366,12 +371,15 @@ template <typename SegmentOrLinestring> inline
 detail::predicates::path<SegmentOrLinestring>
 path(SegmentOrLinestring const& linestring, unsigned k)
 {
-    return detail::predicates::path<SegmentOrLinestring>(linestring, k);
+	return detail::predicates::path<SegmentOrLinestring>(linestring, k);
 }
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
 
-namespace detail { namespace predicates {
+namespace detail
+{
+namespace predicates
+{
 
 // operator! generators
 
@@ -379,51 +387,54 @@ template <typename Fun, bool Negated> inline
 satisfies<Fun, !Negated>
 operator!(satisfies<Fun, Negated> const& p)
 {
-    return satisfies<Fun, !Negated>(p);
+	return satisfies<Fun, !Negated>(p);
 }
 
 template <typename Geometry, typename Tag, bool Negated> inline
 spatial_predicate<Geometry, Tag, !Negated>
 operator!(spatial_predicate<Geometry, Tag, Negated> const& p)
 {
-    return spatial_predicate<Geometry, Tag, !Negated>(p.geometry);
+	return spatial_predicate<Geometry, Tag, !Negated>(p.geometry);
 }
 
 // operator&& generators
 
 template <typename Pred1, typename Pred2> inline
 boost::tuples::cons<
-    Pred1,
-    boost::tuples::cons<Pred2, boost::tuples::null_type>
+Pred1,
+boost::tuples::cons<Pred2, boost::tuples::null_type>
 >
 operator&&(Pred1 const& p1, Pred2 const& p2)
 {
-    /*typedef typename boost::mpl::if_c<is_predicate<Pred1>::value, Pred1, Pred1 const&>::type stored1;
-    typedef typename boost::mpl::if_c<is_predicate<Pred2>::value, Pred2, Pred2 const&>::type stored2;*/
-    namespace bt = boost::tuples;
+	/*typedef typename boost::mpl::if_c<is_predicate<Pred1>::value, Pred1, Pred1 const&>::type stored1;
+	typedef typename boost::mpl::if_c<is_predicate<Pred2>::value, Pred2, Pred2 const&>::type stored2;*/
+	namespace bt = boost::tuples;
 
-    return
-    bt::cons< Pred1, bt::cons<Pred2, bt::null_type> >
-        ( p1, bt::cons<Pred2, bt::null_type>(p2, bt::null_type()) );
+	return
+	    bt::cons< Pred1, bt::cons<Pred2, bt::null_type> >
+	    ( p1, bt::cons<Pred2, bt::null_type>(p2, bt::null_type()) );
 }
 
 template <typename Head, typename Tail, typename Pred> inline
 typename tuples::push_back<
-    boost::tuples::cons<Head, Tail>, Pred
+boost::tuples::cons<Head, Tail>, Pred
 >::type
 operator&&(boost::tuples::cons<Head, Tail> const& t, Pred const& p)
 {
-    //typedef typename boost::mpl::if_c<is_predicate<Pred>::value, Pred, Pred const&>::type stored;
-    namespace bt = boost::tuples;
+	//typedef typename boost::mpl::if_c<is_predicate<Pred>::value, Pred, Pred const&>::type stored;
+	namespace bt = boost::tuples;
 
-    return
-    tuples::push_back<
-        bt::cons<Head, Tail>, Pred
-    >::apply(t, p);
+	return
+	    tuples::push_back<
+	    bt::cons<Head, Tail>, Pred
+	    >::apply(t, p);
 }
-    
-}} // namespace detail::predicates
 
-}}} // namespace boost::geometry::index
+}
+} // namespace detail::predicates
+
+}
+}
+} // namespace boost::geometry::index
 
 #endif // BOOST_GEOMETRY_INDEX_PREDICATES_HPP

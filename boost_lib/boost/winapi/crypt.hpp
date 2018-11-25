@@ -21,9 +21,13 @@
 #endif
 
 #if !defined( BOOST_USE_WINDOWS_H )
-namespace boost { namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 typedef ULONG_PTR_ HCRYPTPROV_;
-}}
+}
+}
 
 // Some versions of MinGW contain buggy declarations of CryptEnumProvidersA and CryptEnumProvidersW.
 // We cannot detect those broken versions, and we can't include the system header because it's incomplete.
@@ -37,69 +41,69 @@ extern "C" {
 #if BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
 #if !defined( BOOST_NO_ANSI_APIS )
 #if !defined( BOOST_WINAPI_IS_MINGW ) || !defined( UNICODE )
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptEnumProvidersA(
-    boost::winapi::DWORD_ dwIndex,
-    boost::winapi::DWORD_ *pdwReserved,
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::DWORD_ *pdwProvType,
-    boost::winapi::LPSTR_ szProvName,
-    boost::winapi::DWORD_ *pcbProvName);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptEnumProvidersA(
+	    boost::winapi::DWORD_ dwIndex,
+	    boost::winapi::DWORD_ *pdwReserved,
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::DWORD_ *pdwProvType,
+	    boost::winapi::LPSTR_ szProvName,
+	    boost::winapi::DWORD_ *pcbProvName);
 #else
 // Broken declaration in MinGW
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptEnumProvidersA(
-    boost::winapi::DWORD_ dwIndex,
-    boost::winapi::DWORD_ *pdwReserved,
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::DWORD_ *pdwProvType,
-    boost::winapi::LPWSTR_ szProvName,
-    boost::winapi::DWORD_ *pcbProvName);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptEnumProvidersA(
+	    boost::winapi::DWORD_ dwIndex,
+	    boost::winapi::DWORD_ *pdwReserved,
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::DWORD_ *pdwProvType,
+	    boost::winapi::LPWSTR_ szProvName,
+	    boost::winapi::DWORD_ *pcbProvName);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptAcquireContextA(
-    boost::winapi::HCRYPTPROV_ *phProv,
-    boost::winapi::LPCSTR_ pszContainer,
-    boost::winapi::LPCSTR_ pszProvider,
-    boost::winapi::DWORD_ dwProvType,
-    boost::winapi::DWORD_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptAcquireContextA(
+	    boost::winapi::HCRYPTPROV_ *phProv,
+	    boost::winapi::LPCSTR_ pszContainer,
+	    boost::winapi::LPCSTR_ pszProvider,
+	    boost::winapi::DWORD_ dwProvType,
+	    boost::winapi::DWORD_ dwFlags);
 #endif // !defined( BOOST_NO_ANSI_APIS )
 
 #if !defined( BOOST_WINAPI_IS_MINGW ) || defined( UNICODE )
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptEnumProvidersW(
-    boost::winapi::DWORD_ dwIndex,
-    boost::winapi::DWORD_ *pdwReserved,
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::DWORD_ *pdwProvType,
-    boost::winapi::LPWSTR_ szProvName,
-    boost::winapi::DWORD_ *pcbProvName);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptEnumProvidersW(
+	    boost::winapi::DWORD_ dwIndex,
+	    boost::winapi::DWORD_ *pdwReserved,
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::DWORD_ *pdwProvType,
+	    boost::winapi::LPWSTR_ szProvName,
+	    boost::winapi::DWORD_ *pcbProvName);
 #else
 // Broken declaration in MinGW
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptEnumProvidersW(
-    boost::winapi::DWORD_ dwIndex,
-    boost::winapi::DWORD_ *pdwReserved,
-    boost::winapi::DWORD_ dwFlags,
-    boost::winapi::DWORD_ *pdwProvType,
-    boost::winapi::LPSTR_ szProvName,
-    boost::winapi::DWORD_ *pcbProvName);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptEnumProvidersW(
+	    boost::winapi::DWORD_ dwIndex,
+	    boost::winapi::DWORD_ *pdwReserved,
+	    boost::winapi::DWORD_ dwFlags,
+	    boost::winapi::DWORD_ *pdwProvType,
+	    boost::winapi::LPSTR_ szProvName,
+	    boost::winapi::DWORD_ *pcbProvName);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptAcquireContextW(
-    boost::winapi::HCRYPTPROV_ *phProv,
-    boost::winapi::LPCWSTR_ szContainer,
-    boost::winapi::LPCWSTR_ szProvider,
-    boost::winapi::DWORD_ dwProvType,
-    boost::winapi::DWORD_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptAcquireContextW(
+	    boost::winapi::HCRYPTPROV_ *phProv,
+	    boost::winapi::LPCWSTR_ szContainer,
+	    boost::winapi::LPCWSTR_ szProvider,
+	    boost::winapi::DWORD_ dwProvType,
+	    boost::winapi::DWORD_ dwFlags);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptGenRandom(
-    boost::winapi::HCRYPTPROV_ hProv,
-    boost::winapi::DWORD_ dwLen,
-    boost::winapi::BYTE_ *pbBuffer);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptGenRandom(
+	    boost::winapi::HCRYPTPROV_ hProv,
+	    boost::winapi::DWORD_ dwLen,
+	    boost::winapi::BYTE_ *pbBuffer);
 #endif // BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
 
 #if BOOST_WINAPI_PARTITION_APP_SYSTEM
@@ -107,22 +111,24 @@ CryptGenRandom(
 // Standalone MS Windows SDK 6.0A and later until 10.0 provide a different declaration of CryptReleaseContext for Windows 2000 and older.
 // This is not the case for (a) MinGW and MinGW-w64, (b) MSVC 7.1 and 8, which are shipped with their own Windows SDK,
 // and (c) MSVC 14.0 and later, which are used with Windows SDK 10.
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptReleaseContext(
-    boost::winapi::HCRYPTPROV_ hProv,
-    boost::winapi::ULONG_PTR_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptReleaseContext(
+	    boost::winapi::HCRYPTPROV_ hProv,
+	    boost::winapi::ULONG_PTR_ dwFlags);
 #else
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-CryptReleaseContext(
-    boost::winapi::HCRYPTPROV_ hProv,
-    boost::winapi::DWORD_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	CryptReleaseContext(
+	    boost::winapi::HCRYPTPROV_ hProv,
+	    boost::winapi::DWORD_ dwFlags);
 #endif
 #endif // BOOST_WINAPI_PARTITION_APP_SYSTEM
 }
 #endif // !defined( BOOST_USE_WINDOWS_H )
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined( BOOST_USE_WINDOWS_H )
 
@@ -169,7 +175,7 @@ BOOST_FORCEINLINE BOOL_ CryptEnumProvidersA(
     LPSTR_ szProvName,
     DWORD_ *pcbProvName)
 {
-    return ::CryptEnumProvidersA(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
+	return ::CryptEnumProvidersA(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
 }
 
 BOOST_FORCEINLINE BOOL_ crypt_enum_providers(
@@ -180,7 +186,7 @@ BOOST_FORCEINLINE BOOL_ crypt_enum_providers(
     LPSTR_ szProvName,
     DWORD_ *pcbProvName)
 {
-    return ::CryptEnumProvidersA(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
+	return ::CryptEnumProvidersA(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
 }
 
 BOOST_FORCEINLINE BOOL_ crypt_acquire_context(
@@ -190,7 +196,7 @@ BOOST_FORCEINLINE BOOL_ crypt_acquire_context(
     DWORD_ dwProvType,
     DWORD_ dwFlags)
 {
-    return ::CryptAcquireContextA(phProv, pszContainer, pszProvider, dwProvType, dwFlags);
+	return ::CryptAcquireContextA(phProv, pszContainer, pszProvider, dwProvType, dwFlags);
 }
 #endif
 
@@ -202,7 +208,7 @@ BOOST_FORCEINLINE BOOL_ CryptEnumProvidersW(
     LPWSTR_ szProvName,
     DWORD_ *pcbProvName)
 {
-    return ::CryptEnumProvidersW(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
+	return ::CryptEnumProvidersW(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
 }
 
 BOOST_FORCEINLINE BOOL_ crypt_enum_providers(
@@ -213,7 +219,7 @@ BOOST_FORCEINLINE BOOL_ crypt_enum_providers(
     LPWSTR_ szProvName,
     DWORD_ *pcbProvName)
 {
-    return ::CryptEnumProvidersW(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
+	return ::CryptEnumProvidersW(dwIndex, pdwReserved, dwFlags, pdwProvType, winapi::detail::cast_ptr(szProvName), pcbProvName);
 }
 
 BOOST_FORCEINLINE BOOL_ crypt_acquire_context(
@@ -223,7 +229,7 @@ BOOST_FORCEINLINE BOOL_ crypt_acquire_context(
     DWORD_ dwProvType,
     DWORD_ dwFlags)
 {
-    return ::CryptAcquireContextW(phProv, szContainer, szProvider, dwProvType, dwFlags);
+	return ::CryptAcquireContextW(phProv, szContainer, szProvider, dwProvType, dwFlags);
 }
 
 #endif // BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
@@ -231,7 +237,7 @@ BOOST_FORCEINLINE BOOL_ crypt_acquire_context(
 #if BOOST_WINAPI_PARTITION_APP_SYSTEM
 BOOST_FORCEINLINE BOOL_ CryptReleaseContext(HCRYPTPROV_ hProv, DWORD_ dwFlags)
 {
-    return ::CryptReleaseContext(hProv, dwFlags);
+	return ::CryptReleaseContext(hProv, dwFlags);
 }
 #endif
 

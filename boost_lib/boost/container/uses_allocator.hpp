@@ -14,8 +14,10 @@
 #include <boost/container/uses_allocator_fwd.hpp>
 #include <boost/container/detail/type_traits.hpp>
 
-namespace boost {
-namespace container {
+namespace boost
+{
+namespace container
+{
 
 //! <b>Remark</b>: if a specialization constructible_with_allocator_suffix<X>::value is true, indicates that T may be constructed
 //! with an allocator as its last constructor argument.  Ideally, all constructors of T (including the
@@ -58,7 +60,9 @@ namespace container {
 //! to detect if a type should be constructed with suffix or prefix allocator arguments.
 template <class T>
 struct constructible_with_allocator_suffix
-{  static const bool value = false; };
+{
+	static const bool value = false;
+};
 
 //! <b>Remark</b>: if a specialization constructible_with_allocator_prefix<X>::value is true, indicates that T may be constructed
 //! with allocator_arg and T::allocator_type as its first two constructor arguments.
@@ -108,41 +112,47 @@ struct constructible_with_allocator_suffix
 //! to detect if a type should be constructed with suffix or prefix allocator arguments.
 template <class T>
 struct constructible_with_allocator_prefix
-{  static const bool value = false; };
+{
+	static const bool value = false;
+};
 
 #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
-namespace dtl {
+namespace dtl
+{
 
 template<typename T, typename Allocator>
 struct uses_allocator_imp
 {
-   // Use SFINAE (Substitution Failure Is Not An Error) to detect the
-   // presence of an 'allocator_type' nested type convertilble from Allocator.
-   private:
-   typedef char yes_type;
-   struct no_type{ char dummy[2]; };
+	// Use SFINAE (Substitution Failure Is Not An Error) to detect the
+	// presence of an 'allocator_type' nested type convertilble from Allocator.
+private:
+	typedef char yes_type;
+	struct no_type
+	{
+		char dummy[2];
+	};
 
-   // Match this function if T::allocator_type exists and is
-   // implicitly convertible from Allocator
-   template <class U>
-   static yes_type test(typename U::allocator_type);
+	// Match this function if T::allocator_type exists and is
+	// implicitly convertible from Allocator
+	template <class U>
+	static yes_type test(typename U::allocator_type);
 
-   // Match this function if T::allocator_type exists and it's type is `erased_type`.
-   template <class U, class V>
-   static typename dtl::enable_if
-      < dtl::is_same<typename U::allocator_type, erased_type>
-      , yes_type
-      >::type  test(const V&);
+	// Match this function if T::allocator_type exists and it's type is `erased_type`.
+	template <class U, class V>
+	static typename dtl::enable_if
+	< dtl::is_same<typename U::allocator_type, erased_type>
+	, yes_type
+	>::type  test(const V&);
 
-   // Match this function if TypeT::allocator_type does not exist or is
-   // not convertible from Allocator.
-   template <typename U>
-   static no_type test(...);
-   static Allocator alloc;  // Declared but not defined
+	// Match this function if TypeT::allocator_type does not exist or is
+	// not convertible from Allocator.
+	template <typename U>
+	static no_type test(...);
+	static Allocator alloc;  // Declared but not defined
 
-   public:
-   static const bool value = sizeof(test<T>(alloc)) == sizeof(yes_type);
+public:
+	static const bool value = sizeof(test<T>(alloc)) == sizeof(yes_type);
 };
 
 }  //namespace dtl {
@@ -161,9 +171,10 @@ struct uses_allocator_imp
 //! is an alias `erased_type`. False otherwise.
 template <typename T, typename Allocator>
 struct uses_allocator
-   : dtl::uses_allocator_imp<T, Allocator>
+	: dtl::uses_allocator_imp<T, Allocator>
 {};
 
-}} //namespace boost::container
+}
+} //namespace boost::container
 
 #endif   //BOOST_CONTAINER_USES_ALLOCATOR_HPP

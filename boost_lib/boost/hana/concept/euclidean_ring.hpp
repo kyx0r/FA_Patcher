@@ -21,15 +21,15 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    template <typename R>
-    struct EuclideanRing
-        : hana::integral_constant<bool,
-            !is_default<mod_impl<typename tag_of<R>::type,
-                                 typename tag_of<R>::type>>::value &&
-            !is_default<div_impl<typename tag_of<R>::type,
-                                 typename tag_of<R>::type>>::value
-        >
-    { };
+template <typename R>
+struct EuclideanRing
+	: hana::integral_constant<bool,
+	  !is_default<mod_impl<typename tag_of<R>::type,
+	  typename tag_of<R>::type>>::value &&
+	  !is_default<div_impl<typename tag_of<R>::type,
+	  typename tag_of<R>::type>>::value
+	  >
+{ };
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CONCEPT_EUCLIDEAN_RING_HPP

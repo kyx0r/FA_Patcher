@@ -78,8 +78,8 @@ const version_info_viewer::translation_list version_info_viewer::get_translation
 		//Create string representation of translation value
 		std::wstringstream ss;
 		ss << std::hex
-			<< std::setw(4) << std::setfill(L'0') << (*it).first
-			<< std::setw(4) << std::setfill(L'0') <<  (*it).second;
+		   << std::setw(4) << std::setfill(L'0') << (*it).first
+		   << std::setw(4) << std::setfill(L'0') <<  (*it).second;
 
 		//Save it
 		ret.push_back(ss.str());
@@ -104,7 +104,7 @@ const std::wstring version_info_viewer::get_property(const std::wstring& propert
 
 		return ret;
 	}
-	
+
 	lang_string_values_map::const_iterator it = strings_.begin();
 
 	if(translation.empty())
@@ -125,7 +125,7 @@ const std::wstring version_info_viewer::get_property(const std::wstring& propert
 			return ret;
 		}
 	}
-	
+
 	//Find value of the required property
 	string_values_map::const_iterator str_it = (*it).second.find(property_name);
 

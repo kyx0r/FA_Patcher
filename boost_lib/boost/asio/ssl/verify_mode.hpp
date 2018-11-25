@@ -20,9 +20,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ssl {
+namespace boost
+{
+namespace asio
+{
+namespace ssl
+{
 
 /// Bitmask type for peer verification.
 /**

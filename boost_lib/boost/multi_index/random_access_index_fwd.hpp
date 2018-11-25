@@ -15,67 +15,70 @@
 
 #include <boost/multi_index/tag.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace multi_index{
+namespace multi_index
+{
 
-namespace detail{
+namespace detail
+{
 
 template<typename SuperMeta,typename TagList>
 class random_access_index;
 
 template<
-  typename SuperMeta1,typename TagList1,
-  typename SuperMeta2,typename TagList2
->
+    typename SuperMeta1,typename TagList1,
+    typename SuperMeta2,typename TagList2
+    >
 bool operator==(
-  const random_access_index<SuperMeta1,TagList1>& x,
-  const random_access_index<SuperMeta2,TagList2>& y);
+    const random_access_index<SuperMeta1,TagList1>& x,
+    const random_access_index<SuperMeta2,TagList2>& y);
 
 template<
-  typename SuperMeta1,typename TagList1,
-  typename SuperMeta2,typename TagList2
->
+    typename SuperMeta1,typename TagList1,
+    typename SuperMeta2,typename TagList2
+    >
 bool operator<(
-  const random_access_index<SuperMeta1,TagList1>& x,
-  const random_access_index<SuperMeta2,TagList2>& y);
+    const random_access_index<SuperMeta1,TagList1>& x,
+    const random_access_index<SuperMeta2,TagList2>& y);
 
 template<
-  typename SuperMeta1,typename TagList1,
-  typename SuperMeta2,typename TagList2
->
+    typename SuperMeta1,typename TagList1,
+    typename SuperMeta2,typename TagList2
+    >
 bool operator!=(
-  const random_access_index<SuperMeta1,TagList1>& x,
-  const random_access_index<SuperMeta2,TagList2>& y);
+    const random_access_index<SuperMeta1,TagList1>& x,
+    const random_access_index<SuperMeta2,TagList2>& y);
 
 template<
-  typename SuperMeta1,typename TagList1,
-  typename SuperMeta2,typename TagList2
->
+    typename SuperMeta1,typename TagList1,
+    typename SuperMeta2,typename TagList2
+    >
 bool operator>(
-  const random_access_index<SuperMeta1,TagList1>& x,
-  const random_access_index<SuperMeta2,TagList2>& y);
+    const random_access_index<SuperMeta1,TagList1>& x,
+    const random_access_index<SuperMeta2,TagList2>& y);
 
 template<
-  typename SuperMeta1,typename TagList1,
-  typename SuperMeta2,typename TagList2
->
+    typename SuperMeta1,typename TagList1,
+    typename SuperMeta2,typename TagList2
+    >
 bool operator>=(
-  const random_access_index<SuperMeta1,TagList1>& x,
-  const random_access_index<SuperMeta2,TagList2>& y);
+    const random_access_index<SuperMeta1,TagList1>& x,
+    const random_access_index<SuperMeta2,TagList2>& y);
 
 template<
-  typename SuperMeta1,typename TagList1,
-  typename SuperMeta2,typename TagList2
->
+    typename SuperMeta1,typename TagList1,
+    typename SuperMeta2,typename TagList2
+    >
 bool operator<=(
-  const random_access_index<SuperMeta1,TagList1>& x,
-  const random_access_index<SuperMeta2,TagList2>& y);
+    const random_access_index<SuperMeta1,TagList1>& x,
+    const random_access_index<SuperMeta2,TagList2>& y);
 
 template<typename SuperMeta,typename TagList>
 void swap(
-  random_access_index<SuperMeta,TagList>& x,
-  random_access_index<SuperMeta,TagList>& y);
+    random_access_index<SuperMeta,TagList>& x,
+    random_access_index<SuperMeta,TagList>& y);
 
 } /* namespace multi_index::detail */
 

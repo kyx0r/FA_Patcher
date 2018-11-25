@@ -24,9 +24,12 @@
 #include <boost/compute/detail/work_size.hpp>
 #include <boost/compute/detail/vendor.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class OutputIterator>
 inline event copy_on_device_cpu(InputIterator first,
@@ -34,25 +37,25 @@ inline event copy_on_device_cpu(InputIterator first,
                                 size_t count,
                                 command_queue &queue)
 {
-    meta_kernel k("copy");
-    const device& device = queue.get_device();
+	meta_kernel k("copy");
+	const device& device = queue.get_device();
 
-    k <<
-        "uint block = " <<
-            "(uint)ceil(((float)count)/get_global_size(0));\n" <<
-        "uint index = get_global_id(0) * block;\n" <<
-        "uint end = min(count, index + block);\n" <<
-        "while(index < end){\n" <<
-            result[k.var<uint_>("index")] << '=' <<
-                first[k.var<uint_>("index")] << ";\n" <<
-            "index++;\n" <<
-        "}\n";
+	k <<
+	  "uint block = " <<
+	  "(uint)ceil(((float)count)/get_global_size(0));\n" <<
+	  "uint index = get_global_id(0) * block;\n" <<
+	  "uint end = min(count, index + block);\n" <<
+	  "while(index < end){\n" <<
+	  result[k.var<uint_>("index")] << '=' <<
+	  first[k.var<uint_>("index")] << ";\n" <<
+	  "index++;\n" <<
+	  "}\n";
 
-    k.add_set_arg<const uint_>("count", static_cast<uint_>(count));
+	k.add_set_arg<const uint_>("count", static_cast<uint_>(count));
 
-    size_t global_work_size = device.compute_units();
-    if(count <= 1024) global_work_size = 1;
-    return k.exec_1d(queue, 0, global_work_size);
+	size_t global_work_size = device.compute_units();
+	if(count <= 1024) global_work_size = 1;
+	return k.exec_1d(queue, 0, global_work_size);
 }
 
 template<class InputIterator, class OutputIterator>
@@ -61,32 +64,32 @@ inline event copy_on_device_gpu(InputIterator first,
                                 size_t count,
                                 command_queue &queue)
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type input_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type input_type;
 
-    const device& device = queue.get_device();
-    boost::shared_ptr<parameter_cache> parameters =
-        detail::parameter_cache::get_global_cache(device);
-    std::string cache_key =
-        "__boost_copy_kernel_" + boost::lexical_cast<std::string>(sizeof(input_type));
+	const device& device = queue.get_device();
+	boost::shared_ptr<parameter_cache> parameters =
+	    detail::parameter_cache::get_global_cache(device);
+	std::string cache_key =
+	    "__boost_copy_kernel_" + boost::lexical_cast<std::string>(sizeof(input_type));
 
-    uint_ vpt = parameters->get(cache_key, "vpt", 4);
-    uint_ tpb = parameters->get(cache_key, "tpb", 128);
+	uint_ vpt = parameters->get(cache_key, "vpt", 4);
+	uint_ tpb = parameters->get(cache_key, "tpb", 128);
 
-    meta_kernel k("copy");
-    k <<
-        "uint index = get_local_id(0) + " <<
-            "(" << vpt * tpb << " * get_group_id(0));\n" <<
-        "for(uint i = 0; i < " << vpt << "; i++){\n" <<
-        "    if(index < count){\n" <<
-                result[k.var<uint_>("index")] << '=' <<
-                    first[k.var<uint_>("index")] << ";\n" <<
-        "       index += " << tpb << ";\n"
-        "    }\n"
-        "}\n";
+	meta_kernel k("copy");
+	k <<
+	  "uint index = get_local_id(0) + " <<
+	  "(" << vpt * tpb << " * get_group_id(0));\n" <<
+	  "for(uint i = 0; i < " << vpt << "; i++){\n" <<
+	  "    if(index < count){\n" <<
+	  result[k.var<uint_>("index")] << '=' <<
+	  first[k.var<uint_>("index")] << ";\n" <<
+	  "       index += " << tpb << ";\n"
+	  "    }\n"
+	  "}\n";
 
-    k.add_set_arg<const uint_>("count", static_cast<uint_>(count));
-    size_t global_work_size = calculate_work_size(count, vpt, tpb);
-    return k.exec_1d(queue, 0, global_work_size, tpb);
+	k.add_set_arg<const uint_>("count", static_cast<uint_>(count));
+	size_t global_work_size = calculate_work_size(count, vpt, tpb);
+	return k.exec_1d(queue, 0, global_work_size, tpb);
 }
 
 template<class InputIterator, class OutputIterator>
@@ -95,22 +98,23 @@ inline event dispatch_copy_on_device(InputIterator first,
                                      OutputIterator result,
                                      command_queue &queue)
 {
-    const size_t count = detail::iterator_range_size(first, last);
+	const size_t count = detail::iterator_range_size(first, last);
 
-    if(count == 0){
-        // nothing to do
-        return event();
-    }
+	if(count == 0)
+	{
+		// nothing to do
+		return event();
+	}
 
-    const device& device = queue.get_device();
-    // copy_on_device_cpu() does not work for CPU on Apple platform
-    // due to bug in its compiler.
-    // See https://github.com/boostorg/compute/pull/626
-    if((device.type() & device::cpu) && !is_apple_platform_device(device))
-    {
-        return copy_on_device_cpu(first, result, count, queue);
-    }
-    return copy_on_device_gpu(first, result, count, queue);
+	const device& device = queue.get_device();
+	// copy_on_device_cpu() does not work for CPU on Apple platform
+	// due to bug in its compiler.
+	// See https://github.com/boostorg/compute/pull/626
+	if((device.type() & device::cpu) && !is_apple_platform_device(device))
+	{
+		return copy_on_device_cpu(first, result, count, queue);
+	}
+	return copy_on_device_gpu(first, result, count, queue);
 }
 
 template<class InputIterator, class OutputIterator>
@@ -119,8 +123,8 @@ inline OutputIterator copy_on_device(InputIterator first,
                                      OutputIterator result,
                                      command_queue &queue)
 {
-    dispatch_copy_on_device(first, last, result, queue);
-    return result + std::distance(first, last);
+	dispatch_copy_on_device(first, last, result, queue);
+	return result + std::distance(first, last);
 }
 
 template<class InputIterator>
@@ -129,19 +133,19 @@ inline discard_iterator copy_on_device(InputIterator first,
                                        discard_iterator result,
                                        command_queue &queue)
 {
-    (void) queue;
+	(void) queue;
 
-    return result + std::distance(first, last);
+	return result + std::distance(first, last);
 }
 
 template<class InputIterator, class OutputIterator>
 inline future<OutputIterator> copy_on_device_async(InputIterator first,
-                                                   InputIterator last,
-                                                   OutputIterator result,
-                                                   command_queue &queue)
+        InputIterator last,
+        OutputIterator result,
+        command_queue &queue)
 {
-    event event_ = dispatch_copy_on_device(first, last, result, queue);
-    return make_future(result + std::distance(first, last), event_);
+	event event_ = dispatch_copy_on_device(first, last, result, queue);
+	return make_future(result + std::distance(first, last), event_);
 }
 
 #ifdef BOOST_COMPUTE_CL_VERSION_2_0
@@ -152,34 +156,36 @@ inline svm_ptr<T> copy_on_device(svm_ptr<T> first,
                                  svm_ptr<T> result,
                                  command_queue &queue)
 {
-    size_t count = iterator_range_size(first, last);
-    if(count == 0){
-        return result;
-    }
+	size_t count = iterator_range_size(first, last);
+	if(count == 0)
+	{
+		return result;
+	}
 
-    queue.enqueue_svm_memcpy(
-        result.get(), first.get(), count * sizeof(T)
-    );
+	queue.enqueue_svm_memcpy(
+	    result.get(), first.get(), count * sizeof(T)
+	);
 
-    return result + count;
+	return result + count;
 }
 
 template<class T>
 inline future<svm_ptr<T> > copy_on_device_async(svm_ptr<T> first,
-                                                svm_ptr<T> last,
-                                                svm_ptr<T> result,
-                                                command_queue &queue)
+        svm_ptr<T> last,
+        svm_ptr<T> result,
+        command_queue &queue)
 {
-    size_t count = iterator_range_size(first, last);
-    if(count == 0){
-        return future<svm_ptr<T> >();
-    }
+	size_t count = iterator_range_size(first, last);
+	if(count == 0)
+	{
+		return future<svm_ptr<T> >();
+	}
 
-    event event_ = queue.enqueue_svm_memcpy_async(
-        result.get(), first.get(), count * sizeof(T)
-    );
+	event event_ = queue.enqueue_svm_memcpy_async(
+	                   result.get(), first.get(), count * sizeof(T)
+	               );
 
-    return make_future(result + count, event_);
+	return make_future(result + count, event_);
 }
 #endif // BOOST_COMPUTE_CL_VERSION_2_0
 

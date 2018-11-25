@@ -21,39 +21,42 @@
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-struct _RTL_CONDITION_VARIABLE;
-struct _RTL_CRITICAL_SECTION;
-struct _RTL_SRWLOCK;
+	struct _RTL_CONDITION_VARIABLE;
+	struct _RTL_CRITICAL_SECTION;
+	struct _RTL_SRWLOCK;
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-InitializeConditionVariable(::_RTL_CONDITION_VARIABLE* ConditionVariable);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	InitializeConditionVariable(::_RTL_CONDITION_VARIABLE* ConditionVariable);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-WakeConditionVariable(::_RTL_CONDITION_VARIABLE* ConditionVariable);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	WakeConditionVariable(::_RTL_CONDITION_VARIABLE* ConditionVariable);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-WakeAllConditionVariable(::_RTL_CONDITION_VARIABLE* ConditionVariable);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	WakeAllConditionVariable(::_RTL_CONDITION_VARIABLE* ConditionVariable);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-SleepConditionVariableCS(
-    ::_RTL_CONDITION_VARIABLE* ConditionVariable,
-    ::_RTL_CRITICAL_SECTION* CriticalSection,
-    boost::winapi::DWORD_ dwMilliseconds);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	SleepConditionVariableCS(
+	    ::_RTL_CONDITION_VARIABLE* ConditionVariable,
+	    ::_RTL_CRITICAL_SECTION* CriticalSection,
+	    boost::winapi::DWORD_ dwMilliseconds);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-SleepConditionVariableSRW(
-    ::_RTL_CONDITION_VARIABLE* ConditionVariable,
-    ::_RTL_SRWLOCK* SRWLock,
-    boost::winapi::DWORD_ dwMilliseconds,
-    boost::winapi::ULONG_ Flags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	SleepConditionVariableSRW(
+	    ::_RTL_CONDITION_VARIABLE* ConditionVariable,
+	    ::_RTL_SRWLOCK* SRWLock,
+	    boost::winapi::DWORD_ dwMilliseconds,
+	    boost::winapi::ULONG_ Flags);
 }
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
-typedef struct BOOST_MAY_ALIAS _RTL_CONDITION_VARIABLE {
-    PVOID_ Ptr;
+typedef struct BOOST_MAY_ALIAS _RTL_CONDITION_VARIABLE
+{
+	PVOID_ Ptr;
 } CONDITION_VARIABLE_, *PCONDITION_VARIABLE_;
 
 #if defined( BOOST_USE_WINDOWS_H )
@@ -67,17 +70,17 @@ struct _RTL_SRWLOCK;
 
 BOOST_FORCEINLINE VOID_ InitializeConditionVariable(PCONDITION_VARIABLE_ ConditionVariable)
 {
-    ::InitializeConditionVariable(reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable));
+	::InitializeConditionVariable(reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable));
 }
 
 BOOST_FORCEINLINE VOID_ WakeConditionVariable(PCONDITION_VARIABLE_ ConditionVariable)
 {
-    ::WakeConditionVariable(reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable));
+	::WakeConditionVariable(reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable));
 }
 
 BOOST_FORCEINLINE VOID_ WakeAllConditionVariable(PCONDITION_VARIABLE_ ConditionVariable)
 {
-    ::WakeAllConditionVariable(reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable));
+	::WakeAllConditionVariable(reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable));
 }
 
 BOOST_FORCEINLINE BOOL_ SleepConditionVariableCS(
@@ -85,10 +88,10 @@ BOOST_FORCEINLINE BOOL_ SleepConditionVariableCS(
     _RTL_CRITICAL_SECTION* CriticalSection,
     DWORD_ dwMilliseconds)
 {
-    return ::SleepConditionVariableCS(
-        reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable),
-        reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(CriticalSection),
-        dwMilliseconds);
+	return ::SleepConditionVariableCS(
+	           reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable),
+	           reinterpret_cast< ::_RTL_CRITICAL_SECTION* >(CriticalSection),
+	           dwMilliseconds);
 }
 
 BOOST_FORCEINLINE BOOL_ SleepConditionVariableSRW(
@@ -97,11 +100,11 @@ BOOST_FORCEINLINE BOOL_ SleepConditionVariableSRW(
     DWORD_ dwMilliseconds,
     ULONG_ Flags)
 {
-    return ::SleepConditionVariableSRW(
-        reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable),
-        reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock),
-        dwMilliseconds,
-        Flags);
+	return ::SleepConditionVariableSRW(
+	           reinterpret_cast< ::_RTL_CONDITION_VARIABLE* >(ConditionVariable),
+	           reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock),
+	           dwMilliseconds,
+	           Flags);
 }
 
 #if defined( BOOST_USE_WINDOWS_H )

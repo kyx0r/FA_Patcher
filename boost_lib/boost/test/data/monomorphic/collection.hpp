@@ -20,10 +20,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
-namespace monomorphic {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
+namespace monomorphic
+{
 
 // ************************************************************************** //
 // **************                  collection                  ************** //
@@ -36,31 +40,41 @@ namespace monomorphic {
 //! container with one element will be considered as singletons.
 //! This dataset is constructible with the @ref boost::unit_test::data::make function.
 template<typename C>
-class collection {
-    typedef typename boost::decay<C>::type col_type;
+class collection
+{
+	typedef typename boost::decay<C>::type col_type;
 public:
-    typedef typename col_type::value_type sample;
+	typedef typename col_type::value_type sample;
 
-    enum { arity = 1 };
+	enum { arity = 1 };
 
-    typedef typename col_type::const_iterator iterator;
+	typedef typename col_type::const_iterator iterator;
 
-    //! Constructor consumed a temporary collection or stores a reference 
-    explicit        collection( C&& col ) : m_col( std::forward<C>(col) ) {}
+	//! Constructor consumed a temporary collection or stores a reference
+	explicit        collection( C&& col ) : m_col( std::forward<C>(col) ) {}
 
-    //! Move constructor
-    collection( collection&& c ) : m_col( std::forward<C>( c.m_col ) ) {}
+	//! Move constructor
+	collection( collection&& c ) : m_col( std::forward<C>( c.m_col ) ) {}
 
-    //! Returns the underlying collection
-    C const&        col() const             { return m_col; }
+	//! Returns the underlying collection
+	C const&        col() const
+	{
+		return m_col;
+	}
 
-    //! dataset interface
-    data::size_t    size() const            { return m_col.size(); }
-    iterator        begin() const           { return m_col.begin(); }
+	//! dataset interface
+	data::size_t    size() const
+	{
+		return m_col.size();
+	}
+	iterator        begin() const
+	{
+		return m_col.begin();
+	}
 
 private:
-    // Data members
-    C               m_col;
+	// Data members
+	C               m_col;
 };
 
 //____________________________________________________________________________//
@@ -76,9 +90,9 @@ struct is_dataset<collection<C>> : mpl::true_ {};
 //! @overload boost::unit_test::data::make()
 template<typename C>
 inline typename std::enable_if<is_container_forward_iterable<C>::value,monomorphic::collection<C>>::type
-make( C&& c )
+        make( C&& c )
 {
-    return monomorphic::collection<C>( std::forward<C>(c) );
+	return monomorphic::collection<C>( std::forward<C>(c) );
 }
 
 } // namespace data

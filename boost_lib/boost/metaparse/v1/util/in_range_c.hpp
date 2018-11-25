@@ -10,28 +10,28 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <class T, T LowerBound, T UpperBound>
-        struct in_range_c
-        {
-          typedef in_range_c type;
-        
-          template <class Item>
-          struct apply :
-            boost::mpl::bool_<(
-              LowerBound <= Item::type::value
-              && Item::type::value <= UpperBound
-            )>
-          {};
-        };
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <class T, T LowerBound, T UpperBound>
+struct in_range_c
+{
+	typedef in_range_c type;
+
+	template <class Item>
+	struct apply :
+	boost::mpl::bool_<(
+	    LowerBound <= Item::type::value
+	    && Item::type::value <= UpperBound
+	)>
+	{};
+};
+}
+}
+}
 }
 
 #endif

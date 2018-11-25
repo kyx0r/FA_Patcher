@@ -18,8 +18,10 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/system.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 ///
 /// \brief Substring matching algorithm
@@ -42,30 +44,30 @@ inline TextIterator search(TextIterator t_first,
                            PatternIterator p_last,
                            command_queue &queue = system::default_queue())
 {
-    // there is no need to check if pattern starts at last n - 1 indices
-    vector<uint_> matching_indices(
-        detail::iterator_range_size(t_first, t_last)
-            - detail::iterator_range_size(p_first, p_last) + 1,
-        queue.get_context()
-    );
+	// there is no need to check if pattern starts at last n - 1 indices
+	vector<uint_> matching_indices(
+	    detail::iterator_range_size(t_first, t_last)
+	    - detail::iterator_range_size(p_first, p_last) + 1,
+	    queue.get_context()
+	);
 
-    // search_kernel puts value 1 at every index in vector where pattern starts at
-    detail::search_kernel<PatternIterator,
-                          TextIterator,
-                          vector<uint_>::iterator> kernel;
+	// search_kernel puts value 1 at every index in vector where pattern starts at
+	detail::search_kernel<PatternIterator,
+	       TextIterator,
+	       vector<uint_>::iterator> kernel;
 
-    kernel.set_range(p_first, p_last, t_first, t_last, matching_indices.begin());
-    kernel.exec(queue);
+	kernel.set_range(p_first, p_last, t_first, t_last, matching_indices.begin());
+	kernel.exec(queue);
 
-    vector<uint_>::iterator index = ::boost::compute::find(
-        matching_indices.begin(), matching_indices.end(), uint_(1), queue
-    );
+	vector<uint_>::iterator index = ::boost::compute::find(
+	                                    matching_indices.begin(), matching_indices.end(), uint_(1), queue
+	                                );
 
-    // pattern was not found
-    if(index == matching_indices.end())
-        return t_last;
+	// pattern was not found
+	if(index == matching_indices.end())
+		return t_last;
 
-    return t_first + detail::iterator_range_size(matching_indices.begin(), index);
+	return t_first + detail::iterator_range_size(matching_indices.begin(), index);
 }
 
 } //end compute namespace

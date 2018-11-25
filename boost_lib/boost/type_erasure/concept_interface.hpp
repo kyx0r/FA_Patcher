@@ -11,8 +11,10 @@
 #ifndef BOOST_TYPE_ERASURE_CONCEPT_INTERFACE_HPP_INCLUDED
 #define BOOST_TYPE_ERASURE_CONCEPT_INTERFACE_HPP_INCLUDED
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * The @ref concept_interface class can be specialized to

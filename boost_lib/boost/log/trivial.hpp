@@ -31,21 +31,23 @@
 #error Boost.Log: Trivial logging is available for narrow-character builds only. Use advanced initialization routines to setup wide-character logging.
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace trivial {
+namespace trivial
+{
 
 //! Trivial severity levels
 enum severity_level
 {
-    trace,
-    debug,
-    info,
-    warning,
-    error,
-    fatal
+	trace,
+	debug,
+	info,
+	warning,
+	error,
+	fatal
 };
 
 //! Returns stringized enumeration value or \c NULL, if the value is not valid
@@ -56,12 +58,12 @@ template< typename CharT, typename TraitsT >
 inline std::basic_ostream< CharT, TraitsT >& operator<< (
     std::basic_ostream< CharT, TraitsT >& strm, severity_level lvl)
 {
-    const char* str = boost::log::trivial::to_string(lvl);
-    if (str)
-        strm << str;
-    else
-        strm << static_cast< int >(lvl);
-    return strm;
+	const char* str = boost::log::trivial::to_string(lvl);
+	if (str)
+		strm << str;
+	else
+		strm << static_cast< int >(lvl);
+	return strm;
 }
 
 //! Reads stringized representation of the severity level from the stream
@@ -84,19 +86,22 @@ typedef sources::severity_logger< severity_level > logger_type;
  */
 struct logger
 {
-    //! Logger type
-    typedef trivial::logger_type logger_type;
+	//! Logger type
+	typedef trivial::logger_type logger_type;
 
-    /*!
-     * Returns a reference to the trivial logger instance
-     */
-    static BOOST_LOG_API logger_type& get();
+	/*!
+	 * Returns a reference to the trivial logger instance
+	 */
+	static BOOST_LOG_API logger_type& get();
 
-    // Implementation details - never use these
+	// Implementation details - never use these
 #if !defined(BOOST_LOG_DOXYGEN_PASS)
-    enum registration_line_t { registration_line = __LINE__ };
-    static const char* registration_file() { return __FILE__; }
-    static BOOST_LOG_API logger_type construct_logger();
+	enum registration_line_t { registration_line = __LINE__ };
+	static const char* registration_file()
+	{
+		return __FILE__;
+	}
+	static BOOST_LOG_API logger_type construct_logger();
 #endif
 };
 

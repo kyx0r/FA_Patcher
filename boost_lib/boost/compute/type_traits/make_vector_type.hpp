@@ -15,8 +15,10 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Meta-function which returns a vector type for \p Scalar with \p Size.
 ///
@@ -36,7 +38,7 @@ struct make_vector_type
 template<class Scalar>
 struct make_vector_type<Scalar, 1>
 {
-    typedef Scalar type;
+	typedef Scalar type;
 };
 
 /// \internal_

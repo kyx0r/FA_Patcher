@@ -14,7 +14,9 @@
 
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 // Meta-function to access segment-ratio for a policy
@@ -22,7 +24,8 @@ template <typename Point, typename Policy>
 struct segment_ratio_type {}; // : not_implemented<> {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_POLICIES_ROBUSTNESS_SEGMENT_RATIO_TYPE_HPP

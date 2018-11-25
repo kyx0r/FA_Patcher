@@ -20,7 +20,7 @@ namespace mp11
 // mp_identity
 template<class T> struct mp_identity
 {
-    using type = T;
+	using type = T;
 };
 
 // mp_identity_t
@@ -39,12 +39,12 @@ template<bool C, class T, class... E> struct mp_if_c_impl
 
 template<class T, class... E> struct mp_if_c_impl<true, T, E...>
 {
-    using type = T;
+	using type = T;
 };
 
 template<class T, class E> struct mp_if_c_impl<false, T, E>
 {
-    using type = E;
+	using type = E;
 };
 
 } // namespace detail
@@ -81,10 +81,10 @@ namespace detail
 
 template<template<class...> class F, class... T> struct mp_valid_impl
 {
-    template<template<class...> class G, class = G<T...>> static mp_true check(int);
-    template<template<class...> class> static mp_false check(...);
+	template<template<class...> class G, class = G<T...>> static mp_true check(int);
+	template<template<class...> class> static mp_false check(...);
 
-    using type = decltype(check<F>(0));
+	using type = decltype(check<F>(0));
 };
 
 } // namespace detail
@@ -99,7 +99,7 @@ namespace detail
 
 template<template<class...> class F, class... T> struct mp_defer_impl
 {
-    using type = F<T...>;
+	using type = F<T...>;
 };
 
 struct mp_no_type
@@ -118,7 +118,7 @@ template<bool C, class T, template<class...> class F, class... U> struct mp_eval
 
 template<class T, template<class...> class F, class... U> struct mp_eval_if_c_impl<true, T, F, U...>
 {
-    using type = T;
+	using type = T;
 };
 
 template<class T, template<class...> class F, class... U> struct mp_eval_if_c_impl<false, T, F, U...>: mp_defer<F, U...>
@@ -159,16 +159,16 @@ template<class C, class T, class... E> struct mp_cond_impl: mp_defer<mp_cond_, C
 // mp_quote
 template<template<class...> class F> struct mp_quote
 {
-    // the indirection through mp_defer works around the language inability
-    // to expand T... into a fixed parameter list of an alias template
+	// the indirection through mp_defer works around the language inability
+	// to expand T... into a fixed parameter list of an alias template
 
-    template<class... T> using fn = typename mp_defer<F, T...>::type;
+	template<class... T> using fn = typename mp_defer<F, T...>::type;
 };
 
 // mp_quote_trait
 template<template<class...> class F> struct mp_quote_trait
 {
-    template<class... T> using fn = typename F<T...>::type;
+	template<class... T> using fn = typename F<T...>::type;
 };
 
 // mp_invoke

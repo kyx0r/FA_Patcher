@@ -13,22 +13,22 @@
 #include <boost/tti/gen/namespace_gen.hpp>
 
 namespace boost
-  {
-  namespace tti
-    {
-    namespace detail
-      {
-      template <class BOOST_TTI_DETAIL_TP_T>
-      struct is_lambda_expression :
-        boost::mpl::or_
-          <
-          BOOST_TTI_NAMESPACE::detail::is_metafunction_class<BOOST_TTI_DETAIL_TP_T>,
-          BOOST_TTI_NAMESPACE::detail::is_placeholder_expression<BOOST_TTI_DETAIL_TP_T>
-          >
-        {
-        };
-      }
-    }
-  }
-  
+{
+namespace tti
+{
+namespace detail
+{
+template <class BOOST_TTI_DETAIL_TP_T>
+struct is_lambda_expression :
+	boost::mpl::or_
+	<
+	BOOST_TTI_NAMESPACE::detail::is_metafunction_class<BOOST_TTI_DETAIL_TP_T>,
+	BOOST_TTI_NAMESPACE::detail::is_placeholder_expression<BOOST_TTI_DETAIL_TP_T>
+	>
+{
+};
+}
+}
+}
+
 #endif // BOOST_TTI_DETAIL_LAMBDA_HPP

@@ -19,7 +19,7 @@ namespace detail
 
 template<class... T> struct mp_void_impl
 {
-    using type = void;
+	using type = void;
 };
 
 } // namespace detail

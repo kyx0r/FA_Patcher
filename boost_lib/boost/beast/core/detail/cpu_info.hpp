@@ -28,9 +28,12 @@
 #include <cpuid.h>  // __get_cpuid
 #endif
 
-namespace boost {
-namespace beast {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace detail
+{
 
 /*  Portions from Boost,
     Copyright Andrey Semashev 2007 - 2015.
@@ -45,49 +48,49 @@ cpuid(
     std::uint32_t& edx)
 {
 #ifdef BOOST_MSVC
-    int regs[4];
-    __cpuid(regs, id);
-    eax = regs[0];
-    ebx = regs[1];
-    ecx = regs[2];
-    edx = regs[3];
+	int regs[4];
+	__cpuid(regs, id);
+	eax = regs[0];
+	ebx = regs[1];
+	ecx = regs[2];
+	edx = regs[3];
 #else
-    __get_cpuid(id, &eax, &ebx, &ecx, &edx);
+	__get_cpuid(id, &eax, &ebx, &ecx, &edx);
 #endif
 }
 
 struct cpu_info
 {
-    bool sse42 = false;
+	bool sse42 = false;
 
-    cpu_info();
+	cpu_info();
 };
 
 inline
 cpu_info::
 cpu_info()
 {
-    constexpr std::uint32_t SSE42 = 1 << 20;
+	constexpr std::uint32_t SSE42 = 1 << 20;
 
-    std::uint32_t eax = 0;
-    std::uint32_t ebx = 0;
-    std::uint32_t ecx = 0;
-    std::uint32_t edx = 0;
+	std::uint32_t eax = 0;
+	std::uint32_t ebx = 0;
+	std::uint32_t ecx = 0;
+	std::uint32_t edx = 0;
 
-    cpuid(0, eax, ebx, ecx, edx);
-    if(eax >= 1)
-    {
-        cpuid(1, eax, ebx, ecx, edx);
-        sse42 = (ecx & SSE42) != 0;
-    }
+	cpuid(0, eax, ebx, ecx, edx);
+	if(eax >= 1)
+	{
+		cpuid(1, eax, ebx, ecx, edx);
+		sse42 = (ecx & SSE42) != 0;
+	}
 }
 
 template<class = void>
 cpu_info const&
 get_cpu_info()
 {
-    static cpu_info const ci;
-    return ci;
+	static cpu_info const ci;
+	return ci;
 }
 
 } // detail

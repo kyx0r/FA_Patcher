@@ -29,49 +29,49 @@ namespace boost
 
 //  polymorphic_pointer_downcast  --------------------------------------------//
 
-    //  BOOST_ASSERT() checked polymorphic downcast.  Crosscasts prohibited.
-    //  Supports any type with static_pointer_cast/dynamic_pointer_cast functions:
-    //  built-in pointers, std::shared_ptr, boost::shared_ptr, boost::intrusive_ptr, etc.
+//  BOOST_ASSERT() checked polymorphic downcast.  Crosscasts prohibited.
+//  Supports any type with static_pointer_cast/dynamic_pointer_cast functions:
+//  built-in pointers, std::shared_ptr, boost::shared_ptr, boost::intrusive_ptr, etc.
 
-    //  WARNING: Because this cast uses BOOST_ASSERT(), it violates
-    //  the One Definition Rule if used in multiple translation units
-    //  where BOOST_DISABLE_ASSERTS, BOOST_ENABLE_ASSERT_HANDLER
-    //  NDEBUG are defined inconsistently.
+//  WARNING: Because this cast uses BOOST_ASSERT(), it violates
+//  the One Definition Rule if used in multiple translation units
+//  where BOOST_DISABLE_ASSERTS, BOOST_ENABLE_ASSERT_HANDLER
+//  NDEBUG are defined inconsistently.
 
-    //  Contributed by Boris Rasin
+//  Contributed by Boris Rasin
 
-    namespace detail
-    {
-        template <typename Target, typename Source>
-        struct dynamic_pointer_cast_result
-        {
+namespace detail
+{
+template <typename Target, typename Source>
+struct dynamic_pointer_cast_result
+{
 #ifdef BOOST_NO_CXX11_DECLTYPE
-            BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, dynamic_pointer_cast<Target>(boost::declval<Source>()))
-            typedef typename nested::type type;
+	BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, dynamic_pointer_cast<Target>(boost::declval<Source>()))
+	typedef typename nested::type type;
 #else
-            typedef decltype(dynamic_pointer_cast<Target>(boost::declval<Source>())) type;
+	typedef decltype(dynamic_pointer_cast<Target>(boost::declval<Source>())) type;
 #endif
-        };
-    }
+};
+}
 
-    template <typename Target, typename Source>
-    inline typename detail::dynamic_pointer_cast_result<Target, Source>::type
-    polymorphic_pointer_downcast (const Source& x)
-    {
-        BOOST_ASSERT(dynamic_pointer_cast<Target> (x) == x);
-        return static_pointer_cast<Target> (x);
-    }
+template <typename Target, typename Source>
+inline typename detail::dynamic_pointer_cast_result<Target, Source>::type
+polymorphic_pointer_downcast (const Source& x)
+{
+	BOOST_ASSERT(dynamic_pointer_cast<Target> (x) == x);
+	return static_pointer_cast<Target> (x);
+}
 
-    template <typename Target, typename Source>
-    inline typename detail::dynamic_pointer_cast_result<Target, Source>::type
-    polymorphic_pointer_cast (const Source& x)
-    {
-        typename detail::dynamic_pointer_cast_result<Target, Source>::type tmp
-            = dynamic_pointer_cast<Target> (x);
-        if ( !tmp ) boost::throw_exception( std::bad_cast() );
+template <typename Target, typename Source>
+inline typename detail::dynamic_pointer_cast_result<Target, Source>::type
+polymorphic_pointer_cast (const Source& x)
+{
+	typename detail::dynamic_pointer_cast_result<Target, Source>::type tmp
+	    = dynamic_pointer_cast<Target> (x);
+	if ( !tmp ) boost::throw_exception( std::bad_cast() );
 
-        return tmp;
-    }
+	return tmp;
+}
 
 } // namespace boost
 

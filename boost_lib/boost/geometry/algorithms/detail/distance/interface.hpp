@@ -42,7 +42,9 @@
 #include <boost/geometry/algorithms/dispatch/distance.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -56,34 +58,34 @@ template
 <
     typename Geometry1, typename Geometry2, typename Strategy,
     typename Tag1, typename Tag2, typename StrategyTag
->
+    >
 struct distance
-<
-    Geometry1, Geometry2, Strategy,
-    Tag1, Tag2, StrategyTag,
-    true
->
-    : distance<Geometry2, Geometry1, Strategy, Tag2, Tag1, StrategyTag, false>
+	<
+	Geometry1, Geometry2, Strategy,
+	Tag1, Tag2, StrategyTag,
+	true
+	>
+	: distance<Geometry2, Geometry1, Strategy, Tag2, Tag1, StrategyTag, false>
 {
-    typedef typename strategy::distance::services::return_type
-                     <
-                         Strategy,
-                         typename point_type<Geometry2>::type,
-                         typename point_type<Geometry1>::type
-                     >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy,
+	typename point_type<Geometry2>::type,
+	typename point_type<Geometry1>::type
+	>::type return_type;
 
-    static inline return_type apply(
-        Geometry1 const& g1,
-        Geometry2 const& g2,
-        Strategy const& strategy)
-    {
-        return distance
-            <
-                Geometry2, Geometry1, Strategy,
-                Tag2, Tag1, StrategyTag,
-                false
-            >::apply(g2, g1, strategy);
-    }
+	static inline return_type apply(
+	    Geometry1 const& g1,
+	    Geometry2 const& g2,
+	    Strategy const& strategy)
+	{
+		return distance
+		       <
+		       Geometry2, Geometry1, Strategy,
+		       Tag2, Tag1, StrategyTag,
+		       false
+		       >::apply(g2, g1, strategy);
+	}
 };
 
 
@@ -96,35 +98,35 @@ namespace resolve_strategy
 
 struct distance
 {
-    template <typename Geometry1, typename Geometry2, typename Strategy>
-    static inline typename distance_result<Geometry1, Geometry2, Strategy>::type
-    apply(Geometry1 const& geometry1,
-          Geometry2 const& geometry2,
-          Strategy const& strategy)
-    {
-        return dispatch::distance
-            <
-                Geometry1, Geometry2, Strategy
-            >::apply(geometry1, geometry2, strategy);
-    }
+	template <typename Geometry1, typename Geometry2, typename Strategy>
+	static inline typename distance_result<Geometry1, Geometry2, Strategy>::type
+	apply(Geometry1 const& geometry1,
+	      Geometry2 const& geometry2,
+	      Strategy const& strategy)
+	{
+		return dispatch::distance
+		       <
+		       Geometry1, Geometry2, Strategy
+		       >::apply(geometry1, geometry2, strategy);
+	}
 
-    template <typename Geometry1, typename Geometry2>
-    static inline
-    typename distance_result<Geometry1, Geometry2, default_strategy>::type
-    apply(Geometry1 const& geometry1,
-          Geometry2 const& geometry2,
-          default_strategy)
-    {
-        typedef typename detail::distance::default_strategy
-            <
-                Geometry1, Geometry2
-            >::type strategy_type;
+	template <typename Geometry1, typename Geometry2>
+	static inline
+	typename distance_result<Geometry1, Geometry2, default_strategy>::type
+	apply(Geometry1 const& geometry1,
+	      Geometry2 const& geometry2,
+	      default_strategy)
+	{
+		typedef typename detail::distance::default_strategy
+		<
+		Geometry1, Geometry2
+		>::type strategy_type;
 
-        return dispatch::distance
-            <
-                Geometry1, Geometry2, strategy_type
-            >::apply(geometry1, geometry2, strategy_type());
-    }
+		return dispatch::distance
+		       <
+		       Geometry1, Geometry2, strategy_type
+		       >::apply(geometry1, geometry2, strategy_type());
+	}
 };
 
 } // namespace resolve_strategy
@@ -137,124 +139,124 @@ namespace resolve_variant
 template <typename Geometry1, typename Geometry2>
 struct distance
 {
-    template <typename Strategy>
-    static inline typename distance_result<Geometry1, Geometry2, Strategy>::type
-    apply(Geometry1 const& geometry1,
-          Geometry2 const& geometry2,
-          Strategy const& strategy)
-    {
-        return
-            resolve_strategy::distance::apply(geometry1, geometry2, strategy);
-    }
+	template <typename Strategy>
+	static inline typename distance_result<Geometry1, Geometry2, Strategy>::type
+	apply(Geometry1 const& geometry1,
+	      Geometry2 const& geometry2,
+	      Strategy const& strategy)
+	{
+		return
+		    resolve_strategy::distance::apply(geometry1, geometry2, strategy);
+	}
 };
 
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T), typename Geometry2>
 struct distance<variant<BOOST_VARIANT_ENUM_PARAMS(T)>, Geometry2>
 {
-    template <typename Strategy>
-    struct visitor: static_visitor
-        <
-            typename distance_result
-                <
-                    variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
-                    Geometry2,
-                    Strategy
-                >::type
-        >
-    {
-        Geometry2 const& m_geometry2;
-        Strategy const& m_strategy;
+	template <typename Strategy>
+	struct visitor: static_visitor
+		<
+		typename distance_result
+		<
+	variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
+	Geometry2,
+	Strategy
+	>::type
+	>
+	{
+	    Geometry2 const& m_geometry2;
+	    Strategy const& m_strategy;
 
-        visitor(Geometry2 const& geometry2,
-                Strategy const& strategy)
-            : m_geometry2(geometry2),
-              m_strategy(strategy)
-        {}
+	    visitor(Geometry2 const& geometry2,
+	            Strategy const& strategy)
+	    : m_geometry2(geometry2),
+	    m_strategy(strategy)
+	{}
 
-        template <typename Geometry1>
-        typename distance_result<Geometry1, Geometry2, Strategy>::type
-        operator()(Geometry1 const& geometry1) const
-        {
-            return distance
-                <
-                    Geometry1,
-                    Geometry2
-                >::template apply
-                    <
-                        Strategy
-                    >(geometry1, m_geometry2, m_strategy);
-        }
-    };
+	template <typename Geometry1>
+	typename distance_result<Geometry1, Geometry2, Strategy>::type
+	operator()(Geometry1 const& geometry1) const
+	{
+		return distance
+		       <
+		       Geometry1,
+		       Geometry2
+		       >::template apply
+		       <
+		           Strategy
+		           >(geometry1, m_geometry2, m_strategy);
+	}
+	       };
 
-    template <typename Strategy>
-    static inline typename distance_result
-        <
-            variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
-            Geometry2,
-            Strategy
-        >::type
-    apply(variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry1,
-          Geometry2 const& geometry2,
-          Strategy const& strategy)
-    {
-        return boost::apply_visitor(visitor<Strategy>(geometry2, strategy), geometry1);
-    }
+	template <typename Strategy>
+	static inline typename distance_result
+	<
+	variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
+	        Geometry2,
+	        Strategy
+	        >::type
+	        apply(variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry1,
+	              Geometry2 const& geometry2,
+	              Strategy const& strategy)
+	{
+		return boost::apply_visitor(visitor<Strategy>(geometry2, strategy), geometry1);
+	}
 };
 
 
 template <typename Geometry1, BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct distance<Geometry1, variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    template <typename Strategy>
-    struct visitor: static_visitor
-        <
-            typename distance_result
-                <
-                    Geometry1,
-                    variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
-                    Strategy
-                >::type
-        >
-    {
-        Geometry1 const& m_geometry1;
-        Strategy const& m_strategy;
+	template <typename Strategy>
+	struct visitor: static_visitor
+		<
+		typename distance_result
+		<
+		Geometry1,
+	variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
+	Strategy
+	>::type
+	>
+	{
+	    Geometry1 const& m_geometry1;
+	    Strategy const& m_strategy;
 
-        visitor(Geometry1 const& geometry1,
-                Strategy const& strategy)
-            : m_geometry1(geometry1),
-              m_strategy(strategy)
-        {}
+	    visitor(Geometry1 const& geometry1,
+	            Strategy const& strategy)
+	    : m_geometry1(geometry1),
+	    m_strategy(strategy)
+	{}
 
-        template <typename Geometry2>
-        typename distance_result<Geometry1, Geometry2, Strategy>::type
-        operator()(Geometry2 const& geometry2) const
-        {
-            return distance
-                <
-                    Geometry1,
-                    Geometry2
-                >::template apply
-                <
-                    Strategy
-                >(m_geometry1, geometry2, m_strategy);
-        }
-    };
+	template <typename Geometry2>
+	typename distance_result<Geometry1, Geometry2, Strategy>::type
+	operator()(Geometry2 const& geometry2) const
+	{
+		return distance
+		       <
+		       Geometry1,
+		       Geometry2
+		       >::template apply
+		       <
+		           Strategy
+		           >(m_geometry1, geometry2, m_strategy);
+	}
+	       };
 
-    template <typename Strategy>
-    static inline typename distance_result
-        <
-            Geometry1,
-            variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
-            Strategy
-        >::type
-    apply(
-        Geometry1 const& geometry1,
-        const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry2,
-        Strategy const& strategy)
-    {
-        return boost::apply_visitor(visitor<Strategy>(geometry1, strategy), geometry2);
-    }
+	template <typename Strategy>
+	static inline typename distance_result
+	<
+	Geometry1,
+	variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
+	Strategy
+	>::type
+	apply(
+	    Geometry1 const& geometry1,
+	    const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry2,
+	    Strategy const& strategy)
+	{
+		return boost::apply_visitor(visitor<Strategy>(geometry1, strategy), geometry2);
+	}
 };
 
 
@@ -262,58 +264,58 @@ template
 <
     BOOST_VARIANT_ENUM_PARAMS(typename T1),
     BOOST_VARIANT_ENUM_PARAMS(typename T2)
->
-struct distance
-    <
-        boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)>,
-        boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)>
     >
+struct distance
+	<
+boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)>,
+boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)>
+>
 {
-    template <typename Strategy>
-    struct visitor: static_visitor
-        <
-            typename distance_result
-                <
-                    boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)>,
-                    boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)>,
-                    Strategy
-                >::type
-        >
-    {
-        Strategy const& m_strategy;
+	template <typename Strategy>
+	struct visitor: static_visitor
+		<
+		typename distance_result
+		<
+	boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)>,
+	boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)>,
+	      Strategy
+	      >::type
+	      >
+	      {
+	          Strategy const& m_strategy;
 
-        visitor(Strategy const& strategy)
-            : m_strategy(strategy)
-        {}
+	          visitor(Strategy const& strategy)
+	          : m_strategy(strategy)
+	{}
 
-        template <typename Geometry1, typename Geometry2>
-        typename distance_result<Geometry1, Geometry2, Strategy>::type
-        operator()(Geometry1 const& geometry1, Geometry2 const& geometry2) const
-        {
-            return distance
-                <
-                    Geometry1,
-                    Geometry2
-                >::template apply
-                <
-                    Strategy
-                >(geometry1, geometry2, m_strategy);
-        }
-    };
+	template <typename Geometry1, typename Geometry2>
+	typename distance_result<Geometry1, Geometry2, Strategy>::type
+	operator()(Geometry1 const& geometry1, Geometry2 const& geometry2) const
+	{
+		return distance
+		       <
+		       Geometry1,
+		       Geometry2
+		       >::template apply
+		       <
+		           Strategy
+		           >(geometry1, geometry2, m_strategy);
+	}
+	       };
 
-    template <typename Strategy>
-    static inline typename distance_result
-        <
-            boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)>,
-            boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)>,
-            Strategy
-        >::type
-    apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)> const& geometry1,
-          boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)> const& geometry2,
-          Strategy const& strategy)
-    {
-        return boost::apply_visitor(visitor<Strategy>(strategy), geometry1, geometry2);
-    }
+	template <typename Strategy>
+	static inline typename distance_result
+	<
+	boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)>,
+	      boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)>,
+	      Strategy
+	      >::type
+	      apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T1)> const& geometry1,
+	            boost::variant<BOOST_VARIANT_ENUM_PARAMS(T2)> const& geometry2,
+	            Strategy const& strategy)
+	{
+		return boost::apply_visitor(visitor<Strategy>(strategy), geometry1, geometry2);
+	}
 };
 
 } // namespace resolve_variant
@@ -361,17 +363,17 @@ distance(Geometry1 const& geometry1,
          Geometry2 const& geometry2,
          Strategy const& strategy)
 {
-    concepts::check<Geometry1 const>();
-    concepts::check<Geometry2 const>();
+	concepts::check<Geometry1 const>();
+	concepts::check<Geometry2 const>();
 
-    detail::throw_on_empty_input(geometry1);
-    detail::throw_on_empty_input(geometry2);
+	detail::throw_on_empty_input(geometry1);
+	detail::throw_on_empty_input(geometry2);
 
-    return resolve_variant::distance
-               <
-                   Geometry1,
-                   Geometry2
-               >::apply(geometry1, geometry2, strategy);
+	return resolve_variant::distance
+	       <
+	       Geometry1,
+	       Geometry2
+	       >::apply(geometry1, geometry2, strategy);
 }
 
 
@@ -392,12 +394,13 @@ inline typename default_distance_result<Geometry1, Geometry2>::type
 distance(Geometry1 const& geometry1,
          Geometry2 const& geometry2)
 {
-    concepts::check<Geometry1 const>();
-    concepts::check<Geometry2 const>();
+	concepts::check<Geometry1 const>();
+	concepts::check<Geometry2 const>();
 
-    return geometry::distance(geometry1, geometry2, default_strategy());
+	return geometry::distance(geometry1, geometry2, default_strategy());
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISTANCE_INTERFACE_HPP

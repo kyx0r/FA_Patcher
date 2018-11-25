@@ -32,61 +32,66 @@
 #include <boost/geometry/algorithms/dispatch/is_valid.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 
 template <typename Linestring>
 struct is_valid_linestring
 {
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(Linestring const& linestring,
-                             VisitPolicy& visitor,
-                             Strategy const& strategy)
-    {
-        if (has_invalid_coordinate<Linestring>::apply(linestring, visitor))
-        {
-            return false;
-        }
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(Linestring const& linestring,
+	                         VisitPolicy& visitor,
+	                         Strategy const& strategy)
+	{
+		if (has_invalid_coordinate<Linestring>::apply(linestring, visitor))
+		{
+			return false;
+		}
 
-        if (boost::size(linestring) < 2)
-        {
-            return visitor.template apply<failure_few_points>();
-        }
+		if (boost::size(linestring) < 2)
+		{
+			return visitor.template apply<failure_few_points>();
+		}
 
-        std::size_t num_distinct = detail::num_distinct_consecutive_points
-            <
-                Linestring,
-                3u,
-                true,
-                not_equal_to<typename point_type<Linestring>::type>
-            >::apply(linestring);
+		std::size_t num_distinct = detail::num_distinct_consecutive_points
+		                           <
+		                           Linestring,
+		                           3u,
+		                           true,
+		                           not_equal_to<typename point_type<Linestring>::type>
+		                           >::apply(linestring);
 
-        if (num_distinct < 2u)
-        {
-            return
-                visitor.template apply<failure_wrong_topological_dimension>();
-        }
+		if (num_distinct < 2u)
+		{
+			return
+			    visitor.template apply<failure_wrong_topological_dimension>();
+		}
 
-        if (num_distinct == 2u)
-        {
-            return visitor.template apply<no_failure>();
-        }
+		if (num_distinct == 2u)
+		{
+			return visitor.template apply<no_failure>();
+		}
 
-        return ! has_spikes
-                    <
-                        Linestring, closed
-                    >::apply(linestring, visitor,
-                             strategy.get_side_strategy());
-    }
+		return ! has_spikes
+		       <
+		       Linestring, closed
+		       >::apply(linestring, visitor,
+		                strategy.get_side_strategy());
+	}
 };
 
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -103,7 +108,7 @@ namespace dispatch
 // A curve is simple if it does not pass through the same point twice,
 // with the possible exception of its two endpoints
 //
-// There is an option here as to whether spikes are allowed for linestrings; 
+// There is an option here as to whether spikes are allowed for linestrings;
 // here we pass this as an additional template parameter: allow_spikes
 // If allow_spikes is set to true, spikes are allowed, false otherwise.
 // By default, spikes are disallowed
@@ -111,9 +116,9 @@ namespace dispatch
 // Reference: OGC 06-103r4 (6.1.6.1)
 template <typename Linestring, bool AllowEmptyMultiGeometries>
 struct is_valid
-    <
-        Linestring, linestring_tag, AllowEmptyMultiGeometries
-    > : detail::is_valid::is_valid_linestring<Linestring>
+	<
+	Linestring, linestring_tag, AllowEmptyMultiGeometries
+	> : detail::is_valid::is_valid_linestring<Linestring>
 {};
 
 
@@ -125,54 +130,54 @@ struct is_valid
 // Reference: OGC 06-103r4 (6.1.8.1; Fig. 9)
 template <typename MultiLinestring, bool AllowEmptyMultiGeometries>
 class is_valid
-    <
-        MultiLinestring, multi_linestring_tag, AllowEmptyMultiGeometries
-    >
+	<
+	MultiLinestring, multi_linestring_tag, AllowEmptyMultiGeometries
+	>
 {
 private:
-    template <typename VisitPolicy, typename Strategy>
-    struct per_linestring
-    {
-        per_linestring(VisitPolicy& policy, Strategy const& strategy)
-            : m_policy(policy)
-            , m_strategy(strategy)
-        {}
+	template <typename VisitPolicy, typename Strategy>
+	struct per_linestring
+	{
+		per_linestring(VisitPolicy& policy, Strategy const& strategy)
+			: m_policy(policy)
+			, m_strategy(strategy)
+		{}
 
-        template <typename Linestring>
-        inline bool apply(Linestring const& linestring) const
-        {
-            return detail::is_valid::is_valid_linestring
-                <
-                    Linestring
-                >::apply(linestring, m_policy, m_strategy);
-        }
+		template <typename Linestring>
+		inline bool apply(Linestring const& linestring) const
+		{
+			return detail::is_valid::is_valid_linestring
+			       <
+			       Linestring
+			       >::apply(linestring, m_policy, m_strategy);
+		}
 
-        VisitPolicy& m_policy;
-        Strategy const& m_strategy;
-    };
+		VisitPolicy& m_policy;
+		Strategy const& m_strategy;
+	};
 
 public:
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(MultiLinestring const& multilinestring,
-                             VisitPolicy& visitor,
-                             Strategy const& strategy)
-    {
-        if (BOOST_GEOMETRY_CONDITION(
-                AllowEmptyMultiGeometries && boost::empty(multilinestring)))
-        {
-            return visitor.template apply<no_failure>();
-        }
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(MultiLinestring const& multilinestring,
+	                         VisitPolicy& visitor,
+	                         Strategy const& strategy)
+	{
+		if (BOOST_GEOMETRY_CONDITION(
+		            AllowEmptyMultiGeometries && boost::empty(multilinestring)))
+		{
+			return visitor.template apply<no_failure>();
+		}
 
-        typedef per_linestring<VisitPolicy, Strategy> per_ls;
+		typedef per_linestring<VisitPolicy, Strategy> per_ls;
 
-        return detail::check_iterator_range
-            <
-                per_ls,
-                false // do not check for empty multilinestring (done above)
-            >::apply(boost::begin(multilinestring),
-                     boost::end(multilinestring),
-                     per_ls(visitor, strategy));
-    }
+		return detail::check_iterator_range
+		       <
+		       per_ls,
+		       false // do not check for empty multilinestring (done above)
+		       >::apply(boost::begin(multilinestring),
+		                boost::end(multilinestring),
+		                per_ls(visitor, strategy));
+	}
 };
 
 
@@ -180,7 +185,8 @@ public:
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_LINEAR_HPP

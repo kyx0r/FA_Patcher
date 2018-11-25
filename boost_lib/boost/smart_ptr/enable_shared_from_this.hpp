@@ -26,63 +26,63 @@ template<class T> class enable_shared_from_this
 {
 protected:
 
-    BOOST_CONSTEXPR enable_shared_from_this() BOOST_SP_NOEXCEPT
-    {
-    }
+	BOOST_CONSTEXPR enable_shared_from_this() BOOST_SP_NOEXCEPT
+	{
+	}
 
-    BOOST_CONSTEXPR enable_shared_from_this(enable_shared_from_this const &) BOOST_SP_NOEXCEPT
-    {
-    }
+	BOOST_CONSTEXPR enable_shared_from_this(enable_shared_from_this const &) BOOST_SP_NOEXCEPT
+	{
+	}
 
-    enable_shared_from_this & operator=(enable_shared_from_this const &) BOOST_SP_NOEXCEPT
-    {
-        return *this;
-    }
+	enable_shared_from_this & operator=(enable_shared_from_this const &) BOOST_SP_NOEXCEPT
+	{
+		return *this;
+	}
 
-    ~enable_shared_from_this() BOOST_SP_NOEXCEPT // ~weak_ptr<T> newer throws, so this call also must not throw
-    {
-    }
+	~enable_shared_from_this() BOOST_SP_NOEXCEPT // ~weak_ptr<T> newer throws, so this call also must not throw
+	{
+	}
 
 public:
 
-    shared_ptr<T> shared_from_this()
-    {
-        shared_ptr<T> p( weak_this_ );
-        BOOST_ASSERT( p.get() == this );
-        return p;
-    }
+	shared_ptr<T> shared_from_this()
+	{
+		shared_ptr<T> p( weak_this_ );
+		BOOST_ASSERT( p.get() == this );
+		return p;
+	}
 
-    shared_ptr<T const> shared_from_this() const
-    {
-        shared_ptr<T const> p( weak_this_ );
-        BOOST_ASSERT( p.get() == this );
-        return p;
-    }
+	shared_ptr<T const> shared_from_this() const
+	{
+		shared_ptr<T const> p( weak_this_ );
+		BOOST_ASSERT( p.get() == this );
+		return p;
+	}
 
-    weak_ptr<T> weak_from_this() BOOST_SP_NOEXCEPT
-    {
-        return weak_this_;
-    }
+	weak_ptr<T> weak_from_this() BOOST_SP_NOEXCEPT
+	{
+		return weak_this_;
+	}
 
-    weak_ptr<T const> weak_from_this() const BOOST_SP_NOEXCEPT
-    {
-        return weak_this_;
-    }
+	weak_ptr<T const> weak_from_this() const BOOST_SP_NOEXCEPT
+	{
+		return weak_this_;
+	}
 
 public: // actually private, but avoids compiler template friendship issues
 
-    // Note: invoked automatically by shared_ptr; do not call
-    template<class X, class Y> void _internal_accept_owner( shared_ptr<X> const * ppx, Y * py ) const BOOST_SP_NOEXCEPT
-    {
-        if( weak_this_.expired() )
-        {
-            weak_this_ = shared_ptr<T>( *ppx, py );
-        }
-    }
+	// Note: invoked automatically by shared_ptr; do not call
+	template<class X, class Y> void _internal_accept_owner( shared_ptr<X> const * ppx, Y * py ) const BOOST_SP_NOEXCEPT
+	{
+		if( weak_this_.expired() )
+		{
+			weak_this_ = shared_ptr<T>( *ppx, py );
+		}
+	}
 
 private:
 
-    mutable weak_ptr<T> weak_this_;
+	mutable weak_ptr<T> weak_this_;
 };
 
 } // namespace boost

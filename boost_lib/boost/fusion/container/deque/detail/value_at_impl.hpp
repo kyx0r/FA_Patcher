@@ -14,33 +14,36 @@
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/assert.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct deque_tag;
+namespace fusion
+{
+struct deque_tag;
 
-    namespace extension
-    {
-        template<typename T>
-        struct value_at_impl;
+namespace extension
+{
+template<typename T>
+struct value_at_impl;
 
-        template<>
-        struct value_at_impl<deque_tag>
-        {
-            template<typename Sequence, typename N>
-            struct apply
-            {
-                typedef typename Sequence::next_up next_up;
-                typedef typename Sequence::next_down next_down;
-                BOOST_MPL_ASSERT_RELATION(next_down::value, !=, next_up::value);
+template<>
+struct value_at_impl<deque_tag>
+{
+	template<typename Sequence, typename N>
+	struct apply
+	{
+		typedef typename Sequence::next_up next_up;
+		typedef typename Sequence::next_down next_down;
+		BOOST_MPL_ASSERT_RELATION(next_down::value, !=, next_up::value);
 
-                static int const offset = next_down::value + 1;
-                typedef mpl::int_<(N::value + offset)> adjusted_index;
-                typedef typename
-                    detail::keyed_element_value_at<Sequence, adjusted_index>::type
-                type;
-            };
-        };
-    }
-}}
+		static int const offset = next_down::value + 1;
+		typedef mpl::int_<(N::value + offset)> adjusted_index;
+		typedef typename
+		detail::keyed_element_value_at<Sequence, adjusted_index>::type
+		type;
+	};
+};
+}
+}
+}
 
 #endif

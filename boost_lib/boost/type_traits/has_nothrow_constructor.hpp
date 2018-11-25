@@ -22,9 +22,10 @@
 #include <boost/type_traits/is_default_constructible.hpp>
 #endif
 
-namespace boost {
+namespace boost
+{
 
-template <class T> struct has_nothrow_constructor : public integral_constant<bool, BOOST_HAS_NOTHROW_CONSTRUCTOR(T)>{};
+template <class T> struct has_nothrow_constructor : public integral_constant<bool, BOOST_HAS_NOTHROW_CONSTRUCTOR(T)> {};
 
 #elif !defined(BOOST_NO_CXX11_NOEXCEPT)
 
@@ -36,14 +37,17 @@ template <class T> struct has_nothrow_constructor : public integral_constant<boo
 #pragma warning(disable:4197) // top-level volatile in cast is ignored
 #endif
 
-namespace boost { namespace detail{
+namespace boost
+{
+namespace detail
+{
 
-   template <class T, bool b> struct has_nothrow_constructor_imp : public boost::integral_constant<bool, false>{};
-   template <class T> struct has_nothrow_constructor_imp<T, true> : public boost::integral_constant<bool, noexcept(T())>{};
-   template <class T, std::size_t N> struct has_nothrow_constructor_imp<T[N], true> : public has_nothrow_constructor_imp<T, true> {};
+template <class T, bool b> struct has_nothrow_constructor_imp : public boost::integral_constant<bool, false> {};
+template <class T> struct has_nothrow_constructor_imp<T, true> : public boost::integral_constant<bool, noexcept(T())> {};
+template <class T, std::size_t N> struct has_nothrow_constructor_imp<T[N], true> : public has_nothrow_constructor_imp<T, true> {};
 }
 
-template <class T> struct has_nothrow_constructor : public detail::has_nothrow_constructor_imp<T, is_default_constructible<T>::value>{};
+template <class T> struct has_nothrow_constructor : public detail::has_nothrow_constructor_imp<T, is_default_constructible<T>::value> {};
 
 #ifdef BOOST_MSVC
 #pragma warning(pop)
@@ -53,7 +57,8 @@ template <class T> struct has_nothrow_constructor : public detail::has_nothrow_c
 
 #include <boost/type_traits/has_trivial_constructor.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template <class T> struct has_nothrow_constructor : public ::boost::has_trivial_constructor<T> {};
 
@@ -61,12 +66,12 @@ template <class T> struct has_nothrow_constructor : public ::boost::has_trivial_
 
 template<> struct has_nothrow_constructor<void> : public false_type {};
 #ifndef BOOST_NO_CV_VOID_SPECIALIZATIONS
-template<> struct has_nothrow_constructor<void const> : public false_type{};
-template<> struct has_nothrow_constructor<void const volatile> : public false_type{};
-template<> struct has_nothrow_constructor<void volatile> : public false_type{};
+template<> struct has_nothrow_constructor<void const> : public false_type {};
+template<> struct has_nothrow_constructor<void const volatile> : public false_type {};
+template<> struct has_nothrow_constructor<void volatile> : public false_type {};
 #endif
 
-template <class T> struct has_nothrow_default_constructor : public has_nothrow_constructor<T>{};
+template <class T> struct has_nothrow_default_constructor : public has_nothrow_constructor<T> {};
 
 } // namespace boost
 

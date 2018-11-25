@@ -24,11 +24,14 @@
 #include <boost/config.hpp> // for BOOST_LIKELY
 #include <boost/current_function.hpp>
 
-namespace boost { namespace geometry
+namespace boost
 {
-    void assertion_failed(char const * expr, char const * function, char const * file, long line); // user defined
-    void assertion_failed_msg(char const * expr, char const * msg, char const * function, char const * file, long line); // user defined
-}} // namespace boost::geometry
+namespace geometry
+{
+void assertion_failed(char const * expr, char const * function, char const * file, long line); // user defined
+void assertion_failed_msg(char const * expr, char const * msg, char const * function, char const * file, long line); // user defined
+}
+} // namespace boost::geometry
 
 #define BOOST_GEOMETRY_ASSERT(expr) (BOOST_LIKELY(!!(expr))? ((void)0): ::boost::geometry::assertion_failed(#expr, BOOST_CURRENT_FUNCTION, __FILE__, __LINE__))
 #define BOOST_GEOMETRY_ASSERT_MSG(expr, msg) (BOOST_LIKELY(!!(expr))? ((void)0): ::boost::geometry::assertion_failed_msg(#expr, msg, BOOST_CURRENT_FUNCTION, __FILE__, __LINE__))

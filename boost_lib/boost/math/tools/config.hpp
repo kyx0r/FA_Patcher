@@ -74,8 +74,8 @@
 //
 // Intel compiler prior to version 10 has sporadic problems
 // calling the long double overloads of the std lib math functions:
-// calling ::powl is OK, but std::pow(long double, long double) 
-// may segfault depending upon the value of the arguments passed 
+// calling ::powl is OK, but std::pow(long double, long double)
+// may segfault depending upon the value of the arguments passed
 // and the specific Linux distribution.
 //
 // We'll be conservative and disable long double support for this compiler.
@@ -95,7 +95,7 @@
 #endif
 
 #if defined(BOOST_MSVC) && !defined(_WIN32_WCE)
-   // Better safe than sorry, our tests don't support hardware exceptions:
+// Better safe than sorry, our tests don't support hardware exceptions:
 #  define BOOST_MATH_CONTROL_FP _control87(MCW_EM,MCW_EM)
 #endif
 
@@ -240,21 +240,21 @@
 #endif
 
 //
-// The maximum order of polynomial that will be evaluated 
+// The maximum order of polynomial that will be evaluated
 // via an unrolled specialisation:
 //
 #ifndef BOOST_MATH_MAX_POLY_ORDER
 #  define BOOST_MATH_MAX_POLY_ORDER 20
-#endif 
+#endif
 //
 // Set the method used to evaluate polynomials and rationals:
 //
 #ifndef BOOST_MATH_POLY_METHOD
 #  define BOOST_MATH_POLY_METHOD 2
-#endif 
+#endif
 #ifndef BOOST_MATH_RATIONAL_METHOD
 #  define BOOST_MATH_RATIONAL_METHOD 1
-#endif 
+#endif
 //
 // decide whether to store constants as integers or reals:
 //
@@ -270,7 +270,7 @@
 #if defined(_GLIBCXX_USE_FLOAT128) && defined(BOOST_GCC) && !defined(__STRICT_ANSI__) \
    && !defined(BOOST_MATH_DISABLE_FLOAT128) || defined(BOOST_MATH_USE_FLOAT128)
 //
-// Only enable this when the compiler really is GCC as clang and probably 
+// Only enable this when the compiler really is GCC as clang and probably
 // intel too don't support __float128 yet :-(
 //
 #ifndef BOOST_MATH_USE_FLOAT128
@@ -332,20 +332,23 @@
 
 #define BOOST_MATH_STD_USING BOOST_MATH_STD_USING_CORE
 
-namespace boost{ namespace math{
+namespace boost
+{
+namespace math
+{
 namespace tools
 {
 
 template <class T>
 inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c) BOOST_MATH_NOEXCEPT(T)
 {
-   return (std::max)((std::max)(a, b), c);
+	return (std::max)((std::max)(a, b), c);
 }
 
 template <class T>
 inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d) BOOST_MATH_NOEXCEPT(T)
 {
-   return (std::max)((std::max)(a, b), (std::max)(c, d));
+	return (std::max)((std::max)(a, b), (std::max)(c, d));
 }
 
 } // namespace tools
@@ -355,21 +358,23 @@ void suppress_unused_variable_warning(const T&) BOOST_MATH_NOEXCEPT(T)
 {
 }
 
-namespace detail{
+namespace detail
+{
 
 template <class T>
 struct is_integer_for_rounding
 {
-   static const bool value = boost::is_integral<T>::value
+	static const bool value = boost::is_integral<T>::value
 #ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
-      || (std::numeric_limits<T>::is_specialized && std::numeric_limits<T>::is_integer)
+	                          || (std::numeric_limits<T>::is_specialized && std::numeric_limits<T>::is_integer)
 #endif
-      ;
+	                          ;
 };
 
 }
 
-}} // namespace boost namespace math
+}
+} // namespace boost namespace math
 
 #ifdef __GLIBC_PREREQ
 #  if __GLIBC_PREREQ(2,14)
@@ -385,33 +390,37 @@ struct is_integer_for_rounding
 // Much more information in this message thread: https://groups.google.com/forum/#!topic/boost-list/ZT99wtIFlb4
 //
 
-   #include <boost/detail/fenv.hpp>
+#include <boost/detail/fenv.hpp>
 
 #  ifdef FE_ALL_EXCEPT
 
-namespace boost{ namespace math{
-   namespace detail
-   {
-   struct fpu_guard
-   {
-      fpu_guard()
-      {
-         fegetexceptflag(&m_flags, FE_ALL_EXCEPT);
-         feclearexcept(FE_ALL_EXCEPT);
-      }
-      ~fpu_guard()
-      {
-         fesetexceptflag(&m_flags, FE_ALL_EXCEPT);
-      }
-   private:
-      fexcept_t m_flags;
-   };
+namespace boost
+{
+namespace math
+{
+namespace detail
+{
+struct fpu_guard
+{
+	fpu_guard()
+	{
+		fegetexceptflag(&m_flags, FE_ALL_EXCEPT);
+		feclearexcept(FE_ALL_EXCEPT);
+	}
+	~fpu_guard()
+	{
+		fesetexceptflag(&m_flags, FE_ALL_EXCEPT);
+	}
+private:
+	fexcept_t m_flags;
+};
 
-   } // namespace detail
-   }} // namespaces
+} // namespace detail
+}
+} // namespaces
 
 #    define BOOST_FPU_EXCEPTION_GUARD boost::math::detail::fpu_guard local_guard_object;
-#    define BOOST_MATH_INSTRUMENT_FPU do{ fexcept_t cpu_flags; fegetexceptflag(&cpu_flags, FE_ALL_EXCEPT); BOOST_MATH_INSTRUMENT_VARIABLE(cpu_flags); } while(0); 
+#    define BOOST_MATH_INSTRUMENT_FPU do{ fexcept_t cpu_flags; fegetexceptflag(&cpu_flags, FE_ALL_EXCEPT); BOOST_MATH_INSTRUMENT_VARIABLE(cpu_flags); } while(0);
 
 #  else
 

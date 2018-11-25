@@ -38,48 +38,54 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost {
-namespace wave {
-namespace cpplexer {
+namespace boost
+{
+namespace wave
+{
+namespace cpplexer
+{
 
 template <typename Token>
 class include_guards
 {
 public:
-    include_guards()
-    :   state(&include_guards::state_0), detected_guards(false),
-        current_state(true), if_depth(0)
-    {}
+	include_guards()
+		:   state(&include_guards::state_0), detected_guards(false),
+		    current_state(true), if_depth(0)
+	{}
 
-    Token& detect_guard(Token& t)
-        { return current_state ? (this->*state)(t) : t; }
-    bool detected(std::string& guard_name_) const
-    {
-        if (detected_guards) {
-            guard_name_ = guard_name.c_str();
-            return true;
-        }
-        return false;
-    }
+	Token& detect_guard(Token& t)
+	{
+		return current_state ? (this->*state)(t) : t;
+	}
+	bool detected(std::string& guard_name_) const
+	{
+		if (detected_guards)
+		{
+			guard_name_ = guard_name.c_str();
+			return true;
+		}
+		return false;
+	}
 
 private:
-    typedef Token& state_type(Token& t);
-    state_type include_guards::* state;
+	typedef Token& state_type(Token& t);
+	state_type include_guards::* state;
 
-    bool detected_guards;
-    bool current_state;
-    typename Token::string_type guard_name;
-    int if_depth;
+	bool detected_guards;
+	bool current_state;
+	typename Token::string_type guard_name;
+	int if_depth;
 
-    state_type state_0, state_1, state_2, state_3, state_4, state_5;
-    state_type state_1a, state_1b, state_1c, state_1d, state_1e;
+	state_type state_0, state_1, state_2, state_3, state_4, state_5;
+	state_type state_1a, state_1b, state_1c, state_1d, state_1e;
 
-    bool is_skippable(token_id id) const
-    {
-        return (T_POUND == BASE_TOKEN(id) ||
-                IS_CATEGORY(id, WhiteSpaceTokenType) ||
-                IS_CATEGORY(id, EOLTokenType));
-    }
+	bool is_skippable(token_id id) const
+	{
+		return (T_POUND == BASE_TOKEN(id) ||
+		        IS_CATEGORY(id, WhiteSpaceTokenType) ||
+		        IS_CATEGORY(id, EOLTokenType));
+	}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,14 +94,14 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_0(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_PP_IFNDEF == id)
-        state = &include_guards::state_1;
-    else if (T_PP_IF == id)
-        state = &include_guards::state_1a;
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_PP_IFNDEF == id)
+		state = &include_guards::state_1;
+	else if (T_PP_IF == id)
+		state = &include_guards::state_1a;
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,14 +110,15 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_1(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_IDENTIFIER == id) {
-        guard_name = t.get_value();
-        state = &include_guards::state_2;
-    }
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_IDENTIFIER == id)
+	{
+		guard_name = t.get_value();
+		state = &include_guards::state_2;
+	}
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -120,12 +127,12 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_1a(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_NOT == BASE_TOKEN(id))
-        state = &include_guards::state_1b;
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_NOT == BASE_TOKEN(id))
+		state = &include_guards::state_1b;
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -134,12 +141,12 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_1b(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_IDENTIFIER == id && t.get_value() == "defined")
-        state = &include_guards::state_1c;
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_IDENTIFIER == id && t.get_value() == "defined")
+		state = &include_guards::state_1c;
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,16 +155,17 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_1c(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_LEFTPAREN == id)
-        state = &include_guards::state_1d;
-    else if (T_IDENTIFIER == id) {
-        guard_name = t.get_value();
-        state = &include_guards::state_2;
-    }
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_LEFTPAREN == id)
+		state = &include_guards::state_1d;
+	else if (T_IDENTIFIER == id)
+	{
+		guard_name = t.get_value();
+		state = &include_guards::state_2;
+	}
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -166,14 +174,15 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_1d(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_IDENTIFIER == id) {
-        guard_name = t.get_value();
-        state = &include_guards::state_1e;
-    }
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_IDENTIFIER == id)
+	{
+		guard_name = t.get_value();
+		state = &include_guards::state_1e;
+	}
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -182,12 +191,12 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_1e(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_RIGHTPAREN == id)
-        state = &include_guards::state_2;
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_RIGHTPAREN == id)
+		state = &include_guards::state_2;
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,12 +205,12 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_2(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_PP_DEFINE == id)
-        state = &include_guards::state_3;
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_PP_DEFINE == id)
+		state = &include_guards::state_3;
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -210,12 +219,12 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_3(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_IDENTIFIER == id && t.get_value() == guard_name)
-        state = &include_guards::state_4;
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_IDENTIFIER == id && t.get_value() == guard_name)
+		state = &include_guards::state_4;
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -224,16 +233,17 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_4(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_PP_IF == id || T_PP_IFDEF == id || T_PP_IFNDEF == id)
-        ++if_depth;
-    else if (T_PP_ENDIF == id) {
-        if (if_depth > 0)
-            --if_depth;
-        else
-            state = &include_guards::state_5;
-    }
-    return t;
+	token_id id = token_id(t);
+	if (T_PP_IF == id || T_PP_IFDEF == id || T_PP_IFNDEF == id)
+		++if_depth;
+	else if (T_PP_ENDIF == id)
+	{
+		if (if_depth > 0)
+			--if_depth;
+		else
+			state = &include_guards::state_5;
+	}
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -242,12 +252,12 @@ template <typename Token>
 inline Token&
 include_guards<Token>::state_5(Token& t)
 {
-    token_id id = token_id(t);
-    if (T_EOF == id)
-        detected_guards = current_state;
-    else if (!is_skippable(id))
-        current_state = false;
-    return t;
+	token_id id = token_id(t);
+	if (T_EOF == id)
+		detected_guards = current_state;
+	else if (!is_skippable(id))
+		current_state = false;
+	return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

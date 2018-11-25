@@ -28,7 +28,9 @@
 #include <initializer_list>
 #endif
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace model
@@ -55,31 +57,31 @@ template
     typename Point,
     template<typename, typename> class Container = std::vector,
     template<typename> class Allocator = std::allocator
->
+    >
 class multi_point : public Container<Point, Allocator<Point> >
 {
-    BOOST_CONCEPT_ASSERT( (concepts::Point<Point>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Point<Point>) );
 
-    typedef Container<Point, Allocator<Point> > base_type;
+	typedef Container<Point, Allocator<Point> > base_type;
 
 public :
-    /// \constructor_default{multi_point}
-    inline multi_point()
-        : base_type()
-    {}
+	/// \constructor_default{multi_point}
+	inline multi_point()
+		: base_type()
+	{}
 
-    /// \constructor_begin_end{multi_point}
-    template <typename Iterator>
-    inline multi_point(Iterator begin, Iterator end)
-        : base_type(begin, end)
-    {}
+	/// \constructor_begin_end{multi_point}
+	template <typename Iterator>
+	inline multi_point(Iterator begin, Iterator end)
+		: base_type(begin, end)
+	{}
 
 #ifndef BOOST_NO_CXX11_HDR_INITIALIZER_LIST
 
-    /// \constructor_initializer_list{multi_point}
-    inline multi_point(std::initializer_list<Point> l)
-        : base_type(l.begin(), l.end())
-    {}
+	/// \constructor_initializer_list{multi_point}
+	inline multi_point(std::initializer_list<Point> l)
+		: base_type(l.begin(), l.end())
+	{}
 
 // Commented out for now in order to support Boost.Assign
 // Without this assignment operator first the object should be created
@@ -109,15 +111,16 @@ template
     typename Point,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct tag< model::multi_point<Point, Container, Allocator> >
 {
-    typedef multi_point_tag type;
+	typedef multi_point_tag type;
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_MULTI_POINT_HPP

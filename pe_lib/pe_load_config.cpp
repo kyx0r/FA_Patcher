@@ -11,40 +11,40 @@ using namespace pe_win;
 //Default constructor
 image_config_info::image_config_info()
 	:time_stamp_(0),
-	major_version_(0), minor_version_(0),
-	global_flags_clear_(0), global_flags_set_(0),
-	critical_section_default_timeout_(0),
-	decommit_free_block_threshold_(0), decommit_total_free_threshold_(0),
-	lock_prefix_table_va_(0),
-	max_allocation_size_(0),
-	virtual_memory_threshold_(0),
-	process_affinity_mask_(0),
-	process_heap_flags_(0),
-	service_pack_version_(0),
-	edit_list_va_(0),
-	security_cookie_va_(0),
-	se_handler_table_va_(0),
-	se_handler_count_(0)
+	 major_version_(0), minor_version_(0),
+	 global_flags_clear_(0), global_flags_set_(0),
+	 critical_section_default_timeout_(0),
+	 decommit_free_block_threshold_(0), decommit_total_free_threshold_(0),
+	 lock_prefix_table_va_(0),
+	 max_allocation_size_(0),
+	 virtual_memory_threshold_(0),
+	 process_affinity_mask_(0),
+	 process_heap_flags_(0),
+	 service_pack_version_(0),
+	 edit_list_va_(0),
+	 security_cookie_va_(0),
+	 se_handler_table_va_(0),
+	 se_handler_count_(0)
 {}
 
 //Constructors from PE structures
 template<typename ConfigStructure>
 image_config_info::image_config_info(const ConfigStructure& info)
 	:time_stamp_(info.TimeDateStamp),
-	major_version_(info.MajorVersion), minor_version_(info.MinorVersion),
-	global_flags_clear_(info.GlobalFlagsClear), global_flags_set_(info.GlobalFlagsSet),
-	critical_section_default_timeout_(info.CriticalSectionDefaultTimeout),
-	decommit_free_block_threshold_(info.DeCommitFreeBlockThreshold), decommit_total_free_threshold_(info.DeCommitTotalFreeThreshold),
-	lock_prefix_table_va_(info.LockPrefixTable),
-	max_allocation_size_(info.MaximumAllocationSize),
-	virtual_memory_threshold_(info.VirtualMemoryThreshold),
-	process_affinity_mask_(info.ProcessAffinityMask),
-	process_heap_flags_(info.ProcessHeapFlags),
-	service_pack_version_(info.CSDVersion),
-	edit_list_va_(info.EditList),
-	security_cookie_va_(info.SecurityCookie),
-	se_handler_table_va_(info.SEHandlerTable),
-	se_handler_count_(info.SEHandlerCount)
+	 major_version_(info.MajorVersion), minor_version_(info.MinorVersion),
+	 global_flags_clear_(info.GlobalFlagsClear), global_flags_set_(info.GlobalFlagsSet),
+	 critical_section_default_timeout_(info.CriticalSectionDefaultTimeout),
+	 decommit_free_block_threshold_(info.DeCommitFreeBlockThreshold), decommit_total_free_threshold_(info.DeCommitTotalFreeThreshold),
+	 lock_prefix_table_va_(info.LockPrefixTable),
+	 max_allocation_size_(info.MaximumAllocationSize),
+	 virtual_memory_threshold_(info.VirtualMemoryThreshold),
+	 process_affinity_mask_(info.ProcessAffinityMask),
+	 process_heap_flags_(info.ProcessHeapFlags),
+	 service_pack_version_(info.CSDVersion),
+	 edit_list_va_(info.EditList),
+	 security_cookie_va_(info.SecurityCookie),
+	 se_handler_table_va_(info.SEHandlerTable),
+	 se_handler_count_(info.SEHandlerCount)
 {}
 
 //Instantiate template constructor with needed structures
@@ -320,16 +320,16 @@ image_config_info::lock_prefix_rva_list& image_config_info::get_lock_prefix_rvas
 const image_config_info get_image_config(const pe_base& pe)
 {
 	return pe.get_pe_type() == pe_type_32
-		? get_image_config_base<pe_types_class_32>(pe)
-		: get_image_config_base<pe_types_class_64>(pe);
+	       ? get_image_config_base<pe_types_class_32>(pe)
+	       : get_image_config_base<pe_types_class_64>(pe);
 }
 
 //Image config rebuilder
 const image_directory rebuild_image_config(pe_base& pe, const image_config_info& info, section& image_config_section, uint32_t offset_from_section_start, bool write_se_handlers, bool write_lock_prefixes, bool save_to_pe_header, bool auto_strip_last_section)
 {
 	return pe.get_pe_type() == pe_type_32
-		? rebuild_image_config_base<pe_types_class_32>(pe, info, image_config_section, offset_from_section_start, write_se_handlers, write_lock_prefixes, save_to_pe_header, auto_strip_last_section)
-		: rebuild_image_config_base<pe_types_class_64>(pe, info, image_config_section, offset_from_section_start, write_se_handlers, write_lock_prefixes, save_to_pe_header, auto_strip_last_section);
+	       ? rebuild_image_config_base<pe_types_class_32>(pe, info, image_config_section, offset_from_section_start, write_se_handlers, write_lock_prefixes, save_to_pe_header, auto_strip_last_section)
+	       : rebuild_image_config_base<pe_types_class_64>(pe, info, image_config_section, offset_from_section_start, write_se_handlers, write_lock_prefixes, save_to_pe_header, auto_strip_last_section);
 }
 
 
@@ -354,7 +354,7 @@ const image_config_info get_image_config_base(const pe_base& pe)
 
 	//Check possible overflow
 	if(config_info.SEHandlerCount >= pe_utils::max_dword / sizeof(uint32_t)
-		|| config_info.SEHandlerTable >= static_cast<typename PEClassType::BaseSize>(-1) - config_info.SEHandlerCount * sizeof(uint32_t))
+	        || config_info.SEHandlerTable >= static_cast<typename PEClassType::BaseSize>(-1) - config_info.SEHandlerCount * sizeof(uint32_t))
 		throw pe_exception("Incorrect load config directory", pe_exception::incorrect_config_directory);
 
 	//Read sorted SE handler RVA list (if any)
@@ -390,22 +390,22 @@ const image_directory rebuild_image_config_base(pe_base& pe, const image_config_
 	//Check that image_config_section is attached to this PE image
 	if(!pe.section_attached(image_config_section))
 		throw pe_exception("Image Config section must be attached to PE file", pe_exception::section_is_not_attached);
-	
+
 	uint32_t alignment = pe_utils::align_up(offset_from_section_start, sizeof(typename PEClassType::BaseSize)) - offset_from_section_start;
 
 	uint32_t needed_size = sizeof(typename PEClassType::ConfigStruct); //Calculate needed size for Image Config table
-	
+
 	uint32_t image_config_data_pos = offset_from_section_start + alignment;
 
 	uint32_t current_pos_of_se_handlers = 0;
 	uint32_t current_pos_of_lock_prefixes = 0;
-	
+
 	if(write_se_handlers)
 	{
 		current_pos_of_se_handlers = needed_size + image_config_data_pos;
 		needed_size += static_cast<uint32_t>(info.get_se_handler_rvas().size()) * sizeof(uint32_t); //RVAs of SE Handlers
 	}
-	
+
 	if(write_lock_prefixes)
 	{
 		current_pos_of_lock_prefixes = needed_size + image_config_data_pos;
@@ -413,8 +413,8 @@ const image_directory rebuild_image_config_base(pe_base& pe, const image_config_
 	}
 
 	//Check if image_config_section is last one. If it's not, check if there's enough place for Image Config data
-	if(&image_config_section != &*(pe.get_image_sections().end() - 1) && 
-		(image_config_section.empty() || pe_utils::align_up(image_config_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + image_config_data_pos))
+	if(&image_config_section != &*(pe.get_image_sections().end() - 1) &&
+	        (image_config_section.empty() || pe_utils::align_up(image_config_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + image_config_data_pos))
 		throw pe_exception("Insufficient space for TLS directory", pe_exception::insufficient_space);
 
 	std::string& raw_data = image_config_section.get_raw_data();
@@ -442,7 +442,7 @@ const image_directory rebuild_image_config_base(pe_base& pe, const image_config_
 	image_config_section_struct.EditList = static_cast<typename PEClassType::BaseSize>(info.get_edit_list_va());
 	image_config_section_struct.SecurityCookie = static_cast<typename PEClassType::BaseSize>(info.get_security_cookie_va());
 	image_config_section_struct.SEHandlerCount = static_cast<typename PEClassType::BaseSize>(info.get_se_handler_rvas().size());
-	
+
 
 	if(write_se_handlers)
 	{

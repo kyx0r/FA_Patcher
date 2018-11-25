@@ -35,9 +35,12 @@
 # error Only Windows, POSIX and std::thread are supported!
 #endif
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if !defined(BOOST_ASIO_HAS_THREADS)
 typedef null_thread thread;

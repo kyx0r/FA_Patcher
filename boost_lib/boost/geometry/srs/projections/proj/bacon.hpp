@@ -48,225 +48,237 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct apian {};
-    struct ortel {};
-    struct bacon {};
+namespace par4
+{
+struct apian {};
+struct ortel {};
+struct bacon {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace bacon
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace bacon
+{
 
-            //static const double HLFPI2 = 2.46740110027233965467;
-            static const double EPS = 1e-10;
+//static const double HLFPI2 = 2.46740110027233965467;
+static const double EPS = 1e-10;
 
-            struct par_bacon
-            {
-                int bacn;
-                int ortl;
-            };
+struct par_bacon
+{
+	int bacn;
+	int ortl;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_bacon_spheroid : public base_t_f<base_bacon_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_bacon_spheroid : public base_t_f<base_bacon_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_bacon m_proj_parm;
+	par_bacon m_proj_parm;
 
-                inline base_bacon_spheroid(const Parameters& par)
-                    : base_t_f<base_bacon_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_bacon_spheroid(const Parameters& par)
+		: base_t_f<base_bacon_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
-                    static const CalculationType HLFPI2 = detail::HALFPI_SQR<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+		static const CalculationType HLFPI2 = detail::HALFPI_SQR<CalculationType>();
 
-                    CalculationType ax, f;
+		CalculationType ax, f;
 
-                    xy_y = this->m_proj_parm.bacn ? HALFPI * sin(lp_lat) : lp_lat;
-                    if ((ax = fabs(lp_lon)) >= EPS) {
-                        if (this->m_proj_parm.ortl && ax >= HALFPI)
-                            xy_x = sqrt(HLFPI2 - lp_lat * lp_lat + EPS) + ax - HALFPI;
-                        else {
-                            f = 0.5 * (HLFPI2 / ax + ax);
-                            xy_x = ax - f + sqrt(f * f - xy_y * xy_y);
-                        }
-                        if (lp_lon < 0.) xy_x = - xy_x;
-                    } else
-                        xy_x = 0.;
-                }
+		xy_y = this->m_proj_parm.bacn ? HALFPI * sin(lp_lat) : lp_lat;
+		if ((ax = fabs(lp_lon)) >= EPS)
+		{
+			if (this->m_proj_parm.ortl && ax >= HALFPI)
+				xy_x = sqrt(HLFPI2 - lp_lat * lp_lat + EPS) + ax - HALFPI;
+			else
+			{
+				f = 0.5 * (HLFPI2 / ax + ax);
+				xy_x = ax - f + sqrt(f * f - xy_y * xy_y);
+			}
+			if (lp_lon < 0.) xy_x = - xy_x;
+		}
+		else
+			xy_x = 0.;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "bacon_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "bacon_spheroid";
+	}
 
-            };
+};
 
-            // Apian Globular I
-            template <typename Parameters>
-            inline void setup_apian(Parameters& par, par_bacon& proj_parm)
-            {
-                proj_parm.bacn = proj_parm.ortl = 0;
-                par.es = 0.;
-            }
+// Apian Globular I
+template <typename Parameters>
+inline void setup_apian(Parameters& par, par_bacon& proj_parm)
+{
+	proj_parm.bacn = proj_parm.ortl = 0;
+	par.es = 0.;
+}
 
-            // Ortelius Oval
-            template <typename Parameters>
-            inline void setup_ortel(Parameters& par, par_bacon& proj_parm)
-            {
-                proj_parm.bacn = 0;
-                proj_parm.ortl = 1;
-                par.es = 0.;
-            }
+// Ortelius Oval
+template <typename Parameters>
+inline void setup_ortel(Parameters& par, par_bacon& proj_parm)
+{
+	proj_parm.bacn = 0;
+	proj_parm.ortl = 1;
+	par.es = 0.;
+}
 
-            // Bacon Globular
-            template <typename Parameters>
-            inline void setup_bacon(Parameters& par, par_bacon& proj_parm)
-            {
-                proj_parm.bacn = 1;
-                proj_parm.ortl = 0;
-                par.es = 0.;
-            }
+// Bacon Globular
+template <typename Parameters>
+inline void setup_bacon(Parameters& par, par_bacon& proj_parm)
+{
+	proj_parm.bacn = 1;
+	proj_parm.ortl = 0;
+	par.es = 0.;
+}
 
-    }} // namespace detail::bacon
-    #endif // doxygen
+}
+} // namespace detail::bacon
+#endif // doxygen
 
-    /*!
-        \brief Apian Globular I projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_apian.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct apian_spheroid : public detail::bacon::base_bacon_spheroid<CalculationType, Parameters>
-    {
-        inline apian_spheroid(const Parameters& par) : detail::bacon::base_bacon_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::bacon::setup_apian(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Apian Globular I projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_apian.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct apian_spheroid : public detail::bacon::base_bacon_spheroid<CalculationType, Parameters>
+{
+	inline apian_spheroid(const Parameters& par) : detail::bacon::base_bacon_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::bacon::setup_apian(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief Ortelius Oval projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_ortel.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct ortel_spheroid : public detail::bacon::base_bacon_spheroid<CalculationType, Parameters>
-    {
-        inline ortel_spheroid(const Parameters& par) : detail::bacon::base_bacon_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::bacon::setup_ortel(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Ortelius Oval projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_ortel.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct ortel_spheroid : public detail::bacon::base_bacon_spheroid<CalculationType, Parameters>
+{
+	inline ortel_spheroid(const Parameters& par) : detail::bacon::base_bacon_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::bacon::setup_ortel(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief Bacon Globular projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_bacon.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct bacon_spheroid : public detail::bacon::base_bacon_spheroid<CalculationType, Parameters>
-    {
-        inline bacon_spheroid(const Parameters& par) : detail::bacon::base_bacon_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::bacon::setup_bacon(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Bacon Globular projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_bacon.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct bacon_spheroid : public detail::bacon::base_bacon_spheroid<CalculationType, Parameters>
+{
+	inline bacon_spheroid(const Parameters& par) : detail::bacon::base_bacon_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::bacon::setup_bacon(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::apian, apian_spheroid, apian_spheroid)
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::bacon, bacon_spheroid, bacon_spheroid)
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::ortel, ortel_spheroid, ortel_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::apian, apian_spheroid, apian_spheroid)
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::bacon, bacon_spheroid, bacon_spheroid)
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::ortel, ortel_spheroid, ortel_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class apian_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<apian_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class apian_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<apian_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        class ortel_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<ortel_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+template <typename CalculationType, typename Parameters>
+class ortel_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<ortel_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        class bacon_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<bacon_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+template <typename CalculationType, typename Parameters>
+class bacon_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<bacon_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void bacon_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("apian", new apian_entry<CalculationType, Parameters>);
-            factory.add_to_factory("ortel", new ortel_entry<CalculationType, Parameters>);
-            factory.add_to_factory("bacon", new bacon_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void bacon_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("apian", new apian_entry<CalculationType, Parameters>);
+	factory.add_to_factory("ortel", new ortel_entry<CalculationType, Parameters>);
+	factory.add_to_factory("bacon", new bacon_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_BACON_HPP
 

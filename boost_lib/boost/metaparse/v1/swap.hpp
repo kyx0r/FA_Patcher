@@ -8,20 +8,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class F>
-      struct swap
-      {
-        typedef swap type;
+namespace metaparse
+{
+namespace v1
+{
+template <class F>
+struct swap
+{
+	typedef swap type;
 
-        template <class A, class B>
-        struct apply : F::template apply<B, A> {};
-      };
-    }
-  }
+	template <class A, class B>
+	struct apply : F::template apply<B, A> {};
+};
+}
+}
 }
 
 #endif

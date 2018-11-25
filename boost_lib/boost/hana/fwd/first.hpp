@@ -15,34 +15,36 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Returns the first element of a pair.
-    //! @ingroup group-Product
-    //!
-    //! Note that if the `Product` actually stores the elements it contains,
-    //! `hana::first` is required to return a lvalue reference, a lvalue
-    //! reference to const or a rvalue reference to the first element, where
-    //! the type of reference must match that of the pair passed to `first`.
-    //! If the `Product` does not store the elements it contains (i.e. it
-    //! generates them on demand), this requirement is dropped.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/first.cpp
+//! Returns the first element of a pair.
+//! @ingroup group-Product
+//!
+//! Note that if the `Product` actually stores the elements it contains,
+//! `hana::first` is required to return a lvalue reference, a lvalue
+//! reference to const or a rvalue reference to the first element, where
+//! the type of reference must match that of the pair passed to `first`.
+//! If the `Product` does not store the elements it contains (i.e. it
+//! generates them on demand), this requirement is dropped.
+//!
+//!
+//! Example
+//! -------
+//! @include example/first.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto first = [](auto&& product) -> decltype(auto) {
-        return tag-dispatched;
-    };
+constexpr auto first = [](auto&& product) -> decltype(auto)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename P, typename = void>
-    struct first_impl : first_impl<P, when<true>> { };
+template <typename P, typename = void>
+struct first_impl : first_impl<P, when<true>> { };
 
-    struct first_t {
-        template <typename Pair>
-        constexpr decltype(auto) operator()(Pair&& pair) const;
-    };
+struct first_t
+{
+	template <typename Pair>
+	constexpr decltype(auto) operator()(Pair&& pair) const;
+};
 
-    constexpr first_t first{};
+constexpr first_t first{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

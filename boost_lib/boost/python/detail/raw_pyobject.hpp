@@ -5,7 +5,12 @@
 #ifndef RAW_PYOBJECT_DWA2002628_HPP
 # define RAW_PYOBJECT_DWA2002628_HPP
 
-namespace boost { namespace python { namespace detail { 
+namespace boost
+{
+namespace python
+{
+namespace detail
+{
 
 //
 // Define some types which we can use to get around the vagaries of
@@ -27,6 +32,8 @@ typedef borrowed_reference_t* borrowed_reference;
 struct new_non_null_reference_t;
 typedef new_non_null_reference_t* new_non_null_reference;
 
-}}} // namespace boost::python::detail
+}
+}
+} // namespace boost::python::detail
 
 #endif // RAW_PYOBJECT_DWA2002628_HPP

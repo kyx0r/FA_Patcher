@@ -18,7 +18,9 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -34,14 +36,14 @@ namespace detail
 template <typename CoordinateType>
 struct coordinate_cast
 {
-    static inline CoordinateType apply(std::string const& source)
-    {
+	static inline CoordinateType apply(std::string const& source)
+	{
 #if defined(BOOST_GEOMETRY_NO_LEXICAL_CAST)
-        return atof(source.c_str());
+		return atof(source.c_str());
 #else
-        return boost::lexical_cast<CoordinateType>(source);
+		return boost::lexical_cast<CoordinateType>(source);
 #endif
-    }
+	}
 };
 
 
@@ -50,6 +52,7 @@ struct coordinate_cast
 
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_UTIL_COORDINATE_CAST_HPP

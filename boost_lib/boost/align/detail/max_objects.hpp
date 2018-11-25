@@ -11,14 +11,17 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/align/detail/integral_constant.hpp>
 #include <cstddef>
 
-namespace boost {
-namespace alignment {
-namespace detail {
+namespace boost
+{
+namespace alignment
+{
+namespace detail
+{
 
 template<class T>
 struct max_objects
-    : integral_constant<std::size_t,
-        ~static_cast<std::size_t>(0) / sizeof(T)> { };
+	: integral_constant<std::size_t,
+  ~static_cast<std::size_t>(0) / sizeof(T)> { };
 
 } /* detail */
 } /* alignment */

@@ -27,7 +27,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -44,130 +45,155 @@ BOOST_LOG_OPEN_NAMESPACE
 class attribute_name
 {
 public:
-    //! String type
-    typedef std::string string_type;
+	//! String type
+	typedef std::string string_type;
 #ifdef BOOST_LOG_DOXYGEN_PASS
-    //! Associated identifier
-    typedef unspecified id_type;
+	//! Associated identifier
+	typedef unspecified id_type;
 #else
-    typedef uint32_t id_type;
+	typedef uint32_t id_type;
 
 private:
-    class repository;
-    friend class repository;
+	class repository;
+	friend class repository;
 
 private:
-    //! Associated identifier
-    id_type m_id;
-    //! A special identifier value indicating unassigned attribute name
-    static BOOST_CONSTEXPR_OR_CONST id_type uninitialized = ~static_cast< id_type >(0u);
+	//! Associated identifier
+	id_type m_id;
+	//! A special identifier value indicating unassigned attribute name
+	static BOOST_CONSTEXPR_OR_CONST id_type uninitialized = ~static_cast< id_type >(0u);
 #endif
 
 public:
-    /*!
-     * Default constructor. Creates an object that does not refer to any attribute name.
-     */
-    BOOST_CONSTEXPR attribute_name() BOOST_NOEXCEPT : m_id(uninitialized)
-    {
-    }
-    /*!
-     * Constructs an attribute name from the specified string
-     *
-     * \param name An attribute name
-     * \pre \a name is not NULL and points to a zero-terminated string
-     */
-    attribute_name(const char* name) :
-        m_id(get_id_from_string(name))
-    {
-    }
-    /*!
-     * Constructs an attribute name from the specified string
-     *
-     * \param name An attribute name
-     */
-    attribute_name(string_type const& name) :
-        m_id(get_id_from_string(name.c_str()))
-    {
-    }
+	/*!
+	 * Default constructor. Creates an object that does not refer to any attribute name.
+	 */
+BOOST_CONSTEXPR attribute_name() BOOST_NOEXCEPT :
+	m_id(uninitialized)
+	{
+	}
+	/*!
+	 * Constructs an attribute name from the specified string
+	 *
+	 * \param name An attribute name
+	 * \pre \a name is not NULL and points to a zero-terminated string
+	 */
+	attribute_name(const char* name) :
+		m_id(get_id_from_string(name))
+	{
+	}
+	/*!
+	 * Constructs an attribute name from the specified string
+	 *
+	 * \param name An attribute name
+	 */
+	attribute_name(string_type const& name) :
+		m_id(get_id_from_string(name.c_str()))
+	{
+	}
 
-    /*!
-     * Compares the attribute names
-     *
-     * \return \c true if <tt>*this</tt> and \c that refer to the same attribute name,
-     *         and \c false otherwise.
-     */
-    bool operator== (attribute_name const& that) const BOOST_NOEXCEPT { return m_id == that.m_id; }
-    /*!
-     * Compares the attribute names
-     *
-     * \return \c true if <tt>*this</tt> and \c that refer to different attribute names,
-     *         and \c false otherwise.
-     */
-    bool operator!= (attribute_name const& that) const BOOST_NOEXCEPT { return m_id != that.m_id; }
+	/*!
+	 * Compares the attribute names
+	 *
+	 * \return \c true if <tt>*this</tt> and \c that refer to the same attribute name,
+	 *         and \c false otherwise.
+	 */
+	bool operator== (attribute_name const& that) const BOOST_NOEXCEPT
+	{
+		return m_id == that.m_id;
+	}
+	/*!
+	 * Compares the attribute names
+	 *
+	 * \return \c true if <tt>*this</tt> and \c that refer to different attribute names,
+	 *         and \c false otherwise.
+	 */
+	bool operator!= (attribute_name const& that) const BOOST_NOEXCEPT
+	{
+		return m_id != that.m_id;
+	}
 
-    /*!
-     * Compares the attribute names
-     *
-     * \return \c true if <tt>*this</tt> and \c that refer to the same attribute name,
-     *         and \c false otherwise.
-     */
-    bool operator== (const char* that) const { return (m_id != uninitialized) && (this->string() == that); }
-    /*!
-     * Compares the attribute names
-     *
-     * \return \c true if <tt>*this</tt> and \c that refer to different attribute names,
-     *         and \c false otherwise.
-     */
-    bool operator!= (const char* that) const { return !operator== (that); }
+	/*!
+	 * Compares the attribute names
+	 *
+	 * \return \c true if <tt>*this</tt> and \c that refer to the same attribute name,
+	 *         and \c false otherwise.
+	 */
+	bool operator== (const char* that) const
+	{
+		return (m_id != uninitialized) && (this->string() == that);
+	}
+	/*!
+	 * Compares the attribute names
+	 *
+	 * \return \c true if <tt>*this</tt> and \c that refer to different attribute names,
+	 *         and \c false otherwise.
+	 */
+	bool operator!= (const char* that) const
+	{
+		return !operator== (that);
+	}
 
-    /*!
-     * Compares the attribute names
-     *
-     * \return \c true if <tt>*this</tt> and \c that refer to the same attribute name,
-     *         and \c false otherwise.
-     */
-    bool operator== (string_type const& that) const { return (m_id != uninitialized) && (this->string() == that); }
-    /*!
-     * Compares the attribute names
-     *
-     * \return \c true if <tt>*this</tt> and \c that refer to different attribute names,
-     *         and \c false otherwise.
-     */
-    bool operator!= (string_type const& that) const { return !operator== (that); }
+	/*!
+	 * Compares the attribute names
+	 *
+	 * \return \c true if <tt>*this</tt> and \c that refer to the same attribute name,
+	 *         and \c false otherwise.
+	 */
+	bool operator== (string_type const& that) const
+	{
+		return (m_id != uninitialized) && (this->string() == that);
+	}
+	/*!
+	 * Compares the attribute names
+	 *
+	 * \return \c true if <tt>*this</tt> and \c that refer to different attribute names,
+	 *         and \c false otherwise.
+	 */
+	bool operator!= (string_type const& that) const
+	{
+		return !operator== (that);
+	}
 
-    /*!
-     * Checks if the object was default-constructed
-     *
-     * \return \c true if <tt>*this</tt> was constructed with an attribute name, \c false otherwise
-     */
-    BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
-    /*!
-     * Checks if the object was default-constructed
-     *
-     * \return \c true if <tt>*this</tt> was default-constructed and does not refer to any attribute name,
-     *         \c false otherwise
-     */
-    bool operator! () const BOOST_NOEXCEPT { return (m_id == uninitialized); }
+	/*!
+	 * Checks if the object was default-constructed
+	 *
+	 * \return \c true if <tt>*this</tt> was constructed with an attribute name, \c false otherwise
+	 */
+	BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
+	/*!
+	 * Checks if the object was default-constructed
+	 *
+	 * \return \c true if <tt>*this</tt> was default-constructed and does not refer to any attribute name,
+	 *         \c false otherwise
+	 */
+	bool operator! () const BOOST_NOEXCEPT
+	{
+		return (m_id == uninitialized);
+	}
 
-    /*!
-     * \return The associated id value
-     * \pre <tt>(!*this) == false</tt>
-     */
-    id_type id() const BOOST_NOEXCEPT
-    {
-        BOOST_ASSERT(m_id != uninitialized);
-        return m_id;
-    }
-    /*!
-     * \return The attribute name string that was used during the object construction
-     * \pre <tt>(!*this) == false</tt>
-     */
-    string_type const& string() const { return get_string_from_id(m_id); }
+	/*!
+	 * \return The associated id value
+	 * \pre <tt>(!*this) == false</tt>
+	 */
+	id_type id() const BOOST_NOEXCEPT
+	{
+		BOOST_ASSERT(m_id != uninitialized);
+		return m_id;
+	}
+	/*!
+	 * \return The attribute name string that was used during the object construction
+	 * \pre <tt>(!*this) == false</tt>
+	 */
+	string_type const& string() const
+	{
+		return get_string_from_id(m_id);
+	}
 
 private:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static BOOST_LOG_API id_type get_id_from_string(const char* name);
-    static BOOST_LOG_API string_type const& get_string_from_id(id_type id);
+	static BOOST_LOG_API id_type get_id_from_string(const char* name);
+	static BOOST_LOG_API string_type const& get_string_from_id(id_type id);
 #endif
 };
 

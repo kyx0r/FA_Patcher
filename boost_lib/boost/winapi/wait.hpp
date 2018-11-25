@@ -20,51 +20,53 @@
 extern "C" {
 
 #if BOOST_WINAPI_PARTITION_APP || BOOST_WINAPI_PARTITION_SYSTEM
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-WaitForSingleObjectEx(
-    boost::winapi::HANDLE_ hHandle,
-    boost::winapi::DWORD_ dwMilliseconds,
-    boost::winapi::BOOL_ bAlertable);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	WaitForSingleObjectEx(
+	    boost::winapi::HANDLE_ hHandle,
+	    boost::winapi::DWORD_ dwMilliseconds,
+	    boost::winapi::BOOL_ bAlertable);
 #endif
 
 #if BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
 #if BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_NT4
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-SignalObjectAndWait(
-    boost::winapi::HANDLE_ hObjectToSignal,
-    boost::winapi::HANDLE_ hObjectToWaitOn,
-    boost::winapi::DWORD_ dwMilliseconds,
-    boost::winapi::BOOL_ bAlertable);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	SignalObjectAndWait(
+	    boost::winapi::HANDLE_ hObjectToSignal,
+	    boost::winapi::HANDLE_ hObjectToWaitOn,
+	    boost::winapi::DWORD_ dwMilliseconds,
+	    boost::winapi::BOOL_ bAlertable);
 #endif
 #endif
 
 #if BOOST_WINAPI_PARTITION_APP_SYSTEM
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-WaitForSingleObject(
-    boost::winapi::HANDLE_ hHandle,
-    boost::winapi::DWORD_ dwMilliseconds);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	WaitForSingleObject(
+	    boost::winapi::HANDLE_ hHandle,
+	    boost::winapi::DWORD_ dwMilliseconds);
 
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-WaitForMultipleObjects(
-    boost::winapi::DWORD_ nCount,
-    boost::winapi::HANDLE_ const* lpHandles,
-    boost::winapi::BOOL_ bWaitAll,
-    boost::winapi::DWORD_ dwMilliseconds);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	WaitForMultipleObjects(
+	    boost::winapi::DWORD_ nCount,
+	    boost::winapi::HANDLE_ const* lpHandles,
+	    boost::winapi::BOOL_ bWaitAll,
+	    boost::winapi::DWORD_ dwMilliseconds);
 
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-WaitForMultipleObjectsEx(
-    boost::winapi::DWORD_ nCount,
-    boost::winapi::HANDLE_ const* lpHandles,
-    boost::winapi::BOOL_ bWaitAll,
-    boost::winapi::DWORD_ dwMilliseconds,
-    boost::winapi::BOOL_ bAlertable);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	WaitForMultipleObjectsEx(
+	    boost::winapi::DWORD_ nCount,
+	    boost::winapi::HANDLE_ const* lpHandles,
+	    boost::winapi::BOOL_ bWaitAll,
+	    boost::winapi::DWORD_ dwMilliseconds,
+	    boost::winapi::BOOL_ bAlertable);
 #endif // BOOST_WINAPI_PARTITION_APP_SYSTEM
 
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if BOOST_WINAPI_PARTITION_APP || BOOST_WINAPI_PARTITION_SYSTEM
 using ::WaitForSingleObjectEx;

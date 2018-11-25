@@ -23,9 +23,11 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
-namespace detail {
+namespace detail
+{
 
 template< typename EnumType, typename Void = void >
 struct underlying_type_impl;
@@ -36,10 +38,10 @@ struct underlying_type_impl;
 template< typename EnumType >
 struct underlying_type_impl< EnumType, typename EnumType::is_boost_scoped_enum_tag >
 {
-    /**
-     * The member typedef type names the underlying type of EnumType. It is EnumType::underlying_type when the EnumType is an emulated scoped enum,
-     */
-    typedef typename EnumType::underlying_type type;
+	/**
+	 * The member typedef type names the underlying type of EnumType. It is EnumType::underlying_type when the EnumType is an emulated scoped enum,
+	 */
+	typedef typename EnumType::underlying_type type;
 };
 
 #endif
@@ -49,7 +51,7 @@ struct underlying_type_impl< EnumType, typename EnumType::is_boost_scoped_enum_t
 template< typename EnumType, typename Void >
 struct underlying_type_impl
 {
-    typedef typename std::underlying_type< EnumType >::type type;
+	typedef typename std::underlying_type< EnumType >::type type;
 };
 
 #endif
@@ -70,7 +72,7 @@ struct underlying_type_impl
  */
 template< typename EnumType >
 struct underlying_type :
-    public detail::underlying_type_impl< EnumType >
+	public detail::underlying_type_impl< EnumType >
 {
 };
 

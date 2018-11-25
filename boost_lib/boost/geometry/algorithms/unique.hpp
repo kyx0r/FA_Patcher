@@ -28,70 +28,75 @@
 #include <boost/geometry/policies/compare.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace unique
+namespace detail
+{
+namespace unique
 {
 
 
 struct range_unique
 {
-    template <typename Range, typename ComparePolicy>
-    static inline void apply(Range& range, ComparePolicy const& policy)
-    {
-        typename boost::range_iterator<Range>::type it
-            = std::unique
-                (
-                    boost::begin(range),
-                    boost::end(range),
-                    policy
-                );
+	template <typename Range, typename ComparePolicy>
+	static inline void apply(Range& range, ComparePolicy const& policy)
+	{
+		typename boost::range_iterator<Range>::type it
+		    = std::unique
+		      (
+		          boost::begin(range),
+		          boost::end(range),
+		          policy
+		      );
 
-        traits::resize<Range>::apply(range, it - boost::begin(range));
-    }
+		traits::resize<Range>::apply(range, it - boost::begin(range));
+	}
 };
 
 
 struct polygon_unique
 {
-    template <typename Polygon, typename ComparePolicy>
-    static inline void apply(Polygon& polygon, ComparePolicy const& policy)
-    {
-        range_unique::apply(exterior_ring(polygon), policy);
+	template <typename Polygon, typename ComparePolicy>
+	static inline void apply(Polygon& polygon, ComparePolicy const& policy)
+	{
+		range_unique::apply(exterior_ring(polygon), policy);
 
-        typename interior_return_type<Polygon>::type
-            rings = interior_rings(polygon);
+		typename interior_return_type<Polygon>::type
+		rings = interior_rings(polygon);
 
-        for (typename detail::interior_iterator<Polygon>::type
-                it = boost::begin(rings); it != boost::end(rings); ++it)
-        {
-            range_unique::apply(*it, policy);
-        }
-    }
+		for (typename detail::interior_iterator<Polygon>::type
+		        it = boost::begin(rings); it != boost::end(rings); ++it)
+		{
+			range_unique::apply(*it, policy);
+		}
+	}
 };
 
 
 template <typename Policy>
 struct multi_unique
 {
-    template <typename MultiGeometry, typename ComparePolicy>
-    static inline void apply(MultiGeometry& multi, ComparePolicy const& compare)
-    {
-        for (typename boost::range_iterator<MultiGeometry>::type
-                it = boost::begin(multi);
-            it != boost::end(multi);
-            ++it)
-        {
-            Policy::apply(*it, compare);
-        }
-    }
+	template <typename MultiGeometry, typename ComparePolicy>
+	static inline void apply(MultiGeometry& multi, ComparePolicy const& compare)
+	{
+		for (typename boost::range_iterator<MultiGeometry>::type
+		        it = boost::begin(multi);
+		        it != boost::end(multi);
+		        ++it)
+		{
+			Policy::apply(*it, compare);
+		}
+	}
 };
 
 
-}} // namespace detail::unique
+}
+} // namespace detail::unique
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -105,30 +110,30 @@ template
 <
     typename Geometry,
     typename Tag = typename tag<Geometry>::type
->
+    >
 struct unique
 {
-    template <typename ComparePolicy>
-    static inline void apply(Geometry&, ComparePolicy const& )
-    {}
+	template <typename ComparePolicy>
+	static inline void apply(Geometry&, ComparePolicy const& )
+	{}
 };
 
 
 template <typename Ring>
 struct unique<Ring, ring_tag>
-    : detail::unique::range_unique
+	: detail::unique::range_unique
 {};
 
 
 template <typename LineString>
 struct unique<LineString, linestring_tag>
-    : detail::unique::range_unique
+	: detail::unique::range_unique
 {};
 
 
 template <typename Polygon>
 struct unique<Polygon, polygon_tag>
-    : detail::unique::polygon_unique
+	: detail::unique::polygon_unique
 {};
 
 
@@ -140,13 +145,13 @@ struct unique<Polygon, polygon_tag>
 
 template <typename MultiLineString>
 struct unique<MultiLineString, multi_linestring_tag>
-    : detail::unique::multi_unique<detail::unique::range_unique>
+	: detail::unique::multi_unique<detail::unique::range_unique>
 {};
 
 
 template <typename MultiPolygon>
 struct unique<MultiPolygon, multi_polygon_tag>
-    : detail::unique::multi_unique<detail::unique::polygon_unique>
+	: detail::unique::multi_unique<detail::unique::polygon_unique>
 {};
 
 
@@ -166,19 +171,20 @@ struct unique<MultiPolygon, multi_polygon_tag>
 template <typename Geometry>
 inline void unique(Geometry& geometry)
 {
-    concepts::check<Geometry>();
+	concepts::check<Geometry>();
 
-    // Default strategy is the default point-comparison policy
-    typedef geometry::equal_to
-        <
-            typename geometry::point_type<Geometry>::type
-        > policy;
+	// Default strategy is the default point-comparison policy
+	typedef geometry::equal_to
+	<
+	typename geometry::point_type<Geometry>::type
+	> policy;
 
 
-    dispatch::unique<Geometry>::apply(geometry, policy());
+	dispatch::unique<Geometry>::apply(geometry, policy());
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_UNIQUE_HPP

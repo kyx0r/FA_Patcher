@@ -17,23 +17,26 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
+namespace boost
+{
+namespace coroutines
+{
 
 struct BOOST_COROUTINES_DECL stack_traits
 {
-    static bool is_unbounded() BOOST_NOEXCEPT;
+	static bool is_unbounded() BOOST_NOEXCEPT;
 
-    static std::size_t page_size() BOOST_NOEXCEPT;
+	static std::size_t page_size() BOOST_NOEXCEPT;
 
-    static std::size_t default_size() BOOST_NOEXCEPT;
+	static std::size_t default_size() BOOST_NOEXCEPT;
 
-    static std::size_t minimum_size() BOOST_NOEXCEPT;
+	static std::size_t minimum_size() BOOST_NOEXCEPT;
 
-    static std::size_t maximum_size() BOOST_NOEXCEPT;
+	static std::size_t maximum_size() BOOST_NOEXCEPT;
 };
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

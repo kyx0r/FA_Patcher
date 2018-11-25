@@ -8,11 +8,13 @@
 # include <boost/concept/assert.hpp>
 # include <boost/preprocessor/seq/for_each.hpp>
 
-namespace boost { 
+namespace boost
+{
 
 // unaryfunptr_arg_type from parameter/aux_/parenthesized_type.hpp
 
-namespace ccheck_aux {
+namespace ccheck_aux
+{
 
 // A metafunction that transforms void(*)(T) -> T
 template <class UnaryFunctionPointer>
@@ -21,13 +23,13 @@ struct unaryfunptr_arg_type;
 template <class Arg>
 struct unaryfunptr_arg_type<void(*)(Arg)>
 {
-    typedef Arg type;
+	typedef Arg type;
 };
 
 template <>
 struct unaryfunptr_arg_type<void(*)(void)>
 {
-    typedef void type;
+	typedef void type;
 };
 
 } // namespace ccheck_aux
@@ -36,7 +38,7 @@ struct unaryfunptr_arg_type<void(*)(void)>
 template <class Model, class More>
 struct requires_ : More
 {
-    BOOST_CONCEPT_ASSERT((Model));
+	BOOST_CONCEPT_ASSERT((Model));
 };
 
 // Template for use by macros, where models must be wrapped in parens.
@@ -45,8 +47,8 @@ struct requires_ : More
 template <class ModelFn>
 struct _requires_
 {
-    enum { value = 0 };
-    BOOST_CONCEPT_ASSERT_FN(ModelFn);
+	enum { value = 0 };
+	BOOST_CONCEPT_ASSERT_FN(ModelFn);
 };
 
 template <int check, class Result>
@@ -56,7 +58,7 @@ struct Requires_ : ::boost::ccheck_aux::unaryfunptr_arg_type<Result>
 
 # if BOOST_WORKAROUND(BOOST_INTEL_WIN, BOOST_TESTED_AT(1010))
 #  define BOOST_CONCEPT_REQUIRES_(r,data,t) | (::boost::_requires_<void(*)t>::value)
-# else 
+# else
 #  define BOOST_CONCEPT_REQUIRES_(r,data,t) + (::boost::_requires_<void(*)t>::value)
 # endif
 
@@ -83,7 +85,7 @@ struct Requires_ : ::boost::ccheck_aux::unaryfunptr_arg_type<Result>
       void(*)result                                                                 \
     >::type
 
-#endif 
+#endif
 
 // C++0x proposed syntax changed.  This supports an older usage
 #define BOOST_CONCEPT_WHERE(models,result) BOOST_CONCEPT_REQUIRES(models,result)

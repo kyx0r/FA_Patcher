@@ -7,11 +7,11 @@
 
 __asm__
 (
-	".equ by_pass_address,0x006B8FE0-0x006B8FB9 \n"
+    ".equ by_pass_address,0x006B8FE0-0x006B8FB9 \n"
 );
 
-__asm__ __volatile__ 
+__asm__ __volatile__
 (
-	"jmp . + by_pass_address \n"
-	".align 128, 0x0 \n"
+    "jmp . + by_pass_address \n"
+    ".align 128, 0x0 \n"
 );

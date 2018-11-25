@@ -17,20 +17,22 @@
 #include <boost/geometry/util/has_nan_coordinate.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
 
-namespace boost { namespace geometry
+namespace boost
 {
-    
+namespace geometry
+{
+
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail
 {
 
 struct is_not_finite
 {
-    template <typename T>
-    static inline bool apply(T const& t)
-    {
-        return ! boost::math::isfinite(t);
-    }
+	template <typename T>
+	static inline bool apply(T const& t)
+	{
+		return ! boost::math::isfinite(t);
+	}
 };
 
 } // namespace detail
@@ -39,17 +41,18 @@ struct is_not_finite
 template <typename Point>
 bool has_non_finite_coordinate(Point const& point)
 {
-    return detail::has_coordinate_with_property
-        <
-            Point,
-            detail::is_not_finite,
-            boost::is_floating_point
-                <
-                    typename coordinate_type<Point>::type
-                >::value
-        >::apply(point);
+	return detail::has_coordinate_with_property
+	       <
+	       Point,
+	       detail::is_not_finite,
+	       boost::is_floating_point
+	       <
+	       typename coordinate_type<Point>::type
+	       >::value
+	       >::apply(point);
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_UTIL_HAS_NON_FINITE_COORDINATE_HPP

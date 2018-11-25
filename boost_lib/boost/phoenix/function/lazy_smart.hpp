@@ -19,9 +19,12 @@
 #ifndef BOOST_PHOENIX_FUNCTION_LAZY_SMART
 #define BOOST_PHOENIX_FUNCTION_LAZY_SMART
 
-namespace boost {
-    namespace phoenix {
-      namespace fcpp {
+namespace boost
+{
+namespace phoenix
+{
+namespace fcpp
+{
 
 //////////////////////////////////////////////////////////////////////
 // Feature: Smartness
@@ -45,80 +48,103 @@ struct SmartFunctoid {};
 // We add crazy identifiers to ensure that users don't accidentally talk
 // to functoids directly; they should always be going through the traits
 // class to ask for info.
-struct smart_functoid0 : public SmartFunctoid {
-   template <class Dummy, int i> struct crazy_accepts {
-      static const bool args = false;
-   };
-   template <class Dummy> struct crazy_accepts<Dummy,0> {
-      static const bool args = true;
-   };
-   static const int crazy_max_args = 0;
+struct smart_functoid0 : public SmartFunctoid
+{
+	template <class Dummy, int i> struct crazy_accepts
+	{
+		static const bool args = false;
+	};
+	template <class Dummy> struct crazy_accepts<Dummy,0>
+	{
+		static const bool args = true;
+	};
+	static const int crazy_max_args = 0;
 };
 
-struct smart_functoid1 : public SmartFunctoid {
-   template <class Dummy, int i> struct crazy_accepts {
-      static const bool args = false;
-   };
-   template <class Dummy> struct crazy_accepts<Dummy,1> {
-      static const bool args = true;
-   };
-   static const int crazy_max_args = 1;
+struct smart_functoid1 : public SmartFunctoid
+{
+	template <class Dummy, int i> struct crazy_accepts
+	{
+		static const bool args = false;
+	};
+	template <class Dummy> struct crazy_accepts<Dummy,1>
+	{
+		static const bool args = true;
+	};
+	static const int crazy_max_args = 1;
 };
 
-struct smart_functoid2 : public SmartFunctoid {
-   template <class Dummy, int i> struct crazy_accepts {
-      static const bool args = false;
-   };
-   template <class Dummy> struct crazy_accepts<Dummy,1> {
-      static const bool args = true;
-   };
-   template <class Dummy> struct crazy_accepts<Dummy,2> {
-      static const bool args = true;
-   };
-   static const int crazy_max_args = 2;
+struct smart_functoid2 : public SmartFunctoid
+{
+	template <class Dummy, int i> struct crazy_accepts
+	{
+		static const bool args = false;
+	};
+	template <class Dummy> struct crazy_accepts<Dummy,1>
+	{
+		static const bool args = true;
+	};
+	template <class Dummy> struct crazy_accepts<Dummy,2>
+	{
+		static const bool args = true;
+	};
+	static const int crazy_max_args = 2;
 };
 
-struct smart_functoid3 : public SmartFunctoid {
-   template <class Dummy, int i> struct crazy_accepts {
-      static const bool args = false;
-   };
-   template <class Dummy> struct crazy_accepts<Dummy,1> {
-      static const bool args = true;
-   };
-   template <class Dummy> struct crazy_accepts<Dummy,2> {
-      static const bool args = true;
-   };
-   template <class Dummy> struct crazy_accepts<Dummy,3> {
-      static const bool args = true;
-   };
-   static const int crazy_max_args = 3;
+struct smart_functoid3 : public SmartFunctoid
+{
+	template <class Dummy, int i> struct crazy_accepts
+	{
+		static const bool args = false;
+	};
+	template <class Dummy> struct crazy_accepts<Dummy,1>
+	{
+		static const bool args = true;
+	};
+	template <class Dummy> struct crazy_accepts<Dummy,2>
+	{
+		static const bool args = true;
+	};
+	template <class Dummy> struct crazy_accepts<Dummy,3>
+	{
+		static const bool args = true;
+	};
+	static const int crazy_max_args = 3;
 };
 
 
-namespace impl {
-   template <class F, bool b> struct NeededASmartFunctoidButInsteadGot {};
-   template <class F> struct NeededASmartFunctoidButInsteadGot<F,true> {
-      typedef F type;
-   };
-   template <bool b> struct Ensure;
-   template <> struct Ensure<true> {};
+namespace impl
+{
+template <class F, bool b> struct NeededASmartFunctoidButInsteadGot {};
+template <class F> struct NeededASmartFunctoidButInsteadGot<F,true>
+{
+	typedef F type;
+};
+template <bool b> struct Ensure;
+template <> struct Ensure<true> {};
 } // end namespace impl
 
 template <class MaybeASmartFunctoid>
-struct functoid_traits {
-  typedef typename boost::remove_reference<MaybeASmartFunctoid>::type MaybeASmartFunctoidT;
-   typedef
-      typename impl::NeededASmartFunctoidButInsteadGot<MaybeASmartFunctoidT,
-         boost::is_base_and_derived<SmartFunctoid,
-         MaybeASmartFunctoidT>::value>::type F;
-      template <int i> struct accepts {
-      static const bool args = F::template crazy_accepts<int,i>::args;
-   };
-   template <int i> struct ensure_accepts {
-      static const bool ok = F::template crazy_accepts<int,i>::args;
-      inline static void args() { (void) impl::Ensure<ok>(); }
-   };
-   static const int max_args = F::crazy_max_args;
+struct functoid_traits
+{
+	typedef typename boost::remove_reference<MaybeASmartFunctoid>::type MaybeASmartFunctoidT;
+	typedef
+	typename impl::NeededASmartFunctoidButInsteadGot<MaybeASmartFunctoidT,
+	         boost::is_base_and_derived<SmartFunctoid,
+	         MaybeASmartFunctoidT>::value>::type F;
+	template <int i> struct accepts
+	{
+		static const bool args = F::template crazy_accepts<int,i>::args;
+	};
+	template <int i> struct ensure_accepts
+	{
+		static const bool ok = F::template crazy_accepts<int,i>::args;
+		inline static void args()
+		{
+			(void) impl::Ensure<ok>();
+		}
+	};
+	static const int max_args = F::crazy_max_args;
 };
 
 // These can be used to make functoids smart without having to alter
@@ -126,27 +152,27 @@ struct functoid_traits {
 // to declare the object.
 template <typename F>
 struct smart_function0 : public smart_functoid0,
-                         public boost::phoenix::function<F>
+	public boost::phoenix::function<F>
 { };
 
 template <typename F>
 struct smart_function1 : public smart_functoid1,
-                         public boost::phoenix::function<F>
+	public boost::phoenix::function<F>
 {
-  typedef F type;
+	typedef F type;
 };
 
 template <typename F>
 struct smart_function2 : public smart_functoid2,
-                         public boost::phoenix::function<F>
+	public boost::phoenix::function<F>
 { };
 
 template <typename F>
 struct smart_function3 : public smart_functoid3,
-                         public boost::phoenix::function<F>
+	public boost::phoenix::function<F>
 { };
-      }
-    }
+}
+}
 }
 
 

@@ -10,18 +10,20 @@ Patcher::Patcher(const string& filename_in, const string& filename_out)
 		cout<<fg::red<<filename_in<<"not found! Rename the file if needed\n";
 		debug_pause();
 	}
-	
-	boost::filesystem::copy_file(filename_in, filename_out, boost::filesystem::copy_option::overwrite_if_exists);	
-	
+
+	boost::filesystem::copy_file(filename_in, filename_out, boost::filesystem::copy_option::overwrite_if_exists);
+
 	if(!boost::filesystem::exists("/build"))
-	{boost::filesystem::create_directory("build");}
-		
+	{
+		boost::filesystem::create_directory("build");
+	}
+
 	if(!check_system())
 	{
 		cout<<fg::red<<"No system present. Exiting patcher. \n";
 		debug_pause();
 	}
-	
+
 	if(!check_make())
 	{
 		cout<<fg::red<<"No make present. Exiting patcher. \n";
@@ -33,10 +35,10 @@ bool Patcher::check_system()
 {
 	if (system(nullptr))
 	{
-		#ifdef DEBUG
+#ifdef DEBUG
 		cout <<fg::green<< "Command processor exists "<<fg::reset<<endl;
 		cout << " " "\n";
-		#endif
+#endif
 		return true;
 	}
 	else
@@ -44,7 +46,7 @@ bool Patcher::check_system()
 		cout <<fg::red<< "Command processor doesn't exist \n";
 		return false;
 	}
-}  
+}
 
 int debug_pause()
 {
@@ -59,19 +61,19 @@ bool Patcher::check_make()
 {
 	if (!system("make"))
 	{
-		#ifdef DEBUG
+#ifdef DEBUG
 		cout <<fg::green<< "Detected make"<<fg::reset<<endl;
 		cout << " " "\n";
-		#endif
+#endif
 		make = "make";
 		return true;
 	}
 	else if(!system("mingw32-make"))
 	{
-		#ifdef DEBUG
+#ifdef DEBUG
 		cout <<fg::green<< "Detected mingw32-make"<<fg::reset<<endl;
 		cout << " " "\n";
-		#endif
+#endif
 		make = "mingw32-make";
 		return true;
 	}

@@ -24,50 +24,52 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 //! Base class for time traits involving Boost.DateTime.
 struct basic_time_traits
 {
-    //! Time type
-    typedef posix_time::ptime time_type;
+	//! Time type
+	typedef posix_time::ptime time_type;
 
-    //! Current time source
+	//! Current time source
 #if defined(BOOST_DATE_TIME_HAS_HIGH_PRECISION_CLOCK)
-    typedef posix_time::microsec_clock clock_source;
+	typedef posix_time::microsec_clock clock_source;
 #else
-    typedef posix_time::second_clock clock_source;
+	typedef posix_time::second_clock clock_source;
 #endif // defined(BOOST_DATE_TIME_HAS_HIGH_PRECISION_CLOCK)
 };
 
 //! Time traits that describes UTC time acquirement via Boost.DateTime facilities
 struct utc_time_traits :
-    public basic_time_traits
+	public basic_time_traits
 {
-    /*!
-     * \return Current time stamp
-     */
-    static time_type get_clock()
-    {
-        return clock_source::universal_time();
-    }
+	/*!
+	 * \return Current time stamp
+	 */
+	static time_type get_clock()
+	{
+		return clock_source::universal_time();
+	}
 };
 
 //! Time traits that describes local time acquirement via Boost.DateTime facilities
 struct local_time_traits :
-    public basic_time_traits
+	public basic_time_traits
 {
-    /*!
-     * \return Current time stamp
-     */
-    static time_type get_clock()
-    {
-        return clock_source::local_time();
-    }
+	/*!
+	 * \return Current time stamp
+	 */
+	static time_type get_clock()
+	{
+		return clock_source::local_time();
+	}
 };
 
 } // namespace attributes

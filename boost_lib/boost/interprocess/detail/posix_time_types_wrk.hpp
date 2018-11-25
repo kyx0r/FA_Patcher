@@ -32,8 +32,10 @@
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/date_time/posix_time/posix_time_duration.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 typedef boost::date_time::microsec_clock<boost::posix_time::ptime> microsec_clock;
 

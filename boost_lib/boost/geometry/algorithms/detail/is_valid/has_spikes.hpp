@@ -34,44 +34,48 @@
 #include <boost/geometry/io/dsv/write.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 template <typename Point>
 struct equal_to
 {
-    Point const& m_point;
+	Point const& m_point;
 
-    equal_to(Point const& point)
-        : m_point(point)
-    {}
+	equal_to(Point const& point)
+		: m_point(point)
+	{}
 
-    template <typename OtherPoint>
-    inline bool operator()(OtherPoint const& other) const
-    {
-        return geometry::equals(m_point, other);
-    }
+	template <typename OtherPoint>
+	inline bool operator()(OtherPoint const& other) const
+	{
+		return geometry::equals(m_point, other);
+	}
 };
 
 template <typename Point>
 struct not_equal_to
 {
-    Point const& m_point;
+	Point const& m_point;
 
-    not_equal_to(Point const& point)
-        : m_point(point)
-    {}
+	not_equal_to(Point const& point)
+		: m_point(point)
+	{}
 
-    template <typename OtherPoint>
-    inline bool operator()(OtherPoint const& other) const
-    {
-        return ! geometry::equals(other, m_point);
-    }
+	template <typename OtherPoint>
+	inline bool operator()(OtherPoint const& other) const
+	{
+		return ! geometry::equals(other, m_point);
+	}
 };
 
 
@@ -79,96 +83,98 @@ struct not_equal_to
 template <typename Range, closure_selector Closure>
 struct has_spikes
 {
-    template <typename Iterator>
-    static inline Iterator find_different_from_first(Iterator first,
-                                                     Iterator last)
-    {
-        typedef not_equal_to<typename point_type<Range>::type> not_equal;
+	template <typename Iterator>
+	static inline Iterator find_different_from_first(Iterator first,
+	        Iterator last)
+	{
+		typedef not_equal_to<typename point_type<Range>::type> not_equal;
 
-        BOOST_GEOMETRY_ASSERT(first != last);
+		BOOST_GEOMETRY_ASSERT(first != last);
 
-        Iterator second = first;
-        ++second;
-        return std::find_if(second, last, not_equal(*first));
-    }
+		Iterator second = first;
+		++second;
+		return std::find_if(second, last, not_equal(*first));
+	}
 
-    template <typename VisitPolicy, typename SideStrategy>
-    static inline bool apply(Range const& range, VisitPolicy& visitor,
-                             SideStrategy const& strategy)
-    {
-        boost::ignore_unused(visitor);
+	template <typename VisitPolicy, typename SideStrategy>
+	static inline bool apply(Range const& range, VisitPolicy& visitor,
+	                         SideStrategy const& strategy)
+	{
+		boost::ignore_unused(visitor);
 
-        typedef typename closeable_view<Range const, Closure>::type view_type;
-        typedef typename boost::range_iterator<view_type const>::type iterator; 
+		typedef typename closeable_view<Range const, Closure>::type view_type;
+		typedef typename boost::range_iterator<view_type const>::type iterator;
 
-        bool const is_linear
-            = boost::is_same<typename tag<Range>::type, linestring_tag>::value;
+		bool const is_linear
+		    = boost::is_same<typename tag<Range>::type, linestring_tag>::value;
 
-        view_type const view(range);
+		view_type const view(range);
 
-        iterator prev = boost::begin(view);
+		iterator prev = boost::begin(view);
 
-        iterator cur = find_different_from_first(prev, boost::end(view));
-        if (cur == boost::end(view))
-        {
-            // the range has only one distinct point, so it
-            // cannot have a spike
-            return ! visitor.template apply<no_failure>();
-        }
+		iterator cur = find_different_from_first(prev, boost::end(view));
+		if (cur == boost::end(view))
+		{
+			// the range has only one distinct point, so it
+			// cannot have a spike
+			return ! visitor.template apply<no_failure>();
+		}
 
-        iterator next = find_different_from_first(cur, boost::end(view));
-        if (next == boost::end(view))
-        {
-            // the range has only two distinct points, so it
-            // cannot have a spike
-            return ! visitor.template apply<no_failure>();
-        }
+		iterator next = find_different_from_first(cur, boost::end(view));
+		if (next == boost::end(view))
+		{
+			// the range has only two distinct points, so it
+			// cannot have a spike
+			return ! visitor.template apply<no_failure>();
+		}
 
-        while (next != boost::end(view))
-        {
-            if ( geometry::detail::point_is_spike_or_equal(*prev, *next, *cur,
-                                                           strategy) )
-            {
-                return
-                    ! visitor.template apply<failure_spikes>(is_linear, *cur);
-            }
-            prev = cur;
-            cur = next;
-            next = find_different_from_first(cur, boost::end(view));
-        }
+		while (next != boost::end(view))
+		{
+			if ( geometry::detail::point_is_spike_or_equal(*prev, *next, *cur,
+			        strategy) )
+			{
+				return
+				    ! visitor.template apply<failure_spikes>(is_linear, *cur);
+			}
+			prev = cur;
+			cur = next;
+			next = find_different_from_first(cur, boost::end(view));
+		}
 
-        if (geometry::equals(range::front(view), range::back(view)))
-        {
-            iterator cur = boost::begin(view);
-            typename boost::range_reverse_iterator
-                <
-                    view_type const
-                >::type prev = find_different_from_first(boost::rbegin(view),
-                                                         boost::rend(view));
+		if (geometry::equals(range::front(view), range::back(view)))
+		{
+			iterator cur = boost::begin(view);
+			typename boost::range_reverse_iterator
+			<
+			view_type const
+			>::type prev = find_different_from_first(boost::rbegin(view),
+			               boost::rend(view));
 
-            iterator next = find_different_from_first(cur, boost::end(view));
-            if (detail::point_is_spike_or_equal(*prev, *next, *cur, strategy))
-            {
-                return
-                    ! visitor.template apply<failure_spikes>(is_linear, *cur);
-            }
-            else
-            {
-                return ! visitor.template apply<no_failure>();
-            }
-        }
+			iterator next = find_different_from_first(cur, boost::end(view));
+			if (detail::point_is_spike_or_equal(*prev, *next, *cur, strategy))
+			{
+				return
+				    ! visitor.template apply<failure_spikes>(is_linear, *cur);
+			}
+			else
+			{
+				return ! visitor.template apply<no_failure>();
+			}
+		}
 
-        return ! visitor.template apply<no_failure>();
-    }
+		return ! visitor.template apply<no_failure>();
+	}
 };
 
 
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_HAS_SPIKES_HPP

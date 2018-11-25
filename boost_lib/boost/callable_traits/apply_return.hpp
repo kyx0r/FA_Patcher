@@ -11,23 +11,29 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 BOOST_CLBL_TRTS_DEFINE_SFINAE_ERROR_ORIGIN(apply_return)
 BOOST_CLBL_TRTS_SFINAE_MSG(apply_return, invalid_types_for_apply_return)
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename R>
-    struct apply_return_helper {
-        using type = typename detail::traits<T>::template apply_return<R>;
-    };
+template<typename T, typename R>
+struct apply_return_helper
+{
+	using type = typename detail::traits<T>::template apply_return<R>;
+};
 
-    //special case
-    template<typename... Args, typename R>
-    struct apply_return_helper<std::tuple<Args...>, R> {
-        using type = R(Args...);
-    };
+//special case
+template<typename... Args, typename R>
+struct apply_return_helper<std::tuple<Args...>, R>
+{
+	using type = R(Args...);
+};
 }
 
 //[ apply_return_hpp
@@ -42,28 +48,30 @@ template<typename T, typename R>
 using apply_return_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::apply_return_helper<T, R>::type,
-        invalid_types_for_apply_return>;
+    typename detail::apply_return_helper<T, R>::type,
+    invalid_types_for_apply_return>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename R, typename = std::false_type>
-    struct apply_return_impl {};
+template<typename T, typename R, typename = std::false_type>
+struct apply_return_impl {};
 
-    template<typename T, typename R>
-    struct apply_return_impl <T, R, typename std::is_same<
-        apply_return_t<T, R>, detail::dummy>::type>
-    {
-        using type = apply_return_t<T, R>;
-    };
+template<typename T, typename R>
+struct apply_return_impl <T, R, typename std::is_same<
+	apply_return_t<T, R>, detail::dummy>::type>
+{
+	using type = apply_return_t<T, R>;
+};
 }
-    //->
+//->
 
 template<typename T, typename R>
 struct apply_return : detail::apply_return_impl<T, R> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

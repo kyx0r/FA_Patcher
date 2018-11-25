@@ -27,7 +27,9 @@
 #include <boost/geometry/util/add_const_if_c.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -48,11 +50,11 @@ namespace traits
 template <typename Polygon>
 struct exterior_ring
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_POLYGON_TYPE
-            , (types<Polygon>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_POLYGON_TYPE
+	    , (types<Polygon>)
+	);
 };
 
 
@@ -67,30 +69,30 @@ namespace core_dispatch
 template <typename Tag, typename Geometry>
 struct exterior_ring
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 
 template <typename Polygon>
 struct exterior_ring<polygon_tag, Polygon>
 {
-    static
-    typename geometry::ring_return_type<Polygon>::type
-        apply(typename add_const_if_c
-            <
-                boost::is_const<Polygon>::type::value,
-                Polygon
-            >::type& polygon)
-    {
-        return traits::exterior_ring
-            <
-                typename boost::remove_const<Polygon>::type
-            >::get(polygon);
-    }
+	static
+	typename geometry::ring_return_type<Polygon>::type
+	apply(typename add_const_if_c
+	      <
+	      boost::is_const<Polygon>::type::value,
+	      Polygon
+	      >::type& polygon)
+	{
+		return traits::exterior_ring
+		       <
+		       typename boost::remove_const<Polygon>::type
+		       >::get(polygon);
+	}
 };
 
 
@@ -109,11 +111,11 @@ struct exterior_ring<polygon_tag, Polygon>
 template <typename Polygon>
 inline typename ring_return_type<Polygon>::type exterior_ring(Polygon& polygon)
 {
-    return core_dispatch::exterior_ring
-        <
-            typename tag<Polygon>::type,
-            Polygon
-        >::apply(polygon);
+	return core_dispatch::exterior_ring
+	       <
+	       typename tag<Polygon>::type,
+	       Polygon
+	       >::apply(polygon);
 }
 
 
@@ -129,17 +131,18 @@ inline typename ring_return_type<Polygon>::type exterior_ring(Polygon& polygon)
 */
 template <typename Polygon>
 inline typename ring_return_type<Polygon const>::type exterior_ring(
-        Polygon const& polygon)
+    Polygon const& polygon)
 {
-    return core_dispatch::exterior_ring
-        <
-            typename tag<Polygon>::type,
-            Polygon const
-        >::apply(polygon);
+	return core_dispatch::exterior_ring
+	       <
+	       typename tag<Polygon>::type,
+	       Polygon const
+	       >::apply(polygon);
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_EXTERIOR_RING_HPP

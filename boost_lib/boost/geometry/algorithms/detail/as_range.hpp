@@ -22,7 +22,9 @@
 #include <boost/geometry/util/add_const_if_c.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -34,22 +36,22 @@ namespace dispatch
 template <typename GeometryTag, typename Geometry, typename Range, bool IsConst>
 struct as_range
 {
-    static inline typename add_const_if_c<IsConst, Range>::type& get(
-            typename add_const_if_c<IsConst, Geometry>::type& input)
-    {
-        return input;
-    }
+	static inline typename add_const_if_c<IsConst, Range>::type& get(
+	    typename add_const_if_c<IsConst, Geometry>::type& input)
+	{
+		return input;
+	}
 };
 
 
 template <typename Geometry, typename Range, bool IsConst>
 struct as_range<polygon_tag, Geometry, Range, IsConst>
 {
-    static inline typename add_const_if_c<IsConst, Range>::type& get(
-            typename add_const_if_c<IsConst, Geometry>::type& input)
-    {
-        return exterior_ring(input);
-    }
+	static inline typename add_const_if_c<IsConst, Range>::type& get(
+	    typename add_const_if_c<IsConst, Geometry>::type& input)
+	{
+		return exterior_ring(input);
+	}
 };
 
 
@@ -69,13 +71,13 @@ or the outer ring (polygon)
 template <typename Range, typename Geometry>
 inline Range& as_range(Geometry& input)
 {
-    return dispatch::as_range
-        <
-            typename tag<Geometry>::type,
-            Geometry,
-            Range,
-            false
-        >::get(input);
+	return dispatch::as_range
+	       <
+	       typename tag<Geometry>::type,
+	       Geometry,
+	       Range,
+	       false
+	       >::get(input);
 }
 
 
@@ -88,18 +90,19 @@ or the outer ring (polygon), const version
 template <typename Range, typename Geometry>
 inline Range const& as_range(Geometry const& input)
 {
-    return dispatch::as_range
-        <
-            typename tag<Geometry>::type,
-            Geometry,
-            Range,
-            true
-        >::get(input);
+	return dispatch::as_range
+	       <
+	       typename tag<Geometry>::type,
+	       Geometry,
+	       Range,
+	       true
+	       >::get(input);
 }
 
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_AS_RANGE_HPP

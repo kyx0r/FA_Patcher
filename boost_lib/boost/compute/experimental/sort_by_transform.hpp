@@ -19,9 +19,12 @@
 #include <boost/compute/detail/iterator_range_size.hpp>
 #include <boost/compute/type_traits/result_of.hpp>
 
-namespace boost {
-namespace compute {
-namespace experimental {
+namespace boost
+{
+namespace compute
+{
+namespace experimental
+{
 
 template<class Iterator, class Transform, class Compare>
 inline void sort_by_transform(Iterator first,
@@ -30,33 +33,34 @@ inline void sort_by_transform(Iterator first,
                               Compare compare,
                               command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
-    typedef typename boost::compute::result_of<Transform(value_type)>::type key_type;
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	typedef typename boost::compute::result_of<Transform(value_type)>::type key_type;
 
-    size_t n = detail::iterator_range_size(first, last);
-    if(n < 2){
-        return;
-    }
+	size_t n = detail::iterator_range_size(first, last);
+	if(n < 2)
+	{
+		return;
+	}
 
-    const context &context = queue.get_context();
+	const context &context = queue.get_context();
 
-    ::boost::compute::vector<key_type> keys(n, context);
+	::boost::compute::vector<key_type> keys(n, context);
 
-    ::boost::compute::transform(
-        first,
-        last,
-        keys.begin(),
-        transform,
-        queue
-    );
+	::boost::compute::transform(
+	    first,
+	    last,
+	    keys.begin(),
+	    transform,
+	    queue
+	);
 
-    ::boost::compute::sort_by_key(
-        keys.begin(),
-        keys.end(),
-        first,
-        compare,
-        queue
-    );
+	::boost::compute::sort_by_key(
+	    keys.begin(),
+	    keys.end(),
+	    first,
+	    compare,
+	    queue
+	);
 }
 
 } // end experimental namespace

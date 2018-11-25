@@ -13,14 +13,20 @@
 
 #include <string>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T>
 struct type_definition_trait
 {
-    static std::string value() { return std::string(); }
+	static std::string value()
+	{
+		return std::string();
+	}
 };
 
 } // end detail namespace
@@ -33,7 +39,7 @@ struct type_definition_trait
 template<class T>
 inline std::string type_definition()
 {
-    return detail::type_definition_trait<T>::value();
+	return detail::type_definition_trait<T>::value();
 }
 
 } // end compute namespace

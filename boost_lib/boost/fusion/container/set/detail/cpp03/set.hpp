@@ -47,56 +47,65 @@
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct fusion_sequence_tag;
+namespace fusion
+{
+struct fusion_sequence_tag;
 
-    template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_SET_SIZE, typename T)>
-    struct set : sequence_base<set<BOOST_PP_ENUM_PARAMS(FUSION_MAX_SET_SIZE, T)> >
-    {
-        struct category : forward_traversal_tag, associative_tag {};
+template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_SET_SIZE, typename T)>
+struct set : sequence_base<set<BOOST_PP_ENUM_PARAMS(FUSION_MAX_SET_SIZE, T)> >
+{
+	struct category : forward_traversal_tag, associative_tag {};
 
-        typedef set_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::false_ is_view;
+	typedef set_tag fusion_tag;
+	typedef fusion_sequence_tag tag; // this gets picked up by MPL
+	typedef mpl::false_ is_view;
 
-        typedef vector<
-            BOOST_PP_ENUM_PARAMS(FUSION_MAX_SET_SIZE, T)>
-        storage_type;
+	typedef vector<
+	BOOST_PP_ENUM_PARAMS(FUSION_MAX_SET_SIZE, T)>
+	storage_type;
 
-        typedef typename storage_type::size size;
+	typedef typename storage_type::size size;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        set()
-            : data() {}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	set()
+		: data() {}
 
-        template <typename Sequence>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        set(Sequence const& rhs
-            , typename enable_if<traits::is_sequence<Sequence>, detail::enabler_>::type = detail::enabler)
-            : data(rhs) {}
+	template <typename Sequence>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	set(Sequence const& rhs
+	    , typename enable_if<traits::is_sequence<Sequence>, detail::enabler_>::type = detail::enabler)
+		: data(rhs) {}
 
-        #include <boost/fusion/container/set/detail/cpp03/set_forward_ctor.hpp>
+#include <boost/fusion/container/set/detail/cpp03/set_forward_ctor.hpp>
 
-        template <typename T>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        set&
-        operator=(T const& rhs)
-        {
-            data = rhs;
-            return *this;
-        }
+	template <typename T>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	set&
+	operator=(T const& rhs)
+	{
+		data = rhs;
+		return *this;
+	}
 
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type& get_data() { return data; }
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type const& get_data() const { return data; }
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type& get_data()
+	{
+		return data;
+	}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type const& get_data() const
+	{
+		return data;
+	}
 
-    private:
+private:
 
-        storage_type data;
-    };
-}}
+	storage_type data;
+};
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)

@@ -17,25 +17,32 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace fibers {
-namespace detail {
+namespace boost
+{
+namespace fibers
+{
+namespace detail
+{
 
 template< typename X, typename ... Y >
 struct is_all_same;
 
 template< typename X, typename Y0, typename ... Y >
-struct is_all_same< X, Y0, Y ... > {
-    static constexpr bool value =
-        std::is_same< X, Y0 >::value && is_all_same< X, Y ... >::value;
+struct is_all_same< X, Y0, Y ... >
+{
+	static constexpr bool value =
+	    std::is_same< X, Y0 >::value && is_all_same< X, Y ... >::value;
 };
 
 template< typename X, typename Y0 >
-struct is_all_same< X, Y0 > {
-    static constexpr bool value = std::is_same< X, Y0 >::value;
+struct is_all_same< X, Y0 >
+{
+	static constexpr bool value = std::is_same< X, Y0 >::value;
 };
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

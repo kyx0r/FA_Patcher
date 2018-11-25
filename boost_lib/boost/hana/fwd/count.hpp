@@ -15,42 +15,44 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Return the number of elements in the structure that compare equal to
-    //! a given value.
-    //! @ingroup group-Foldable
-    //!
-    //! Given a Foldable structure `xs` and a value `value`, `count` returns
-    //! an unsigned integral, or a Constant thereof, representing the number
-    //! of elements of `xs` that compare equal to `value`. For this method to
-    //! be well-defined, all the elements of the structure must be Comparable
-    //! with the given value.
-    //!
-    //!
-    //! @param xs
-    //! The structure whose elements are counted.
-    //!
-    //! @param value
-    //! A value compared with each element in the structure. Elements
-    //! that compare equal to this value are counted, others are not.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/count.cpp
+//! Return the number of elements in the structure that compare equal to
+//! a given value.
+//! @ingroup group-Foldable
+//!
+//! Given a Foldable structure `xs` and a value `value`, `count` returns
+//! an unsigned integral, or a Constant thereof, representing the number
+//! of elements of `xs` that compare equal to `value`. For this method to
+//! be well-defined, all the elements of the structure must be Comparable
+//! with the given value.
+//!
+//!
+//! @param xs
+//! The structure whose elements are counted.
+//!
+//! @param value
+//! A value compared with each element in the structure. Elements
+//! that compare equal to this value are counted, others are not.
+//!
+//!
+//! Example
+//! -------
+//! @include example/count.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto count = [](auto&& xs, auto&& value) {
-        return tag-dispatched;
-    };
+constexpr auto count = [](auto&& xs, auto&& value)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename T, typename = void>
-    struct count_impl : count_impl<T, when<true>> { };
+template <typename T, typename = void>
+struct count_impl : count_impl<T, when<true>> { };
 
-    struct count_t {
-        template <typename Xs, typename Value>
-        constexpr auto operator()(Xs&& xs, Value&& value) const;
-    };
+struct count_t
+{
+	template <typename Xs, typename Value>
+	constexpr auto operator()(Xs&& xs, Value&& value) const;
+};
 
-    constexpr count_t count{};
+constexpr count_t count{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

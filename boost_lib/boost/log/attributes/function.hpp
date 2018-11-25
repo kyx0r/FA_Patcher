@@ -30,11 +30,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that acquires its value from a third-party function object
@@ -47,61 +49,61 @@ namespace attributes {
  */
 template< typename R >
 class function :
-    public attribute
+	public attribute
 {
-    BOOST_STATIC_ASSERT_MSG(!is_void< R >::value, "Boost.Log: Function object return type must not be void");
+	BOOST_STATIC_ASSERT_MSG(!is_void< R >::value, "Boost.Log: Function object return type must not be void");
 
 public:
-    //! The attribute value type
-    typedef R value_type;
+	//! The attribute value type
+	typedef R value_type;
 
 protected:
-    //! Base class for factory implementation
-    class BOOST_LOG_NO_VTABLE BOOST_SYMBOL_VISIBLE impl :
-        public attribute::impl
-    {
-    };
+	//! Base class for factory implementation
+	class BOOST_LOG_NO_VTABLE BOOST_SYMBOL_VISIBLE impl :
+		public attribute::impl
+	{
+	};
 
-    //! Factory implementation
-    template< typename T >
-    class impl_template :
-        public impl
-    {
-    private:
-        //! Functor that returns attribute values
-        /*!
-         * \note The constness signifies that the function object should avoid
-         *       modifying its state since it's not protected against concurrent calls.
-         */
-        const T m_Functor;
+	//! Factory implementation
+	template< typename T >
+	class impl_template :
+		public impl
+	{
+	private:
+		//! Functor that returns attribute values
+		/*!
+		 * \note The constness signifies that the function object should avoid
+		 *       modifying its state since it's not protected against concurrent calls.
+		 */
+		const T m_Functor;
 
-    public:
-        /*!
-         * Constructor with the stored delegate initialization
-         */
-        explicit impl_template(T const& fun) : m_Functor(fun) {}
+	public:
+		/*!
+		 * Constructor with the stored delegate initialization
+		 */
+		explicit impl_template(T const& fun) : m_Functor(fun) {}
 
-        attribute_value get_value()
-        {
-            return attributes::make_attribute_value(m_Functor());
-        }
-    };
+		attribute_value get_value()
+		{
+			return attributes::make_attribute_value(m_Functor());
+		}
+	};
 
 public:
-    /*!
-     * Initializing constructor
-     */
-    template< typename T >
-    explicit function(T const& fun) : attribute(new impl_template< T >(fun))
-    {
-    }
-    /*!
-     * Constructor for casting support
-     */
-    explicit function(cast_source const& source) :
-        attribute(source.as< impl >())
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 */
+	template< typename T >
+	explicit function(T const& fun) : attribute(new impl_template< T >(fun))
+	{
+	}
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit function(cast_source const& source) :
+		attribute(source.as< impl >())
+	{
+	}
 };
 
 #ifndef BOOST_NO_RESULT_OF
@@ -114,21 +116,21 @@ public:
  */
 template< typename T >
 inline function<
-    typename remove_cv<
-        typename remove_reference<
-            typename boost::result_of< T() >::type
-        >::type
-    >::type
+typename remove_cv<
+typename remove_reference<
+typename boost::result_of< T() >::type
+>::type
+>::type
 > make_function(T const& fun)
 {
-    typedef typename remove_cv<
-        typename remove_reference<
-            typename boost::result_of< T() >::type
-        >::type
-    >::type result_type;
+	typedef typename remove_cv<
+	typename remove_reference<
+	typename boost::result_of< T() >::type
+	>::type
+	>::type result_type;
 
-    typedef function< result_type > function_type;
-    return function_type(fun);
+	typedef function< result_type > function_type;
+	return function_type(fun);
 }
 
 #endif // BOOST_NO_RESULT_OF
@@ -144,17 +146,17 @@ inline function<
  */
 template< typename R, typename T >
 inline function<
-    typename remove_cv<
-        typename remove_reference< R >::type
-    >::type
+typename remove_cv<
+typename remove_reference< R >::type
+>::type
 > make_function(T const& fun)
 {
-    typedef typename remove_cv<
-        typename remove_reference< R >::type
-    >::type result_type;
+	typedef typename remove_cv<
+	typename remove_reference< R >::type
+	>::type result_type;
 
-    typedef function< result_type > function_type;
-    return function_type(fun);
+	typedef function< result_type > function_type;
+	return function_type(fun);
 }
 
 #endif // BOOST_LOG_DOXYGEN_PASS

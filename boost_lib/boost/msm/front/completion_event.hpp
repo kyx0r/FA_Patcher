@@ -11,21 +11,27 @@
 #ifndef BOOST_MSM_FRONT_COMMON_COMPLETION_EVENT_H
 #define BOOST_MSM_FRONT_COMMON_COMPLETION_EVENT_H
 
-namespace boost { namespace msm { namespace front
+namespace boost
+{
+namespace msm
+{
+namespace front
 {
 
-    struct none
-    {
-        // make every event convertible to none.
-        // to support standard-conform implementation of pseudo exits.
-        none(){}
-        template <class Event>
-        none(Event const&){}
+struct none
+{
+	// make every event convertible to none.
+	// to support standard-conform implementation of pseudo exits.
+	none() {}
+	template <class Event>
+	none(Event const&) {}
 
-        typedef int completion_event;
-    };
+	typedef int completion_event;
+};
 
-}}}
+}
+}
+}
 
 #endif //BOOST_MSM_FRONT_COMMON_COMPLETION_EVENT_H
 

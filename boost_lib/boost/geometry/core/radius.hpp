@@ -31,7 +31,9 @@
 #include <boost/geometry/util/bare_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -80,7 +82,7 @@ namespace core_dispatch
 template <typename Tag, typename Geometry>
 struct radius_type
 {
-    //typedef core_dispatch_specialization_required type;
+	//typedef core_dispatch_specialization_required type;
 };
 
 /*!
@@ -92,8 +94,8 @@ template <typename Tag,
           typename IsPointer>
 struct radius_access
 {
-    //static inline CoordinateType get(Geometry const& ) {}
-    //static inline void set(Geometry& g, CoordinateType const& value) {}
+	//static inline CoordinateType get(Geometry const& ) {}
+	//static inline void set(Geometry& g, CoordinateType const& value) {}
 };
 
 } // namespace core_dispatch
@@ -108,11 +110,11 @@ struct radius_access
 template <typename Geometry>
 struct radius_type
 {
-    typedef typename core_dispatch::radius_type
-                        <
-                            typename tag<Geometry>::type,
-                            typename util::bare_type<Geometry>::type
-                        >::type type;
+	typedef typename core_dispatch::radius_type
+	<
+	typename tag<Geometry>::type,
+	         typename util::bare_type<Geometry>::type
+	         >::type type;
 };
 
 /*!
@@ -125,13 +127,13 @@ struct radius_type
 template <std::size_t I, typename Geometry>
 inline typename radius_type<Geometry>::type get_radius(Geometry const& geometry)
 {
-    return core_dispatch::radius_access
-            <
-                typename tag<Geometry>::type,
-                typename util::bare_type<Geometry>::type,
-                I,
-                typename boost::is_pointer<Geometry>::type
-            >::get(geometry);
+	return core_dispatch::radius_access
+	       <
+	       typename tag<Geometry>::type,
+	       typename util::bare_type<Geometry>::type,
+	       I,
+	       typename boost::is_pointer<Geometry>::type
+	       >::get(geometry);
 }
 
 /*!
@@ -145,13 +147,13 @@ template <std::size_t I, typename Geometry>
 inline void set_radius(Geometry& geometry,
                        typename radius_type<Geometry>::type const& radius)
 {
-    core_dispatch::radius_access
-        <
-            typename tag<Geometry>::type,
-            typename util::bare_type<Geometry>::type,
-            I,
-            typename boost::is_pointer<Geometry>::type
-        >::set(geometry, radius);
+	core_dispatch::radius_access
+	<
+	typename tag<Geometry>::type,
+	         typename util::bare_type<Geometry>::type,
+	         I,
+	         typename boost::is_pointer<Geometry>::type
+	         >::set(geometry, radius);
 }
 
 
@@ -163,15 +165,15 @@ namespace detail
 template <typename Tag, typename Geometry, std::size_t Dimension>
 struct radius_access
 {
-    static inline typename radius_type<Geometry>::type get(Geometry const& geometry)
-    {
-        return traits::radius_access<Geometry, Dimension>::get(geometry);
-    }
-    static inline void set(Geometry& geometry,
-                           typename radius_type<Geometry>::type const& value)
-    {
-        traits::radius_access<Geometry, Dimension>::set(geometry, value);
-    }
+	static inline typename radius_type<Geometry>::type get(Geometry const& geometry)
+	{
+		return traits::radius_access<Geometry, Dimension>::get(geometry);
+	}
+	static inline void set(Geometry& geometry,
+	                       typename radius_type<Geometry>::type const& value)
+	{
+		traits::radius_access<Geometry, Dimension>::set(geometry, value);
+	}
 };
 
 } // namespace detail
@@ -187,65 +189,66 @@ template <typename Tag,
           std::size_t Dimension>
 struct radius_access<Tag, Geometry, Dimension, boost::true_type>
 {
-    typedef typename geometry::radius_type<Geometry>::type radius_type;
+	typedef typename geometry::radius_type<Geometry>::type radius_type;
 
-    static inline radius_type get(const Geometry * geometry)
-    {
-        return radius_access
-                <
-                    Tag,
-                    Geometry,
-                    Dimension,
-                    typename boost::is_pointer<Geometry>::type
-                >::get(*geometry);
-    }
+	static inline radius_type get(const Geometry * geometry)
+	{
+		return radius_access
+		       <
+		       Tag,
+		       Geometry,
+		       Dimension,
+		       typename boost::is_pointer<Geometry>::type
+		       >::get(*geometry);
+	}
 
-    static inline void set(Geometry * geometry, radius_type const& value)
-    {
-        return radius_access
-                <
-                    Tag,
-                    Geometry,
-                    Dimension,
-                    typename boost::is_pointer<Geometry>::type
-                >::set(*geometry, value);
-    }
+	static inline void set(Geometry * geometry, radius_type const& value)
+	{
+		return radius_access
+		       <
+		       Tag,
+		       Geometry,
+		       Dimension,
+		       typename boost::is_pointer<Geometry>::type
+		       >::set(*geometry, value);
+	}
 };
 
 
 template <typename Geometry>
 struct radius_type<srs_sphere_tag, Geometry>
 {
-    typedef typename traits::radius_type<Geometry>::type type;
+	typedef typename traits::radius_type<Geometry>::type type;
 };
 
 template <typename Geometry, std::size_t Dimension>
 struct radius_access<srs_sphere_tag, Geometry, Dimension, boost::false_type>
-    : detail::radius_access<srs_sphere_tag, Geometry, Dimension>
+	: detail::radius_access<srs_sphere_tag, Geometry, Dimension>
 {
-    //BOOST_STATIC_ASSERT(Dimension == 0);
-    BOOST_STATIC_ASSERT(Dimension < 3);
+	//BOOST_STATIC_ASSERT(Dimension == 0);
+	BOOST_STATIC_ASSERT(Dimension < 3);
 };
 
 template <typename Geometry>
 struct radius_type<srs_spheroid_tag, Geometry>
 {
-    typedef typename traits::radius_type<Geometry>::type type;
+	typedef typename traits::radius_type<Geometry>::type type;
 };
 
 template <typename Geometry, std::size_t Dimension>
 struct radius_access<srs_spheroid_tag, Geometry, Dimension, boost::false_type>
-    : detail::radius_access<srs_spheroid_tag, Geometry, Dimension>
+	: detail::radius_access<srs_spheroid_tag, Geometry, Dimension>
 {
-    //BOOST_STATIC_ASSERT(Dimension == 0 || Dimension == 2);
-    BOOST_STATIC_ASSERT(Dimension < 3);
+	//BOOST_STATIC_ASSERT(Dimension == 0 || Dimension == 2);
+	BOOST_STATIC_ASSERT(Dimension < 3);
 };
 
 } // namespace core_dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_RADIUS_HPP

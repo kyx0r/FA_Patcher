@@ -20,10 +20,14 @@
 #include <boost/geometry/strategies/transform/matrix_transformers.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace transform
+namespace strategy
+{
+namespace transform
 {
 
 /*!
@@ -35,23 +39,25 @@ template
     typename CalculationType,
     std::size_t Dimension1,
     std::size_t Dimension2
->
+    >
 class inverse_transformer
-    : public matrix_transformer<CalculationType, Dimension1, Dimension2>
+	: public matrix_transformer<CalculationType, Dimension1, Dimension2>
 {
 public :
-    template <typename Transformer>
-    inline inverse_transformer(Transformer const& input)
-    {
-        this->m_matrix = boost::qvm::inverse(input.matrix());
-    }
+	template <typename Transformer>
+	inline inverse_transformer(Transformer const& input)
+	{
+		this->m_matrix = boost::qvm::inverse(input.matrix());
+	}
 
 };
 
 
-}} // namespace strategy::transform
+}
+} // namespace strategy::transform
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_TRANSFORM_INVERSE_TRANSFORMER_HPP

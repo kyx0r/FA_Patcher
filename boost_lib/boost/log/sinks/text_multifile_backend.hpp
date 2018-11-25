@@ -34,95 +34,98 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
-namespace file {
+namespace file
+{
 
-    /*!
-     * An adapter class that allows to use regular formatters as file name generators.
-     */
-    template< typename FormatterT >
-    class file_name_composer_adapter
-    {
-    public:
-        //! Functor result type
-        typedef filesystem::path result_type;
-        //! File name character type
-        typedef result_type::string_type::value_type native_char_type;
-        //! The adopted formatter type
-        typedef FormatterT formatter_type;
-        //! Formatting stream type
-        typedef basic_formatting_ostream< native_char_type > stream_type;
+/*!
+ * An adapter class that allows to use regular formatters as file name generators.
+ */
+template< typename FormatterT >
+class file_name_composer_adapter
+{
+public:
+	//! Functor result type
+	typedef filesystem::path result_type;
+	//! File name character type
+	typedef result_type::string_type::value_type native_char_type;
+	//! The adopted formatter type
+	typedef FormatterT formatter_type;
+	//! Formatting stream type
+	typedef basic_formatting_ostream< native_char_type > stream_type;
 
-    private:
-        //! The adopted formatter
-        formatter_type m_Formatter;
-        //! Formatted file name storage
-        mutable result_type::string_type m_FileName;
-        //! Formatting stream
-        mutable stream_type m_FormattingStream;
+private:
+	//! The adopted formatter
+	formatter_type m_Formatter;
+	//! Formatted file name storage
+	mutable result_type::string_type m_FileName;
+	//! Formatting stream
+	mutable stream_type m_FormattingStream;
 
-    public:
-        /*!
-         * Initializing constructor
-         */
-        explicit file_name_composer_adapter(formatter_type const& formatter, std::locale const& loc = std::locale()) :
-            m_Formatter(formatter),
-            m_FormattingStream(m_FileName)
-        {
-            m_FormattingStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
-            m_FormattingStream.imbue(loc);
-        }
-        /*!
-         * Copy constructor
-         */
-        file_name_composer_adapter(file_name_composer_adapter const& that) :
-            m_Formatter(that.m_Formatter),
-            m_FormattingStream(m_FileName)
-        {
-            m_FormattingStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
-            m_FormattingStream.imbue(that.m_FormattingStream.getloc());
-        }
-        /*!
-         * Assignment
-         */
-        file_name_composer_adapter& operator= (file_name_composer_adapter const& that)
-        {
-            m_Formatter = that.m_Formatter;
-            return *this;
-        }
+public:
+	/*!
+	 * Initializing constructor
+	 */
+	explicit file_name_composer_adapter(formatter_type const& formatter, std::locale const& loc = std::locale()) :
+		m_Formatter(formatter),
+		m_FormattingStream(m_FileName)
+	{
+		m_FormattingStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+		m_FormattingStream.imbue(loc);
+	}
+	/*!
+	 * Copy constructor
+	 */
+	file_name_composer_adapter(file_name_composer_adapter const& that) :
+		m_Formatter(that.m_Formatter),
+		m_FormattingStream(m_FileName)
+	{
+		m_FormattingStream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+		m_FormattingStream.imbue(that.m_FormattingStream.getloc());
+	}
+	/*!
+	 * Assignment
+	 */
+	file_name_composer_adapter& operator= (file_name_composer_adapter const& that)
+	{
+		m_Formatter = that.m_Formatter;
+		return *this;
+	}
 
-        /*!
-         * The operator generates a file name based on the log record
-         */
-        result_type operator() (record_view const& rec) const
-        {
-            boost::log::aux::cleanup_guard< stream_type > cleanup1(m_FormattingStream);
-            boost::log::aux::cleanup_guard< result_type::string_type > cleanup2(m_FileName);
+	/*!
+	 * The operator generates a file name based on the log record
+	 */
+	result_type operator() (record_view const& rec) const
+	{
+		boost::log::aux::cleanup_guard< stream_type > cleanup1(m_FormattingStream);
+		boost::log::aux::cleanup_guard< result_type::string_type > cleanup2(m_FileName);
 
-            m_Formatter(rec, m_FormattingStream);
-            m_FormattingStream.flush();
+		m_Formatter(rec, m_FormattingStream);
+		m_FormattingStream.flush();
 
-            return result_type(m_FileName);
-        }
-    };
+		return result_type(m_FileName);
+	}
+};
 
-    /*!
-     * The function adopts a log record formatter into a file name generator
-     *
-     * \param fmt The formatter function object to adopt
-     * \param loc The locale to use to character code conversion and formatting
-     */
-    template< typename FormatterT >
-    inline file_name_composer_adapter< FormatterT > as_file_name_composer(
-        FormatterT const& fmt, std::locale const& loc = std::locale())
-    {
-        return file_name_composer_adapter< FormatterT >(fmt, loc);
-    }
+/*!
+ * The function adopts a log record formatter into a file name generator
+ *
+ * \param fmt The formatter function object to adopt
+ * \param loc The locale to use to character code conversion and formatting
+ */
+template< typename FormatterT >
+inline file_name_composer_adapter< FormatterT > as_file_name_composer(
+    FormatterT const& fmt, std::locale const& loc = std::locale())
+{
+	return file_name_composer_adapter< FormatterT >(fmt, loc);
+}
 
 } // namespace file
 
@@ -136,60 +139,60 @@ namespace file {
  * some entity or process in a separate file.
  */
 class text_multifile_backend :
-    public basic_formatted_sink_backend< char >
+	public basic_formatted_sink_backend< char >
 {
-    //! Base type
-    typedef basic_formatted_sink_backend< char > base_type;
+	//! Base type
+	typedef basic_formatted_sink_backend< char > base_type;
 
 public:
-    //! Character type
-    typedef base_type::char_type char_type;
-    //! String type to be used as a message text holder
-    typedef base_type::string_type string_type;
+	//! Character type
+	typedef base_type::char_type char_type;
+	//! String type to be used as a message text holder
+	typedef base_type::string_type string_type;
 
-    //! File name composer functor type
-    typedef boost::log::aux::light_function< filesystem::path (record_view const&) > file_name_composer_type;
+	//! File name composer functor type
+	typedef boost::log::aux::light_function< filesystem::path (record_view const&) > file_name_composer_type;
 
 private:
-    //! \cond
+	//! \cond
 
-    struct implementation;
-    implementation* m_pImpl;
+	struct implementation;
+	implementation* m_pImpl;
 
-    //! \endcond
+	//! \endcond
 
 public:
-    /*!
-     * Default constructor. The constructed sink backend has no file name composer and
-     * thus will not write any files.
-     */
-    BOOST_LOG_API text_multifile_backend();
+	/*!
+	 * Default constructor. The constructed sink backend has no file name composer and
+	 * thus will not write any files.
+	 */
+	BOOST_LOG_API text_multifile_backend();
 
-    /*!
-     * Destructor
-     */
-    BOOST_LOG_API ~text_multifile_backend();
+	/*!
+	 * Destructor
+	 */
+	BOOST_LOG_API ~text_multifile_backend();
 
-    /*!
-     * The method sets file name composer functional object. Log record formatters are accepted, too.
-     *
-     * \param composer File name composer functor
-     */
-    template< typename ComposerT >
-    void set_file_name_composer(ComposerT const& composer)
-    {
-        set_file_name_composer_internal(composer);
-    }
+	/*!
+	 * The method sets file name composer functional object. Log record formatters are accepted, too.
+	 *
+	 * \param composer File name composer functor
+	 */
+	template< typename ComposerT >
+	void set_file_name_composer(ComposerT const& composer)
+	{
+		set_file_name_composer_internal(composer);
+	}
 
-    /*!
-     * The method writes the message to the sink
-     */
-    BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
+	/*!
+	 * The method writes the message to the sink
+	 */
+	BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
 
 private:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! The method sets the file name composer
-    BOOST_LOG_API void set_file_name_composer_internal(file_name_composer_type const& composer);
+	//! The method sets the file name composer
+	BOOST_LOG_API void set_file_name_composer_internal(file_name_composer_type const& composer);
 #endif // BOOST_LOG_DOXYGEN_PASS
 };
 

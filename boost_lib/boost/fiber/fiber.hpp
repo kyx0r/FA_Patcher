@@ -34,141 +34,164 @@
 # pragma warning(disable:4251)
 #endif
 
-namespace boost {
-namespace fibers {
+namespace boost
+{
+namespace fibers
+{
 
-class BOOST_FIBERS_DECL fiber {
+class BOOST_FIBERS_DECL fiber
+{
 private:
-    friend class context;
+	friend class context;
 
-    typedef intrusive_ptr< context >  ptr_t;
+	typedef intrusive_ptr< context >  ptr_t;
 
-    ptr_t       impl_{};
+	ptr_t       impl_{};
 
-    void start_() noexcept;
+	void start_() noexcept;
 
 public:
-    typedef context::id    id;
+	typedef context::id    id;
 
-    fiber() = default;
+	fiber() = default;
 
-    template< typename Fn,
-              typename ... Arg,
-              typename = detail::disable_overload< fiber, Fn >,
-              typename = detail::disable_overload< launch, Fn >,
-              typename = detail::disable_overload< std::allocator_arg_t, Fn >
-    >
+	template< typename Fn,
+	          typename ... Arg,
+	          typename = detail::disable_overload< fiber, Fn >,
+	          typename = detail::disable_overload< launch, Fn >,
+	          typename = detail::disable_overload< std::allocator_arg_t, Fn >
+	          >
 #if BOOST_COMP_GNUC < 50000000
-    fiber( Fn && fn, Arg && ... arg) :
+	fiber( Fn && fn, Arg && ... arg) :
 #else
-    fiber( Fn && fn, Arg ... arg) :
+	fiber( Fn && fn, Arg ... arg) :
 #endif
-        fiber{ launch::post,
-               std::allocator_arg, default_stack(),
-               std::forward< Fn >( fn), std::forward< Arg >( arg) ... } {
-    }
+		fiber { launch::post,
+		        std::allocator_arg, default_stack(),
+		        std::forward< Fn >( fn), std::forward< Arg >( arg) ...
+		      }
+	{
+	}
 
-    template< typename Fn,
-              typename ... Arg,
-              typename = detail::disable_overload< fiber, Fn >
-    >
+	template< typename Fn,
+	          typename ... Arg,
+	          typename = detail::disable_overload< fiber, Fn >
+	          >
 #if BOOST_COMP_GNUC < 50000000
-    fiber( launch policy, Fn && fn, Arg && ... arg) :
+	fiber( launch policy, Fn && fn, Arg && ... arg) :
 #else
-    fiber( launch policy, Fn && fn, Arg ... arg) :
+	fiber( launch policy, Fn && fn, Arg ... arg) :
 #endif
-        fiber{ policy,
-               std::allocator_arg, default_stack(),
-               std::forward< Fn >( fn), std::forward< Arg >( arg) ... } {
-    }
+		fiber { policy,
+		        std::allocator_arg, default_stack(),
+		        std::forward< Fn >( fn), std::forward< Arg >( arg) ...
+		      }
+	{
+	}
 
-    template< typename StackAllocator,
-              typename Fn,
-              typename ... Arg
-    >
+	template< typename StackAllocator,
+	          typename Fn,
+	          typename ... Arg
+	          >
 #if BOOST_COMP_GNUC < 50000000
-    fiber( std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg && ... arg) :
+	fiber( std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg && ... arg) :
 #else
-    fiber( std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg ... arg) :
+	fiber( std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg ... arg) :
 #endif
-        fiber{ launch::post,
-               std::allocator_arg, std::forward< StackAllocator >( salloc),
-               std::forward< Fn >( fn), std::forward< Arg >( arg) ... } {
-    }
+		fiber { launch::post,
+		        std::allocator_arg, std::forward< StackAllocator >( salloc),
+		        std::forward< Fn >( fn), std::forward< Arg >( arg) ...
+		      }
+	{
+	}
 
-    template< typename StackAllocator,
-              typename Fn,
-              typename ... Arg
-    >
+	template< typename StackAllocator,
+	          typename Fn,
+	          typename ... Arg
+	          >
 #if BOOST_COMP_GNUC < 50000000
-    fiber( launch policy, std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg && ... arg) :
+	fiber( launch policy, std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg && ... arg) :
 #else
-    fiber( launch policy, std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg ... arg) :
+	fiber( launch policy, std::allocator_arg_t, StackAllocator && salloc, Fn && fn, Arg ... arg) :
 #endif
-        impl_{ make_worker_context( policy, std::forward< StackAllocator >( salloc), std::forward< Fn >( fn), std::forward< Arg >( arg) ... ) } {
-        start_();
-    }
+		impl_ { make_worker_context( policy, std::forward< StackAllocator >( salloc), std::forward< Fn >( fn), std::forward< Arg >( arg) ... ) }
+	{
+		start_();
+	}
 
-    ~fiber() {
-        if ( joinable() ) {
-            std::terminate();
-        }
-    }
+	~fiber()
+	{
+		if ( joinable() )
+		{
+			std::terminate();
+		}
+	}
 
-    fiber( fiber const&) = delete;
-    fiber & operator=( fiber const&) = delete;
+	fiber( fiber const&) = delete;
+	fiber & operator=( fiber const&) = delete;
 
-    fiber( fiber && other) noexcept :
-        impl_{} {
-        swap( other);
-    }
+	fiber( fiber && other) noexcept :
+		impl_ {}
+	{
+		swap( other);
+	}
 
-    fiber & operator=( fiber && other) noexcept {
-        if ( joinable() ) {
-            std::terminate();
-        }
-        if ( BOOST_UNLIKELY( this == & other) ) {
-            return * this;
-        }
-        impl_.swap( other.impl_);
-        return * this;
-    }
+	fiber & operator=( fiber && other) noexcept
+	{
+		if ( joinable() )
+		{
+			std::terminate();
+		}
+		if ( BOOST_UNLIKELY( this == & other) )
+		{
+			return * this;
+		}
+		impl_.swap( other.impl_);
+		return * this;
+	}
 
-    void swap( fiber & other) noexcept {
-        impl_.swap( other.impl_);
-    }
+	void swap( fiber & other) noexcept
+	{
+		impl_.swap( other.impl_);
+	}
 
-    id get_id() const noexcept {
-        return impl_ ? impl_->get_id() : id();
-    }
+	id get_id() const noexcept
+	{
+		return impl_ ? impl_->get_id() : id();
+	}
 
-    bool joinable() const noexcept {
-        return nullptr != impl_;
-    }
+	bool joinable() const noexcept
+	{
+		return nullptr != impl_;
+	}
 
-    void join();
+	void join();
 
-    void detach();
+	void detach();
 
-    template< typename PROPS >
-    PROPS & properties() {
-        auto props = impl_->get_properties();
-        BOOST_ASSERT_MSG( props, "fiber::properties not set");
-        return dynamic_cast< PROPS & >( * props );
-    }
+	template< typename PROPS >
+	PROPS & properties()
+	{
+		auto props = impl_->get_properties();
+		BOOST_ASSERT_MSG( props, "fiber::properties not set");
+		return dynamic_cast< PROPS & >( * props );
+	}
 };
 
 inline
-bool operator<( fiber const& l, fiber const& r) noexcept {
-    return l.get_id() < r.get_id();
+bool operator<( fiber const& l, fiber const& r) noexcept
+{
+	return l.get_id() < r.get_id();
 }
 
 inline
-void swap( fiber & l, fiber & r) noexcept {
-    return l.swap( r);
+void swap( fiber & l, fiber & r) noexcept
+{
+	return l.swap( r);
 }
 
-}}
+}
+}
 
 #ifdef _MSC_VER
 # pragma warning(pop)

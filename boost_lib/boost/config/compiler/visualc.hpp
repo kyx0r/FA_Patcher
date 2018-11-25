@@ -63,7 +63,7 @@
 #endif
 
 #if _MSC_VER < 1600  // 150X == VC++ 9.0
-   // A bug in VC9:
+// A bug in VC9:
 #  define BOOST_NO_ADL_BARRIER
 #endif
 
@@ -281,7 +281,7 @@
 // IOW, you can't use these 'versions' in any sensible way. Sorry.
 # if defined(UNDER_CE)
 #   if _MSC_VER < 1400
-      // Note: I'm not aware of any CE compiler with version 13xx
+// Note: I'm not aware of any CE compiler with version 13xx
 #      if defined(BOOST_ASSERT_CONFIG)
 #         error "Unknown EVC++ compiler version - please run the configure tests and report the results"
 #      else
@@ -293,11 +293,11 @@
 #     define BOOST_COMPILER_VERSION evc9
 #   elif _MSC_VER < 1700
 #     define BOOST_COMPILER_VERSION evc10
-#   elif _MSC_VER < 1800 
-#     define BOOST_COMPILER_VERSION evc11 
-#   elif _MSC_VER < 1900 
+#   elif _MSC_VER < 1800
+#     define BOOST_COMPILER_VERSION evc11
+#   elif _MSC_VER < 1900
 #     define BOOST_COMPILER_VERSION evc12
-#   elif _MSC_VER < 2000  
+#   elif _MSC_VER < 2000
 #     define BOOST_COMPILER_VERSION evc14
 #   else
 #      if defined(BOOST_ASSERT_CONFIG)
@@ -308,7 +308,7 @@
 #   endif
 # else
 #   if _MSC_VER < 1200
-      // Note: Versions up to 7.0 aren't supported.
+// Note: Versions up to 7.0 aren't supported.
 #     define BOOST_COMPILER_VERSION 5.0
 #   elif _MSC_VER < 1300
 #     define BOOST_COMPILER_VERSION 6.0
@@ -322,7 +322,7 @@
 #     define BOOST_COMPILER_VERSION 9.0
 #   elif _MSC_VER < 1700
 #     define BOOST_COMPILER_VERSION 10.0
-#   elif _MSC_VER < 1800 
+#   elif _MSC_VER < 1800
 #     define BOOST_COMPILER_VERSION 11.0
 #   elif _MSC_VER < 1900
 #     define BOOST_COMPILER_VERSION 12.0
@@ -346,9 +346,9 @@
 #  if defined(BOOST_ASSERT_CONFIG)
 #     error "Boost.Config is older than your current compiler version."
 #  elif !defined(BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE)
-      //
-      // Disabled as of March 2018 - the pace of VS releases is hard to keep up with
-      // and in any case, we have relatively few defect macros defined now.
-      // BOOST_PRAGMA_MESSAGE("Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an updated Boost version. Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.")
+//
+// Disabled as of March 2018 - the pace of VS releases is hard to keep up with
+// and in any case, we have relatively few defect macros defined now.
+// BOOST_PRAGMA_MESSAGE("Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an updated Boost version. Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.")
 #  endif
 #endif

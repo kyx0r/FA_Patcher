@@ -16,16 +16,22 @@
 
 #if !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS)
 
-namespace boost { namespace spirit { namespace qi
+namespace boost
 {
-    template <typename Expr>
-    typename boost::proto::result_of::deep_copy<Expr>::type
-    copy(Expr const& expr)
-    {
-        BOOST_SPIRIT_ASSERT_MATCH(boost::spirit::qi::domain, Expr);
-        return boost::proto::deep_copy(expr);
-    }
-}}}
+namespace spirit
+{
+namespace qi
+{
+template <typename Expr>
+typename boost::proto::result_of::deep_copy<Expr>::type
+copy(Expr const& expr)
+{
+	BOOST_SPIRIT_ASSERT_MATCH(boost::spirit::qi::domain, Expr);
+	return boost::proto::deep_copy(expr);
+}
+}
+}
+}
 
 #endif
 #endif

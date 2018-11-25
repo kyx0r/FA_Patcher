@@ -14,32 +14,37 @@
 #include "boost/dynamic_bitset/dynamic_bitset.hpp"
 #include <boost/serialization/vector.hpp>
 
-namespace boost {
+namespace boost
+{
 
-    // implementation for optional zero-copy serialization support
-    template <typename Block, typename Allocator>
-        class dynamic_bitset<Block, Allocator>::serialize_impl
-        {
-            public:
-                template <typename Ar> 
-                static void serialize(Ar& ar, dynamic_bitset<Block, Allocator>& bs, unsigned) {
-                    ar & serialization::make_nvp("m_num_bits", bs.m_num_bits)
-                       & serialization::make_nvp("m_bits", bs.m_bits);
-                }
-        };
+// implementation for optional zero-copy serialization support
+template <typename Block, typename Allocator>
+class dynamic_bitset<Block, Allocator>::serialize_impl
+{
+public:
+	template <typename Ar>
+	static void serialize(Ar& ar, dynamic_bitset<Block, Allocator>& bs, unsigned)
+	{
+		ar & serialization::make_nvp("m_num_bits", bs.m_num_bits)
+		& serialization::make_nvp("m_bits", bs.m_bits);
+	}
+};
 
 }
 
 // ADL hook to Boost Serialization library
-namespace boost {
-    namespace serialization {
+namespace boost
+{
+namespace serialization
+{
 
-        template <typename Ar, typename Block, typename Allocator>
-            void serialize(Ar& ar, dynamic_bitset<Block, Allocator>& bs, unsigned version) {
-                dynamic_bitset<Block, Allocator>::serialize_impl::serialize(ar, bs, version);
-            }
+template <typename Ar, typename Block, typename Allocator>
+void serialize(Ar& ar, dynamic_bitset<Block, Allocator>& bs, unsigned version)
+{
+	dynamic_bitset<Block, Allocator>::serialize_impl::serialize(ar, bs, version);
+}
 
-    } // namespace serialization
+} // namespace serialization
 } // namespace boost
 
 #endif // include guard

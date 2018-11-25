@@ -11,93 +11,99 @@
 #include <boost/spirit/home/x3/support/unused.hpp>
 #include <boost/mpl/identity.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template <typename ID, typename T, typename Next = unused_type>
-    struct context
-    {
-        context(T& val, Next const& next)
-            : val(val), next(next) {}
+namespace spirit
+{
+namespace x3
+{
+template <typename ID, typename T, typename Next = unused_type>
+struct context
+{
+	context(T& val, Next const& next)
+		: val(val), next(next) {}
 
-        T& get(mpl::identity<ID>) const
-        {
-            return val;
-        }
+	T& get(mpl::identity<ID>) const
+	{
+		return val;
+	}
 
-        template <typename ID_>
-        decltype(auto) get(ID_ id) const
-        {
-            return next.get(id);
-        }
+	template <typename ID_>
+	decltype(auto) get(ID_ id) const
+	{
+		return next.get(id);
+	}
 
-        T& val;
-        Next const& next;
-    };
+	T& val;
+	Next const& next;
+};
 
-    template <typename ID, typename T>
-    struct context<ID, T, unused_type>
-    {
-        context(T& val)
-            : val(val) {}
+template <typename ID, typename T>
+struct context<ID, T, unused_type>
+{
+	context(T& val)
+		: val(val) {}
 
-        context(T& val, unused_type)
-            : val(val) {}
+	context(T& val, unused_type)
+		: val(val) {}
 
-        T& get(mpl::identity<ID>) const
-        {
-            return val;
-        }
+	T& get(mpl::identity<ID>) const
+	{
+		return val;
+	}
 
-        template <typename ID_>
-        unused_type get(ID_) const
-        {
-            return {};
-        }
+	template <typename ID_>
+	unused_type get(ID_) const
+	{
+		return {};
+	}
 
-        T& val;
-    };
+	T& val;
+};
 
-    template <typename Tag, typename Context>
-    inline decltype(auto) get(Context const& context)
-    {
-        return context.get(mpl::identity<Tag>());
-    }
+template <typename Tag, typename Context>
+inline decltype(auto) get(Context const& context)
+{
+	return context.get(mpl::identity<Tag>());
+}
 
-    template <typename ID, typename T, typename Next>
-    inline context<ID, T, Next> make_context(T& val, Next const& next)
-    {
-        return { val, next };
-    }
+template <typename ID, typename T, typename Next>
+inline context<ID, T, Next> make_context(T& val, Next const& next)
+{
+	return { val, next };
+}
 
-    template <typename ID, typename T>
-    inline context<ID, T> make_context(T& val)
-    {
-        return { val };
-    }
+template <typename ID, typename T>
+inline context<ID, T> make_context(T& val)
+{
+	return { val };
+}
 
-    namespace detail
-    {
-        template <typename ID, typename T, typename Next, typename FoundVal>
-        inline Next const&
-        make_unique_context(T& /* val */, Next const& next, FoundVal&)
-        {
-            return next;
-        }
-        
-        template <typename ID, typename T, typename Next>
-        inline context<ID, T, Next>
-        make_unique_context(T& val, Next const& next, unused_type)
-        {
-            return { val, next };
-        }
-    }
+namespace detail
+{
+template <typename ID, typename T, typename Next, typename FoundVal>
+inline Next const&
+make_unique_context(T& /* val */, Next const& next, FoundVal&)
+{
+	return next;
+}
 
-    template <typename ID, typename T, typename Next>
-    inline auto
-    make_unique_context(T& val, Next const& next)
-    {
-        return detail::make_unique_context<ID>(val, next, x3::get<ID>(next));
-    }
-}}}
+template <typename ID, typename T, typename Next>
+inline context<ID, T, Next>
+make_unique_context(T& val, Next const& next, unused_type)
+{
+	return { val, next };
+}
+}
+
+template <typename ID, typename T, typename Next>
+inline auto
+make_unique_context(T& val, Next const& next)
+{
+	return detail::make_unique_context<ID>(val, next, x3::get<ID>(next));
+}
+}
+}
+}
 
 #endif

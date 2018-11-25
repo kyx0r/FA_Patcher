@@ -21,91 +21,94 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class winsock_init_base
 {
 protected:
-  // Structure to track result of initialisation and number of uses. POD is used
-  // to ensure that the values are zero-initialised prior to any code being run.
-  struct data
-  {
-    long init_count_;
-    long result_;
-  };
+	// Structure to track result of initialisation and number of uses. POD is used
+	// to ensure that the values are zero-initialised prior to any code being run.
+	struct data
+	{
+		long init_count_;
+		long result_;
+	};
 
-  BOOST_ASIO_DECL static void startup(data& d,
-      unsigned char major, unsigned char minor);
+	BOOST_ASIO_DECL static void startup(data& d,
+	                                    unsigned char major, unsigned char minor);
 
-  BOOST_ASIO_DECL static void manual_startup(data& d);
+	BOOST_ASIO_DECL static void manual_startup(data& d);
 
-  BOOST_ASIO_DECL static void cleanup(data& d);
+	BOOST_ASIO_DECL static void cleanup(data& d);
 
-  BOOST_ASIO_DECL static void manual_cleanup(data& d);
+	BOOST_ASIO_DECL static void manual_cleanup(data& d);
 
-  BOOST_ASIO_DECL static void throw_on_error(data& d);
+	BOOST_ASIO_DECL static void throw_on_error(data& d);
 };
 
 template <int Major = 2, int Minor = 0>
 class winsock_init : private winsock_init_base
 {
 public:
-  winsock_init(bool allow_throw = true)
-  {
-    startup(data_, Major, Minor);
-    if (allow_throw)
-      throw_on_error(data_);
-  }
+	winsock_init(bool allow_throw = true)
+	{
+		startup(data_, Major, Minor);
+		if (allow_throw)
+			throw_on_error(data_);
+	}
 
-  winsock_init(const winsock_init&)
-  {
-    startup(data_, Major, Minor);
-    throw_on_error(data_);
-  }
+	winsock_init(const winsock_init&)
+	{
+		startup(data_, Major, Minor);
+		throw_on_error(data_);
+	}
 
-  ~winsock_init()
-  {
-    cleanup(data_);
-  }
+	~winsock_init()
+	{
+		cleanup(data_);
+	}
 
-  // This class may be used to indicate that user code will manage Winsock
-  // initialisation and cleanup. This may be required in the case of a DLL, for
-  // example, where it is not safe to initialise Winsock from global object
-  // constructors.
-  //
-  // To prevent asio from initialising Winsock, the object must be constructed
-  // before any Asio's own global objects. With MSVC, this may be accomplished
-  // by adding the following code to the DLL:
-  //
-  //   #pragma warning(push)
-  //   #pragma warning(disable:4073)
-  //   #pragma init_seg(lib)
-  //   boost::asio::detail::winsock_init<>::manual manual_winsock_init;
-  //   #pragma warning(pop)
-  class manual
-  {
-  public:
-    manual()
-    {
-      manual_startup(data_);
-    }
+	// This class may be used to indicate that user code will manage Winsock
+	// initialisation and cleanup. This may be required in the case of a DLL, for
+	// example, where it is not safe to initialise Winsock from global object
+	// constructors.
+	//
+	// To prevent asio from initialising Winsock, the object must be constructed
+	// before any Asio's own global objects. With MSVC, this may be accomplished
+	// by adding the following code to the DLL:
+	//
+	//   #pragma warning(push)
+	//   #pragma warning(disable:4073)
+	//   #pragma init_seg(lib)
+	//   boost::asio::detail::winsock_init<>::manual manual_winsock_init;
+	//   #pragma warning(pop)
+	class manual
+	{
+	public:
+		manual()
+		{
+			manual_startup(data_);
+		}
 
-    manual(const manual&)
-    {
-      manual_startup(data_);
-    }
+		manual(const manual&)
+		{
+			manual_startup(data_);
+		}
 
-    ~manual()
-    {
-      manual_cleanup(data_);
-    }
-  };
+		~manual()
+		{
+			manual_cleanup(data_);
+		}
+	};
 
 private:
-  friend class manual;
-  static data data_;
+	friend class manual;
+	static data data_;
 };
 
 template <int Major, int Minor>

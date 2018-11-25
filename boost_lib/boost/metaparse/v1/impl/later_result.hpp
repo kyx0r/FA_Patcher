@@ -13,26 +13,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class R1, class R2>
-        struct later_result :
-          boost::mpl::if_<
-            typename boost::mpl::less<
-              typename get_position<R2>::type,
-              typename get_position<R1>::type
-            >::type,
-            R1,
-            R2
-          >
-        {};
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class R1, class R2>
+struct later_result :
+	boost::mpl::if_<
+	typename boost::mpl::less<
+	typename get_position<R2>::type,
+	typename get_position<R1>::type
+	>::type,
+	R1,
+	R2
+	>
+{};
+}
+}
+}
 }
 
 #endif

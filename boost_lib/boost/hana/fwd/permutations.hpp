@@ -15,35 +15,37 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Return a sequence of all the permutations of the given sequence.
-    //! @ingroup group-Sequence
-    //!
-    //! Specifically, `permutations(xs)` is a sequence whose elements are
-    //! permutations of the original sequence `xs`. The permutations are not
-    //! guaranteed to be in any specific order. Also note that the number
-    //! of permutations grows very rapidly as the length of the original
-    //! sequence increases. The growth rate is `O(length(xs)!)`; with a
-    //! sequence `xs` of length only 8, `permutations(xs)` contains over
-    //! 40 000 elements!
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/permutations.cpp
+//! Return a sequence of all the permutations of the given sequence.
+//! @ingroup group-Sequence
+//!
+//! Specifically, `permutations(xs)` is a sequence whose elements are
+//! permutations of the original sequence `xs`. The permutations are not
+//! guaranteed to be in any specific order. Also note that the number
+//! of permutations grows very rapidly as the length of the original
+//! sequence increases. The growth rate is `O(length(xs)!)`; with a
+//! sequence `xs` of length only 8, `permutations(xs)` contains over
+//! 40 000 elements!
+//!
+//!
+//! Example
+//! -------
+//! @include example/permutations.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto permutations = [](auto&& xs) {
-        return tag-dispatched;
-    };
+constexpr auto permutations = [](auto&& xs)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename S, typename = void>
-    struct permutations_impl : permutations_impl<S, when<true>> { };
+template <typename S, typename = void>
+struct permutations_impl : permutations_impl<S, when<true>> { };
 
-    struct permutations_t {
-        template <typename Xs>
-        constexpr auto operator()(Xs&& xs) const;
-    };
+struct permutations_t
+{
+	template <typename Xs>
+	constexpr auto operator()(Xs&& xs) const;
+};
 
-    constexpr permutations_t permutations{};
+constexpr permutations_t permutations{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

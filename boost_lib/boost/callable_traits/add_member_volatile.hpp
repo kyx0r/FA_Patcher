@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ add_member_volatile_hpp
 /*`
@@ -27,34 +30,35 @@ using add_member_volatile_t = //see below
 #ifdef BOOST_CLBL_TRTS_DISABLE_ABOMINABLE_FUNCTIONS
 
     detail::sfinae_try<
-        typename detail::traits<T>::add_member_volatile,
+    typename detail::traits<T>::add_member_volatile,
 
-        detail::fail_when_same<typename detail::traits<T>::add_member_volatile,
-                detail::abominable_functions_not_supported_on_this_compiler,
-            this_compiler_doesnt_support_abominable_function_types>,
+    detail::fail_when_same<typename detail::traits<T>::add_member_volatile,
+    detail::abominable_functions_not_supported_on_this_compiler,
+    this_compiler_doesnt_support_abominable_function_types>,
 
-        detail::fail_if_invalid<
-            typename detail::traits<T>::add_member_volatile,
-            member_qualifiers_are_illegal_for_this_type>>;
+    detail::fail_if_invalid<
+    typename detail::traits<T>::add_member_volatile,
+    member_qualifiers_are_illegal_for_this_type>>;
 #else
 
     detail::try_but_fail_if_invalid<
-        typename detail::traits<T>::add_member_volatile,
-        member_qualifiers_are_illegal_for_this_type>;
+    typename detail::traits<T>::add_member_volatile,
+    member_qualifiers_are_illegal_for_this_type>;
 
 #endif // #ifdef BOOST_CLBL_TRTS_DISABLE_ABOMINABLE_FUNCTIONS
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct add_member_volatile_impl {};
+template<typename T, typename = std::false_type>
+struct add_member_volatile_impl {};
 
-    template<typename T>
-    struct add_member_volatile_impl <T, typename std::is_same<
-        add_member_volatile_t<T>, detail::dummy>::type>
-    {
-        using type = add_member_volatile_t<T>;
-    };
+template<typename T>
+struct add_member_volatile_impl <T, typename std::is_same<
+	add_member_volatile_t<T>, detail::dummy>::type>
+{
+	using type = add_member_volatile_t<T>;
+};
 }
 //->
 
@@ -62,7 +66,8 @@ template<typename T>
 struct add_member_volatile : detail::add_member_volatile_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

@@ -17,8 +17,10 @@
 #include <streambuf>
 #include <utility>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** Return an object representing a @b ConstBufferSequence.
 
@@ -49,11 +51,11 @@ detail::buffers_helper<ConstBufferSequence>
 #endif
 buffers(ConstBufferSequence const& b)
 {
-    static_assert(boost::asio::is_const_buffer_sequence<
-        ConstBufferSequence>::value,
-            "ConstBufferSequence requirements not met");
-    return detail::buffers_helper<
-        ConstBufferSequence>{b};
+	static_assert(boost::asio::is_const_buffer_sequence<
+	              ConstBufferSequence>::value,
+	              "ConstBufferSequence requirements not met");
+	return detail::buffers_helper<
+	       ConstBufferSequence> {b};
 }
 
 /** Return an output stream that formats values into a @b DynamicBuffer.
@@ -85,17 +87,17 @@ template<class DynamicBuffer>
 implementation_defined
 #else
 detail::ostream_helper<
-    DynamicBuffer, char, std::char_traits<char>,
-        detail::basic_streambuf_movable::value>
+DynamicBuffer, char, std::char_traits<char>,
+               detail::basic_streambuf_movable::value>
 #endif
 ostream(DynamicBuffer& buffer)
 {
-    static_assert(
-        boost::asio::is_dynamic_buffer<DynamicBuffer>::value,
-        "DynamicBuffer requirements not met");
-    return detail::ostream_helper<
-        DynamicBuffer, char, std::char_traits<char>,
-            detail::basic_streambuf_movable::value>{buffer};
+	static_assert(
+	    boost::asio::is_dynamic_buffer<DynamicBuffer>::value,
+	    "DynamicBuffer requirements not met");
+	return detail::ostream_helper<
+	       DynamicBuffer, char, std::char_traits<char>,
+	       detail::basic_streambuf_movable::value> {buffer};
 }
 
 } // beast

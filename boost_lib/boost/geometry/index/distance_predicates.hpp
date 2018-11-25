@@ -17,7 +17,12 @@
 \defgroup nearest_relations Nearest relations (boost::geometry::index::)
 */
 
-namespace boost { namespace geometry { namespace index {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
 
 // relations generators
 
@@ -43,7 +48,7 @@ closer or further than value v. This is default relation.
 template <typename T>
 detail::to_nearest<T> to_nearest(T const& v)
 {
-    return detail::to_nearest<T>(v);
+	return detail::to_nearest<T>(v);
 }
 
 /*!
@@ -65,7 +70,7 @@ closer or further than value v.
 template <typename T>
 detail::to_centroid<T> to_centroid(T const& v)
 {
-    return detail::to_centroid<T>(v);
+	return detail::to_centroid<T>(v);
 }
 
 /*!
@@ -88,7 +93,7 @@ closer or further than value v.
 template <typename T>
 detail::to_furthest<T> to_furthest(T const& v)
 {
-    return detail::to_furthest<T>(v);
+	return detail::to_furthest<T>(v);
 }
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
@@ -199,6 +204,8 @@ points are further than some distance and closer than some other distance.
 //    return detail::bounded<PointRelation, MinRelation, MaxRelation>(pr, minr, maxr);
 //}
 
-}}} // namespace boost::geometry::index
+}
+}
+} // namespace boost::geometry::index
 
 #endif // BOOST_GEOMETRY_INDEX_DISTANCE_PREDICATES_HPP

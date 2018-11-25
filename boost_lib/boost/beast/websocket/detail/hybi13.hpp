@@ -20,51 +20,55 @@
 #include <string>
 #include <type_traits>
 
-namespace boost {
-namespace beast {
-namespace websocket {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
+namespace detail
+{
 
 using sec_ws_key_type = static_string<
-    beast::detail::base64::encoded_size(16)>;
+                        beast::detail::base64::encoded_size(16)>;
 
 using sec_ws_accept_type = static_string<
-    beast::detail::base64::encoded_size(20)>;
+                           beast::detail::base64::encoded_size(20)>;
 
 template<class Gen>
 void
 make_sec_ws_key(sec_ws_key_type& key, Gen& g)
 {
-    char a[16];
-    for(int i = 0; i < 16; i += 4)
-    {
-        auto const v = g();
-        a[i  ] =  v        & 0xff;
-        a[i+1] = (v >>  8) & 0xff;
-        a[i+2] = (v >> 16) & 0xff;
-        a[i+3] = (v >> 24) & 0xff;
-    }
-    key.resize(key.max_size());
-    key.resize(beast::detail::base64::encode(
-        key.data(), &a[0], 16));
+	char a[16];
+	for(int i = 0; i < 16; i += 4)
+	{
+		auto const v = g();
+		a[i  ] =  v        & 0xff;
+		a[i+1] = (v >>  8) & 0xff;
+		a[i+2] = (v >> 16) & 0xff;
+		a[i+3] = (v >> 24) & 0xff;
+	}
+	key.resize(key.max_size());
+	key.resize(beast::detail::base64::encode(
+	               key.data(), &a[0], 16));
 }
 
 template<class = void>
 void
 make_sec_ws_accept(sec_ws_accept_type& accept,
-    string_view key)
+                   string_view key)
 {
-    BOOST_ASSERT(key.size() <= sec_ws_key_type::max_size_n);
-    static_string<sec_ws_key_type::max_size_n + 36> m(key);
-    m.append("258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
-    beast::detail::sha1_context ctx;
-    beast::detail::init(ctx);
-    beast::detail::update(ctx, m.data(), m.size());
-    char digest[beast::detail::sha1_context::digest_size];
-    beast::detail::finish(ctx, &digest[0]);
-    accept.resize(accept.max_size());
-    accept.resize(beast::detail::base64::encode(
-        accept.data(), &digest[0], sizeof(digest)));
+	BOOST_ASSERT(key.size() <= sec_ws_key_type::max_size_n);
+	static_string<sec_ws_key_type::max_size_n + 36> m(key);
+	m.append("258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+	beast::detail::sha1_context ctx;
+	beast::detail::init(ctx);
+	beast::detail::update(ctx, m.data(), m.size());
+	char digest[beast::detail::sha1_context::digest_size];
+	beast::detail::finish(ctx, &digest[0]);
+	accept.resize(accept.max_size());
+	accept.resize(beast::detail::base64::encode(
+	                  accept.data(), &digest[0], sizeof(digest)));
 }
 
 } // detail

@@ -31,13 +31,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 // C++11 interface
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
+namespace fusion
+{
+struct void_;
 
-    template <typename ...T>
-    struct list;
-}}
+template <typename ...T>
+struct list;
+}
+}
 
 #endif
 #endif

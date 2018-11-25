@@ -24,7 +24,9 @@
 #include <boost/geometry/core/geometry_id.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -35,12 +37,12 @@ namespace detail
 // Different geometries: reverse_dispatch if second ID < first ID
 template <std::size_t GeometryId1, std::size_t GeometryId2>
 struct reverse_dispatch : boost::mpl::if_c
-    <
-        (GeometryId1 > GeometryId2),
-        boost::true_type,
-        boost::false_type
-    >
-{};
+	<
+(GeometryId1 > GeometryId2),
+boost::true_type,
+      boost::false_type
+      >
+      {};
 
 
 // Same geometry: never reverse_dispatch
@@ -54,13 +56,14 @@ struct reverse_dispatch<GeometryId, GeometryId> : boost::false_type {};
 
 template <typename Geometry1, typename Geometry2>
 struct reverse_dispatch : detail::reverse_dispatch
-    <
-        geometry_id<Geometry1>::type::value,
-        geometry_id<Geometry2>::type::value
-    >
+	<
+	geometry_id<Geometry1>::type::value,
+	geometry_id<Geometry2>::type::value
+	>
 {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_REVERSE_DISPATCH_HPP

@@ -39,25 +39,25 @@ template < class Iter_t, typename Compare = compare_iter < Iter_t > >
 static void insert_sort (Iter_t first, Iter_t last,
                          Compare comp = Compare())
 {
-    //--------------------------------------------------------------------
-    //                   DEFINITIONS
-    //--------------------------------------------------------------------
-    typedef value_iter< Iter_t > value_t;
+	//--------------------------------------------------------------------
+	//                   DEFINITIONS
+	//--------------------------------------------------------------------
+	typedef value_iter< Iter_t > value_t;
 
-    if ((last - first) < 2) return;
+	if ((last - first) < 2) return;
 
-    for (Iter_t it_examine = first + 1; it_examine != last; ++it_examine)
-    {
-        value_t Aux = std::move (*it_examine);
-        Iter_t it_insertion = it_examine;
+	for (Iter_t it_examine = first + 1; it_examine != last; ++it_examine)
+	{
+		value_t Aux = std::move (*it_examine);
+		Iter_t it_insertion = it_examine;
 
-        while (it_insertion != first and comp (Aux, *(it_insertion - 1)))
-        {
-            *it_insertion = std::move (*(it_insertion - 1));
-            --it_insertion;
-        };
-        *it_insertion = std::move (Aux);
-    };
+		while (it_insertion != first and comp (Aux, *(it_insertion - 1)))
+		{
+			*it_insertion = std::move (*(it_insertion - 1));
+			--it_insertion;
+		};
+		*it_insertion = std::move (Aux);
+	};
 };
 
 /*

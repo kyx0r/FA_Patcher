@@ -11,7 +11,14 @@
 
 #include <algorithm>
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
 // See https://svn.boost.org/trac/boost/ticket/12861
 //     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58800
@@ -30,15 +37,15 @@ namespace boost { namespace geometry { namespace index { namespace detail {
 #warning "std::nth_element replaced with std::sort, libstdc++ bug workaround.";
 
 template <typename RandomIt>
-void nth_element(RandomIt first, RandomIt , RandomIt last)
+void nth_element(RandomIt first, RandomIt, RandomIt last)
 {
-    std::sort(first, last);
+	std::sort(first, last);
 }
 
 template <typename RandomIt, typename Compare>
-void nth_element(RandomIt first, RandomIt , RandomIt last, Compare comp)
+void nth_element(RandomIt first, RandomIt, RandomIt last, Compare comp)
 {
-    std::sort(first, last, comp);
+	std::sort(first, last, comp);
 }
 
 #else
@@ -46,17 +53,20 @@ void nth_element(RandomIt first, RandomIt , RandomIt last, Compare comp)
 template <typename RandomIt>
 void nth_element(RandomIt first, RandomIt nth, RandomIt last)
 {
-    std::nth_element(first, nth, last);
+	std::nth_element(first, nth, last);
 }
 
 template <typename RandomIt, typename Compare>
 void nth_element(RandomIt first, RandomIt nth, RandomIt last, Compare comp)
 {
-    std::nth_element(first, nth, last, comp);
+	std::nth_element(first, nth, last, comp);
 }
 
 #endif
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_NTH_ELEMENT_HPP

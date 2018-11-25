@@ -29,43 +29,47 @@
 
 #endif
 
-namespace boost { namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 template< typename Tag > struct abs_impl;
 
 template< typename T > struct abs_tag
 {
-    typedef typename T::tag type;
+	typedef typename T::tag type;
 };
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(N)
+    typename BOOST_MPL_AUX_NA_PARAM(N)
     >
 struct abs
-    : abs_impl<
-          typename abs_tag<N>::type
-        >::template apply<N>::type
+	: abs_impl<
+	  typename abs_tag<N>::type
+	  >::template apply<N>::type
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1, abs, (N))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(1, abs, (N))
 };
 
 BOOST_MPL_AUX_NA_SPEC(1, abs)
 
 template<
-      typename T
+    typename T
     , T n1
     >
 struct abs_c
-    : abs<integral_c<T,n1> >
+	: abs<integral_c<T,n1> >
 {
 };
 
 #if defined(BOOST_MPL_CFG_NO_NESTED_VALUE_ARITHMETIC_2)
-namespace aux {
+namespace aux
+{
 template< typename T, T n > struct abs_wknd
 {
-    BOOST_STATIC_CONSTANT(T, value = (n < 0 ? -n : n));
-    typedef integral_c<T,value> type;
+	BOOST_STATIC_CONSTANT(T, value = (n < 0 ? -n : n));
+	typedef integral_c<T,value> type;
 };
 }
 #endif
@@ -74,16 +78,17 @@ template<>
 struct abs_impl<integral_c_tag>
 {
 #if defined(BOOST_MPL_CFG_NO_NESTED_VALUE_ARITHMETIC_2)
-    template< typename N > struct apply
-        : aux::abs_wknd< typename N::value_type, N::value >
+	template< typename N > struct apply
+		: aux::abs_wknd< typename N::value_type, N::value >
 #else
-    template< typename N > struct apply
-        : integral_c< typename N::value_type, ((N::value < 0) ? (-N::value) : N::value ) >
+	template< typename N > struct apply
+	: integral_c< typename N::value_type, ((N::value < 0) ? (-N::value) : N::value ) >
 #endif
-    {
-    };
+	{
+	};
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_ABS_HPP_INCLUDED

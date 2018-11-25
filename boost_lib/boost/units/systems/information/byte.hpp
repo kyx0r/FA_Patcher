@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2014 Erik Erlandson
@@ -16,16 +16,21 @@
 
 #include <boost/units/base_units/information/byte.hpp>
 
-namespace boost {
-namespace units { 
-namespace information {
+namespace boost
+{
+namespace units
+{
+namespace information
+{
 
 typedef make_system<byte_base_unit>::type system;
 
 typedef unit<dimensionless_type, system> dimensionless;
 
-namespace hu {
-namespace byte {
+namespace hu
+{
+namespace byte
+{
 typedef unit<information_dimension, system> info;
 } // namespace bit
 } // namespace hu

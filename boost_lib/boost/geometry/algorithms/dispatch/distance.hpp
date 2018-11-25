@@ -29,7 +29,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -42,31 +44,31 @@ template
 <
     typename Geometry1, typename Geometry2,
     typename Strategy = typename detail::distance::default_strategy
-        <
-            Geometry1, Geometry2
+    <
+        Geometry1, Geometry2
         >::type,
     typename Tag1 = typename tag_cast
-        <
-            typename tag<Geometry1>::type,
-            segment_tag,
-            box_tag,
-            linear_tag,
-            areal_tag
+    <
+        typename tag<Geometry1>::type,
+        segment_tag,
+        box_tag,
+        linear_tag,
+        areal_tag
         >::type,
     typename Tag2 = typename tag_cast
-        <
-            typename tag<Geometry2>::type,
-            segment_tag,
-            box_tag,
-            linear_tag,
-            areal_tag
+    <
+        typename tag<Geometry2>::type,
+        segment_tag,
+        box_tag,
+        linear_tag,
+        areal_tag
         >::type,
     typename StrategyTag = typename strategy::distance::services::tag
-        <
-            Strategy
+    <
+        Strategy
         >::type,
     bool Reverse = reverse_dispatch<Geometry1, Geometry2>::type::value
->
+    >
 struct distance: not_implemented<Tag1, Tag2>
 {};
 
@@ -76,7 +78,8 @@ struct distance: not_implemented<Tag1, Tag2>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DISPATCH_DISTANCE_HPP

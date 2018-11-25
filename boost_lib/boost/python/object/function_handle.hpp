@@ -10,7 +10,12 @@
 # include <boost/python/object/py_function.hpp>
 # include <boost/python/signature.hpp>
 
-namespace boost { namespace python { namespace objects { 
+namespace boost
+{
+namespace python
+{
+namespace objects
+{
 
 BOOST_PYTHON_DECL handle<> function_handle_impl(py_function const& f);
 
@@ -20,15 +25,15 @@ BOOST_PYTHON_DECL handle<> function_handle_impl(py_function const& f);
 template <class F, class Signature>
 inline handle<> function_handle(F const& f, Signature)
 {
-    enum { n_arguments = mpl::size<Signature>::value - 1 };
+	enum { n_arguments = mpl::size<Signature>::value - 1 };
 
-    return objects::function_handle_impl(
-        python::detail::caller<
-            F,default_call_policies,Signature
-        >(
-            f, default_call_policies()
-         )
-    );
+	return objects::function_handle_impl(
+	           python::detail::caller<
+	           F,default_call_policies,Signature
+	           >(
+	               f, default_call_policies()
+	           )
+	       );
 }
 
 // Just like make_function, but returns a handle<> intead. Same
@@ -36,9 +41,11 @@ inline handle<> function_handle(F const& f, Signature)
 template <class F>
 handle<> make_function_handle(F f)
 {
-    return objects::function_handle(f, python::detail::get_signature(f));
+	return objects::function_handle(f, python::detail::get_signature(f));
 }
 
-}}} // namespace boost::python::objects
+}
+}
+} // namespace boost::python::objects
 
 #endif // FUNCTION_HANDLE_DWA2002725_HPP

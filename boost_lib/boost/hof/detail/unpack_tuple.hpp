@@ -15,43 +15,47 @@
 #include <tuple>
 #include <array>
 
-namespace boost { namespace hof {
+namespace boost
+{
+namespace hof
+{
 
-namespace detail {
+namespace detail
+{
 
 template<class Sequence>
-constexpr typename gens<std::tuple_size<Sequence>::value>::type 
+constexpr typename gens<std::tuple_size<Sequence>::value>::type
 make_tuple_gens(const Sequence&)
 {
-    return {};
+	return {};
 }
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
 
 template<std::size_t I, class Tuple>
 struct tuple_element_return
-: std::tuple_element<I, Tuple>
+	: std::tuple_element<I, Tuple>
 {};
 
 template<std::size_t I, class Tuple>
 struct tuple_element_return<I, Tuple&>
-: std::add_lvalue_reference<typename tuple_element_return<I, Tuple>::type>
+	: std::add_lvalue_reference<typename tuple_element_return<I, Tuple>::type>
 {};
 
 template<std::size_t I, class Tuple>
 struct tuple_element_return<I, Tuple&&>
-: std::add_rvalue_reference<typename tuple_element_return<I, Tuple>::type>
+	: std::add_rvalue_reference<typename tuple_element_return<I, Tuple>::type>
 {};
 
 template<std::size_t I, class Tuple>
 struct tuple_element_return<I, const Tuple>
-: std::add_const<typename tuple_element_return<I, Tuple>::type>
+	: std::add_const<typename tuple_element_return<I, Tuple>::type>
 {};
 
 template< std::size_t I, class Tuple, class R = typename tuple_element_return<I, Tuple&&>::type >
-R tuple_get( Tuple&& t ) 
-{ 
-    return (R&&)(std::get<I>(boost::hof::forward<Tuple>(t))); 
+R tuple_get( Tuple&& t )
+{
+	return (R&&)(std::get<I>(boost::hof::forward<Tuple>(t)));
 }
 #define BOOST_HOF_UNPACK_TUPLE_GET boost::hof::detail::tuple_get
 #else
@@ -69,30 +73,31 @@ constexpr auto unpack_tuple(F&& f, T&& t, seq<N...>) BOOST_HOF_RETURNS
 
 struct unpack_tuple_apply
 {
-    template<class F, class S>
-    constexpr static auto apply(F&& f, S&& t) BOOST_HOF_RETURNS
-    (
-        boost::hof::detail::unpack_tuple(BOOST_HOF_FORWARD(F)(f), BOOST_HOF_FORWARD(S)(t), boost::hof::detail::make_tuple_gens(t))
-    );
+	template<class F, class S>
+	constexpr static auto apply(F&& f, S&& t) BOOST_HOF_RETURNS
+	(
+	    boost::hof::detail::unpack_tuple(BOOST_HOF_FORWARD(F)(f), BOOST_HOF_FORWARD(S)(t), boost::hof::detail::make_tuple_gens(t))
+	);
 };
 
 }
 
 template<class... Ts>
 struct unpack_sequence<std::tuple<Ts...>>
-: detail::unpack_tuple_apply
+	                                       : detail::unpack_tuple_apply
 {};
 
 template<class T, class U>
 struct unpack_sequence<std::pair<T, U>>
-: detail::unpack_tuple_apply
+	                                     : detail::unpack_tuple_apply
 {};
 
 template<class T, std::size_t N>
 struct unpack_sequence<std::array<T, N>>
-: detail::unpack_tuple_apply
+	                                      : detail::unpack_tuple_apply
 {};
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

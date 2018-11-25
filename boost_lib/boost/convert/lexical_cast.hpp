@@ -7,10 +7,13 @@
 
 #include <boost/lexical_cast.hpp>
 
-namespace boost { namespace cnv
+namespace boost
 {
-    struct lexical_cast;
-}}
+namespace cnv
+{
+struct lexical_cast;
+}
+}
 
 /// @brief boost::lexical_cast-based converter
 /// @details The purpose of the converter is to
@@ -23,18 +26,18 @@ namespace boost { namespace cnv
 
 struct boost::cnv::lexical_cast
 {
-    template<typename TypeOut, typename TypeIn>
-    void
-    operator()(TypeIn const& value_in, boost::optional<TypeOut>& result_out) const
-    {
-        try
-        {
-            result_out = boost::lexical_cast<TypeOut>(value_in);
-        }
-        catch (boost::bad_lexical_cast const&)
-        {
-        }
-    }
+	template<typename TypeOut, typename TypeIn>
+	void
+	operator()(TypeIn const& value_in, boost::optional<TypeOut>& result_out) const
+	{
+		try
+		{
+			result_out = boost::lexical_cast<TypeOut>(value_in);
+		}
+		catch (boost::bad_lexical_cast const&)
+		{
+		}
+	}
 };
 
 #endif // BOOST_CONVERT_LEXICAL_CAST_HPP

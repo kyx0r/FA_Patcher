@@ -23,7 +23,10 @@
 #   endif
 #  endif
 
-namespace boost { namespace python { 
+namespace boost
+{
+namespace python
+{
 
 // for this compiler at least, cross-shared-library type_info
 // comparisons don't work, so use typeid(x).name() instead. It's not
@@ -34,7 +37,7 @@ namespace boost { namespace python {
  || (defined(__hpux) && defined(__HP_aCC)) \
  || (defined(linux) && defined(__INTEL_COMPILER) && defined(__ICC))
 #  define BOOST_PYTHON_TYPE_ID_NAME
-# endif 
+# endif
 
 #ifdef BOOST_PYTHON_HAVE_GCC_CP_DEMANGLE
 // Runtime detection of broken cxxabi::__cxa_demangle versions,
@@ -48,23 +51,23 @@ bool cxxabi_cxa_demangle_is_broken();
 // which works across shared libraries.
 struct type_info : private totally_ordered<type_info>
 {
-    inline type_info(std::type_info const& = typeid(void));
-    
-    inline bool operator<(type_info const& rhs) const;
-    inline bool operator==(type_info const& rhs) const;
+	inline type_info(std::type_info const& = typeid(void));
 
-    char const* name() const;
-    friend BOOST_PYTHON_DECL std::ostream& operator<<(
-        std::ostream&, type_info const&);
-    
- private: // data members
+	inline bool operator<(type_info const& rhs) const;
+	inline bool operator==(type_info const& rhs) const;
+
+	char const* name() const;
+	friend BOOST_PYTHON_DECL std::ostream& operator<<(
+	    std::ostream&, type_info const&);
+
+private: // data members
 #  ifdef BOOST_PYTHON_TYPE_ID_NAME
-    typedef char const* base_id_t;
+	typedef char const* base_id_t;
 #  else
-    typedef std::type_info const* base_id_t;
+	typedef std::type_info const* base_id_t;
 #  endif
-    
-    base_id_t m_base_type;
+
+	base_id_t m_base_type;
 };
 
 
@@ -74,14 +77,14 @@ struct type_info : private totally_ordered<type_info>
 template <class T>
 inline type_info type_id()
 {
-    return type_info(
+	return type_info(
 #  if !defined(_MSC_VER)                                       \
       || !BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, <= 700)
-        typeid(T)
+	           typeid(T)
 #  else // strip the decoration which Intel mistakenly leaves in
-        python::detail::msvc_typeid((boost::type<T>*)0)
-#  endif 
-        );
+	           python::detail::msvc_typeid((boost::type<T>*)0)
+#  endif
+	       );
 }
 
 #  if (defined(__EDG_VERSION__) && __EDG_VERSION__ < 245) \
@@ -112,55 +115,55 @@ BOOST_PYTHON_SIGNED_INTEGRAL_TYPE_ID(long long)
 
 //
 inline type_info::type_info(std::type_info const& id)
-    : m_base_type(
+	: m_base_type(
 #  ifdef BOOST_PYTHON_TYPE_ID_NAME
-        id.name()
+	      id.name()
 #  else
-        &id
+	      &id
 #  endif
-        )
+	  )
 {
 }
 
 inline bool type_info::operator<(type_info const& rhs) const
 {
 #  ifdef BOOST_PYTHON_TYPE_ID_NAME
-    return std::strcmp(m_base_type, rhs.m_base_type) < 0;
+	return std::strcmp(m_base_type, rhs.m_base_type) < 0;
 #  else
-    return m_base_type->before(*rhs.m_base_type);
-#  endif 
+	return m_base_type->before(*rhs.m_base_type);
+#  endif
 }
 
 inline bool type_info::operator==(type_info const& rhs) const
 {
 #  ifdef BOOST_PYTHON_TYPE_ID_NAME
-    return !std::strcmp(m_base_type, rhs.m_base_type);
+	return !std::strcmp(m_base_type, rhs.m_base_type);
 #  else
-    return *m_base_type == *rhs.m_base_type;
-#  endif 
+	return *m_base_type == *rhs.m_base_type;
+#  endif
 }
 
 #  ifdef BOOST_PYTHON_HAVE_GCC_CP_DEMANGLE
 namespace detail
 {
-  BOOST_PYTHON_DECL char const* gcc_demangle(char const*);
+BOOST_PYTHON_DECL char const* gcc_demangle(char const*);
 }
 #  endif
-    
+
 inline char const* type_info::name() const
 {
-    char const* raw_name
-        = m_base_type
+	char const* raw_name
+	    = m_base_type
 #  ifndef BOOST_PYTHON_TYPE_ID_NAME
-          ->name()
+	      ->name()
 #  endif
-        ;
-    
+	      ;
+
 #  ifdef BOOST_PYTHON_HAVE_GCC_CP_DEMANGLE
-    return detail::gcc_demangle(raw_name);
+	return detail::gcc_demangle(raw_name);
 #  else
-    return raw_name;
-#  endif 
+	return raw_name;
+#  endif
 }
 
 
@@ -169,16 +172,17 @@ BOOST_PYTHON_DECL std::ostream& operator<<(std::ostream&, type_info const&);
 template<>
 inline type_info type_id<void>()
 {
-    return type_info (typeid (void *));
+	return type_info (typeid (void *));
 }
 #   ifndef BOOST_NO_CV_VOID_SPECIALIZATIONS
 template<>
 inline type_info type_id<const volatile void>()
 {
-    return type_info (typeid (void *));
+	return type_info (typeid (void *));
 }
 #  endif
 
-}} // namespace boost::python
+}
+} // namespace boost::python
 
 #endif // TYPE_ID_DWA2002517_HPP

@@ -49,166 +49,176 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct oea {};
+namespace par4
+{
+struct oea {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace oea
-    {
-            template <typename T>
-            struct par_oea
-            {
-                T    theta;
-                T    m, n;
-                T    two_r_m, two_r_n, rm, rn, hm, hn;
-                T    cp0, sp0;
-            };
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace oea
+{
+template <typename T>
+struct par_oea
+{
+	T    theta;
+	T    m, n;
+	T    two_r_m, two_r_n, rm, rn, hm, hn;
+	T    cp0, sp0;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_oea_spheroid : public base_t_fi<base_oea_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_oea_spheroid : public base_t_fi<base_oea_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_oea<CalculationType> m_proj_parm;
+	par_oea<CalculationType> m_proj_parm;
 
-                inline base_oea_spheroid(const Parameters& par)
-                    : base_t_fi<base_oea_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_oea_spheroid(const Parameters& par)
+		: base_t_fi<base_oea_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  sphere
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType Az, M, N, cp, sp, cl, shz;
+	// FORWARD(s_forward)  sphere
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType Az, M, N, cp, sp, cl, shz;
 
-                    cp = cos(lp_lat);
-                    sp = sin(lp_lat);
-                    cl = cos(lp_lon);
-                    Az = aatan2(cp * sin(lp_lon), this->m_proj_parm.cp0 * sp - this->m_proj_parm.sp0 * cp * cl) + this->m_proj_parm.theta;
-                    shz = sin(0.5 * aacos(this->m_proj_parm.sp0 * sp + this->m_proj_parm.cp0 * cp * cl));
-                    M = aasin(shz * sin(Az));
-                    N = aasin(shz * cos(Az) * cos(M) / cos(M * this->m_proj_parm.two_r_m));
-                    xy_y = this->m_proj_parm.n * sin(N * this->m_proj_parm.two_r_n);
-                    xy_x = this->m_proj_parm.m * sin(M * this->m_proj_parm.two_r_m) * cos(N) / cos(N * this->m_proj_parm.two_r_n);
-                }
+		cp = cos(lp_lat);
+		sp = sin(lp_lat);
+		cl = cos(lp_lon);
+		Az = aatan2(cp * sin(lp_lon), this->m_proj_parm.cp0 * sp - this->m_proj_parm.sp0 * cp * cl) + this->m_proj_parm.theta;
+		shz = sin(0.5 * aacos(this->m_proj_parm.sp0 * sp + this->m_proj_parm.cp0 * cp * cl));
+		M = aasin(shz * sin(Az));
+		N = aasin(shz * cos(Az) * cos(M) / cos(M * this->m_proj_parm.two_r_m));
+		xy_y = this->m_proj_parm.n * sin(N * this->m_proj_parm.two_r_n);
+		xy_x = this->m_proj_parm.m * sin(M * this->m_proj_parm.two_r_m) * cos(N) / cos(N * this->m_proj_parm.two_r_n);
+	}
 
-                // INVERSE(s_inverse)  sphere
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType N, M, xp, yp, z, Az, cz, sz, cAz;
+	// INVERSE(s_inverse)  sphere
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType N, M, xp, yp, z, Az, cz, sz, cAz;
 
-                    N = this->m_proj_parm.hn * aasin(xy_y * this->m_proj_parm.rn);
-                    M = this->m_proj_parm.hm * aasin(xy_x * this->m_proj_parm.rm * cos(N * this->m_proj_parm.two_r_n) / cos(N));
-                    xp = 2. * sin(M);
-                    yp = 2. * sin(N) * cos(M * this->m_proj_parm.two_r_m) / cos(M);
-                    cAz = cos(Az = aatan2(xp, yp) - this->m_proj_parm.theta);
-                    z = 2. * aasin(0.5 * boost::math::hypot(xp, yp));
-                    sz = sin(z);
-                    cz = cos(z);
-                    lp_lat = aasin(this->m_proj_parm.sp0 * cz + this->m_proj_parm.cp0 * sz * cAz);
-                    lp_lon = aatan2(sz * sin(Az),
-                        this->m_proj_parm.cp0 * cz - this->m_proj_parm.sp0 * sz * cAz);
-                }
+		N = this->m_proj_parm.hn * aasin(xy_y * this->m_proj_parm.rn);
+		M = this->m_proj_parm.hm * aasin(xy_x * this->m_proj_parm.rm * cos(N * this->m_proj_parm.two_r_n) / cos(N));
+		xp = 2. * sin(M);
+		yp = 2. * sin(N) * cos(M * this->m_proj_parm.two_r_m) / cos(M);
+		cAz = cos(Az = aatan2(xp, yp) - this->m_proj_parm.theta);
+		z = 2. * aasin(0.5 * boost::math::hypot(xp, yp));
+		sz = sin(z);
+		cz = cos(z);
+		lp_lat = aasin(this->m_proj_parm.sp0 * cz + this->m_proj_parm.cp0 * sz * cAz);
+		lp_lon = aatan2(sz * sin(Az),
+		                this->m_proj_parm.cp0 * cz - this->m_proj_parm.sp0 * sz * cAz);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "oea_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "oea_spheroid";
+	}
 
-            };
+};
 
-            // Oblated Equal Area
-            template <typename Parameters, typename T>
-            inline void setup_oea(Parameters& par, par_oea<T>& proj_parm)
-            {
-                if (((proj_parm.n = pj_param(par.params, "dn").f) <= 0.) ||
-                    ((proj_parm.m = pj_param(par.params, "dm").f) <= 0.))
-                    BOOST_THROW_EXCEPTION( projection_exception(-39) );
-                else {
-                    proj_parm.theta = pj_param(par.params, "rtheta").f;
-                    proj_parm.sp0 = sin(par.phi0);
-                    proj_parm.cp0 = cos(par.phi0);
-                    proj_parm.rn = 1./ proj_parm.n;
-                    proj_parm.rm = 1./ proj_parm.m;
-                    proj_parm.two_r_n = 2. * proj_parm.rn;
-                    proj_parm.two_r_m = 2. * proj_parm.rm;
-                    proj_parm.hm = 0.5 * proj_parm.m;
-                    proj_parm.hn = 0.5 * proj_parm.n;
-                    par.es = 0.;
-                }
-            }
+// Oblated Equal Area
+template <typename Parameters, typename T>
+inline void setup_oea(Parameters& par, par_oea<T>& proj_parm)
+{
+	if (((proj_parm.n = pj_param(par.params, "dn").f) <= 0.) ||
+	        ((proj_parm.m = pj_param(par.params, "dm").f) <= 0.))
+		BOOST_THROW_EXCEPTION( projection_exception(-39) );
+	else
+	{
+		proj_parm.theta = pj_param(par.params, "rtheta").f;
+		proj_parm.sp0 = sin(par.phi0);
+		proj_parm.cp0 = cos(par.phi0);
+		proj_parm.rn = 1./ proj_parm.n;
+		proj_parm.rm = 1./ proj_parm.m;
+		proj_parm.two_r_n = 2. * proj_parm.rn;
+		proj_parm.two_r_m = 2. * proj_parm.rm;
+		proj_parm.hm = 0.5 * proj_parm.m;
+		proj_parm.hn = 0.5 * proj_parm.n;
+		par.es = 0.;
+	}
+}
 
-    }} // namespace detail::oea
-    #endif // doxygen
+}
+} // namespace detail::oea
+#endif // doxygen
 
-    /*!
-        \brief Oblated Equal Area projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-        \par Projection parameters
-         - n (real)
-         - m (real)
-         - theta: Theta (degrees)
-        \par Example
-        \image html ex_oea.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct oea_spheroid : public detail::oea::base_oea_spheroid<CalculationType, Parameters>
-    {
-        inline oea_spheroid(const Parameters& par) : detail::oea::base_oea_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::oea::setup_oea(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Oblated Equal Area projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+    \par Projection parameters
+     - n (real)
+     - m (real)
+     - theta: Theta (degrees)
+    \par Example
+    \image html ex_oea.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct oea_spheroid : public detail::oea::base_oea_spheroid<CalculationType, Parameters>
+{
+	inline oea_spheroid(const Parameters& par) : detail::oea::base_oea_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::oea::setup_oea(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::oea, oea_spheroid, oea_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::oea, oea_spheroid, oea_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class oea_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<oea_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class oea_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<oea_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void oea_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("oea", new oea_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void oea_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("oea", new oea_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_OEA_HPP
 

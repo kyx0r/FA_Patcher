@@ -15,20 +15,27 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <stdexcept>
 
-namespace boost { namespace spirit { namespace qi {
-    template <typename Iterator>
-    struct expectation_failure : std::runtime_error
-    {
-        expectation_failure(Iterator first_, Iterator last_, info const& what)
-            : std::runtime_error("boost::spirit::qi::expectation_failure")
-            , first(first_), last(last_), what_(what)
-        {}
-        ~expectation_failure() throw() {}
+namespace boost
+{
+namespace spirit
+{
+namespace qi
+{
+template <typename Iterator>
+struct expectation_failure : std::runtime_error
+{
+	expectation_failure(Iterator first_, Iterator last_, info const& what)
+		: std::runtime_error("boost::spirit::qi::expectation_failure")
+		, first(first_), last(last_), what_(what)
+	{}
+	~expectation_failure() throw() {}
 
-        Iterator first;
-        Iterator last;
-        info what_;
-    };
-}}}
+	Iterator first;
+	Iterator last;
+	info what_;
+};
+}
+}
+}
 
 #endif

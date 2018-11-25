@@ -17,8 +17,10 @@
 #include <boost/compute/functional/operator.hpp>
 #include <boost/compute/algorithm/adjacent_find.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns \c true if the values in the range [\p first, \p last)
 /// are in sorted order.
@@ -39,12 +41,12 @@ inline bool is_sorted(InputIterator first,
                       Compare compare,
                       command_queue &queue = system::default_queue())
 {
-    using ::boost::compute::placeholders::_1;
-    using ::boost::compute::placeholders::_2;
+	using ::boost::compute::placeholders::_1;
+	using ::boost::compute::placeholders::_2;
 
-    return ::boost::compute::adjacent_find(
-        first, last, ::boost::compute::bind(compare, _2, _1), queue
-    ) == last;
+	return ::boost::compute::adjacent_find(
+	           first, last, ::boost::compute::bind(compare, _2, _1), queue
+	       ) == last;
 }
 
 /// \overload
@@ -53,11 +55,11 @@ inline bool is_sorted(InputIterator first,
                       InputIterator last,
                       command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    return ::boost::compute::is_sorted(
-        first, last, ::boost::compute::less<value_type>(), queue
-    );
+	return ::boost::compute::is_sorted(
+	           first, last, ::boost::compute::less<value_type>(), queue
+	       );
 }
 
 } // end compute namespace

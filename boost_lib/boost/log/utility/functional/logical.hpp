@@ -33,33 +33,35 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! The trait creates a common integral type suitable for comparison. This is mostly to silence compiler warnings like 'signed/unsigned mismatch'.
 template< typename T, typename U, unsigned int TSizeV = sizeof(T), unsigned int USizeV = sizeof(U), bool TSmallerThanU = (sizeof(T) < sizeof(U)) >
-struct make_common_integral_type
+          struct make_common_integral_type
 {
-    typedef T type;
+	typedef T type;
 };
 
 //! Specialization for case when \c T is smaller than \c U
 template< typename T, typename U, unsigned int TSizeV, unsigned int USizeV >
 struct make_common_integral_type< T, U, TSizeV, USizeV, true >
 {
-    typedef U type;
+	typedef U type;
 };
 
 //! Specialization for the case when both types have the same size
 template< typename T, typename U, unsigned int SizeV >
 struct make_common_integral_type< T, U, SizeV, SizeV, false > :
-    public mpl::if_<
-        is_unsigned< T >,
-        T,
-        U
+public mpl::if_<
+    is_unsigned< T >,
+    T,
+    U
     >
 {
 };
@@ -69,151 +71,151 @@ struct make_common_integral_type< T, U, SizeV, SizeV, false > :
 //! Equality predicate
 struct equal_to
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& left, U const& right) const
-    {
-        return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
-    }
+	template< typename T, typename U >
+	bool operator() (T const& left, U const& right) const
+	{
+		return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
+	}
 
 private:
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::false_ const&)
-    {
-        return (left == right);
-    }
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::true_ const&)
-    {
-        typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
-        return static_cast< common_integral_type >(left) == static_cast< common_integral_type >(right);
-    }
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::false_ const&)
+	{
+		return (left == right);
+	}
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::true_ const&)
+	{
+		typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
+		return static_cast< common_integral_type >(left) == static_cast< common_integral_type >(right);
+	}
 };
 
 //! Inequality predicate
 struct not_equal_to
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& left, U const& right) const
-    {
-        return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
-    }
+	template< typename T, typename U >
+	bool operator() (T const& left, U const& right) const
+	{
+		return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
+	}
 
 private:
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::false_ const&)
-    {
-        return (left != right);
-    }
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::true_ const&)
-    {
-        typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
-        return static_cast< common_integral_type >(left) != static_cast< common_integral_type >(right);
-    }
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::false_ const&)
+	{
+		return (left != right);
+	}
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::true_ const&)
+	{
+		typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
+		return static_cast< common_integral_type >(left) != static_cast< common_integral_type >(right);
+	}
 };
 
 //! Less predicate
 struct less
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& left, U const& right) const
-    {
-        return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
-    }
+	template< typename T, typename U >
+	bool operator() (T const& left, U const& right) const
+	{
+		return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
+	}
 
 private:
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::false_ const&)
-    {
-        return (left < right);
-    }
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::true_ const&)
-    {
-        typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
-        return static_cast< common_integral_type >(left) < static_cast< common_integral_type >(right);
-    }
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::false_ const&)
+	{
+		return (left < right);
+	}
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::true_ const&)
+	{
+		typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
+		return static_cast< common_integral_type >(left) < static_cast< common_integral_type >(right);
+	}
 };
 
 //! Greater predicate
 struct greater
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& left, U const& right) const
-    {
-        return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
-    }
+	template< typename T, typename U >
+	bool operator() (T const& left, U const& right) const
+	{
+		return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
+	}
 
 private:
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::false_ const&)
-    {
-        return (left > right);
-    }
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::true_ const&)
-    {
-        typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
-        return static_cast< common_integral_type >(left) > static_cast< common_integral_type >(right);
-    }
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::false_ const&)
+	{
+		return (left > right);
+	}
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::true_ const&)
+	{
+		typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
+		return static_cast< common_integral_type >(left) > static_cast< common_integral_type >(right);
+	}
 };
 
 //! Less or equal predicate
 struct less_equal
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& left, U const& right) const
-    {
-        return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
-    }
+	template< typename T, typename U >
+	bool operator() (T const& left, U const& right) const
+	{
+		return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
+	}
 
 private:
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::false_ const&)
-    {
-        return (left <= right);
-    }
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::true_ const&)
-    {
-        typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
-        return static_cast< common_integral_type >(left) <= static_cast< common_integral_type >(right);
-    }
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::false_ const&)
+	{
+		return (left <= right);
+	}
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::true_ const&)
+	{
+		typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
+		return static_cast< common_integral_type >(left) <= static_cast< common_integral_type >(right);
+	}
 };
 
 //! Greater or equal predicate
 struct greater_equal
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename T, typename U >
-    bool operator() (T const& left, U const& right) const
-    {
-        return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
-    }
+	template< typename T, typename U >
+	bool operator() (T const& left, U const& right) const
+	{
+		return op(left, right, typename mpl::and_< is_integral< T >, is_integral< U > >::type());
+	}
 
 private:
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::false_ const&)
-    {
-        return (left >= right);
-    }
-    template< typename T, typename U >
-    static bool op(T const& left, U const& right, mpl::true_ const&)
-    {
-        typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
-        return static_cast< common_integral_type >(left) >= static_cast< common_integral_type >(right);
-    }
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::false_ const&)
+	{
+		return (left >= right);
+	}
+	template< typename T, typename U >
+	static bool op(T const& left, U const& right, mpl::true_ const&)
+	{
+		typedef typename aux::make_common_integral_type< T, U >::type common_integral_type;
+		return static_cast< common_integral_type >(left) >= static_cast< common_integral_type >(right);
+	}
 };
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

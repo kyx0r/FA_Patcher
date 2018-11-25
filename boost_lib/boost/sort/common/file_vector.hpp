@@ -44,23 +44,24 @@ namespace common
 /// @remarks
 //-----------------------------------------------------------------------------
 static int generate_file(const std::string & filename, size_t NElem)
-{   //------------------------------- begin ----------------------------------
-    std::ofstream ofile;
-    ofile.open(filename, std::ios_base::out | std::ios_base::binary |
-                         std::ios_base::trunc);
-    if (ofile.bad())
-    {
-        throw std::ios_base::failure("could not open file \n");
-    };
-    std::mt19937_64 my_rand(0);
+{
+	//------------------------------- begin ----------------------------------
+	std::ofstream ofile;
+	ofile.open(filename, std::ios_base::out | std::ios_base::binary |
+	           std::ios_base::trunc);
+	if (ofile.bad())
+	{
+		throw std::ios_base::failure("could not open file \n");
+	};
+	std::mt19937_64 my_rand(0);
 
-    for (size_t i = 0; i < NElem; ++i)
-    {
-        uint64_t Aux = my_rand();
-        ofile.write((char *) &Aux, 8);
-    }
-    ofile.close();
-    return 0;
+	for (size_t i = 0; i < NElem; ++i)
+	{
+		uint64_t Aux = my_rand();
+		ofile.write((char *) &Aux, 8);
+	}
+	ofile.close();
+	return 0;
 };
 //
 //-----------------------------------------------------------------------------
@@ -75,34 +76,35 @@ static int generate_file(const std::string & filename, size_t NElem)
 //-----------------------------------------------------------------------------
 static int fill_vector_uint64(const std::string & filename,
                               std::vector<uint64_t> & V, size_t NElem)
-{   //----------------------- begin ------------------------------------------
-    std::ifstream input(filename, std::ios_base::in | std::ios_base::binary);
-    if (input.fail())
-    {
-        throw std::ios_base::failure("could not open file \n");
-    };
-    //------------------------------------------------------------------------
-    // Calculate the lenght of the file and the number of elements inside
-    //------------------------------------------------------------------------
-    input.seekg(0, std::ios_base::end);
-    size_t length = input.tellg();
-    size_t uCount = length / 8;
-    if (uCount < NElem)
-    {
-        throw std::ios_base::failure("incorrect lenght of the file\n");
-    };
-    V.clear();
-    V.reserve(NElem);
+{
+	//----------------------- begin ------------------------------------------
+	std::ifstream input(filename, std::ios_base::in | std::ios_base::binary);
+	if (input.fail())
+	{
+		throw std::ios_base::failure("could not open file \n");
+	};
+	//------------------------------------------------------------------------
+	// Calculate the lenght of the file and the number of elements inside
+	//------------------------------------------------------------------------
+	input.seekg(0, std::ios_base::end);
+	size_t length = input.tellg();
+	size_t uCount = length / 8;
+	if (uCount < NElem)
+	{
+		throw std::ios_base::failure("incorrect lenght of the file\n");
+	};
+	V.clear();
+	V.reserve(NElem);
 
-    uint64_t Aux = 0;
-    input.seekg(0, std::ios_base::beg);
-    for (size_t i = 0; i < NElem; ++i)
-    {
-        input.read(reinterpret_cast<char *>(&Aux), 8);
-        V.push_back(Aux);
-    };
-    input.close();
-    return 0;
+	uint64_t Aux = 0;
+	input.seekg(0, std::ios_base::beg);
+	for (size_t i = 0; i < NElem; ++i)
+	{
+		input.read(reinterpret_cast<char *>(&Aux), 8);
+		V.push_back(Aux);
+	};
+	input.close();
+	return 0;
 };
 
 //
@@ -117,21 +119,22 @@ static int fill_vector_uint64(const std::string & filename,
 //-----------------------------------------------------------------------------
 static int write_file_uint64 (const std::vector<uint64_t> & V,
                               const std::string & filename)
-{   //--------------------------------- begin --------------------------------
-    std::ofstream ofile;
-    ofile.open(filename,
-                    std::ios_base::out | std::ios_base::binary
-                                    | std::ios_base::trunc);
-    if (ofile.bad())
-    {
-        throw std::ios_base::failure("could not open file \n");
-    };
-    for (size_t i = 0; i < V.size(); ++i)
-    {
-        ofile.write((char *) &(V[i]), 8);
-    }
-    ofile.close();
-    return 0;
+{
+	//--------------------------------- begin --------------------------------
+	std::ofstream ofile;
+	ofile.open(filename,
+	           std::ios_base::out | std::ios_base::binary
+	           | std::ios_base::trunc);
+	if (ofile.bad())
+	{
+		throw std::ios_base::failure("could not open file \n");
+	};
+	for (size_t i = 0; i < V.size(); ++i)
+	{
+		ofile.write((char *) &(V[i]), 8);
+	}
+	ofile.close();
+	return 0;
 };
 //
 //-----------------------------------------------------------------------------
@@ -146,37 +149,38 @@ static int write_file_uint64 (const std::vector<uint64_t> & V,
 //-----------------------------------------------------------------------------
 static int fill_vector_string (const std::string & filename,
                                std::vector<std::string> & V, size_t NElem)
-{   //----------------------- begin ------------------------------------------
-    std::ifstream input(filename, std::ios_base::in | std::ios_base::binary);
-    if (input.fail())
-    {
-        throw std::ios_base::failure("could not open file \n");
-    };
-    //------------------------------------------------------------------------
-    // Calculate the lenght of the file and the number of elements inside
-    //------------------------------------------------------------------------
-    input.seekg(0, std::ios_base::end);
-    V.clear();
-    V.reserve(NElem);
+{
+	//----------------------- begin ------------------------------------------
+	std::ifstream input(filename, std::ios_base::in | std::ios_base::binary);
+	if (input.fail())
+	{
+		throw std::ios_base::failure("could not open file \n");
+	};
+	//------------------------------------------------------------------------
+	// Calculate the lenght of the file and the number of elements inside
+	//------------------------------------------------------------------------
+	input.seekg(0, std::ios_base::end);
+	V.clear();
+	V.reserve(NElem);
 
-    std::string inval;
-    input.seekg(0, std::ios_base::beg);
+	std::string inval;
+	input.seekg(0, std::ios_base::beg);
 
-    for (size_t i = 0; i < NElem; ++i)
-    {
-        if (!input.eof())
-        {
-            input >> inval;
-            V.push_back(inval);
-            inval.clear();
-        }
-        else
-        {
-            throw std::ios_base::failure("Insuficient lenght of the file\n");
-        };
-    };
-    input.close();
-    return 0;
+	for (size_t i = 0; i < NElem; ++i)
+	{
+		if (!input.eof())
+		{
+			input >> inval;
+			V.push_back(inval);
+			inval.clear();
+		}
+		else
+		{
+			throw std::ios_base::failure("Insuficient lenght of the file\n");
+		};
+	};
+	input.close();
+	return 0;
 };
 
 //
@@ -190,23 +194,24 @@ static int fill_vector_string (const std::string & filename,
 /// @remarks
 //-----------------------------------------------------------------------------
 static int write_file_string (const std::vector<std::string> & V,
-                             const std::string & filename)
-{   //--------------------------------- begin --------------------------------
-    std::ofstream ofile;
-    ofile.open(filename,
-                    std::ios_base::out | std::ios_base::binary
-                                    | std::ios_base::trunc);
-    if (ofile.bad())
-    {
-        throw std::ios_base::failure("could not open file \n");
-    };
-    for (size_t i = 0; i < V.size(); ++i)
-    {
-        ofile.write((char *) &(V[i][0]), V[i].size());
-        ofile.put(0x0);
-    }
-    ofile.close();
-    return 0;
+                              const std::string & filename)
+{
+	//--------------------------------- begin --------------------------------
+	std::ofstream ofile;
+	ofile.open(filename,
+	           std::ios_base::out | std::ios_base::binary
+	           | std::ios_base::trunc);
+	if (ofile.bad())
+	{
+		throw std::ios_base::failure("could not open file \n");
+	};
+	for (size_t i = 0; i < V.size(); ++i)
+	{
+		ofile.write((char *) &(V[i][0]), V[i].size());
+		ofile.put(0x0);
+	}
+	ofile.close();
+	return 0;
 };
 //---------------------------------------------------------------------------
 /// @struct uint64_file_generator
@@ -215,52 +220,69 @@ static int write_file_string (const std::vector<std::string> & V,
 /// @remarks
 //---------------------------------------------------------------------------
 struct uint64_file_generator
-{   //----------------------------------------------------------------------
-    //                  VARIABLES
-    //----------------------------------------------------------------------
-    std::ifstream input;
-    size_t NMax, Pos;
-    size_t Max_Val;
-    std::string s;
+{
+	//----------------------------------------------------------------------
+	//                  VARIABLES
+	//----------------------------------------------------------------------
+	std::ifstream input;
+	size_t NMax, Pos;
+	size_t Max_Val;
+	std::string s;
 
-    //----------------------------------------------------------------------
-    //                    FUNCTIONS
-    //----------------------------------------------------------------------
-    uint64_file_generator(const std::string & filename)
-    {   //---------------------------- begin ---------------------------------
-        s = filename;
-        input.open(filename, std::ios_base::in | std::ios_base::binary);
-        if (input.fail() or input.bad())
-        {
-            throw std::ios_base::failure("could not open file \n");
-        };
-        //--------------------------------------------------------------------
-        // Calculate the lenght of the file and the number of elements inside
-        //--------------------------------------------------------------------
-        input.seekg(0, std::ios_base::end);
-        size_t length = input.tellg();
-        NMax = length / 8;
-        Pos = 0;
-        Max_Val = ~((size_t) 0);
-        input.seekg(0);
-    };
+	//----------------------------------------------------------------------
+	//                    FUNCTIONS
+	//----------------------------------------------------------------------
+	uint64_file_generator(const std::string & filename)
+	{
+		//---------------------------- begin ---------------------------------
+		s = filename;
+		input.open(filename, std::ios_base::in | std::ios_base::binary);
+		if (input.fail() or input.bad())
+		{
+			throw std::ios_base::failure("could not open file \n");
+		};
+		//--------------------------------------------------------------------
+		// Calculate the lenght of the file and the number of elements inside
+		//--------------------------------------------------------------------
+		input.seekg(0, std::ios_base::end);
+		size_t length = input.tellg();
+		NMax = length / 8;
+		Pos = 0;
+		Max_Val = ~((size_t) 0);
+		input.seekg(0);
+	};
 
-    void set_max_val(size_t MV){ Max_Val = MV; };
+	void set_max_val(size_t MV)
+	{
+		Max_Val = MV;
+	};
 
-    size_t size() const { return NMax; };
+	size_t size() const
+	{
+		return NMax;
+	};
 
-    uint64_t get(void)
-    {
-        uint64_t Aux;
-        input.read(reinterpret_cast<char *>(&Aux), 8);
-        return (Aux % Max_Val);
-    };
+	uint64_t get(void)
+	{
+		uint64_t Aux;
+		input.read(reinterpret_cast<char *>(&Aux), 8);
+		return (Aux % Max_Val);
+	};
 
-    uint64_t operator ( )(){ return get(); };
+	uint64_t operator ( )()
+	{
+		return get();
+	};
 
-    void reset(void) { input.seekg(0, std::ios_base::beg); };
+	void reset(void)
+	{
+		input.seekg(0, std::ios_base::beg);
+	};
 
-    ~uint64_file_generator() { if (input.is_open()) input.close(); };
+	~uint64_file_generator()
+	{
+		if (input.is_open()) input.close();
+	};
 };
 //
 //****************************************************************************

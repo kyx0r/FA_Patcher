@@ -13,8 +13,10 @@
 
 #include <boost/mpl/int.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 struct rational_c_tag : int_<10> {};
 

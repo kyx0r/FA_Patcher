@@ -40,24 +40,30 @@
 #define BOOST_GEOMETRY_PROJECTIONS_PJ_QSFN_HPP
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
 {
-    
-namespace detail {
+namespace geometry
+{
+namespace projections
+{
+
+namespace detail
+{
 
 /* determine small q */
 template <typename T>
 inline T pj_qsfn(T const& sinphi, T const& e, T const& one_es)
 {
-    static const T EPSILON = 1.0e-7;
+	static const T EPSILON = 1.0e-7;
 
-    if (e >= EPSILON)
-    {
-        T con = e * sinphi;
-        return (one_es * (sinphi / (1. - con * con) -
-           (.5 / e) * log ((1. - con) / (1. + con))));
-    } else
-        return (sinphi + sinphi);
+	if (e >= EPSILON)
+	{
+		T con = e * sinphi;
+		return (one_es * (sinphi / (1. - con * con) -
+		                  (.5 / e) * log ((1. - con) / (1. + con))));
+	}
+	else
+		return (sinphi + sinphi);
 }
 
 
@@ -66,7 +72,7 @@ static const int MAX_C = 9;
 template <typename T>
 struct AUTHALIC
 {
-    T C[MAX_C], CP[MAX_C], CQ[MAX_C];
+	T C[MAX_C], CP[MAX_C], CQ[MAX_C];
 };
 
 /**
@@ -78,18 +84,20 @@ struct AUTHALIC
 template <typename T>
 inline T proj_qsfn(T const& phi, AUTHALIC<T> const& a)
 {
-    T s, s2, sum;
-    int i = MAX_C;
+	T s, s2, sum;
+	int i = MAX_C;
 
-    s = sin(phi);
-    s2 = s * s;
-    sum = a.CQ[MAX_C - 1];
-    while (--i) sum = a.CQ[i] + s2 * sum;
-    return(s * sum);
+	s = sin(phi);
+	s2 = s * s;
+	sum = a.CQ[MAX_C - 1];
+	while (--i) sum = a.CQ[i] + s2 * sum;
+	return(s * sum);
 }
 
 } // namespace detail
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif

@@ -37,50 +37,55 @@
 //!\file
 //!Describes the real adaptive pool shared by many Interprocess pool allocators
 
-namespace boost {
-namespace interprocess {
-namespace ipcdetail {
+namespace boost
+{
+namespace interprocess
+{
+namespace ipcdetail
+{
 
 template< class SegmentManager
-        , std::size_t NodeSize
-        , std::size_t NodesPerBlock
-        , std::size_t MaxFreeBlocks
-        , unsigned char OverheadPercent
-        >
+          , std::size_t NodeSize
+          , std::size_t NodesPerBlock
+          , std::size_t MaxFreeBlocks
+          , unsigned char OverheadPercent
+          >
 class private_adaptive_node_pool
-   :  public boost::container::dtl::private_adaptive_node_pool_impl
-         < typename SegmentManager::segment_manager_base_type
-         , ::boost::container::adaptive_pool_flag::size_ordered |
-           ::boost::container::adaptive_pool_flag::address_ordered
-         >
+	:  public boost::container::dtl::private_adaptive_node_pool_impl
+	   < typename SegmentManager::segment_manager_base_type
+	, ::boost::container::adaptive_pool_flag::size_ordered |
+	   ::boost::container::adaptive_pool_flag::address_ordered
+	   >
 {
-   typedef boost::container::dtl::private_adaptive_node_pool_impl
-      < typename SegmentManager::segment_manager_base_type
-      , ::boost::container::adaptive_pool_flag::size_ordered |
-        ::boost::container::adaptive_pool_flag::address_ordered
-      > base_t;
-   //Non-copyable
-   private_adaptive_node_pool();
-   private_adaptive_node_pool(const private_adaptive_node_pool &);
-   private_adaptive_node_pool &operator=(const private_adaptive_node_pool &);
+	typedef boost::container::dtl::private_adaptive_node_pool_impl
+	< typename SegmentManager::segment_manager_base_type
+	, ::boost::container::adaptive_pool_flag::size_ordered |
+	::boost::container::adaptive_pool_flag::address_ordered
+	> base_t;
+	//Non-copyable
+	private_adaptive_node_pool();
+	private_adaptive_node_pool(const private_adaptive_node_pool &);
+	private_adaptive_node_pool &operator=(const private_adaptive_node_pool &);
 
-   public:
-   typedef SegmentManager              segment_manager;
-   typedef typename base_t::size_type  size_type;
+public:
+	typedef SegmentManager              segment_manager;
+	typedef typename base_t::size_type  size_type;
 
-   static const size_type nodes_per_block = NodesPerBlock;
+	static const size_type nodes_per_block = NodesPerBlock;
 
-   //Deprecated, use node_per_block
-   static const size_type nodes_per_chunk = NodesPerBlock;
+	//Deprecated, use node_per_block
+	static const size_type nodes_per_chunk = NodesPerBlock;
 
-   //!Constructor from a segment manager. Never throws
-   private_adaptive_node_pool(segment_manager *segment_mngr)
-      :  base_t(segment_mngr, NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent)
-   {}
+	//!Constructor from a segment manager. Never throws
+	private_adaptive_node_pool(segment_manager *segment_mngr)
+		:  base_t(segment_mngr, NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent)
+	{}
 
-   //!Returns the segment manager. Never throws
-   segment_manager* get_segment_manager() const
-   {  return static_cast<segment_manager*>(base_t::get_segment_manager_base()); }
+	//!Returns the segment manager. Never throws
+	segment_manager* get_segment_manager() const
+	{
+		return static_cast<segment_manager*>(base_t::get_segment_manager_base());
+	}
 };
 
 //!Pooled shared memory allocator using adaptive pool. Includes
@@ -88,25 +93,25 @@ class private_adaptive_node_pool
 //!responsibility of user classes. Node size (NodeSize) and the number of
 //!nodes allocated per block (NodesPerBlock) are known at compile time
 template< class SegmentManager
-        , std::size_t NodeSize
-        , std::size_t NodesPerBlock
-        , std::size_t MaxFreeBlocks
-        , unsigned char OverheadPercent
-        >
+          , std::size_t NodeSize
+          , std::size_t NodesPerBlock
+          , std::size_t MaxFreeBlocks
+          , unsigned char OverheadPercent
+          >
 class shared_adaptive_node_pool
-   :  public ipcdetail::shared_pool_impl
-      < private_adaptive_node_pool
-         <SegmentManager, NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent>
-      >
+	:  public ipcdetail::shared_pool_impl
+	   < private_adaptive_node_pool
+	   <SegmentManager, NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent>
+	   >
 {
-   typedef ipcdetail::shared_pool_impl
-      < private_adaptive_node_pool
-         <SegmentManager, NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent>
-      > base_t;
-   public:
-   shared_adaptive_node_pool(SegmentManager *segment_mgnr)
-      : base_t(segment_mgnr)
-   {}
+	typedef ipcdetail::shared_pool_impl
+	< private_adaptive_node_pool
+	<SegmentManager, NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent>
+	> base_t;
+public:
+	shared_adaptive_node_pool(SegmentManager *segment_mgnr)
+		: base_t(segment_mgnr)
+	{}
 };
 
 }  //namespace ipcdetail {

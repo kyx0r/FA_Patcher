@@ -18,8 +18,8 @@ Distributed under the Boost Software License, Version 1.0.
 //////////////////////////////////////////////////////////////////////////////
 
 #if defined(_MSC_VER) && !defined(__clang__) // MSVC
-    // This must be checked first, because otherwise it produces a fatal
-    // error due to unrecognized #warning directives used below.
+// This must be checked first, because otherwise it produces a fatal
+// error due to unrecognized #warning directives used below.
 #   pragma message("Warning: the native Microsoft compiler is not supported due to lack of proper C++14 support.")
 
 #elif defined(__clang__) && defined(_MSC_VER) // Clang-cl (Clang for Windows)
@@ -163,56 +163,56 @@ Distributed under the Boost Software License, Version 1.0.
 
 #if defined(BOOST_HANA_DOXYGEN_INVOKED) || \
     (defined(NDEBUG) && !defined(BOOST_HANA_CONFIG_DISABLE_ASSERTIONS))
-    //! @ingroup group-config
-    //! Disables the `BOOST_HANA_*_ASSERT` macro & friends.
-    //!
-    //! When this macro is defined, the `BOOST_HANA_*_ASSERT` macro & friends
-    //! are disabled, i.e. they expand to nothing.
-    //!
-    //! This macro is defined automatically when `NDEBUG` is defined. It can
-    //! also be defined by users before including this header or defined on
-    //! the command line.
+//! @ingroup group-config
+//! Disables the `BOOST_HANA_*_ASSERT` macro & friends.
+//!
+//! When this macro is defined, the `BOOST_HANA_*_ASSERT` macro & friends
+//! are disabled, i.e. they expand to nothing.
+//!
+//! This macro is defined automatically when `NDEBUG` is defined. It can
+//! also be defined by users before including this header or defined on
+//! the command line.
 #   define BOOST_HANA_CONFIG_DISABLE_ASSERTIONS
 #endif
 
 #if defined(BOOST_HANA_DOXYGEN_INVOKED)
-    //! @ingroup group-config
-    //! Disables concept checks in interface methods.
-    //!
-    //! When this macro is not defined (the default), tag-dispatched methods
-    //! will make sure the arguments they are passed are models of the proper
-    //! concept(s). This can be very helpful in catching programming errors,
-    //! but it is also slightly less compile-time efficient. You should
-    //! probably always leave the checks enabled (and hence never define this
-    //! macro), except perhaps in translation units that are compiled very
-    //! often but whose code using Hana is modified very rarely.
+//! @ingroup group-config
+//! Disables concept checks in interface methods.
+//!
+//! When this macro is not defined (the default), tag-dispatched methods
+//! will make sure the arguments they are passed are models of the proper
+//! concept(s). This can be very helpful in catching programming errors,
+//! but it is also slightly less compile-time efficient. You should
+//! probably always leave the checks enabled (and hence never define this
+//! macro), except perhaps in translation units that are compiled very
+//! often but whose code using Hana is modified very rarely.
 #   define BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
 #endif
 
 #if defined(BOOST_HANA_DOXYGEN_INVOKED)
-    //! @ingroup group-config
-    //! Enables usage of the "string literal operator template" GNU extension.
-    //!
-    //! That operator is not part of the language yet, but it is supported by
-    //! both Clang and GCC. This operator allows Hana to provide the nice `_s`
-    //! user-defined literal for creating compile-time strings.
-    //!
-    //! When this macro is not defined, the GNU extension will be not used
-    //! by Hana. Because this is a non-standard extension, the macro is not
-    //! defined by default.
+//! @ingroup group-config
+//! Enables usage of the "string literal operator template" GNU extension.
+//!
+//! That operator is not part of the language yet, but it is supported by
+//! both Clang and GCC. This operator allows Hana to provide the nice `_s`
+//! user-defined literal for creating compile-time strings.
+//!
+//! When this macro is not defined, the GNU extension will be not used
+//! by Hana. Because this is a non-standard extension, the macro is not
+//! defined by default.
 #   define BOOST_HANA_CONFIG_ENABLE_STRING_UDL
 #endif
 
 #if defined(BOOST_HANA_DOXYGEN_INVOKED)
-    //! @ingroup group-config
-    //! Enables additional assertions and sanity checks to be done by Hana.
-    //!
-    //! When this macro is defined (it is __not defined__ by default),
-    //! additional sanity checks may be done by Hana. These checks may
-    //! be costly to perform, either in terms of compilation time or in
-    //! terms of execution time. These checks may help debugging an
-    //! application during its initial development, but they should not
-    //! be enabled as part of the normal configuration.
+//! @ingroup group-config
+//! Enables additional assertions and sanity checks to be done by Hana.
+//!
+//! When this macro is defined (it is __not defined__ by default),
+//! additional sanity checks may be done by Hana. These checks may
+//! be costly to perform, either in terms of compilation time or in
+//! terms of execution time. These checks may help debugging an
+//! application during its initial development, but they should not
+//! be enabled as part of the normal configuration.
 #   define BOOST_HANA_CONFIG_ENABLE_DEBUG_MODE
 #endif
 

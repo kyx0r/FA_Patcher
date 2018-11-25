@@ -10,7 +10,14 @@
 #include <boost/process/detail/posix/handler.hpp>
 #include <type_traits>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 struct require_io_context {};
 
@@ -35,6 +42,9 @@ template<typename T>
 struct does_require_io_context<const T&> : std::is_base_of<require_io_context, T> {};
 
 
-}}}}
+}
+}
+}
+}
 
 #endif /* BOOST_PROCESS_WINDOWS_ASYNC_HANDLER_HPP_ */

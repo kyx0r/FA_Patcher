@@ -10,10 +10,10 @@
 
 /// BOOST_HOF_STATIC_FUNCTION
 /// ===================
-/// 
+///
 /// Description
 /// -----------
-/// 
+///
 
 /// The `BOOST_HOF_STATIC_FUNCTION` macro allows initializing a function object from a
 /// `constexpr` expression. It uses the best practices as outlined in
@@ -23,21 +23,21 @@
 /// order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order), and an
 /// external address of the function object that is the same across translation
 /// units to avoid possible One-Definition-Rule(ODR) violations.
-/// 
+///
 /// In C++17, this achieved using the `inline` keyword. However, on older
 /// compilers it is initialized using a reference to a static member variable.
 /// The static member variable is default constructed, as such the user variable
 /// is always default constructed regardless of the expression.
-/// 
+///
 /// By default, all functions defined with `BOOST_HOF_STATIC_FUNCTION` use the
 /// [`boost::hof::reveal`](/include/boost/hof/reveal) adaptor to improve error messages.
-/// 
+///
 /// Example
 /// -------
-/// 
+///
 ///     #include <boost/hof.hpp>
 ///     #include <cassert>
-/// 
+///
 ///     struct sum_f
 ///     {
 ///         template<class T, class U>
@@ -46,14 +46,14 @@
 ///             return x+y;
 ///         }
 ///     };
-/// 
+///
 ///     BOOST_HOF_STATIC_FUNCTION(sum) = sum_f();
 ///     BOOST_HOF_STATIC_FUNCTION(partial_sum) = boost::hof::partial(sum_f());
-/// 
+///
 ///     int main() {
 ///         assert(sum(1, 2) == partial_sum(1)(2));
 ///     }
-/// 
+///
 
 #include <boost/hof/reveal.hpp>
 #if !BOOST_HOF_HAS_INLINE_VARIABLES
@@ -61,25 +61,31 @@
 #include <boost/hof/detail/constexpr_deduce.hpp>
 #endif
 
-namespace boost { namespace hof {
+namespace boost
+{
+namespace hof
+{
 
-namespace detail {
+namespace detail
+{
 
 struct reveal_static_const_factory
 {
-    constexpr reveal_static_const_factory()
-    {}
-    template<class F>
-    constexpr reveal_adaptor<F> operator=(const F& f) const
-    {
+	constexpr reveal_static_const_factory()
+	{}
+	template<class F>
+	constexpr reveal_adaptor<F> operator=(const F& f) const
+	{
 #if BOOST_HOF_HAS_INLINE_VARIABLES
 #else
-        static_assert(BOOST_HOF_IS_DEFAULT_CONSTRUCTIBLE(F), "Static functions must be default constructible");
+		static_assert(BOOST_HOF_IS_DEFAULT_CONSTRUCTIBLE(F), "Static functions must be default constructible");
 #endif
-        return reveal_adaptor<F>(f);
-    }
+		return reveal_adaptor<F>(f);
+	}
 };
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #if BOOST_HOF_HAS_INLINE_VARIABLES
 #define BOOST_HOF_STATIC_FUNCTION(name) inline const constexpr auto name = boost::hof::detail::reveal_static_const_factory()

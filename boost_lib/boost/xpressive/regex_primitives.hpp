@@ -33,171 +33,176 @@
 # include <boost/xpressive/detail/static/modifier.hpp>
 #endif
 
-namespace boost { namespace xpressive { namespace detail
+namespace boost
+{
+namespace xpressive
+{
+namespace detail
 {
 
-    typedef assert_word_placeholder<word_boundary<mpl::true_> > assert_word_boundary;
-    typedef assert_word_placeholder<word_begin> assert_word_begin;
-    typedef assert_word_placeholder<word_end> assert_word_end;
+typedef assert_word_placeholder<word_boundary<mpl::true_> > assert_word_boundary;
+typedef assert_word_placeholder<word_begin> assert_word_begin;
+typedef assert_word_placeholder<word_end> assert_word_end;
 
-    // workaround msvc-7.1 bug with function pointer types
-    // within function types:
-    #if BOOST_WORKAROUND(BOOST_MSVC, == 1310)
-    #define mark_number(x) proto::call<mark_number(x)>
-    #define minus_one() proto::make<minus_one()>
-    #endif
+// workaround msvc-7.1 bug with function pointer types
+// within function types:
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1310)
+#define mark_number(x) proto::call<mark_number(x)>
+#define minus_one() proto::make<minus_one()>
+#endif
 
-    struct push_back : proto::callable
-    {
-        typedef int result_type;
+struct push_back : proto::callable
+{
+	typedef int result_type;
 
-        template<typename Subs>
-        int operator ()(Subs &subs, int i) const
-        {
-            subs.push_back(i);
-            return i;
-        }
-    };
+	template<typename Subs>
+	int operator ()(Subs &subs, int i) const
+	{
+		subs.push_back(i);
+		return i;
+	}
+};
 
-    struct mark_number : proto::callable
-    {
-        typedef int result_type;
+struct mark_number : proto::callable
+{
+	typedef int result_type;
 
-        template<typename Expr>
-        int operator ()(Expr const &expr) const
-        {
-            return expr.mark_number_;
-        }
-    };
+	template<typename Expr>
+	int operator ()(Expr const &expr) const
+	{
+		return expr.mark_number_;
+	}
+};
 
-    typedef mpl::int_<-1> minus_one;
+typedef mpl::int_<-1> minus_one;
 
-    // s1 or -s1
-    struct SubMatch
-      : proto::or_<
-            proto::when<basic_mark_tag,                push_back(proto::_data, mark_number(proto::_value))   >
-          , proto::when<proto::negate<basic_mark_tag>, push_back(proto::_data, minus_one())                  >
-        >
-    {};
+// s1 or -s1
+struct SubMatch
+	: proto::or_<
+  proto::when<basic_mark_tag,                push_back(proto::_data, mark_number(proto::_value))   >
+  , proto::when<proto::negate<basic_mark_tag>, push_back(proto::_data, minus_one())                  >
+  >
+  {};
 
-    struct SubMatchList
-      : proto::or_<SubMatch, proto::comma<SubMatchList, SubMatch> >
-    {};
+struct SubMatchList
+	: proto::or_<SubMatch, proto::comma<SubMatchList, SubMatch> >
+{};
 
-    template<typename Subs>
-    typename enable_if<
-        mpl::and_<proto::is_expr<Subs>, proto::matches<Subs, SubMatchList> >
-      , std::vector<int>
-    >::type
-    to_vector(Subs const &subs)
-    {
-        std::vector<int> subs_;
-        SubMatchList()(subs, 0, subs_);
-        return subs_;
-    }
+template<typename Subs>
+typename enable_if<
+mpl::and_<proto::is_expr<Subs>, proto::matches<Subs, SubMatchList> >
+, std::vector<int>
+>::type
+to_vector(Subs const &subs)
+{
+	std::vector<int> subs_;
+	SubMatchList()(subs, 0, subs_);
+	return subs_;
+}
 
-    #if BOOST_WORKAROUND(BOOST_MSVC, == 1310)
-    #undef mark_number
-    #undef minus_one
-    #endif
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1310)
+#undef mark_number
+#undef minus_one
+#endif
 
-    // replace "Expr" with "keep(*State) >> Expr"
-    struct skip_primitives : proto::transform<skip_primitives>
-    {
-        template<typename Expr, typename State, typename Data>
-        struct impl : proto::transform_impl<Expr, State, Data>
-        {
-            typedef
-                typename proto::shift_right<
-                    typename proto::unary_expr<
-                        keeper_tag
-                      , typename proto::dereference<State>::type
-                    >::type
-                  , Expr
-                >::type
-            result_type;
+// replace "Expr" with "keep(*State) >> Expr"
+struct skip_primitives : proto::transform<skip_primitives>
+{
+	template<typename Expr, typename State, typename Data>
+	struct impl : proto::transform_impl<Expr, State, Data>
+	{
+		typedef
+		typename proto::shift_right<
+		typename proto::unary_expr<
+		keeper_tag
+		, typename proto::dereference<State>::type
+		>::type
+		, Expr
+		>::type
+		result_type;
 
-            result_type operator ()(
-                typename impl::expr_param expr
-              , typename impl::state_param state
-              , typename impl::data_param
-            ) const
-            {
-                result_type that = {{{state}}, expr};
-                return that;
-            }
-        };
-    };
+		result_type operator ()(
+		    typename impl::expr_param expr
+		    , typename impl::state_param state
+		    , typename impl::data_param
+		) const
+		{
+			result_type that = {{{state}}, expr};
+			return that;
+		}
+	};
+};
 
-    struct Primitives
-      : proto::or_<
-            proto::terminal<proto::_>
-          , proto::comma<proto::_, proto::_>
-          , proto::subscript<proto::terminal<set_initializer>, proto::_>
-          , proto::assign<proto::terminal<set_initializer>, proto::_>
-          , proto::assign<proto::terminal<attribute_placeholder<proto::_> >, proto::_>
-          , proto::complement<Primitives>
-        >
-    {};
+struct Primitives
+	: proto::or_<
+	  proto::terminal<proto::_>
+	, proto::comma<proto::_, proto::_>
+	, proto::subscript<proto::terminal<set_initializer>, proto::_>
+	, proto::assign<proto::terminal<set_initializer>, proto::_>
+	, proto::assign<proto::terminal<attribute_placeholder<proto::_> >, proto::_>
+	, proto::complement<Primitives>
+	  >
+{};
 
-    struct SkipGrammar
-      : proto::or_<
-            proto::when<Primitives, skip_primitives>
-          , proto::assign<proto::terminal<mark_placeholder>, SkipGrammar>   // don't "skip" mark tags
-          , proto::subscript<SkipGrammar, proto::_>                         // don't put skips in actions
-          , proto::binary_expr<modifier_tag, proto::_, SkipGrammar>         // don't skip modifiers
-          , proto::unary_expr<lookbehind_tag, proto::_>                     // don't skip lookbehinds
-          , proto::nary_expr<proto::_, proto::vararg<SkipGrammar> >         // everything else is fair game!
-        >
-    {};
+struct SkipGrammar
+	: proto::or_<
+	  proto::when<Primitives, skip_primitives>
+	, proto::assign<proto::terminal<mark_placeholder>, SkipGrammar>   // don't "skip" mark tags
+	, proto::subscript<SkipGrammar, proto::_>                         // don't put skips in actions
+	, proto::binary_expr<modifier_tag, proto::_, SkipGrammar>         // don't skip modifiers
+	, proto::unary_expr<lookbehind_tag, proto::_>                     // don't skip lookbehinds
+	, proto::nary_expr<proto::_, proto::vararg<SkipGrammar> >         // everything else is fair game!
+	  >
+{};
 
-    template<typename Skip>
-    struct skip_directive
-    {
-        typedef typename proto::result_of::as_expr<Skip>::type skip_type;
+template<typename Skip>
+struct skip_directive
+{
+	typedef typename proto::result_of::as_expr<Skip>::type skip_type;
 
-        skip_directive(Skip const &skip)
-          : skip_(proto::as_expr(skip))
-        {}
+	skip_directive(Skip const &skip)
+		: skip_(proto::as_expr(skip))
+	{}
 
-        template<typename Sig>
-        struct result {};
+	template<typename Sig>
+	struct result {};
 
-        template<typename This, typename Expr>
-        struct result<This(Expr)>
-        {
-            typedef
-                SkipGrammar::impl<
-                    typename proto::result_of::as_expr<Expr>::type
-                  , skip_type const &
-                  , mpl::void_ &
-                >
-            skip_transform;
+	template<typename This, typename Expr>
+	struct result<This(Expr)>
+	{
+		typedef
+		SkipGrammar::impl<
+		typename proto::result_of::as_expr<Expr>::type
+		, skip_type const &
+		, mpl::void_ &
+		>
+		skip_transform;
 
-            typedef
-                typename proto::shift_right<
-                    typename skip_transform::result_type
-                  , typename proto::dereference<skip_type>::type
-                >::type
-            type;
-        };
+		typedef
+		typename proto::shift_right<
+		typename skip_transform::result_type
+		, typename proto::dereference<skip_type>::type
+		>::type
+		type;
+	};
 
-        template<typename Expr>
-        typename result<skip_directive(Expr)>::type
-        operator ()(Expr const &expr) const
-        {
-            mpl::void_ ignore;
-            typedef result<skip_directive(Expr)> result_fun;
-            typename result_fun::type that = {
-                typename result_fun::skip_transform()(proto::as_expr(expr), this->skip_, ignore)
-              , {skip_}
-            };
-            return that;
-        }
+	template<typename Expr>
+	typename result<skip_directive(Expr)>::type
+	operator ()(Expr const &expr) const
+	{
+		mpl::void_ ignore;
+		typedef result<skip_directive(Expr)> result_fun;
+		typename result_fun::type that =
+		{
+			typename result_fun::skip_transform()(proto::as_expr(expr), this->skip_, ignore)
+			, {skip_}
+		};
+		return that;
+	}
 
-    private:
-        skip_type skip_;
-    };
+private:
+	skip_type skip_;
+};
 
 /*
 ///////////////////////////////////////////////////////////////////////////////
@@ -526,7 +531,7 @@ detail::set_initializer_type const set = {{}};
 /// is used. Then you can use it within static regexes to created sub-matches
 /// by assigning a sub-expression to it, or to refer back to already created
 /// sub-matches.
-/// 
+///
 /// \code
 /// mark_tag number(1); // "number" is now equivalent to "s1"
 /// // Match a number, followed by a space and the same number again
@@ -537,36 +542,36 @@ detail::set_initializer_type const set = {{}};
 /// can be used to index into the <tt>match_results\<\></tt> object to retrieve the
 /// corresponding sub-match.
 struct mark_tag
-  : proto::extends<detail::basic_mark_tag, mark_tag, detail::regex_domain>
+	: proto::extends<detail::basic_mark_tag, mark_tag, detail::regex_domain>
 {
 private:
-    typedef proto::extends<detail::basic_mark_tag, mark_tag, detail::regex_domain> base_type;
+	typedef proto::extends<detail::basic_mark_tag, mark_tag, detail::regex_domain> base_type;
 
-    static detail::basic_mark_tag make_tag(int mark_nbr)
-    {
-        detail::basic_mark_tag mark = {{mark_nbr}};
-        return mark;
-    }
+	static detail::basic_mark_tag make_tag(int mark_nbr)
+	{
+		detail::basic_mark_tag mark = {{mark_nbr}};
+		return mark;
+	}
 
 public:
-    /// \brief Initialize a mark_tag placeholder
-    /// \param mark_nbr An integer that uniquely identifies this \c mark_tag
-    /// within the static regexes in which this \c mark_tag will be used.
-    /// \pre <tt>mark_nbr \> 0</tt>
-    mark_tag(int mark_nbr)
-      : base_type(mark_tag::make_tag(mark_nbr))
-    {
-        // Marks numbers must be integers greater than 0.
-        BOOST_ASSERT(mark_nbr > 0);
-    }
+	/// \brief Initialize a mark_tag placeholder
+	/// \param mark_nbr An integer that uniquely identifies this \c mark_tag
+	/// within the static regexes in which this \c mark_tag will be used.
+	/// \pre <tt>mark_nbr \> 0</tt>
+	mark_tag(int mark_nbr)
+		: base_type(mark_tag::make_tag(mark_nbr))
+	{
+		// Marks numbers must be integers greater than 0.
+		BOOST_ASSERT(mark_nbr > 0);
+	}
 
-    /// INTERNAL ONLY
-    operator detail::basic_mark_tag const &() const
-    {
-        return this->proto_base();
-    }
+	/// INTERNAL ONLY
+	operator detail::basic_mark_tag const &() const
+	{
+		return this->proto_base();
+	}
 
-    BOOST_PROTO_EXTENDS_USING_ASSIGN_NON_DEPENDENT(mark_tag)
+	BOOST_PROTO_EXTENDS_USING_ASSIGN_NON_DEPENDENT(mark_tag)
 };
 
 // This macro is used when declaring mark_tags that are global because
@@ -614,7 +619,10 @@ BOOST_XPRESSIVE_GLOBAL_MARK_TAG(s9, 9);
 /// Use icase() to make a sub-expression case-insensitive. For instance,
 /// "foo" >> icase(set['b'] >> "ar") will match "foo" exactly followed by
 /// "bar" irrespective of case.
-template<typename Expr> detail::unspecified icase(Expr const &expr) { return 0; }
+template<typename Expr> detail::unspecified icase(Expr const &expr)
+{
+	return 0;
+}
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -630,7 +638,10 @@ template<typename Expr> detail::unspecified icase(Expr const &expr) { return 0; 
 /// character literal, as with ~as_xpr('a'). This will match any one character
 /// that is not an 'a'.
 #ifdef BOOST_XPRESSIVE_DOXYGEN_INVOKED
-template<typename Literal> detail::unspecified as_xpr(Literal const &literal) { return 0; }
+template<typename Literal> detail::unspecified as_xpr(Literal const &literal)
+{
+	return 0;
+}
 #else
 proto::functional::as_expr<> const as_xpr = {};
 #endif
@@ -643,8 +654,8 @@ template<typename BidiIter>
 inline typename proto::terminal<reference_wrapper<basic_regex<BidiIter> const> >::type const
 by_ref(basic_regex<BidiIter> const &rex)
 {
-    reference_wrapper<basic_regex<BidiIter> const> ref(rex);
-    return proto::terminal<reference_wrapper<basic_regex<BidiIter> const> >::type::make(ref);
+	reference_wrapper<basic_regex<BidiIter> const> ref(rex);
+	return proto::terminal<reference_wrapper<basic_regex<BidiIter> const> >::type::make(ref);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -658,8 +669,8 @@ template<typename Char>
 inline typename proto::terminal<detail::range_placeholder<Char> >::type const
 range(Char ch_min, Char ch_max)
 {
-    detail::range_placeholder<Char> that = {ch_min, ch_max, false};
-    return proto::terminal<detail::range_placeholder<Char> >::type::make(that);
+	detail::range_placeholder<Char> that = {ch_min, ch_max, false};
+	return proto::terminal<detail::range_placeholder<Char> >::type::make(that);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -668,16 +679,16 @@ range(Char ch_min, Char ch_max)
 /// \param expr The sub-expression to make optional.
 template<typename Expr>
 typename proto::result_of::make_expr<
-    proto::tag::logical_not
-  , proto::default_domain
-  , Expr const &
+proto::tag::logical_not
+, proto::default_domain
+, Expr const &
 >::type const
 optional(Expr const &expr)
 {
-    return proto::make_expr<
-        proto::tag::logical_not
-      , proto::default_domain
-    >(boost::ref(expr));
+	return proto::make_expr<
+	       proto::tag::logical_not
+	       , proto::default_domain
+	       >(boost::ref(expr));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -693,32 +704,32 @@ optional(Expr const &expr)
 /// \param expr The sub-expression to repeat.
 template<unsigned int Min, unsigned int Max, typename Expr>
 typename proto::result_of::make_expr<
-    detail::generic_quant_tag<Min, Max>
-  , proto::default_domain
-  , Expr const &
+detail::generic_quant_tag<Min, Max>
+, proto::default_domain
+, Expr const &
 >::type const
 repeat(Expr const &expr)
 {
-    return proto::make_expr<
-        detail::generic_quant_tag<Min, Max>
-      , proto::default_domain
-    >(boost::ref(expr));
+	return proto::make_expr<
+	       detail::generic_quant_tag<Min, Max>
+	       , proto::default_domain
+	       >(boost::ref(expr));
 }
 
 /// \overload
 ///
 template<unsigned int Count, typename Expr2>
 typename proto::result_of::make_expr<
-    detail::generic_quant_tag<Count, Count>
-  , proto::default_domain
-  , Expr2 const &
+detail::generic_quant_tag<Count, Count>
+, proto::default_domain
+, Expr2 const &
 >::type const
 repeat(Expr2 const &expr2)
 {
-    return proto::make_expr<
-        detail::generic_quant_tag<Count, Count>
-      , proto::default_domain
-    >(boost::ref(expr2));
+	return proto::make_expr<
+	       detail::generic_quant_tag<Count, Count>
+	       , proto::default_domain
+	       >(boost::ref(expr2));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -733,16 +744,16 @@ repeat(Expr2 const &expr2)
 /// \param expr The sub-expression to modify.
 template<typename Expr>
 typename proto::result_of::make_expr<
-    detail::keeper_tag
-  , proto::default_domain
-  , Expr const &
+detail::keeper_tag
+, proto::default_domain
+, Expr const &
 >::type const
 keep(Expr const &expr)
 {
-    return proto::make_expr<
-        detail::keeper_tag
-      , proto::default_domain
-    >(boost::ref(expr));
+	return proto::make_expr<
+	       detail::keeper_tag
+	       , proto::default_domain
+	       >(boost::ref(expr));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -760,16 +771,16 @@ keep(Expr const &expr)
 /// \param expr The sub-expression to put in the look-ahead assertion.
 template<typename Expr>
 typename proto::result_of::make_expr<
-    detail::lookahead_tag
-  , proto::default_domain
-  , Expr const &
+detail::lookahead_tag
+, proto::default_domain
+, Expr const &
 >::type const
 before(Expr const &expr)
 {
-    return proto::make_expr<
-        detail::lookahead_tag
-      , proto::default_domain
-    >(boost::ref(expr));
+	return proto::make_expr<
+	       detail::lookahead_tag
+	       , proto::default_domain
+	       >(boost::ref(expr));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -789,16 +800,16 @@ before(Expr const &expr)
 /// \pre expr cannot match a variable number of characters.
 template<typename Expr>
 typename proto::result_of::make_expr<
-    detail::lookbehind_tag
-  , proto::default_domain
-  , Expr const &
+detail::lookbehind_tag
+, proto::default_domain
+, Expr const &
 >::type const
 after(Expr const &expr)
 {
-    return proto::make_expr<
-        detail::lookbehind_tag
-      , proto::default_domain
-    >(boost::ref(expr));
+	return proto::make_expr<
+	       detail::lookbehind_tag
+	       , proto::default_domain
+	       >(boost::ref(expr));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -815,12 +826,12 @@ template<typename Locale>
 inline detail::modifier_op<detail::locale_modifier<Locale> > const
 imbue(Locale const &loc)
 {
-    detail::modifier_op<detail::locale_modifier<Locale> > mod =
-    {
-        detail::locale_modifier<Locale>(loc)
-      , regex_constants::ECMAScript
-    };
-    return mod;
+	detail::modifier_op<detail::locale_modifier<Locale> > mod =
+	{
+		detail::locale_modifier<Locale>(loc)
+		, regex_constants::ECMAScript
+	};
+	return mod;
 }
 
 proto::terminal<detail::attribute_placeholder<mpl::int_<1> > >::type const a1 = {{}};
@@ -872,56 +883,57 @@ proto::terminal<detail::attribute_placeholder<mpl::int_<9> > >::type const a9 = 
 template<typename Skip>
 detail::skip_directive<Skip> skip(Skip const &skip)
 {
-    return detail::skip_directive<Skip>(skip);
+	return detail::skip_directive<Skip>(skip);
 }
 
 namespace detail
 {
-    inline void ignore_unused_regex_primitives()
-    {
-        detail::ignore_unused(repeat_max);
-        detail::ignore_unused(inf);
-        detail::ignore_unused(epsilon);
-        detail::ignore_unused(nil);
-        detail::ignore_unused(alnum);
-        detail::ignore_unused(bos);
-        detail::ignore_unused(eos);
-        detail::ignore_unused(bol);
-        detail::ignore_unused(eol);
-        detail::ignore_unused(bow);
-        detail::ignore_unused(eow);
-        detail::ignore_unused(_b);
-        detail::ignore_unused(_w);
-        detail::ignore_unused(_d);
-        detail::ignore_unused(_s);
-        detail::ignore_unused(_n);
-        detail::ignore_unused(_ln);
-        detail::ignore_unused(_);
-        detail::ignore_unused(self);
-        detail::ignore_unused(set);
-        detail::ignore_unused(s0);
-        detail::ignore_unused(s1);
-        detail::ignore_unused(s2);
-        detail::ignore_unused(s3);
-        detail::ignore_unused(s4);
-        detail::ignore_unused(s5);
-        detail::ignore_unused(s6);
-        detail::ignore_unused(s7);
-        detail::ignore_unused(s8);
-        detail::ignore_unused(s9);
-        detail::ignore_unused(a1);
-        detail::ignore_unused(a2);
-        detail::ignore_unused(a3);
-        detail::ignore_unused(a4);
-        detail::ignore_unused(a5);
-        detail::ignore_unused(a6);
-        detail::ignore_unused(a7);
-        detail::ignore_unused(a8);
-        detail::ignore_unused(a9);
-        detail::ignore_unused(as_xpr);
-    }
+inline void ignore_unused_regex_primitives()
+{
+	detail::ignore_unused(repeat_max);
+	detail::ignore_unused(inf);
+	detail::ignore_unused(epsilon);
+	detail::ignore_unused(nil);
+	detail::ignore_unused(alnum);
+	detail::ignore_unused(bos);
+	detail::ignore_unused(eos);
+	detail::ignore_unused(bol);
+	detail::ignore_unused(eol);
+	detail::ignore_unused(bow);
+	detail::ignore_unused(eow);
+	detail::ignore_unused(_b);
+	detail::ignore_unused(_w);
+	detail::ignore_unused(_d);
+	detail::ignore_unused(_s);
+	detail::ignore_unused(_n);
+	detail::ignore_unused(_ln);
+	detail::ignore_unused(_);
+	detail::ignore_unused(self);
+	detail::ignore_unused(set);
+	detail::ignore_unused(s0);
+	detail::ignore_unused(s1);
+	detail::ignore_unused(s2);
+	detail::ignore_unused(s3);
+	detail::ignore_unused(s4);
+	detail::ignore_unused(s5);
+	detail::ignore_unused(s6);
+	detail::ignore_unused(s7);
+	detail::ignore_unused(s8);
+	detail::ignore_unused(s9);
+	detail::ignore_unused(a1);
+	detail::ignore_unused(a2);
+	detail::ignore_unused(a3);
+	detail::ignore_unused(a4);
+	detail::ignore_unused(a5);
+	detail::ignore_unused(a6);
+	detail::ignore_unused(a7);
+	detail::ignore_unused(a8);
+	detail::ignore_unused(a9);
+	detail::ignore_unused(as_xpr);
+}
 }
 
-}} // namespace boost::xpressive
+}
+} // namespace boost::xpressive
 
 #endif

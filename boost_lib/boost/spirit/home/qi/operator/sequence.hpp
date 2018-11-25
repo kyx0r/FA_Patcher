@@ -16,52 +16,62 @@
 #include <boost/spirit/home/qi/detail/fail_function.hpp>
 #include <boost/spirit/home/qi/meta_compiler.hpp>
 
-namespace boost { namespace spirit
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Enablers
-    ///////////////////////////////////////////////////////////////////////////
-    template <>
-    struct use_operator<qi::domain, proto::tag::shift_right> // enables >>
-      : mpl::true_ {};
-
-    template <>
-    struct flatten_tree<qi::domain, proto::tag::shift_right> // flattens >>
-      : mpl::true_ {};
-}}
-
-namespace boost { namespace spirit { namespace qi
+namespace spirit
 {
-    template <typename Elements>
-    struct sequence : sequence_base<sequence<Elements>, Elements>
-    {
-        friend struct sequence_base<sequence<Elements>, Elements>;
+///////////////////////////////////////////////////////////////////////////
+// Enablers
+///////////////////////////////////////////////////////////////////////////
+template <>
+struct use_operator<qi::domain, proto::tag::shift_right> // enables >>
+	: mpl::true_ {};
 
-        sequence(Elements const& elements)
-          : sequence_base<sequence<Elements>, Elements>(elements) {}
+template <>
+struct flatten_tree<qi::domain, proto::tag::shift_right> // flattens >>
+	: mpl::true_ {};
+}
+}
 
-    private:
+namespace boost
+{
+namespace spirit
+{
+namespace qi
+{
+template <typename Elements>
+struct sequence : sequence_base<sequence<Elements>, Elements>
+{
+	friend struct sequence_base<sequence<Elements>, Elements>;
 
-        template <typename Iterator, typename Context, typename Skipper>
-        static detail::fail_function<Iterator, Context, Skipper>
-        fail_function(
-            Iterator& first, Iterator const& last
-          , Context& context, Skipper const& skipper)
-        {
-            return detail::fail_function<Iterator, Context, Skipper>
-                (first, last, context, skipper);
-        }
+	sequence(Elements const& elements)
+		: sequence_base<sequence<Elements>, Elements>(elements) {}
 
-        std::string id() const { return "sequence"; }
-    };
+private:
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Parser generators: make_xxx function (objects)
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Elements, typename Modifiers>
-    struct make_composite<proto::tag::shift_right, Elements, Modifiers>
-      : make_nary_composite<Elements, sequence>
-    {};
+	template <typename Iterator, typename Context, typename Skipper>
+	static detail::fail_function<Iterator, Context, Skipper>
+	fail_function(
+	    Iterator& first, Iterator const& last
+	    , Context& context, Skipper const& skipper)
+	{
+		return detail::fail_function<Iterator, Context, Skipper>
+		       (first, last, context, skipper);
+	}
+
+	std::string id() const
+	{
+		return "sequence";
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////
+// Parser generators: make_xxx function (objects)
+///////////////////////////////////////////////////////////////////////////
+template <typename Elements, typename Modifiers>
+struct make_composite<proto::tag::shift_right, Elements, Modifiers>
+	: make_nary_composite<Elements, sequence>
+{};
 
 //     ///////////////////////////////////////////////////////////////////////////
 //     // Define what attributes are compatible with a sequence
@@ -69,28 +79,36 @@ namespace boost { namespace spirit { namespace qi
 //     struct is_attribute_compatible<Attribute, sequence<Elements>, Context, Iterator>
 //       : mpl::or_<
 //             is_convertible<Attribute
-//               , typename traits::attribute_of<sequence<Elements>, Context, Iterator>::type> 
+//               , typename traits::attribute_of<sequence<Elements>, Context, Iterator>::type>
 //           , traits::is_fusion_sequence_compatible<qi::domain, Attribute
-//               , sequence<Elements>, Context, Iterator> 
+//               , sequence<Elements>, Context, Iterator>
 //           , traits::is_container_compatible<qi::domain, Attribute
 //               , sequence<Elements>, Context, Iterator>
 //         >
 //     {};
-}}}
+}
+}
+}
 
-namespace boost { namespace spirit { namespace traits
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Elements>
-    struct has_semantic_action<qi::sequence<Elements> >
-      : nary_has_semantic_action<Elements> {};
+namespace spirit
+{
+namespace traits
+{
+///////////////////////////////////////////////////////////////////////////
+template <typename Elements>
+struct has_semantic_action<qi::sequence<Elements> >
+	: nary_has_semantic_action<Elements> {};
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Elements, typename Attribute, typename Context
-      , typename Iterator>
-    struct handles_container<qi::sequence<Elements>, Attribute, Context
-          , Iterator>
-      : mpl::true_ {};
-}}}
+///////////////////////////////////////////////////////////////////////////
+template <typename Elements, typename Attribute, typename Context
+          , typename Iterator>
+struct handles_container<qi::sequence<Elements>, Attribute, Context
+	, Iterator>
+	: mpl::true_ {};
+}
+}
+}
 
 #endif

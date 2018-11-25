@@ -34,7 +34,13 @@
 #include <boost/geometry/strategies/geographic/parameters.hpp>
 
 
-namespace boost { namespace geometry { namespace strategy { namespace disjoint
+namespace boost
+{
+namespace geometry
+{
+namespace strategy
+{
+namespace disjoint
 {
 
 // NOTE: This may be temporary place for this or corresponding strategy
@@ -46,54 +52,54 @@ template
     typename FormulaPolicy = strategy::andoyer,
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 struct segment_box_geographic
 {
 public:
-    typedef Spheroid model_type;
+	typedef Spheroid model_type;
 
-    inline segment_box_geographic()
-        : m_spheroid()
-    {}
+	inline segment_box_geographic()
+		: m_spheroid()
+	{}
 
-    explicit inline segment_box_geographic(Spheroid const& spheroid)
-        : m_spheroid(spheroid)
-    {}
+	explicit inline segment_box_geographic(Spheroid const& spheroid)
+		: m_spheroid(spheroid)
+	{}
 
-    template <typename Segment, typename Box>
-    struct point_in_geometry_strategy
-        : services::default_strategy
-            <
-                typename point_type<Segment>::type,
-                Box
-            >
-    {};
+	template <typename Segment, typename Box>
+	struct point_in_geometry_strategy
+		: services::default_strategy
+		  <
+		  typename point_type<Segment>::type,
+		  Box
+		  >
+	{};
 
-    template <typename Segment, typename Box>
-    static inline typename point_in_geometry_strategy<Segment, Box>::type
-        get_point_in_geometry_strategy()
-    {
-        typedef typename point_in_geometry_strategy<Segment, Box>::type strategy_type;
+	template <typename Segment, typename Box>
+	static inline typename point_in_geometry_strategy<Segment, Box>::type
+	get_point_in_geometry_strategy()
+	{
+		typedef typename point_in_geometry_strategy<Segment, Box>::type strategy_type;
 
-        return strategy_type();
-    }
+		return strategy_type();
+	}
 
-    template <typename Segment, typename Box>
-    inline bool apply(Segment const& segment, Box const& box) const
-    {
-        geometry::strategy::azimuth::geographic
-            <
-                FormulaPolicy,
-                Spheroid,
-                CalculationType
-            > azimuth_geographic(m_spheroid);
+	template <typename Segment, typename Box>
+	inline bool apply(Segment const& segment, Box const& box) const
+	{
+		geometry::strategy::azimuth::geographic
+		<
+		FormulaPolicy,
+		Spheroid,
+		CalculationType
+		> azimuth_geographic(m_spheroid);
 
-        return geometry::detail::disjoint::disjoint_segment_box_sphere_or_spheroid
-                <geographic_tag>::apply(segment, box, azimuth_geographic);
-    }
+		return geometry::detail::disjoint::disjoint_segment_box_sphere_or_spheroid
+		       <geographic_tag>::apply(segment, box, azimuth_geographic);
+	}
 
 private:
-    Spheroid m_spheroid;
+	Spheroid m_spheroid;
 };
 
 
@@ -105,16 +111,16 @@ namespace services
 
 template <typename Linear, typename Box, typename LinearTag>
 struct default_strategy<Linear, Box, LinearTag, box_tag, 1, 2,
-                        geographic_tag, geographic_tag>
+	       geographic_tag, geographic_tag>
 {
-    typedef segment_box_geographic<> type;
+	typedef segment_box_geographic<> type;
 };
 
 template <typename Box, typename Linear, typename LinearTag>
 struct default_strategy<Box, Linear, box_tag, LinearTag, 2, 1,
-                        geographic_tag, geographic_tag>
+	       geographic_tag, geographic_tag>
 {
-    typedef segment_box_geographic<> type;
+	typedef segment_box_geographic<> type;
 };
 
 
@@ -124,7 +130,10 @@ struct default_strategy<Box, Linear, box_tag, LinearTag, 2, 1,
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}}}} // namespace boost::geometry::strategy::disjoint
+}
+}
+}
+} // namespace boost::geometry::strategy::disjoint
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_DISJOINT_SEGMENT_BOX_HPP

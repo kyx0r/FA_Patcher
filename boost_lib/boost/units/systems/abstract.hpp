@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -29,11 +29,14 @@
 #include <boost/units/physical_dimensions/temperature.hpp>
 #include <boost/units/physical_dimensions/time.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units {
+namespace units
+{
 
-namespace abstract {
+namespace abstract
+{
 
 struct length_unit_tag : base_unit<length_unit_tag, length_dimension, -30> { };
 struct mass_unit_tag : base_unit<mass_unit_tag, mass_dimension, -29> { };
@@ -46,15 +49,15 @@ struct plane_angle_unit_tag : base_unit<plane_angle_unit_tag, plane_angle_dimens
 struct solid_angle_unit_tag : base_unit<solid_angle_unit_tag, solid_angle_dimension, -22> { };
 
 typedef make_system<
-    length_unit_tag,
-    mass_unit_tag,
-    time_unit_tag,
-    current_unit_tag,
-    temperature_unit_tag,
-    amount_unit_tag,
-    luminous_intensity_unit_tag,
-    plane_angle_unit_tag,
-    solid_angle_unit_tag
+length_unit_tag,
+mass_unit_tag,
+time_unit_tag,
+current_unit_tag,
+temperature_unit_tag,
+amount_unit_tag,
+luminous_intensity_unit_tag,
+plane_angle_unit_tag,
+solid_angle_unit_tag
 >::type system;
 
 typedef unit<length_dimension,system>                length;                 ///< abstract unit of length
@@ -69,67 +72,121 @@ typedef unit<solid_angle_dimension,system>           solid_angle;            ///
 
 } // namespace abstract
 
-template<> 
-struct base_unit_info<abstract::length_unit_tag> 
-{ 
-    static std::string name()       { return "[Length]"; }
-    static std::string symbol()     { return "[L]"; }
+template<>
+struct base_unit_info<abstract::length_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Length]";
+	}
+	static std::string symbol()
+	{
+		return "[L]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::mass_unit_tag> 
-{ 
-    static std::string name()       { return "[Mass]"; }
-    static std::string symbol()     { return "[M]"; }
+template<>
+struct base_unit_info<abstract::mass_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Mass]";
+	}
+	static std::string symbol()
+	{
+		return "[M]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::time_unit_tag> 
-{ 
-    static std::string name()       { return "[Time]"; }
-    static std::string symbol()     { return "[T]"; }
+template<>
+struct base_unit_info<abstract::time_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Time]";
+	}
+	static std::string symbol()
+	{
+		return "[T]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::current_unit_tag> 
-{ 
-    static std::string name()       { return "[Electric Current]"; }
-    static std::string symbol()     { return "[I]"; }
+template<>
+struct base_unit_info<abstract::current_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Electric Current]";
+	}
+	static std::string symbol()
+	{
+		return "[I]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::temperature_unit_tag> 
-{ 
-    static std::string name()       { return "[Temperature]"; }
-    static std::string symbol()     { return "[Theta]"; }
+template<>
+struct base_unit_info<abstract::temperature_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Temperature]";
+	}
+	static std::string symbol()
+	{
+		return "[Theta]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::amount_unit_tag> 
-{ 
-    static std::string name()       { return "[Amount]"; }
-    static std::string symbol()     { return "[N]"; }
+template<>
+struct base_unit_info<abstract::amount_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Amount]";
+	}
+	static std::string symbol()
+	{
+		return "[N]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::luminous_intensity_unit_tag> 
-{ 
-    static std::string name()       { return "[Luminous Intensity]"; }
-    static std::string symbol()     { return "[J]"; }
+template<>
+struct base_unit_info<abstract::luminous_intensity_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Luminous Intensity]";
+	}
+	static std::string symbol()
+	{
+		return "[J]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::plane_angle_unit_tag> 
-{ 
-    static std::string name()       { return "[Plane Angle]"; }
-    static std::string symbol()     { return "[QP]"; }
+template<>
+struct base_unit_info<abstract::plane_angle_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Plane Angle]";
+	}
+	static std::string symbol()
+	{
+		return "[QP]";
+	}
 };
 
-template<> 
-struct base_unit_info<abstract::solid_angle_unit_tag> 
-{ 
-    static std::string name()       { return "[Solid Angle]"; }
-    static std::string symbol()     { return "[QS]"; }
+template<>
+struct base_unit_info<abstract::solid_angle_unit_tag>
+{
+	static std::string name()
+	{
+		return "[Solid Angle]";
+	}
+	static std::string symbol()
+	{
+		return "[QS]";
+	}
 };
 
 } // namespace units

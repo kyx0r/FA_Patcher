@@ -48,148 +48,158 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct wink2 {};
+namespace par4
+{
+struct wink2 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace wink2
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace wink2
+{
 
-            static const int MAX_ITER = 10;
+static const int MAX_ITER = 10;
 
-            static const double LOOP_TOL = 1e-7;
-            //static const double TWO_D_PI = 0.636619772367581343;
+static const double LOOP_TOL = 1e-7;
+//static const double TWO_D_PI = 0.636619772367581343;
 
-            template <typename T>
-            struct par_wink2
-            {
-                T    cosphi1;
-            };
+template <typename T>
+struct par_wink2
+{
+	T    cosphi1;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_wink2_spheroid : public base_t_f<base_wink2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_wink2_spheroid : public base_t_f<base_wink2_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_wink2<CalculationType> m_proj_parm;
+	par_wink2<CalculationType> m_proj_parm;
 
-                inline base_wink2_spheroid(const Parameters& par)
-                    : base_t_f<base_wink2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_wink2_spheroid(const Parameters& par)
+		: base_t_f<base_wink2_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType ONEPI = detail::ONEPI<CalculationType>();
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
-                    static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
-                    static const CalculationType TWO_D_PI = detail::TWO_D_PI<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType ONEPI = detail::ONEPI<CalculationType>();
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+		static const CalculationType FORTPI = detail::FORTPI<CalculationType>();
+		static const CalculationType TWO_D_PI = detail::TWO_D_PI<CalculationType>();
 
-                    CalculationType k, V;
-                    int i;
+		CalculationType k, V;
+		int i;
 
-                    xy_y = lp_lat * TWO_D_PI;
-                    k = ONEPI * sin(lp_lat);
-                    lp_lat *= 1.8;
-                    for (i = MAX_ITER; i ; --i) {
-                        lp_lat -= V = (lp_lat + sin(lp_lat) - k) /
-                            (1. + cos(lp_lat));
-                        if (fabs(V) < LOOP_TOL)
-                            break;
-                    }
-                    if (!i)
-                        lp_lat = (lp_lat < 0.) ? -HALFPI : HALFPI;
-                    else
-                        lp_lat *= 0.5;
-                    xy_x = 0.5 * lp_lon * (cos(lp_lat) + this->m_proj_parm.cosphi1);
-                    xy_y = FORTPI * (sin(lp_lat) + xy_y);
-                }
+		xy_y = lp_lat * TWO_D_PI;
+		k = ONEPI * sin(lp_lat);
+		lp_lat *= 1.8;
+		for (i = MAX_ITER; i ; --i)
+		{
+			lp_lat -= V = (lp_lat + sin(lp_lat) - k) /
+			              (1. + cos(lp_lat));
+			if (fabs(V) < LOOP_TOL)
+				break;
+		}
+		if (!i)
+			lp_lat = (lp_lat < 0.) ? -HALFPI : HALFPI;
+		else
+			lp_lat *= 0.5;
+		xy_x = 0.5 * lp_lon * (cos(lp_lat) + this->m_proj_parm.cosphi1);
+		xy_y = FORTPI * (sin(lp_lat) + xy_y);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "wink2_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "wink2_spheroid";
+	}
 
-            };
+};
 
-            // Winkel II
-            template <typename Parameters, typename T>
-            inline void setup_wink2(Parameters& par, par_wink2<T>& proj_parm)
-            {
-                proj_parm.cosphi1 = cos(pj_param(par.params, "rlat_1").f);
-                par.es = 0.;
-            }
+// Winkel II
+template <typename Parameters, typename T>
+inline void setup_wink2(Parameters& par, par_wink2<T>& proj_parm)
+{
+	proj_parm.cosphi1 = cos(pj_param(par.params, "rlat_1").f);
+	par.es = 0.;
+}
 
-    }} // namespace detail::wink2
-    #endif // doxygen
+}
+} // namespace detail::wink2
+#endif // doxygen
 
-    /*!
-        \brief Winkel II projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-         - no inverse
-        \par Projection parameters
-         - lat_1: Latitude of first standard parallel (degrees)
-        \par Example
-        \image html ex_wink2.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct wink2_spheroid : public detail::wink2::base_wink2_spheroid<CalculationType, Parameters>
-    {
-        inline wink2_spheroid(const Parameters& par) : detail::wink2::base_wink2_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::wink2::setup_wink2(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Winkel II projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+     - no inverse
+    \par Projection parameters
+     - lat_1: Latitude of first standard parallel (degrees)
+    \par Example
+    \image html ex_wink2.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct wink2_spheroid : public detail::wink2::base_wink2_spheroid<CalculationType, Parameters>
+{
+	inline wink2_spheroid(const Parameters& par) : detail::wink2::base_wink2_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::wink2::setup_wink2(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wink2, wink2_spheroid, wink2_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wink2, wink2_spheroid, wink2_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class wink2_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<wink2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class wink2_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<wink2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void wink2_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("wink2", new wink2_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void wink2_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("wink2", new wink2_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_WINK2_HPP
 

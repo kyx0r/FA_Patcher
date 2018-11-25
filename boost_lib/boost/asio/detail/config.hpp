@@ -505,7 +505,7 @@
     || defined(BOOST_ASIO_HAS_BOOST_CHRONO)
 #  define BOOST_ASIO_HAS_CHRONO 1
 # endif // defined(BOOST_ASIO_HAS_STD_CHRONO)
-        // || defined(BOOST_ASIO_HAS_BOOST_CHRONO)
+// || defined(BOOST_ASIO_HAS_BOOST_CHRONO)
 #endif // !defined(BOOST_ASIO_HAS_CHRONO)
 
 // Boost support for the DateTime library.
@@ -866,7 +866,7 @@
    && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #   define BOOST_ASIO_WINDOWS_APP 1
 #  endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
-         // && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+// && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 # endif // defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0603)
 #endif // !defined(BOOST_ASIO_WINDOWS_APP)
 
@@ -879,7 +879,7 @@
     && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #    define BOOST_ASIO_WINDOWS_RUNTIME 1
 #   endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
-          // && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+// && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #  endif // defined(__cplusplus_winrt)
 # endif // !defined(BOOST_ASIO_WINDOWS_APP)
 #endif // !defined(BOOST_ASIO_WINDOWS_RUNTIME)
@@ -1028,9 +1028,9 @@
 #  endif // !defined(BOOST_ASIO_DISABLE_KQUEUE)
 # endif // !defined(BOOST_ASIO_HAS_KQUEUE)
 #endif // (defined(__MACH__) && defined(__APPLE__))
-       //   || defined(__FreeBSD__)
-       //   || defined(__NetBSD__)
-       //   || defined(__OpenBSD__)
+//   || defined(__FreeBSD__)
+//   || defined(__NetBSD__)
+//   || defined(__OpenBSD__)
 
 // Solaris: /dev/poll.
 #if defined(__sun)
@@ -1053,9 +1053,9 @@
 #   endif // !defined(BOOST_ASIO_DISABLE_SERIAL_PORT)
 #  endif // !defined(__SYMBIAN32__)
 # endif // defined(BOOST_ASIO_HAS_IOCP)
-        //   || !defined(BOOST_ASIO_WINDOWS)
-        //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
-        //   && !defined(__CYGWIN__)
+//   || !defined(BOOST_ASIO_WINDOWS)
+//   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+//   && !defined(__CYGWIN__)
 #endif // !defined(BOOST_ASIO_HAS_SERIAL_PORT)
 
 // Windows: stream handles.
@@ -1104,8 +1104,8 @@
   && !defined(__CYGWIN__)
 #   define BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR 1
 #  endif // !defined(BOOST_ASIO_WINDOWS)
-         //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
-         //   && !defined(__CYGWIN__)
+//   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+//   && !defined(__CYGWIN__)
 # endif // !defined(BOOST_ASIO_DISABLE_POSIX_STREAM_DESCRIPTOR)
 #endif // !defined(BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR)
 
@@ -1117,8 +1117,8 @@
   && !defined(__CYGWIN__)
 #   define BOOST_ASIO_HAS_LOCAL_SOCKETS 1
 #  endif // !defined(BOOST_ASIO_WINDOWS)
-         //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
-         //   && !defined(__CYGWIN__)
+//   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+//   && !defined(__CYGWIN__)
 # endif // !defined(BOOST_ASIO_DISABLE_LOCAL_SOCKETS)
 #endif // !defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 
@@ -1130,8 +1130,8 @@
   && !defined(__CYGWIN__)
 #   define BOOST_ASIO_HAS_SIGACTION 1
 #  endif // !defined(BOOST_ASIO_WINDOWS)
-         //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
-         //   && !defined(__CYGWIN__)
+//   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+//   && !defined(__CYGWIN__)
 # endif // !defined(BOOST_ASIO_DISABLE_SIGACTION)
 #endif // !defined(BOOST_ASIO_HAS_SIGACTION)
 
@@ -1292,8 +1292,8 @@
     && !defined(UNDER_CE)
 #   define BOOST_ASIO_HAS_SECURE_RTL 1
 #  endif // defined(BOOST_ASIO_MSVC)
-         // && (BOOST_ASIO_MSVC >= 1400)
-         // && !defined(UNDER_CE)
+// && (BOOST_ASIO_MSVC >= 1400)
+// && !defined(UNDER_CE)
 # endif // !defined(BOOST_ASIO_DISABLE_SECURE_RTL)
 #endif // !defined(BOOST_ASIO_HAS_SECURE_RTL)
 
@@ -1322,7 +1322,7 @@
 #    elif defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 1100)
 #     define BOOST_ASIO_HAS_THREAD_KEYWORD_EXTENSION 1
 #    endif // defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 1100)
-           // && !(defined(__clang__) && defined(__ANDROID__))
+// && !(defined(__clang__) && defined(__ANDROID__))
 #   endif // ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 3)) || (__GNUC__ > 3)
 #  endif // defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
 # endif // defined(__linux__)
@@ -1343,7 +1343,7 @@
    || (defined(__MACH__) && defined(__APPLE__))
 #  define BOOST_ASIO_HAS_SSIZE_T 1
 # endif // defined(__linux__)
-        //   || (defined(__MACH__) && defined(__APPLE__))
+//   || (defined(__MACH__) && defined(__APPLE__))
 #endif // !defined(BOOST_ASIO_DISABLE_SSIZE_T)
 
 // Helper macros to manage the transition away from the old services-based API.
@@ -1392,7 +1392,7 @@
     || (__clang_major__ > 3)
 #  define BOOST_ASIO_UNUSED_TYPEDEF __attribute__((__unused__))
 # endif // ((__clang_major__ == 3) && (__clang_minor__ >= 6))
-        //   || (__clang_major__ > 3)
+//   || (__clang_major__ > 3)
 #elif defined(__GNUC__)
 # if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 8)) || (__GNUC__ > 4)
 #  define BOOST_ASIO_UNUSED_TYPEDEF __attribute__((__unused__))

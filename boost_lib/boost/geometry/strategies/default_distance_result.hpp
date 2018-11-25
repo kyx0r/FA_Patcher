@@ -22,7 +22,9 @@
 #include <boost/geometry/strategies/distance_result.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -33,11 +35,12 @@ namespace boost { namespace geometry
  */
 template <typename Geometry1, typename Geometry2 = Geometry1>
 struct default_distance_result
-    : distance_result<Geometry1, Geometry2, void>
+	: distance_result<Geometry1, Geometry2, void>
 {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_DEFAULT_DISTANCE_RESULT_HPP

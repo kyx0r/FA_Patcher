@@ -11,17 +11,26 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/mpl/bool.hpp>
 
-namespace boost { namespace spirit { namespace x3 { namespace traits
+namespace boost
 {
-    template <typename T, typename Enable = void>
-    struct is_range
-      : mpl::false_
-    {};
+namespace spirit
+{
+namespace x3
+{
+namespace traits
+{
+template <typename T, typename Enable = void>
+struct is_range
+	: mpl::false_
+{};
 
-    template <typename T>
-    struct is_range<boost::iterator_range<T>>
-      : mpl::true_
-    {};
-}}}}
+template <typename T>
+struct is_range<boost::iterator_range<T>>
+	                                       : mpl::true_
+{};
+}
+}
+}
+}
 
 #endif

@@ -20,9 +20,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ip {
+namespace boost
+{
+namespace asio
+{
+namespace ip
+{
 
 /// Socket option for determining whether an IPv6 socket supports IPv6
 /// communication only.
@@ -32,7 +35,7 @@ namespace ip {
  * @par Examples
  * Setting the option:
  * @code
- * boost::asio::ip::tcp::socket socket(io_context); 
+ * boost::asio::ip::tcp::socket socket(io_context);
  * ...
  * boost::asio::ip::v6_only option(true);
  * socket.set_option(option);
@@ -41,7 +44,7 @@ namespace ip {
  * @par
  * Getting the current option value:
  * @code
- * boost::asio::ip::tcp::socket socket(io_context); 
+ * boost::asio::ip::tcp::socket socket(io_context);
  * ...
  * boost::asio::ip::v6_only option;
  * socket.get_option(option);
@@ -55,11 +58,11 @@ namespace ip {
 typedef implementation_defined v6_only;
 #elif defined(IPV6_V6ONLY)
 typedef boost::asio::detail::socket_option::boolean<
-    IPPROTO_IPV6, IPV6_V6ONLY> v6_only;
+IPPROTO_IPV6, IPV6_V6ONLY> v6_only;
 #else
 typedef boost::asio::detail::socket_option::boolean<
-    boost::asio::detail::custom_socket_option_level,
-    boost::asio::detail::always_fail_option> v6_only;
+boost::asio::detail::custom_socket_option_level,
+      boost::asio::detail::always_fail_option> v6_only;
 #endif
 
 } // namespace ip

@@ -16,26 +16,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class Result>
-      struct empty
-      {
-        typedef empty type;
-        
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::if_<
-            boost::mpl::empty<S>,
-            accept<Result, S, Pos>,
-            reject<error::end_of_input_expected, Pos>
-          >
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class Result>
+struct empty
+{
+	typedef empty type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::if_<
+		boost::mpl::empty<S>,
+		accept<Result, S, Pos>,
+		reject<error::end_of_input_expected, Pos>
+		>
+	{};
+};
+}
+}
 }
 
 #endif

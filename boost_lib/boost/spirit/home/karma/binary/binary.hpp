@@ -59,327 +59,334 @@
                                                                               \
 /***/
 
-namespace boost { namespace spirit
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Enablers
-    ///////////////////////////////////////////////////////////////////////////
+namespace spirit
+{
+///////////////////////////////////////////////////////////////////////////
+// Enablers
+///////////////////////////////////////////////////////////////////////////
 
-    BOOST_SPIRIT_ENABLE_BINARY(byte_)                   // enables byte_
-    BOOST_SPIRIT_ENABLE_BINARY(word)                    // enables word
-    BOOST_SPIRIT_ENABLE_BINARY(big_word)                // enables big_word
-    BOOST_SPIRIT_ENABLE_BINARY(little_word)             // enables little_word
-    BOOST_SPIRIT_ENABLE_BINARY(dword)                   // enables dword
-    BOOST_SPIRIT_ENABLE_BINARY(big_dword)               // enables big_dword
-    BOOST_SPIRIT_ENABLE_BINARY(little_dword)            // enables little_dword
+BOOST_SPIRIT_ENABLE_BINARY(byte_)                   // enables byte_
+BOOST_SPIRIT_ENABLE_BINARY(word)                    // enables word
+BOOST_SPIRIT_ENABLE_BINARY(big_word)                // enables big_word
+BOOST_SPIRIT_ENABLE_BINARY(little_word)             // enables little_word
+BOOST_SPIRIT_ENABLE_BINARY(dword)                   // enables dword
+BOOST_SPIRIT_ENABLE_BINARY(big_dword)               // enables big_dword
+BOOST_SPIRIT_ENABLE_BINARY(little_dword)            // enables little_dword
 #ifdef BOOST_HAS_LONG_LONG
-    BOOST_SPIRIT_ENABLE_BINARY(qword)                   // enables qword
-    BOOST_SPIRIT_ENABLE_BINARY(big_qword)               // enables big_qword
-    BOOST_SPIRIT_ENABLE_BINARY(little_qword)            // enables little_qword
+BOOST_SPIRIT_ENABLE_BINARY(qword)                   // enables qword
+BOOST_SPIRIT_ENABLE_BINARY(big_qword)               // enables big_qword
+BOOST_SPIRIT_ENABLE_BINARY(little_qword)            // enables little_qword
 #endif
-    BOOST_SPIRIT_ENABLE_BINARY_IEEE754(bin_float)
-    BOOST_SPIRIT_ENABLE_BINARY_IEEE754(big_bin_float)
-    BOOST_SPIRIT_ENABLE_BINARY_IEEE754(little_bin_float)
-    BOOST_SPIRIT_ENABLE_BINARY_IEEE754(bin_double)
-    BOOST_SPIRIT_ENABLE_BINARY_IEEE754(big_bin_double)
-    BOOST_SPIRIT_ENABLE_BINARY_IEEE754(little_bin_double)
-}}
+BOOST_SPIRIT_ENABLE_BINARY_IEEE754(bin_float)
+BOOST_SPIRIT_ENABLE_BINARY_IEEE754(big_bin_float)
+BOOST_SPIRIT_ENABLE_BINARY_IEEE754(little_bin_float)
+BOOST_SPIRIT_ENABLE_BINARY_IEEE754(bin_double)
+BOOST_SPIRIT_ENABLE_BINARY_IEEE754(big_bin_double)
+BOOST_SPIRIT_ENABLE_BINARY_IEEE754(little_bin_double)
+}
+}
 
 #undef BOOST_SPIRIT_ENABLE_BINARY
 #undef BOOST_SPIRIT_ENABLE_BINARY_IEEE754
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace spirit { namespace karma
+namespace boost
+{
+namespace spirit
+{
+namespace karma
 {
 #ifndef BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
-    using boost::spirit::byte_;
-    using boost::spirit::word;
-    using boost::spirit::big_word;
-    using boost::spirit::little_word;
-    using boost::spirit::dword;
-    using boost::spirit::big_dword;
-    using boost::spirit::little_dword;
+using boost::spirit::byte_;
+using boost::spirit::word;
+using boost::spirit::big_word;
+using boost::spirit::little_word;
+using boost::spirit::dword;
+using boost::spirit::big_dword;
+using boost::spirit::little_dword;
 #ifdef BOOST_HAS_LONG_LONG
-    using boost::spirit::qword;
-    using boost::spirit::big_qword;
-    using boost::spirit::little_qword;
+using boost::spirit::qword;
+using boost::spirit::big_qword;
+using boost::spirit::little_qword;
 #endif
-    using boost::spirit::bin_float;
-    using boost::spirit::big_bin_float;
-    using boost::spirit::little_bin_float;
-    using boost::spirit::bin_double;
-    using boost::spirit::big_bin_double;
-    using boost::spirit::little_bin_double;
+using boost::spirit::bin_float;
+using boost::spirit::big_bin_float;
+using boost::spirit::little_bin_float;
+using boost::spirit::bin_double;
+using boost::spirit::big_bin_double;
+using boost::spirit::little_bin_double;
 #endif
 
-    using boost::spirit::byte_type;
-    using boost::spirit::word_type;
-    using boost::spirit::big_word_type;
-    using boost::spirit::little_word_type;
-    using boost::spirit::dword_type;
-    using boost::spirit::big_dword_type;
-    using boost::spirit::little_dword_type;
+using boost::spirit::byte_type;
+using boost::spirit::word_type;
+using boost::spirit::big_word_type;
+using boost::spirit::little_word_type;
+using boost::spirit::dword_type;
+using boost::spirit::big_dword_type;
+using boost::spirit::little_dword_type;
 #ifdef BOOST_HAS_LONG_LONG
-    using boost::spirit::qword_type;
-    using boost::spirit::big_qword_type;
-    using boost::spirit::little_qword_type;
+using boost::spirit::qword_type;
+using boost::spirit::big_qword_type;
+using boost::spirit::little_qword_type;
 #endif
-    using boost::spirit::bin_float_type;
-    using boost::spirit::big_bin_float_type;
-    using boost::spirit::little_bin_float_type;
-    using boost::spirit::bin_double_type;
-    using boost::spirit::big_bin_double_type;
-    using boost::spirit::little_bin_double_type;
+using boost::spirit::bin_float_type;
+using boost::spirit::big_bin_float_type;
+using boost::spirit::little_bin_float_type;
+using boost::spirit::bin_double_type;
+using boost::spirit::big_bin_double_type;
+using boost::spirit::little_bin_double_type;
 
-    namespace detail
-    {
-        template <int bits>
-        struct integer
-        {
+namespace detail
+{
+template <int bits>
+struct integer
+{
 #ifdef BOOST_HAS_LONG_LONG
-            BOOST_SPIRIT_ASSERT_MSG(
-                bits == 8 || bits == 16 || bits == 32 || bits == 64,
-                not_supported_binary_size, ());
+	BOOST_SPIRIT_ASSERT_MSG(
+	    bits == 8 || bits == 16 || bits == 32 || bits == 64,
+	    not_supported_binary_size, ());
 #else
-            BOOST_SPIRIT_ASSERT_MSG(
-                bits == 8 || bits == 16 || bits == 32,
-                not_supported_binary_size, ());
+	BOOST_SPIRIT_ASSERT_MSG(
+	    bits == 8 || bits == 16 || bits == 32,
+	    not_supported_binary_size, ());
 #endif
-        };
+};
 
-        template <>
-        struct integer<8>
-        {
-            typedef uint_least8_t type;
-        };
+template <>
+struct integer<8>
+{
+	typedef uint_least8_t type;
+};
 
-        template <>
-        struct integer<16>
-        {
-            typedef uint_least16_t type;
-        };
+template <>
+struct integer<16>
+{
+	typedef uint_least16_t type;
+};
 
-        template <>
-        struct integer<32>
-        {
-            typedef uint_least32_t type;
-        };
+template <>
+struct integer<32>
+{
+	typedef uint_least32_t type;
+};
 
 #ifdef BOOST_HAS_LONG_LONG
-        template <>
-        struct integer<64>
-        {
-            typedef uint_least64_t type;
-        };
+template <>
+struct integer<64>
+{
+	typedef uint_least64_t type;
+};
 #endif
 
-        template <int bits>
-        struct floating_point
-        {
-            BOOST_SPIRIT_ASSERT_MSG(
-                bits == 32 || bits == 64,
-                not_supported_binary_size, ());
-        };
+template <int bits>
+struct floating_point
+{
+	BOOST_SPIRIT_ASSERT_MSG(
+	    bits == 32 || bits == 64,
+	    not_supported_binary_size, ());
+};
 
-        template <>
-        struct floating_point<32>
-        {
-            typedef float type;
-        };
+template <>
+struct floating_point<32>
+{
+	typedef float type;
+};
 
-        template <>
-        struct floating_point<64>
-        {
-            typedef double type;
-        };
+template <>
+struct floating_point<64>
+{
+	typedef double type;
+};
 
-        ///////////////////////////////////////////////////////////////////////
-        template <BOOST_SCOPED_ENUM(boost::endian::endianness) bits>
-        struct what;
+///////////////////////////////////////////////////////////////////////
+template <BOOST_SCOPED_ENUM(boost::endian::endianness) bits>
+struct what;
 
-        template <>
-        struct what<boost::endian::endianness::native>
-        {
-            static info is()
-            {
-                return info("native-endian binary");
-            }
-        };
+template <>
+struct what<boost::endian::endianness::native>
+{
+	static info is()
+	{
+		return info("native-endian binary");
+	}
+};
 
-        template <>
-        struct what<boost::endian::endianness::little>
-        {
-            static info is()
-            {
-                return info("little-endian binary");
-            }
-        };
+template <>
+struct what<boost::endian::endianness::little>
+{
+	static info is()
+	{
+		return info("little-endian binary");
+	}
+};
 
-        template <>
-        struct what<boost::endian::endianness::big>
-        {
-            static info is()
-            {
-                return info("big-endian binary");
-            }
-        };
-    }
+template <>
+struct what<boost::endian::endianness::big>
+{
+	static info is()
+	{
+		return info("big-endian binary");
+	}
+};
+}
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T, BOOST_SCOPED_ENUM(boost::endian::endianness) endian, int bits>
-    struct any_binary_generator
-      : primitive_generator<any_binary_generator<T, endian, bits> >
-    {
-        template <typename Context, typename Unused = unused_type>
-        struct attribute: T {};
+///////////////////////////////////////////////////////////////////////////
+template <typename T, BOOST_SCOPED_ENUM(boost::endian::endianness) endian, int bits>
+struct any_binary_generator
+	: primitive_generator<any_binary_generator<T, endian, bits> >
+{
+	template <typename Context, typename Unused = unused_type>
+	struct attribute: T {};
 
-        template <
-            typename OutputIterator, typename Context, typename Delimiter
-          , typename Attribute>
-        static bool generate(OutputIterator& sink, Context& context
-          , Delimiter const& d, Attribute const& attr)
-        {
-            if (!traits::has_optional_value(attr))
-                return false;
+	template <
+	    typename OutputIterator, typename Context, typename Delimiter
+	    , typename Attribute>
+	static bool generate(OutputIterator& sink, Context& context
+	                     , Delimiter const& d, Attribute const& attr)
+	{
+		if (!traits::has_optional_value(attr))
+			return false;
 
-            // Even if the endian types are not pod's (at least not in the
-            // definition of C++03) it seems to be safe to assume they are.
-            // This allows us to treat them as a sequence of consecutive bytes.
-            boost::endian::endian<endian, typename T::type, bits> p;
+		// Even if the endian types are not pod's (at least not in the
+		// definition of C++03) it seems to be safe to assume they are.
+		// This allows us to treat them as a sequence of consecutive bytes.
+		boost::endian::endian<endian, typename T::type, bits> p;
 
 #if defined(BOOST_MSVC)
 // warning C4244: 'argument' : conversion from 'const int' to 'foo', possible loss of data
 #pragma warning(push)
 #pragma warning(disable: 4244)
 #endif
-            typedef typename T::type attribute_type;
-            p = traits::extract_from<attribute_type>(attr, context);
+		typedef typename T::type attribute_type;
+		p = traits::extract_from<attribute_type>(attr, context);
 #if defined(BOOST_MSVC)
 #pragma warning(pop)
 #endif
 
-            unsigned char const* bytes =
-                reinterpret_cast<unsigned char const*>(&p);
+		unsigned char const* bytes =
+		    reinterpret_cast<unsigned char const*>(&p);
 
-            for (unsigned int i = 0; i < sizeof(p); ++i)
-            {
-                if (!detail::generate_to(sink, *bytes++))
-                    return false;
-            }
-            return karma::delimit_out(sink, d);     // always do post-delimiting
-        }
+		for (unsigned int i = 0; i < sizeof(p); ++i)
+		{
+			if (!detail::generate_to(sink, *bytes++))
+				return false;
+		}
+		return karma::delimit_out(sink, d);     // always do post-delimiting
+	}
 
-        // this any_byte_director has no parameter attached, it needs to have
-        // been initialized from a direct literal
-        template <
-            typename OutputIterator, typename Context, typename Delimiter>
-        static bool generate(OutputIterator&, Context&, Delimiter const&
-          , unused_type)
-        {
-            // It is not possible (doesn't make sense) to use binary generators
-            // without providing any attribute, as the generator doesn't 'know'
-            // what to output. The following assertion fires if this situation
-            // is detected in your code.
-            BOOST_SPIRIT_ASSERT_FAIL(OutputIterator,
-                binary_generator_not_usable_without_attribute, ());
-            return false;
-        }
+	// this any_byte_director has no parameter attached, it needs to have
+	// been initialized from a direct literal
+	template <
+	    typename OutputIterator, typename Context, typename Delimiter>
+	static bool generate(OutputIterator&, Context&, Delimiter const&
+	                     , unused_type)
+	{
+		// It is not possible (doesn't make sense) to use binary generators
+		// without providing any attribute, as the generator doesn't 'know'
+		// what to output. The following assertion fires if this situation
+		// is detected in your code.
+		BOOST_SPIRIT_ASSERT_FAIL(OutputIterator,
+		                         binary_generator_not_usable_without_attribute, ());
+		return false;
+	}
 
-        template <typename Context>
-        static info what(Context const& /*context*/)
-        {
-            return karma::detail::what<endian>::is();
-        }
-    };
+	template <typename Context>
+	static info what(Context const& /*context*/)
+	{
+		return karma::detail::what<endian>::is();
+	}
+};
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T, BOOST_SCOPED_ENUM(boost::endian::endianness) endian, int bits>
-    struct literal_binary_generator
-      : primitive_generator<literal_binary_generator<T, endian, bits> >
-    {
-        template <typename Context, typename Unused>
-        struct attribute
-        {
-            typedef unused_type type;
-        };
+///////////////////////////////////////////////////////////////////////////
+template <typename T, BOOST_SCOPED_ENUM(boost::endian::endianness) endian, int bits>
+struct literal_binary_generator
+	: primitive_generator<literal_binary_generator<T, endian, bits> >
+{
+	template <typename Context, typename Unused>
+	struct attribute
+	{
+		typedef unused_type type;
+	};
 
-        template <typename V>
-        literal_binary_generator(V const& v)
-        {
+	template <typename V>
+	literal_binary_generator(V const& v)
+	{
 #if defined(BOOST_MSVC)
 // warning C4244: 'argument' : conversion from 'const int' to 'foo', possible loss of data
 #pragma warning(push)
 #pragma warning(disable: 4244)
 #endif
-            data_ = v;
+		data_ = v;
 #if defined(BOOST_MSVC)
 #pragma warning(pop)
 #endif
-        }
+	}
 
-        template <
-            typename OutputIterator, typename Context, typename Delimiter
-          , typename Attribute>
-        bool generate(OutputIterator& sink, Context&, Delimiter const& d
-          , Attribute const&) const
-        {
-            // Even if the endian types are not pod's (at least not in the
-            // definition of C++03) it seems to be safe to assume they are
-            // (but in C++0x the endian types _are_ PODs).
-            // This allows us to treat them as a sequence of consecutive bytes.
-            unsigned char const* bytes =
-                reinterpret_cast<unsigned char const*>(&data_);
+	template <
+	    typename OutputIterator, typename Context, typename Delimiter
+	    , typename Attribute>
+	bool generate(OutputIterator& sink, Context&, Delimiter const& d
+	              , Attribute const&) const
+	{
+		// Even if the endian types are not pod's (at least not in the
+		// definition of C++03) it seems to be safe to assume they are
+		// (but in C++0x the endian types _are_ PODs).
+		// This allows us to treat them as a sequence of consecutive bytes.
+		unsigned char const* bytes =
+		    reinterpret_cast<unsigned char const*>(&data_);
 
-            for (unsigned int i = 0; i < sizeof(data_type); ++i)
-            {
-                if (!detail::generate_to(sink, *bytes++))
-                    return false;
-            }
-            return karma::delimit_out(sink, d);  // always do post-delimiting
-        }
+		for (unsigned int i = 0; i < sizeof(data_type); ++i)
+		{
+			if (!detail::generate_to(sink, *bytes++))
+				return false;
+		}
+		return karma::delimit_out(sink, d);  // always do post-delimiting
+	}
 
-        template <typename Context>
-        static info what(Context const& /*context*/)
-        {
-            return karma::detail::what<endian>::is();
-        }
+	template <typename Context>
+	static info what(Context const& /*context*/)
+	{
+		return karma::detail::what<endian>::is();
+	}
 
-        typedef boost::endian::endian<endian, typename T::type,
-            bits> data_type;
+	typedef boost::endian::endian<endian, typename T::type,
+	        bits> data_type;
 
-        data_type data_;
-    };
+	data_type data_;
+};
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Generator generators: make_xxx function (objects)
-    ///////////////////////////////////////////////////////////////////////////
-    namespace detail
-    {
-        template <typename T, BOOST_SCOPED_ENUM(boost::endian::endianness) endian
+///////////////////////////////////////////////////////////////////////////
+// Generator generators: make_xxx function (objects)
+///////////////////////////////////////////////////////////////////////////
+namespace detail
+{
+template <typename T, BOOST_SCOPED_ENUM(boost::endian::endianness) endian
           , int bits>
-        struct basic_binary
-        {
-            typedef any_binary_generator<T, endian, bits> result_type;
+struct basic_binary
+{
+	typedef any_binary_generator<T, endian, bits> result_type;
 
-            result_type operator()(unused_type, unused_type) const
-            {
-                return result_type();
-            }
-        };
+	result_type operator()(unused_type, unused_type) const
+	{
+		return result_type();
+	}
+};
 
-        template <typename Modifiers, typename T
+template <typename Modifiers, typename T
           , BOOST_SCOPED_ENUM(boost::endian::endianness) endian, int bits>
-        struct basic_binary_literal
-        {
-            typedef literal_binary_generator<T, endian, bits> result_type;
+struct basic_binary_literal
+{
+	typedef literal_binary_generator<T, endian, bits> result_type;
 
-            template <typename Terminal>
-            result_type operator()(Terminal const& term, unused_type) const
-            {
-                return result_type(fusion::at_c<0>(term.args));
-            }
-        };
-    }
+	template <typename Terminal>
+	result_type operator()(Terminal const& term, unused_type) const
+	{
+		return result_type(fusion::at_c<0>(term.args));
+	}
+};
+}
 
 #define BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(name, endiantype, bits)            \
     template <typename Modifiers>                                             \
@@ -395,17 +402,17 @@ namespace boost { namespace spirit { namespace karma
                                                                               \
     /***/
 
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(byte_, native, 8)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(word, native, 16)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(big_word, big, 16)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(little_word, little, 16)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(dword, native, 32)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(big_dword, big, 32)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(little_dword, little, 32)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(byte_, native, 8)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(word, native, 16)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(big_word, big, 16)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(little_word, little, 16)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(dword, native, 32)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(big_dword, big, 32)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(little_dword, little, 32)
 #ifdef BOOST_HAS_LONG_LONG
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(qword, native, 64)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(big_qword, big, 64)
-    BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(little_qword, little, 64)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(qword, native, 64)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(big_qword, big, 64)
+BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE(little_qword, little, 64)
 #endif
 
 #undef BOOST_SPIRIT_MAKE_BINARY_PRIMITIVE
@@ -424,15 +431,17 @@ namespace boost { namespace spirit { namespace karma
                                                                               \
     /***/
 
-    BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(bin_float, native, 32)
-    BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(big_bin_float, big, 32)
-    BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(little_bin_float, little, 32)
-    BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(bin_double, native, 64)
-    BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(big_bin_double, big, 64)
-    BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(little_bin_double, little, 64)
+BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(bin_float, native, 32)
+BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(big_bin_float, big, 32)
+BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(little_bin_float, little, 32)
+BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(bin_double, native, 64)
+BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(big_bin_double, big, 64)
+BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE(little_bin_double, little, 64)
 
 #undef BOOST_SPIRIT_MAKE_BINARY_IEEE754_PRIMITIVE
 
-}}}
+}
+}
+}
 
 #endif

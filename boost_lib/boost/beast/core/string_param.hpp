@@ -17,8 +17,10 @@
 #include <boost/beast/core/detail/type_traits.hpp>
 #include <boost/optional.hpp>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** A function parameter which efficiently converts to string.
 
@@ -41,85 +43,85 @@ namespace beast {
 */
 class string_param
 {
-    string_view sv_;
-    char buf_[128];
-    boost::optional<detail::static_ostream> os_;
+	string_view sv_;
+	char buf_[128];
+	boost::optional<detail::static_ostream> os_;
 
-    template<class T>
-    typename std::enable_if<
-        std::is_integral<T>::value>::type
-    print(T const&);
+	template<class T>
+	typename std::enable_if<
+	std::is_integral<T>::value>::type
+	print(T const&);
 
-    template<class T>
-    typename std::enable_if<
-        ! std::is_integral<T>::value &&
-        ! std::is_convertible<T, string_view>::value
-    >::type
-    print(T const&);
+	template<class T>
+	typename std::enable_if<
+	! std::is_integral<T>::value &&
+	! std::is_convertible<T, string_view>::value
+	>::type
+	print(T const&);
 
-    void
-    print(string_view);
+	void
+	print(string_view);
 
-    template<class T>
-    typename std::enable_if<
-        std::is_integral<T>::value>::type
-    print_1(T const&);
+	template<class T>
+	typename std::enable_if<
+	std::is_integral<T>::value>::type
+	print_1(T const&);
 
-    template<class T>
-    typename std::enable_if<
-        ! std::is_integral<T>::value>::type
-    print_1(T const&);
+	template<class T>
+	typename std::enable_if<
+	! std::is_integral<T>::value>::type
+	print_1(T const&);
 
-    void
-    print_n()
-    {
-    }
+	void
+	print_n()
+	{
+	}
 
-    template<class T0, class... TN>
-    void
-    print_n(T0 const&, TN const&...);
+	template<class T0, class... TN>
+	void
+	print_n(T0 const&, TN const&...);
 
-    template<class T0, class T1, class... TN>
-    void
-    print(T0 const&, T1 const&, TN const&...);
+	template<class T0, class T1, class... TN>
+	void
+	print(T0 const&, T1 const&, TN const&...);
 
 public:
-    /// Copy constructor (disallowed)
-    string_param(string_param const&) = delete;
+	/// Copy constructor (disallowed)
+	string_param(string_param const&) = delete;
 
-    /// Copy assignment (disallowed)
-    string_param& operator=(string_param const&) = delete;
+	/// Copy assignment (disallowed)
+	string_param& operator=(string_param const&) = delete;
 
-    /** Constructor
+	/** Constructor
 
-        This function constructs a string as if by concatenating
-        the result of streaming each argument in order into an
-        output stream. It is used as a notational convenience
-        at call sites which expect a parameter with the semantics
-        of a @ref string_view.
+	    This function constructs a string as if by concatenating
+	    the result of streaming each argument in order into an
+	    output stream. It is used as a notational convenience
+	    at call sites which expect a parameter with the semantics
+	    of a @ref string_view.
 
-        The implementation uses a small, internal static buffer
-        to avoid memory allocations especially for the case where
-        the list of arguments to be converted consists of a single
-        integral type.
+	    The implementation uses a small, internal static buffer
+	    to avoid memory allocations especially for the case where
+	    the list of arguments to be converted consists of a single
+	    integral type.
 
-        @param args One or more arguments to convert
-    */
-    template<class... Args>
-    string_param(Args const&... args);
+	    @param args One or more arguments to convert
+	*/
+	template<class... Args>
+	string_param(Args const&... args);
 
-    /// Returns the contained string
-    string_view
-    str() const
-    {
-        return sv_;
-    }
+	/// Returns the contained string
+	string_view
+	str() const
+	{
+		return sv_;
+	}
 
-    /// Implicit conversion to @ref string_view
-    operator string_view const() const
-    {
-        return sv_;
-    }
+	/// Implicit conversion to @ref string_view
+	operator string_view const() const
+	{
+		return sv_;
+	}
 };
 
 } // beast

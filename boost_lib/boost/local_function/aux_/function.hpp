@@ -83,7 +83,7 @@
     , \
     BOOST_LOCAL_FUNCTION_AUX_bind_type(z, bind_n, ~) & \
     BOOST_LOCAL_FUNCTION_AUX_bind_name(z, bind_n, ~)
-    
+
 #define BOOST_LOCAL_FUNCTION_AUX_bind_member(z, bind_n, unsued) \
     BOOST_PP_CAT(BOOST_LOCAL_FUNCTION_AUX_bind_name(z, bind_n, ~), _)
 
@@ -135,7 +135,7 @@
 #define BOOST_LOCAL_FUNCTION_AUX_call_init(z, n, unused) \
     BOOST_LOCAL_FUNCTION_AUX_call_member(z, n, ~) = \
             BOOST_LOCAL_FUNCTION_AUX_call_name(z, n, ~);
-                
+
 #define BOOST_LOCAL_FUNCTION_AUX_operator_call(z, defaults_n, arity) \
     /* precondition: object_ && call_function_ */ \
     inline R operator()( \
@@ -163,16 +163,21 @@
         ); \
     }
 
-namespace boost { namespace local_function { namespace aux {
+namespace boost
+{
+namespace local_function
+{
+namespace aux
+{
 
 template<
-      typename F
+    typename F
     , size_t defaults
 #if !BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS
     BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
-            BOOST_LOCAL_FUNCTION_AUX_comma_bind_tparam, ~)
+                    BOOST_LOCAL_FUNCTION_AUX_comma_bind_tparam, ~)
 #endif
->
+    >
 class function {}; // Empty template, only use its specializations.
 
 // Iterate within namespace.
@@ -181,21 +186,23 @@ class function {}; // Empty template, only use its specializations.
                 BOOST_LOCAL_FUNCTION_AUX_FUNCTION_THIS_FILE_))
 #       include BOOST_PP_ITERATE() // Iterate over function arity.
 
-} } } // namespace
+}
+}
+} // namespace
 
 // Register type for type-of emu (NAME use TYPEOF to deduce this fctor type).
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::local_function::aux::function,
-    (typename) // For `F` tparam.
-    (size_t) // For `defaults` tparam.
-    // MSVC error if using #if instead of PP_IIF here.
-    BOOST_PP_IIF(BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS,
-        BOOST_PP_TUPLE_EAT(3) // Nothing.
-    ,
-        BOOST_PP_REPEAT // For bind tparams.
-    )(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
-            BOOST_LOCAL_FUNCTION_AUX_typename_seq, ~)
-)
+                               (typename) // For `F` tparam.
+                               (size_t) // For `defaults` tparam.
+                               // MSVC error if using #if instead of PP_IIF here.
+                               BOOST_PP_IIF(BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS,
+                                       BOOST_PP_TUPLE_EAT(3) // Nothing.
+                                       ,
+                                       BOOST_PP_REPEAT // For bind tparams.
+                                           )(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
+                                                   BOOST_LOCAL_FUNCTION_AUX_typename_seq, ~)
+                              )
 
 #undef BOOST_LOCAL_FUNCTION_AUX_typename_seq
 #undef BOOST_LOCAL_FUNCTION_AUX_arg_type
@@ -239,90 +246,92 @@ BOOST_TYPEOF_REGISTER_TEMPLATE(boost::local_function::aux::function,
 template<
     typename R
     BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_AUX_arity,
-            BOOST_LOCAL_FUNCTION_AUX_comma_arg_tparam, ~)
+                    BOOST_LOCAL_FUNCTION_AUX_comma_arg_tparam, ~)
 #if !BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS
     BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
-            BOOST_LOCAL_FUNCTION_AUX_comma_bind_tparam, ~)
+                    BOOST_LOCAL_FUNCTION_AUX_comma_bind_tparam, ~)
 #endif
->
+    >
 class function<
-      R (
-        BOOST_PP_ENUM(BOOST_LOCAL_FUNCTION_AUX_arity,
-                BOOST_LOCAL_FUNCTION_AUX_arg_type, ~)
-      )
-    , BOOST_LOCAL_FUNCTION_AUX_defaults
+	R (
+	    BOOST_PP_ENUM(BOOST_LOCAL_FUNCTION_AUX_arity,
+	                  BOOST_LOCAL_FUNCTION_AUX_arg_type, ~)
+	)
+	, BOOST_LOCAL_FUNCTION_AUX_defaults
 #if !BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS
-    BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
-            BOOST_LOCAL_FUNCTION_AUX_comma_bind_type, ~)
+	BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
+	                BOOST_LOCAL_FUNCTION_AUX_comma_bind_type, ~)
 #endif
-> {
-    // The object type will actually be a local class which cannot be passed as
-    // a template parameter so a generic `void*` pointer is used to hold the
-    // object (this pointer will then be cased by the call-function implemented
-    // by the local class itself). This is the trick used to pass a local
-    // function as a template parameter. This trick uses function pointers for
-    // the call-functions and function pointers cannot always be optimized by
-    // the compiler (they cannot be inlined) thus this trick increased run-time
-    // (another trick using virtual functions for the local class was also
-    // investigated but also virtual functions cannot be inlined plus they
-    // require virtual tables lookups so the virtual functions trick measured
-    // worst run-time performance than the function pointer trick).
-    typedef void* object_ptr;
-    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
-            BOOST_LOCAL_FUNCTION_AUX_call_typedef, // INC for no defaults.
-            BOOST_LOCAL_FUNCTION_AUX_arity)
+	>
+{
+	// The object type will actually be a local class which cannot be passed as
+	// a template parameter so a generic `void*` pointer is used to hold the
+	// object (this pointer will then be cased by the call-function implemented
+	// by the local class itself). This is the trick used to pass a local
+	// function as a template parameter. This trick uses function pointers for
+	// the call-functions and function pointers cannot always be optimized by
+	// the compiler (they cannot be inlined) thus this trick increased run-time
+	// (another trick using virtual functions for the local class was also
+	// investigated but also virtual functions cannot be inlined plus they
+	// require virtual tables lookups so the virtual functions trick measured
+	// worst run-time performance than the function pointer trick).
+	typedef void* object_ptr;
+	BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
+	                BOOST_LOCAL_FUNCTION_AUX_call_typedef, // INC for no defaults.
+	                BOOST_LOCAL_FUNCTION_AUX_arity)
 
 public:
-    // Provide public type interface following Boost.Function names
-    // (traits must be defined in both this and the local functor).
-    BOOST_STATIC_CONSTANT(size_t, arity = BOOST_LOCAL_FUNCTION_AUX_arity);
-    typedef R result_type;
-    BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_AUX_arity,
-            BOOST_LOCAL_FUNCTION_AUX_arg_typedef, ~)
+	// Provide public type interface following Boost.Function names
+	// (traits must be defined in both this and the local functor).
+	BOOST_STATIC_CONSTANT(size_t, arity = BOOST_LOCAL_FUNCTION_AUX_arity);
+	typedef R result_type;
+	BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_AUX_arity,
+	                BOOST_LOCAL_FUNCTION_AUX_arg_typedef, ~)
 
-    // NOTE: Must have default constructor for init without function name in
-    // function macro expansion.
+	// NOTE: Must have default constructor for init without function name in
+	// function macro expansion.
 
-    // Cannot be private but it should never be used by programmers directly
-    // so used internal symbol.
-    inline void BOOST_LOCAL_FUNCTION_AUX_FUNCTION_INIT_CALL_FUNC(
-        object_ptr object
+	// Cannot be private but it should never be used by programmers directly
+	// so used internal symbol.
+	inline void BOOST_LOCAL_FUNCTION_AUX_FUNCTION_INIT_CALL_FUNC(
+	    object_ptr object
 #if !BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS
-        BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
-                BOOST_LOCAL_FUNCTION_AUX_comma_bind_param_decl, ~)
+	    BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
+	                    BOOST_LOCAL_FUNCTION_AUX_comma_bind_param_decl, ~)
 #endif
-        BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
-                BOOST_LOCAL_FUNCTION_AUX_comma_call_param_decl, ~)
-    ) {
-        object_ = object;
+	    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
+	                    BOOST_LOCAL_FUNCTION_AUX_comma_call_param_decl, ~)
+	)
+	{
+		object_ = object;
 #if !BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS
-        BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
-                BOOST_LOCAL_FUNCTION_AUX_bind_member_init, ~)
+		BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
+		                BOOST_LOCAL_FUNCTION_AUX_bind_member_init, ~)
 #endif
-        BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
-                BOOST_LOCAL_FUNCTION_AUX_call_init, ~) // INC for no defaults.
-        unused_ = 0; // To avoid a GCC uninitialized warning.
-    }
-    
-    // Result operator(Arg1, ..., ArgN-1, ArgN) -- iff defaults >= 0
-    // Result operator(Arg1, ..., ArgN-1)       -- iff defaults >= 1
-    // ...                                      -- etc
-    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
-            BOOST_LOCAL_FUNCTION_AUX_operator_call, // INC for no defaults.
-            BOOST_LOCAL_FUNCTION_AUX_arity)
+		BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
+		                BOOST_LOCAL_FUNCTION_AUX_call_init, ~) // INC for no defaults.
+		unused_ = 0; // To avoid a GCC uninitialized warning.
+	}
+
+	// Result operator(Arg1, ..., ArgN-1, ArgN) -- iff defaults >= 0
+	// Result operator(Arg1, ..., ArgN-1)       -- iff defaults >= 1
+	// ...                                      -- etc
+	BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
+	                BOOST_LOCAL_FUNCTION_AUX_operator_call, // INC for no defaults.
+	                BOOST_LOCAL_FUNCTION_AUX_arity)
 
 private:
-    object_ptr object_;
+	object_ptr object_;
 #if !BOOST_LOCAL_FUNCTION_CONFIG_LOCALS_AS_TPARAMS
-    BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
-            BOOST_LOCAL_FUNCTION_AUX_bind_member_decl, ~)
+	BOOST_PP_REPEAT(BOOST_LOCAL_FUNCTION_CONFIG_BIND_MAX,
+	                BOOST_LOCAL_FUNCTION_AUX_bind_member_decl, ~)
 #endif
-    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
-            BOOST_LOCAL_FUNCTION_AUX_call_decl, ~) // INC for no defaults.
+	BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_FUNCTION_AUX_defaults),
+	                BOOST_LOCAL_FUNCTION_AUX_call_decl, ~) // INC for no defaults.
 
-    // run-time: this unused void* member variable allows for compiler
-    // optimizations (at least on MSVC it reduces invocation time of about 50%)
-    void* unused_;
+	// run-time: this unused void* member variable allows for compiler
+	// optimizations (at least on MSVC it reduces invocation time of about 50%)
+	void* unused_;
 };
 
 #   undef BOOST_LOCAL_FUNCTION_AUX_defaults

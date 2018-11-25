@@ -15,9 +15,17 @@
 #include <boost/variant/get.hpp>
 #include <boost/variant/variant.hpp>
 
-namespace boost { namespace geometry { namespace index {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
 
-namespace detail { namespace rtree {
+namespace detail
+{
+namespace rtree
+{
 
 // nodes variants forward declarations
 
@@ -32,11 +40,11 @@ struct variant_leaf;
 template <typename V, typename Value, typename Parameters, typename Box, typename Allocators, typename Tag>
 inline V & get(
     boost::variant<
-        variant_leaf<Value, Parameters, Box, Allocators, Tag>,
-        variant_internal_node<Value, Parameters, Box, Allocators, Tag>
+    variant_leaf<Value, Parameters, Box, Allocators, Tag>,
+    variant_internal_node<Value, Parameters, Box, Allocators, Tag>
     > & v)
 {
-    return boost::get<V>(v);
+	return boost::get<V>(v);
 }
 
 // apply visitor
@@ -44,25 +52,28 @@ inline V & get(
 template <typename Visitor, typename Value, typename Parameters, typename Box, typename Allocators, typename Tag>
 inline void apply_visitor(Visitor & v,
                           boost::variant<
-                              variant_leaf<Value, Parameters, Box, Allocators, Tag>,
-                              variant_internal_node<Value, Parameters, Box, Allocators, Tag>
+                          variant_leaf<Value, Parameters, Box, Allocators, Tag>,
+                          variant_internal_node<Value, Parameters, Box, Allocators, Tag>
                           > & n)
 {
-    boost::apply_visitor(v, n);
+	boost::apply_visitor(v, n);
 }
 
 template <typename Visitor, typename Value, typename Parameters, typename Box, typename Allocators, typename Tag>
 inline void apply_visitor(Visitor & v,
                           boost::variant<
-                              variant_leaf<Value, Parameters, Box, Allocators, Tag>,
-                              variant_internal_node<Value, Parameters, Box, Allocators, Tag>
+                          variant_leaf<Value, Parameters, Box, Allocators, Tag>,
+                          variant_internal_node<Value, Parameters, Box, Allocators, Tag>
                           > const& n)
 {
-    boost::apply_visitor(v, n);
+	boost::apply_visitor(v, n);
 }
 
-}} // namespace detail::rtree
+}
+} // namespace detail::rtree
 
-}}} // namespace boost::geometry::index
+}
+}
+} // namespace boost::geometry::index
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_RTREE_NODE_VARIANT_VISITOR_HPP

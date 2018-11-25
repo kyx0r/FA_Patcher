@@ -20,44 +20,50 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    template<
-      typename Duration,
-      typename Features = accumulators::features<accumulators::tag::count,
-        accumulators::tag::sum, accumulators::tag::min,
-        accumulators::tag::max, accumulators::tag::mean>,
-      typename Weight = void>
-    struct laps_accumulator_set : last_lap<Duration>
-    {
-      typedef last_lap<Duration> base_type;
-      typedef Duration duration;
-      typedef typename duration::rep rep;
-      typedef accumulators::accumulator_set<rep, Features,
-          Weight> storage_type;
-      storage_type acc_;
+template<
+    typename Duration,
+    typename Features = accumulators::features<accumulators::tag::count,
+            accumulators::tag::sum, accumulators::tag::min,
+            accumulators::tag::max, accumulators::tag::mean>,
+    typename Weight = void>
+struct laps_accumulator_set : last_lap<Duration>
+{
+	typedef last_lap<Duration> base_type;
+	typedef Duration duration;
+	typedef typename duration::rep rep;
+	typedef accumulators::accumulator_set<rep, Features,
+	        Weight> storage_type;
+	storage_type acc_;
 
-      void store(duration const& d)
-      {
-        this->base_type::store(d);
-        acc_(d.count());
-      }
+	void store(duration const& d)
+	{
+		this->base_type::store(d);
+		acc_(d.count());
+	}
 
-      void reset()
-      {
-        this->base_type::reset();
-        acc_ = storage_type();
-      }
+	void reset()
+	{
+		this->base_type::reset();
+		acc_ = storage_type();
+	}
 
-      storage_type const& accumulator_set() const  { return acc_; }
+	storage_type const& accumulator_set() const
+	{
+		return acc_;
+	}
 
-      duration elapsed() const  { return duration(accumulators::sum(acc_)); }
+	duration elapsed() const
+	{
+		return duration(accumulators::sum(acc_));
+	}
 
-    };
+};
 
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 

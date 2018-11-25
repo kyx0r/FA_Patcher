@@ -8,7 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 #if defined BOOST_MSVC
-   #pragma warning (pop)
+#pragma warning (pop)
 #endif
 
 #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)

@@ -33,11 +33,17 @@
 //            // prog.cc:6: error: conflict with 'template<class T> void foo(T)'
 //            // prog.cc:10: error: in call to 'foo'
 //      }
-namespace boost { namespace fusion { namespace detail
+namespace boost
 {
-    namespace barrier { }
-    using namespace barrier;
-}}}
+namespace fusion
+{
+namespace detail
+{
+namespace barrier { }
+using namespace barrier;
+}
+}
+}
 #define BOOST_FUSION_BARRIER_BEGIN namespace barrier {
 #define BOOST_FUSION_BARRIER_END   }
 
@@ -83,8 +89,8 @@ namespace boost { namespace fusion { namespace detail
 #   define BOOST_FUSION_WORKAROUND_FOR_LWG_2408
 namespace std
 {
-    template <typename>
-    struct iterator_traits;
+template <typename>
+struct iterator_traits;
 }
 #endif
 

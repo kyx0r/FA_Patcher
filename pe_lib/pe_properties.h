@@ -8,7 +8,7 @@ class pe_properties
 {
 public: //Constructors
 	virtual std::auto_ptr<pe_properties> duplicate() const = 0;
-	
+
 	//Fills properly PE structures
 	virtual void create_pe(uint32_t section_alignment, uint16_t subsystem) = 0;
 
@@ -33,7 +33,7 @@ public: //DIRECTORIES
 	virtual void set_directory_rva(uint32_t id, uint32_t rva) = 0;
 	//Sets directory size (just a value of PE header, no moving occurs)
 	virtual void set_directory_size(uint32_t id, uint32_t size) = 0;
-	
+
 	//Strips only zero DATA_DIRECTORY entries to count = min_count
 	//Returns resulting number of data directories
 	//strip_iat_directory - if true, even not empty IAT directory will be stripped
@@ -77,7 +77,7 @@ public: //PE HEADER
 	//Sets stack size reserve for PE32 and PE64 respectively
 	virtual void set_stack_size_reserve(uint32_t size) = 0;
 	virtual void set_stack_size_reserve(uint64_t size) = 0;
-	
+
 	//Returns heap size commit for PE32 and PE64 respectively
 	virtual uint32_t get_heap_size_commit_32() const = 0;
 	virtual uint64_t get_heap_size_commit_64() const = 0;
@@ -103,7 +103,7 @@ public: //PE HEADER
 	virtual uint16_t get_characteristics() const = 0;
 	//Sets PE characteristics
 	virtual void set_characteristics(uint16_t ch) = 0;
-	
+
 	//Clears PE characteristics flag
 	void clear_characteristics_flags(uint16_t flags);
 	//Sets PE characteristics flag
@@ -129,16 +129,16 @@ public: //PE HEADER
 
 	//Returns checksum of PE file from header
 	virtual uint32_t get_checksum() const = 0;
-	
+
 	//Sets checksum of PE file
 	virtual void set_checksum(uint32_t checksum) = 0;
-	
+
 	//Returns timestamp of PE file from header
 	virtual uint32_t get_time_date_stamp() const = 0;
-	
+
 	//Sets timestamp of PE file
 	virtual void set_time_date_stamp(uint32_t timestamp) = 0;
-	
+
 	//Returns Machine field value of PE file from header
 	virtual uint16_t get_machine() const = 0;
 
@@ -147,10 +147,10 @@ public: //PE HEADER
 
 	//Returns DLL Characteristics
 	virtual uint16_t get_dll_characteristics() const = 0;
-	
+
 	//Sets DLL Characteristics
 	virtual void set_dll_characteristics(uint16_t characteristics) = 0;
-	
+
 	//Sets required operation system version
 	virtual void set_os_version(uint16_t major, uint16_t minor) = 0;
 
@@ -175,7 +175,7 @@ public: //ADDRESS CONVERTIONS
 	//bound_check checks integer overflow
 	virtual uint32_t va_to_rva(uint32_t va, bool bound_check = true) const = 0;
 	virtual uint32_t va_to_rva(uint64_t va, bool bound_check = true) const = 0;
-	
+
 	//Relative Virtual Address (RVA) to Virtual Address (VA) convertions
 	//for PE32 and PE64 respectively
 	virtual uint32_t rva_to_va_32(uint32_t rva) const = 0;
@@ -185,7 +185,7 @@ public: //ADDRESS CONVERTIONS
 public: //SECTIONS
 	//Returns number of sections
 	virtual uint16_t get_number_of_sections() const = 0;
-	
+
 public:
 	//Sets number of sections
 	virtual void set_number_of_sections(uint16_t number) = 0;

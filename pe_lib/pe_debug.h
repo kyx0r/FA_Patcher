@@ -272,14 +272,14 @@ private:
 	//Union containing advanced debug information pointer
 	union advanced_info
 	{
-	public:
+public:
 		//Default constructor
 		advanced_info();
 
 		//Returns true if advanced debug info is present
 		bool is_present() const;
 
-	public:
+public:
 		pdb_7_0_info* adv_pdb_7_0_info;
 		pdb_2_0_info* adv_pdb_2_0_info;
 		misc_debug_info* adv_misc_info;

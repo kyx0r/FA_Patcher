@@ -217,7 +217,10 @@
 #if defined(BOOST_NO_INTRINSIC_WCHAR_T)
 #include <cwchar>
 template< typename T > struct assert_no_intrinsic_wchar_t;
-template<> struct assert_no_intrinsic_wchar_t<wchar_t> { typedef void type; };
+template<> struct assert_no_intrinsic_wchar_t<wchar_t>
+{
+	typedef void type;
+};
 // if you see an error here then you need to unset BOOST_NO_INTRINSIC_WCHAR_T
 // where it is defined above:
 typedef assert_no_intrinsic_wchar_t<unsigned short>::type assert_no_intrinsic_wchar_t_;
@@ -320,7 +323,7 @@ template<> struct assert_intrinsic_wchar_t<unsigned short> {};
 
 //
 // C++0x features
-// For each feature we need to check both the Intel compiler version, 
+// For each feature we need to check both the Intel compiler version,
 // and the version of MSVC or GCC that we are emulating.
 // See http://software.intel.com/en-us/articles/c0x-features-supported-by-intel-c-compiler/
 // for a list of which features were implemented in which Intel releases.
@@ -460,7 +463,7 @@ template<> struct assert_intrinsic_wchar_t<unsigned short> {};
 
 // BOOST_NO_CXX11_NOEXCEPT
 #if (BOOST_INTEL_CXX_VERSION >= 1500) && (!defined(BOOST_INTEL_GCC_VERSION) || (BOOST_INTEL_GCC_VERSION >= 40600)) && (!defined(_MSC_VER) || (_MSC_VER >= 9999))
-// Available in earlier Intel release, but generates errors when used with 
+// Available in earlier Intel release, but generates errors when used with
 // conditional exception specifications, for example in multiprecision:
 #  undef BOOST_NO_CXX11_NOEXCEPT
 #endif

@@ -19,44 +19,47 @@
 #include <boost/range/end.hpp>
 #include <boost/range/value_type.hpp>
 
-namespace boost { namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 template<class InputIterator, class T, class BinaryOperation>
 T reduce(InputIterator first, InputIterator last, T init, BinaryOperation bOp)
 {
-    ;
-    for (; first != last; ++first)
-        init = bOp(init, *first);
-    return init;
+	;
+	for (; first != last; ++first)
+		init = bOp(init, *first);
+	return init;
 }
 
 template<class InputIterator, class T>
 T reduce(InputIterator first, InputIterator last, T init)
 {
 	typedef typename std::iterator_traits<InputIterator>::value_type VT;
-    return reduce(first, last, init, std::plus<VT>());
+	return reduce(first, last, init, std::plus<VT>());
 }
 
 template<class InputIterator>
 typename std::iterator_traits<InputIterator>::value_type
 reduce(InputIterator first, InputIterator last)
 {
-    return reduce(first, last,
-       typename std::iterator_traits<InputIterator>::value_type());
+	return reduce(first, last,
+	              typename std::iterator_traits<InputIterator>::value_type());
 }
 
 template<class Range>
 typename boost::range_value<Range>::type
 reduce(const Range &r)
 {
-    return reduce(boost::begin(r), boost::end(r));
+	return reduce(boost::begin(r), boost::end(r));
 }
 
 //	Not sure that this won't be ambiguous (1)
 template<class Range, class T>
 T reduce(const Range &r, T init)
 {
-    return reduce(boost::begin (r), boost::end (r), init);
+	return reduce(boost::begin (r), boost::end (r), init);
 }
 
 
@@ -64,9 +67,10 @@ T reduce(const Range &r, T init)
 template<class Range, class T, class BinaryOperation>
 T reduce(const Range &r, T init, BinaryOperation bOp)
 {
-    return reduce(boost::begin(r), boost::end(r), init, bOp);
+	return reduce(boost::begin(r), boost::end(r), init, bOp);
 }
 
-}} // namespace boost and algorithm
+}
+} // namespace boost and algorithm
 
 #endif // BOOST_ALGORITHM_REDUCE_HPP

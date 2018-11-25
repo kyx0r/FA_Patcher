@@ -20,17 +20,17 @@
 // namespace boost.
 namespace boost_optional_detail
 {
-  template <class T, class Factory>
-  inline void construct(Factory const& factory, void* address)
-  {
-    factory.BOOST_NESTED_TEMPLATE apply<T>(address);
-  }
+template <class T, class Factory>
+inline void construct(Factory const& factory, void* address)
+{
+	factory.BOOST_NESTED_TEMPLATE apply<T>(address);
+}
 }
 
 namespace boost
 {
-  class in_place_factory_base ;
-  class typed_in_place_factory_base ;
+class in_place_factory_base ;
+class typed_in_place_factory_base ;
 }
 
 #endif // header guard

@@ -17,15 +17,15 @@
 
 namespace boost
 {
-  namespace thread_detail
-  {
-    inline boost::recursive_mutex& terminal_mutex()
-    {
-      static boost::recursive_mutex mtx;
-      return mtx;
-    }
+namespace thread_detail
+{
+inline boost::recursive_mutex& terminal_mutex()
+{
+	static boost::recursive_mutex mtx;
+	return mtx;
+}
 
-  }
+}
 }
 #if defined BOOST_THREAD_USES_LOG_THREAD_ID
 
@@ -49,27 +49,27 @@ namespace boost
 
 namespace boost
 {
-  namespace thread_detail
-  {
-    struct dummy_stream_t
-    {
-    };
+namespace thread_detail
+{
+struct dummy_stream_t
+{
+};
 
-    template <typename T>
-    inline dummy_stream_t const& operator<<(dummy_stream_t const& os, T)
-    {
-      return os;
-    }
+template <typename T>
+inline dummy_stream_t const& operator<<(dummy_stream_t const& os, T)
+{
+	return os;
+}
 
-    inline dummy_stream_t const& operator<<(dummy_stream_t const& os, dummy_stream_t const&)
-    {
-      return os;
-    }
+inline dummy_stream_t const& operator<<(dummy_stream_t const& os, dummy_stream_t const&)
+{
+	return os;
+}
 
 
-    BOOST_CONSTEXPR_OR_CONST dummy_stream_t dummy_stream = {};
+BOOST_CONSTEXPR_OR_CONST dummy_stream_t dummy_stream = {};
 
-  }
+}
 }
 
 #ifdef BOOST_MSVC

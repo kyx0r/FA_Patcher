@@ -15,34 +15,41 @@
 #include <iomanip>
 #include <boost/uuid/sha1.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // Accumulates SHA1 hash of the passed strings.
-class sha1 {
-    public:
-        sha1(const std::string &s = "") {
-            if (!s.empty()) this->process(s);
-        }
+class sha1
+{
+public:
+	sha1(const std::string &s = "")
+	{
+		if (!s.empty()) this->process(s);
+	}
 
-        sha1& process(const std::string &s) {
-            h.process_bytes(s.c_str(), s.size());
-            return *this;
-        }
+	sha1& process(const std::string &s)
+	{
+		h.process_bytes(s.c_str(), s.size());
+		return *this;
+	}
 
-        operator std::string() {
-            unsigned int digest[5];
-            h.get_digest(digest);
+	operator std::string()
+	{
+		unsigned int digest[5];
+		h.get_digest(digest);
 
-            std::ostringstream buf;
-            for(int i = 0; i < 5; ++i)
-                buf << std::hex << std::setfill('0') << std::setw(8) << digest[i];
+		std::ostringstream buf;
+		for(int i = 0; i < 5; ++i)
+			buf << std::hex << std::setfill('0') << std::setw(8) << digest[i];
 
-            return buf.str();
-        }
-    private:
-        boost::uuids::detail::sha1 h;
+		return buf.str();
+	}
+private:
+	boost::uuids::detail::sha1 h;
 };
 
 } // end detail namespace

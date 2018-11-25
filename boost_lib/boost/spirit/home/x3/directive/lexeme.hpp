@@ -14,65 +14,71 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template <typename Subject>
-    struct lexeme_directive : unary_parser<Subject, lexeme_directive<Subject>>
-    {
-        typedef unary_parser<Subject, lexeme_directive<Subject> > base_type;
-        static bool const is_pass_through_unary = true;
-        static bool const handles_container = Subject::handles_container;
+namespace spirit
+{
+namespace x3
+{
+template <typename Subject>
+struct lexeme_directive : unary_parser<Subject, lexeme_directive<Subject>>
+{
+	typedef unary_parser<Subject, lexeme_directive<Subject> > base_type;
+	static bool const is_pass_through_unary = true;
+	static bool const handles_container = Subject::handles_container;
 
-        lexeme_directive(Subject const& subject)
-          : base_type(subject) {}
+	lexeme_directive(Subject const& subject)
+		: base_type(subject) {}
 
-        template <typename Iterator, typename Context
-          , typename RContext, typename Attribute>
-        typename enable_if<has_skipper<Context>, bool>::type
-        parse(Iterator& first, Iterator const& last
-          , Context const& context, RContext& rcontext, Attribute& attr) const
-        {
-            x3::skip_over(first, last, context);
-            auto const& skipper = x3::get<skipper_tag>(context);
+	template <typename Iterator, typename Context
+	          , typename RContext, typename Attribute>
+	typename enable_if<has_skipper<Context>, bool>::type
+	parse(Iterator& first, Iterator const& last
+	      , Context const& context, RContext& rcontext, Attribute& attr) const
+	{
+		x3::skip_over(first, last, context);
+		auto const& skipper = x3::get<skipper_tag>(context);
 
-            typedef unused_skipper<
-                typename remove_reference<decltype(skipper)>::type>
-            unused_skipper_type;
-            unused_skipper_type unused_skipper(skipper);
+		typedef unused_skipper<
+		typename remove_reference<decltype(skipper)>::type>
+		unused_skipper_type;
+		unused_skipper_type unused_skipper(skipper);
 
-            return this->subject.parse(
-                first, last
-              , make_context<skipper_tag>(unused_skipper, context)
-              , rcontext
-              , attr);
-        }
+		return this->subject.parse(
+		           first, last
+		           , make_context<skipper_tag>(unused_skipper, context)
+		           , rcontext
+		           , attr);
+	}
 
-        template <typename Iterator, typename Context
-          , typename RContext, typename Attribute>
-        typename disable_if<has_skipper<Context>, bool>::type
-        parse(Iterator& first, Iterator const& last
-          , Context const& context, RContext& rcontext, Attribute& attr) const
-        {
-            //  no need to pre-skip if skipper is unused
-            return this->subject.parse(
-                first, last
-              , context
-              , rcontext
-              , attr);
-        }
-    };
+	template <typename Iterator, typename Context
+	          , typename RContext, typename Attribute>
+	typename disable_if<has_skipper<Context>, bool>::type
+	parse(Iterator& first, Iterator const& last
+	      , Context const& context, RContext& rcontext, Attribute& attr) const
+	{
+		//  no need to pre-skip if skipper is unused
+		return this->subject.parse(
+		           first, last
+		           , context
+		           , rcontext
+		           , attr);
+	}
+};
 
-    struct lexeme_gen
-    {
-        template <typename Subject>
-        lexeme_directive<typename extension::as_parser<Subject>::value_type>
-        operator[](Subject const& subject) const
-        {
-            return { as_parser(subject) };
-        }
-    };
+struct lexeme_gen
+{
+	template <typename Subject>
+	lexeme_directive<typename extension::as_parser<Subject>::value_type>
+	operator[](Subject const& subject) const
+	{
+		return { as_parser(subject) };
+	}
+};
 
-    auto const lexeme = lexeme_gen{};
-}}}
+auto const lexeme = lexeme_gen {};
+}
+}
+}
 
 #endif

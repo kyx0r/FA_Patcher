@@ -53,88 +53,97 @@
 #include <boost/geometry/srs/projections/proj4.hpp>
 
 
-namespace boost { namespace geometry { namespace projections {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
 
-namespace detail {
+namespace detail
+{
 
 
 /* SEC_TO_RAD = Pi/180/3600 */
 template <typename T>
-inline T SEC_TO_RAD() { return 4.84813681109535993589914102357e-6; }
+inline T SEC_TO_RAD()
+{
+	return 4.84813681109535993589914102357e-6;
+}
 
 template <typename BGParams, typename T>
-inline void pj_datum_add_defn(BGParams const& , std::vector<pvalue<T> >& pvalues)
+inline void pj_datum_add_defn(BGParams const&, std::vector<pvalue<T> >& pvalues)
 {
-    /* -------------------------------------------------------------------- */
-    /*      Is there a datum definition in the parameter list?  If so,      */
-    /*      add the defining values to the parameter list.  Note that       */
-    /*      this will append the ellipse definition as well as the          */
-    /*      towgs84= and related parameters.  It should also be pointed     */
-    /*      out that the addition is permanent rather than temporary        */
-    /*      like most other keyword expansion so that the ellipse           */
-    /*      definition will last into the pj_ell_set() function called      */
-    /*      after this one.                                                 */
-    /* -------------------------------------------------------------------- */
-    std::string name = pj_param(pvalues, "sdatum").s;
-    if(! name.empty())
-    {
-        /* find the datum definition */
-        const int n = sizeof(pj_datums) / sizeof(pj_datums[0]);
-        int index = -1;
-        for (int i = 0; i < n && index == -1; i++)
-        {
-            if(pj_datums[i].id == name)
-            {
-                index = i;
-            }
-        }
+	/* -------------------------------------------------------------------- */
+	/*      Is there a datum definition in the parameter list?  If so,      */
+	/*      add the defining values to the parameter list.  Note that       */
+	/*      this will append the ellipse definition as well as the          */
+	/*      towgs84= and related parameters.  It should also be pointed     */
+	/*      out that the addition is permanent rather than temporary        */
+	/*      like most other keyword expansion so that the ellipse           */
+	/*      definition will last into the pj_ell_set() function called      */
+	/*      after this one.                                                 */
+	/* -------------------------------------------------------------------- */
+	std::string name = pj_param(pvalues, "sdatum").s;
+	if(! name.empty())
+	{
+		/* find the datum definition */
+		const int n = sizeof(pj_datums) / sizeof(pj_datums[0]);
+		int index = -1;
+		for (int i = 0; i < n && index == -1; i++)
+		{
+			if(pj_datums[i].id == name)
+			{
+				index = i;
+			}
+		}
 
-        if (index == -1)
-        {
-            BOOST_THROW_EXCEPTION( projection_exception(-9) );
-        }
+		if (index == -1)
+		{
+			BOOST_THROW_EXCEPTION( projection_exception(-9) );
+		}
 
-        if(! pj_datums[index].ellipse_id.empty())
-        {
-            std::string entry("ellps=");
-            entry +=pj_datums[index].ellipse_id;
-            pvalues.push_back(pj_mkparam<T>(entry));
-        }
+		if(! pj_datums[index].ellipse_id.empty())
+		{
+			std::string entry("ellps=");
+			entry +=pj_datums[index].ellipse_id;
+			pvalues.push_back(pj_mkparam<T>(entry));
+		}
 
-        if(! pj_datums[index].defn.empty())
-        {
-            pvalues.push_back(pj_mkparam<T>(pj_datums[index].defn));
-        }
-    }
+		if(! pj_datums[index].defn.empty())
+		{
+			pvalues.push_back(pj_mkparam<T>(pj_datums[index].defn));
+		}
+	}
 }
 
 template <BOOST_GEOMETRY_PROJECTIONS_DETAIL_TYPENAME_PX, typename T>
 inline void pj_datum_add_defn(srs::static_proj4<BOOST_GEOMETRY_PROJECTIONS_DETAIL_PX> const& /*bg_params*/,
                               std::vector<pvalue<T> >& pvalues)
 {
-    typedef srs::static_proj4<BOOST_GEOMETRY_PROJECTIONS_DETAIL_PX> bg_parameters_type;
-    typedef typename srs::par4::detail::tuples_find_if
-        <
-            bg_parameters_type,
-            //srs::par4::detail::is_datum
-            srs::par4::detail::is_param_t<srs::par4::datum>::pred
-        >::type datum_type;
-    typedef typename srs::par4::detail::datum_traits
-        <
-            datum_type
-        > datum_traits;
+	typedef srs::static_proj4<BOOST_GEOMETRY_PROJECTIONS_DETAIL_PX> bg_parameters_type;
+	typedef typename srs::par4::detail::tuples_find_if
+	<
+	bg_parameters_type,
+	//srs::par4::detail::is_datum
+	srs::par4::detail::is_param_t<srs::par4::datum>::pred
+	>::type datum_type;
+	typedef typename srs::par4::detail::datum_traits
+	<
+	datum_type
+	> datum_traits;
 
-    // is unknown if datum parameter found but traits are not specialized
-    static const bool not_set_or_known = boost::is_same<datum_type, void>::value
-                                      || ! boost::is_same<typename datum_traits::ellps_type, void>::value;
-    BOOST_MPL_ASSERT_MSG((not_set_or_known), UNKNOWN_DATUM, (bg_parameters_type));
+	// is unknown if datum parameter found but traits are not specialized
+	static const bool not_set_or_known = boost::is_same<datum_type, void>::value
+	                                     || ! boost::is_same<typename datum_traits::ellps_type, void>::value;
+	BOOST_MPL_ASSERT_MSG((not_set_or_known), UNKNOWN_DATUM, (bg_parameters_type));
 
-    std::string defn = datum_traits::definition();
+	std::string defn = datum_traits::definition();
 
-    if (! defn.empty())
-    {
-        pvalues.push_back(pj_mkparam<T>(defn));
-    }
+	if (! defn.empty())
+	{
+		pvalues.push_back(pj_mkparam<T>(defn));
+	}
 }
 
 /************************************************************************/
@@ -144,70 +153,72 @@ inline void pj_datum_add_defn(srs::static_proj4<BOOST_GEOMETRY_PROJECTIONS_DETAI
 template <typename BGParams, typename T>
 inline void pj_datum_set(BGParams const& bg_params, std::vector<pvalue<T> >& pvalues, parameters<T>& projdef)
 {
-    static const T SEC_TO_RAD = detail::SEC_TO_RAD<T>();
+	static const T SEC_TO_RAD = detail::SEC_TO_RAD<T>();
 
-    projdef.datum_type = PJD_UNKNOWN;
+	projdef.datum_type = PJD_UNKNOWN;
 
-    pj_datum_add_defn(bg_params, pvalues);
+	pj_datum_add_defn(bg_params, pvalues);
 
-/* -------------------------------------------------------------------- */
-/*      Check for nadgrids parameter.                                   */
-/* -------------------------------------------------------------------- */
-    std::string nadgrids = pj_param(pvalues, "snadgrids").s;
-    std::string towgs84 = pj_param(pvalues, "stowgs84").s;
-    if(! nadgrids.empty())
-    {
-        /* We don't actually save the value separately.  It will continue
-           to exist int he param list for use in pj_apply_gridshift.c */
+	/* -------------------------------------------------------------------- */
+	/*      Check for nadgrids parameter.                                   */
+	/* -------------------------------------------------------------------- */
+	std::string nadgrids = pj_param(pvalues, "snadgrids").s;
+	std::string towgs84 = pj_param(pvalues, "stowgs84").s;
+	if(! nadgrids.empty())
+	{
+		/* We don't actually save the value separately.  It will continue
+		   to exist int he param list for use in pj_apply_gridshift.c */
 
-        projdef.datum_type = PJD_GRIDSHIFT;
-    }
+		projdef.datum_type = PJD_GRIDSHIFT;
+	}
 
-/* -------------------------------------------------------------------- */
-/*      Check for towgs84 parameter.                                    */
-/* -------------------------------------------------------------------- */
-    else if(! towgs84.empty())
-    {
-        int parm_count = 0;
+	/* -------------------------------------------------------------------- */
+	/*      Check for towgs84 parameter.                                    */
+	/* -------------------------------------------------------------------- */
+	else if(! towgs84.empty())
+	{
+		int parm_count = 0;
 
-        int n = sizeof(projdef.datum_params) / sizeof(projdef.datum_params[0]);
+		int n = sizeof(projdef.datum_params) / sizeof(projdef.datum_params[0]);
 
-        /* parse out the pvalues */
-        std::vector<std::string> parm;
-        boost::split(parm, towgs84, boost::is_any_of(" ,"));
-        for (std::vector<std::string>::const_iterator it = parm.begin();
-            it != parm.end() && parm_count < n;
-            ++it)
-        {
-            projdef.datum_params[parm_count++] = atof(it->c_str());
-        }
+		/* parse out the pvalues */
+		std::vector<std::string> parm;
+		boost::split(parm, towgs84, boost::is_any_of(" ,"));
+		for (std::vector<std::string>::const_iterator it = parm.begin();
+		        it != parm.end() && parm_count < n;
+		        ++it)
+		{
+			projdef.datum_params[parm_count++] = atof(it->c_str());
+		}
 
-        if( projdef.datum_params[3] != 0.0
-            || projdef.datum_params[4] != 0.0
-            || projdef.datum_params[5] != 0.0
-            || projdef.datum_params[6] != 0.0 )
-        {
-            projdef.datum_type = PJD_7PARAM;
+		if( projdef.datum_params[3] != 0.0
+		        || projdef.datum_params[4] != 0.0
+		        || projdef.datum_params[5] != 0.0
+		        || projdef.datum_params[6] != 0.0 )
+		{
+			projdef.datum_type = PJD_7PARAM;
 
-            /* transform from arc seconds to radians */
-            projdef.datum_params[3] *= SEC_TO_RAD;
-            projdef.datum_params[4] *= SEC_TO_RAD;
-            projdef.datum_params[5] *= SEC_TO_RAD;
-            /* transform from parts per million to scaling factor */
-            projdef.datum_params[6] =
-                (projdef.datum_params[6]/1000000.0) + 1;
-        }
-        else
-        {
-            projdef.datum_type = PJD_3PARAM;
-        }
+			/* transform from arc seconds to radians */
+			projdef.datum_params[3] *= SEC_TO_RAD;
+			projdef.datum_params[4] *= SEC_TO_RAD;
+			projdef.datum_params[5] *= SEC_TO_RAD;
+			/* transform from parts per million to scaling factor */
+			projdef.datum_params[6] =
+			    (projdef.datum_params[6]/1000000.0) + 1;
+		}
+		else
+		{
+			projdef.datum_type = PJD_3PARAM;
+		}
 
-        /* Note that pj_init() will later switch datum_type to
-           PJD_WGS84 if shifts are all zero, and ellipsoid is WGS84 or GRS80 */
-    }
+		/* Note that pj_init() will later switch datum_type to
+		   PJD_WGS84 if shifts are all zero, and ellipsoid is WGS84 or GRS80 */
+	}
 }
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_PJ_DATUM_SET_HPP

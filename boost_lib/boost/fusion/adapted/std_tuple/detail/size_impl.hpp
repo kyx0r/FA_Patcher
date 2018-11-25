@@ -12,26 +12,29 @@
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct std_tuple_tag;
+namespace fusion
+{
+struct std_tuple_tag;
 
-    namespace extension
-    {
-        template<typename T>
-        struct size_impl;
+namespace extension
+{
+template<typename T>
+struct size_impl;
 
-        template <>
-        struct size_impl<std_tuple_tag>
-        {
-            template <typename Sequence>
-            struct apply :
-                mpl::int_<std::tuple_size<
-                    typename remove_const<Sequence>::type>::value
-                >
-            {};
-        };
-    }
-}}
+template <>
+struct size_impl<std_tuple_tag>
+{
+	template <typename Sequence>
+	struct apply :
+		mpl::int_<std::tuple_size<
+		typename remove_const<Sequence>::type>::value
+		>
+	{};
+};
+}
+}
+}
 
 #endif

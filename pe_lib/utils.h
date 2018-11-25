@@ -66,7 +66,7 @@ public:
 
 	//Returns stream size
 	static std::streamoff get_file_size(std::istream& file);
-	
+
 #ifndef PE_BLISS_WINDOWS
 public:
 	static const u16string to_ucs2(const std::wstring& str);

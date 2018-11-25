@@ -19,19 +19,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S>
-        struct size;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S>
+struct size;
 
-        #ifdef BOOST_METAPARSE_STRING_CASE
-        #  error BOOST_METAPARSE_STRING_CASE
-        #endif
-        #define BOOST_METAPARSE_STRING_CASE(z, n, unused) \
+#ifdef BOOST_METAPARSE_STRING_CASE
+#  error BOOST_METAPARSE_STRING_CASE
+#endif
+#define BOOST_METAPARSE_STRING_CASE(z, n, unused) \
           template <BOOST_PP_ENUM_PARAMS(n, int C)> \
           struct \
             size< \
@@ -46,17 +46,17 @@ namespace boost
             > : \
             boost::mpl::int_<n> \
           {};
-  
-        BOOST_PP_REPEAT(
-          BOOST_METAPARSE_LIMIT_STRING_SIZE,
-          BOOST_METAPARSE_STRING_CASE,
-          ~
-        )
-  
-        #undef BOOST_METAPARSE_STRING_CASE
-      }
-    }
-  }
+
+BOOST_PP_REPEAT(
+    BOOST_METAPARSE_LIMIT_STRING_SIZE,
+    BOOST_METAPARSE_STRING_CASE,
+    ~
+)
+
+#undef BOOST_METAPARSE_STRING_CASE
+}
+}
+}
 }
 
 #endif

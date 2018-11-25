@@ -14,7 +14,7 @@ Handle old values.
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/virtual.hpp>
 #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-    #include <boost/contract/detail/checking.hpp>
+#include <boost/contract/detail/checking.hpp>
 #endif
 #include <boost/contract/detail/operator_safe_bool.hpp>
 #include <boost/contract/detail/declspec.hpp>
@@ -45,11 +45,11 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 /** @cond */
 
 #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
-    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) /* nothing */
+#define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) /* nothing */
 #else
-    #include <boost/typeof/typeof.hpp>
-    // Explicitly force old_ptr<...> conversion to allow for C++11 auto decl.
-    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
+#include <boost/typeof/typeof.hpp>
+// Explicitly force old_ptr<...> conversion to allow for C++11 auto decl.
+#define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
         boost::contract::old_ptr<BOOST_TYPEOF(value)>
 #endif
 
@@ -123,7 +123,10 @@ old value expressions without using this macro (see
 
 /* CODE */
 
-namespace boost { namespace contract {
+namespace boost
+{
+namespace contract
+{
 
 /**
 Trait to check if an old value type can be copied or not.
@@ -198,32 +201,36 @@ that are copyable (i.e., for which
         Old Value Requirements}
 */
 template<typename T> // Used only if is_old_value_copyable<T>.
-struct old_value_copy {
-    /**
-    Construct this object by making one single copy of the specified old value.
+struct old_value_copy
+{
+	/**
+	Construct this object by making one single copy of the specified old value.
 
-    This is the only operation within this library that actually copies old
-    values.
-    This ensures this library makes one and only one copy of old values (if they
-    actually need to be copied).
+	This is the only operation within this library that actually copies old
+	values.
+	This ensures this library makes one and only one copy of old values (if they
+	actually need to be copied).
 
-    @param old The old value to copy.
-    */
-    explicit old_value_copy(T const& old) :
-            old_(old) {} // This makes the one single copy of T.
+	@param old The old value to copy.
+	*/
+	explicit old_value_copy(T const& old) :
+		old_(old) {} // This makes the one single copy of T.
 
-    /**
-    Return a (constant) reference to the old value that was copied.
-    
-    Contract assertions should not change the state of the program so the old
-    value copy is returned as @c const (see
-    @RefSect{contract_programming_overview.constant_correctness,
-    Constant Correctness}).
-    */
-    T const& old() const { return old_; }
+	/**
+	Return a (constant) reference to the old value that was copied.
+
+	Contract assertions should not change the state of the program so the old
+	value copy is returned as @c const (see
+	@RefSect{contract_programming_overview.constant_correctness,
+	Constant Correctness}).
+	*/
+	T const& old() const
+	{
+		return old_;
+	}
 
 private:
-    T const old_;
+	T const old_;
 };
 
 template<typename T>
@@ -258,89 +265,92 @@ public:
         generate a compile-time error when the pointer is dereferenced.
 */
 template<typename T>
-class old_ptr { /* copyable (as *) */
+class old_ptr   /* copyable (as *) */
+{
 public:
-    /** Pointed old value type. */
-    typedef T element_type;
+	/** Pointed old value type. */
+	typedef T element_type;
 
-    /** Construct this old value pointer as null. */
-    old_ptr() {}
+	/** Construct this old value pointer as null. */
+	old_ptr() {}
 
-    /**
-    Dereference this old value pointer.
+	/**
+	Dereference this old value pointer.
 
-    This will generate a run-time error if this pointer is null and a
-    compile-time error if the pointed type @c T is not copyable (i.e., if
-    @c boost::contract::is_old_value_copyable<T>::value is @c false).
-    
-    @return The pointed old value.
-            Contract assertions should not change the state of the program so
-            this member function is @c const and it returns the old value as a
-            reference to a constant object (see
-            @RefSect{contract_programming_overview.constant_correctness,
-            Constant Correctness}).
-    */
-    T const& operator*() const {
-        BOOST_STATIC_ASSERT_MSG(
-            boost::contract::is_old_value_copyable<T>::value,
-            "old_ptr<T> requires T copyable (see is_old_value_copyable<T>), "
-            "otherwise use old_ptr_if_copyable<T>"
-        );
-        BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
-        return typed_copy_->old();
-    }
+	This will generate a run-time error if this pointer is null and a
+	compile-time error if the pointed type @c T is not copyable (i.e., if
+	@c boost::contract::is_old_value_copyable<T>::value is @c false).
 
-    /**
-    Structure-dereference this old value pointer.
+	@return The pointed old value.
+	        Contract assertions should not change the state of the program so
+	        this member function is @c const and it returns the old value as a
+	        reference to a constant object (see
+	        @RefSect{contract_programming_overview.constant_correctness,
+	        Constant Correctness}).
+	*/
+	T const& operator*() const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    boost::contract::is_old_value_copyable<T>::value,
+		    "old_ptr<T> requires T copyable (see is_old_value_copyable<T>), "
+		    "otherwise use old_ptr_if_copyable<T>"
+		);
+		BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
+		return typed_copy_->old();
+	}
 
-    This will generate a compile-time error if the pointed type @c T is not
-    copyable (i.e., if @c boost::contract::is_old_value_copyable<T>::value is
-    @c false).
+	/**
+	Structure-dereference this old value pointer.
 
-    @return A pointer to the old value (null if this old value pointer is null).
-            Contract assertions should not change the state of the program so
-            this member function is @c const and it returns the old value as a
-            constant pointer to a constant object (see
-            @RefSect{contract_programming_overview.constant_correctness,
-            Constant Correctness}).
-    */
-    T const* const operator->() const {
-        BOOST_STATIC_ASSERT_MSG(
-            boost::contract::is_old_value_copyable<T>::value,
-            "old_ptr<T> requires T copyble (see is_old_value_copyable<T>), "
-            "otherwise use old_ptr_if_copyable<T>"
-        );
-        if(typed_copy_) return &typed_copy_->old();
-        return 0;
-    }
+	This will generate a compile-time error if the pointed type @c T is not
+	copyable (i.e., if @c boost::contract::is_old_value_copyable<T>::value is
+	@c false).
 
-    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
-        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>,
-                !!typed_copy_)
-    #else
-        /**
-        Check if this old value pointer is null or not.
+	@return A pointer to the old value (null if this old value pointer is null).
+	        Contract assertions should not change the state of the program so
+	        this member function is @c const and it returns the old value as a
+	        constant pointer to a constant object (see
+	        @RefSect{contract_programming_overview.constant_correctness,
+	        Constant Correctness}).
+	*/
+	T const* const operator->() const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    boost::contract::is_old_value_copyable<T>::value,
+		    "old_ptr<T> requires T copyble (see is_old_value_copyable<T>), "
+		    "otherwise use old_ptr_if_copyable<T>"
+		);
+		if(typed_copy_) return &typed_copy_->old();
+		return 0;
+	}
 
-        (This is implemented using safe-bool emulation on compilers that do not
-        support C++11 explicit type conversion operators.)
+#ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
+	BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>,
+	        !!typed_copy_)
+#else
+	/**
+	Check if this old value pointer is null or not.
 
-        @return True if this pointer is not null, false otherwise.
-        */
-        explicit operator bool() const;
-    #endif
+	(This is implemented using safe-bool emulation on compilers that do not
+	support C++11 explicit type conversion operators.)
 
-/** @cond */
+	@return True if this pointer is not null, false otherwise.
+	*/
+	explicit operator bool() const;
+#endif
+
+	/** @cond */
 private:
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        explicit old_ptr(boost::shared_ptr<old_value_copy<T> > old)
-                : typed_copy_(old) {}
-    #endif
+#ifndef BOOST_CONTRACT_NO_OLDS
+	explicit old_ptr(boost::shared_ptr<old_value_copy<T> > old)
+		: typed_copy_(old) {}
+#endif
 
-    boost::shared_ptr<old_value_copy<T> > typed_copy_;
+	boost::shared_ptr<old_value_copy<T> > typed_copy_;
 
-    friend class old_pointer;
-    friend class old_ptr_if_copyable<T>;
-/** @endcond */
+	friend class old_pointer;
+	friend class old_ptr_if_copyable<T>;
+	/** @endcond */
 };
 
 /**
@@ -376,92 +386,95 @@ public:
         compile-time error when this pointer is dereferenced).
 */
 template<typename T>
-class old_ptr_if_copyable { /* copyable (as *) */
+class old_ptr_if_copyable   /* copyable (as *) */
+{
 public:
-    /** Pointed old value type. */
-    typedef T element_type;
+	/** Pointed old value type. */
+	typedef T element_type;
 
-    /** Construct this old value pointer as null. */
-    old_ptr_if_copyable() {}
+	/** Construct this old value pointer as null. */
+	old_ptr_if_copyable() {}
 
-    /**
-    Construct this old value pointer from an old value pointer that requires
-    the old value type to be copyable.
+	/**
+	Construct this old value pointer from an old value pointer that requires
+	the old value type to be copyable.
 
-    This constructor is implicitly called by this library when assigning an
-    object of this type using @RefMacro{BOOST_CONTRACT_OLDOF} (this constructor
-    is usually not explicitly called by user code).
+	This constructor is implicitly called by this library when assigning an
+	object of this type using @RefMacro{BOOST_CONTRACT_OLDOF} (this constructor
+	is usually not explicitly called by user code).
 
-    @param other    Old value pointer that requires the old value type to be
-                    copyable.
-    */
-    /* implicit */ old_ptr_if_copyable(old_ptr<T> const& other) :
-            typed_copy_(other.typed_copy_) {}
+	@param other    Old value pointer that requires the old value type to be
+	                copyable.
+	*/
+	/* implicit */ old_ptr_if_copyable(old_ptr<T> const& other) :
+		typed_copy_(other.typed_copy_) {}
 
-    /**
-    Dereference this old value pointer.
+	/**
+	Dereference this old value pointer.
 
-    This will generate a run-time error if this pointer is null, but no
-    compile-time error is generated if the pointed type @c T is not copyable
-    (i.e., if @c boost::contract::is_old_value_copyable<T>::value is @c false).
-    
-    @return The pointed old value.
-            Contract assertions should not change the state of the program so
-            this member function is @c const and it returns the old value as a
-            reference to a constant object (see
-            @RefSect{contract_programming_overview.constant_correctness,
-            Constant Correctness}).
-    */
-    T const& operator*() const {
-        BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
-        return typed_copy_->old();
-    }
+	This will generate a run-time error if this pointer is null, but no
+	compile-time error is generated if the pointed type @c T is not copyable
+	(i.e., if @c boost::contract::is_old_value_copyable<T>::value is @c false).
 
-    /**
-    Structure-dereference this old value pointer.
+	@return The pointed old value.
+	        Contract assertions should not change the state of the program so
+	        this member function is @c const and it returns the old value as a
+	        reference to a constant object (see
+	        @RefSect{contract_programming_overview.constant_correctness,
+	        Constant Correctness}).
+	*/
+	T const& operator*() const
+	{
+		BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
+		return typed_copy_->old();
+	}
 
-    This will return null but will not generate a compile-time error if the
-    pointed type @c T is not copyable (i.e., if
-    @c boost::contract::is_old_value_copyable<T>::value is @c false).
+	/**
+	Structure-dereference this old value pointer.
 
-    @return A pointer to the old value (null if this old value pointer is null).
-            Contract assertions should not change the state of the program so
-            this member function is @c const and it returns the old value as a
-            constant pointer to a constant object (see
-            @RefSect{contract_programming_overview.constant_correctness,
-            Constant Correctness}).
-    */
-    T const* const operator->() const {
-        if(typed_copy_) return &typed_copy_->old();
-        return 0;
-    }
+	This will return null but will not generate a compile-time error if the
+	pointed type @c T is not copyable (i.e., if
+	@c boost::contract::is_old_value_copyable<T>::value is @c false).
 
-    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
-        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_if_copyable<T>,
-                !!typed_copy_)
-    #else
-        /**
-        Check if this old value pointer is null or not (safe-bool operator).
+	@return A pointer to the old value (null if this old value pointer is null).
+	        Contract assertions should not change the state of the program so
+	        this member function is @c const and it returns the old value as a
+	        constant pointer to a constant object (see
+	        @RefSect{contract_programming_overview.constant_correctness,
+	        Constant Correctness}).
+	*/
+	T const* const operator->() const
+	{
+		if(typed_copy_) return &typed_copy_->old();
+		return 0;
+	}
 
-        (This is implemented using safe-bool emulation on compilers that do not
-        support C++11 explicit type conversion operators.)
+#ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
+	BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_if_copyable<T>,
+	        !!typed_copy_)
+#else
+	/**
+	Check if this old value pointer is null or not (safe-bool operator).
 
-        @return True if this pointer is not null, false otherwise.
-        */
-        explicit operator bool() const;
-    #endif
+	(This is implemented using safe-bool emulation on compilers that do not
+	support C++11 explicit type conversion operators.)
 
-/** @cond */
+	@return True if this pointer is not null, false otherwise.
+	*/
+	explicit operator bool() const;
+#endif
+
+	/** @cond */
 private:
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        explicit old_ptr_if_copyable(boost::shared_ptr<old_value_copy<T> > old)
-                : typed_copy_(old) {}
-    #endif
+#ifndef BOOST_CONTRACT_NO_OLDS
+	explicit old_ptr_if_copyable(boost::shared_ptr<old_value_copy<T> > old)
+		: typed_copy_(old) {}
+#endif
 
-    boost::shared_ptr<old_value_copy<T> > typed_copy_;
+	boost::shared_ptr<old_value_copy<T> > typed_copy_;
 
-    friend class old_pointer;
-/** @endcond */
+	friend class old_pointer;
+	/** @endcond */
 };
 
 /**
@@ -478,65 +491,66 @@ are actually copied.
 @see    @RefSect{extras.old_value_requirements__templates_,
         Old Value Requirements}
 */
-class old_value { // Copyable (as *). 
+class old_value   // Copyable (as *).
+{
 public:
-    // Following implicitly called by ternary operator `... ? ... : null_old()`.
+	// Following implicitly called by ternary operator `... ? ... : null_old()`.
 
-    /**
-    Construct this object from the specified old value when the old value type
-    is copy constructible.
+	/**
+	Construct this object from the specified old value when the old value type
+	is copy constructible.
 
-    The specified old value is copied (one time only) using
-    @c boost::contract::old_value_copy, in which case related old value pointer
-    will not be null (no copy is made if postconditions and exception guarantees
-    are not being checked, see @RefMacro{BOOST_CONTRACT_NO_OLDS}).
+	The specified old value is copied (one time only) using
+	@c boost::contract::old_value_copy, in which case related old value pointer
+	will not be null (no copy is made if postconditions and exception guarantees
+	are not being checked, see @RefMacro{BOOST_CONTRACT_NO_OLDS}).
 
-    @param old Old value to be copied.
+	@param old Old value to be copied.
 
-    @tparam T Old value type.
-    */
-    template<typename T>
-    /* implicit */ old_value(
-        T const& old,
-        typename boost::enable_if<boost::contract::is_old_value_copyable<T>
-                >::type* = 0
-    )
-        #ifndef BOOST_CONTRACT_NO_OLDS
-            : untyped_copy_(new old_value_copy<T>(old))
-        #endif // Else, leave ptr_ null (thus no copy of T).
-    {}
-    
-    /**
-    Construct this object from the specified old value when the old value type
-    is not copyable.
+	@tparam T Old value type.
+	*/
+	template<typename T>
+	/* implicit */ old_value(
+	    T const& old,
+	    typename boost::enable_if<boost::contract::is_old_value_copyable<T>
+	    >::type* = 0
+	)
+#ifndef BOOST_CONTRACT_NO_OLDS
+		: untyped_copy_(new old_value_copy<T>(old))
+#endif // Else, leave ptr_ null (thus no copy of T).
+	{}
 
-    The specified old value cannot be copied in this case so it is not copied
-    and the related old value pointer will always be null (thus a call to this
-    constructor has no effect and it will likely be optimized away by most
-    compilers).
-    
-    @param old Old value (that will not be copied in this case).
-    
-    @tparam T Old value type.
-    */
-    template<typename T>
-    /* implicit */ old_value(
-        T const& old,
-        typename boost::disable_if<boost::contract::is_old_value_copyable<T>
-                >::type* = 0
-    ) {} // Leave ptr_ null (thus no copy of T).
+	/**
+	Construct this object from the specified old value when the old value type
+	is not copyable.
 
-/** @cond */
+	The specified old value cannot be copied in this case so it is not copied
+	and the related old value pointer will always be null (thus a call to this
+	constructor has no effect and it will likely be optimized away by most
+	compilers).
+
+	@param old Old value (that will not be copied in this case).
+
+	@tparam T Old value type.
+	*/
+	template<typename T>
+	/* implicit */ old_value(
+	    T const& old,
+	    typename boost::disable_if<boost::contract::is_old_value_copyable<T>
+	    >::type* = 0
+	) {} // Leave ptr_ null (thus no copy of T).
+
+	/** @cond */
 private:
-    explicit old_value() {}
-    
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        boost::shared_ptr<void> untyped_copy_; // Type erasure.
-    #endif
+	explicit old_value() {}
 
-    friend class old_pointer;
-    friend BOOST_CONTRACT_DETAIL_DECLSPEC old_value null_old();
-/** @endcond */
+#ifndef BOOST_CONTRACT_NO_OLDS
+	boost::shared_ptr<void> untyped_copy_; // Type erasure.
+#endif
+
+	friend class old_pointer;
+	friend BOOST_CONTRACT_DETAIL_DECLSPEC old_value null_old();
+	/** @endcond */
 };
 
 /**
@@ -546,121 +560,134 @@ This class is often only implicitly used by this library and it does not
 explicitly appear in user code (that is why this class does not have public
 constructors, etc.).
 */
-class old_pointer { // Copyable (as *).
+class old_pointer   // Copyable (as *).
+{
 public:
-    /**
-    Convert this object to an actual old value pointer for which the old value
-    type @c T might or not be copyable.
+	/**
+	Convert this object to an actual old value pointer for which the old value
+	type @c T might or not be copyable.
 
-    For example, this is implicitly called when assigning or initializing old
-    value pointers.
-    
-    @tparam T   Type of the pointed old value.
-                The old value pointer will always be null if this type is not
-                copyable (see
-                @c boost::contract::is_old_value_copyable), but this library
-                will not generate a compile-time error.
-    */
-    template<typename T>
-    /* implicit */ operator old_ptr_if_copyable<T>() {
-        return get<old_ptr_if_copyable<T> >();
-    }
-    
-    /**
-    Convert this object to an actual old value pointer for which the old value
-    type @c T must be copyable.
+	For example, this is implicitly called when assigning or initializing old
+	value pointers.
 
-    For example, this is implicitly called when assigning or initializing old
-    value pointers.
-    
-    @tparam T   Type of the pointed old value. This type must be copyable
-                (see @c boost::contract::is_old_value_copyable),
-                otherwise this library will generate a compile-time error when
-                the old value pointer is dereferenced.
-    */
-    template<typename T>
-    /* implicit */ operator old_ptr<T>() {
-        return get<old_ptr<T> >();
-    }
+	@tparam T   Type of the pointed old value.
+	            The old value pointer will always be null if this type is not
+	            copyable (see
+	            @c boost::contract::is_old_value_copyable), but this library
+	            will not generate a compile-time error.
+	*/
+	template<typename T>
+	/* implicit */ operator old_ptr_if_copyable<T>()
+	{
+		return get<old_ptr_if_copyable<T> >();
+	}
 
-/** @cond */
+	/**
+	Convert this object to an actual old value pointer for which the old value
+	type @c T must be copyable.
+
+	For example, this is implicitly called when assigning or initializing old
+	value pointers.
+
+	@tparam T   Type of the pointed old value. This type must be copyable
+	            (see @c boost::contract::is_old_value_copyable),
+	            otherwise this library will generate a compile-time error when
+	            the old value pointer is dereferenced.
+	*/
+	template<typename T>
+	/* implicit */ operator old_ptr<T>()
+	{
+		return get<old_ptr<T> >();
+	}
+
+	/** @cond */
 private:
-    explicit old_pointer(virtual_* v, old_value const& old)
-        #ifndef BOOST_CONTRACT_NO_OLDS
-            : v_(v), untyped_copy_(old.untyped_copy_)
-        #endif
-    {}
-    
-    template<typename Ptr>
-    Ptr get() {
-        #ifndef BOOST_CONTRACT_NO_OLDS
-            if(!boost::contract::is_old_value_copyable<typename
-                    Ptr::element_type>::value) {
-                BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
-                return Ptr(); // Non-copyable so no old value and return null.
-        #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-            } else if(!v_ && boost::contract::detail::checking::already()) {
-                return Ptr(); // Not checking (so return null).
-        #endif
-            } else if(!v_) {
-                BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
-                typedef old_value_copy<typename Ptr::element_type> copied_type;
-                boost::shared_ptr<copied_type> typed_copy = // Un-erase type.
-                        boost::static_pointer_cast<copied_type>(untyped_copy_);
-                BOOST_CONTRACT_DETAIL_DEBUG(typed_copy);
-                return Ptr(typed_copy);
-            } else if(
-                v_->action_ == boost::contract::virtual_::push_old_init_copy ||
-                v_->action_ == boost::contract::virtual_::push_old_ftor_copy
-            ) {
-                BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
-                std::queue<boost::shared_ptr<void> >& copies = v_->action_ ==
-                        boost::contract::virtual_::push_old_ftor_copy ?
-                    v_->old_ftor_copies_
-                :
-                    v_->old_init_copies_
-                ;
-                copies.push(untyped_copy_);
-                return Ptr(); // Pushed (so return null).
-            } else if(
-                boost::contract::virtual_::pop_old_init_copy(v_->action_) ||
-                v_->action_ == boost::contract::virtual_::pop_old_ftor_copy
-            ) {
-                // Copy not null, but still pop it from the queue.
-                BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
+	explicit old_pointer(virtual_* v, old_value const& old)
+#ifndef BOOST_CONTRACT_NO_OLDS
+		: v_(v), untyped_copy_(old.untyped_copy_)
+#endif
+	{}
 
-                std::queue<boost::shared_ptr<void> >& copies = v_->action_ ==
-                        boost::contract::virtual_::pop_old_ftor_copy ?
-                    v_->old_ftor_copies_
-                :
-                    v_->old_init_copies_
-                ;
-                boost::shared_ptr<void> untyped_copy = copies.front();
-                BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy);
-                copies.pop();
+	template<typename Ptr>
+	Ptr get()
+	{
+#ifndef BOOST_CONTRACT_NO_OLDS
+		if(!boost::contract::is_old_value_copyable<typename
+		        Ptr::element_type>::value)
+		{
+			BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
+			return Ptr(); // Non-copyable so no old value and return null.
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+		}
+		else if(!v_ && boost::contract::detail::checking::already())
+		{
+			return Ptr(); // Not checking (so return null).
+#endif
+		}
+		else if(!v_)
+		{
+			BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
+			typedef old_value_copy<typename Ptr::element_type> copied_type;
+			boost::shared_ptr<copied_type> typed_copy = // Un-erase type.
+			    boost::static_pointer_cast<copied_type>(untyped_copy_);
+			BOOST_CONTRACT_DETAIL_DEBUG(typed_copy);
+			return Ptr(typed_copy);
+		}
+		else if(
+		    v_->action_ == boost::contract::virtual_::push_old_init_copy ||
+		    v_->action_ == boost::contract::virtual_::push_old_ftor_copy
+		)
+		{
+			BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
+			std::queue<boost::shared_ptr<void> >& copies = v_->action_ ==
+			        boost::contract::virtual_::push_old_ftor_copy ?
+			        v_->old_ftor_copies_
+			        :
+			        v_->old_init_copies_
+			        ;
+			copies.push(untyped_copy_);
+			return Ptr(); // Pushed (so return null).
+		}
+		else if(
+		    boost::contract::virtual_::pop_old_init_copy(v_->action_) ||
+		    v_->action_ == boost::contract::virtual_::pop_old_ftor_copy
+		)
+		{
+			// Copy not null, but still pop it from the queue.
+			BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
 
-                typedef old_value_copy<typename Ptr::element_type> copied_type;
-                boost::shared_ptr<copied_type> typed_copy = // Un-erase type.
-                        boost::static_pointer_cast<copied_type>(untyped_copy);
-                BOOST_CONTRACT_DETAIL_DEBUG(typed_copy);
-                return Ptr(typed_copy);
-            }
-            BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
-        #endif
-        return Ptr();
-    }
+			std::queue<boost::shared_ptr<void> >& copies = v_->action_ ==
+			        boost::contract::virtual_::pop_old_ftor_copy ?
+			        v_->old_ftor_copies_
+			        :
+			        v_->old_init_copies_
+			        ;
+			boost::shared_ptr<void> untyped_copy = copies.front();
+			BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy);
+			copies.pop();
 
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        virtual_* v_;
-        boost::shared_ptr<void> untyped_copy_; // Type erasure.
-    #endif
-    
-    friend BOOST_CONTRACT_DETAIL_DECLSPEC
-    old_pointer make_old(old_value const&);
+			typedef old_value_copy<typename Ptr::element_type> copied_type;
+			boost::shared_ptr<copied_type> typed_copy = // Un-erase type.
+			    boost::static_pointer_cast<copied_type>(untyped_copy);
+			BOOST_CONTRACT_DETAIL_DEBUG(typed_copy);
+			return Ptr(typed_copy);
+		}
+		BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
+#endif
+		return Ptr();
+	}
 
-    friend BOOST_CONTRACT_DETAIL_DECLSPEC
-    old_pointer make_old(virtual_*, old_value const&);
-/** @endcond */
+#ifndef BOOST_CONTRACT_NO_OLDS
+	virtual_* v_;
+	boost::shared_ptr<void> untyped_copy_; // Type erasure.
+#endif
+
+	friend BOOST_CONTRACT_DETAIL_DECLSPEC
+	old_pointer make_old(old_value const&);
+
+	friend BOOST_CONTRACT_DETAIL_DECLSPEC
+	old_pointer make_old(virtual_*, old_value const&);
+	/** @endcond */
 };
 
 /**
@@ -751,16 +778,17 @@ This function is often only used by the code expanded by
 
 @return True if old values need to be copied, false otherwise.
 */
-inline bool copy_old() {
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-            return !boost::contract::detail::checking::already();
-        #else
-            return true;
-        #endif
-    #else
-        return false; // No post checking, so never copy old values.
-    #endif
+inline bool copy_old()
+{
+#ifndef BOOST_CONTRACT_NO_OLDS
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+	return !boost::contract::detail::checking::already();
+#else
+	return true;
+#endif
+#else
+	return false; // No post checking, so never copy old values.
+#endif
 }
 
 /**
@@ -784,26 +812,29 @@ This function is often only used by the code expanded by
 
 @return True if old values need to be copied, false otherwise.
 */
-inline bool copy_old(virtual_* v) {
-    #ifndef BOOST_CONTRACT_NO_OLDS
-        if(!v) {
-            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-                return !boost::contract::detail::checking::already();
-            #else
-                return true;
-            #endif
-        }
-        return v->action_ == boost::contract::virtual_::push_old_init_copy ||
-                v->action_ == boost::contract::virtual_::push_old_ftor_copy;
-    #else
-        return false; // No post checking, so never copy old values.
-    #endif
+inline bool copy_old(virtual_* v)
+{
+#ifndef BOOST_CONTRACT_NO_OLDS
+	if(!v)
+	{
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+		return !boost::contract::detail::checking::already();
+#else
+		return true;
+#endif
+	}
+	return v->action_ == boost::contract::virtual_::push_old_init_copy ||
+	       v->action_ == boost::contract::virtual_::push_old_ftor_copy;
+#else
+	return false; // No post checking, so never copy old values.
+#endif
 }
 
-} } // namespace
+}
+} // namespace
 
 #ifdef BOOST_CONTRACT_HEADER_ONLY
-    #include <boost/contract/detail/inlined/old.hpp>
+#include <boost/contract/detail/inlined/old.hpp>
 #endif
 
 #endif // #include guard

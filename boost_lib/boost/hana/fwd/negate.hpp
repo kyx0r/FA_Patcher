@@ -15,27 +15,29 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Return the inverse of an element of a group.
-    //! @ingroup group-Group
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/negate.cpp
+//! Return the inverse of an element of a group.
+//! @ingroup group-Group
+//!
+//!
+//! Example
+//! -------
+//! @include example/negate.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto negate = [](auto&& x) -> decltype(auto) {
-        return tag-dispatched;
-    };
+constexpr auto negate = [](auto&& x) -> decltype(auto)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename G, typename = void>
-    struct negate_impl : negate_impl<G, when<true>> { };
+template <typename G, typename = void>
+struct negate_impl : negate_impl<G, when<true>> { };
 
-    struct negate_t {
-        template <typename X>
-        constexpr decltype(auto) operator()(X&& x) const;
-    };
+struct negate_t
+{
+	template <typename X>
+	constexpr decltype(auto) operator()(X&& x) const;
+};
 
-    constexpr negate_t negate{};
+constexpr negate_t negate{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

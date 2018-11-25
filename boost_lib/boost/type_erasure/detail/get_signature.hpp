@@ -14,16 +14,20 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 template<class Concept>
-struct get_signature {
-    BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, &Concept::apply)
-    typedef typename boost::remove_pointer<
-        typename nested::type
-    >::type type;
+struct get_signature
+{
+	BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, &Concept::apply)
+	typedef typename boost::remove_pointer<
+	typename nested::type
+	>::type type;
 };
 
 }

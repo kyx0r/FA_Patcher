@@ -19,23 +19,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-          BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-          class P,
-          boost::mpl::na
-        )
-      >
-      struct last_of;
+namespace metaparse
+{
+namespace v1
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+        class P,
+        boost::mpl::na
+    )
+    >
+struct last_of;
 
-      #ifdef BOOST_METAPARSE_LAST_OF_N
-      #  error BOOST_METAPARSE_LAST_OF_N already defined
-      #endif
-      #define BOOST_METAPARSE_LAST_OF_N(z, n, unused) \
+#ifdef BOOST_METAPARSE_LAST_OF_N
+#  error BOOST_METAPARSE_LAST_OF_N already defined
+#endif
+#define BOOST_METAPARSE_LAST_OF_N(z, n, unused) \
         template <BOOST_PP_ENUM_PARAMS(n, class P)> \
         struct last_of< \
           BOOST_PP_ENUM_PARAMS(n, P) \
@@ -50,16 +50,16 @@ namespace boost
             n - 1 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, P) \
           > \
         {};
-      
-      BOOST_PP_REPEAT(
-        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-        BOOST_METAPARSE_LAST_OF_N,
-        ~
-      )
-      
-      #undef BOOST_METAPARSE_LAST_OF_N
-    }
-  }
+
+BOOST_PP_REPEAT(
+    BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+    BOOST_METAPARSE_LAST_OF_N,
+    ~
+)
+
+#undef BOOST_METAPARSE_LAST_OF_N
+}
+}
 }
 
 #endif

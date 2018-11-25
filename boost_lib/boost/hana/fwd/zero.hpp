@@ -15,30 +15,31 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Identity of `plus`.
-    //! @ingroup group-Monoid
-    //!
-    //! @tparam M
-    //! The tag (a `Monoid`) of the returned identity.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/zero.cpp
+//! Identity of `plus`.
+//! @ingroup group-Monoid
+//!
+//! @tparam M
+//! The tag (a `Monoid`) of the returned identity.
+//!
+//!
+//! Example
+//! -------
+//! @include example/zero.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    template <typename M>
-    constexpr auto zero = []() -> decltype(auto) {
-        return tag-dispatched;
-    };
+template <typename M>
+constexpr auto zero = []() -> decltype(auto)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename M, typename = void>
-    struct zero_impl : zero_impl<M, when<true>> { };
+template <typename M, typename = void>
+struct zero_impl : zero_impl<M, when<true>> { };
 
-    template <typename M>
-    struct zero_t;
+template <typename M>
+struct zero_t;
 
-    template <typename M>
-    constexpr zero_t<M> zero{};
+template <typename M>
+constexpr zero_t<M> zero{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

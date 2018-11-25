@@ -1,6 +1,6 @@
 //  (C) Copyright Gennadiy Rozental 2001.
 //  Distributed under the Boost Software License, Version 1.0.
-//  (See accompanying file LICENSE_1_0.txt or copy at 
+//  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org/libs/test for the library home page.
@@ -34,11 +34,15 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
 
-namespace monomorphic {
+namespace monomorphic
+{
 
 
 #if !defined(BOOST_TEST_DOXYGEN_DOC__)
@@ -91,11 +95,11 @@ struct is_dataset<DataSet const> : is_dataset<DataSet> {};
 //! This function has several overloads:
 //! @code
 //! // returns ds if ds is already a dataset
-//! template <typename DataSet> DataSet make(DataSet&& ds); 
+//! template <typename DataSet> DataSet make(DataSet&& ds);
 //!
 //! // creates a singleton dataset, for non forward iterable and non dataset type T
 //! // (a C string is not considered as a sequence).
-//! template <typename T> monomorphic::singleton<T> make(T&& v); 
+//! template <typename T> monomorphic::singleton<T> make(T&& v);
 //! monomorphic::singleton<char*> make( char* str );
 //! monomorphic::singleton<char const*> make( char const* str );
 //!
@@ -109,7 +113,7 @@ template<typename DataSet>
 inline typename std::enable_if<monomorphic::is_dataset<DataSet>::value,DataSet>::type
 make(DataSet&& ds)
 {
-    return std::forward<DataSet>( ds );
+	return std::forward<DataSet>( ds );
 }
 
 //____________________________________________________________________________//
@@ -119,10 +123,10 @@ make(DataSet&& ds)
 
 //! @overload boost::unit_test::data::make()
 template<typename T>
-inline typename std::enable_if<!is_container_forward_iterable<T>::value && 
-                               !monomorphic::is_dataset<T>::value &&
-                               !is_array<typename remove_reference<T>::type>::value, 
-                               monomorphic::singleton<T>>::type
+inline typename std::enable_if<!is_container_forward_iterable<T>::value &&
+!monomorphic::is_dataset<T>::value &&
+!is_array<typename remove_reference<T>::type>::value,
+monomorphic::singleton<T>>::type
 make( T&& v );
 
 //____________________________________________________________________________//
@@ -130,7 +134,7 @@ make( T&& v );
 //! @overload boost::unit_test::data::make()
 template<typename C>
 inline typename std::enable_if<is_container_forward_iterable<C>::value,monomorphic::collection<C>>::type
-make( C&& c );
+        make( C&& c );
 
 //____________________________________________________________________________//
 
@@ -160,12 +164,14 @@ make( std::initializer_list<T>&& );
 
 //____________________________________________________________________________//
 
-namespace result_of {
+namespace result_of
+{
 
 //! Result of the make call.
 template<typename DataSet>
-struct make {
-    typedef decltype( data::make( declval<DataSet>() ) ) type;
+struct make
+{
+	typedef decltype( data::make( declval<DataSet>() ) ) type;
 };
 
 } // namespace result_of

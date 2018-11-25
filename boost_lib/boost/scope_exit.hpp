@@ -185,7 +185,12 @@
 #endif // VARIADICS
 
 // Steven Watanabe's trick with a modification suggested by Kim Barrett
-namespace boost { namespace scope_exit { namespace detail {
+namespace boost
+{
+namespace scope_exit
+{
+namespace detail
+{
 
 // Type of a local BOOST_SCOPE_EXIT_AUX_ARGS variable.
 // First use in a local scope will declare the BOOST_SCOPE_EXIT_AUX_ARGS
@@ -194,29 +199,32 @@ namespace boost { namespace scope_exit { namespace detail {
 template<int Dummy = 0>
 struct declared
 {
-    void* value;
-    static int const cmp2 = 0;
-    friend void operator>(int, declared const&) {}
+	void* value;
+	static int const cmp2 = 0;
+	friend void operator>(int, declared const&) {}
 };
 
-struct undeclared { declared<> dummy[2]; };
+struct undeclared
+{
+	declared<> dummy[2];
+};
 
 template<int> struct resolve;
 
 template<>
 struct resolve<sizeof(declared<>)>
 {
-    static const int cmp1 = 0;
+	static const int cmp1 = 0;
 };
 
 template<>
 struct resolve<sizeof(undeclared)>
 {
-    template<int>
-    struct cmp1
-    {
-        static int const cmp2 = 0;
-    };
+	template<int>
+	struct cmp1
+	{
+		static int const cmp2 = 0;
+	};
 };
 
 typedef void (*ref_tag)(int&);
@@ -227,33 +235,41 @@ template<class T, class Tag> struct member;
 template<class T>
 struct member<T,ref_tag>
 {
-    T& value;
+	T& value;
 #if !BOOST_SCOPE_EXIT_AUX_TPL_GCC_WORKAROUND_01
-    member(T& ref) : value(ref) {}
+	member(T& ref) : value(ref) {}
 #endif
 };
 
 template<class T>
 struct member<T,val_tag>
 {
-    T value;
+	T value;
 #if !BOOST_SCOPE_EXIT_AUX_TPL_GCC_WORKAROUND_01
-    member(T& val) : value(val) {}
+	member(T& val) : value(val) {}
 #endif
 };
 
-template<class T> inline T& deref(T* p, ref_tag) { return *p; }
-template<class T> inline T& deref(T& r, val_tag) { return  r; }
+template<class T> inline T& deref(T* p, ref_tag)
+{
+	return *p;
+}
+template<class T> inline T& deref(T& r, val_tag)
+{
+	return  r;
+}
 
 template<class T>
 struct wrapper
 {
-    typedef T type;
+	typedef T type;
 };
 
 template<class T> wrapper<T> wrap(T&);
 
-} } } // namespace
+}
+}
+} // namespace
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::scope_exit::detail::wrapper, 1)
@@ -314,7 +330,7 @@ extern boost::scope_exit::detail::undeclared BOOST_SCOPE_EXIT_AUX_ARGS;
             BOOST_SCOPE_EXIT_DETAIL_PARAM_T(BOOST_PP_TUPLE_ELEM(2, 0, id_ty), \
                     i, var) \
     var
- 
+
 #define BOOST_SCOPE_EXIT_AUX_ARG(r, id, i, var) \
     BOOST_PP_COMMA_IF(i) \
     boost_se_params_->BOOST_SCOPE_EXIT_DETAIL_PARAM(id, i, var).value
@@ -345,8 +361,14 @@ extern boost::scope_exit::detail::undeclared BOOST_SCOPE_EXIT_AUX_ARGS;
 #   include <typeinfo>
 #endif
 
-namespace boost { namespace scope_exit { namespace aux {
-        namespace msvc_typeof_this {
+namespace boost
+{
+namespace scope_exit
+{
+namespace aux
+{
+namespace msvc_typeof_this
+{
 
 // compile-time constant code
 #if defined(BOOST_MSVC) && defined(_MSC_EXTENSIONS)
@@ -354,43 +376,54 @@ namespace boost { namespace scope_exit { namespace aux {
 template<int N> struct the_counter;
 
 template<typename T,int N = 5 /* for similarity */>
-struct encode_counter {
-    __if_exists(the_counter<N + 256>) {
-        BOOST_STATIC_CONSTANT(unsigned,
-            count=(encode_counter<T,N + 257>::count));
-    }
-    __if_not_exists(the_counter<N + 256>) {
-        __if_exists(the_counter<N + 64>) {
-            BOOST_STATIC_CONSTANT(unsigned,
-                    count=(encode_counter<T,N + 65>::count));
-        }
-        __if_not_exists(the_counter<N + 64>) {
-            __if_exists(the_counter<N + 16>) {
-                BOOST_STATIC_CONSTANT(unsigned,
-                        count=(encode_counter<T,N + 17>::count));
-            }
-            __if_not_exists(the_counter<N + 16>) {
-                __if_exists(the_counter<N + 4>) {
-                    BOOST_STATIC_CONSTANT(unsigned,
-                            count=(encode_counter<T,N + 5>::count));
-                }
-                __if_not_exists(the_counter<N + 4>) {
-                    __if_exists(the_counter<N>) {
-                        BOOST_STATIC_CONSTANT(unsigned,
-                                count=(encode_counter<T,N + 1>::count));
-                    }
-                    __if_not_exists(the_counter<N>) {
-                        BOOST_STATIC_CONSTANT(unsigned,count=N);
-                        typedef the_counter<N> type;
-                    }
-                }
-            }
-        }
-    }
+struct encode_counter
+{
+	__if_exists(the_counter<N + 256>)
+	{
+		BOOST_STATIC_CONSTANT(unsigned,
+		                      count=(encode_counter<T,N + 257>::count));
+	}
+	__if_not_exists(the_counter<N + 256>)
+	{
+		__if_exists(the_counter<N + 64>)
+		{
+			BOOST_STATIC_CONSTANT(unsigned,
+			                      count=(encode_counter<T,N + 65>::count));
+		}
+		__if_not_exists(the_counter<N + 64>)
+		{
+			__if_exists(the_counter<N + 16>)
+			{
+				BOOST_STATIC_CONSTANT(unsigned,
+				                      count=(encode_counter<T,N + 17>::count));
+			}
+			__if_not_exists(the_counter<N + 16>)
+			{
+				__if_exists(the_counter<N + 4>)
+				{
+					BOOST_STATIC_CONSTANT(unsigned,
+					                      count=(encode_counter<T,N + 5>::count));
+				}
+				__if_not_exists(the_counter<N + 4>)
+				{
+					__if_exists(the_counter<N>)
+					{
+						BOOST_STATIC_CONSTANT(unsigned,
+						                      count=(encode_counter<T,N + 1>::count));
+					}
+					__if_not_exists(the_counter<N>)
+					{
+						BOOST_STATIC_CONSTANT(unsigned,count=N);
+						typedef the_counter<N> type;
+					}
+				}
+			}
+		}
+	}
 };
 
 #else // compile-time constant code
-    
+
 template<int N> struct encode_counter : encode_counter<N - 1> {};
 
 template<> struct encode_counter<0> {};
@@ -405,25 +438,28 @@ template<typename ID, typename T = msvc_extract_type_default_param>
 struct msvc_extract_type;
 
 template<typename ID>
-struct msvc_extract_type<ID, msvc_extract_type_default_param> {
-    template<bool>
-    struct id2type_impl;
+struct msvc_extract_type<ID, msvc_extract_type_default_param>
+{
+	template<bool>
+	struct id2type_impl;
 
-    typedef id2type_impl<true> id2type;
+	typedef id2type_impl<true> id2type;
 };
 
 template<typename ID, typename T>
 struct msvc_extract_type
-        : msvc_extract_type<ID, msvc_extract_type_default_param> {
-    template<>
-    struct id2type_impl<true> { // VC8.0 specific bug-feature.
-        typedef T type;
-    };
+	: msvc_extract_type<ID, msvc_extract_type_default_param>
+{
+	template<>
+	struct id2type_impl<true>   // VC8.0 specific bug-feature.
+	{
+		typedef T type;
+	};
 
-    template<bool>
-    struct id2type_impl;
+	template<bool>
+	struct id2type_impl;
 
-    typedef id2type_impl<true> id2type;
+	typedef id2type_impl<true> id2type;
 };
 
 template<typename T, typename ID>
@@ -432,62 +468,72 @@ struct msvc_register_type : msvc_extract_type<ID, T> {};
 #else // type-of code
 
 template<typename ID>
-struct msvc_extract_type {
-    struct id2type;
+struct msvc_extract_type
+{
+	struct id2type;
 };
 
 template<typename T, typename ID>
-struct msvc_register_type : msvc_extract_type<ID> {
-    typedef msvc_extract_type<ID> base_type;
-    struct base_type::id2type { // This uses nice VC6.5 and VC7.1 bug-features.
-        typedef T type;
-    };
+struct msvc_register_type : msvc_extract_type<ID>
+{
+	typedef msvc_extract_type<ID> base_type;
+	struct base_type::id2type   // This uses nice VC6.5 and VC7.1 bug-features.
+	{
+		typedef T type;
+	};
 };
 
 #endif // typeof code
 
 template<int Id>
-struct msvc_typeid_wrapper {
-    typedef typename msvc_extract_type<boost::mpl::int_<Id>
-            >::id2type id2type;
-    typedef typename id2type::type type;
+struct msvc_typeid_wrapper
+{
+	typedef typename msvc_extract_type<boost::mpl::int_<Id>
+	>::id2type id2type;
+	typedef typename id2type::type type;
 };
 
 template<>
-struct msvc_typeid_wrapper<4> {
-    typedef msvc_typeid_wrapper<4> type;
+struct msvc_typeid_wrapper<4>
+{
+	typedef msvc_typeid_wrapper<4> type;
 };
 
 template<typename T>
-struct encode_type {
-    BOOST_STATIC_CONSTANT(unsigned, value = encode_counter<T>::count);
-    typedef typename msvc_register_type<T,
-            boost::mpl::int_<value> >::id2type type;
-    BOOST_STATIC_CONSTANT(unsigned, next = value + 1);
+struct encode_type
+{
+	BOOST_STATIC_CONSTANT(unsigned, value = encode_counter<T>::count);
+	typedef typename msvc_register_type<T,
+	        boost::mpl::int_<value> >::id2type type;
+	BOOST_STATIC_CONSTANT(unsigned, next = value + 1);
 };
 
 template<class T>
-struct sizer {
-    typedef char(*type)[encode_type<T>::value];
+struct sizer
+{
+	typedef char(*type)[encode_type<T>::value];
 };
 
 template<typename T>
 typename boost::disable_if<
-      typename boost::is_function<T>::type
-    , typename sizer<T>::type
+typename boost::is_function<T>::type
+, typename sizer<T>::type
 >::type encode_start(T const&);
 
 template<typename T>
 typename boost::enable_if<
-      typename boost::is_function<T>::type
-    , typename sizer<T>::type
+typename boost::is_function<T>::type
+, typename sizer<T>::type
 >::type encode_start(T&);
 
 template<typename Organizer, typename T>
 msvc_register_type<T, Organizer> typeof_register_type(const T&,
         Organizer* = 0);
 
-} } } } // namespace
+}
+}
+}
+} // namespace
 
 #define BOOST_SCOPE_EXIT_AUX_TYPEDEF_TYPEOF_THIS_INDEX_(id) \
     BOOST_PP_CAT(boost_se_thistype_index_, id)
@@ -697,30 +743,51 @@ msvc_register_type<T, Organizer> typeof_register_type(const T&,
 
 #ifndef BOOST_NO_CXX11_LAMBDAS
 
-namespace boost { namespace scope_exit { namespace aux {
+namespace boost
+{
+namespace scope_exit
+{
+namespace aux
+{
 
 template<typename This = void>
-struct guard { // With object `this_` (for backward compatibility).
-    explicit guard(This _this) : this_(_this) {}
-    ~guard() { if(f_) f_(this_); }
-    template<typename Lambda>
-    void operator=(Lambda f) { f_ = f; }
+struct guard   // With object `this_` (for backward compatibility).
+{
+	explicit guard(This _this) : this_(_this) {}
+	~guard()
+	{
+		if(f_) f_(this_);
+	}
+	template<typename Lambda>
+	void operator=(Lambda f)
+	{
+		f_ = f;
+	}
 private:
-    This this_;
-    boost::function<void (This)> f_;
+	This this_;
+	boost::function<void (This)> f_;
 };
 
 template<>
-struct guard<void> { // Without object `this_` (could capture `this` directly).
-    ~guard() { if(f_) f_(); }
-    template<typename Lambda>
-    void operator=(Lambda f) { f_ = f; }
+struct guard<void>   // Without object `this_` (could capture `this` directly).
+{
+	~guard()
+	{
+		if(f_) f_();
+	}
+	template<typename Lambda>
+	void operator=(Lambda f)
+	{
+		f_ = f;
+	}
 private:
-    boost::function<void (void)> f_;
+	boost::function<void (void)> f_;
 };
 
-} } } // namespace
-    
+}
+}
+} // namespace
+
 #define BOOST_SCOPE_EXIT_AUX_LAMBDA_PARAMS(id) \
     BOOST_PP_CAT(boost_se_lambda_params_, id)
 

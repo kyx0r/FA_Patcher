@@ -21,7 +21,9 @@
 #include <boost/geometry/util/bare_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -39,10 +41,10 @@ namespace traits
 template <typename Point, typename Enable = void>
 struct coordinate_system
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE, (types<Point>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE, (types<Point>)
+	);
 };
 
 } // namespace traits
@@ -52,24 +54,24 @@ struct coordinate_system
 #ifndef DOXYGEN_NO_DISPATCH
 namespace core_dispatch
 {
-    template <typename GeometryTag, typename G>
-    struct coordinate_system
-    {
-        typedef typename point_type<GeometryTag, G>::type P;
+template <typename GeometryTag, typename G>
+struct coordinate_system
+{
+	typedef typename point_type<GeometryTag, G>::type P;
 
-        // Call its own specialization on point-tag
-        typedef typename coordinate_system<point_tag, P>::type type;
-    };
+	// Call its own specialization on point-tag
+	typedef typename coordinate_system<point_tag, P>::type type;
+};
 
 
-    template <typename Point>
-    struct coordinate_system<point_tag, Point>
-    {
-        typedef typename traits::coordinate_system
-            <
-                typename geometry::util::bare_type<Point>::type
-            >::type type;
-    };
+template <typename Point>
+struct coordinate_system<point_tag, Point>
+{
+	typedef typename traits::coordinate_system
+	<
+	typename geometry::util::bare_type<Point>::type
+	>::type type;
+};
 
 
 } // namespace core_dispatch
@@ -86,15 +88,16 @@ namespace core_dispatch
 template <typename Geometry>
 struct coordinate_system
 {
-    typedef typename core_dispatch::coordinate_system
-        <
-            typename tag<Geometry>::type,
-            typename geometry::util::bare_type<Geometry>::type
-        >::type type;
+	typedef typename core_dispatch::coordinate_system
+	<
+	typename tag<Geometry>::type,
+	         typename geometry::util::bare_type<Geometry>::type
+	         >::type type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_COORDINATE_SYSTEM_HPP

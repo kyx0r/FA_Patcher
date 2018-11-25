@@ -25,7 +25,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -37,13 +39,14 @@ template
     typename Geometry,
     typename Tag = typename tag<Geometry>::type,
     typename CS_Tag = typename cs_tag<Geometry>::type
->
+    >
 struct envelope : not_implemented<Tag>
 {};
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DISPATCH_ENVELOPE_HPP

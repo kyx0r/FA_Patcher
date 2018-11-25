@@ -74,34 +74,36 @@
 
 #if !defined(BOOST_NO_UNSPECIFIED_BOOL)
 
-namespace boost {
+namespace boost
+{
 
-namespace detail {
+namespace detail
+{
 
 #if !defined(_MSC_VER) && !defined(__IBMCPP__)
 
-    struct unspecified_bool
-    {
-        // NOTE TO THE USER: If you see this in error messages then you tried
-        // to apply an unsupported operator on the object that supports
-        // explicit conversion to bool.
-        struct OPERATORS_NOT_ALLOWED;
-        static void true_value(OPERATORS_NOT_ALLOWED*) {}
-    };
-    typedef void (*unspecified_bool_type)(unspecified_bool::OPERATORS_NOT_ALLOWED*);
+struct unspecified_bool
+{
+	// NOTE TO THE USER: If you see this in error messages then you tried
+	// to apply an unsupported operator on the object that supports
+	// explicit conversion to bool.
+	struct OPERATORS_NOT_ALLOWED;
+	static void true_value(OPERATORS_NOT_ALLOWED*) {}
+};
+typedef void (*unspecified_bool_type)(unspecified_bool::OPERATORS_NOT_ALLOWED*);
 
 #else
 
-    // MSVC and VACPP are too eager to convert pointer to function to void* even though they shouldn't
-    struct unspecified_bool
-    {
-        // NOTE TO THE USER: If you see this in error messages then you tried
-        // to apply an unsupported operator on the object that supports
-        // explicit conversion to bool.
-        struct OPERATORS_NOT_ALLOWED;
-        void true_value(OPERATORS_NOT_ALLOWED*) {}
-    };
-    typedef void (unspecified_bool::*unspecified_bool_type)(unspecified_bool::OPERATORS_NOT_ALLOWED*);
+// MSVC and VACPP are too eager to convert pointer to function to void* even though they shouldn't
+struct unspecified_bool
+{
+	// NOTE TO THE USER: If you see this in error messages then you tried
+	// to apply an unsupported operator on the object that supports
+	// explicit conversion to bool.
+	struct OPERATORS_NOT_ALLOWED;
+	void true_value(OPERATORS_NOT_ALLOWED*) {}
+};
+typedef void (unspecified_bool::*unspecified_bool_type)(unspecified_bool::OPERATORS_NOT_ALLOWED*);
 
 #endif
 

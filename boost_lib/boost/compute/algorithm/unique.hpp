@@ -17,8 +17,10 @@
 #include <boost/compute/container/vector.hpp>
 #include <boost/compute/functional/operator.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Removes all consecutive duplicate elements (determined by \p op) from the
 /// range [first, last). If \p op is not provided, the equality operator is
@@ -40,13 +42,13 @@ inline InputIterator unique(InputIterator first,
                             BinaryPredicate op,
                             command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    vector<value_type> temp(first, last, queue);
+	vector<value_type> temp(first, last, queue);
 
-    return ::boost::compute::unique_copy(
-        temp.begin(), temp.end(), first, op, queue
-    );
+	return ::boost::compute::unique_copy(
+	           temp.begin(), temp.end(), first, op, queue
+	       );
 }
 
 /// \overload
@@ -55,11 +57,11 @@ inline InputIterator unique(InputIterator first,
                             InputIterator last,
                             command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    return ::boost::compute::unique(
-        first, last, ::boost::compute::equal_to<value_type>(), queue
-    );
+	return ::boost::compute::unique(
+	           first, last, ::boost::compute::equal_to<value_type>(), queue
+	       );
 }
 
 } // end compute namespace

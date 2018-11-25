@@ -35,11 +35,14 @@
 #include <typeinfo>
 #include <utility>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 /* model for any_collection */
 
@@ -52,157 +55,173 @@ struct any_model;
 
 template<typename Concept,typename Concept2,typename T>
 struct is_acceptable<
-  type_erasure::any<Concept2,T>,any_model<Concept>,
-  typename std::enable_if<
-    !type_erasure::is_relaxed<Concept2>::value&&
-    !type_erasure::is_subconcept<type_erasure::assignable<>,Concept2>::value&&
-    !type_erasure::is_subconcept<
-      type_erasure::assignable<type_erasure::_self,type_erasure::_self&&>,
-      Concept2>::value
-  >::type
->:std::false_type{};
+	type_erasure::any<Concept2,T>,any_model<Concept>,
+	typename std::enable_if<
+	!type_erasure::is_relaxed<Concept2>::value&&
+	!type_erasure::is_subconcept<type_erasure::assignable<>,Concept2>::value&&
+	!type_erasure::is_subconcept<
+	type_erasure::assignable<type_erasure::_self,type_erasure::_self&&>,
+	Concept2>::value
+	>::type
+	>:std::false_type {};
 
 /* is_terminal defined out-class to allow for partial specialization */
 
 template<typename Concept,typename T>
 using any_model_enable_if_has_typeid_=typename std::enable_if<
-  type_erasure::is_subconcept<
-    type_erasure::typeid_<typename std::decay<T>::type>,
-    Concept
-  >::value
->::type*;
+                                      type_erasure::is_subconcept<
+                                      type_erasure::typeid_<typename std::decay<T>::type>,
+                                      Concept
+                                      >::value
+                                      >::type*;
 
 template<typename T,typename=void*>
-struct any_model_is_terminal:std::true_type{};
+struct any_model_is_terminal:std::true_type {};
 
 template<typename Concept,typename T>
 struct any_model_is_terminal<
-  type_erasure::any<Concept,T>,any_model_enable_if_has_typeid_<Concept,T>
->:std::false_type{};
+	type_erasure::any<Concept,T>,any_model_enable_if_has_typeid_<Concept,T>
+	>:std::false_type {};
 
 /* used for make_value_type */
 
 template<typename T,typename Q>
 struct any_model_make_reference
 {
-  static T& apply(Q& x){return x;}
-}; 
+	static T& apply(Q& x)
+	{
+		return x;
+	}
+};
 
 template<typename Concept>
 struct any_model
 {
-  using value_type=type_erasure::any<
-    typename std::conditional<
-      type_erasure::is_subconcept<type_erasure::typeid_<>,Concept>::value,
-      Concept,
-      mpl::vector2<Concept,type_erasure::typeid_<>>
-    >::type,
-    type_erasure::_self&
-  >;
+	using value_type=type_erasure::any<
+	                 typename std::conditional<
+	                 type_erasure::is_subconcept<type_erasure::typeid_<>,Concept>::value,
+	                 Concept,
+	                 mpl::vector2<Concept,type_erasure::typeid_<>>
+	                 >::type,
+	                 type_erasure::_self&
+	                 >;
 
-  template<typename Concrete>
-  using is_implementation=std::true_type; /* can't compile-time check concept
+	template<typename Concrete>
+	using is_implementation=std::true_type; /* can't compile-time check concept
                                            * compliance */
-  template<typename T>
-  using is_terminal=any_model_is_terminal<T>;
+	template<typename T>
+	using is_terminal=any_model_is_terminal<T>;
 
-  template<typename T>
-  static const std::type_info& subtypeid(const T&){return typeid(T);}
+	template<typename T>
+	static const std::type_info& subtypeid(const T&)
+	{
+		return typeid(T);
+	}
 
-  template<
-    typename Concept2,typename T,
-    any_model_enable_if_has_typeid_<Concept2,T> =nullptr
-  >
-  static const std::type_info& subtypeid(
-    const type_erasure::any<Concept2,T>& a)
-  {
-    return type_erasure::typeid_of(a);
-  }
+	template<
+	    typename Concept2,typename T,
+	    any_model_enable_if_has_typeid_<Concept2,T> =nullptr
+	    >
+	static const std::type_info& subtypeid(
+	    const type_erasure::any<Concept2,T>& a)
+	{
+		return type_erasure::typeid_of(a);
+	}
 
-  template<typename T>
-  static void* subaddress(T& x){return boost::addressof(x);}
+	template<typename T>
+	static void* subaddress(T& x)
+	{
+		return boost::addressof(x);
+	}
 
-  template<typename T>
-  static const void* subaddress(const T& x){return boost::addressof(x);}
+	template<typename T>
+	static const void* subaddress(const T& x)
+	{
+		return boost::addressof(x);
+	}
 
-  template<
-    typename Concept2,typename T,
-    any_model_enable_if_has_typeid_<Concept2,T> =nullptr
-  >
-  static void* subaddress(type_erasure::any<Concept2,T>& a)
-  {
-    return type_erasure::any_cast<void*>(&a);
-  }
+	template<
+	    typename Concept2,typename T,
+	    any_model_enable_if_has_typeid_<Concept2,T> =nullptr
+	    >
+	static void* subaddress(type_erasure::any<Concept2,T>& a)
+	{
+		return type_erasure::any_cast<void*>(&a);
+	}
 
-  template<
-    typename Concept2,typename T,
-    any_model_enable_if_has_typeid_<Concept2,T> =nullptr
-  >
-  static const void* subaddress(const type_erasure::any<Concept2,T>& a)
-  {
-    return type_erasure::any_cast<const void*>(&a);
-  }
+	template<
+	    typename Concept2,typename T,
+	    any_model_enable_if_has_typeid_<Concept2,T> =nullptr
+	    >
+	static const void* subaddress(const type_erasure::any<Concept2,T>& a)
+	{
+		return type_erasure::any_cast<const void*>(&a);
+	}
 
-  using base_iterator=any_iterator<value_type>;
-  using const_base_iterator=any_iterator<const value_type>;
-  using base_sentinel=value_type*;
-  using const_base_sentinel=const value_type*;
-  template<typename Concrete>
-  using iterator=Concrete*;
-  template<typename Concrete>
-  using const_iterator=const Concrete*;
-  using segment_backend=detail::segment_backend<any_model>;
-  template<typename Concrete,typename Allocator>
-  using segment_backend_implementation=split_segment<
-    any_model,
-    Concrete,
-    typename std::allocator_traits<Allocator>::
-      template rebind_alloc<Concrete>
-  >;
-  using segment_backend_unique_ptr=
-    typename segment_backend::segment_backend_unique_ptr;
+	using base_iterator=any_iterator<value_type>;
+	using const_base_iterator=any_iterator<const value_type>;
+	using base_sentinel=value_type*;
+	using const_base_sentinel=const value_type*;
+	template<typename Concrete>
+	using iterator=Concrete*;
+	template<typename Concrete>
+	using const_iterator=const Concrete*;
+	using segment_backend=detail::segment_backend<any_model>;
+	template<typename Concrete,typename Allocator>
+	using segment_backend_implementation=split_segment<
+	                                     any_model,
+	                                     Concrete,
+	                                     typename std::allocator_traits<Allocator>::
+	                                     template rebind_alloc<Concrete>
+	>;
+	using segment_backend_unique_ptr=
+	    typename segment_backend::segment_backend_unique_ptr;
 
-  static base_iterator nonconst_iterator(const_base_iterator it)
-  {
-    return base_iterator{
-      const_cast<value_type*>(static_cast<const value_type*>(it))};
-  }
+	static base_iterator nonconst_iterator(const_base_iterator it)
+	{
+		return base_iterator
+		{
+			const_cast<value_type*>(static_cast<const value_type*>(it))};
+	}
 
-  template<typename T>
-  static iterator<T> nonconst_iterator(const_iterator<T> it)
-  {
-    return const_cast<iterator<T>>(it);
-  }
+	template<typename T>
+	static iterator<T> nonconst_iterator(const_iterator<T> it)
+	{
+		return const_cast<iterator<T>>(it);
+	}
 
-  template<typename Concrete,typename Allocator>
-  static segment_backend_unique_ptr make(const Allocator& al)
-  {
-    return segment_backend_implementation<Concrete,Allocator>::new_(al,al);
-  }
+	template<typename Concrete,typename Allocator>
+	static segment_backend_unique_ptr make(const Allocator& al)
+	{
+		return segment_backend_implementation<Concrete,Allocator>::new_(al,al);
+	}
 
 private:
-  template<typename,typename,typename>
-  friend class split_segment;
+	template<typename,typename,typename>
+	friend class split_segment;
 
-  template<typename Concrete>
-  static value_type make_value_type(Concrete& x){return value_type{x};}
+	template<typename Concrete>
+	static value_type make_value_type(Concrete& x)
+	{
+		return value_type{x};
+	}
 
-  template<typename Concept2,typename T>
-  static value_type make_value_type(type_erasure::any<Concept2,T>& x)
-  {
-    /* I don't pretend to understand what's going on here, see
-     * https://lists.boost.org/boost-users/2017/05/87556.php
-     */
+	template<typename Concept2,typename T>
+	static value_type make_value_type(type_erasure::any<Concept2,T>& x)
+	{
+		/* I don't pretend to understand what's going on here, see
+		 * https://lists.boost.org/boost-users/2017/05/87556.php
+		 */
 
-    using namespace boost::type_erasure;
-    using ref_type=any<Concept2,T>;
-    using make_ref=any_model_make_reference<_self,ref_type>;
-    using concept_=typename concept_of<value_type>::type;
+		using namespace boost::type_erasure;
+		using ref_type=any<Concept2,T>;
+		using make_ref=any_model_make_reference<_self,ref_type>;
+		using concept_=typename concept_of<value_type>::type;
 
-    auto b=make_binding<mpl::map1<mpl::pair<_self,ref_type>>>();
+		auto b=make_binding<mpl::map1<mpl::pair<_self,ref_type>>>();
 
-    return {call(binding<make_ref>{b},make_ref{},x),binding<concept_>{b}};
-  }
+		return {call(binding<make_ref>{b},make_ref{},x),binding<concept_>{b}};
+	}
 };
 
 } /* namespace poly_collection::detail */

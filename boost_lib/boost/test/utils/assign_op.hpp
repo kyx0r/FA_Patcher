@@ -15,8 +15,10 @@
 #ifndef BOOST_TEST_UTILS_ASSIGN_OP_HPP
 #define BOOST_TEST_UTILS_ASSIGN_OP_HPP
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************             generic assign operator          ************** //
@@ -27,7 +29,7 @@ template<typename T,typename S>
 inline void
 assign_op( T& t, S const& s, long )
 {
-    t = s;
+	t = s;
 }
 
 //____________________________________________________________________________//

@@ -15,60 +15,60 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <
-          class LowerBound = boost::mpl::na,
-          class UpperBound = boost::mpl::na,
-          class Item = boost::mpl::na
-        >
-        struct in_range :
-          boost::mpl::bool_<
-            boost::mpl::less_equal<LowerBound, Item>::type::value
-            && boost::mpl::less_equal<Item, UpperBound>::type::value
-          >
-        {};
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <
+    class LowerBound = boost::mpl::na,
+    class UpperBound = boost::mpl::na,
+    class Item = boost::mpl::na
+    >
+struct in_range :
+	boost::mpl::bool_<
+	boost::mpl::less_equal<LowerBound, Item>::type::value
+	&& boost::mpl::less_equal<Item, UpperBound>::type::value
+	>
+{};
 
-        template <class LowerBound, class UpperBound>
-        struct in_range<LowerBound, UpperBound, boost::mpl::na>
-        {
-          typedef in_range type;
+template <class LowerBound, class UpperBound>
+struct in_range<LowerBound, UpperBound, boost::mpl::na>
+{
+	typedef in_range type;
 
-          template <class Item = boost::mpl::na>
-          struct apply : in_range<LowerBound, UpperBound, Item> {};
-        };
+	template <class Item = boost::mpl::na>
+	struct apply : in_range<LowerBound, UpperBound, Item> {};
+};
 
-        template <class LowerBound>
-        struct in_range<LowerBound, boost::mpl::na, boost::mpl::na>
-        {
-          typedef in_range type;
+template <class LowerBound>
+struct in_range<LowerBound, boost::mpl::na, boost::mpl::na>
+{
+	typedef in_range type;
 
-          template <
-            class UpperBound = boost::mpl::na,
-            class Item = boost::mpl::na
-          >
-          struct apply : in_range<LowerBound, UpperBound, Item> {};
-        };
+	template <
+	    class UpperBound = boost::mpl::na,
+	    class Item = boost::mpl::na
+	    >
+	struct apply : in_range<LowerBound, UpperBound, Item> {};
+};
 
-        template <>
-        struct in_range<boost::mpl::na, boost::mpl::na, boost::mpl::na>
-        {
-          typedef in_range type;
+template <>
+struct in_range<boost::mpl::na, boost::mpl::na, boost::mpl::na>
+{
+	typedef in_range type;
 
-          template <
-            class LowerBound = boost::mpl::na,
-            class UpperBound = boost::mpl::na,
-            class Item = boost::mpl::na
-          >
-          struct apply : in_range<LowerBound, UpperBound, Item> {};
-        };
-      }
-    }
-  }
+	template <
+	    class LowerBound = boost::mpl::na,
+	    class UpperBound = boost::mpl::na,
+	    class Item = boost::mpl::na
+	    >
+	struct apply : in_range<LowerBound, UpperBound, Item> {};
+};
+}
+}
+}
 }
 
 #endif

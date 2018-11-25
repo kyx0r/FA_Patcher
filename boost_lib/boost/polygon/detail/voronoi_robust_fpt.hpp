@@ -52,190 +52,238 @@
 // For further information about relative errors and ULPs try this link:
 // http://docs.sun.com/source/806-3568/ncg_goldberg.html
 
-namespace boost {
-namespace polygon {
-namespace detail {
+namespace boost
+{
+namespace polygon
+{
+namespace detail
+{
 
 template <typename T>
-T get_sqrt(const T& that) {
-  return (std::sqrt)(that);
+T get_sqrt(const T& that)
+{
+	return (std::sqrt)(that);
 }
 
 template <typename T>
-bool is_pos(const T& that) {
-  return that > 0;
+bool is_pos(const T& that)
+{
+	return that > 0;
 }
 
 template <typename T>
-bool is_neg(const T& that) {
-  return that < 0;
+bool is_neg(const T& that)
+{
+	return that < 0;
 }
 
 template <typename T>
-bool is_zero(const T& that) {
-  return that == 0;
+bool is_zero(const T& that)
+{
+	return that == 0;
 }
 
 template <typename _fpt>
-class robust_fpt {
- public:
-  typedef _fpt floating_point_type;
-  typedef _fpt relative_error_type;
+class robust_fpt
+{
+public:
+	typedef _fpt floating_point_type;
+	typedef _fpt relative_error_type;
 
-  // Rounding error is at most 1 EPS.
-  enum {
-    ROUNDING_ERROR = 1
-  };
+	// Rounding error is at most 1 EPS.
+	enum
+	{
+		ROUNDING_ERROR = 1
+	};
 
-  robust_fpt() : fpv_(0.0), re_(0.0) {}
-  explicit robust_fpt(floating_point_type fpv) :
-      fpv_(fpv), re_(0.0) {}
-  robust_fpt(floating_point_type fpv, relative_error_type error) :
-      fpv_(fpv), re_(error) {}
+	robust_fpt() : fpv_(0.0), re_(0.0) {}
+	explicit robust_fpt(floating_point_type fpv) :
+		fpv_(fpv), re_(0.0) {}
+	robust_fpt(floating_point_type fpv, relative_error_type error) :
+		fpv_(fpv), re_(error) {}
 
-  floating_point_type fpv() const { return fpv_; }
-  relative_error_type re() const { return re_; }
-  relative_error_type ulp() const { return re_; }
+	floating_point_type fpv() const
+	{
+		return fpv_;
+	}
+	relative_error_type re() const
+	{
+		return re_;
+	}
+	relative_error_type ulp() const
+	{
+		return re_;
+	}
 
-  robust_fpt& operator=(const robust_fpt& that) {
-    this->fpv_ = that.fpv_;
-    this->re_ = that.re_;
-    return *this;
-  }
+	robust_fpt& operator=(const robust_fpt& that)
+	{
+		this->fpv_ = that.fpv_;
+		this->re_ = that.re_;
+		return *this;
+	}
 
-  bool has_pos_value() const {
-    return is_pos(fpv_);
-  }
+	bool has_pos_value() const
+	{
+		return is_pos(fpv_);
+	}
 
-  bool has_neg_value() const {
-    return is_neg(fpv_);
-  }
+	bool has_neg_value() const
+	{
+		return is_neg(fpv_);
+	}
 
-  bool has_zero_value() const {
-    return is_zero(fpv_);
-  }
+	bool has_zero_value() const
+	{
+		return is_zero(fpv_);
+	}
 
-  robust_fpt operator-() const {
-    return robust_fpt(-fpv_, re_);
-  }
+	robust_fpt operator-() const
+	{
+		return robust_fpt(-fpv_, re_);
+	}
 
-  robust_fpt& operator+=(const robust_fpt& that) {
-    floating_point_type fpv = this->fpv_ + that.fpv_;
-    if ((!is_neg(this->fpv_) && !is_neg(that.fpv_)) ||
-        (!is_pos(this->fpv_) && !is_pos(that.fpv_))) {
-      this->re_ = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
-    } else {
-      floating_point_type temp =
-        (this->fpv_ * this->re_ - that.fpv_ * that.re_) / fpv;
-      if (is_neg(temp))
-        temp = -temp;
-      this->re_ = temp + ROUNDING_ERROR;
-    }
-    this->fpv_ = fpv;
-    return *this;
-  }
+	robust_fpt& operator+=(const robust_fpt& that)
+	{
+		floating_point_type fpv = this->fpv_ + that.fpv_;
+		if ((!is_neg(this->fpv_) && !is_neg(that.fpv_)) ||
+		        (!is_pos(this->fpv_) && !is_pos(that.fpv_)))
+		{
+			this->re_ = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
+		}
+		else
+		{
+			floating_point_type temp =
+			    (this->fpv_ * this->re_ - that.fpv_ * that.re_) / fpv;
+			if (is_neg(temp))
+				temp = -temp;
+			this->re_ = temp + ROUNDING_ERROR;
+		}
+		this->fpv_ = fpv;
+		return *this;
+	}
 
-  robust_fpt& operator-=(const robust_fpt& that) {
-    floating_point_type fpv = this->fpv_ - that.fpv_;
-    if ((!is_neg(this->fpv_) && !is_pos(that.fpv_)) ||
-        (!is_pos(this->fpv_) && !is_neg(that.fpv_))) {
-       this->re_ = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
-    } else {
-      floating_point_type temp =
-        (this->fpv_ * this->re_ + that.fpv_ * that.re_) / fpv;
-      if (is_neg(temp))
-         temp = -temp;
-      this->re_ = temp + ROUNDING_ERROR;
-    }
-    this->fpv_ = fpv;
-    return *this;
-  }
+	robust_fpt& operator-=(const robust_fpt& that)
+	{
+		floating_point_type fpv = this->fpv_ - that.fpv_;
+		if ((!is_neg(this->fpv_) && !is_pos(that.fpv_)) ||
+		        (!is_pos(this->fpv_) && !is_neg(that.fpv_)))
+		{
+			this->re_ = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
+		}
+		else
+		{
+			floating_point_type temp =
+			    (this->fpv_ * this->re_ + that.fpv_ * that.re_) / fpv;
+			if (is_neg(temp))
+				temp = -temp;
+			this->re_ = temp + ROUNDING_ERROR;
+		}
+		this->fpv_ = fpv;
+		return *this;
+	}
 
-  robust_fpt& operator*=(const robust_fpt& that) {
-    this->re_ += that.re_ + ROUNDING_ERROR;
-    this->fpv_ *= that.fpv_;
-    return *this;
-  }
+	robust_fpt& operator*=(const robust_fpt& that)
+	{
+		this->re_ += that.re_ + ROUNDING_ERROR;
+		this->fpv_ *= that.fpv_;
+		return *this;
+	}
 
-  robust_fpt& operator/=(const robust_fpt& that) {
-    this->re_ += that.re_ + ROUNDING_ERROR;
-    this->fpv_ /= that.fpv_;
-    return *this;
-  }
+	robust_fpt& operator/=(const robust_fpt& that)
+	{
+		this->re_ += that.re_ + ROUNDING_ERROR;
+		this->fpv_ /= that.fpv_;
+		return *this;
+	}
 
-  robust_fpt operator+(const robust_fpt& that) const {
-    floating_point_type fpv = this->fpv_ + that.fpv_;
-    relative_error_type re;
-    if ((!is_neg(this->fpv_) && !is_neg(that.fpv_)) ||
-        (!is_pos(this->fpv_) && !is_pos(that.fpv_))) {
-      re = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
-    } else {
-      floating_point_type temp =
-        (this->fpv_ * this->re_ - that.fpv_ * that.re_) / fpv;
-      if (is_neg(temp))
-        temp = -temp;
-      re = temp + ROUNDING_ERROR;
-    }
-    return robust_fpt(fpv, re);
-  }
+	robust_fpt operator+(const robust_fpt& that) const
+	{
+		floating_point_type fpv = this->fpv_ + that.fpv_;
+		relative_error_type re;
+		if ((!is_neg(this->fpv_) && !is_neg(that.fpv_)) ||
+		        (!is_pos(this->fpv_) && !is_pos(that.fpv_)))
+		{
+			re = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
+		}
+		else
+		{
+			floating_point_type temp =
+			    (this->fpv_ * this->re_ - that.fpv_ * that.re_) / fpv;
+			if (is_neg(temp))
+				temp = -temp;
+			re = temp + ROUNDING_ERROR;
+		}
+		return robust_fpt(fpv, re);
+	}
 
-  robust_fpt operator-(const robust_fpt& that) const {
-    floating_point_type fpv = this->fpv_ - that.fpv_;
-    relative_error_type re;
-    if ((!is_neg(this->fpv_) && !is_pos(that.fpv_)) ||
-        (!is_pos(this->fpv_) && !is_neg(that.fpv_))) {
-      re = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
-    } else {
-      floating_point_type temp =
-        (this->fpv_ * this->re_ + that.fpv_ * that.re_) / fpv;
-      if (is_neg(temp))
-        temp = -temp;
-      re = temp + ROUNDING_ERROR;
-    }
-    return robust_fpt(fpv, re);
-  }
+	robust_fpt operator-(const robust_fpt& that) const
+	{
+		floating_point_type fpv = this->fpv_ - that.fpv_;
+		relative_error_type re;
+		if ((!is_neg(this->fpv_) && !is_pos(that.fpv_)) ||
+		        (!is_pos(this->fpv_) && !is_neg(that.fpv_)))
+		{
+			re = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
+		}
+		else
+		{
+			floating_point_type temp =
+			    (this->fpv_ * this->re_ + that.fpv_ * that.re_) / fpv;
+			if (is_neg(temp))
+				temp = -temp;
+			re = temp + ROUNDING_ERROR;
+		}
+		return robust_fpt(fpv, re);
+	}
 
-  robust_fpt operator*(const robust_fpt& that) const {
-    floating_point_type fpv = this->fpv_ * that.fpv_;
-    relative_error_type re = this->re_ + that.re_ + ROUNDING_ERROR;
-    return robust_fpt(fpv, re);
-  }
+	robust_fpt operator*(const robust_fpt& that) const
+	{
+		floating_point_type fpv = this->fpv_ * that.fpv_;
+		relative_error_type re = this->re_ + that.re_ + ROUNDING_ERROR;
+		return robust_fpt(fpv, re);
+	}
 
-  robust_fpt operator/(const robust_fpt& that) const {
-    floating_point_type fpv = this->fpv_ / that.fpv_;
-    relative_error_type re = this->re_ + that.re_ + ROUNDING_ERROR;
-    return robust_fpt(fpv, re);
-  }
+	robust_fpt operator/(const robust_fpt& that) const
+	{
+		floating_point_type fpv = this->fpv_ / that.fpv_;
+		relative_error_type re = this->re_ + that.re_ + ROUNDING_ERROR;
+		return robust_fpt(fpv, re);
+	}
 
-  robust_fpt sqrt() const {
-    return robust_fpt(get_sqrt(fpv_),
-                      re_ * static_cast<relative_error_type>(0.5) +
-                      ROUNDING_ERROR);
-  }
+	robust_fpt sqrt() const
+	{
+		return robust_fpt(get_sqrt(fpv_),
+		                  re_ * static_cast<relative_error_type>(0.5) +
+		                  ROUNDING_ERROR);
+	}
 
- private:
-  floating_point_type fpv_;
-  relative_error_type re_;
+private:
+	floating_point_type fpv_;
+	relative_error_type re_;
 };
 
 template <typename T>
-robust_fpt<T> get_sqrt(const robust_fpt<T>& that) {
-  return that.sqrt();
+robust_fpt<T> get_sqrt(const robust_fpt<T>& that)
+{
+	return that.sqrt();
 }
 
 template <typename T>
-bool is_pos(const robust_fpt<T>& that) {
-  return that.has_pos_value();
+bool is_pos(const robust_fpt<T>& that)
+{
+	return that.has_pos_value();
 }
 
 template <typename T>
-bool is_neg(const robust_fpt<T>& that) {
-  return that.has_neg_value();
+bool is_neg(const robust_fpt<T>& that)
+{
+	return that.has_neg_value();
 }
 
 template <typename T>
-bool is_zero(const robust_fpt<T>& that) {
-  return that.has_zero_value();
+bool is_zero(const robust_fpt<T>& that)
+{
+	return that.has_zero_value();
 }
 
 // robust_dif consists of two not negative values: value1 and value2.
@@ -244,261 +292,317 @@ bool is_zero(const robust_fpt<T>& that) {
 // and subtraction of a negative value is equivalent to the addition to
 // value1. The structure implicitly avoids difference computation.
 template <typename T>
-class robust_dif {
- public:
-  robust_dif() :
-      positive_sum_(0),
-      negative_sum_(0) {}
+class robust_dif
+{
+public:
+	robust_dif() :
+		positive_sum_(0),
+		negative_sum_(0) {}
 
-  explicit robust_dif(const T& value) :
-      positive_sum_((value > 0)?value:0),
-      negative_sum_((value < 0)?-value:0) {}
+	explicit robust_dif(const T& value) :
+		positive_sum_((value > 0)?value:0),
+		negative_sum_((value < 0)?-value:0) {}
 
-  robust_dif(const T& pos, const T& neg) :
-      positive_sum_(pos),
-      negative_sum_(neg) {}
+	robust_dif(const T& pos, const T& neg) :
+		positive_sum_(pos),
+		negative_sum_(neg) {}
 
-  T dif() const {
-    return positive_sum_ - negative_sum_;
-  }
+	T dif() const
+	{
+		return positive_sum_ - negative_sum_;
+	}
 
-  T pos() const {
-    return positive_sum_;
-  }
+	T pos() const
+	{
+		return positive_sum_;
+	}
 
-  T neg() const {
-    return negative_sum_;
-  }
+	T neg() const
+	{
+		return negative_sum_;
+	}
 
-  robust_dif<T> operator-() const {
-    return robust_dif(negative_sum_, positive_sum_);
-  }
+	robust_dif<T> operator-() const
+	{
+		return robust_dif(negative_sum_, positive_sum_);
+	}
 
-  robust_dif<T>& operator+=(const T& val) {
-    if (!is_neg(val))
-      positive_sum_ += val;
-    else
-      negative_sum_ -= val;
-    return *this;
-  }
+	robust_dif<T>& operator+=(const T& val)
+	{
+		if (!is_neg(val))
+			positive_sum_ += val;
+		else
+			negative_sum_ -= val;
+		return *this;
+	}
 
-  robust_dif<T>& operator+=(const robust_dif<T>& that) {
-    positive_sum_ += that.positive_sum_;
-    negative_sum_ += that.negative_sum_;
-    return *this;
-  }
+	robust_dif<T>& operator+=(const robust_dif<T>& that)
+	{
+		positive_sum_ += that.positive_sum_;
+		negative_sum_ += that.negative_sum_;
+		return *this;
+	}
 
-  robust_dif<T>& operator-=(const T& val) {
-    if (!is_neg(val))
-      negative_sum_ += val;
-    else
-      positive_sum_ -= val;
-    return *this;
-  }
+	robust_dif<T>& operator-=(const T& val)
+	{
+		if (!is_neg(val))
+			negative_sum_ += val;
+		else
+			positive_sum_ -= val;
+		return *this;
+	}
 
-  robust_dif<T>& operator-=(const robust_dif<T>& that) {
-    positive_sum_ += that.negative_sum_;
-    negative_sum_ += that.positive_sum_;
-    return *this;
-  }
+	robust_dif<T>& operator-=(const robust_dif<T>& that)
+	{
+		positive_sum_ += that.negative_sum_;
+		negative_sum_ += that.positive_sum_;
+		return *this;
+	}
 
-  robust_dif<T>& operator*=(const T& val) {
-    if (!is_neg(val)) {
-      positive_sum_ *= val;
-      negative_sum_ *= val;
-    } else {
-      positive_sum_ *= -val;
-      negative_sum_ *= -val;
-      swap();
-    }
-    return *this;
-  }
+	robust_dif<T>& operator*=(const T& val)
+	{
+		if (!is_neg(val))
+		{
+			positive_sum_ *= val;
+			negative_sum_ *= val;
+		}
+		else
+		{
+			positive_sum_ *= -val;
+			negative_sum_ *= -val;
+			swap();
+		}
+		return *this;
+	}
 
-  robust_dif<T>& operator*=(const robust_dif<T>& that) {
-    T positive_sum = this->positive_sum_ * that.positive_sum_ +
-                     this->negative_sum_ * that.negative_sum_;
-    T negative_sum = this->positive_sum_ * that.negative_sum_ +
-                     this->negative_sum_ * that.positive_sum_;
-    positive_sum_ = positive_sum;
-    negative_sum_ = negative_sum;
-    return *this;
-  }
+	robust_dif<T>& operator*=(const robust_dif<T>& that)
+	{
+		T positive_sum = this->positive_sum_ * that.positive_sum_ +
+		                 this->negative_sum_ * that.negative_sum_;
+		T negative_sum = this->positive_sum_ * that.negative_sum_ +
+		                 this->negative_sum_ * that.positive_sum_;
+		positive_sum_ = positive_sum;
+		negative_sum_ = negative_sum;
+		return *this;
+	}
 
-  robust_dif<T>& operator/=(const T& val) {
-    if (!is_neg(val)) {
-      positive_sum_ /= val;
-      negative_sum_ /= val;
-    } else {
-      positive_sum_ /= -val;
-      negative_sum_ /= -val;
-      swap();
-    }
-    return *this;
-  }
+	robust_dif<T>& operator/=(const T& val)
+	{
+		if (!is_neg(val))
+		{
+			positive_sum_ /= val;
+			negative_sum_ /= val;
+		}
+		else
+		{
+			positive_sum_ /= -val;
+			negative_sum_ /= -val;
+			swap();
+		}
+		return *this;
+	}
 
- private:
-  void swap() {
-    (std::swap)(positive_sum_, negative_sum_);
-  }
+private:
+	void swap()
+	{
+		(std::swap)(positive_sum_, negative_sum_);
+	}
 
-  T positive_sum_;
-  T negative_sum_;
+	T positive_sum_;
+	T negative_sum_;
 };
 
 template<typename T>
 robust_dif<T> operator+(const robust_dif<T>& lhs,
-                        const robust_dif<T>& rhs) {
-  return robust_dif<T>(lhs.pos() + rhs.pos(), lhs.neg() + rhs.neg());
+                        const robust_dif<T>& rhs)
+{
+	return robust_dif<T>(lhs.pos() + rhs.pos(), lhs.neg() + rhs.neg());
 }
 
 template<typename T>
-robust_dif<T> operator+(const robust_dif<T>& lhs, const T& rhs) {
-  if (!is_neg(rhs)) {
-    return robust_dif<T>(lhs.pos() + rhs, lhs.neg());
-  } else {
-    return robust_dif<T>(lhs.pos(), lhs.neg() - rhs);
-  }
+robust_dif<T> operator+(const robust_dif<T>& lhs, const T& rhs)
+{
+	if (!is_neg(rhs))
+	{
+		return robust_dif<T>(lhs.pos() + rhs, lhs.neg());
+	}
+	else
+	{
+		return robust_dif<T>(lhs.pos(), lhs.neg() - rhs);
+	}
 }
 
 template<typename T>
-robust_dif<T> operator+(const T& lhs, const robust_dif<T>& rhs) {
-  if (!is_neg(lhs)) {
-    return robust_dif<T>(lhs + rhs.pos(), rhs.neg());
-  } else {
-    return robust_dif<T>(rhs.pos(), rhs.neg() - lhs);
-  }
+robust_dif<T> operator+(const T& lhs, const robust_dif<T>& rhs)
+{
+	if (!is_neg(lhs))
+	{
+		return robust_dif<T>(lhs + rhs.pos(), rhs.neg());
+	}
+	else
+	{
+		return robust_dif<T>(rhs.pos(), rhs.neg() - lhs);
+	}
 }
 
 template<typename T>
 robust_dif<T> operator-(const robust_dif<T>& lhs,
-                        const robust_dif<T>& rhs) {
-  return robust_dif<T>(lhs.pos() + rhs.neg(), lhs.neg() + rhs.pos());
+                        const robust_dif<T>& rhs)
+{
+	return robust_dif<T>(lhs.pos() + rhs.neg(), lhs.neg() + rhs.pos());
 }
 
 template<typename T>
-robust_dif<T> operator-(const robust_dif<T>& lhs, const T& rhs) {
-  if (!is_neg(rhs)) {
-    return robust_dif<T>(lhs.pos(), lhs.neg() + rhs);
-  } else {
-    return robust_dif<T>(lhs.pos() - rhs, lhs.neg());
-  }
+robust_dif<T> operator-(const robust_dif<T>& lhs, const T& rhs)
+{
+	if (!is_neg(rhs))
+	{
+		return robust_dif<T>(lhs.pos(), lhs.neg() + rhs);
+	}
+	else
+	{
+		return robust_dif<T>(lhs.pos() - rhs, lhs.neg());
+	}
 }
 
 template<typename T>
-robust_dif<T> operator-(const T& lhs, const robust_dif<T>& rhs) {
-  if (!is_neg(lhs)) {
-    return robust_dif<T>(lhs + rhs.neg(), rhs.pos());
-  } else {
-    return robust_dif<T>(rhs.neg(), rhs.pos() - lhs);
-  }
+robust_dif<T> operator-(const T& lhs, const robust_dif<T>& rhs)
+{
+	if (!is_neg(lhs))
+	{
+		return robust_dif<T>(lhs + rhs.neg(), rhs.pos());
+	}
+	else
+	{
+		return robust_dif<T>(rhs.neg(), rhs.pos() - lhs);
+	}
 }
 
 template<typename T>
 robust_dif<T> operator*(const robust_dif<T>& lhs,
-                        const robust_dif<T>& rhs) {
-  T res_pos = lhs.pos() * rhs.pos() + lhs.neg() * rhs.neg();
-  T res_neg = lhs.pos() * rhs.neg() + lhs.neg() * rhs.pos();
-  return robust_dif<T>(res_pos, res_neg);
+                        const robust_dif<T>& rhs)
+{
+	T res_pos = lhs.pos() * rhs.pos() + lhs.neg() * rhs.neg();
+	T res_neg = lhs.pos() * rhs.neg() + lhs.neg() * rhs.pos();
+	return robust_dif<T>(res_pos, res_neg);
 }
 
 template<typename T>
-robust_dif<T> operator*(const robust_dif<T>& lhs, const T& val) {
-  if (!is_neg(val)) {
-    return robust_dif<T>(lhs.pos() * val, lhs.neg() * val);
-  } else {
-    return robust_dif<T>(-lhs.neg() * val, -lhs.pos() * val);
-  }
+robust_dif<T> operator*(const robust_dif<T>& lhs, const T& val)
+{
+	if (!is_neg(val))
+	{
+		return robust_dif<T>(lhs.pos() * val, lhs.neg() * val);
+	}
+	else
+	{
+		return robust_dif<T>(-lhs.neg() * val, -lhs.pos() * val);
+	}
 }
 
 template<typename T>
-robust_dif<T> operator*(const T& val, const robust_dif<T>& rhs) {
-  if (!is_neg(val)) {
-    return robust_dif<T>(val * rhs.pos(), val * rhs.neg());
-  } else {
-    return robust_dif<T>(-val * rhs.neg(), -val * rhs.pos());
-  }
+robust_dif<T> operator*(const T& val, const robust_dif<T>& rhs)
+{
+	if (!is_neg(val))
+	{
+		return robust_dif<T>(val * rhs.pos(), val * rhs.neg());
+	}
+	else
+	{
+		return robust_dif<T>(-val * rhs.neg(), -val * rhs.pos());
+	}
 }
 
 template<typename T>
-robust_dif<T> operator/(const robust_dif<T>& lhs, const T& val) {
-  if (!is_neg(val)) {
-    return robust_dif<T>(lhs.pos() / val, lhs.neg() / val);
-  } else {
-    return robust_dif<T>(-lhs.neg() / val, -lhs.pos() / val);
-  }
+robust_dif<T> operator/(const robust_dif<T>& lhs, const T& val)
+{
+	if (!is_neg(val))
+	{
+		return robust_dif<T>(lhs.pos() / val, lhs.neg() / val);
+	}
+	else
+	{
+		return robust_dif<T>(-lhs.neg() / val, -lhs.pos() / val);
+	}
 }
 
 // Used to compute expressions that operate with sqrts with predefined
 // relative error. Evaluates expressions of the next type:
 // sum(i = 1 .. n)(A[i] * sqrt(B[i])), 1 <= n <= 4.
 template <typename _int, typename _fpt, typename _converter>
-class robust_sqrt_expr {
- public:
-  enum MAX_RELATIVE_ERROR {
-    MAX_RELATIVE_ERROR_EVAL1 = 4,
-    MAX_RELATIVE_ERROR_EVAL2 = 7,
-    MAX_RELATIVE_ERROR_EVAL3 = 16,
-    MAX_RELATIVE_ERROR_EVAL4 = 25
-  };
+class robust_sqrt_expr
+{
+public:
+	enum MAX_RELATIVE_ERROR
+	{
+		MAX_RELATIVE_ERROR_EVAL1 = 4,
+		MAX_RELATIVE_ERROR_EVAL2 = 7,
+		MAX_RELATIVE_ERROR_EVAL3 = 16,
+		MAX_RELATIVE_ERROR_EVAL4 = 25
+	};
 
-  // Evaluates expression (re = 4 EPS):
-  // A[0] * sqrt(B[0]).
-  _fpt eval1(_int* A, _int* B) {
-    _fpt a = convert(A[0]);
-    _fpt b = convert(B[0]);
-    return a * get_sqrt(b);
-  }
+	// Evaluates expression (re = 4 EPS):
+	// A[0] * sqrt(B[0]).
+	_fpt eval1(_int* A, _int* B)
+	{
+		_fpt a = convert(A[0]);
+		_fpt b = convert(B[0]);
+		return a * get_sqrt(b);
+	}
 
-  // Evaluates expression (re = 7 EPS):
-  // A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]).
-  _fpt eval2(_int* A, _int* B) {
-    _fpt a = eval1(A, B);
-    _fpt b = eval1(A + 1, B + 1);
-    if ((!is_neg(a) && !is_neg(b)) ||
-        (!is_pos(a) && !is_pos(b)))
-      return a + b;
-    return convert(A[0] * A[0] * B[0] - A[1] * A[1] * B[1]) / (a - b);
-  }
+	// Evaluates expression (re = 7 EPS):
+	// A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]).
+	_fpt eval2(_int* A, _int* B)
+	{
+		_fpt a = eval1(A, B);
+		_fpt b = eval1(A + 1, B + 1);
+		if ((!is_neg(a) && !is_neg(b)) ||
+		        (!is_pos(a) && !is_pos(b)))
+			return a + b;
+		return convert(A[0] * A[0] * B[0] - A[1] * A[1] * B[1]) / (a - b);
+	}
 
-  // Evaluates expression (re = 16 EPS):
-  // A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) + A[2] * sqrt(B[2]).
-  _fpt eval3(_int* A, _int* B) {
-    _fpt a = eval2(A, B);
-    _fpt b = eval1(A + 2, B + 2);
-    if ((!is_neg(a) && !is_neg(b)) ||
-        (!is_pos(a) && !is_pos(b)))
-      return a + b;
-    tA[3] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1] - A[2] * A[2] * B[2];
-    tB[3] = 1;
-    tA[4] = A[0] * A[1] * 2;
-    tB[4] = B[0] * B[1];
-    return eval2(tA + 3, tB + 3) / (a - b);
-  }
+	// Evaluates expression (re = 16 EPS):
+	// A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) + A[2] * sqrt(B[2]).
+	_fpt eval3(_int* A, _int* B)
+	{
+		_fpt a = eval2(A, B);
+		_fpt b = eval1(A + 2, B + 2);
+		if ((!is_neg(a) && !is_neg(b)) ||
+		        (!is_pos(a) && !is_pos(b)))
+			return a + b;
+		tA[3] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1] - A[2] * A[2] * B[2];
+		tB[3] = 1;
+		tA[4] = A[0] * A[1] * 2;
+		tB[4] = B[0] * B[1];
+		return eval2(tA + 3, tB + 3) / (a - b);
+	}
 
 
-  // Evaluates expression (re = 25 EPS):
-  // A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) +
-  // A[2] * sqrt(B[2]) + A[3] * sqrt(B[3]).
-  _fpt eval4(_int* A, _int* B) {
-    _fpt a = eval2(A, B);
-    _fpt b = eval2(A + 2, B + 2);
-    if ((!is_neg(a) && !is_neg(b)) ||
-        (!is_pos(a) && !is_pos(b)))
-      return a + b;
-    tA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1] -
-            A[2] * A[2] * B[2] - A[3] * A[3] * B[3];
-    tB[0] = 1;
-    tA[1] = A[0] * A[1] * 2;
-    tB[1] = B[0] * B[1];
-    tA[2] = A[2] * A[3] * -2;
-    tB[2] = B[2] * B[3];
-    return eval3(tA, tB) / (a - b);
-  }
+	// Evaluates expression (re = 25 EPS):
+	// A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) +
+	// A[2] * sqrt(B[2]) + A[3] * sqrt(B[3]).
+	_fpt eval4(_int* A, _int* B)
+	{
+		_fpt a = eval2(A, B);
+		_fpt b = eval2(A + 2, B + 2);
+		if ((!is_neg(a) && !is_neg(b)) ||
+		        (!is_pos(a) && !is_pos(b)))
+			return a + b;
+		tA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1] -
+		        A[2] * A[2] * B[2] - A[3] * A[3] * B[3];
+		tB[0] = 1;
+		tA[1] = A[0] * A[1] * 2;
+		tB[1] = B[0] * B[1];
+		tA[2] = A[2] * A[3] * -2;
+		tB[2] = B[2] * B[3];
+		return eval3(tA, tB) / (a - b);
+	}
 
- private:
-  _int tA[5];
-  _int tB[5];
-  _converter convert;
+private:
+	_int tA[5];
+	_int tB[5];
+	_converter convert;
 };
 }  // detail
 }  // polygon

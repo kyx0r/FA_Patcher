@@ -18,7 +18,11 @@
 #include <boost/geometry/srs/projections/srid_traits.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -36,9 +40,9 @@ namespace detail
 template <size_t ESRI>
 struct esri_traits
 {
-    // Specializations define:
-    // - type to get projection type
-    // - function par to get parameters
+	// Specializations define:
+	// - type to get projection type
+	// - function par to get parameters
 };
 
 BOOST_GEOMETRY_PROJECTIONS_DETAIL_SRID_TRAITS_E (esri, 37001, longlat, WGS66, "+proj=longlat +ellps=WGS66 +no_defs")
@@ -492,7 +496,9 @@ BOOST_GEOMETRY_PROJECTIONS_DETAIL_SRID_TRAITS_E (esri, 104305, longlat, clrk80, 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 
 #endif

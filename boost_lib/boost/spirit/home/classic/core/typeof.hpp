@@ -20,97 +20,101 @@
 #include <boost/spirit/home/classic/core/scanner/skipper_fwd.hpp>
 #include <boost/spirit/home/classic/core/non_terminal/subrule_fwd.hpp>
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    // parser.hpp
-    template <typename IteratorT> struct parse_info;
-    struct plain_parser_category;
-    struct binary_parser_category;
-    struct unary_parser_category;
-    struct action_parser_category;
+// parser.hpp
+template <typename IteratorT> struct parse_info;
+struct plain_parser_category;
+struct binary_parser_category;
+struct unary_parser_category;
+struct action_parser_category;
 
-    // match.hpp
-    template<typename T> class match; 
+// match.hpp
+template<typename T> class match;
 
-    // primitives/primitives.hpp
-    template<class ParserT> struct negated_char_parser;
-    template<typename CharT> struct chlit;
-    template<typename CharT> struct range;
-    template<typename IteratorT> class chseq;
-    template<typename IteratorT> class strlit;
-    struct nothing_parser;
-    struct anychar_parser;
-    struct alnum_parser;
-    struct alpha_parser;
-    struct cntrl_parser;
-    struct digit_parser;
-    struct xdigit_parser;
-    struct graph_parser;
-    struct upper_parser;
-    struct lower_parser;
-    struct print_parser;
-    struct punct_parser;
-    struct blank_parser;
-    struct space_parser;
-    struct eol_parser;
-    struct end_parser; 
+// primitives/primitives.hpp
+template<class ParserT> struct negated_char_parser;
+template<typename CharT> struct chlit;
+template<typename CharT> struct range;
+template<typename IteratorT> class chseq;
+template<typename IteratorT> class strlit;
+struct nothing_parser;
+struct anychar_parser;
+struct alnum_parser;
+struct alpha_parser;
+struct cntrl_parser;
+struct digit_parser;
+struct xdigit_parser;
+struct graph_parser;
+struct upper_parser;
+struct lower_parser;
+struct print_parser;
+struct punct_parser;
+struct blank_parser;
+struct space_parser;
+struct eol_parser;
+struct end_parser;
 
-    // non_terminal/parser_context.hpp
-    template<typename T> struct parser_context;
+// non_terminal/parser_context.hpp
+template<typename T> struct parser_context;
 
-    // non_terminal/parser_id.hpp
-    class parser_id;
-    template<int N> struct parser_tag;
-    class dynamic_parser_tag;
-    struct parser_address_tag;
+// non_terminal/parser_id.hpp
+class parser_id;
+template<int N> struct parser_tag;
+class dynamic_parser_tag;
+struct parser_address_tag;
 
-    // non_terminal/rule.hpp
-    template<typename T0, typename T1, typename T2> class rule; 
+// non_terminal/rule.hpp
+template<typename T0, typename T1, typename T2> class rule;
 
-    // non_terminal/grammar.hpp
-    template<class DerivedT, typename ContextT> struct grammar; 
+// non_terminal/grammar.hpp
+template<class DerivedT, typename ContextT> struct grammar;
 
-    // composite.hpp
-    template<class ParserT, typename ActionT> class action;
-    template<class A, class B> struct alternative;
-    template<class A, class B> struct difference;
-    template<class A, class B> struct exclusive_or;
-    template<class A, class B> struct intersection;
-    template<class a, class b> struct sequence;
-    template<class A, class B> struct sequential_or;
-    template<class S> struct kleene_star;
-    template<class S> struct positive;
-    template<class S> struct optional;
-    // composite/directives.hpp
-    template<class ParserT> struct contiguous;
-    template<class ParserT> struct inhibit_case;
-    template<class BaseT> struct inhibit_case_iteration_policy;
-    template<class A, class B> struct longest_alternative;
-    template<class A, class B> struct shortest_alternative;
-    template<class ParserT, typename BoundsT> struct min_bounded;
-    template<class ParserT, typename BoundsT> struct max_bounded;
-    template<class ParserT, typename BoundsT> struct bounded;
-    // composite/no_actions.hpp
-    template<class Parser> struct no_actions_parser;
-    template<class Base> struct no_actions_action_policy;
-    // composite/epsilon.hpp
-    struct epsilon_parser;
-    template<typename CondT, bool positive> struct condition_parser;
-    template<typename SubjectT> struct empty_match_parser;
-    template<typename SubjectT> struct negated_empty_match_parser;
+// composite.hpp
+template<class ParserT, typename ActionT> class action;
+template<class A, class B> struct alternative;
+template<class A, class B> struct difference;
+template<class A, class B> struct exclusive_or;
+template<class A, class B> struct intersection;
+template<class a, class b> struct sequence;
+template<class A, class B> struct sequential_or;
+template<class S> struct kleene_star;
+template<class S> struct positive;
+template<class S> struct optional;
+// composite/directives.hpp
+template<class ParserT> struct contiguous;
+template<class ParserT> struct inhibit_case;
+template<class BaseT> struct inhibit_case_iteration_policy;
+template<class A, class B> struct longest_alternative;
+template<class A, class B> struct shortest_alternative;
+template<class ParserT, typename BoundsT> struct min_bounded;
+template<class ParserT, typename BoundsT> struct max_bounded;
+template<class ParserT, typename BoundsT> struct bounded;
+// composite/no_actions.hpp
+template<class Parser> struct no_actions_parser;
+template<class Base> struct no_actions_action_policy;
+// composite/epsilon.hpp
+struct epsilon_parser;
+template<typename CondT, bool positive> struct condition_parser;
+template<typename SubjectT> struct empty_match_parser;
+template<typename SubjectT> struct negated_empty_match_parser;
 
-    // deprecated assign/push_back actor -- they live somewhere else, now
-    struct assign_action;
-    struct push_back_action;
-    template<typename T, typename ActionT> class ref_value_actor;
-    template<typename T, typename ValueT, typename ActionT> 
-    class ref_const_ref_actor;
+// deprecated assign/push_back actor -- they live somewhere else, now
+struct assign_action;
+struct push_back_action;
+template<typename T, typename ActionT> class ref_value_actor;
+template<typename T, typename ValueT, typename ActionT>
+class ref_const_ref_actor;
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-}} // namespace BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace BOOST_SPIRIT_CLASSIC_NS
 
 
 
@@ -326,18 +330,22 @@ BOOST_TYPEOF_REGISTER_TYPE(BOOST_SPIRIT_CLASSIC_NS::push_back_action)
 
 
 #if BOOST_WORKAROUND(BOOST_MSVC,BOOST_TESTED_AT(1400)) && BOOST_MSVC >= 1400
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    nil_t & operator* (nil_t);
-    nil_t & operator+ (nil_t);
+nil_t & operator* (nil_t);
+nil_t & operator+ (nil_t);
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-} } // namespace ::BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace ::BOOST_SPIRIT_CLASSIC_NS
 #endif
 
 
 #endif
- 
+

@@ -15,8 +15,10 @@
 #include <boost/move/detail/config_begin.hpp>
 #include <boost/move/utility_core.hpp>
 
-namespace boost {
-namespace movelib {
+namespace boost
+{
+namespace movelib
+{
 
 //! <b>Requires</b>: The comparison function shall be an equivalence relation. The type of *first shall satisfy
 //! the MoveAssignable requirements
@@ -31,20 +33,23 @@ namespace movelib {
 template<class ForwardIterator, class BinaryPredicate>
 ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
 {
-    if (first != last) {
-      ForwardIterator next(first);
-      ++next;
-      for (; next != last; ++next, ++first) {
-         if (pred(*first, *next)) { //Find first equal element
-            while (++next != last)
-               if (!pred(*first, *next))
-                  *++first = ::boost::move(*next);
-            break;
-         }
-      }
-      ++first;
-   }
-   return first;
+	if (first != last)
+	{
+		ForwardIterator next(first);
+		++next;
+		for (; next != last; ++next, ++first)
+		{
+			if (pred(*first, *next))   //Find first equal element
+			{
+				while (++next != last)
+					if (!pred(*first, *next))
+						*++first = ::boost::move(*next);
+				break;
+			}
+		}
+		++first;
+	}
+	return first;
 }
 
 }  //namespace movelib {

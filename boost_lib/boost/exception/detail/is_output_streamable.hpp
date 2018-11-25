@@ -16,44 +16,44 @@
 #endif
 
 namespace
-boost
-    {
-    namespace
-    to_string_detail
-        {
-        struct
-        partial_ordering_helper1
-            {
-            template <class CharT,class Traits>
-            partial_ordering_helper1( std::basic_ostream<CharT,Traits> & );
-            };
+	boost
+{
+namespace
+	to_string_detail
+{
+struct
+	partial_ordering_helper1
+{
+	template <class CharT,class Traits>
+	partial_ordering_helper1( std::basic_ostream<CharT,Traits> & );
+};
 
-        struct
-        partial_ordering_helper2
-            {
-            template <class T>
-            partial_ordering_helper2( T const & );
-            };
+struct
+	partial_ordering_helper2
+{
+	template <class T>
+	partial_ordering_helper2( T const & );
+};
 
-        char operator<<( partial_ordering_helper1, partial_ordering_helper2 );
+char operator<<( partial_ordering_helper1, partial_ordering_helper2 );
 
-        template <class T,class CharT,class Traits>
-        struct
-        is_output_streamable_impl
-            {
-            static std::basic_ostream<CharT,Traits> & f();
-            static T const & g();
-            enum e { value=1!=(sizeof(f()<<g())) };
-            };
-        }
+template <class T,class CharT,class Traits>
+struct
+	is_output_streamable_impl
+{
+	static std::basic_ostream<CharT,Traits> & f();
+	static T const & g();
+	enum e { value=1!=(sizeof(f()<<g())) };
+};
+}
 
-    template <class T, class CharT=char, class Traits=std::char_traits<CharT> >
-    struct
-    is_output_streamable
-        {
-        enum e { value=to_string_detail::is_output_streamable_impl<T,CharT,Traits>::value };
-        };
-    }
+template <class T, class CharT=char, class Traits=std::char_traits<CharT> >
+struct
+	is_output_streamable
+{
+	enum e { value=to_string_detail::is_output_streamable_impl<T,CharT,Traits>::value };
+};
+}
 
 #if defined(_MSC_VER) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
 #pragma warning(pop)

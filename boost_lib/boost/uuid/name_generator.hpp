@@ -17,8 +17,10 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace uuids {
+namespace boost
+{
+namespace uuids
+{
 
 //! \deprecated
 //! \brief this provides backwards compatibility with previous boost

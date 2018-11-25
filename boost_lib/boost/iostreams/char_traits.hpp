@@ -10,7 +10,7 @@
 
 #if defined(_MSC_VER)
 # pragma once
-#endif 
+#endif
 
 #include <boost/config.hpp>
 #include <cstddef>
@@ -23,10 +23,16 @@
 #endif
 
 #ifdef BOOST_NO_STDC_NAMESPACE
-namespace std { using ::wint_t; }
+namespace std
+{
+using ::wint_t;
+}
 #endif
 
-namespace boost { namespace iostreams {
+namespace boost
+{
+namespace iostreams
+{
 
 // Dinkumware that comes with QNX Momentics 6.3.0, 4.0.2, incorrectly defines
 // the EOF and WEOF macros to not std:: qualify the wint_t type (and so does
@@ -47,27 +53,66 @@ template<typename Ch>
 struct char_traits;
 
 template<>
-struct char_traits<char> : BOOST_IOSTREAMS_CHAR_TRAITS(char) {
-    static char newline() { return '\n'; }
-    static int good() { return '\n'; }
-    static int would_block() { return WOULD_BLOCK; }
-    static bool is_good(int c) { return c != EOF && c != WOULD_BLOCK; }
-    static bool is_eof(int c) { return c == EOF; }
-    static bool would_block(int c) { return c == WOULD_BLOCK; }
+struct char_traits<char> : BOOST_IOSTREAMS_CHAR_TRAITS(char)
+{
+	static char newline()
+	{
+		return '\n';
+	}
+	static int good()
+	{
+		return '\n';
+	}
+	static int would_block()
+	{
+		return WOULD_BLOCK;
+	}
+	static bool is_good(int c)
+	{
+		return c != EOF && c != WOULD_BLOCK;
+	}
+	static bool is_eof(int c)
+	{
+		return c == EOF;
+	}
+	static bool would_block(int c)
+	{
+		return c == WOULD_BLOCK;
+	}
 };
 
 #ifndef BOOST_IOSTREAMS_NO_WIDE_STREAMS
 template<>
-struct char_traits<wchar_t> : std::char_traits<wchar_t> {
-    static wchar_t newline() { return L'\n'; }
-    static std::wint_t good() { return L'\n'; }
-    static std::wint_t would_block() { return WWOULD_BLOCK; }
-    static bool is_good(std::wint_t c) { return c != WEOF && c != WWOULD_BLOCK; }
-    static bool is_eof(std::wint_t c) { return c == WEOF; }
-    static bool would_block(std::wint_t c) { return c == WWOULD_BLOCK; }
+struct char_traits<wchar_t> : std::char_traits<wchar_t>
+{
+	static wchar_t newline()
+	{
+		return L'\n';
+	}
+	static std::wint_t good()
+	{
+		return L'\n';
+	}
+	static std::wint_t would_block()
+	{
+		return WWOULD_BLOCK;
+	}
+	static bool is_good(std::wint_t c)
+	{
+		return c != WEOF && c != WWOULD_BLOCK;
+	}
+	static bool is_eof(std::wint_t c)
+	{
+		return c == WEOF;
+	}
+	static bool would_block(std::wint_t c)
+	{
+		return c == WWOULD_BLOCK;
+	}
 };
 #endif
 
-} } // End namespaces iostreams, boost.
+}
+} // End namespaces iostreams, boost.
 
 #endif // #ifndef BOOST_IOSTREAMS_CHAR_TRAITS_HPP_INCLUDED

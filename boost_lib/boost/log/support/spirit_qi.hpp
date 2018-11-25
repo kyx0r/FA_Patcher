@@ -29,11 +29,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! This tag type is used if an expression is recognized as a Boost.Spirit.Qi expression
 struct boost_spirit_qi_expression_tag;
@@ -42,43 +44,46 @@ struct boost_spirit_qi_expression_tag;
 template< typename ExpressionT >
 struct matching_expression_kind< ExpressionT, typename boost::enable_if_c< spirit::traits::matches< spirit::qi::domain, ExpressionT >::value >::type >
 {
-    typedef boost_spirit_qi_expression_tag type;
+	typedef boost_spirit_qi_expression_tag type;
 };
 
 //! The matching function implementation
 template< typename ExpressionT >
 struct match_traits< ExpressionT, boost_spirit_qi_expression_tag >
 {
-    typedef typename spirit::result_of::compile< spirit::qi::domain, ExpressionT, spirit::unused_type >::type compiled_type;
+	typedef typename spirit::result_of::compile< spirit::qi::domain, ExpressionT, spirit::unused_type >::type compiled_type;
 
-    static compiled_type compile(ExpressionT const& expr)
-    {
-        return spirit::compile< spirit::qi::domain >(expr);
-    }
+	static compiled_type compile(ExpressionT const& expr)
+	{
+		return spirit::compile< spirit::qi::domain >(expr);
+	}
 
-    template< typename StringT >
-    static bool matches(StringT const& str, ExpressionT const& expr)
-    {
-        typedef typename StringT::const_iterator const_iterator;
-        const_iterator it = str.begin(), end = str.end();
-        return (spirit::qi::parse(it, end, expr) && it == end);
-    }
+	template< typename StringT >
+	static bool matches(StringT const& str, ExpressionT const& expr)
+	{
+		typedef typename StringT::const_iterator const_iterator;
+		const_iterator it = str.begin(), end = str.end();
+		return (spirit::qi::parse(it, end, expr) && it == end);
+	}
 };
 
 //! The matching function implementation
 template< typename IteratorT, typename T1, typename T2, typename T3, typename T4 >
 struct match_traits< spirit::qi::rule< IteratorT, T1, T2, T3, T4 >, boost_spirit_qi_expression_tag >
 {
-    typedef spirit::qi::rule< IteratorT, T1, T2, T3, T4 > compiled_type;
-    static compiled_type compile(compiled_type const& expr) { return expr; }
+	typedef spirit::qi::rule< IteratorT, T1, T2, T3, T4 > compiled_type;
+	static compiled_type compile(compiled_type const& expr)
+	{
+		return expr;
+	}
 
-    template< typename StringT >
-    static bool matches(StringT const& str, compiled_type const& expr)
-    {
-        typedef typename StringT::const_iterator const_iterator;
-        const_iterator it = str.begin(), end = str.end();
-        return (spirit::qi::parse(it, end, expr) && it == end);
-    }
+	template< typename StringT >
+	static bool matches(StringT const& str, compiled_type const& expr)
+	{
+		typedef typename StringT::const_iterator const_iterator;
+		const_iterator it = str.begin(), end = str.end();
+		return (spirit::qi::parse(it, end, expr) && it == end);
+	}
 };
 
 } // namespace aux

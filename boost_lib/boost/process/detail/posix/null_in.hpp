@@ -15,21 +15,31 @@
 #include <boost/process/detail/posix/file_descriptor.hpp>
 #include <unistd.h>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 struct null_in : handler_base_ext
 {
-    file_descriptor source{"/dev/null", file_descriptor::read};
+	file_descriptor source{"/dev/null", file_descriptor::read};
 
 public:
-    template <class Executor>
-    void on_exec_setup(Executor &e) const
-    {
-        if (::dup2(source.handle(), STDIN_FILENO) == -1)
-             e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
-    }
+	template <class Executor>
+	void on_exec_setup(Executor &e) const
+	{
+		if (::dup2(source.handle(), STDIN_FILENO) == -1)
+			e.set_error(::boost::process::detail::get_last_error(), "dup2() failed");
+	}
 };
 
-}}}}
+}
+}
+}
+}
 
 #endif

@@ -18,11 +18,11 @@
 
 namespace boost
 {
-  namespace csbl
-  {
-    using ::boost::shared_ptr;
-    using ::boost::make_shared;
-  }
+namespace csbl
+{
+using ::boost::shared_ptr;
+using ::boost::make_shared;
+}
 }
 
 #else
@@ -31,11 +31,11 @@ namespace boost
 
 namespace boost
 {
-  namespace csbl
-  {
-    using std::shared_ptr;
-    using std::make_shared;
-  }
+namespace csbl
+{
+using std::shared_ptr;
+using std::make_shared;
+}
 }
 
 #endif

@@ -22,10 +22,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
-namespace monomorphic {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
+namespace monomorphic
+{
 
 // ************************************************************************** //
 // **************                  generated_by                ************** //
@@ -44,54 +48,69 @@ namespace monomorphic {
  * - the member function @c reset should put the state of the object in the same state as right after its instanciation
  */
 template<typename Generator>
-class generated_by {
+class generated_by
+{
 public:
-    typedef typename Generator::sample sample;
+	typedef typename Generator::sample sample;
 
-    enum { arity = 1 };
+	enum { arity = 1 };
 
-    struct iterator {
-        // Constructor
-        explicit    iterator( Generator& gen )
-        : m_gen( &gen )
-        {
-            if(m_gen->capacity() > 0) {
-                m_gen->reset();
-                ++*this;
-            }
-        }
+	struct iterator
+	{
+		// Constructor
+		explicit    iterator( Generator& gen )
+			: m_gen( &gen )
+		{
+			if(m_gen->capacity() > 0)
+			{
+				m_gen->reset();
+				++*this;
+			}
+		}
 
-        // forward iterator interface
-        sample const&   operator*() const   { return m_curr_sample; }
-        void            operator++()        { m_curr_sample = m_gen->next(); }
+		// forward iterator interface
+		sample const&   operator*() const
+		{
+			return m_curr_sample;
+		}
+		void            operator++()
+		{
+			m_curr_sample = m_gen->next();
+		}
 
-    private:
-        // Data members
-        Generator*  m_gen;
-        sample      m_curr_sample;
-    };
+	private:
+		// Data members
+		Generator*  m_gen;
+		sample      m_curr_sample;
+	};
 
-    typedef Generator generator_type;
+	typedef Generator generator_type;
 
-    // Constructor
-    explicit        generated_by( Generator&& G )
-    : m_generator( std::forward<Generator>(G) )
-    {}
+	// Constructor
+	explicit        generated_by( Generator&& G )
+		: m_generator( std::forward<Generator>(G) )
+	{}
 
-    // Move constructor
-    generated_by( generated_by&& rhs )
-    : m_generator( std::forward<Generator>(rhs.m_generator) )
-    {}
+	// Move constructor
+	generated_by( generated_by&& rhs )
+		: m_generator( std::forward<Generator>(rhs.m_generator) )
+	{}
 
-    //! Size of the underlying dataset
-    data::size_t    size() const            { return m_generator.capacity(); }
+	//! Size of the underlying dataset
+	data::size_t    size() const
+	{
+		return m_generator.capacity();
+	}
 
-    //! Iterator on the beginning of the dataset
-    iterator        begin() const           { return iterator( boost::ref(const_cast<Generator&>(m_generator)) ); }
+	//! Iterator on the beginning of the dataset
+	iterator        begin() const
+	{
+		return iterator( boost::ref(const_cast<Generator&>(m_generator)) );
+	}
 
 private:
-    // Data members
-    Generator       m_generator;
+	// Data members
+	Generator       m_generator;
 };
 
 //____________________________________________________________________________//

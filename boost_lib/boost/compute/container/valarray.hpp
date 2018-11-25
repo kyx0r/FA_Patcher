@@ -30,240 +30,243 @@
 #include <boost/compute/iterator/buffer_iterator.hpp>
 #include <boost/compute/type_traits.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 template<class T>
 class valarray
 {
 public:
-    explicit valarray(const context &context = system::default_context())
-        : m_buffer(context, 0)
-    {
-    }
+	explicit valarray(const context &context = system::default_context())
+		: m_buffer(context, 0)
+	{
+	}
 
-    explicit valarray(size_t size,
-                      const context &context = system::default_context())
-        : m_buffer(context, size * sizeof(T))
-    {
-    }
+	explicit valarray(size_t size,
+	                  const context &context = system::default_context())
+		: m_buffer(context, size * sizeof(T))
+	{
+	}
 
-    valarray(const T &value,
-             size_t size,
-             const context &context = system::default_context())
-        : m_buffer(context, size * sizeof(T))
-    {
-        fill(begin(), end(), value);
-    }
+	valarray(const T &value,
+	         size_t size,
+	         const context &context = system::default_context())
+		: m_buffer(context, size * sizeof(T))
+	{
+		fill(begin(), end(), value);
+	}
 
-    valarray(const T *values,
-             size_t size,
-             const context &context = system::default_context())
-        : m_buffer(context, size * sizeof(T))
-    {
-        copy(values, values + size, begin());
-    }
+	valarray(const T *values,
+	         size_t size,
+	         const context &context = system::default_context())
+		: m_buffer(context, size * sizeof(T))
+	{
+		copy(values, values + size, begin());
+	}
 
-    valarray(const valarray<T> &other)
-        : m_buffer(other.m_buffer.get_context(), other.size() * sizeof(T))
-    {
-        copy(other.begin(), other.end(), begin());
-    }
+	valarray(const valarray<T> &other)
+		: m_buffer(other.m_buffer.get_context(), other.size() * sizeof(T))
+	{
+		copy(other.begin(), other.end(), begin());
+	}
 
-    valarray(const std::valarray<T> &valarray,
-             const context &context = system::default_context())
-        : m_buffer(context, valarray.size() * sizeof(T))
-    {
-        copy(&valarray[0], &valarray[valarray.size()], begin());
-    }
+	valarray(const std::valarray<T> &valarray,
+	         const context &context = system::default_context())
+		: m_buffer(context, valarray.size() * sizeof(T))
+	{
+		copy(&valarray[0], &valarray[valarray.size()], begin());
+	}
 
-    valarray<T>& operator=(const valarray<T> &other)
-    {
-        if(this != &other){
-            // change to other's OpenCL context
-            m_buffer = buffer(other.m_buffer.get_context(), other.size() * sizeof(T));
-            copy(other.begin(), other.end(), begin());
-        }
+	valarray<T>& operator=(const valarray<T> &other)
+	{
+		if(this != &other)
+		{
+			// change to other's OpenCL context
+			m_buffer = buffer(other.m_buffer.get_context(), other.size() * sizeof(T));
+			copy(other.begin(), other.end(), begin());
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    valarray<T>& operator=(const std::valarray<T> &valarray)
-    {
-        m_buffer = buffer(m_buffer.get_context(), valarray.size() * sizeof(T));
-        copy(&valarray[0], &valarray[valarray.size()], begin());
+	valarray<T>& operator=(const std::valarray<T> &valarray)
+	{
+		m_buffer = buffer(m_buffer.get_context(), valarray.size() * sizeof(T));
+		copy(&valarray[0], &valarray[valarray.size()], begin());
 
-        return *this;
-    }
+		return *this;
+	}
 
-    valarray<T>& operator*=(const T&);
+	valarray<T>& operator*=(const T&);
 
-    valarray<T>& operator/=(const T&);
+	valarray<T>& operator/=(const T&);
 
-    valarray<T>& operator%=(const T& val);
+	valarray<T>& operator%=(const T& val);
 
-    valarray<T> operator+() const
-    {
-        //  This operator can be used with any type.
-        valarray<T> result(size());
-        copy(begin(), end(), result.begin());
-        return result;
-    }
+	valarray<T> operator+() const
+	{
+		//  This operator can be used with any type.
+		valarray<T> result(size());
+		copy(begin(), end(), result.begin());
+		return result;
+	}
 
-    valarray<T> operator-() const
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            is_fundamental<T>::value,
-            "This operator can be used with all OpenCL built-in scalar"
-            " and vector types"
-        );
-        valarray<T> result(size());
-        BOOST_COMPUTE_FUNCTION(T, unary_minus, (T x),
-        {
-            return -x;
-        });
-        transform(begin(), end(), result.begin(), unary_minus);
-        return result;
-    }
+	valarray<T> operator-() const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    is_fundamental<T>::value,
+		    "This operator can be used with all OpenCL built-in scalar"
+		    " and vector types"
+		);
+		valarray<T> result(size());
+		BOOST_COMPUTE_FUNCTION(T, unary_minus, (T x),
+		{
+			return -x;
+		});
+		transform(begin(), end(), result.begin(), unary_minus);
+		return result;
+	}
 
-    valarray<T> operator~() const
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            is_fundamental<T>::value &&
-                !is_floating_point<typename scalar_type<T>::type>::value,
-            "This operator can be used with all OpenCL built-in scalar"
-            " and vector types except the built-in scalar and vector float types"
-        );
-        valarray<T> result(size());
-        BOOST_COMPUTE_FUNCTION(T, bitwise_not, (T x),
-        {
-            return ~x;
-        });
-        transform(begin(), end(), result.begin(), bitwise_not);
-        return result;
-    }
+	valarray<T> operator~() const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    is_fundamental<T>::value &&
+		    !is_floating_point<typename scalar_type<T>::type>::value,
+		    "This operator can be used with all OpenCL built-in scalar"
+		    " and vector types except the built-in scalar and vector float types"
+		);
+		valarray<T> result(size());
+		BOOST_COMPUTE_FUNCTION(T, bitwise_not, (T x),
+		{
+			return ~x;
+		});
+		transform(begin(), end(), result.begin(), bitwise_not);
+		return result;
+	}
 
-    /// In OpenCL there cannot be memory buffer with bool type, for
-    /// this reason return type is valarray<char> instead of valarray<bool>.
-    /// 1 means true, 0 means false.
-    valarray<char> operator!() const
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            is_fundamental<T>::value,
-            "This operator can be used with all OpenCL built-in scalar"
-            " and vector types"
-        );
-        valarray<char> result(size());
-        BOOST_COMPUTE_FUNCTION(char, logical_not, (T x),
-        {
-            return !x;
-        });
-        transform(begin(), end(), &result[0], logical_not);
-        return result;
-    }
+	/// In OpenCL there cannot be memory buffer with bool type, for
+	/// this reason return type is valarray<char> instead of valarray<bool>.
+	/// 1 means true, 0 means false.
+	valarray<char> operator!() const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    is_fundamental<T>::value,
+		    "This operator can be used with all OpenCL built-in scalar"
+		    " and vector types"
+		);
+		valarray<char> result(size());
+		BOOST_COMPUTE_FUNCTION(char, logical_not, (T x),
+		{
+			return !x;
+		});
+		transform(begin(), end(), &result[0], logical_not);
+		return result;
+	}
 
-    valarray<T>& operator+=(const T&);
+	valarray<T>& operator+=(const T&);
 
-    valarray<T>& operator-=(const T&);
+	valarray<T>& operator-=(const T&);
 
-    valarray<T>& operator^=(const T&);
+	valarray<T>& operator^=(const T&);
 
-    valarray<T>& operator&=(const T&);
+	valarray<T>& operator&=(const T&);
 
-    valarray<T>& operator|=(const T&);
+	valarray<T>& operator|=(const T&);
 
-    valarray<T>& operator<<=(const T&);
+	valarray<T>& operator<<=(const T&);
 
-    valarray<T>& operator>>=(const T&);
+	valarray<T>& operator>>=(const T&);
 
-    valarray<T>& operator*=(const valarray<T>&);
+	valarray<T>& operator*=(const valarray<T>&);
 
-    valarray<T>& operator/=(const valarray<T>&);
+	valarray<T>& operator/=(const valarray<T>&);
 
-    valarray<T>& operator%=(const valarray<T>&);
+	valarray<T>& operator%=(const valarray<T>&);
 
-    valarray<T>& operator+=(const valarray<T>&);
+	valarray<T>& operator+=(const valarray<T>&);
 
-    valarray<T>& operator-=(const valarray<T>&);
+	valarray<T>& operator-=(const valarray<T>&);
 
-    valarray<T>& operator^=(const valarray<T>&);
+	valarray<T>& operator^=(const valarray<T>&);
 
-    valarray<T>& operator&=(const valarray<T>&);
+	valarray<T>& operator&=(const valarray<T>&);
 
-    valarray<T>& operator|=(const valarray<T>&);
+	valarray<T>& operator|=(const valarray<T>&);
 
-    valarray<T>& operator<<=(const valarray<T>&);
+	valarray<T>& operator<<=(const valarray<T>&);
 
-    valarray<T>& operator>>=(const valarray<T>&);
+	valarray<T>& operator>>=(const valarray<T>&);
 
-    ~valarray()
-    {
+	~valarray()
+	{
 
-    }
+	}
 
-    size_t size() const
-    {
-        return m_buffer.size() / sizeof(T);
-    }
+	size_t size() const
+	{
+		return m_buffer.size() / sizeof(T);
+	}
 
-    void resize(size_t size, T value = T())
-    {
-        m_buffer = buffer(m_buffer.get_context(), size * sizeof(T));
-        fill(begin(), end(), value);
-    }
+	void resize(size_t size, T value = T())
+	{
+		m_buffer = buffer(m_buffer.get_context(), size * sizeof(T));
+		fill(begin(), end(), value);
+	}
 
-    detail::buffer_value<T> operator[](size_t index)
-    {
-        return *(begin() + static_cast<ptrdiff_t>(index));
-    }
+	detail::buffer_value<T> operator[](size_t index)
+	{
+		return *(begin() + static_cast<ptrdiff_t>(index));
+	}
 
-    const detail::buffer_value<T> operator[](size_t index) const
-    {
-        return *(begin() + static_cast<ptrdiff_t>(index));
-    }
+	const detail::buffer_value<T> operator[](size_t index) const
+	{
+		return *(begin() + static_cast<ptrdiff_t>(index));
+	}
 
-    T (min)() const
-    {
-        return *(boost::compute::min_element(begin(), end()));
-    }
+	T (min)() const
+	{
+		return *(boost::compute::min_element(begin(), end()));
+	}
 
-    T (max)() const
-    {
-        return *(boost::compute::max_element(begin(), end()));
-    }
+	T (max)() const
+	{
+		return *(boost::compute::max_element(begin(), end()));
+	}
 
-    T sum() const
-    {
-        return boost::compute::accumulate(begin(), end(), T(0));
-    }
+	T sum() const
+	{
+		return boost::compute::accumulate(begin(), end(), T(0));
+	}
 
-    template<class UnaryFunction>
-    valarray<T> apply(UnaryFunction function) const
-    {
-        valarray<T> result(size());
-        transform(begin(), end(), result.begin(), function);
-        return result;
-    }
+	template<class UnaryFunction>
+	valarray<T> apply(UnaryFunction function) const
+	{
+		valarray<T> result(size());
+		transform(begin(), end(), result.begin(), function);
+		return result;
+	}
 
-    const buffer& get_buffer() const
-    {
-        return m_buffer;
-    }
+	const buffer& get_buffer() const
+	{
+		return m_buffer;
+	}
 
-
-private:
-    buffer_iterator<T> begin() const
-    {
-        return buffer_iterator<T>(m_buffer, 0);
-    }
-
-    buffer_iterator<T> end() const
-    {
-        return buffer_iterator<T>(m_buffer, size());
-    }
 
 private:
-    buffer m_buffer;
+	buffer_iterator<T> begin() const
+	{
+		return buffer_iterator<T>(m_buffer, 0);
+	}
+
+	buffer_iterator<T> end() const
+	{
+		return buffer_iterator<T>(m_buffer, size());
+	}
+
+private:
+	buffer m_buffer;
 };
 
 /// \internal_
@@ -325,11 +328,11 @@ BOOST_COMPUTE_DEFINE_VALARRAY_COMPOUND_ASSIGNMENT_NO_FP(>>, shift_right)
 // integer scalar and integer vector data types only.
 // See OpenCL specification.
 BOOST_COMPUTE_DEFINE_VALARRAY_COMPOUND_ASSIGNMENT(%, modulus,
-    BOOST_STATIC_ASSERT_MSG(
-        is_integral<typename scalar_type<T>::type>::value,
-        "This operator can be used only with OpenCL built-in integer types"
-    );
-)
+        BOOST_STATIC_ASSERT_MSG(
+            is_integral<typename scalar_type<T>::type>::value,
+            "This operator can be used only with OpenCL built-in integer types"
+        );
+                                                 )
 
 #undef BOOST_COMPUTE_DEFINE_VALARRAY_COMPOUND_ASSIGNMENT_ANY
 #undef BOOST_COMPUTE_DEFINE_VALARRAY_COMPOUND_ASSIGNMENT_NO_FP

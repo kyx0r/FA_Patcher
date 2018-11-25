@@ -21,9 +21,9 @@
 
 BOOST_PHOENIX_DEFINE_EXPRESSION_VARARG(
     (boost)(phoenix)(new_)
-  , (proto::terminal<detail::target<proto::_> >)
+    , (proto::terminal<detail::target<proto::_> >)
     (meta_grammar)
-  , BOOST_PHOENIX_COMPOSITE_LIMIT
+    , BOOST_PHOENIX_COMPOSITE_LIMIT
 )
 
 #if defined(__WAVE__) && defined(BOOST_PHOENIX_CREATE_PREPROCESSED_FILES)

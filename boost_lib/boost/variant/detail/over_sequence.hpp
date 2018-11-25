@@ -18,8 +18,12 @@
 #include <boost/mpl/aux_/config/ctps.hpp>
 
 
-namespace boost {
-namespace detail { namespace variant {
+namespace boost
+{
+namespace detail
+{
+namespace variant
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 // (detail) class over_sequence
@@ -29,7 +33,7 @@ namespace detail { namespace variant {
 template <typename Types>
 struct over_sequence
 {
-    typedef Types type;
+	typedef Types type;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,18 +45,19 @@ struct over_sequence
 
 template <typename T>
 struct is_over_sequence
-    : mpl::false_
+	: mpl::false_
 {
 };
 
 template <typename Types>
 struct is_over_sequence< over_sequence<Types> >
-    : mpl::true_
+	: mpl::true_
 {
 };
 
 
-}} // namespace detail::variant
+}
+} // namespace detail::variant
 } // namespace boost
 
 #endif // BOOST_VARIANT_DETAIL_OVER_SEQUENCE_HPP

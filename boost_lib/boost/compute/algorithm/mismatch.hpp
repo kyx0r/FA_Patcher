@@ -22,8 +22,10 @@
 #include <boost/compute/iterator/zip_iterator.hpp>
 #include <boost/compute/functional/detail/unpack.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns a pair of iterators pointing to the first position where the
 /// range [\p first1, \p last1) and the range starting at \p first2
@@ -37,33 +39,33 @@ mismatch(InputIterator1 first1,
          InputIterator2 first2,
          command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
 
-    ::boost::compute::equal_to<value_type> op;
+	::boost::compute::equal_to<value_type> op;
 
-    InputIterator2 last2 = first2 + std::distance(first1, last1);
+	InputIterator2 last2 = first2 + std::distance(first1, last1);
 
-    InputIterator1 iter =
-        boost::get<0>(
-            ::boost::compute::find(
-                ::boost::compute::make_transform_iterator(
-                    ::boost::compute::make_zip_iterator(
-                        boost::make_tuple(first1, first2)
-                    ),
-                    detail::unpack(op)
-                ),
-                ::boost::compute::make_transform_iterator(
-                    ::boost::compute::make_zip_iterator(
-                        boost::make_tuple(last1, last2)
-                    ),
-                    detail::unpack(op)
-                ),
-                false,
-                queue
-            ).base().get_iterator_tuple()
-        );
+	InputIterator1 iter =
+	    boost::get<0>(
+	        ::boost::compute::find(
+	            ::boost::compute::make_transform_iterator(
+	                ::boost::compute::make_zip_iterator(
+	                    boost::make_tuple(first1, first2)
+	                ),
+	                detail::unpack(op)
+	            ),
+	            ::boost::compute::make_transform_iterator(
+	                ::boost::compute::make_zip_iterator(
+	                    boost::make_tuple(last1, last2)
+	                ),
+	                detail::unpack(op)
+	            ),
+	            false,
+	            queue
+	        ).base().get_iterator_tuple()
+	    );
 
-    return std::make_pair(iter, first2 + std::distance(first1, iter));
+	return std::make_pair(iter, first2 + std::distance(first1, iter));
 }
 
 /// \overload
@@ -75,14 +77,16 @@ mismatch(InputIterator1 first1,
          InputIterator2 last2,
          command_queue &queue = system::default_queue())
 {
-    if(std::distance(first1, last1) < std::distance(first2, last2)){
-        return ::boost::compute::mismatch(first1, last1, first2, queue);
-    }
-    else {
-        return ::boost::compute::mismatch(
-            first1, first1 + std::distance(first2, last2), first2, queue
-        );
-    }
+	if(std::distance(first1, last1) < std::distance(first2, last2))
+	{
+		return ::boost::compute::mismatch(first1, last1, first2, queue);
+	}
+	else
+	{
+		return ::boost::compute::mismatch(
+		           first1, first1 + std::distance(first2, last2), first2, queue
+		       );
+	}
 }
 
 } // end compute namespace

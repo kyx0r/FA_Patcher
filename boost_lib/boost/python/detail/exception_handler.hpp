@@ -9,7 +9,12 @@
 # include <boost/function/function0.hpp>
 # include <boost/function/function2.hpp>
 
-namespace boost { namespace python { namespace detail {
+namespace boost
+{
+namespace python
+{
+namespace detail
+{
 
 struct exception_handler;
 
@@ -17,32 +22,34 @@ typedef function2<bool, exception_handler const&, function0<void> const&> handle
 
 struct BOOST_PYTHON_DECL exception_handler
 {
- private: // types
-    
- public:
-    explicit exception_handler(handler_function const& impl);
+private: // types
 
-    inline bool handle(function0<void> const& f) const;
-    
-    bool operator()(function0<void> const& f) const;
- 
-    static exception_handler* chain;
-    
- private:
-    static exception_handler* tail;
-    
-    handler_function m_impl;
-    exception_handler* m_next;
+public:
+	explicit exception_handler(handler_function const& impl);
+
+	inline bool handle(function0<void> const& f) const;
+
+	bool operator()(function0<void> const& f) const;
+
+	static exception_handler* chain;
+
+private:
+	static exception_handler* tail;
+
+	handler_function m_impl;
+	exception_handler* m_next;
 };
 
 
 inline bool exception_handler::handle(function0<void> const& f) const
 {
-    return this->m_impl(*this, f);
+	return this->m_impl(*this, f);
 }
 
 BOOST_PYTHON_DECL void register_exception_handler(handler_function const& f);
 
-}}} // namespace boost::python::detail
+}
+}
+} // namespace boost::python::detail
 
 #endif // EXCEPTION_HANDLER_DWA2002810_HPP

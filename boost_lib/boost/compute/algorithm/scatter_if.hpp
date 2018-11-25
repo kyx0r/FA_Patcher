@@ -21,59 +21,63 @@
 #include <boost/compute/detail/iterator_range_size.hpp>
 #include <boost/compute/detail/meta_kernel.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class MapIterator, class StencilIterator, class OutputIterator, class Predicate>
 class scatter_if_kernel : meta_kernel
 {
 public:
-    scatter_if_kernel() : meta_kernel("scatter_if")
-    {}
+	scatter_if_kernel() : meta_kernel("scatter_if")
+	{}
 
-    void set_range(InputIterator first,
-                   InputIterator last,
-                   MapIterator map,
-                   StencilIterator stencil,
-                   OutputIterator result,
-                   Predicate predicate)
-    {
-        m_count = iterator_range_size(first, last);
-        m_input_offset = first.get_index();
-        m_output_offset = result.get_index();
+	void set_range(InputIterator first,
+	               InputIterator last,
+	               MapIterator map,
+	               StencilIterator stencil,
+	               OutputIterator result,
+	               Predicate predicate)
+	{
+		m_count = iterator_range_size(first, last);
+		m_input_offset = first.get_index();
+		m_output_offset = result.get_index();
 
-        m_input_offset_arg = add_arg<uint_>("input_offset");
-        m_output_offset_arg = add_arg<uint_>("output_offset");
+		m_input_offset_arg = add_arg<uint_>("input_offset");
+		m_output_offset_arg = add_arg<uint_>("output_offset");
 
-        *this <<
-        "const uint i = get_global_id(0);\n" <<
-        "uint i1 = " << map[expr<uint_>("i")] <<
-        " + output_offset;\n" <<
-        "uint i2 = i + input_offset;\n" <<
-        if_(predicate(stencil[expr<uint_>("i")])) << "\n" <<
-            result[expr<uint_>("i1")] << "=" <<
-            first[expr<uint_>("i2")] << ";\n";
-    }
+		*this <<
+		      "const uint i = get_global_id(0);\n" <<
+		      "uint i1 = " << map[expr<uint_>("i")] <<
+		      " + output_offset;\n" <<
+		      "uint i2 = i + input_offset;\n" <<
+		      if_(predicate(stencil[expr<uint_>("i")])) << "\n" <<
+		      result[expr<uint_>("i1")] << "=" <<
+		      first[expr<uint_>("i2")] << ";\n";
+	}
 
-    event exec(command_queue &queue)
-    {
-        if(m_count == 0) {
-            return event();
-        }
+	event exec(command_queue &queue)
+	{
+		if(m_count == 0)
+		{
+			return event();
+		}
 
-        set_arg(m_input_offset_arg, uint_(m_input_offset));
-        set_arg(m_output_offset_arg, uint_(m_output_offset));
+		set_arg(m_input_offset_arg, uint_(m_input_offset));
+		set_arg(m_output_offset_arg, uint_(m_output_offset));
 
-        return exec_1d(queue, 0, m_count);
-    }
+		return exec_1d(queue, 0, m_count);
+	}
 
 private:
-    size_t m_count;
-    size_t m_input_offset;
-    size_t m_input_offset_arg;
-    size_t m_output_offset;
-    size_t m_output_offset_arg;
+	size_t m_count;
+	size_t m_input_offset;
+	size_t m_input_offset_arg;
+	size_t m_output_offset;
+	size_t m_output_offset_arg;
 };
 
 } // end detail namespace
@@ -94,10 +98,10 @@ inline void scatter_if(InputIterator first,
                        Predicate predicate,
                        command_queue &queue = system::default_queue())
 {
-    detail::scatter_if_kernel<InputIterator, MapIterator, StencilIterator, OutputIterator, Predicate> kernel;
+	detail::scatter_if_kernel<InputIterator, MapIterator, StencilIterator, OutputIterator, Predicate> kernel;
 
-    kernel.set_range(first, last, map, stencil, result, predicate);
-    kernel.exec(queue);
+	kernel.set_range(first, last, map, stencil, result, predicate);
+	kernel.exec(queue);
 }
 
 template<class InputIterator, class MapIterator, class StencilIterator, class OutputIterator>
@@ -108,9 +112,9 @@ inline void scatter_if(InputIterator first,
                        OutputIterator result,
                        command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<StencilIterator>::value_type T;
+	typedef typename std::iterator_traits<StencilIterator>::value_type T;
 
-    scatter_if(first, last, map, stencil, result, identity<T>(), queue);
+	scatter_if(first, last, map, stencil, result, identity<T>(), queue);
 }
 
 } // end compute namespace

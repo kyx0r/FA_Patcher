@@ -5,13 +5,15 @@
 #ifndef IMPLICIT_CAST_DWA200356_HPP
 # define IMPLICIT_CAST_DWA200356_HPP
 
-namespace boost {
+namespace boost
+{
 
-namespace detail {
+namespace detail
+{
 
 template<class T> struct icast_identity
 {
-    typedef T type;
+	typedef T type;
 };
 
 } // namespace detail
@@ -22,8 +24,9 @@ template<class T> struct icast_identity
 // The use of identity creates a non-deduced form, so that the
 // explicit template argument must be supplied
 template <typename T>
-inline T implicit_cast (typename boost::detail::icast_identity<T>::type x) {
-    return x;
+inline T implicit_cast (typename boost::detail::icast_identity<T>::type x)
+{
+	return x;
 }
 
 // incomplete return type now is here

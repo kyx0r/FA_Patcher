@@ -16,9 +16,12 @@
 #include <boost/compute/algorithm/transform.hpp>
 #include <boost/compute/iterator/counting_iterator.hpp>
 
-namespace boost {
-namespace compute {
-namespace experimental {
+namespace boost
+{
+namespace compute
+{
+namespace experimental
+{
 
 template<class Iterator, class UnaryFunction>
 inline void tabulate(Iterator first,
@@ -26,15 +29,15 @@ inline void tabulate(Iterator first,
                      UnaryFunction function,
                      command_queue &queue)
 {
-    size_t n = detail::iterator_range_size(first, last);
+	size_t n = detail::iterator_range_size(first, last);
 
-    ::boost::compute::transform(
-        ::boost::compute::make_counting_iterator<int>(0),
-        ::boost::compute::make_counting_iterator<int>(n),
-        first,
-        function,
-        queue
-    );
+	::boost::compute::transform(
+	    ::boost::compute::make_counting_iterator<int>(0),
+	    ::boost::compute::make_counting_iterator<int>(n),
+	    first,
+	    function,
+	    queue
+	);
 }
 
 } // end experimental namespace

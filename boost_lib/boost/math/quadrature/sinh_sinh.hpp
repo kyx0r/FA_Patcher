@@ -20,24 +20,31 @@
 #include <memory>
 #include <boost/math/quadrature/detail/sinh_sinh_detail.hpp>
 
-namespace boost{ namespace math{ namespace quadrature {
+namespace boost
+{
+namespace math
+{
+namespace quadrature
+{
 
 template<class Real, class Policy = boost::math::policies::policy<> >
 class sinh_sinh
 {
 public:
-    sinh_sinh(size_t max_refinements = 9)
-        : m_imp(std::make_shared<detail::sinh_sinh_detail<Real, Policy> >(max_refinements)) {}
+	sinh_sinh(size_t max_refinements = 9)
+		: m_imp(std::make_shared<detail::sinh_sinh_detail<Real, Policy> >(max_refinements)) {}
 
-    template<class F>
-    Real integrate(const F f, Real tol = boost::math::tools::root_epsilon<Real>(), Real* error = nullptr, Real* L1 = nullptr, std::size_t* levels = nullptr) const
-    {
-        return m_imp->integrate(f, tol, error, L1, levels);
-    }
+	template<class F>
+	Real integrate(const F f, Real tol = boost::math::tools::root_epsilon<Real>(), Real* error = nullptr, Real* L1 = nullptr, std::size_t* levels = nullptr) const
+	{
+		return m_imp->integrate(f, tol, error, L1, levels);
+	}
 
 private:
-    std::shared_ptr<detail::sinh_sinh_detail<Real, Policy>> m_imp;
+	std::shared_ptr<detail::sinh_sinh_detail<Real, Policy>> m_imp;
 };
 
-}}}
+}
+}
+}
 #endif

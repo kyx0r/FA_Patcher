@@ -17,204 +17,210 @@
 #include <boost/pool/object_pool.hpp>
 #include <boost/foreach.hpp>
 
-namespace boost { namespace spirit { namespace qi
+namespace boost
 {
-    template <typename Char, typename T>
-    struct tst_map
-    {
-        typedef Char char_type; // the character type
-        typedef T value_type; // the value associated with each entry
-        typedef detail::tst_node<Char, T> node;
+namespace spirit
+{
+namespace qi
+{
+template <typename Char, typename T>
+struct tst_map
+{
+	typedef Char char_type; // the character type
+	typedef T value_type; // the value associated with each entry
+	typedef detail::tst_node<Char, T> node;
 
-        tst_map()
-        {
-        }
+	tst_map()
+	{
+	}
 
-        ~tst_map()
-        {
-            // Nothing to do here.
-            // The pools do the right thing for us
-        }
+	~tst_map()
+	{
+		// Nothing to do here.
+		// The pools do the right thing for us
+	}
 
-        tst_map(tst_map const& rhs)
-        {
-            copy(rhs);
-        }
+	tst_map(tst_map const& rhs)
+	{
+		copy(rhs);
+	}
 
-        tst_map& operator=(tst_map const& rhs)
-        {
-            return assign(rhs);
-        }
+	tst_map& operator=(tst_map const& rhs)
+	{
+		return assign(rhs);
+	}
 
-        template <typename Iterator, typename Filter>
-        T* find(Iterator& first, Iterator last, Filter filter) const
-        {
-            if (first != last)
-            {
-                Iterator save = first;
-                typename map_type::const_iterator
-                    i = map.find(filter(*first++));
+	template <typename Iterator, typename Filter>
+	T* find(Iterator& first, Iterator last, Filter filter) const
+	{
+		if (first != last)
+		{
+			Iterator save = first;
+			typename map_type::const_iterator
+			i = map.find(filter(*first++));
 
-                if (i != map.end())
-                {
-                    if (T* p = node::find(i->second.root, first, last, filter))
-                    {
-                        return p;
-                    }
-                   
-                    if (i->second.data)
-                    {
-                        return i->second.data;
-                    }
-                }
-                first = save;
-            }
-            return 0;
-        }
+			if (i != map.end())
+			{
+				if (T* p = node::find(i->second.root, first, last, filter))
+				{
+					return p;
+				}
 
-        template <typename Iterator>
-        T* find(Iterator& first, Iterator last) const
-        {
-            return find(first, last, tst_pass_through());
-        }
+				if (i->second.data)
+				{
+					return i->second.data;
+				}
+			}
+			first = save;
+		}
+		return 0;
+	}
 
-        template <typename Iterator>
-        bool add(
-            Iterator first
-          , Iterator last
-          , typename boost::call_traits<T>::param_type val)
-        {
-            if (first != last)
-            {
-                map_data x = {0, 0};
-                std::pair<typename map_type::iterator, bool>
-                    r = map.insert(std::pair<Char, map_data>(*first++, x));
+	template <typename Iterator>
+	T* find(Iterator& first, Iterator last) const
+	{
+		return find(first, last, tst_pass_through());
+	}
 
-                if (first != last)
-                {
-                    return node::add(r.first->second.root
-                      , first, last, val, this) ? true : false;
-                }
-                else
-                {
-                    if (r.first->second.data)
-                        return false;
-                    r.first->second.data = this->new_data(val);
-                }
-                return true;
-            }
-            return false;
-        }
+	template <typename Iterator>
+	bool add(
+	    Iterator first
+	    , Iterator last
+	    , typename boost::call_traits<T>::param_type val)
+	{
+		if (first != last)
+		{
+			map_data x = {0, 0};
+			std::pair<typename map_type::iterator, bool>
+			r = map.insert(std::pair<Char, map_data>(*first++, x));
 
-        template <typename Iterator>
-        void remove(Iterator first, Iterator last)
-        {
-            if (first != last)
-            {
-                typename map_type::iterator i = map.find(*first++);
-                if (i != map.end())
-                {
-                    if (first != last)
-                    {
-                        node::remove(i->second.root, first, last, this);
-                    }
-                    else if (i->second.data)
-                    {
-                        this->delete_data(i->second.data);
-                        i->second.data = 0;
-                    }
-                    if (i->second.data == 0 && i->second.root == 0)
-                    {
-                        map.erase(i);
-                    }
-                }
-            }
-        }
+			if (first != last)
+			{
+				return node::add(r.first->second.root
+				                 , first, last, val, this) ? true : false;
+			}
+			else
+			{
+				if (r.first->second.data)
+					return false;
+				r.first->second.data = this->new_data(val);
+			}
+			return true;
+		}
+		return false;
+	}
 
-        void clear()
-        {
-            BOOST_FOREACH(typename map_type::value_type& x, map)
-            {
-                node::destruct_node(x.second.root, this);
-                if (x.second.data)
-                    this->delete_data(x.second.data);
-            }
-            map.clear();
-        }
+	template <typename Iterator>
+	void remove(Iterator first, Iterator last)
+	{
+		if (first != last)
+		{
+			typename map_type::iterator i = map.find(*first++);
+			if (i != map.end())
+			{
+				if (first != last)
+				{
+					node::remove(i->second.root, first, last, this);
+				}
+				else if (i->second.data)
+				{
+					this->delete_data(i->second.data);
+					i->second.data = 0;
+				}
+				if (i->second.data == 0 && i->second.root == 0)
+				{
+					map.erase(i);
+				}
+			}
+		}
+	}
 
-        template <typename F>
-        void for_each(F f) const
-        {
-            BOOST_FOREACH(typename map_type::value_type const& x, map)
-            {
-                std::basic_string<Char> s(1, x.first);
-                node::for_each(x.second.root, s, f);
-                if (x.second.data)
-                    f(s, *x.second.data);
-            }
-        }
+	void clear()
+	{
+		BOOST_FOREACH(typename map_type::value_type& x, map)
+		{
+			node::destruct_node(x.second.root, this);
+			if (x.second.data)
+				this->delete_data(x.second.data);
+		}
+		map.clear();
+	}
 
-    private:
+	template <typename F>
+	void for_each(F f) const
+	{
+		BOOST_FOREACH(typename map_type::value_type const& x, map)
+		{
+			std::basic_string<Char> s(1, x.first);
+			node::for_each(x.second.root, s, f);
+			if (x.second.data)
+				f(s, *x.second.data);
+		}
+	}
 
-        friend struct detail::tst_node<Char, T>;
+private:
 
-        struct map_data
-        {
-            node* root;
-            T* data;
-        };
+	friend struct detail::tst_node<Char, T>;
 
-        typedef unordered_map<Char, map_data> map_type;
+	struct map_data
+	{
+		node* root;
+		T* data;
+	};
 
-        void copy(tst_map const& rhs)
-        {
-            BOOST_FOREACH(typename map_type::value_type const& x, rhs.map)
-            {
-                map_data xx = {node::clone_node(x.second.root, this), 0};
-                if (x.second.data)
-                    xx.data = data_pool.construct(*x.second.data);
-                map[x.first] = xx;
-            }
-        }
+	typedef unordered_map<Char, map_data> map_type;
 
-        tst_map& assign(tst_map const& rhs)
-        {
-            if (this != &rhs)
-            {
-                BOOST_FOREACH(typename map_type::value_type& x, map)
-                {
-                    node::destruct_node(x.second.root, this);
-                }
-                map.clear();
-                copy(rhs);
-            }
-            return *this;
-        }
+	void copy(tst_map const& rhs)
+	{
+		BOOST_FOREACH(typename map_type::value_type const& x, rhs.map)
+		{
+			map_data xx = {node::clone_node(x.second.root, this), 0};
+			if (x.second.data)
+				xx.data = data_pool.construct(*x.second.data);
+			map[x.first] = xx;
+		}
+	}
 
-        node* new_node(Char id)
-        {
-            return node_pool.construct(id);
-        }
+	tst_map& assign(tst_map const& rhs)
+	{
+		if (this != &rhs)
+		{
+			BOOST_FOREACH(typename map_type::value_type& x, map)
+			{
+				node::destruct_node(x.second.root, this);
+			}
+			map.clear();
+			copy(rhs);
+		}
+		return *this;
+	}
 
-        T* new_data(typename boost::call_traits<T>::param_type val)
-        {
-            return data_pool.construct(val);
-        }
+	node* new_node(Char id)
+	{
+		return node_pool.construct(id);
+	}
 
-        void delete_node(node* p)
-        {
-            node_pool.destroy(p);
-        }
+	T* new_data(typename boost::call_traits<T>::param_type val)
+	{
+		return data_pool.construct(val);
+	}
 
-        void delete_data(T* p)
-        {
-            data_pool.destroy(p);
-        }
+	void delete_node(node* p)
+	{
+		node_pool.destroy(p);
+	}
 
-        map_type map;
-        object_pool<node> node_pool;
-        object_pool<T> data_pool;
-    };
-}}}
+	void delete_data(T* p)
+	{
+		data_pool.destroy(p);
+	}
+
+	map_type map;
+	object_pool<node> node_pool;
+	object_pool<T> data_pool;
+};
+}
+}
+}
 
 #endif

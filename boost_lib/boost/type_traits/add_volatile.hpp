@@ -12,7 +12,8 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 // * convert a type T to volatile type - add_volatile<T>
 // this is not required since the result is always
@@ -25,19 +26,25 @@ namespace boost {
 // references with MSVC6.
 #   pragma warning(push)
 #   pragma warning(disable:4181) // warning C4181: qualifier applied to reference type ignored
-#endif 
+#endif
 
-template <class T> struct add_volatile{ typedef T volatile type; };
+template <class T> struct add_volatile
+{
+	typedef T volatile type;
+};
 
 #if defined(BOOST_MSVC)
 #   pragma warning(pop)
-#endif 
+#endif
 
-template <class T> struct add_volatile<T&>{ typedef T& type; };
+template <class T> struct add_volatile<T&>
+{
+	typedef T& type;
+};
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
-   template <class T> using add_volatile_t = typename add_volatile<T>::type;
+template <class T> using add_volatile_t = typename add_volatile<T>::type;
 
 #endif
 

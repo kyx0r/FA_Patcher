@@ -22,124 +22,157 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace fibers {
+namespace boost
+{
+namespace fibers
+{
 
-class fiber_error : public std::system_error {
+class fiber_error : public std::system_error
+{
 public:
-    fiber_error( std::error_code ec) :
-        std::system_error{ ec } {
-    }
+	fiber_error( std::error_code ec) :
+		std::system_error{ ec }
+	{
+	}
 
-    fiber_error( std::error_code ec, const char * what_arg) :
-        std::system_error{ ec, what_arg } {
-    }
+	fiber_error( std::error_code ec, const char * what_arg) :
+		std::system_error{ ec, what_arg }
+	{
+	}
 
-    fiber_error( std::error_code ec, std::string const& what_arg) :
-        std::system_error{ ec, what_arg } {
-    }
+	fiber_error( std::error_code ec, std::string const& what_arg) :
+		std::system_error{ ec, what_arg }
+	{
+	}
 
-    virtual ~fiber_error() = default;
+	virtual ~fiber_error() = default;
 };
 
-class lock_error : public fiber_error {
+class lock_error : public fiber_error
+{
 public:
-    lock_error( std::error_code ec) :
-        fiber_error{ ec } {
-    }
+	lock_error( std::error_code ec) :
+		fiber_error{ ec }
+	{
+	}
 
-    lock_error( std::error_code ec, const char * what_arg) :
-        fiber_error{ ec, what_arg } {
-    }
+	lock_error( std::error_code ec, const char * what_arg) :
+		fiber_error{ ec, what_arg }
+	{
+	}
 
-    lock_error( std::error_code ec, std::string const& what_arg) :
-        fiber_error{ ec, what_arg } {
-    }
+	lock_error( std::error_code ec, std::string const& what_arg) :
+		fiber_error{ ec, what_arg }
+	{
+	}
 };
 
-enum class future_errc {
-    broken_promise = 1,
-    future_already_retrieved,
-    promise_already_satisfied,
-    no_state
+enum class future_errc
+{
+	broken_promise = 1,
+	future_already_retrieved,
+	promise_already_satisfied,
+	no_state
 };
 
 BOOST_FIBERS_DECL
 std::error_category const& future_category() noexcept;
 
-}}
+}
+}
 
-namespace std {
+namespace std
+{
 
 template<>
-struct is_error_code_enum< boost::fibers::future_errc > : public true_type {
+struct is_error_code_enum< boost::fibers::future_errc > : public true_type
+{
 };
 
 inline
-std::error_code make_error_code( boost::fibers::future_errc e) noexcept {
-    return std::error_code{ static_cast< int >( e), boost::fibers::future_category() };
+std::error_code make_error_code( boost::fibers::future_errc e) noexcept
+{
+	return std::error_code{ static_cast< int >( e), boost::fibers::future_category() };
 }
 
 inline
-std::error_condition make_error_condition( boost::fibers::future_errc e) noexcept {
-    return std::error_condition{ static_cast< int >( e), boost::fibers::future_category() };
+std::error_condition make_error_condition( boost::fibers::future_errc e) noexcept
+{
+	return std::error_condition{ static_cast< int >( e), boost::fibers::future_category() };
 }
 
 }
 
-namespace boost {
-namespace fibers {
+namespace boost
+{
+namespace fibers
+{
 
-class future_error : public fiber_error {
+class future_error : public fiber_error
+{
 public:
-    future_error( std::error_code ec) :
-        fiber_error{ ec } {
-    }
+	future_error( std::error_code ec) :
+		fiber_error{ ec }
+	{
+	}
 };
 
-class future_uninitialized : public future_error {
+class future_uninitialized : public future_error
+{
 public:
-    future_uninitialized() :
-        future_error{ std::make_error_code( future_errc::no_state) } {
-    }
+	future_uninitialized() :
+		future_error{ std::make_error_code( future_errc::no_state) }
+	{
+	}
 };
 
-class future_already_retrieved : public future_error {
+class future_already_retrieved : public future_error
+{
 public:
-    future_already_retrieved() :
-        future_error{ std::make_error_code( future_errc::future_already_retrieved) } {
-    }
+	future_already_retrieved() :
+		future_error{ std::make_error_code( future_errc::future_already_retrieved) }
+	{
+	}
 };
 
-class broken_promise : public future_error {
+class broken_promise : public future_error
+{
 public:
-    broken_promise() :
-        future_error{ std::make_error_code( future_errc::broken_promise) } {
-    }
+	broken_promise() :
+		future_error{ std::make_error_code( future_errc::broken_promise) }
+	{
+	}
 };
 
-class promise_already_satisfied : public future_error {
+class promise_already_satisfied : public future_error
+{
 public:
-    promise_already_satisfied() :
-        future_error{ std::make_error_code( future_errc::promise_already_satisfied) } {
-    }
+	promise_already_satisfied() :
+		future_error{ std::make_error_code( future_errc::promise_already_satisfied) }
+	{
+	}
 };
 
-class promise_uninitialized : public future_error {
+class promise_uninitialized : public future_error
+{
 public:
-    promise_uninitialized() :
-        future_error{ std::make_error_code( future_errc::no_state) } {
-    }
+	promise_uninitialized() :
+		future_error{ std::make_error_code( future_errc::no_state) }
+	{
+	}
 };
 
-class packaged_task_uninitialized : public future_error {
+class packaged_task_uninitialized : public future_error
+{
 public:
-    packaged_task_uninitialized() :
-        future_error{ std::make_error_code( future_errc::no_state) } {
-    }
+	packaged_task_uninitialized() :
+		future_error{ std::make_error_code( future_errc::no_state) }
+	{
+	}
 };
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

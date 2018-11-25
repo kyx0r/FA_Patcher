@@ -11,23 +11,29 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    template<typename Duration>
-    struct no_memory
-    {
-      typedef Duration duration;
+template<typename Duration>
+struct no_memory
+{
+	typedef Duration duration;
 
-      duration elapsed() const  { return duration::zero(); }
-      duration last() const  { return duration::zero(); }
-      void store(duration const& )  {}
-      void reset() {}
+	duration elapsed() const
+	{
+		return duration::zero();
+	}
+	duration last() const
+	{
+		return duration::zero();
+	}
+	void store(duration const& )  {}
+	void reset() {}
 
-    };
+};
 
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 

@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/stable_partition.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 ///
 /// Partitions the elements in the range [\p first, \p last) according to
@@ -32,7 +34,7 @@ inline Iterator partition(Iterator first,
                           UnaryPredicate predicate,
                           command_queue &queue = system::default_queue())
 {
-    return stable_partition(first, last, predicate, queue);
+	return stable_partition(first, last, predicate, queue);
 }
 
 } // end compute namespace

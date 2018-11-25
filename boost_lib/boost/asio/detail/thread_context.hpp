@@ -21,9 +21,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class thread_info_base;
 
@@ -31,8 +34,8 @@ class thread_info_base;
 class thread_context
 {
 public:
-  // Per-thread call stack to track the state of each thread in the context.
-  typedef call_stack<thread_context, thread_info_base> thread_call_stack;
+	// Per-thread call stack to track the state of each thread in the context.
+	typedef call_stack<thread_context, thread_info_base> thread_call_stack;
 };
 
 } // namespace detail

@@ -14,33 +14,36 @@
 #include <boost/compute/device.hpp>
 #include <boost/compute/platform.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // returns true if the device is an nvidia gpu
 inline bool is_nvidia_device(const device &device)
 {
-    std::string nvidia("NVIDIA");
-    return device.vendor().compare(0, nvidia.size(), nvidia) == 0;
+	std::string nvidia("NVIDIA");
+	return device.vendor().compare(0, nvidia.size(), nvidia) == 0;
 }
 
 // returns true if the device is an amd cpu or gpu
 inline bool is_amd_device(const device &device)
 {
-    return device.platform().vendor() == "Advanced Micro Devices, Inc.";
+	return device.platform().vendor() == "Advanced Micro Devices, Inc.";
 }
 
 // returns true if the platform is Apple OpenCL platform
 inline bool is_apple_platform(const platform &platform)
 {
-    return platform.name() == "Apple";
+	return platform.name() == "Apple";
 }
 
 // returns true if the device is from Apple OpenCL Platform
 inline bool is_apple_platform_device(const device &device)
 {
-    return is_apple_platform(device.platform());
+	return is_apple_platform(device.platform());
 }
 
 } // end detail namespace

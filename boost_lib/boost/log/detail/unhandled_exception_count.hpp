@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! Returns the number of currently pending exceptions
 BOOST_LOG_API unsigned int unhandled_exception_count() BOOST_NOEXCEPT;

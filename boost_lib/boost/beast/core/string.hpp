@@ -15,8 +15,10 @@
 #include <boost/utility/string_view.hpp>
 #include <algorithm>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /// The type of string view used by the library
 using string_view = boost::string_view;
@@ -26,14 +28,15 @@ template<class CharT, class Traits>
 using basic_string_view =
     boost::basic_string_view<CharT, Traits>;
 
-namespace detail {
+namespace detail
+{
 
 inline
 char
 ascii_tolower(char c)
 {
-    return ((static_cast<unsigned>(c) - 65U) < 26) ?
-        c + 'a' - 'A' : c;
+	return ((static_cast<unsigned>(c) - 65U) < 26) ?
+	       c + 'a' - 'A' : c;
 }
 
 template<class = void>
@@ -42,31 +45,31 @@ iequals(
     beast::string_view lhs,
     beast::string_view rhs)
 {
-    auto n = lhs.size();
-    if(rhs.size() != n)
-        return false;
-    auto p1 = lhs.data();
-    auto p2 = rhs.data();
-    char a, b;
-    while(n--)
-    {
-        a = *p1++;
-        b = *p2++;
-        if(a != b)
-        {
-            // slow loop
-            do
-            {
-                if(ascii_tolower(a) != ascii_tolower(b))
-                    return false;
-                a = *p1++;
-                b = *p2++;
-            }
-            while(n--);
-            return true;
-        }
-    }
-    return true;
+	auto n = lhs.size();
+	if(rhs.size() != n)
+		return false;
+	auto p1 = lhs.data();
+	auto p2 = rhs.data();
+	char a, b;
+	while(n--)
+	{
+		a = *p1++;
+		b = *p2++;
+		if(a != b)
+		{
+			// slow loop
+			do
+			{
+				if(ascii_tolower(a) != ascii_tolower(b))
+					return false;
+				a = *p1++;
+				b = *p2++;
+			}
+			while(n--);
+			return true;
+		}
+	}
+	return true;
 }
 
 } // detail
@@ -85,7 +88,7 @@ iequals(
     beast::string_view lhs,
     beast::string_view rhs)
 {
-    return detail::iequals(lhs, rhs);
+	return detail::iequals(lhs, rhs);
 }
 
 /** A case-insensitive less predicate for strings.
@@ -94,21 +97,21 @@ iequals(
 */
 struct iless
 {
-    bool
-    operator()(
-        string_view lhs,
-        string_view rhs) const
-    {
-        using std::begin;
-        using std::end;
-        return std::lexicographical_compare(
-            begin(lhs), end(lhs), begin(rhs), end(rhs),
-            [](char c1, char c2)
-            {
-                return detail::ascii_tolower(c1) < detail::ascii_tolower(c2);
-            }
-        );
-    }
+	bool
+	operator()(
+	    string_view lhs,
+	    string_view rhs) const
+	{
+		using std::begin;
+		using std::end;
+		return std::lexicographical_compare(
+		           begin(lhs), end(lhs), begin(rhs), end(rhs),
+		           [](char c1, char c2)
+		{
+			return detail::ascii_tolower(c1) < detail::ascii_tolower(c2);
+		}
+		       );
+	}
 };
 
 /** A case-insensitive equality predicate for strings.
@@ -117,13 +120,13 @@ struct iless
 */
 struct iequal
 {
-    bool
-    operator()(
-        string_view lhs,
-        string_view rhs) const
-    {
-        return iequals(lhs, rhs);
-    }
+	bool
+	operator()(
+	    string_view lhs,
+	    string_view rhs) const
+	{
+		return iequals(lhs, rhs);
+	}
 };
 
 } // beast

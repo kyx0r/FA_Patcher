@@ -18,9 +18,12 @@
 #include <boost/limits.hpp>
 #include <boost/pending/integer_log2.hpp>
 
-namespace boost {
-namespace random {
-namespace detail {
+namespace boost
+{
+namespace random
+{
+namespace detail
+{
 
 #if !defined(BOOST_NO_CXX11_CONSTEXPR)
 #define BOOST_RANDOM_DETAIL_CONSTEXPR constexpr
@@ -36,45 +39,45 @@ template<int Shift>
 struct integer_log2_impl
 {
 #if defined(BOOST_NO_CXX11_CONSTEXPR)
-    template<class T>
-    BOOST_RANDOM_DETAIL_CONSTEXPR static int apply(T t, int accum)
-    {
-        int update = ((t >> Shift) != 0) * Shift;
-        return integer_log2_impl<Shift / 2>::apply(t >> update, accum + update);
-    }
+	template<class T>
+	BOOST_RANDOM_DETAIL_CONSTEXPR static int apply(T t, int accum)
+	{
+		int update = ((t >> Shift) != 0) * Shift;
+		return integer_log2_impl<Shift / 2>::apply(t >> update, accum + update);
+	}
 #else
-    template<class T>
-    BOOST_RANDOM_DETAIL_CONSTEXPR static int apply2(T t, int accum, int update)
-    {
-        return integer_log2_impl<Shift / 2>::apply(t >> update, accum + update);
-    }
+	template<class T>
+	BOOST_RANDOM_DETAIL_CONSTEXPR static int apply2(T t, int accum, int update)
+	{
+		return integer_log2_impl<Shift / 2>::apply(t >> update, accum + update);
+	}
 
-    template<class T>
-    BOOST_RANDOM_DETAIL_CONSTEXPR static int apply(T t, int accum)
-    {
-        return apply2(t, accum, ((t >> Shift) != 0) * Shift);
-    }
+	template<class T>
+	BOOST_RANDOM_DETAIL_CONSTEXPR static int apply(T t, int accum)
+	{
+		return apply2(t, accum, ((t >> Shift) != 0) * Shift);
+	}
 #endif
 };
 
 template<>
 struct integer_log2_impl<1>
 {
-    template<class T>
-    BOOST_RANDOM_DETAIL_CONSTEXPR static int apply(T t, int accum)
-    {
-        return int(t >> 1) + accum;
-    }
+	template<class T>
+	BOOST_RANDOM_DETAIL_CONSTEXPR static int apply(T t, int accum)
+	{
+		return int(t >> 1) + accum;
+	}
 };
 
 template<class T>
 BOOST_RANDOM_DETAIL_CONSTEXPR int integer_log2(T t)
 {
-    return integer_log2_impl<
-        ::boost::detail::max_pow2_less<
-            ::std::numeric_limits<T>::digits, 4
-        >::value
-    >::apply(t, 0);
+	return integer_log2_impl<
+	       ::boost::detail::max_pow2_less<
+	       ::std::numeric_limits<T>::digits, 4
+	       >::value
+	       >::apply(t, 0);
 }
 
 } // namespace detail

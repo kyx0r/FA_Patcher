@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ add_varargs_hpp
 /*`
@@ -25,20 +28,21 @@ template<typename T>
 using add_varargs_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::traits<T>::add_varargs,
-        varargs_are_illegal_for_this_type>;
+    typename detail::traits<T>::add_varargs,
+    varargs_are_illegal_for_this_type>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct add_varargs_impl {};
+template<typename T, typename = std::false_type>
+struct add_varargs_impl {};
 
-    template<typename T>
-    struct add_varargs_impl <T, typename std::is_same<
-        add_varargs_t<T>, detail::dummy>::type>
-    {
-        using type = add_varargs_t<T>;
-    };
+template<typename T>
+struct add_varargs_impl <T, typename std::is_same<
+	add_varargs_t<T>, detail::dummy>::type>
+{
+	using type = add_varargs_t<T>;
+};
 }
 //->
 
@@ -46,7 +50,8 @@ template<typename T>
 struct add_varargs : detail::add_varargs_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

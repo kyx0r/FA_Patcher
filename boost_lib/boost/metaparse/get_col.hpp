@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::get_col;
-  }
+namespace metaparse
+{
+using v1::get_col;
+}
 }
 
 #endif

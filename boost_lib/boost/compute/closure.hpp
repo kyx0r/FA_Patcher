@@ -30,64 +30,67 @@
 #include <boost/compute/type_traits/type_name.hpp>
 #include <boost/compute/type_traits/detail/capture_traits.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class ResultType, class ArgTuple, class CaptureTuple>
 class invoked_closure
 {
 public:
-    typedef ResultType result_type;
+	typedef ResultType result_type;
 
-    BOOST_STATIC_CONSTANT(
-        size_t, arity = boost::tuples::length<ArgTuple>::value
-    );
+	BOOST_STATIC_CONSTANT(
+	    size_t, arity = boost::tuples::length<ArgTuple>::value
+	);
 
-    invoked_closure(const std::string &name,
-                    const std::string &source,
-                    const std::map<std::string, std::string> &definitions,
-                    const ArgTuple &args,
-                    const CaptureTuple &capture)
-        : m_name(name),
-          m_source(source),
-          m_definitions(definitions),
-          m_args(args),
-          m_capture(capture)
-    {
-    }
+	invoked_closure(const std::string &name,
+	                const std::string &source,
+	                const std::map<std::string, std::string> &definitions,
+	                const ArgTuple &args,
+	                const CaptureTuple &capture)
+		: m_name(name),
+		  m_source(source),
+		  m_definitions(definitions),
+		  m_args(args),
+		  m_capture(capture)
+	{
+	}
 
-    std::string name() const
-    {
-        return m_name;
-    }
+	std::string name() const
+	{
+		return m_name;
+	}
 
-    std::string source() const
-    {
-        return m_source;
-    }
+	std::string source() const
+	{
+		return m_source;
+	}
 
-    const std::map<std::string, std::string>& definitions() const
-    {
-        return m_definitions;
-    }
+	const std::map<std::string, std::string>& definitions() const
+	{
+		return m_definitions;
+	}
 
-    const ArgTuple& args() const
-    {
-        return m_args;
-    }
+	const ArgTuple& args() const
+	{
+		return m_args;
+	}
 
-    const CaptureTuple& capture() const
-    {
-        return m_capture;
-    }
+	const CaptureTuple& capture() const
+	{
+		return m_capture;
+	}
 
 private:
-    std::string m_name;
-    std::string m_source;
-    std::map<std::string, std::string> m_definitions;
-    ArgTuple m_args;
-    CaptureTuple m_capture;
+	std::string m_name;
+	std::string m_source;
+	std::map<std::string, std::string> m_definitions;
+	ArgTuple m_args;
+	CaptureTuple m_capture;
 };
 
 } // end detail namespace
@@ -97,150 +100,152 @@ template<class Signature, class CaptureTuple>
 class closure
 {
 public:
-    typedef typename
-        boost::function_traits<Signature>::result_type result_type;
+	typedef typename
+	boost::function_traits<Signature>::result_type result_type;
 
-    BOOST_STATIC_CONSTANT(
-        size_t, arity = boost::function_traits<Signature>::arity
-    );
+	BOOST_STATIC_CONSTANT(
+	    size_t, arity = boost::function_traits<Signature>::arity
+	);
 
-    closure(const std::string &name,
-            const CaptureTuple &capture,
-            const std::string &source)
-        : m_name(name),
-          m_source(source),
-          m_capture(capture)
-    {
-    }
+	closure(const std::string &name,
+	        const CaptureTuple &capture,
+	        const std::string &source)
+		: m_name(name),
+		  m_source(source),
+		  m_capture(capture)
+	{
+	}
 
-    ~closure()
-    {
-    }
+	~closure()
+	{
+	}
 
-    std::string name() const
-    {
-        return m_name;
-    }
+	std::string name() const
+	{
+		return m_name;
+	}
 
-    /// \internal_
-    std::string source() const
-    {
-        return m_source;
-    }
+	/// \internal_
+	std::string source() const
+	{
+		return m_source;
+	}
 
-    /// \internal_
-    void define(std::string name, std::string value = std::string())
-    {
-        m_definitions[name] = value;
-    }
+	/// \internal_
+	void define(std::string name, std::string value = std::string())
+	{
+		m_definitions[name] = value;
+	}
 
-    /// \internal_
-    detail::invoked_closure<result_type, boost::tuple<>, CaptureTuple>
-    operator()() const
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            arity == 0,
-            "Non-nullary closure function invoked with zero arguments"
-        );
+	/// \internal_
+	detail::invoked_closure<result_type, boost::tuple<>, CaptureTuple>
+	operator()() const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    arity == 0,
+		    "Non-nullary closure function invoked with zero arguments"
+		);
 
-        return detail::invoked_closure<result_type, boost::tuple<>, CaptureTuple>(
-            m_name, m_source, m_definitions, boost::make_tuple(), m_capture
-        );
-    }
+		return detail::invoked_closure<result_type, boost::tuple<>, CaptureTuple>(
+		           m_name, m_source, m_definitions, boost::make_tuple(), m_capture
+		       );
+	}
 
-    /// \internal_
-    template<class Arg1>
-    detail::invoked_closure<result_type, boost::tuple<Arg1>, CaptureTuple>
-    operator()(const Arg1 &arg1) const
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            arity == 1,
-            "Non-unary closure function invoked with one argument"
-        );
+	/// \internal_
+	template<class Arg1>
+	detail::invoked_closure<result_type, boost::tuple<Arg1>, CaptureTuple>
+	operator()(const Arg1 &arg1) const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    arity == 1,
+		    "Non-unary closure function invoked with one argument"
+		);
 
-        return detail::invoked_closure<result_type, boost::tuple<Arg1>, CaptureTuple>(
-            m_name, m_source, m_definitions, boost::make_tuple(arg1), m_capture
-        );
-    }
+		return detail::invoked_closure<result_type, boost::tuple<Arg1>, CaptureTuple>(
+		           m_name, m_source, m_definitions, boost::make_tuple(arg1), m_capture
+		       );
+	}
 
-    /// \internal_
-    template<class Arg1, class Arg2>
-    detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2>, CaptureTuple>
-    operator()(const Arg1 &arg1, const Arg2 &arg2) const
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            arity == 2,
-            "Non-binary closure function invoked with two arguments"
-        );
+	/// \internal_
+	template<class Arg1, class Arg2>
+	detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2>, CaptureTuple>
+	operator()(const Arg1 &arg1, const Arg2 &arg2) const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    arity == 2,
+		    "Non-binary closure function invoked with two arguments"
+		);
 
-        return detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2>, CaptureTuple>(
-            m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2), m_capture
-        );
-    }
+		return detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2>, CaptureTuple>(
+		           m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2), m_capture
+		       );
+	}
 
-    /// \internal_
-    template<class Arg1, class Arg2, class Arg3>
-    detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2, Arg3>, CaptureTuple>
-    operator()(const Arg1 &arg1, const Arg2 &arg2, const Arg3 &arg3) const
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            arity == 3,
-            "Non-ternary closure function invoked with three arguments"
-        );
+	/// \internal_
+	template<class Arg1, class Arg2, class Arg3>
+	detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2, Arg3>, CaptureTuple>
+	operator()(const Arg1 &arg1, const Arg2 &arg2, const Arg3 &arg3) const
+	{
+		BOOST_STATIC_ASSERT_MSG(
+		    arity == 3,
+		    "Non-ternary closure function invoked with three arguments"
+		);
 
-        return detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2, Arg3>, CaptureTuple>(
-            m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2, arg3), m_capture
-        );
-    }
+		return detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2, Arg3>, CaptureTuple>(
+		           m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2, arg3), m_capture
+		       );
+	}
 
 private:
-    std::string m_name;
-    std::string m_source;
-    std::map<std::string, std::string> m_definitions;
-    CaptureTuple m_capture;
+	std::string m_name;
+	std::string m_source;
+	std::map<std::string, std::string> m_definitions;
+	CaptureTuple m_capture;
 };
 
-namespace detail {
+namespace detail
+{
 
 struct closure_signature_argument_inserter
 {
-    closure_signature_argument_inserter(std::stringstream &s_,
-                                        const char *capture_string,
-                                        size_t last)
-        : s(s_)
-    {
-        n = 0;
-        m_last = last;
+	closure_signature_argument_inserter(std::stringstream &s_,
+	                                    const char *capture_string,
+	                                    size_t last)
+		: s(s_)
+	{
+		n = 0;
+		m_last = last;
 
-        size_t capture_string_length = std::strlen(capture_string);
-        BOOST_ASSERT(capture_string[0] == '(' &&
-                     capture_string[capture_string_length-1] == ')');
-        std::string capture_string_(capture_string + 1, capture_string_length - 2);
-        boost::split(m_capture_names, capture_string_ , boost::is_any_of(","));
-    }
+		size_t capture_string_length = std::strlen(capture_string);
+		BOOST_ASSERT(capture_string[0] == '(' &&
+		             capture_string[capture_string_length-1] == ')');
+		std::string capture_string_(capture_string + 1, capture_string_length - 2);
+		boost::split(m_capture_names, capture_string_, boost::is_any_of(","));
+	}
 
-    template<class T>
-    void operator()(const T&) const
-    {
-        BOOST_ASSERT(n < m_capture_names.size());
+	template<class T>
+	void operator()(const T&) const
+	{
+		BOOST_ASSERT(n < m_capture_names.size());
 
-        // get captured variable name
-        std::string variable_name = m_capture_names[n];
+		// get captured variable name
+		std::string variable_name = m_capture_names[n];
 
-        // remove leading and trailing whitespace from variable name
-        boost::trim(variable_name);
+		// remove leading and trailing whitespace from variable name
+		boost::trim(variable_name);
 
-        s << capture_traits<T>::type_name() << " " << variable_name;
-        if(n+1 < m_last){
-            s << ", ";
-        }
-        n++;
-    }
+		s << capture_traits<T>::type_name() << " " << variable_name;
+		if(n+1 < m_last)
+		{
+			s << ", ";
+		}
+		n++;
+	}
 
-    mutable size_t n;
-    size_t m_last;
-    std::vector<std::string> m_capture_names;
-    std::stringstream &s;
+	mutable size_t n;
+	size_t m_last;
+	std::vector<std::string> m_capture_names;
+	std::stringstream &s;
 };
 
 template<class Signature, class CaptureTuple>
@@ -250,32 +255,32 @@ make_closure_declaration(const char *name,
                          const CaptureTuple &capture_tuple,
                          const char *capture_string)
 {
-    typedef typename
-        boost::function_traits<Signature>::result_type result_type;
-    typedef typename
-        boost::function_types::parameter_types<Signature>::type parameter_types;
-    typedef typename
-        mpl::size<parameter_types>::type arity_type;
+	typedef typename
+	boost::function_traits<Signature>::result_type result_type;
+	typedef typename
+	boost::function_types::parameter_types<Signature>::type parameter_types;
+	typedef typename
+	mpl::size<parameter_types>::type arity_type;
 
-    std::stringstream s;
-    s << "inline " << type_name<result_type>() << " " << name;
-    s << "(";
+	std::stringstream s;
+	s << "inline " << type_name<result_type>() << " " << name;
+	s << "(";
 
-    // insert function arguments
-    signature_argument_inserter i(s, arguments, arity_type::value);
-    mpl::for_each<
-        typename mpl::transform<parameter_types, boost::add_pointer<mpl::_1>
-    >::type>(i);
-    s << ", ";
+	// insert function arguments
+	signature_argument_inserter i(s, arguments, arity_type::value);
+	mpl::for_each<
+	typename mpl::transform<parameter_types, boost::add_pointer<mpl::_1>
+	>::type>(i);
+	s << ", ";
 
-    // insert capture arguments
-    closure_signature_argument_inserter j(
-        s, capture_string, boost::tuples::length<CaptureTuple>::value
-    );
-    fusion::for_each(capture_tuple, j);
+	// insert capture arguments
+	closure_signature_argument_inserter j(
+	    s, capture_string, boost::tuples::length<CaptureTuple>::value
+	);
+	fusion::for_each(capture_tuple, j);
 
-    s << ")";
-    return s.str();
+	s << ")";
+	return s.str();
 }
 
 // used by the BOOST_COMPUTE_CLOSURE() macro to create a closure
@@ -288,11 +293,11 @@ make_closure_impl(const char *name,
                   const char *capture_string,
                   const std::string &source)
 {
-    std::stringstream s;
-    s << make_closure_declaration<Signature>(name, arguments, capture, capture_string);
-    s << source;
+	std::stringstream s;
+	s << make_closure_declaration<Signature>(name, arguments, capture, capture_string);
+	s << source;
 
-    return closure<Signature, CaptureTuple>(name, capture, s.str());
+	return closure<Signature, CaptureTuple>(name, capture, s.str());
 }
 
 } // end detail namespace

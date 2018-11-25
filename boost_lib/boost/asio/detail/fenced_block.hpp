@@ -44,9 +44,12 @@
 # include <boost/asio/detail/null_fenced_block.hpp>
 #endif
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if !defined(BOOST_ASIO_HAS_THREADS) \
   || defined(BOOST_ASIO_DISABLE_FENCED_BLOCK)

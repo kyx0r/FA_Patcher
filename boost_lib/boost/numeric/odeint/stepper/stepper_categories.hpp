@@ -20,9 +20,12 @@
 
 #include <boost/type_traits/integral_constant.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 
 /*
@@ -48,16 +51,40 @@ struct dense_output_stepper_tag {};
 
 
 template< class tag > struct base_tag ;
-template< > struct base_tag< stepper_tag > { typedef stepper_tag type; };
-template< > struct base_tag< error_stepper_tag > { typedef stepper_tag type; };
-template< > struct base_tag< explicit_error_stepper_tag > { typedef stepper_tag type; };
-template< > struct base_tag< explicit_error_stepper_fsal_tag > { typedef stepper_tag type; };
+template< > struct base_tag< stepper_tag >
+{
+	typedef stepper_tag type;
+};
+template< > struct base_tag< error_stepper_tag >
+{
+	typedef stepper_tag type;
+};
+template< > struct base_tag< explicit_error_stepper_tag >
+{
+	typedef stepper_tag type;
+};
+template< > struct base_tag< explicit_error_stepper_fsal_tag >
+{
+	typedef stepper_tag type;
+};
 
-template< > struct base_tag< controlled_stepper_tag > { typedef controlled_stepper_tag type; };
-template< > struct base_tag< explicit_controlled_stepper_tag > { typedef controlled_stepper_tag type; };
-template< > struct base_tag< explicit_controlled_stepper_fsal_tag > { typedef controlled_stepper_tag type; };
+template< > struct base_tag< controlled_stepper_tag >
+{
+	typedef controlled_stepper_tag type;
+};
+template< > struct base_tag< explicit_controlled_stepper_tag >
+{
+	typedef controlled_stepper_tag type;
+};
+template< > struct base_tag< explicit_controlled_stepper_fsal_tag >
+{
+	typedef controlled_stepper_tag type;
+};
 
-template< > struct base_tag< dense_output_stepper_tag > { typedef dense_output_stepper_tag type; };
+template< > struct base_tag< dense_output_stepper_tag >
+{
+	typedef dense_output_stepper_tag type;
+};
 
 
 } // odeint

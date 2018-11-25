@@ -27,42 +27,48 @@
 #include <boost/fusion/iterator/advance.hpp>
 #include <cstddef>
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
+{
+namespace fusion
+{
+namespace detail
 {
 BOOST_FUSION_BARRIER_BEGIN
 
-    template <typename Indices>
-    struct as_vector_impl;
+template <typename Indices>
+struct as_vector_impl;
 
-    template <std::size_t ...Indices>
-    struct as_vector_impl<index_sequence<Indices...> >
-    {
-        template <typename Iterator>
-        struct apply
-        {
-            typedef vector<
-                typename result_of::value_of<
-                    typename result_of::advance_c<Iterator, Indices>::type
-                >::type...
-            > type;
-        };
+template <std::size_t ...Indices>
+struct as_vector_impl<index_sequence<Indices...> >
+{
+	template <typename Iterator>
+	struct apply
+	{
+		typedef vector<
+		typename result_of::value_of<
+		typename result_of::advance_c<Iterator, Indices>::type
+		>::type...
+		> type;
+	};
 
-        template <typename Iterator>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static typename apply<Iterator>::type
-        call(Iterator i)
-        {
-            typedef typename apply<Iterator>::type result;
-            return result(*advance_c<Indices>(i)...);
-        }
-    };
+	template <typename Iterator>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static typename apply<Iterator>::type
+	call(Iterator i)
+	{
+		typedef typename apply<Iterator>::type result;
+		return result(*advance_c<Indices>(i)...);
+	}
+};
 
-    template <int size>
-    struct as_vector
-        : as_vector_impl<typename make_index_sequence<size>::type> {};
+template <int size>
+struct as_vector
+	: as_vector_impl<typename make_index_sequence<size>::type> {};
 
 BOOST_FUSION_BARRIER_END
-}}}
+}
+}
+}
 
 #endif
 #endif

@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function merge
 ///
@@ -34,10 +34,10 @@ inline OutputIterator merge(const SinglePassRange1& rng1,
                             const SinglePassRange2& rng2,
                             OutputIterator          out)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange2> ));
-    return std::merge(boost::begin(rng1), boost::end(rng1),
-                      boost::begin(rng2), boost::end(rng2), out);
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange2> ));
+	return std::merge(boost::begin(rng1), boost::end(rng1),
+	                  boost::begin(rng2), boost::end(rng2), out);
 }
 
 /// \overload
@@ -48,14 +48,14 @@ inline OutputIterator merge(const SinglePassRange1& rng1,
                             OutputIterator          out,
                             BinaryPredicate         pred)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange1> ));
-    BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange2> ));
-    return std::merge(boost::begin(rng1), boost::end(rng1),
-                      boost::begin(rng2), boost::end(rng2), out, pred);
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange1> ));
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange2> ));
+	return std::merge(boost::begin(rng1), boost::end(rng1),
+	                  boost::begin(rng2), boost::end(rng2), out, pred);
 }
 
-    } // namespace range
-    using range::merge;
+} // namespace range
+using range::merge;
 } // namespace boost
 
 #endif // include guard

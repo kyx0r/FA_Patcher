@@ -31,16 +31,19 @@
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
+namespace fusion
+{
+struct void_;
 
-    template <
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-            FUSION_MAX_VECTOR_SIZE, typename T, void_)
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        FUSION_MAX_VECTOR_SIZE, typename T, void_)
     >
-    struct tuple;
-}}
+struct tuple;
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)

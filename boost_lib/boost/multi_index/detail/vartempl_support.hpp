@@ -24,7 +24,7 @@
  * defined in such way accepts *exactly* BOOST_MULTI_INDEX_LIMIT_VARTEMPL_ARGS
  * arguments: variable number of arguments is emulated by providing a set of
  * overloads foo forwarding to foo_impl with
- * 
+ *
  *   BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL
  *   BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG (initial extra arg)
  *
@@ -84,9 +84,16 @@ BOOST_PP_ENUM(                                                       \
   BOOST_MULTI_INDEX_LIMIT_VARTEMPL_ARGS,                             \
   BOOST_MULTI_INDEX_VARTEMPL_FORWARD_ARG,~)
 
-namespace boost{namespace multi_index{namespace detail{
-struct noarg{};
-}}}
+namespace boost
+{
+namespace multi_index
+{
+namespace detail
+{
+struct noarg {};
+}
+}
+}
 
 /* call vartempl function without args */
 
@@ -156,11 +163,14 @@ BOOST_PP_REPEAT_FROM_TO(                                             \
   BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG_AUX,             \
   (ret)(name_from)(name_to)(extra_arg_type)(extra_arg_name))
 
-namespace boost{
-  
-namespace multi_index{
-  
-namespace detail{
+namespace boost
+{
+
+namespace multi_index
+{
+
+namespace detail
+{
 
 #define BOOST_MULTI_INDEX_VARTEMPL_TO_PLACEMENT_NEW_AUX(z,n,name)    \
 template<                                                            \
@@ -225,16 +235,19 @@ template<typename... Args> ret name_from(                            \
   return name_to(extra_arg_name,std::forward<Args>(args)...);        \
 }
 
-namespace boost{
-  
-namespace multi_index{
-  
-namespace detail{
+namespace boost
+{
+
+namespace multi_index
+{
+
+namespace detail
+{
 
 template<typename Value,typename... Args>
 Value* vartempl_placement_new(Value*x,Args&&... args)
 {
-  return new(x) Value(std::forward<Args>(args)...);
+	return new(x) Value(std::forward<Args>(args)...);
 }
 
 } /* namespace multi_index::detail */

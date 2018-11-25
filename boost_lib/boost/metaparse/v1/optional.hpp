@@ -13,27 +13,27 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class Default = void>
-      struct optional
-      {
-        typedef optional type;
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class Default = void>
+struct optional
+{
+	typedef optional type;
 
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::if_<
-            is_error<typename P::template apply<S, Pos> >,
-            accept<Default, S, Pos>,
-            // is_error evaluates it anyway
-            typename P::template apply<S, Pos>::type
-          >
-        {};
-      };
-    }
-  }
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::if_<
+		is_error<typename P::template apply<S, Pos> >,
+	accept<Default, S, Pos>,
+	       // is_error evaluates it anyway
+	       typename P::template apply<S, Pos>::type
+	>
+	{};
+};
+}
+}
 }
 
 #endif

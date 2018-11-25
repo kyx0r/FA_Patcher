@@ -26,10 +26,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace assertion {
-namespace op {
+namespace boost
+{
+namespace test_tools
+{
+namespace assertion
+{
+namespace op
+{
 
 // ************************************************************************** //
 // **************                   fpctraits                  ************** //
@@ -37,20 +41,23 @@ namespace op {
 // set of floating point comparison traits per comparison OP
 
 template<typename OP>
-struct fpctraits {
-    // indicate if we should perform the operation with a "logical OR"
-    // with the "equality under tolerance".
-    static const bool equality_logical_disjunction = true;
+struct fpctraits
+{
+	// indicate if we should perform the operation with a "logical OR"
+	// with the "equality under tolerance".
+	static const bool equality_logical_disjunction = true;
 };
 
 template <typename Lhs, typename Rhs>
-struct fpctraits<op::LT<Lhs,Rhs> > {
-    static const bool equality_logical_disjunction = false;
+struct fpctraits<op::LT<Lhs,Rhs> >
+{
+	static const bool equality_logical_disjunction = false;
 };
 
 template <typename Lhs, typename Rhs>
-struct fpctraits<op::GT<Lhs,Rhs> > {
-    static const bool equality_logical_disjunction = false;
+struct fpctraits<op::GT<Lhs,Rhs> >
+{
+	static const bool equality_logical_disjunction = false;
 };
 
 //____________________________________________________________________________//
@@ -65,11 +72,12 @@ template <typename FPT, typename Lhs, typename Rhs, typename OP>
 inline assertion_result
 compare_fpv( Lhs const& lhs, Rhs const& rhs, OP* cmp_operator)
 {
-    bool result = cmp_operator->eval_direct(lhs, rhs);
-    if(fpctraits<OP>::equality_logical_disjunction) {
-        return result || compare_fpv<FPT>(lhs, rhs, (op::EQ<Lhs, Rhs>*)0);
-    }
-    return result && compare_fpv<FPT>(lhs, rhs, (op::NE<Lhs, Rhs>*)0);
+	bool result = cmp_operator->eval_direct(lhs, rhs);
+	if(fpctraits<OP>::equality_logical_disjunction)
+	{
+		return result || compare_fpv<FPT>(lhs, rhs, (op::EQ<Lhs, Rhs>*)0);
+	}
+	return result && compare_fpv<FPT>(lhs, rhs, (op::NE<Lhs, Rhs>*)0);
 }
 
 //____________________________________________________________________________//
@@ -78,13 +86,13 @@ template <typename FPT, typename Lhs, typename Rhs>
 inline assertion_result
 compare_fpv_near_zero( FPT const& fpv, op::EQ<Lhs,Rhs>* )
 {
-    fpc::small_with_tolerance<FPT> P( fpc_tolerance<FPT>() );
+	fpc::small_with_tolerance<FPT> P( fpc_tolerance<FPT>() );
 
-    assertion_result ar( P( fpv ) );
-    if( !ar )
-        ar.message() << "Absolute value exceeds tolerance [|" << fpv << "| > "<< fpc_tolerance<FPT>() << ']';
+	assertion_result ar( P( fpv ) );
+	if( !ar )
+		ar.message() << "Absolute value exceeds tolerance [|" << fpv << "| > "<< fpc_tolerance<FPT>() << ']';
 
-    return ar;
+	return ar;
 }
 
 //____________________________________________________________________________//
@@ -93,12 +101,12 @@ template <typename FPT, typename Lhs, typename Rhs>
 inline assertion_result
 compare_fpv_near_zero( FPT const& fpv, op::NE<Lhs,Rhs>* )
 {
-    fpc::small_with_tolerance<FPT> P( fpc_tolerance<FPT>() );
+	fpc::small_with_tolerance<FPT> P( fpc_tolerance<FPT>() );
 
-    assertion_result ar( !P( fpv ) );
-    if( !ar )
-        ar.message() << "Absolute value is within tolerance [|" << fpv << "| < "<< fpc_tolerance<FPT>() << ']';
-    return ar;
+	assertion_result ar( !P( fpv ) );
+	if( !ar )
+		ar.message() << "Absolute value is within tolerance [|" << fpv << "| < "<< fpc_tolerance<FPT>() << ']';
+	return ar;
 }
 
 //____________________________________________________________________________//
@@ -107,21 +115,24 @@ template <typename FPT, typename Lhs, typename Rhs>
 inline assertion_result
 compare_fpv( Lhs const& lhs, Rhs const& rhs, op::EQ<Lhs,Rhs>* )
 {
-    if( lhs == 0 ) {
-        return compare_fpv_near_zero( rhs, (op::EQ<Lhs,Rhs>*)0 );
-    }
-    else if( rhs == 0) {
-        return compare_fpv_near_zero( lhs, (op::EQ<Lhs,Rhs>*)0 );
-    }
-    else {
-        fpc::close_at_tolerance<FPT> P( fpc_tolerance<FPT>(), fpc::FPC_STRONG );
+	if( lhs == 0 )
+	{
+		return compare_fpv_near_zero( rhs, (op::EQ<Lhs,Rhs>*)0 );
+	}
+	else if( rhs == 0)
+	{
+		return compare_fpv_near_zero( lhs, (op::EQ<Lhs,Rhs>*)0 );
+	}
+	else
+	{
+		fpc::close_at_tolerance<FPT> P( fpc_tolerance<FPT>(), fpc::FPC_STRONG );
 
-        assertion_result ar( P( lhs, rhs ) );
-        if( !ar )
-            ar.message() << "Relative difference exceeds tolerance ["
-                         << P.tested_rel_diff() << " > " << P.fraction_tolerance() << ']';
-        return ar;
-    }
+		assertion_result ar( P( lhs, rhs ) );
+		if( !ar )
+			ar.message() << "Relative difference exceeds tolerance ["
+			             << P.tested_rel_diff() << " > " << P.fraction_tolerance() << ']';
+		return ar;
+	}
 }
 
 //____________________________________________________________________________//
@@ -130,22 +141,25 @@ template <typename FPT, typename Lhs, typename Rhs>
 inline assertion_result
 compare_fpv( Lhs const& lhs, Rhs const& rhs, op::NE<Lhs,Rhs>* )
 {
-    if( lhs == 0 ) {
-        return compare_fpv_near_zero( rhs, (op::NE<Lhs,Rhs>*)0 );
-    }
-    else if( rhs == 0 ) {
-        return compare_fpv_near_zero( lhs, (op::NE<Lhs,Rhs>*)0 );
-    }
-    else {
-        fpc::close_at_tolerance<FPT> P( fpc_tolerance<FPT>(), fpc::FPC_WEAK );
+	if( lhs == 0 )
+	{
+		return compare_fpv_near_zero( rhs, (op::NE<Lhs,Rhs>*)0 );
+	}
+	else if( rhs == 0 )
+	{
+		return compare_fpv_near_zero( lhs, (op::NE<Lhs,Rhs>*)0 );
+	}
+	else
+	{
+		fpc::close_at_tolerance<FPT> P( fpc_tolerance<FPT>(), fpc::FPC_WEAK );
 
-        assertion_result ar( !P( lhs, rhs ) );
-        if( !ar )
-            ar.message() << "Relative difference is within tolerance ["
-                         << P.tested_rel_diff() << " < " << fpc_tolerance<FPT>() << ']';
+		assertion_result ar( !P( lhs, rhs ) );
+		if( !ar )
+			ar.message() << "Relative difference is within tolerance ["
+			             << P.tested_rel_diff() << " < " << fpc_tolerance<FPT>() << ']';
 
-        return ar;
-    }
+		return ar;
+	}
 }
 
 //____________________________________________________________________________//

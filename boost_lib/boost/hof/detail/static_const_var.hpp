@@ -10,12 +10,17 @@
 
 #include <boost/hof/detail/intrinsics.hpp>
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class T>
 struct static_const_storage
 {
-    static constexpr T value = T();
+	static constexpr T value = T();
 };
 
 template<class T>
@@ -23,26 +28,27 @@ constexpr T static_const_storage<T>::value;
 
 struct static_const_var_factory
 {
-    constexpr static_const_var_factory()
-    {}
+	constexpr static_const_var_factory()
+	{}
 
-    template<class T>
-    constexpr const T& operator=(const T&) const
-    {
-        static_assert(BOOST_HOF_IS_DEFAULT_CONSTRUCTIBLE(T), "Static const variable must be default constructible");
-        return static_const_storage<T>::value;
-    }
+	template<class T>
+	constexpr const T& operator=(const T&) const
+	{
+		static_assert(BOOST_HOF_IS_DEFAULT_CONSTRUCTIBLE(T), "Static const variable must be default constructible");
+		return static_const_storage<T>::value;
+	}
 };
 }
 
 template<class T>
 constexpr const T& static_const_var()
 {
-    return detail::static_const_storage<T>::value;
+	return detail::static_const_storage<T>::value;
 }
 
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #if BOOST_HOF_HAS_RELAXED_CONSTEXPR || defined(_MSC_VER)
 #define BOOST_HOF_STATIC_CONSTEXPR const constexpr

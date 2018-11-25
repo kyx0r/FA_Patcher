@@ -22,52 +22,53 @@
 
 #include <iterator>
 
-namespace boost {
+namespace boost
+{
 
 namespace detail
 {
-  template <class P>
-  struct smart_ptr_pointee
-  {
-      typedef typename P::element_type type;
-  };
+template <class P>
+struct smart_ptr_pointee
+{
+	typedef typename P::element_type type;
+};
 
-  template <class Iterator>
-  struct iterator_pointee
-  {
-      typedef typename std::iterator_traits<Iterator>::value_type value_type;
+template <class Iterator>
+struct iterator_pointee
+{
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-      struct impl
-      {
-          template <class T>
-          static char test(T const&);
+	struct impl
+	{
+		template <class T>
+		static char test(T const&);
 
-          static char (& test(value_type&) )[2];
+		static char (& test(value_type&) )[2];
 
-          static Iterator& x;
-      };
+		static Iterator& x;
+	};
 
-      BOOST_STATIC_CONSTANT(bool, is_constant = sizeof(impl::test(*impl::x)) == 1);
+	BOOST_STATIC_CONSTANT(bool, is_constant = sizeof(impl::test(*impl::x)) == 1);
 
-      typedef typename mpl::if_c<
+	typedef typename mpl::if_c<
 #  if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x551))
-          ::boost::detail::iterator_pointee<Iterator>::is_constant
+	::boost::detail::iterator_pointee<Iterator>::is_constant
 #  else
-          is_constant
+	is_constant
 #  endif
-        , typename add_const<value_type>::type
-        , value_type
-      >::type type;
-  };
+	, typename add_const<value_type>::type
+	, value_type
+	>::type type;
+};
 }
 
 template <class P>
 struct pointee
-  : mpl::eval_if<
-        detail::is_incrementable<P>
-      , detail::iterator_pointee<P>
-      , detail::smart_ptr_pointee<P>
-    >
+	: mpl::eval_if<
+	  detail::is_incrementable<P>
+	, detail::iterator_pointee<P>
+	, detail::smart_ptr_pointee<P>
+	  >
 {
 };
 

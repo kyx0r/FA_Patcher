@@ -24,11 +24,14 @@
 #include <functional>
 #include <memory>
 
-namespace boost{
+namespace boost
+{
 
-namespace multi_index{
+namespace multi_index
+{
 
-namespace detail{
+namespace detail
+{
 
 /* copy_map is used as an auxiliary structure during copy_() operations.
  * When a container with n nodes is replicated, node_map holds the pairings
@@ -45,113 +48,124 @@ namespace detail{
 template <typename Node>
 struct copy_map_entry
 {
-  copy_map_entry(Node* f,Node* s):first(f),second(s){}
+	copy_map_entry(Node* f,Node* s):first(f),second(s) {}
 
-  Node* first;
-  Node* second;
+	Node* first;
+	Node* second;
 
-  bool operator<(const copy_map_entry<Node>& x)const
-  {
-    return std::less<Node*>()(first,x.first);
-  }
+	bool operator<(const copy_map_entry<Node>& x)const
+	{
+		return std::less<Node*>()(first,x.first);
+	}
 };
 
 template <typename Node,typename Allocator>
 class copy_map:private noncopyable
 {
 public:
-  typedef const copy_map_entry<Node>* const_iterator;
+	typedef const copy_map_entry<Node>* const_iterator;
 
-  copy_map(
-    const Allocator& al,std::size_t size,Node* header_org,Node* header_cpy):
-    al_(al),size_(size),spc(al_,size_),n(0),
-    header_org_(header_org),header_cpy_(header_cpy),released(false)
-  {}
+	copy_map(
+	    const Allocator& al,std::size_t size,Node* header_org,Node* header_cpy):
+		al_(al),size_(size),spc(al_,size_),n(0),
+		header_org_(header_org),header_cpy_(header_cpy),released(false)
+	{}
 
-  ~copy_map()
-  {
-    if(!released){
-      for(std::size_t i=0;i<n;++i){
-        boost::detail::allocator::destroy(
-          boost::addressof((spc.data()+i)->second->value()));
-        deallocate((spc.data()+i)->second);
-      }
-    }
-  }
+	~copy_map()
+	{
+		if(!released)
+		{
+			for(std::size_t i=0; i<n; ++i)
+			{
+				boost::detail::allocator::destroy(
+				    boost::addressof((spc.data()+i)->second->value()));
+				deallocate((spc.data()+i)->second);
+			}
+		}
+	}
 
-  const_iterator begin()const{return raw_ptr<const_iterator>(spc.data());}
-  const_iterator end()const{return raw_ptr<const_iterator>(spc.data()+n);}
+	const_iterator begin()const
+	{
+		return raw_ptr<const_iterator>(spc.data());
+	}
+	const_iterator end()const
+	{
+		return raw_ptr<const_iterator>(spc.data()+n);
+	}
 
-  void clone(Node* node)
-  {
-    (spc.data()+n)->first=node;
-    (spc.data()+n)->second=raw_ptr<Node*>(allocate());
-    BOOST_TRY{
-      boost::detail::allocator::construct(
-        boost::addressof((spc.data()+n)->second->value()),node->value());
-    }
-    BOOST_CATCH(...){
-      deallocate((spc.data()+n)->second);
-      BOOST_RETHROW;
-    }
-    BOOST_CATCH_END
-    ++n;
+	void clone(Node* node)
+	{
+		(spc.data()+n)->first=node;
+		(spc.data()+n)->second=raw_ptr<Node*>(allocate());
+		BOOST_TRY
+		{
+			boost::detail::allocator::construct(
+			    boost::addressof((spc.data()+n)->second->value()),node->value());
+		}
+		BOOST_CATCH(...)
+		{
+			deallocate((spc.data()+n)->second);
+			BOOST_RETHROW;
+		}
+		BOOST_CATCH_END
+		++n;
 
-    if(n==size_){
-      std::sort(
-        raw_ptr<copy_map_entry<Node>*>(spc.data()),
-        raw_ptr<copy_map_entry<Node>*>(spc.data())+size_);
-    }
-  }
+		if(n==size_)
+		{
+			std::sort(
+			    raw_ptr<copy_map_entry<Node>*>(spc.data()),
+			    raw_ptr<copy_map_entry<Node>*>(spc.data())+size_);
+		}
+	}
 
-  Node* find(Node* node)const
-  {
-    if(node==header_org_)return header_cpy_;
-    return std::lower_bound(
-      begin(),end(),copy_map_entry<Node>(node,0))->second;
-  }
+	Node* find(Node* node)const
+	{
+		if(node==header_org_)return header_cpy_;
+		return std::lower_bound(
+		           begin(),end(),copy_map_entry<Node>(node,0))->second;
+	}
 
-  void release()
-  {
-    released=true;
-  }
+	void release()
+	{
+		released=true;
+	}
 
 private:
-  typedef typename boost::detail::allocator::rebind_to<
-    Allocator,Node
-  >::type                                               allocator_type;
+	typedef typename boost::detail::allocator::rebind_to<
+	Allocator,Node
+	>::type                                               allocator_type;
 #ifdef BOOST_NO_CXX11_ALLOCATOR
-  typedef typename allocator_type::pointer              allocator_pointer;
+	typedef typename allocator_type::pointer              allocator_pointer;
 #else
-  typedef std::allocator_traits<allocator_type>         allocator_traits;
-  typedef typename allocator_traits::pointer            allocator_pointer;
+	typedef std::allocator_traits<allocator_type>         allocator_traits;
+	typedef typename allocator_traits::pointer            allocator_pointer;
 #endif
 
-  allocator_type                                        al_;
-  std::size_t                                           size_;
-  auto_space<copy_map_entry<Node>,Allocator>            spc;
-  std::size_t                                           n;
-  Node*                                                 header_org_;
-  Node*                                                 header_cpy_;
-  bool                                                  released;
+	allocator_type                                        al_;
+	std::size_t                                           size_;
+	auto_space<copy_map_entry<Node>,Allocator>            spc;
+	std::size_t                                           n;
+	Node*                                                 header_org_;
+	Node*                                                 header_cpy_;
+	bool                                                  released;
 
-  allocator_pointer allocate()
-  {
+	allocator_pointer allocate()
+	{
 #ifdef BOOST_NO_CXX11_ALLOCATOR
-    return al_.allocate(1);
+		return al_.allocate(1);
 #else
-    return allocator_traits::allocate(al_,1);
+		return allocator_traits::allocate(al_,1);
 #endif
-  }
+	}
 
-  void deallocate(Node* node)
-  {
+	void deallocate(Node* node)
+	{
 #ifdef BOOST_NO_CXX11_ALLOCATOR
-    al_.deallocate(static_cast<allocator_pointer>(node),1);
+		al_.deallocate(static_cast<allocator_pointer>(node),1);
 #else
-    allocator_traits::deallocate(al_,static_cast<allocator_pointer>(node),1);
+		allocator_traits::deallocate(al_,static_cast<allocator_pointer>(node),1);
 #endif
-  }
+	}
 };
 
 } /* namespace multi_index::detail */

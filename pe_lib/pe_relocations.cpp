@@ -111,8 +111,8 @@ const relocation_table_list get_relocations(const pe_base& pe, bool list_absolut
 
 	//Check the length in bytes of the section containing relocation directory
 	if(pe.section_data_length_from_rva(pe.get_directory_rva(image_directory_entry_basereloc),
-		pe.get_directory_rva(image_directory_entry_basereloc), section_data_virtual, true)
-		< sizeof(image_base_relocation))
+	                                   pe.get_directory_rva(image_directory_entry_basereloc), section_data_virtual, true)
+	        < sizeof(image_base_relocation))
 		throw pe_exception("Incorrect relocation directory", pe_exception::incorrect_relocation_directory);
 
 	unsigned long current_pos = pe.get_directory_rva(image_directory_entry_basereloc);
@@ -146,7 +146,7 @@ const relocation_table_list get_relocations(const pe_base& pe, bool list_absolut
 
 		//Save table
 		ret.push_back(table);
-		
+
 		//Go to next relocation block
 		if(!pe_utils::is_sum_safe(current_pos, reloc_table.SizeOfBlock))
 			throw pe_exception("Incorrect relocation directory", pe_exception::incorrect_relocation_directory);
@@ -170,7 +170,7 @@ const image_directory rebuild_relocations(pe_base& pe, const relocation_table_li
 	//Check that reloc_section is attached to this PE image
 	if(!pe.section_attached(reloc_section))
 		throw pe_exception("Relocations section must be attached to PE file", pe_exception::section_is_not_attached);
-	
+
 	uint32_t current_reloc_data_pos = pe_utils::align_up(offset_from_section_start, sizeof(uint32_t));
 
 	uint32_t needed_size = current_reloc_data_pos - offset_from_section_start; //Calculate needed size for relocation tables
@@ -188,8 +188,8 @@ const image_directory rebuild_relocations(pe_base& pe, const relocation_table_li
 	}
 
 	//Check if reloc_section is last one. If it's not, check if there's enough place for relocations data
-	if(&reloc_section != &*(pe.get_image_sections().end() - 1) && 
-		(reloc_section.empty() || pe_utils::align_up(reloc_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + current_reloc_data_pos))
+	if(&reloc_section != &*(pe.get_image_sections().end() - 1) &&
+	        (reloc_section.empty() || pe_utils::align_up(reloc_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + current_reloc_data_pos))
 		throw pe_exception("Insufficient space for relocations directory", pe_exception::insufficient_space);
 
 	std::string& raw_data = reloc_section.get_raw_data();
@@ -229,7 +229,7 @@ const image_directory rebuild_relocations(pe_base& pe, const relocation_table_li
 	}
 
 	image_directory ret(pe.rva_from_section_offset(reloc_section, start_reloc_pos), needed_size - size_delta);
-	
+
 	//Adjust section raw and virtual sizes
 	pe.recalculate_section_sizes(reloc_section, auto_strip_last_section);
 
@@ -250,8 +250,8 @@ const image_directory rebuild_relocations(pe_base& pe, const relocation_table_li
 void rebase_image(pe_base& pe, const relocation_table_list& tables, uint64_t new_base)
 {
 	pe.get_pe_type() == pe_type_32
-		? rebase_image_base<pe_types_class_32>(pe, tables, new_base)
-		: rebase_image_base<pe_types_class_64>(pe, tables, new_base);
+	? rebase_image_base<pe_types_class_32>(pe, tables, new_base)
+	: rebase_image_base<pe_types_class_64>(pe, tables, new_base);
 }
 
 //RELOCATIONS
@@ -284,7 +284,7 @@ void rebase_image_base(pe_base& pe, const relocation_table_list& tables, uint64_
 			//Skip ABSOLUTE entries
 			if((*rel).get_type() == pe_win::image_rel_based_absolute)
 				continue;
-			
+
 			//Recalculate value by RVA and rewrite it
 			uint32_t current_rva = base_rva + (*rel).get_rva();
 			typename PEClassType::BaseSize value = pe.section_data_from_rva<typename PEClassType::BaseSize>(current_rva, section_data_raw, true);

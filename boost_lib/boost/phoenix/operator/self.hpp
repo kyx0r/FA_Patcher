@@ -12,20 +12,23 @@
 #include <boost/phoenix/core/expression.hpp>
 #include <boost/proto/operators.hpp>
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    BOOST_PHOENIX_UNARY_OPERATORS(
-        (address_of)
-        (dereference)
-    )
-    BOOST_PHOENIX_BINARY_OPERATORS(
-        (assign)
-        (subscript)
-    )
-    
-    using proto::exprns_::operator&;
-    using proto::exprns_::operator*;
-}}
+namespace phoenix
+{
+BOOST_PHOENIX_UNARY_OPERATORS(
+    (address_of)
+    (dereference)
+)
+BOOST_PHOENIX_BINARY_OPERATORS(
+    (assign)
+    (subscript)
+)
+
+using proto::exprns_::operator&;
+using proto::exprns_::operator*;
+}
+}
 
 #include <boost/phoenix/operator/detail/undef_operator.hpp>
 

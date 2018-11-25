@@ -11,44 +11,48 @@
 
 # include <boost/config.hpp>
 
-namespace boost { namespace python {
+namespace boost
+{
+namespace python
+{
 
 template<class T> struct other
-{ 
-    typedef T type;
+{
+	typedef T type;
 };
 
 namespace detail
 {
-  template<typename T>
-  class is_other
-  {
-   public:
-      BOOST_STATIC_CONSTANT(bool, value = false); 
-  };
+template<typename T>
+class is_other
+{
+public:
+	BOOST_STATIC_CONSTANT(bool, value = false);
+};
 
-  template<typename T>
-  class is_other<other<T> >
-  {
-   public:
-      BOOST_STATIC_CONSTANT(bool, value = true);
-  };
+template<typename T>
+class is_other<other<T> >
+{
+public:
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 
-  template<typename T>
-  class unwrap_other
-  {
-   public:
-      typedef T type;
-  };
+template<typename T>
+class unwrap_other
+{
+public:
+	typedef T type;
+};
 
-  template<typename T>
-  class unwrap_other<other<T> >
-  {
-   public:
-      typedef T type;
-  };
+template<typename T>
+class unwrap_other<other<T> >
+{
+public:
+	typedef T type;
+};
 }
 
-}} // namespace boost::python
+}
+} // namespace boost::python
 
 #endif // #ifndef OTHER_DWA20020601_HPP

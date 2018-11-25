@@ -16,9 +16,12 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/core/addressof.hpp>
 #endif
 
-namespace boost {
-namespace alignment {
-namespace detail {
+namespace boost
+{
+namespace alignment
+{
+namespace detail
+{
 
 #if !defined(BOOST_NO_CXX11_ADDRESSOF)
 using std::addressof;

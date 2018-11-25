@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -13,14 +13,23 @@
 
 #include <boost/mpl/long.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units {
+namespace units
+{
 
-namespace detail {
+namespace detail
+{
 
-struct no { BOOST_CONSTEXPR no() : dummy() {} char dummy; };
-struct yes { no dummy[2]; };
+struct no
+{
+	BOOST_CONSTEXPR no() : dummy() {} char dummy;
+};
+struct yes
+{
+	no dummy[2];
+};
 
 template<bool> struct ordinal_has_already_been_defined;
 
@@ -28,7 +37,10 @@ template<>
 struct ordinal_has_already_been_defined<true>   { };
 
 template<>
-struct ordinal_has_already_been_defined<false>  { typedef void type; };
+struct ordinal_has_already_been_defined<false>
+{
+	typedef void type;
+};
 
 }
 
@@ -38,16 +50,20 @@ struct ordinal_has_already_been_defined<false>  { typedef void type; };
 /// INTERNAL ONLY
 template<class T>
 BOOST_CONSTEXPR
-detail::no 
-boost_units_is_registered(const T&) 
-{ return(detail::no()); }
+detail::no
+boost_units_is_registered(const T&)
+{
+	return(detail::no());
+}
 
 /// INTERNAL ONLY
 template<class T>
 BOOST_CONSTEXPR
-detail::no 
-boost_units_unit_is_registered(const T&) 
-{ return(detail::no()); }
+detail::no
+boost_units_unit_is_registered(const T&)
+{
+	return(detail::no());
+}
 
 } // namespace units
 

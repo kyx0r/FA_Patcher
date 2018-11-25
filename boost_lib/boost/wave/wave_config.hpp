@@ -391,17 +391,20 @@
 #define BOOST_WAVE_SUPPORT_LONGLONG_INTEGER_LITERALS 0
 #endif
 
-namespace boost { namespace wave
+namespace boost
+{
+namespace wave
 {
 #if defined(BOOST_HAS_LONG_LONG) && \
     BOOST_WAVE_SUPPORT_LONGLONG_INTEGER_LITERALS != 0
-    typedef boost::long_long_type int_literal_type;
-    typedef boost::ulong_long_type uint_literal_type;
+typedef boost::long_long_type int_literal_type;
+typedef boost::ulong_long_type uint_literal_type;
 #else
-    typedef long int_literal_type;
-    typedef unsigned long uint_literal_type;
+typedef long int_literal_type;
+typedef unsigned long uint_literal_type;
 #endif
-}}
+}
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //  On some platforms Wave will not be able to properly detect whether wchar_t

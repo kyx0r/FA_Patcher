@@ -9,20 +9,21 @@
  *
  */
 
- /*
-  *   LOCATION:    see http://www.boost.org for most recent version.
-  *   FILE         instances.cpp
-  *   VERSION      see <boost/version.hpp>
-  *   DESCRIPTION: Defines those template instances that are placed in the
-  *                library rather than in the users object files.
-  */
+/*
+ *   LOCATION:    see http://www.boost.org for most recent version.
+ *   FILE         instances.cpp
+ *   VERSION      see <boost/version.hpp>
+ *   DESCRIPTION: Defines those template instances that are placed in the
+ *                library rather than in the users object files.
+ */
 
 //
 // note no include guard, we may include this multiple times:
 //
 #ifndef BOOST_REGEX_NO_EXTERNAL_TEMPLATES
 
-namespace boost{
+namespace boost
+{
 
 //
 // this header can be included multiple times, each time with
@@ -133,24 +134,25 @@ template class BOOST_REGEX_TEMPLATE_DECL ::boost::BOOST_REGEX_DETAIL_NS::perl_ma
 #  endif
 
 #if !defined(BOOST_NO_STD_LOCALE) && !defined(BOOST_REGEX_ICU_INSTANCES)
-namespace BOOST_REGEX_DETAIL_NS{
+namespace BOOST_REGEX_DETAIL_NS
+{
 template BOOST_REGEX_DECL
 std::locale cpp_regex_traits_base<BOOST_REGEX_CHAR_T>::imbue(const std::locale& l);
 
 template BOOST_REGEX_DECL
-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type 
-   cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::transform_primary(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::transform_primary(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
 template BOOST_REGEX_DECL
-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type 
-   cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::transform(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::transform(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
 template BOOST_REGEX_DECL
-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type 
-   cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::lookup_collatename(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::lookup_collatename(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
 template BOOST_REGEX_DECL
 void cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::init();
 template BOOST_REGEX_DECL
-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::char_class_type 
-   cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::lookup_classname_imp(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::char_class_type
+cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::lookup_classname_imp(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
 #ifdef BOOST_REGEX_BUGGY_CTYPE_FACET
 template BOOST_REGEX_DECL
 bool cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::isctype(const BOOST_REGEX_CHAR_T c, char_class_type mask) const;
@@ -170,21 +172,22 @@ static_mutex& cpp_regex_traits<BOOST_REGEX_CHAR_T>::get_mutex_inst();
 #endif
 #endif
 
-template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >& 
-   basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::do_assign(
-      const BOOST_REGEX_CHAR_T* p1, 
-      const BOOST_REGEX_CHAR_T* p2, 
-      flag_type f);
-template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::locale_type BOOST_REGEX_CALL 
-   basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::imbue(locale_type l);
+template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >&
+basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::do_assign(
+    const BOOST_REGEX_CHAR_T* p1,
+    const BOOST_REGEX_CHAR_T* p2,
+    flag_type f);
+template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::locale_type BOOST_REGEX_CALL
+basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::imbue(locale_type l);
 
-template BOOST_REGEX_DECL void BOOST_REGEX_CALL 
-   match_results<const BOOST_REGEX_CHAR_T*>::maybe_assign(
-      const match_results<const BOOST_REGEX_CHAR_T*>& m);
+template BOOST_REGEX_DECL void BOOST_REGEX_CALL
+match_results<const BOOST_REGEX_CHAR_T*>::maybe_assign(
+    const match_results<const BOOST_REGEX_CHAR_T*>& m);
 
-namespace BOOST_REGEX_DETAIL_NS{
+namespace BOOST_REGEX_DETAIL_NS
+{
 template BOOST_REGEX_DECL void perl_matcher<BOOST_REGEX_CHAR_T const *, match_results< const BOOST_REGEX_CHAR_T* >::allocator_type BOOST_REGEX_TRAITS_T >::construct_init(
-      const basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >& e, match_flag_type f);
+    const basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >& e, match_flag_type f);
 template BOOST_REGEX_DECL bool perl_matcher<BOOST_REGEX_CHAR_T const *, match_results< const BOOST_REGEX_CHAR_T* >::allocator_type BOOST_REGEX_TRAITS_T >::match();
 template BOOST_REGEX_DECL bool perl_matcher<BOOST_REGEX_CHAR_T const *, match_results< const BOOST_REGEX_CHAR_T* >::allocator_type BOOST_REGEX_TRAITS_T >::find();
 } // namespace
@@ -194,13 +197,14 @@ template BOOST_REGEX_DECL bool perl_matcher<BOOST_REGEX_CHAR_T const *, match_re
    && !defined(__SGI_STL_PORT)\
    && !defined(_STLPORT_VERSION)
 // std:basic_string<>::const_iterator instances as well:
-template BOOST_REGEX_DECL void BOOST_REGEX_CALL 
-   match_results<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator>::maybe_assign(
-      const match_results<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator>& m);
+template BOOST_REGEX_DECL void BOOST_REGEX_CALL
+match_results<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator>::maybe_assign(
+    const match_results<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator>& m);
 
-namespace BOOST_REGEX_DETAIL_NS{
+namespace BOOST_REGEX_DETAIL_NS
+{
 template BOOST_REGEX_DECL void perl_matcher<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator, match_results< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator >::allocator_type, boost::regex_traits<BOOST_REGEX_CHAR_T > >::construct_init(
-      const basic_regex<BOOST_REGEX_CHAR_T>& e, match_flag_type f);
+    const basic_regex<BOOST_REGEX_CHAR_T>& e, match_flag_type f);
 template BOOST_REGEX_DECL bool perl_matcher<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator, match_results< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator >::allocator_type, boost::regex_traits<BOOST_REGEX_CHAR_T > >::match();
 template BOOST_REGEX_DECL bool perl_matcher<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator, match_results< std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator >::allocator_type, boost::regex_traits<BOOST_REGEX_CHAR_T > >::find();
 } // namespace

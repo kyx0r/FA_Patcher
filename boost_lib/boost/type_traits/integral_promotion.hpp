@@ -13,9 +13,13 @@
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace type_traits { namespace detail {
+namespace type_traits
+{
+namespace detail
+{
 
 // 4.5/2
 template <class T> struct need_promotion : public boost::is_enum<T> {};
@@ -113,7 +117,7 @@ BOOST_TT_AUX_PROMOTE_FROM_INDEX(8, unsigned __int64)
 template<int N>
 struct sized_type_for_promotion
 {
-    typedef char (&type)[N];
+	typedef char (&type)[N];
 };
 
 #define BOOST_TT_AUX_PROMOTED_INDEX_TESTER(I,T) \
@@ -147,37 +151,41 @@ BOOST_TT_AUX_PROMOTED_INDEX_TESTER(8, unsigned __int64)
 template<class T>
 struct promoted_index
 {
-    static T testee; // undefined
-    BOOST_STATIC_CONSTANT(int, value = sizeof(promoted_index_tester(+testee)) );
-    // Unary plus promotes testee                    LOOK HERE ---> ^
+	static T testee; // undefined
+	BOOST_STATIC_CONSTANT(int, value = sizeof(promoted_index_tester(+testee)) );
+	// Unary plus promotes testee                    LOOK HERE ---> ^
 };
 
 template<class T>
 struct integral_promotion_impl
 {
-    typedef BOOST_DEDUCED_TYPENAME promote_from_index<
-        (boost::type_traits::detail::promoted_index<T>::value)
-      , (boost::is_const<T>::value)
-      , (boost::is_volatile<T>::value)
-      >::type type;
+	typedef BOOST_DEDUCED_TYPENAME promote_from_index<
+	(boost::type_traits::detail::promoted_index<T>::value)
+	, (boost::is_const<T>::value)
+	, (boost::is_volatile<T>::value)
+	>::type type;
 };
 
-template<class T, bool b> struct integral_promotion { typedef T type; };
-template<class T> struct integral_promotion<T, true> : public integral_promotion_impl<T>{};
+template<class T, bool b> struct integral_promotion
+{
+	typedef T type;
+};
+template<class T> struct integral_promotion<T, true> : public integral_promotion_impl<T> {};
 
-} }
+}
+}
 
 template <class T> struct integral_promotion
 {
 private:
-   typedef boost::type_traits::detail::need_promotion<typename remove_cv<T>::type> tag_type;
+	typedef boost::type_traits::detail::need_promotion<typename remove_cv<T>::type> tag_type;
 public:
-   typedef typename boost::type_traits::detail::integral_promotion<T, tag_type::value>::type type;
+	typedef typename boost::type_traits::detail::integral_promotion<T, tag_type::value>::type type;
 };
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
-   template <class T> using integral_promotion_t = typename integral_promotion<T>::type;
+template <class T> using integral_promotion_t = typename integral_promotion<T>::type;
 
 #endif
 

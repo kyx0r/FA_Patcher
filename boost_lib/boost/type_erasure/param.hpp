@@ -24,26 +24,30 @@
 #include <boost/type_erasure/is_placeholder.hpp>
 #include <boost/type_erasure/concept_of.hpp>
 
-namespace boost {
-namespace type_erasure {
-    
+namespace boost
+{
+namespace type_erasure
+{
+
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 
 template<class Concept, class T>
 class any;
-    
+
 template<class Concept>
 class binding;
 
 #endif
 
-namespace detail {
+namespace detail
+{
 
 struct access;
 
 }
 
-namespace detail {
+namespace detail
+{
 
 template<class From, class To>
 struct placeholder_conversion : boost::mpl::false_ {};
@@ -117,151 +121,162 @@ struct placeholder_conversion<T&&, T&&> : boost::mpl::true_ {};
  *
  */
 template<class Concept, class T>
-class param {
+class param
+{
 public:
 
-    friend struct boost::type_erasure::detail::access;
+	friend struct boost::type_erasure::detail::access;
 
-    /** INTERNAL ONLY */
-    typedef void _boost_type_erasure_is_any;
-    /** INTERNAL ONLY */
-    typedef param _boost_type_erasure_derived_type;
+	/** INTERNAL ONLY */
+	typedef void _boost_type_erasure_is_any;
+	/** INTERNAL ONLY */
+	typedef param _boost_type_erasure_derived_type;
 
-    template<class U>
-    param(any<Concept, U>& a
+	template<class U>
+	param(any<Concept, U>& a
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
-        , typename boost::enable_if<
-            ::boost::type_erasure::detail::placeholder_conversion<U, T>
-        >::type* = 0
+	      , typename boost::enable_if<
+	      ::boost::type_erasure::detail::placeholder_conversion<U, T>
+	      >::type* = 0
 #endif
-        )
-      : _impl(a)
-    {}
-    template<class U>
-    param(const any<Concept, U>& a
+	     )
+		: _impl(a)
+	{}
+	template<class U>
+	param(const any<Concept, U>& a
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
-        , typename boost::enable_if<
-            ::boost::type_erasure::detail::placeholder_conversion<
-                typename ::boost::add_const<U>::type,
-                T
-            >
-        >::type* = 0
+	      , typename boost::enable_if<
+	      ::boost::type_erasure::detail::placeholder_conversion<
+	      typename ::boost::add_const<U>::type,
+	      T
+	      >
+	      >::type* = 0
 #endif
-        )
-      : _impl(a)
-    {}
+	     )
+		: _impl(a)
+	{}
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    template<class U>
-    param(any<Concept, U>&& a
+	template<class U>
+	param(any<Concept, U>&& a
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
-        , typename boost::enable_if<
-            ::boost::type_erasure::detail::placeholder_conversion<
-                U&&,
-                T
-            >
-        >::type* = 0
+	      , typename boost::enable_if<
+	      ::boost::type_erasure::detail::placeholder_conversion<
+	      U&&,
+	      T
+	      >
+	      >::type* = 0
 #endif
-        )
-      : _impl(std::move(a))
-    {}
+	     )
+		: _impl(std::move(a))
+	{}
 #endif
 
-    /** INTERNAL ONLY */
-    param(const ::boost::type_erasure::detail::storage& data,
-          const ::boost::type_erasure::binding<Concept>& table)
-      : _impl(data, table)
-    {}
+	/** INTERNAL ONLY */
+	param(const ::boost::type_erasure::detail::storage& data,
+	      const ::boost::type_erasure::binding<Concept>& table)
+		: _impl(data, table)
+	{}
 
-    /** Returns the stored @ref any. */
-    any<Concept, T> get() const { return _impl; }
+	/** Returns the stored @ref any. */
+	any<Concept, T> get() const
+	{
+		return _impl;
+	}
 private:
-    any<Concept, T> _impl;
+	any<Concept, T> _impl;
 };
 
 #if !defined(BOOST_NO_CXX11_REF_QUALIFIERS) && !defined(BOOST_TYPE_ERASURE_DOXYGEN)
 
 template<class Concept, class T>
-class param<Concept, const T&> {
+class param<Concept, const T&>
+{
 public:
 
-    friend struct boost::type_erasure::detail::access;
+	friend struct boost::type_erasure::detail::access;
 
-    /** INTERNAL ONLY */
-    typedef void _boost_type_erasure_is_any;
-    /** INTERNAL ONLY */
-    typedef param _boost_type_erasure_derived_type;
+	/** INTERNAL ONLY */
+	typedef void _boost_type_erasure_is_any;
+	/** INTERNAL ONLY */
+	typedef param _boost_type_erasure_derived_type;
 
-    param(const ::boost::type_erasure::detail::storage& data,
-          const ::boost::type_erasure::binding<Concept>& table)
-      : _impl(data, table)
-    {}
-    template<class U>
-    param(U& u, typename boost::enable_if< ::boost::is_same<U, const any<Concept, T> > >::type* = 0) : _impl(u) {}
-    any<Concept, const T&> get() const { return _impl; }
+	param(const ::boost::type_erasure::detail::storage& data,
+	      const ::boost::type_erasure::binding<Concept>& table)
+		: _impl(data, table)
+	{}
+	template<class U>
+	param(U& u, typename boost::enable_if< ::boost::is_same<U, const any<Concept, T> > >::type* = 0) : _impl(u) {}
+	any<Concept, const T&> get() const
+	{
+		return _impl;
+	}
 protected:
-    struct _impl_t {
-        _impl_t(const ::boost::type_erasure::detail::storage& data_,
-              const ::boost::type_erasure::binding<Concept>& table_)
-          : table(table_), data(data_)
-        {}
-        _impl_t(const any<Concept, T>& u)
-          : table(::boost::type_erasure::detail::access::table(u)),
-            data(::boost::type_erasure::detail::access::data(u))
-        {}
-        // It's safe to capture the table by reference, because
-        // the user's argument should out-live us.  storage is
-        // just a void*, so we don't need to add indirection.
-        const ::boost::type_erasure::binding<Concept>& table;
-        ::boost::type_erasure::detail::storage data;
-    } _impl;
+	struct _impl_t
+	{
+		_impl_t(const ::boost::type_erasure::detail::storage& data_,
+		        const ::boost::type_erasure::binding<Concept>& table_)
+			: table(table_), data(data_)
+		{}
+		_impl_t(const any<Concept, T>& u)
+			: table(::boost::type_erasure::detail::access::table(u)),
+			  data(::boost::type_erasure::detail::access::data(u))
+		{}
+		// It's safe to capture the table by reference, because
+		// the user's argument should out-live us.  storage is
+		// just a void*, so we don't need to add indirection.
+		const ::boost::type_erasure::binding<Concept>& table;
+		::boost::type_erasure::detail::storage data;
+	} _impl;
 };
 
 template<class Concept, class T>
-class param<Concept, T&> : public param<Concept, const T&> {
+class param<Concept, T&> : public param<Concept, const T&>
+{
 public:
 
-    friend struct boost::type_erasure::detail::access;
+	friend struct boost::type_erasure::detail::access;
 
-    /** INTERNAL ONLY */
-    typedef void _boost_type_erasure_is_any;
-    /** INTERNAL ONLY */
-    typedef param _boost_type_erasure_derived_type;
+	/** INTERNAL ONLY */
+	typedef void _boost_type_erasure_is_any;
+	/** INTERNAL ONLY */
+	typedef param _boost_type_erasure_derived_type;
 
-    param(const ::boost::type_erasure::detail::storage& data,
-          const ::boost::type_erasure::binding<Concept>& table)
-      : param<Concept, const T&>(data, table)
-    {}
-    any<Concept, T&> get() const
-    {
-        return any<Concept, T&>(
-            ::boost::type_erasure::detail::access::data(this->_impl),
-            ::boost::type_erasure::detail::access::table(this->_impl));
-    }
+	param(const ::boost::type_erasure::detail::storage& data,
+	      const ::boost::type_erasure::binding<Concept>& table)
+		: param<Concept, const T&>(data, table)
+	{}
+	any<Concept, T&> get() const
+	{
+		return any<Concept, T&>(
+		           ::boost::type_erasure::detail::access::data(this->_impl),
+		           ::boost::type_erasure::detail::access::table(this->_impl));
+	}
 };
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 
 template<class Concept, class T>
-class param<Concept, T&&> : public param<Concept, const T&> {
+class param<Concept, T&&> : public param<Concept, const T&>
+{
 public:
 
-    friend struct boost::type_erasure::detail::access;
+	friend struct boost::type_erasure::detail::access;
 
-    /** INTERNAL ONLY */
-    typedef void _boost_type_erasure_is_any;
-    /** INTERNAL ONLY */
-    typedef param _boost_type_erasure_derived_type;
+	/** INTERNAL ONLY */
+	typedef void _boost_type_erasure_is_any;
+	/** INTERNAL ONLY */
+	typedef param _boost_type_erasure_derived_type;
 
-    param(const ::boost::type_erasure::detail::storage& data,
-          const ::boost::type_erasure::binding<Concept>& table)
-      : param<Concept, const T&>(data, table)
-    {}
-    any<Concept, T&&> get() const
-    {
-        return any<Concept, T&&>(
-            ::boost::type_erasure::detail::access::data(this->_impl),
-            ::boost::type_erasure::detail::access::table(this->_impl));
-    }
+	param(const ::boost::type_erasure::detail::storage& data,
+	      const ::boost::type_erasure::binding<Concept>& table)
+		: param<Concept, const T&>(data, table)
+	{}
+	any<Concept, T&&> get() const
+	{
+		return any<Concept, T&&>(
+		           ::boost::type_erasure::detail::access::data(this->_impl),
+		           ::boost::type_erasure::detail::access::table(this->_impl));
+	}
 };
 
 #endif
@@ -280,17 +295,18 @@ public:
  * \see derived, rebind_any
  */
 template<class Any, class T>
-struct as_param {
+struct as_param
+{
 #ifdef BOOST_TYPE_ERASURE_DOXYGEN
-    typedef detail::unspecified type;
+	typedef detail::unspecified type;
 #else
-    typedef typename ::boost::mpl::if_<
-        ::boost::type_erasure::is_placeholder<
-            typename ::boost::remove_cv<
-                typename ::boost::remove_reference<T>::type>::type>,
-        param<typename ::boost::type_erasure::concept_of<Any>::type, T>,
-        T
-    >::type type;
+	typedef typename ::boost::mpl::if_<
+	::boost::type_erasure::is_placeholder<
+	typename ::boost::remove_cv<
+	typename ::boost::remove_reference<T>::type>::type>,
+	         param<typename ::boost::type_erasure::concept_of<Any>::type, T>,
+	         T
+	         >::type type;
 #endif
 };
 

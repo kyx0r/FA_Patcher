@@ -15,17 +15,23 @@
 
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
-namespace boost { namespace numeric { namespace odeint
+namespace boost
 {
-  template<typename T, typename S>
-  struct vector_space_norm_inf<nt2::container::table<T,S> >
-  {
-    typedef T result_type;
-    result_type operator()(const nt2::container::table<T,S> &v1) const
-    {
-      return nt2::globalmax(nt2::abs(v1));
-    }
-  };
-} } }
+namespace numeric
+{
+namespace odeint
+{
+template<typename T, typename S>
+struct vector_space_norm_inf<nt2::container::table<T,S> >
+{
+	typedef T result_type;
+	result_type operator()(const nt2::container::table<T,S> &v1) const
+	{
+		return nt2::globalmax(nt2::abs(v1));
+	}
+};
+}
+}
+}
 
 #endif

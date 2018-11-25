@@ -20,10 +20,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
-namespace monomorphic {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
+namespace monomorphic
+{
 
 // ************************************************************************** //
 // **************                     array                    ************** //
@@ -31,26 +35,33 @@ namespace monomorphic {
 
 /// Dataset view of a C array
 template<typename T>
-class init_list {
+class init_list
+{
 public:
-    typedef T sample;
+	typedef T sample;
 
-    enum { arity = 1 };
+	enum { arity = 1 };
 
-    typedef T const* iterator;
+	typedef T const* iterator;
 
-    //! Constructor swallows initializer_list
-    init_list( std::initializer_list<T>&& il )
-    : m_data( std::forward<std::initializer_list<T>>( il ) )
-    {}
+	//! Constructor swallows initializer_list
+	init_list( std::initializer_list<T>&& il )
+		: m_data( std::forward<std::initializer_list<T>>( il ) )
+	{}
 
-    //! dataset interface
-    data::size_t    size() const    { return m_data.size(); }
-    iterator        begin() const   { return m_data.begin(); }
+	//! dataset interface
+	data::size_t    size() const
+	{
+		return m_data.size();
+	}
+	iterator        begin() const
+	{
+		return m_data.begin();
+	}
 
 private:
-    // Data members
-    std::initializer_list<T> m_data;    
+	// Data members
+	std::initializer_list<T> m_data;
 };
 
 //____________________________________________________________________________//
@@ -68,7 +79,7 @@ template<typename T>
 inline monomorphic::init_list<T>
 make( std::initializer_list<T>&& il )
 {
-    return monomorphic::init_list<T>( std::forward<std::initializer_list<T>>( il ) );
+	return monomorphic::init_list<T>( std::forward<std::initializer_list<T>>( il ) );
 }
 
 } // namespace data

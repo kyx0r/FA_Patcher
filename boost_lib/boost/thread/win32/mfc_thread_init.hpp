@@ -15,16 +15,16 @@
 extern "C"
 inline BOOL WINAPI ExtRawDllMain(HINSTANCE, DWORD dwReason, LPVOID)
 {
-  if (dwReason == DLL_PROCESS_ATTACH)
-  {
-    // save critical data pointers before running the constructors
-    AFX_MODULE_STATE* pModuleState = AfxGetModuleState();
-    pModuleState->m_pClassInit = pModuleState->m_classList;
-    pModuleState->m_pFactoryInit = pModuleState->m_factoryList;
-    pModuleState->m_classList.m_pHead = NULL;
-    pModuleState->m_factoryList.m_pHead = NULL;
-  }
-  return TRUE; // ok
+	if (dwReason == DLL_PROCESS_ATTACH)
+	{
+		// save critical data pointers before running the constructors
+		AFX_MODULE_STATE* pModuleState = AfxGetModuleState();
+		pModuleState->m_pClassInit = pModuleState->m_classList;
+		pModuleState->m_pFactoryInit = pModuleState->m_factoryList;
+		pModuleState->m_classList.m_pHead = NULL;
+		pModuleState->m_factoryList.m_pHead = NULL;
+	}
+	return TRUE; // ok
 }
 
 extern "C" __declspec(selectany) BOOL (WINAPI * const _pRawDllMainOrig)(HINSTANCE, DWORD, LPVOID) = &ExtRawDllMain;

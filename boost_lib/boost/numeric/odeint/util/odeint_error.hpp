@@ -21,9 +21,12 @@
 #include <string>
 
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 
 /**
@@ -32,9 +35,9 @@ namespace odeint {
 class odeint_error : public std::runtime_error
 {
 public:
-    odeint_error(const std::string &s)
-            : std::runtime_error(s)
-    { }
+	odeint_error(const std::string &s)
+		: std::runtime_error(s)
+	{ }
 };
 
 
@@ -47,9 +50,9 @@ public:
 class no_progress_error : public odeint_error
 {
 public:
-    no_progress_error(const std::string &s)
-            : odeint_error(s)
-    { }
+	no_progress_error(const std::string &s)
+		: odeint_error(s)
+	{ }
 };
 
 
@@ -63,9 +66,9 @@ public:
 class step_adjustment_error : public odeint_error
 {
 public:
-    step_adjustment_error(const std::string &s)
-            : odeint_error(s)
-    { }
+	step_adjustment_error(const std::string &s)
+		: odeint_error(s)
+	{ }
 };
 
 }

@@ -17,21 +17,26 @@
 # include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace context {
-namespace detail {
+namespace boost
+{
+namespace context
+{
+namespace detail
+{
 
 // http://ericniebler.com/2013/08/07/universal-references-and-the-copy-constructo/
 template< typename X, typename Y >
 using disable_overload =
     typename std::enable_if<
-        ! std::is_base_of<
-            X,
-            typename std::decay< Y >::type
-        >::value
+    ! std::is_base_of<
+    X,
+    typename std::decay< Y >::type
+    >::value
     >::type;
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #include BOOST_ABI_SUFFIX

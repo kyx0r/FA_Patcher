@@ -27,26 +27,31 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 /*!
  * Duration between two timestamps
  */
 class duration
 {
-    int64_t m_ticks;
+	int64_t m_ticks;
 
 public:
-    explicit duration(int64_t ticks = 0) : m_ticks(ticks) {}
+	explicit duration(int64_t ticks = 0) : m_ticks(ticks) {}
 
 #if defined(BOOST_WINDOWS) && !defined(__CYGWIN__)
-    int64_t milliseconds() const { return m_ticks; }
+	int64_t milliseconds() const
+	{
+		return m_ticks;
+	}
 #else
-    BOOST_LOG_API int64_t milliseconds() const;
+	BOOST_LOG_API int64_t milliseconds() const;
 #endif
 };
 
@@ -55,15 +60,15 @@ public:
  */
 class timestamp
 {
-    uint64_t m_ticks;
+	uint64_t m_ticks;
 
 public:
-    explicit timestamp(uint64_t ticks = 0) : m_ticks(ticks) {}
+	explicit timestamp(uint64_t ticks = 0) : m_ticks(ticks) {}
 
-    duration operator- (timestamp that) const
-    {
-        return duration(m_ticks - that.m_ticks);
-    }
+	duration operator- (timestamp that) const
+	{
+		return duration(m_ticks - that.m_ticks);
+	}
 };
 
 /*!
@@ -81,7 +86,7 @@ extern BOOST_LOG_API get_tick_count_t get_tick_count;
 
 inline timestamp get_timestamp()
 {
-    return timestamp(get_tick_count());
+	return timestamp(get_tick_count());
 }
 
 #else

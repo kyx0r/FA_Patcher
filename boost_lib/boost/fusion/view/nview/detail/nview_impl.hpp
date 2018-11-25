@@ -23,27 +23,30 @@
 #include <boost/fusion/container/vector.hpp>
 #include <boost/mpl/int.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace result_of
-    {
-        template <typename Sequence, int ...I>
-        struct as_nview
-        {
-            typedef vector<mpl::int_<I>...> index_type;
-            typedef nview<Sequence, index_type> type;
-        };
-    }
+namespace fusion
+{
+namespace result_of
+{
+template <typename Sequence, int ...I>
+struct as_nview
+{
+	typedef vector<mpl::int_<I>...> index_type;
+	typedef nview<Sequence, index_type> type;
+};
+}
 
-    template <int ...I, typename Sequence>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline nview<Sequence, vector<mpl::int_<I>...> >
-    as_nview(Sequence& s)
-    {
-        typedef vector<mpl::int_<I>...> index_type;
-        return nview<Sequence, index_type>(s);
-    }
-}}
+template <int ...I, typename Sequence>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline nview<Sequence, vector<mpl::int_<I>...> >
+as_nview(Sequence& s)
+{
+	typedef vector<mpl::int_<I>...> index_type;
+	return nview<Sequence, index_type>(s);
+}
+}
+}
 
 #endif
 #endif

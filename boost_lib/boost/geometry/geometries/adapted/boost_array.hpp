@@ -13,8 +13,8 @@
 
 #ifdef BOOST_GEOMETRY_ADAPTED_BOOST_ARRAY_TAG_DEFINED
 #error Include either "boost_array_as_point" or \
-    "boost_array_as_linestring" or "boost_array_as_ring" \
-    or "boost_array_as_multi_point" to adapt a boost_array
+"boost_array_as_linestring" or "boost_array_as_ring" \
+or "boost_array_as_multi_point" to adapt a boost_array
 #endif
 
 #define BOOST_GEOMETRY_ADAPTED_BOOST_ARRAY_TAG_DEFINED
@@ -32,7 +32,9 @@
 
 #include <boost/array.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -51,14 +53,14 @@ namespace detail
 template <bool>
 struct boost_array_tag
 {
-    typedef geometry_not_recognized_tag type;
+	typedef geometry_not_recognized_tag type;
 };
 
 
 template <>
 struct boost_array_tag<true>
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 
@@ -69,13 +71,13 @@ struct boost_array_tag<true>
 // Assign the point-tag, preventing arrays of points getting a point-tag
 template <typename CoordinateType, std::size_t DimensionCount>
 struct tag<boost::array<CoordinateType, DimensionCount> >
-    : detail::boost_array_tag<boost::is_arithmetic<CoordinateType>::value> {};
+	: detail::boost_array_tag<boost::is_arithmetic<CoordinateType>::value> {};
 
 
 template <typename CoordinateType, std::size_t DimensionCount>
 struct coordinate_type<boost::array<CoordinateType, DimensionCount> >
 {
-    typedef CoordinateType type;
+	typedef CoordinateType type;
 };
 
 
@@ -86,16 +88,16 @@ struct dimension<boost::array<CoordinateType, DimensionCount> >: boost::mpl::int
 template <typename CoordinateType, std::size_t DimensionCount, std::size_t Dimension>
 struct access<boost::array<CoordinateType, DimensionCount>, Dimension>
 {
-    static inline CoordinateType get(boost::array<CoordinateType, DimensionCount> const& a)
-    {
-        return a[Dimension];
-    }
+	static inline CoordinateType get(boost::array<CoordinateType, DimensionCount> const& a)
+	{
+		return a[Dimension];
+	}
 
-    static inline void set(boost::array<CoordinateType, DimensionCount>& a,
-        CoordinateType const& value)
-    {
-        a[Dimension] = value;
-    }
+	static inline void set(boost::array<CoordinateType, DimensionCount>& a,
+	                       CoordinateType const& value)
+	{
+		a[Dimension] = value;
+	}
 };
 
 
@@ -103,7 +105,8 @@ struct access<boost::array<CoordinateType, DimensionCount>, Dimension>
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #define BOOST_GEOMETRY_REGISTER_BOOST_ARRAY_CS(CoordinateSystem) \

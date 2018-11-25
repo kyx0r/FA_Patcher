@@ -8,20 +8,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class T>
-        struct returns
-        {
-          typedef T type;
-        };
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class T>
+struct returns
+{
+	typedef T type;
+};
+}
+}
+}
 }
 
 #endif

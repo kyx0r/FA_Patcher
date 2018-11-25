@@ -17,7 +17,9 @@
 #include <boost/geometry/io/wkt/read.hpp>
 #include <boost/geometry/io/wkt/write.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 struct format_wkt {};
@@ -35,10 +37,10 @@ struct read
 template <typename Geometry>
 struct read<format_wkt, Geometry>
 {
-    static inline void apply(Geometry& geometry, std::string const& wkt)
-    {
-        read_wkt<typename tag<Geometry>::type, Geometry>::apply(wkt, geometry);
-    }
+	static inline void apply(Geometry& geometry, std::string const& wkt)
+	{
+		read_wkt<typename tag<Geometry>::type, Geometry>::apply(wkt, geometry);
+	}
 };
 
 } // namespace dispatch
@@ -47,12 +49,13 @@ struct read<format_wkt, Geometry>
 template <typename Format, typename Geometry>
 inline void read(Geometry& geometry, std::string const& wkt)
 {
-    geometry::concepts::check<Geometry>();
-    dispatch::read<Format, Geometry>::apply(geometry, wkt);
+	geometry::concepts::check<Geometry>();
+	dispatch::read<Format, Geometry>::apply(geometry, wkt);
 }
 
 // TODO: wriite
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_IO_HPP

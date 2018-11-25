@@ -22,14 +22,14 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    template <typename L>
-    struct Logical
-        : hana::integral_constant<bool,
-            !is_default<eval_if_impl<typename tag_of<L>::type>>::value &&
-            !is_default<not_impl<typename tag_of<L>::type>>::value &&
-            !is_default<while_impl<typename tag_of<L>::type>>::value
-        >
-    { };
+template <typename L>
+struct Logical
+	: hana::integral_constant<bool,
+	  !is_default<eval_if_impl<typename tag_of<L>::type>>::value &&
+	  !is_default<not_impl<typename tag_of<L>::type>>::value &&
+	  !is_default<while_impl<typename tag_of<L>::type>>::value
+	  >
+{ };
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CONCEPT_LOGICAL_HPP

@@ -38,7 +38,11 @@
 #include <boost/math/constants/constants.hpp>
 #include <boost/geometry/util/math.hpp>
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 namespace detail
@@ -48,23 +52,25 @@ namespace detail
 template <typename T>
 inline T adjlon (T lon)
 {
-    if (geometry::math::abs(lon) <= boost::math::constants::pi<T>())
-    {
-        return lon;
-    }
+	if (geometry::math::abs(lon) <= boost::math::constants::pi<T>())
+	{
+		return lon;
+	}
 
-    /* adjust to 0..2pi rad */
-    lon += boost::math::constants::pi<T>();
-    /* remove integral # of 'revolutions'*/
-    lon -= boost::math::constants::two_pi<T>() *
-                std::floor(lon / boost::math::constants::two_pi<T>());
-    /* adjust back to -pi..pi rad */
-    lon -= boost::math::constants::pi<T>();
+	/* adjust to 0..2pi rad */
+	lon += boost::math::constants::pi<T>();
+	/* remove integral # of 'revolutions'*/
+	lon -= boost::math::constants::two_pi<T>() *
+	       std::floor(lon / boost::math::constants::two_pi<T>());
+	/* adjust back to -pi..pi rad */
+	lon -= boost::math::constants::pi<T>();
 
-    return lon;
+	return lon;
 }
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_ADJLON_HPP

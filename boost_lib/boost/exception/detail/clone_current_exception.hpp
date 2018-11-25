@@ -17,38 +17,38 @@
 #endif
 
 namespace
-boost
-    {
-    namespace
-    exception_detail
-        {
-        class clone_base;
+	boost
+{
+namespace
+	exception_detail
+{
+class clone_base;
 
 #ifdef BOOST_ENABLE_NON_INTRUSIVE_EXCEPTION_PTR
-        int clone_current_exception_non_intrusive( clone_base const * & cloned );
+int clone_current_exception_non_intrusive( clone_base const * & cloned );
 #endif
 
-        namespace
-        clone_current_exception_result
-            {
-            int const success=0;
-            int const bad_alloc=1;
-            int const bad_exception=2;
-            int const not_supported=3;
-            }
+namespace
+	clone_current_exception_result
+{
+int const success=0;
+int const bad_alloc=1;
+int const bad_exception=2;
+int const not_supported=3;
+}
 
-        inline
-        int
-        clone_current_exception( clone_base const * & cloned )
-            {
+inline
+int
+clone_current_exception( clone_base const * & cloned )
+{
 #ifdef BOOST_ENABLE_NON_INTRUSIVE_EXCEPTION_PTR
-            return clone_current_exception_non_intrusive(cloned);
+	return clone_current_exception_non_intrusive(cloned);
 #else
-            return clone_current_exception_result::not_supported;
+	return clone_current_exception_result::not_supported;
 #endif
-            }
-        }
-    }
+}
+}
+}
 
 #if defined(_MSC_VER) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
 #pragma warning(pop)

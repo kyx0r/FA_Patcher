@@ -13,8 +13,10 @@
 #include <boost/uuid/basic_name_generator.hpp>
 #include <boost/uuid/detail/sha1.hpp>
 
-namespace boost {
-namespace uuids {
+namespace boost
+{
+namespace uuids
+{
 
 //! \brief SHA1 hashing is the default method defined in RFC 4122 to be
 //!        used when backwards compatibility is not necessary.

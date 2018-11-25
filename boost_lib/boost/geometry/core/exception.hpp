@@ -21,7 +21,9 @@
 
 #include <exception>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -33,10 +35,10 @@ namespace boost { namespace geometry
 class exception : public std::exception
 {
 public:
-    virtual char const* what() const throw()
-    {
-        return "Boost.Geometry exception";
-    }
+	virtual char const* what() const throw()
+	{
+		return "Boost.Geometry exception";
+	}
 };
 
 /*!
@@ -50,12 +52,12 @@ class invalid_input_exception : public geometry::exception
 {
 public:
 
-    inline invalid_input_exception() {}
+	inline invalid_input_exception() {}
 
-    virtual char const* what() const throw()
-    {
-        return "Boost.Geometry Invalid-Input exception";
-    }
+	virtual char const* what() const throw()
+	{
+		return "Boost.Geometry Invalid-Input exception";
+	}
 };
 
 /*!
@@ -75,12 +77,12 @@ class empty_input_exception : public geometry::invalid_input_exception
 {
 public:
 
-    inline empty_input_exception() {}
+	inline empty_input_exception() {}
 
-    virtual char const* what() const throw()
-    {
-        return "Boost.Geometry Empty-Input exception";
-    }
+	virtual char const* what() const throw()
+	{
+		return "Boost.Geometry Empty-Input exception";
+	}
 };
 
 /*!
@@ -94,15 +96,16 @@ class invalid_output_exception : public geometry::exception
 {
 public:
 
-    inline invalid_output_exception() {}
+	inline invalid_output_exception() {}
 
-    virtual char const* what() const throw()
-    {
-        return "Boost.Geometry Invalid-Output exception";
-    }
+	virtual char const* what() const throw()
+	{
+		return "Boost.Geometry Invalid-Output exception";
+	}
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_EXCEPTION_HPP

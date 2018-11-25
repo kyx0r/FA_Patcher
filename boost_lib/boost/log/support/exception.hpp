@@ -27,7 +27,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -61,10 +62,11 @@ typedef error_info< struct current_scope_info_tag, attributes::named_scope_list 
  */
 inline current_scope_info current_scope()
 {
-    return current_scope_info(attributes::named_scope::get_scopes());
+	return current_scope_info(attributes::named_scope::get_scopes());
 }
 
-namespace ipc {
+namespace ipc
+{
 
 class object_name;
 

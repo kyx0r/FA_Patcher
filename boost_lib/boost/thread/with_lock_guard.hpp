@@ -13,7 +13,8 @@
 #include <boost/utility/result_of.hpp>
 //#include <boost/thread/detail/invoke.hpp>
 
-namespace boost {
+namespace boost
+{
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && \
     !defined(BOOST_NO_CXX11_DECLTYPE) && \
@@ -52,8 +53,8 @@ typename boost::result_of<Function(Args...)>::type with_lock_guard(
     BOOST_FWD_REF(Args)... args
 ) //-> decltype(func(boost::forward<Args>(args)...))
 {
-  boost::lock_guard<Lockable> lock(m);
-  return func(boost::forward<Args>(args)...);
+	boost::lock_guard<Lockable> lock(m);
+	return func(boost::forward<Args>(args)...);
 }
 
 #else
@@ -66,9 +67,10 @@ template <class Lockable, class Func>
 typename boost::result_of<Func()>::type with_lock_guard(
     Lockable& m,
     BOOST_FWD_REF(Func) func
-) {
-  boost::lock_guard<Lockable> lock(m);
-  return func();
+)
+{
+	boost::lock_guard<Lockable> lock(m);
+	return func();
 }
 
 template <class Lockable, class Func, class Arg>
@@ -76,11 +78,12 @@ typename boost::result_of<Func(Arg)>::type with_lock_guard(
     Lockable& m,
     BOOST_FWD_REF(Func) func,
     BOOST_FWD_REF(Arg) arg
-) {
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg>(arg)
-  );
+)
+{
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg>(arg)
+	       );
 }
 
 template <class Lockable, class Func, class Arg1, class Arg2>
@@ -89,12 +92,13 @@ typename boost::result_of<Func(Arg1, Arg2)>::type with_lock_guard(
     BOOST_FWD_REF(Func) func,
     BOOST_FWD_REF(Arg1) arg1,
     BOOST_FWD_REF(Arg2) arg2
-) {
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg1>(arg1),
-      boost::forward<Arg2>(arg2)
-  );
+)
+{
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg1>(arg1),
+	           boost::forward<Arg2>(arg2)
+	       );
 }
 
 template <class Lockable, class Func, class Arg1, class Arg2, class Arg3>
@@ -104,18 +108,19 @@ typename boost::result_of<Func(Arg1, Arg2, Arg3)>::type with_lock_guard(
     BOOST_FWD_REF(Arg1) arg1,
     BOOST_FWD_REF(Arg2) arg2,
     BOOST_FWD_REF(Arg3) arg3
-) {
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg1>(arg1),
-      boost::forward<Arg2>(arg2),
-      boost::forward<Arg3>(arg3)
-  );
+)
+{
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg1>(arg1),
+	           boost::forward<Arg2>(arg2),
+	           boost::forward<Arg3>(arg3)
+	       );
 }
 
 template <
     class Lockable, class Func, class Arg1, class Arg2, class Arg3, class Arg4
->
+    >
 typename boost::result_of<Func(Arg1, Arg2, Arg3, Arg4)>::type with_lock_guard(
     Lockable& m,
     BOOST_FWD_REF(Func) func,
@@ -123,90 +128,95 @@ typename boost::result_of<Func(Arg1, Arg2, Arg3, Arg4)>::type with_lock_guard(
     BOOST_FWD_REF(Arg2) arg2,
     BOOST_FWD_REF(Arg3) arg3,
     BOOST_FWD_REF(Arg4) arg4
-) {
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg1>(arg1),
-      boost::forward<Arg2>(arg2),
-      boost::forward<Arg3>(arg3),
-      boost::forward<Arg4>(arg4)
-  );
+)
+{
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg1>(arg1),
+	           boost::forward<Arg2>(arg2),
+	           boost::forward<Arg3>(arg3),
+	           boost::forward<Arg4>(arg4)
+	       );
 }
 
 // overloads for function pointer
 // (if argument is not function pointer, static assert will trigger)
 template <class Lockable, class Func>
 typename boost::result_of<
-    typename boost::add_pointer<Func>::type()
+typename boost::add_pointer<Func>::type()
 >::type with_lock_guard(
     Lockable& m,
     Func* func
-) {
-  BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
+)
+{
+	BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
 
-  boost::lock_guard<Lockable> lock(m);
-  return func();
+	boost::lock_guard<Lockable> lock(m);
+	return func();
 }
 
 template <class Lockable, class Func, class Arg>
 typename boost::result_of<
-    typename boost::add_pointer<Func>::type(Arg)
+typename boost::add_pointer<Func>::type(Arg)
 >::type with_lock_guard(
     Lockable& m,
     Func* func,
     BOOST_FWD_REF(Arg) arg
-) {
-  BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
+)
+{
+	BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
 
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg>(arg)
-  );
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg>(arg)
+	       );
 }
 
 template <class Lockable, class Func, class Arg1, class Arg2>
 typename boost::result_of<
-    typename boost::add_pointer<Func>::type(Arg1, Arg2)
+typename boost::add_pointer<Func>::type(Arg1, Arg2)
 >::type with_lock_guard(
     Lockable& m,
     Func* func,
     BOOST_FWD_REF(Arg1) arg1,
     BOOST_FWD_REF(Arg2) arg2
-) {
-  BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
+)
+{
+	BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
 
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg1>(arg1),
-      boost::forward<Arg2>(arg2)
-  );
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg1>(arg1),
+	           boost::forward<Arg2>(arg2)
+	       );
 }
 
 template <class Lockable, class Func, class Arg1, class Arg2, class Arg3>
 typename boost::result_of<
-    typename boost::add_pointer<Func>::type(Arg1, Arg2, Arg3)
+typename boost::add_pointer<Func>::type(Arg1, Arg2, Arg3)
 >::type with_lock_guard(
     Lockable& m,
     Func* func,
     BOOST_FWD_REF(Arg1) arg1,
     BOOST_FWD_REF(Arg2) arg2,
     BOOST_FWD_REF(Arg3) arg3
-) {
-  BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
+)
+{
+	BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
 
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg1>(arg1),
-      boost::forward<Arg2>(arg2),
-      boost::forward<Arg3>(arg3)
-  );
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg1>(arg1),
+	           boost::forward<Arg2>(arg2),
+	           boost::forward<Arg3>(arg3)
+	       );
 }
 
 template <
     class Lockable, class Func, class Arg1, class Arg2, class Arg3, class Arg4
->
+    >
 typename boost::result_of<
-    typename boost::add_pointer<Func>::type(Arg1, Arg2, Arg3, Arg4)
+typename boost::add_pointer<Func>::type(Arg1, Arg2, Arg3, Arg4)
 >::type with_lock_guard(
     Lockable& m,
     Func* func,
@@ -214,16 +224,17 @@ typename boost::result_of<
     BOOST_FWD_REF(Arg2) arg2,
     BOOST_FWD_REF(Arg3) arg3,
     BOOST_FWD_REF(Arg4) arg4
-) {
-  BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
+)
+{
+	BOOST_STATIC_ASSERT(boost::is_function<Func>::value);
 
-  boost::lock_guard<Lockable> lock(m);
-  return func(
-      boost::forward<Arg1>(arg1),
-      boost::forward<Arg2>(arg2),
-      boost::forward<Arg3>(arg3),
-      boost::forward<Arg4>(arg4)
-  );
+	boost::lock_guard<Lockable> lock(m);
+	return func(
+	           boost::forward<Arg1>(arg1),
+	           boost::forward<Arg2>(arg2),
+	           boost::forward<Arg3>(arg3),
+	           boost::forward<Arg4>(arg4)
+	       );
 }
 
 #endif

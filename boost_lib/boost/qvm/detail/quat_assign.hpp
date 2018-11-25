@@ -11,25 +11,25 @@
 #include <boost/qvm/quat_traits.hpp>
 
 namespace
-boost
-    {
-    namespace
-    qvm
-        {
-        template <class A,class B>
-        BOOST_QVM_INLINE_OPERATIONS
-        typename enable_if_c<
-            is_quat<A>::value && is_quat<B>::value,
-            A &>::type
+	boost
+{
+namespace
+	qvm
+{
+template <class A,class B>
+BOOST_QVM_INLINE_OPERATIONS
+typename enable_if_c<
+is_quat<A>::value && is_quat<B>::value,
+        A &>::type
         assign( A & a, B const & b )
-            {
-            quat_traits<A>::template write_element<0>(a) = quat_traits<B>::template read_element<0>(b);
-            quat_traits<A>::template write_element<1>(a) = quat_traits<B>::template read_element<1>(b);
-            quat_traits<A>::template write_element<2>(a) = quat_traits<B>::template read_element<2>(b);
-            quat_traits<A>::template write_element<3>(a) = quat_traits<B>::template read_element<3>(b);
-            return a;
-            }
-        }
-    }
+{
+	quat_traits<A>::template write_element<0>(a) = quat_traits<B>::template read_element<0>(b);
+	quat_traits<A>::template write_element<1>(a) = quat_traits<B>::template read_element<1>(b);
+	quat_traits<A>::template write_element<2>(a) = quat_traits<B>::template read_element<2>(b);
+	quat_traits<A>::template write_element<3>(a) = quat_traits<B>::template read_element<3>(b);
+	return a;
+}
+}
+}
 
 #endif

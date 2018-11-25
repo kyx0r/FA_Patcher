@@ -46,128 +46,137 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct lask {};
+namespace par4
+{
+struct lask {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace lask
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace lask
+{
 
-            static const double a10 = 0.975534;
-            static const double a12 = -0.119161;
-            static const double a32 = -0.0143059;
-            static const double a14 = -0.0547009;
-            static const double b01 = 1.00384;
-            static const double b21 = 0.0802894;
-            static const double b03 = 0.0998909;
-            static const double b41 = 0.000199025;
-            static const double b23 = -0.0285500;
-            static const double b05 = -0.0491032;
+static const double a10 = 0.975534;
+static const double a12 = -0.119161;
+static const double a32 = -0.0143059;
+static const double a14 = -0.0547009;
+static const double b01 = 1.00384;
+static const double b21 = 0.0802894;
+static const double b03 = 0.0998909;
+static const double b41 = 0.000199025;
+static const double b23 = -0.0285500;
+static const double b05 = -0.0491032;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_lask_spheroid : public base_t_f<base_lask_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_lask_spheroid : public base_t_f<base_lask_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_lask_spheroid(const Parameters& par)
-                    : base_t_f<base_lask_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_lask_spheroid(const Parameters& par)
+		: base_t_f<base_lask_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  sphere
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType l2, p2;
+	// FORWARD(s_forward)  sphere
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType l2, p2;
 
-                    l2 = lp_lon * lp_lon;
-                    p2 = lp_lat * lp_lat;
-                    xy_x = lp_lon * (a10 + p2 * (a12 + l2 * a32 + p2 * a14));
-                    xy_y = lp_lat * (b01 + l2 * (b21 + p2 * b23 + l2 * b41) +
-                        p2 * (b03 + p2 * b05));
-                }
+		l2 = lp_lon * lp_lon;
+		p2 = lp_lat * lp_lat;
+		xy_x = lp_lon * (a10 + p2 * (a12 + l2 * a32 + p2 * a14));
+		xy_y = lp_lat * (b01 + l2 * (b21 + p2 * b23 + l2 * b41) +
+		                 p2 * (b03 + p2 * b05));
+	}
 
-                static inline std::string get_name()
-                {
-                    return "lask_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "lask_spheroid";
+	}
 
-            };
+};
 
-            // Laskowski
-            template <typename Parameters>
-            inline void setup_lask(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Laskowski
+template <typename Parameters>
+inline void setup_lask(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::lask
-    #endif // doxygen
+}
+} // namespace detail::lask
+#endif // doxygen
 
-    /*!
-        \brief Laskowski projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_lask.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct lask_spheroid : public detail::lask::base_lask_spheroid<CalculationType, Parameters>
-    {
-        inline lask_spheroid(const Parameters& par) : detail::lask::base_lask_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::lask::setup_lask(this->m_par);
-        }
-    };
+/*!
+    \brief Laskowski projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_lask.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct lask_spheroid : public detail::lask::base_lask_spheroid<CalculationType, Parameters>
+{
+	inline lask_spheroid(const Parameters& par) : detail::lask::base_lask_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::lask::setup_lask(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::lask, lask_spheroid, lask_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::lask, lask_spheroid, lask_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class lask_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<lask_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class lask_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<lask_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void lask_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("lask", new lask_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void lask_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("lask", new lask_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_LASK_HPP
 

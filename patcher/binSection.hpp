@@ -11,15 +11,18 @@ struct image_section_header
 	vector <uint32_t> SizeOfRawData;
 };
 
+namespace binPatcher
+{
+
 class BinSection : public Utils
 {
-	public:
+public:
 	bool create_Section(istream& pe_file, string out_file_name, const string& section_name, int raw_size = 1, int virtual_size = 0x1000);
 	void apply_Ext(const int verisign_offset, FileIO& fa);
-	
-	private:	
+
+private:
 	image_section_header populate_image_section_header(const string &filename);
-	
+
 	string make_ext_gpp_link = make+" ext_gpp_link";
 	string ext_sector = make+" ext_sector";
 	uint32_t align_data = 0;
@@ -27,5 +30,7 @@ class BinSection : public Utils
 	uint32_t align_bss = 0;
 	uint32_t align_idata = 0;
 	int size;
-	
+
 };
+
+} //namespace binPatcher

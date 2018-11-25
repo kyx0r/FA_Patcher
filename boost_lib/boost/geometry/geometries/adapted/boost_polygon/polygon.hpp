@@ -24,7 +24,9 @@
 #include <boost/geometry/geometries/adapted/boost_polygon/holes_proxy.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -35,68 +37,68 @@ namespace traits
 template <typename CoordinateType>
 struct tag<boost::polygon::polygon_with_holes_data<CoordinateType> >
 {
-    typedef polygon_tag type;
+	typedef polygon_tag type;
 };
 
 template <typename CoordinateType>
 struct ring_const_type<boost::polygon::polygon_with_holes_data<CoordinateType> >
 {
-    typedef adapt::bp::ring_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> const> type;
+	typedef adapt::bp::ring_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> const> type;
 };
 
 template <typename CoordinateType>
 struct ring_mutable_type<boost::polygon::polygon_with_holes_data<CoordinateType> >
 {
-    typedef adapt::bp::ring_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> > type;
+	typedef adapt::bp::ring_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> > type;
 };
 
 template <typename CoordinateType>
 struct interior_const_type<boost::polygon::polygon_with_holes_data<CoordinateType> >
 {
-    typedef adapt::bp::holes_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> const> type;
+	typedef adapt::bp::holes_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> const> type;
 };
 
 template <typename CoordinateType>
 struct interior_mutable_type<boost::polygon::polygon_with_holes_data<CoordinateType> >
 {
-    typedef adapt::bp::holes_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> > type;
+	typedef adapt::bp::holes_proxy<boost::polygon::polygon_with_holes_data<CoordinateType> > type;
 };
 
 
 template <typename CoordinateType>
 struct exterior_ring<boost::polygon::polygon_with_holes_data<CoordinateType> >
 {
-    typedef boost::polygon::polygon_with_holes_data<CoordinateType> polygon_type;
-    typedef adapt::bp::ring_proxy<polygon_type> proxy;
-    typedef adapt::bp::ring_proxy<polygon_type const> const_proxy;
+	typedef boost::polygon::polygon_with_holes_data<CoordinateType> polygon_type;
+	typedef adapt::bp::ring_proxy<polygon_type> proxy;
+	typedef adapt::bp::ring_proxy<polygon_type const> const_proxy;
 
-    static inline proxy get(polygon_type& p)
-    {
-        return proxy(p);
-    }
+	static inline proxy get(polygon_type& p)
+	{
+		return proxy(p);
+	}
 
-    static inline const_proxy get(polygon_type const& p)
-    {
-        return const_proxy(p);
-    }
+	static inline const_proxy get(polygon_type const& p)
+	{
+		return const_proxy(p);
+	}
 };
 
 template <typename CoordinateType>
 struct interior_rings<boost::polygon::polygon_with_holes_data<CoordinateType> >
 {
-    typedef boost::polygon::polygon_with_holes_data<CoordinateType> polygon_type;
-    typedef adapt::bp::holes_proxy<polygon_type> proxy;
-    typedef adapt::bp::holes_proxy<polygon_type const> const_proxy;
+	typedef boost::polygon::polygon_with_holes_data<CoordinateType> polygon_type;
+	typedef adapt::bp::holes_proxy<polygon_type> proxy;
+	typedef adapt::bp::holes_proxy<polygon_type const> const_proxy;
 
-    static inline proxy get(polygon_type& p)
-    {
-        return proxy(p);
-    }
+	static inline proxy get(polygon_type& p)
+	{
+		return proxy(p);
+	}
 
-    static inline const_proxy get(polygon_type const& p)
-    {
-        return const_proxy(p);
-    }
+	static inline const_proxy get(polygon_type const& p)
+	{
+		return const_proxy(p);
+	}
 };
 
 
@@ -104,7 +106,8 @@ struct interior_rings<boost::polygon::polygon_with_holes_data<CoordinateType> >
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_ADAPTED_BOOST_POLYGON_POLYGON_HPP

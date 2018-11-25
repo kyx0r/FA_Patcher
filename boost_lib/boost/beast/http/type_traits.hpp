@@ -20,9 +20,12 @@
 #include <type_traits>
 #include <utility>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 template<bool, class, class>
 struct message;
@@ -46,7 +49,7 @@ struct message;
 */
 template<class T>
 #if BOOST_BEAST_DOXYGEN
-struct is_body : std::integral_constant<bool, ...>{};
+struct is_body : std::integral_constant<bool, ...> {};
 #else
 using is_body = detail::has_value_type<T>;
 #endif
@@ -80,27 +83,27 @@ struct is_body_writer : std::false_type {};
 
 template<class T>
 struct is_body_writer<T, beast::detail::void_t<
-    typename T::writer,
-    typename T::writer::const_buffers_type,
-        decltype(
+	typename T::writer,
+	typename T::writer::const_buffers_type,
+decltype(
     std::declval<typename T::writer&>().init(std::declval<error_code&>()),
     std::declval<boost::optional<std::pair<
-            typename T::writer::const_buffers_type, bool>>&>() =
-            std::declval<typename T::writer>().get(std::declval<error_code&>()),
-        (void)0)>> : std::integral_constant<bool,
+    typename T::writer::const_buffers_type, bool>>&>() =
+        std::declval<typename T::writer>().get(std::declval<error_code&>()),
+    (void)0)>> : std::integral_constant<bool,
     boost::asio::is_const_buffer_sequence<
-        typename T::writer::const_buffers_type>::value && (
-    (std::is_constructible<typename T::writer,
-        header<true, detail::fields_model>&,
-        typename T::value_type&>::value &&
-    std::is_constructible<typename T::writer,
-        header<false, detail::fields_model>&,
-        typename T::value_type&>::value) ||
-    // Deprecated BodyWriter Concept (v1.66)
-    (std::is_constructible<typename T::writer,
-        message<true, T, detail::fields_model>&>::value &&
-    std::is_constructible<typename T::writer,
-        message<false, T, detail::fields_model>&>::value)
+    typename T::writer::const_buffers_type>::value && (
+        (std::is_constructible<typename T::writer,
+         header<true, detail::fields_model>&,
+         typename T::value_type&>::value &&
+         std::is_constructible<typename T::writer,
+         header<false, detail::fields_model>&,
+         typename T::value_type&>::value) ||
+        // Deprecated BodyWriter Concept (v1.66)
+        (std::is_constructible<typename T::writer,
+         message<true, T, detail::fields_model>&>::value &&
+         std::is_constructible<typename T::writer,
+         message<false, T, detail::fields_model>&>::value)
     )
     > {};
 #endif
@@ -144,20 +147,20 @@ struct is_body_reader<T, beast::detail::void_t<decltype(
     std::declval<typename T::reader&>().finish(
         std::declval<error_code&>()),
     (void)0)>> : std::integral_constant<bool,
-        (std::is_constructible<typename T::reader,
-            header<true, detail::fields_model>&,
-                typename T::value_type&>::value &&
-        std::is_constructible<typename T::reader,
-            header<false,detail::fields_model>&,
-                typename T::value_type&>::value) ||
-        // Deprecated BodyReader Concept (v1.66)
-        (std::is_constructible<typename T::reader,
-            message<true, T, detail::fields_model>&>::value &&
-        std::is_constructible<typename T::reader,
-            message<false, T, detail::fields_model>&>::value)
-        >
-{
-};
+    (std::is_constructible<typename T::reader,
+     header<true, detail::fields_model>&,
+     typename T::value_type&>::value &&
+     std::is_constructible<typename T::reader,
+     header<false,detail::fields_model>&,
+     typename T::value_type&>::value) ||
+    // Deprecated BodyReader Concept (v1.66)
+    (std::is_constructible<typename T::reader,
+     message<true, T, detail::fields_model>&>::value &&
+     std::is_constructible<typename T::reader,
+     message<false, T, detail::fields_model>&>::value)
+    >
+    {
+    };
 #endif
 
 /** Determine if `T` meets the requirements of @b Fields

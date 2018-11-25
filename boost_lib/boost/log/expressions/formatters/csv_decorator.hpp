@@ -25,13 +25,16 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 template< typename >
 struct csv_decorator_traits;
@@ -40,22 +43,22 @@ struct csv_decorator_traits;
 template< >
 struct csv_decorator_traits< char >
 {
-    static boost::iterator_range< const char* const* > get_patterns()
-    {
-        static const char* const patterns[] =
-        {
-            "\""
-        };
-        return boost::make_iterator_range(patterns);
-    }
-    static boost::iterator_range< const char* const* > get_replacements()
-    {
-        static const char* const replacements[] =
-        {
-            "\"\""
-        };
-        return boost::make_iterator_range(replacements);
-    }
+	static boost::iterator_range< const char* const* > get_patterns()
+	{
+		static const char* const patterns[] =
+		{
+			"\""
+		};
+		return boost::make_iterator_range(patterns);
+	}
+	static boost::iterator_range< const char* const* > get_replacements()
+	{
+		static const char* const replacements[] =
+		{
+			"\"\""
+		};
+		return boost::make_iterator_range(replacements);
+	}
 };
 #endif // BOOST_LOG_USE_CHAR
 
@@ -63,40 +66,40 @@ struct csv_decorator_traits< char >
 template< >
 struct csv_decorator_traits< wchar_t >
 {
-    static boost::iterator_range< const wchar_t* const* > get_patterns()
-    {
-        static const wchar_t* const patterns[] =
-        {
-            L"\""
-        };
-        return boost::make_iterator_range(patterns);
-    }
-    static boost::iterator_range< const wchar_t* const* > get_replacements()
-    {
-        static const wchar_t* const replacements[] =
-        {
-            L"\"\""
-        };
-        return boost::make_iterator_range(replacements);
-    }
+	static boost::iterator_range< const wchar_t* const* > get_patterns()
+	{
+		static const wchar_t* const patterns[] =
+		{
+			L"\""
+		};
+		return boost::make_iterator_range(patterns);
+	}
+	static boost::iterator_range< const wchar_t* const* > get_replacements()
+	{
+		static const wchar_t* const replacements[] =
+		{
+			L"\"\""
+		};
+		return boost::make_iterator_range(replacements);
+	}
 };
 #endif // BOOST_LOG_USE_WCHAR_T
 
 template< typename CharT >
 struct csv_decorator_gen
 {
-    typedef CharT char_type;
+	typedef CharT char_type;
 
-    template< typename SubactorT >
-    BOOST_FORCEINLINE char_decorator_actor< SubactorT, pattern_replacer< char_type > > operator[] (SubactorT const& subactor) const
-    {
-        typedef csv_decorator_traits< char_type > traits_type;
-        typedef pattern_replacer< char_type > replacer_type;
-        typedef char_decorator_actor< SubactorT, replacer_type > result_type;
-        typedef typename result_type::terminal_type terminal_type;
-        typename result_type::base_type act = {{ terminal_type(subactor, replacer_type(traits_type::get_patterns(), traits_type::get_replacements())) }};
-        return result_type(act);
-    }
+	template< typename SubactorT >
+	BOOST_FORCEINLINE char_decorator_actor< SubactorT, pattern_replacer< char_type > > operator[] (SubactorT const& subactor) const
+	{
+		typedef csv_decorator_traits< char_type > traits_type;
+		typedef pattern_replacer< char_type > replacer_type;
+		typedef char_decorator_actor< SubactorT, replacer_type > result_type;
+		typedef typename result_type::terminal_type terminal_type;
+		typename result_type::base_type act = {{ terminal_type(subactor, replacer_type(traits_type::get_patterns(), traits_type::get_replacements())) }};
+		return result_type(act);
+	}
 };
 
 } // namespace aux
@@ -126,7 +129,7 @@ const aux::csv_decorator_gen< wchar_t > wcsv_decor = {};
 template< typename CharT >
 BOOST_FORCEINLINE aux::csv_decorator_gen< CharT > make_csv_decor()
 {
-    return aux::csv_decorator_gen< CharT >();
+	return aux::csv_decorator_gen< CharT >();
 }
 
 } // namespace expressions

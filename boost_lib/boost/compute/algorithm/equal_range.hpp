@@ -18,8 +18,10 @@
 #include <boost/compute/algorithm/lower_bound.hpp>
 #include <boost/compute/algorithm/upper_bound.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns a pair of iterators containing the range of values equal
 /// to \p value in the sorted range [\p first, \p last).
@@ -32,10 +34,10 @@ equal_range(InputIterator first,
             const T &value,
             command_queue &queue = system::default_queue())
 {
-    return std::make_pair(
-               ::boost::compute::lower_bound(first, last, value, queue),
-               ::boost::compute::upper_bound(first, last, value, queue)
-           );
+	return std::make_pair(
+	           ::boost::compute::lower_bound(first, last, value, queue),
+	           ::boost::compute::upper_bound(first, last, value, queue)
+	       );
 }
 
 } // end compute namespace

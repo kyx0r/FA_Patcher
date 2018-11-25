@@ -15,8 +15,10 @@
 #include <sstream>
 #include <string>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// \class unsupported_extension_error
 /// \brief Exception thrown when attempting to use an unsupported
@@ -32,37 +34,37 @@ namespace compute {
 class unsupported_extension_error : public std::exception
 {
 public:
-    /// Creates a new unsupported extension error exception object indicating
-    /// that \p extension is not supported by the OpenCL platform or device.
-    explicit unsupported_extension_error(const char *extension) throw()
-        : m_extension(extension)
-    {
-        std::stringstream msg;
-        msg << "OpenCL extension " << extension << " not supported";
-        m_error_string = msg.str();
-    }
+	/// Creates a new unsupported extension error exception object indicating
+	/// that \p extension is not supported by the OpenCL platform or device.
+	explicit unsupported_extension_error(const char *extension) throw()
+		: m_extension(extension)
+	{
+		std::stringstream msg;
+		msg << "OpenCL extension " << extension << " not supported";
+		m_error_string = msg.str();
+	}
 
-    /// Destroys the unsupported extension error object.
-    ~unsupported_extension_error() throw()
-    {
-    }
+	/// Destroys the unsupported extension error object.
+	~unsupported_extension_error() throw()
+	{
+	}
 
-    /// Returns the name of the unsupported extension.
-    std::string extension_name() const throw()
-    {
-        return m_extension;
-    }
+	/// Returns the name of the unsupported extension.
+	std::string extension_name() const throw()
+	{
+		return m_extension;
+	}
 
-    /// Returns a string containing a human-readable error message containing
-    /// the name of the unsupported exception.
-    const char* what() const throw()
-    {
-        return m_error_string.c_str();
-    }
+	/// Returns a string containing a human-readable error message containing
+	/// the name of the unsupported exception.
+	const char* what() const throw()
+	{
+		return m_error_string.c_str();
+	}
 
 private:
-    std::string m_extension;
-    std::string m_error_string;
+	std::string m_extension;
+	std::string m_error_string;
 };
 
 } // end compute namespace

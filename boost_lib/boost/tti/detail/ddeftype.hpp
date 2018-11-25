@@ -8,16 +8,16 @@
 #define BOOST_TTI_DETAIL_DEFTYPE_HPP
 
 namespace boost
-  {
-  namespace tti
-    {
-    namespace detail
-      {
-      struct deftype
-        {
-        };
-      }
-    }
-  }
-  
+{
+namespace tti
+{
+namespace detail
+{
+struct deftype
+{
+};
+}
+}
+}
+
 #endif // BOOST_TTI_DETAIL_DEFTYPE_HPP

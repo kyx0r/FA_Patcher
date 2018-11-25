@@ -12,113 +12,122 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace boost { namespace spirit { namespace x3 { namespace traits
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Determine if T is a boolean type
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct is_bool : mpl::false_ {};
+namespace spirit
+{
+namespace x3
+{
+namespace traits
+{
+///////////////////////////////////////////////////////////////////////////
+// Determine if T is a boolean type
+///////////////////////////////////////////////////////////////////////////
+template <typename T>
+struct is_bool : mpl::false_ {};
 
-    template <typename T>
-    struct is_bool<T const> : is_bool<T> {};
+template <typename T>
+struct is_bool<T const> : is_bool<T> {};
 
-    template <>
-    struct is_bool<bool> : mpl::true_ {};
+template <>
+struct is_bool<bool> : mpl::true_ {};
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Determine if T is a signed integer type
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct is_int : mpl::false_ {};
+///////////////////////////////////////////////////////////////////////////
+// Determine if T is a signed integer type
+///////////////////////////////////////////////////////////////////////////
+template <typename T>
+struct is_int : mpl::false_ {};
 
-    template <typename T>
-    struct is_int<T const> : is_int<T> {};
+template <typename T>
+struct is_int<T const> : is_int<T> {};
 
-    template <>
-    struct is_int<short> : mpl::true_ {};
+template <>
+struct is_int<short> : mpl::true_ {};
 
-    template <>
-    struct is_int<int> : mpl::true_ {};
+template <>
+struct is_int<int> : mpl::true_ {};
 
-    template <>
-    struct is_int<long> : mpl::true_ {};
+template <>
+struct is_int<long> : mpl::true_ {};
 
 #ifdef BOOST_HAS_LONG_LONG
-    template <>
-    struct is_int<boost::long_long_type> : mpl::true_ {};
+template <>
+struct is_int<boost::long_long_type> : mpl::true_ {};
 #endif
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Determine if T is an unsigned integer type
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct is_uint : mpl::false_ {};
+///////////////////////////////////////////////////////////////////////////
+// Determine if T is an unsigned integer type
+///////////////////////////////////////////////////////////////////////////
+template <typename T>
+struct is_uint : mpl::false_ {};
 
-    template <typename T>
-    struct is_uint<T const> : is_uint<T> {};
+template <typename T>
+struct is_uint<T const> : is_uint<T> {};
 
 #if !defined(BOOST_NO_INTRINSIC_WCHAR_T)
-    template <>
-    struct is_uint<unsigned short> : mpl::true_ {};
+template <>
+struct is_uint<unsigned short> : mpl::true_ {};
 #endif
 
-    template <>
-    struct is_uint<unsigned int> : mpl::true_ {};
+template <>
+struct is_uint<unsigned int> : mpl::true_ {};
 
-    template <>
-    struct is_uint<unsigned long> : mpl::true_ {};
+template <>
+struct is_uint<unsigned long> : mpl::true_ {};
 
 #ifdef BOOST_HAS_LONG_LONG
-    template <>
-    struct is_uint<boost::ulong_long_type> : mpl::true_ {};
+template <>
+struct is_uint<boost::ulong_long_type> : mpl::true_ {};
 #endif
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Determine if T is a floating point type
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct is_real : mpl::false_ {};
+///////////////////////////////////////////////////////////////////////////
+// Determine if T is a floating point type
+///////////////////////////////////////////////////////////////////////////
+template <typename T>
+struct is_real : mpl::false_ {};
 
-    template <typename T>
-    struct is_real<T const> : is_uint<T> {};
+template <typename T>
+struct is_real<T const> : is_uint<T> {};
 
-    template <>
-    struct is_real<float> : mpl::true_ {};
+template <>
+struct is_real<float> : mpl::true_ {};
 
-    template <>
-    struct is_real<double> : mpl::true_ {};
+template <>
+struct is_real<double> : mpl::true_ {};
 
-    template <>
-    struct is_real<long double> : mpl::true_ {};
+template <>
+struct is_real<long double> : mpl::true_ {};
 
-    ///////////////////////////////////////////////////////////////////////////
-    // customization points for numeric operations
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename Enable = void>
-    struct absolute_value;
+///////////////////////////////////////////////////////////////////////////
+// customization points for numeric operations
+///////////////////////////////////////////////////////////////////////////
+template <typename T, typename Enable = void>
+struct absolute_value;
 
-    template <typename T, typename Enable = void>
-    struct is_negative;
+template <typename T, typename Enable = void>
+struct is_negative;
 
-    template <typename T, typename Enable = void>
-    struct is_zero;
+template <typename T, typename Enable = void>
+struct is_zero;
 
-    template <typename T, typename Enable = void>
-    struct pow10_helper;
+template <typename T, typename Enable = void>
+struct pow10_helper;
 
-    template <typename T, typename Enable = void>
-    struct is_nan;
+template <typename T, typename Enable = void>
+struct is_nan;
 
-    template <typename T, typename Enable = void>
-    struct is_infinite;
-    
-    template <typename T, typename Enable = void>
-    struct check_overflow : mpl::false_ {};
-        
-    template <typename T>
-    struct check_overflow<T, typename enable_if_c<integer_traits<T>::is_integral>::type>
-        : mpl::true_ {};
-}}}}
+template <typename T, typename Enable = void>
+struct is_infinite;
+
+template <typename T, typename Enable = void>
+struct check_overflow : mpl::false_ {};
+
+template <typename T>
+struct check_overflow<T, typename enable_if_c<integer_traits<T>::is_integral>::type>
+	: mpl::true_ {};
+}
+}
+}
+}
 
 #endif

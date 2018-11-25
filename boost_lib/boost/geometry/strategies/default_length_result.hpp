@@ -28,7 +28,9 @@
 #include <boost/geometry/util/transform_variant.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -38,11 +40,11 @@ namespace resolve_strategy
 template <typename Geometry>
 struct default_length_result
 {
-    typedef typename select_most_precise
-        <
-            typename coordinate_type<Geometry>::type,
-            long double
-        >::type type;
+	typedef typename select_most_precise
+	<
+	typename coordinate_type<Geometry>::type,
+	         long double
+	         >::type type;
 };
 
 } // namespace resolve_strategy
@@ -53,18 +55,18 @@ namespace resolve_variant
 
 template <typename Geometry>
 struct default_length_result
-    : resolve_strategy::default_length_result<Geometry>
+	: resolve_strategy::default_length_result<Geometry>
 {};
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct default_length_result<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    typedef typename compress_variant<
-        typename transform_variant<
-            boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
-            resolve_strategy::default_length_result<boost::mpl::placeholders::_>
-        >::type
-    >::type type;
+	typedef typename compress_variant<
+	typename transform_variant<
+	boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>,
+	      resolve_strategy::default_length_result<boost::mpl::placeholders::_>
+	      >::type
+	      >::type type;
 };
 
 } // namespace resolve_variant
@@ -80,10 +82,11 @@ struct default_length_result<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
  */
 template <typename Geometry>
 struct default_length_result
-    : resolve_variant::default_length_result<Geometry>
+	: resolve_variant::default_length_result<Geometry>
 {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_DEFAULT_LENGTH_RESULT_HPP

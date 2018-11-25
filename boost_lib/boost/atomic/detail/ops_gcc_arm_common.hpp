@@ -24,9 +24,12 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 // A memory barrier is effected using a "co-processor 15" instruction,
 // though a separate assembler mnemonic is available for it in v7.
@@ -74,57 +77,57 @@ namespace detail {
 
 struct gcc_arm_operations_base
 {
-    static BOOST_CONSTEXPR_OR_CONST bool full_cas_based = false;
-    static BOOST_CONSTEXPR_OR_CONST bool is_always_lock_free = true;
+	static BOOST_CONSTEXPR_OR_CONST bool full_cas_based = false;
+	static BOOST_CONSTEXPR_OR_CONST bool is_always_lock_free = true;
 
-    static BOOST_FORCEINLINE void fence_before(memory_order order) BOOST_NOEXCEPT
-    {
-        if ((static_cast< unsigned int >(order) & static_cast< unsigned int >(memory_order_release)) != 0u)
-            hardware_full_fence();
-    }
+	static BOOST_FORCEINLINE void fence_before(memory_order order) BOOST_NOEXCEPT
+	{
+		if ((static_cast< unsigned int >(order) & static_cast< unsigned int >(memory_order_release)) != 0u)
+			hardware_full_fence();
+	}
 
-    static BOOST_FORCEINLINE void fence_after(memory_order order) BOOST_NOEXCEPT
-    {
-        if ((static_cast< unsigned int >(order) & (static_cast< unsigned int >(memory_order_consume) | static_cast< unsigned int >(memory_order_acquire))) != 0u)
-            hardware_full_fence();
-    }
+	static BOOST_FORCEINLINE void fence_after(memory_order order) BOOST_NOEXCEPT
+	{
+		if ((static_cast< unsigned int >(order) & (static_cast< unsigned int >(memory_order_consume) | static_cast< unsigned int >(memory_order_acquire))) != 0u)
+			hardware_full_fence();
+	}
 
-    static BOOST_FORCEINLINE void fence_after_store(memory_order order) BOOST_NOEXCEPT
-    {
-        if (order == memory_order_seq_cst)
-            hardware_full_fence();
-    }
+	static BOOST_FORCEINLINE void fence_after_store(memory_order order) BOOST_NOEXCEPT
+	{
+		if (order == memory_order_seq_cst)
+			hardware_full_fence();
+	}
 
-    static BOOST_FORCEINLINE void hardware_full_fence() BOOST_NOEXCEPT
-    {
+	static BOOST_FORCEINLINE void hardware_full_fence() BOOST_NOEXCEPT
+	{
 #if defined(BOOST_ATOMIC_DETAIL_ARM_HAS_DMB)
-        // Older binutils (supposedly, older than 2.21.1) didn't support symbolic or numeric arguments of the "dmb" instruction such as "ish" or "#11".
-        // As a workaround we have to inject encoded bytes of the instruction. There are two encodings for the instruction: ARM and Thumb. See ARM Architecture Reference Manual, A8.8.43.
-        // Since we cannot detect binutils version at compile time, we'll have to always use this hack.
-        __asm__ __volatile__
-        (
+		// Older binutils (supposedly, older than 2.21.1) didn't support symbolic or numeric arguments of the "dmb" instruction such as "ish" or "#11".
+		// As a workaround we have to inject encoded bytes of the instruction. There are two encodings for the instruction: ARM and Thumb. See ARM Architecture Reference Manual, A8.8.43.
+		// Since we cannot detect binutils version at compile time, we'll have to always use this hack.
+		__asm__ __volatile__
+		(
 #if defined(__thumb2__)
-            ".short 0xF3BF, 0x8F5B\n" // dmb ish
+		    ".short 0xF3BF, 0x8F5B\n" // dmb ish
 #else
-            ".word 0xF57FF05B\n" // dmb ish
+		    ".word 0xF57FF05B\n" // dmb ish
 #endif
-            :
-            :
-            : "memory"
-        );
+		    :
+		    :
+		    : "memory"
+		);
 #else
-        uint32_t tmp;
-        __asm__ __volatile__
-        (
-            BOOST_ATOMIC_DETAIL_ARM_ASM_START(%0)
-            "mcr\tp15, 0, r0, c7, c10, 5\n"
-            BOOST_ATOMIC_DETAIL_ARM_ASM_END(%0)
-            : "=&l" (tmp)
-            :
-            : "memory"
-        );
+		uint32_t tmp;
+		__asm__ __volatile__
+		(
+		    BOOST_ATOMIC_DETAIL_ARM_ASM_START(%0)
+		    "mcr\tp15, 0, r0, c7, c10, 5\n"
+		    BOOST_ATOMIC_DETAIL_ARM_ASM_END(%0)
+		    : "=&l" (tmp)
+		    :
+		    : "memory"
+		);
 #endif
-    }
+	}
 };
 
 } // namespace detail

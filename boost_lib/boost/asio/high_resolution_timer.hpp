@@ -22,8 +22,10 @@
 #include <boost/asio/basic_waitable_timer.hpp>
 #include <boost/asio/detail/chrono.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 /// Typedef for a timer based on the high resolution clock.
 /**
@@ -35,8 +37,8 @@ namespace asio {
  * @endcode
  */
 typedef basic_waitable_timer<
-    chrono::high_resolution_clock>
-  high_resolution_timer;
+chrono::high_resolution_clock>
+high_resolution_timer;
 
 } // namespace asio
 } // namespace boost

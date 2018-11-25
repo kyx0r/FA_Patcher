@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function rotate
 ///
@@ -27,25 +27,25 @@ namespace boost
 /// \pre Rng meets the requirements for a Forward range
 template<class ForwardRange>
 inline ForwardRange& rotate(ForwardRange& rng,
-    BOOST_DEDUCED_TYPENAME range_iterator<ForwardRange>::type middle)
+                            BOOST_DEDUCED_TYPENAME range_iterator<ForwardRange>::type middle)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange> ));
-    std::rotate(boost::begin(rng), middle, boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange> ));
+	std::rotate(boost::begin(rng), middle, boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class ForwardRange>
 inline const ForwardRange& rotate(const ForwardRange& rng,
-    BOOST_DEDUCED_TYPENAME range_iterator<const ForwardRange>::type middle)
+                                  BOOST_DEDUCED_TYPENAME range_iterator<const ForwardRange>::type middle)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
-    std::rotate(boost::begin(rng), middle, boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
+	std::rotate(boost::begin(rng), middle, boost::end(rng));
+	return rng;
 }
 
-    } // namespace range
-    using range::rotate;
+} // namespace range
+using range::rotate;
 } // namespace boost
 
 #endif // include guard

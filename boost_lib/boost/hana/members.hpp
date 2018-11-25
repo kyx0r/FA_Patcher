@@ -21,45 +21,51 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Object>
-    constexpr auto members_t::operator()(Object&& object) const {
-        using S = typename hana::tag_of<Object>::type;
-        using Members = BOOST_HANA_DISPATCH_IF(members_impl<S>,
-            hana::Struct<S>::value
-        );
+//! @cond
+template <typename Object>
+constexpr auto members_t::operator()(Object&& object) const
+{
+	using S = typename hana::tag_of<Object>::type;
+	using Members = BOOST_HANA_DISPATCH_IF(members_impl<S>,
+	                                       hana::Struct<S>::value
+	                                      );
 
-        #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-            static_assert(hana::Struct<S>::value,
-            "hana::members(object) requires 'object' to be a Struct");
-        #endif
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::Struct<S>::value,
+	              "hana::members(object) requires 'object' to be a Struct");
+#endif
 
-        return Members::apply(static_cast<Object&&>(object));
-    }
-    //! @endcond
+	return Members::apply(static_cast<Object&&>(object));
+}
+//! @endcond
 
-    namespace struct_detail {
-        template <typename Holder, typename Forward>
-        struct members_helper {
-            Holder object;
-            template <typename Accessor>
-            constexpr decltype(auto) operator()(Accessor&& accessor) const {
-                return hana::second(static_cast<Accessor&&>(accessor))(
-                    static_cast<Forward>(object)
-                );
-            }
-        };
-    }
+namespace struct_detail
+{
+template <typename Holder, typename Forward>
+struct members_helper
+{
+	Holder object;
+	template <typename Accessor>
+	constexpr decltype(auto) operator()(Accessor&& accessor) const
+	{
+		return hana::second(static_cast<Accessor&&>(accessor))(
+		           static_cast<Forward>(object)
+		       );
+	}
+};
+}
 
-    template <typename S, bool condition>
-    struct members_impl<S, when<condition>> : default_ {
-        template <typename Object>
-        static constexpr auto apply(Object&& object) {
-            return hana::transform(hana::accessors<S>(),
-                struct_detail::members_helper<Object&, Object&&>{object}
-            );
-        }
-    };
+template <typename S, bool condition>
+struct members_impl<S, when<condition>> : default_
+{
+	template <typename Object>
+	static constexpr auto apply(Object&& object)
+	{
+		return hana::transform(hana::accessors<S>(),
+		                       struct_detail::members_helper<Object&, Object&&> {object}
+		                      );
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_MEMBERS_HPP

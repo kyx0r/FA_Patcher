@@ -12,38 +12,41 @@
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
 #include <boost/visit_each.hpp>
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    template <typename> struct actor;
+namespace phoenix
+{
+template <typename> struct actor;
 
-    namespace detail
-    {
-        template <typename Visitor>
-        struct visit_each_impl
-        {
-            Visitor& visitor;
-            visit_each_impl(Visitor& visitor_ ) : visitor(visitor_) {}
+namespace detail
+{
+template <typename Visitor>
+struct visit_each_impl
+{
+	Visitor& visitor;
+	visit_each_impl(Visitor& visitor_ ) : visitor(visitor_) {}
 
-            template <typename T>
-            void operator()(T const& t) const
-            {
-                using boost::visit_each;
-                visit_each(visitor, t);
-            }
-        };
-    }
+	template <typename T>
+	void operator()(T const& t) const
+	{
+		using boost::visit_each;
+		visit_each(visitor, t);
+	}
+};
+}
 
-    template <typename Visitor, typename Expr>
-    inline void visit_each(Visitor& visitor, actor<Expr> const& a, long)
-    {
-        fusion::for_each(a, detail::visit_each_impl<Visitor>(visitor));
-    }
+template <typename Visitor, typename Expr>
+inline void visit_each(Visitor& visitor, actor<Expr> const& a, long)
+{
+	fusion::for_each(a, detail::visit_each_impl<Visitor>(visitor));
+}
 
-    template <typename Visitor, typename Expr>
-    inline void visit_each(Visitor& visitor, actor<Expr> const& a)
-    {
-        fusion::for_each(a, detail::visit_each_impl<Visitor>(visitor));
-    }
-}}
+template <typename Visitor, typename Expr>
+inline void visit_each(Visitor& visitor, actor<Expr> const& a)
+{
+	fusion::for_each(a, detail::visit_each_impl<Visitor>(visitor));
+}
+}
+}
 
 #endif

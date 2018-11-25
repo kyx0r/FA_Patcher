@@ -18,23 +18,25 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename Ys>
-    constexpr auto difference_t::operator()(Xs&& xs, Ys&& ys) const {
-        using S = typename hana::tag_of<Xs>::type;
-        using Difference = BOOST_HANA_DISPATCH_IF(difference_impl<S>,
-            true
-        );
+//! @cond
+template <typename Xs, typename Ys>
+constexpr auto difference_t::operator()(Xs&& xs, Ys&& ys) const
+{
+	using S = typename hana::tag_of<Xs>::type;
+	using Difference = BOOST_HANA_DISPATCH_IF(difference_impl<S>,
+	                   true
+	                                         );
 
-        return Difference::apply(static_cast<Xs&&>(xs), static_cast<Ys&&>(ys));
-    }
-    //! @endcond
+	return Difference::apply(static_cast<Xs&&>(xs), static_cast<Ys&&>(ys));
+}
+//! @endcond
 
-    template <typename S, bool condition>
-    struct difference_impl<S, when<condition>> : default_ {
-        template <typename ...Args>
-        static constexpr auto apply(Args&& ...) = delete;
-    };
+template <typename S, bool condition>
+struct difference_impl<S, when<condition>> : default_
+{
+	template <typename ...Args>
+	static constexpr auto apply(Args&& ...) = delete;
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DIFFERENCE_HPP

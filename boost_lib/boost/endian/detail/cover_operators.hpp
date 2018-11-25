@@ -23,8 +23,8 @@
 
 namespace boost
 {
-  namespace endian
-  {
+namespace endian
+{
 
 //--------------------------------------------------------------------------------------//
 
@@ -40,99 +40,99 @@ namespace boost
 
 //--------------------------------------------------------------------------------------//
 
-    template <class D,   // D is the CRTP derived type, i.e. the cover class
-              class ArithmeticT>
-    class cover_operators
+template <class D,   // D is the CRTP derived type, i.e. the cover class
+          class ArithmeticT>
+class cover_operators
 #    ifndef BOOST_ENDIAN_MINIMAL_COVER_OPERATORS
-      : boost::operators<D>
+	: boost::operators<D>
 #    endif
-    {
-      // The other operations take advantage of the type conversion that's
-      // built into unary +.
+{
+	// The other operations take advantage of the type conversion that's
+	// built into unary +.
 
-      // Unary operations.
-      friend ArithmeticT operator+(const D& x) BOOST_NOEXCEPT { return x; }
+	// Unary operations.
+	friend ArithmeticT operator+(const D& x) BOOST_NOEXCEPT { return x; }
 #   ifndef BOOST_ENDIAN_MINIMAL_COVER_OPERATORS
-      friend ArithmeticT operator-(const D& x) BOOST_NOEXCEPT { return -+x; }
-      friend ArithmeticT operator~(const D& x) BOOST_NOEXCEPT { return ~+x; }
-      friend ArithmeticT operator!(const D& x) BOOST_NOEXCEPT { return !+x; }
+	friend ArithmeticT operator-(const D& x) BOOST_NOEXCEPT { return -+x; }
+	friend ArithmeticT operator~(const D& x) BOOST_NOEXCEPT { return ~+x; }
+	friend ArithmeticT operator!(const D& x) BOOST_NOEXCEPT { return !+x; }
 
-      // The basic ordering operations.
-      friend bool operator==(const D& x, ArithmeticT y) BOOST_NOEXCEPT { return +x == y; }
-      friend bool operator<(const D& x, ArithmeticT y) BOOST_NOEXCEPT { return +x < y; }
+	// The basic ordering operations.
+	friend bool operator==(const D& x, ArithmeticT y) BOOST_NOEXCEPT { return +x == y; }
+	friend bool operator<(const D& x, ArithmeticT y) BOOST_NOEXCEPT { return +x < y; }
 #   endif
 
-      // The basic arithmetic operations.
-      friend D& operator+=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x + y); }
-      friend D& operator-=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x - y); }
-      friend D& operator*=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x * y); }
-      friend D& operator/=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x / y); }
-      friend D& operator%=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x % y); }
-      friend D& operator&=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x & y); }
-      friend D& operator|=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x | y); }
-      friend D& operator^=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x ^ y); }
-      friend D& operator<<=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x << y); }
-      friend D& operator>>=(D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return x = static_cast<ArithmeticT>(+x >> y); }
+	// The basic arithmetic operations.
+	friend D& operator+=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x + y); }
+	friend D& operator-=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x - y); }
+	friend D& operator*=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x * y); }
+	friend D& operator/=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x / y); }
+	friend D& operator%=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x % y); }
+	friend D& operator&=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x & y); }
+	friend D& operator|=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x | y); }
+	friend D& operator^=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x ^ y); }
+	friend D& operator<<=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x << y); }
+	friend D& operator>>=(D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return x = static_cast<ArithmeticT>(+x >> y); }
 
-      // A few binary arithmetic operations not covered by operators base class.
-      friend ArithmeticT operator<<(const D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return static_cast<ArithmeticT>(+x << y); }
-      friend ArithmeticT operator>>(const D& x, ArithmeticT y) BOOST_NOEXCEPT
-        { return static_cast<ArithmeticT>(+x >> y); }
+	// A few binary arithmetic operations not covered by operators base class.
+	friend ArithmeticT operator<<(const D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return static_cast<ArithmeticT>(+x << y); }
+	friend ArithmeticT operator>>(const D& x, ArithmeticT y) BOOST_NOEXCEPT
+	{ return static_cast<ArithmeticT>(+x >> y); }
 
-      // Auto-increment and auto-decrement can be defined in terms of the
-      // arithmetic operations.
-      friend D& operator++(D& x) BOOST_NOEXCEPT { return x += 1; }
-      friend D& operator--(D& x) BOOST_NOEXCEPT { return x -= 1; }
+	// Auto-increment and auto-decrement can be defined in terms of the
+	// arithmetic operations.
+	friend D& operator++(D& x) BOOST_NOEXCEPT { return x += 1; }
+	friend D& operator--(D& x) BOOST_NOEXCEPT { return x -= 1; }
 
 #   ifdef BOOST_ENDIAN_MINIMAL_COVER_OPERATORS
-      friend D operator++(D& x, int) BOOST_NOEXCEPT
-      {
-        D tmp(x);
-        x += 1;
-        return tmp;
-      }
-      friend D operator--(D& x, int) BOOST_NOEXCEPT
-      {
-        D tmp(x);
-        x -= 1;
-        return tmp;
-      }
+	friend D operator++(D& x, int) BOOST_NOEXCEPT
+	{
+		D tmp(x);
+		x += 1;
+		return tmp;
+	}
+	friend D operator--(D& x, int) BOOST_NOEXCEPT
+	{
+		D tmp(x);
+		x -= 1;
+		return tmp;
+	}
 #   endif
 
 #   ifndef BOOST_NO_IO_COVER_OPERATORS
 
-      // Stream inserter
-      template <class charT, class traits>
-      friend std::basic_ostream<charT, traits>&
-        operator<<(std::basic_ostream<charT, traits>& os, const D& x)
-      {
-        return os << +x;
-      }
+	// Stream inserter
+	template <class charT, class traits>
+	friend std::basic_ostream<charT, traits>&
+	operator<<(std::basic_ostream<charT, traits>& os, const D& x)
+	{
+		return os << +x;
+	}
 
-      // Stream extractor
-      template <class charT, class traits>
-      friend std::basic_istream<charT, traits>&
-        operator>>(std::basic_istream<charT, traits>& is, D& x)
-      {
-        ArithmeticT i;
-        if (is >> i)
-          x = i;
-        return is;
-      }
+	// Stream extractor
+	template <class charT, class traits>
+	friend std::basic_istream<charT, traits>&
+	operator>>(std::basic_istream<charT, traits>& is, D& x)
+	{
+		ArithmeticT i;
+		if (is >> i)
+			x = i;
+		return is;
+	}
 #   endif
-    };
-  } // namespace endian
+};
+} // namespace endian
 } // namespace boost
 
 #if defined(_MSC_VER)

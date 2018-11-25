@@ -11,33 +11,36 @@
 #include <boost/fusion/support/config.hpp>
 #include <boost/fusion/container/deque/deque_iterator.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct deque_tag;
+namespace fusion
+{
+struct deque_tag;
 
-    namespace extension
-    {
-        template<typename T>
-        struct begin_impl;
+namespace extension
+{
+template<typename T>
+struct begin_impl;
 
-        template<>
-        struct begin_impl<deque_tag>
-        {
-            template<typename Sequence>
-            struct apply
-            {
-                typedef
-                    deque_iterator<Sequence, (Sequence::next_down::value + 1)>
-                type;
+template<>
+struct begin_impl<deque_tag>
+{
+	template<typename Sequence>
+	struct apply
+	{
+		typedef
+		deque_iterator<Sequence, (Sequence::next_down::value + 1)>
+		type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type call(Sequence& seq)
-                {
-                    return type(seq);
-                }
-            };
-        };
-    }
-}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type call(Sequence& seq)
+		{
+			return type(seq);
+		}
+	};
+};
+}
+}
+}
 
 #endif

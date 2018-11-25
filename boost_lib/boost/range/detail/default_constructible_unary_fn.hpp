@@ -16,49 +16,49 @@
 
 namespace boost
 {
-    namespace range_detail
-    {
+namespace range_detail
+{
 
 template<typename F, typename R>
 class default_constructible_unary_fn_wrapper
 {
 public:
-    typedef R result_type;
+	typedef R result_type;
 
-    default_constructible_unary_fn_wrapper()
-    {
-    }
-    default_constructible_unary_fn_wrapper(const F& source)
-        : m_impl(source)
-    {
-    }
-    template<typename Arg>
-    R operator()(const Arg& arg) const
-    {
-        BOOST_ASSERT(m_impl);
-        return (*m_impl)(arg);
-    }
-    template<typename Arg>
-    R operator()(Arg& arg) const
-    {
-        BOOST_ASSERT(m_impl);
-        return (*m_impl)(arg);
-    }
+	default_constructible_unary_fn_wrapper()
+	{
+	}
+	default_constructible_unary_fn_wrapper(const F& source)
+		: m_impl(source)
+	{
+	}
+	template<typename Arg>
+	R operator()(const Arg& arg) const
+	{
+		BOOST_ASSERT(m_impl);
+		return (*m_impl)(arg);
+	}
+	template<typename Arg>
+	R operator()(Arg& arg) const
+	{
+		BOOST_ASSERT(m_impl);
+		return (*m_impl)(arg);
+	}
 private:
-    boost::optional<F> m_impl;
+	boost::optional<F> m_impl;
 };
 
 template<typename F, typename R>
 struct default_constructible_unary_fn_gen
 {
-    typedef typename boost::mpl::if_<
-        boost::has_trivial_default_constructor<F>,
-        F,
-        default_constructible_unary_fn_wrapper<F,R>
-    >::type type;
+	typedef typename boost::mpl::if_<
+	boost::has_trivial_default_constructor<F>,
+	      F,
+	      default_constructible_unary_fn_wrapper<F,R>
+	      >::type type;
 };
 
-    } // namespace range_detail
+} // namespace range_detail
 } // namespace boost
 
 #endif // include guard

@@ -15,22 +15,22 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    /**
-     * rounds up
-     */
-    template <class To, class Rep, class Period>
-    To ceil(const duration<Rep, Period>& d)
-    {
-        To t = duration_cast<To>(d);
-        if (t < d)
-            ++t;
-        return t;
-    }
+/**
+ * rounds up
+ */
+template <class To, class Rep, class Period>
+To ceil(const duration<Rep, Period>& d)
+{
+	To t = duration_cast<To>(d);
+	if (t < d)
+		++t;
+	return t;
+}
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 #endif

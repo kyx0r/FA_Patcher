@@ -41,7 +41,11 @@
 #include <boost/geometry/util/math.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 namespace detail
@@ -49,66 +53,74 @@ namespace detail
 
 namespace aasincos
 {
-    template <typename T>
-    inline T ONE_TOL() { return 1.00000000000001; }
-    //template <typename T>
-    //inline T TOL() { return 0.000000001; }
-    template <typename T>
-    inline T ATOL() { return 1e-50; }
+template <typename T>
+inline T ONE_TOL()
+{
+	return 1.00000000000001;
+}
+//template <typename T>
+//inline T TOL() { return 0.000000001; }
+template <typename T>
+inline T ATOL()
+{
+	return 1e-50;
+}
 }
 
 template <typename T>
 inline T aasin(T const& v)
 {
-    T av = 0;
+	T av = 0;
 
-    if ((av = geometry::math::abs(v)) >= 1.0)
-    {
-        if (av > aasincos::ONE_TOL<T>())
-        {
-            BOOST_THROW_EXCEPTION( projection_exception(-19) );
-        }
-        return (v < 0.0 ? -geometry::math::half_pi<T>() : geometry::math::half_pi<T>());
-    }
+	if ((av = geometry::math::abs(v)) >= 1.0)
+	{
+		if (av > aasincos::ONE_TOL<T>())
+		{
+			BOOST_THROW_EXCEPTION( projection_exception(-19) );
+		}
+		return (v < 0.0 ? -geometry::math::half_pi<T>() : geometry::math::half_pi<T>());
+	}
 
-    return asin(v);
+	return asin(v);
 }
 
 template <typename T>
 inline T aacos(T const& v)
 {
-    T av = 0;
+	T av = 0;
 
-    if ((av = geometry::math::abs(v)) >= 1.0)
-    {
-        if (av > aasincos::ONE_TOL<T>())
-        {
-            BOOST_THROW_EXCEPTION( projection_exception(-19) );
-        }
-        return (v < 0.0 ? geometry::math::pi<T>() : 0.0);
-    }
+	if ((av = geometry::math::abs(v)) >= 1.0)
+	{
+		if (av > aasincos::ONE_TOL<T>())
+		{
+			BOOST_THROW_EXCEPTION( projection_exception(-19) );
+		}
+		return (v < 0.0 ? geometry::math::pi<T>() : 0.0);
+	}
 
-    return acos(v);
+	return acos(v);
 }
 
 template <typename T>
 inline T asqrt(T const& v)
 {
-    return ((v <= 0) ? 0 : sqrt(v));
+	return ((v <= 0) ? 0 : sqrt(v));
 }
 
 template <typename T>
 inline T aatan2(T const& n, T const& d)
 {
-    return ((geometry::math::abs(n) < aasincos::ATOL<T>()
-        && geometry::math::abs(d) < aasincos::ATOL<T>()) ? 0.0 : atan2(n, d));
+	return ((geometry::math::abs(n) < aasincos::ATOL<T>()
+	         && geometry::math::abs(d) < aasincos::ATOL<T>()) ? 0.0 : atan2(n, d));
 }
 
 
 } // namespace detail
 
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_AASINCOS_HPP

@@ -29,23 +29,30 @@
 #define STD std
 #endif
 
-namespace boost { 
-namespace serialization {
-namespace detail {
+namespace boost
+{
+namespace serialization
+{
+namespace detail
+{
 
 template <typename U, typename C>
-struct queue_save : public STD::queue<U, C> {
-    template<class Archive>
-    void operator()(Archive & ar, const unsigned int file_version) const {
-        save(ar, STD::queue<U, C>::c, file_version);
-    }
+struct queue_save : public STD::queue<U, C>
+{
+	template<class Archive>
+	void operator()(Archive & ar, const unsigned int file_version) const
+	{
+		save(ar, STD::queue<U, C>::c, file_version);
+	}
 };
 template <typename U, typename C>
-struct queue_load : public STD::queue<U, C> {
-    template<class Archive>
-    void operator()(Archive & ar, const unsigned int file_version) {
-        load(ar, STD::queue<U, C>::c, file_version);
-    }
+struct queue_load : public STD::queue<U, C>
+{
+	template<class Archive>
+	void operator()(Archive & ar, const unsigned int file_version)
+	{
+		load(ar, STD::queue<U, C>::c, file_version);
+	}
 };
 
 } // detail
@@ -54,14 +61,15 @@ template<class Archive, class T, class C>
 inline void serialize(
     Archive & ar,
     std::queue< T, C> & t,
-    const unsigned int file_version 
-){
-    typedef typename mpl::eval_if<
-        typename Archive::is_saving,
-        mpl::identity<detail::queue_save<T, C> >,
-        mpl::identity<detail::queue_load<T, C> >
-    >::type typex;
-    static_cast<typex &>(t)(ar, file_version);
+    const unsigned int file_version
+)
+{
+	typedef typename mpl::eval_if<
+	typename Archive::is_saving,
+	         mpl::identity<detail::queue_save<T, C> >,
+	         mpl::identity<detail::queue_load<T, C> >
+	         >::type typex;
+	static_cast<typex &>(t)(ar, file_version);
 }
 
 } // namespace serialization

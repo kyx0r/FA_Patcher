@@ -115,11 +115,11 @@ const bound_import_module_list get_bound_import_module_list(const pe_base& pe)
 		return ret;
 
 	uint32_t bound_import_data_len =
-		pe.section_data_length_from_rva(pe.get_directory_rva(image_directory_entry_bound_import), pe.get_directory_rva(image_directory_entry_bound_import), section_data_raw, true);
+	    pe.section_data_length_from_rva(pe.get_directory_rva(image_directory_entry_bound_import), pe.get_directory_rva(image_directory_entry_bound_import), section_data_raw, true);
 
 	if(bound_import_data_len < pe.get_directory_size(image_directory_entry_bound_import))
 		throw pe_exception("Incorrect bound import directory", pe_exception::incorrect_bound_import_directory);
-	
+
 	const char* bound_import_data = pe.section_data_from_rva(pe.get_directory_rva(image_directory_entry_bound_import), section_data_raw, true);
 
 	//Check read in "read_pe" function raw bound import data size
@@ -148,7 +148,7 @@ const bound_import_module_list get_bound_import_module_list(const pe_base& pe)
 
 		//Check DWORDs
 		if(descriptor->NumberOfModuleForwarderRefs >= pe_utils::max_dword / sizeof(image_bound_forwarder_ref)
-			|| !pe_utils::is_sum_safe(current_pos, 2 /* this descriptor and the next one */ * sizeof(image_bound_import_descriptor) + descriptor->NumberOfModuleForwarderRefs * sizeof(image_bound_forwarder_ref)))
+		        || !pe_utils::is_sum_safe(current_pos, 2 /* this descriptor and the next one */ * sizeof(image_bound_import_descriptor) + descriptor->NumberOfModuleForwarderRefs * sizeof(image_bound_forwarder_ref)))
 			throw pe_exception("Incorrect bound import directory", pe_exception::incorrect_bound_import_directory);
 
 		//Move after current descriptor
@@ -224,12 +224,12 @@ const image_directory rebuild_bound_imports(pe_base& pe, const bound_import_modu
 			needed_size += sizeof(image_bound_forwarder_ref);
 		}
 	}
-	
+
 	needed_size += needed_size_for_strings;
-	
+
 	//Check if imports_section is last one. If it's not, check if there's enough place for bound import data
-	if(&imports_section != &*(pe.get_image_sections().end() - 1) && 
-		(imports_section.empty() || pe_utils::align_up(imports_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + directory_pos))
+	if(&imports_section != &*(pe.get_image_sections().end() - 1) &&
+	        (imports_section.empty() || pe_utils::align_up(imports_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + directory_pos))
 		throw pe_exception("Insufficient space for bound import directory", pe_exception::insufficient_space);
 
 	std::string& raw_data = imports_section.get_raw_data();
@@ -237,7 +237,7 @@ const image_directory rebuild_bound_imports(pe_base& pe, const bound_import_modu
 	//This will be done only if imports_section is the last section of image or for section with unaligned raw length of data
 	if(raw_data.length() < needed_size + directory_pos)
 		raw_data.resize(needed_size + directory_pos); //Expand section raw data
-	
+
 	uint32_t current_pos_for_structures = directory_pos;
 	uint32_t current_pos_for_strings = current_pos_for_structures + needed_size - needed_size_for_strings;
 
@@ -251,7 +251,7 @@ const image_directory rebuild_bound_imports(pe_base& pe, const bound_import_modu
 
 		memcpy(&raw_data[current_pos_for_structures], &descriptor, sizeof(descriptor));
 		current_pos_for_structures += sizeof(descriptor);
-		
+
 		size_t length = import.get_module_name().length() + 1 /* nullbyte */;
 		memcpy(&raw_data[current_pos_for_strings], import.get_module_name().c_str(), length);
 		current_pos_for_strings += static_cast<uint32_t>(length);
@@ -275,7 +275,7 @@ const image_directory rebuild_bound_imports(pe_base& pe, const bound_import_modu
 
 	//Adjust section raw and virtual sizes
 	pe.recalculate_section_sizes(imports_section, auto_strip_last_section);
-	
+
 	image_directory ret(pe.rva_from_section_offset(imports_section, directory_pos), needed_size);
 
 	//If auto-rewrite of PE headers is required

@@ -16,7 +16,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -25,12 +27,13 @@ namespace traits
 template<typename Geometry>
 struct tag<boost::strided_range<Geometry> >
 {
-    typedef typename geometry::tag<Geometry>::type type;
+	typedef typename geometry::tag<Geometry>::type type;
 };
 
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_ADAPTED_BOOST_RANGE_STRIDED_HPP
 

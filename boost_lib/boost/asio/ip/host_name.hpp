@@ -21,9 +21,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ip {
+namespace boost
+{
+namespace asio
+{
+namespace ip
+{
 
 /// Get the current host name.
 BOOST_ASIO_DECL std::string host_name();

@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/detail/find_if_with_atomics.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns an iterator pointing to the first element in the range
 /// [\p first, \p last) for which \p predicate returns \c true.
@@ -28,7 +30,7 @@ inline InputIterator find_if(InputIterator first,
                              UnaryPredicate predicate,
                              command_queue &queue = system::default_queue())
 {
-    return detail::find_if_with_atomics(first, last, predicate, queue);
+	return detail::find_if_with_atomics(first, last, predicate, queue);
 }
 
 } // end compute namespace

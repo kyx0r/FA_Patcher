@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/inclusive_scan.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Calculates the cumulative sum of the elements in the range [\p first,
 /// \p last) and writes the resulting values to the range beginning at
@@ -32,7 +34,7 @@ partial_sum(InputIterator first,
             OutputIterator result,
             command_queue &queue = system::default_queue())
 {
-    return ::boost::compute::inclusive_scan(first, last, result, queue);
+	return ::boost::compute::inclusive_scan(first, last, result, queue);
 }
 
 } // end compute namespace

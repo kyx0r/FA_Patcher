@@ -12,43 +12,46 @@
 #include <boost/phoenix/core/expression.hpp>
 #include <boost/proto/operators.hpp>
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    BOOST_PHOENIX_UNARY_OPERATORS(
-        (negate)
-        (unary_plus)
-        (pre_inc)
-        (pre_dec)
-        (post_inc)
-        (post_dec)
-    )
-    
-    BOOST_PHOENIX_BINARY_OPERATORS(
-        (plus_assign)
-        (minus_assign)
-        (multiplies_assign)
-        (divides_assign)
-        (modulus_assign)
-        (plus)
-        (minus)
-        (multiplies)
-        (divides)
-        (modulus)
-    )
+namespace phoenix
+{
+BOOST_PHOENIX_UNARY_OPERATORS(
+    (negate)
+    (unary_plus)
+    (pre_inc)
+    (pre_dec)
+    (post_inc)
+    (post_dec)
+)
 
-    using proto::exprns_::operator++;
-    using proto::exprns_::operator--;
-    using proto::exprns_::operator+=;
-    using proto::exprns_::operator-=;
-    using proto::exprns_::operator*=;
-    using proto::exprns_::operator/=;
-    using proto::exprns_::operator%=;
-    using proto::exprns_::operator+;
-    using proto::exprns_::operator-;
-    using proto::exprns_::operator*;
-    using proto::exprns_::operator/;
-    using proto::exprns_::operator%;
-}}
+BOOST_PHOENIX_BINARY_OPERATORS(
+    (plus_assign)
+    (minus_assign)
+    (multiplies_assign)
+    (divides_assign)
+    (modulus_assign)
+    (plus)
+    (minus)
+    (multiplies)
+    (divides)
+    (modulus)
+)
+
+using proto::exprns_::operator++;
+using proto::exprns_::operator--;
+using proto::exprns_::operator+=;
+using proto::exprns_::operator-=;
+using proto::exprns_::operator*=;
+using proto::exprns_::operator/=;
+using proto::exprns_::operator%=;
+using proto::exprns_::operator+;
+using proto::exprns_::operator-;
+using proto::exprns_::operator*;
+using proto::exprns_::operator/;
+using proto::exprns_::operator%;
+}
+}
 
 #include <boost/phoenix/operator/detail/undef_operator.hpp>
 

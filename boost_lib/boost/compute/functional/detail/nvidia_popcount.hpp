@@ -13,26 +13,29 @@
 
 #include <boost/compute/function.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T>
 class nvidia_popcount : public function<T(T)>
 {
 public:
-    nvidia_popcount()
-        : function<T(T)>("nvidia_popcount")
-    {
-        this->set_source(
-            "inline uint nvidia_popcount(const uint x)\n"
-            "{\n"
-            "    uint count;\n"
-            "    asm(\"popc.b32 %0, %1;\" : \"=r\"(count) : \"r\"(x));\n"
-            "    return count;\n"
-            "}\n"
-        );
-    }
+	nvidia_popcount()
+		: function<T(T)>("nvidia_popcount")
+	{
+		this->set_source(
+		    "inline uint nvidia_popcount(const uint x)\n"
+		    "{\n"
+		    "    uint count;\n"
+		    "    asm(\"popc.b32 %0, %1;\" : \"=r\"(count) : \"r\"(x));\n"
+		    "    return count;\n"
+		    "}\n"
+		);
+	}
 };
 
 } // end detail namespace

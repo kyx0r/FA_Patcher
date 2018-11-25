@@ -15,9 +15,12 @@
 #include <boost/beast/http/message.hpp>
 #include <boost/optional.hpp>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /** An empty @b Body
 
@@ -30,97 +33,97 @@ namespace http {
 */
 struct empty_body
 {
-    /** The type of container used for the body
+	/** The type of container used for the body
 
-        This determines the type of @ref message::body
-        when this body type is used with a message container.
-    */
-    struct value_type
-    {
-    };
+	    This determines the type of @ref message::body
+	    when this body type is used with a message container.
+	*/
+	struct value_type
+	{
+	};
 
-    /** Returns the payload size of the body
+	/** Returns the payload size of the body
 
-        When this body is used with @ref message::prepare_payload,
-        the Content-Length will be set to the payload size, and
-        any chunked Transfer-Encoding will be removed.
-    */
-    static
-    std::uint64_t
-    size(value_type)
-    {
-        return 0;
-    }
+	    When this body is used with @ref message::prepare_payload,
+	    the Content-Length will be set to the payload size, and
+	    any chunked Transfer-Encoding will be removed.
+	*/
+	static
+	std::uint64_t
+	size(value_type)
+	{
+		return 0;
+	}
 
-    /** The algorithm for parsing the body
+	/** The algorithm for parsing the body
 
-        Meets the requirements of @b BodyReader.
-    */
+	    Meets the requirements of @b BodyReader.
+	*/
 #if BOOST_BEAST_DOXYGEN
-    using reader = implementation_defined;
+	using reader = implementation_defined;
 #else
-    struct reader
-    {
-        template<bool isRequest, class Fields>
-        explicit
-        reader(header<isRequest, Fields>&, value_type&)
-        {
-        }
+	struct reader
+	{
+		template<bool isRequest, class Fields>
+		explicit
+		reader(header<isRequest, Fields>&, value_type&)
+		{
+		}
 
-        void
-        init(boost::optional<std::uint64_t> const&, error_code& ec)
-        {
-            ec.assign(0, ec.category());
-        }
+		void
+		init(boost::optional<std::uint64_t> const&, error_code& ec)
+		{
+			ec.assign(0, ec.category());
+		}
 
-        template<class ConstBufferSequence>
-        std::size_t
-        put(ConstBufferSequence const&,
-            error_code& ec)
-        {
-            ec = error::unexpected_body;
-            return 0;
-        }
+		template<class ConstBufferSequence>
+		std::size_t
+		put(ConstBufferSequence const&,
+		    error_code& ec)
+		{
+			ec = error::unexpected_body;
+			return 0;
+		}
 
-        void
-        finish(error_code& ec)
-        {
-            ec.assign(0, ec.category());
-        }
-    };
+		void
+		finish(error_code& ec)
+		{
+			ec.assign(0, ec.category());
+		}
+	};
 #endif
 
-    /** The algorithm for serializing the body
+	/** The algorithm for serializing the body
 
-        Meets the requirements of @b BodyWriter.
-    */
+	    Meets the requirements of @b BodyWriter.
+	*/
 #if BOOST_BEAST_DOXYGEN
-    using writer = implementation_defined;
+	using writer = implementation_defined;
 #else
-    struct writer
-    {
-        using const_buffers_type =
-            boost::asio::const_buffer;
+	struct writer
+	{
+		using const_buffers_type =
+		    boost::asio::const_buffer;
 
-        template<bool isRequest, class Fields>
-        explicit
-        writer(header<isRequest, Fields> const&, value_type const&)
-        {
-        }
+		template<bool isRequest, class Fields>
+		explicit
+		writer(header<isRequest, Fields> const&, value_type const&)
+		{
+		}
 
-        void
-        init(error_code& ec)
-        {
-            ec.assign(0, ec.category());
-        }
+		void
+		init(error_code& ec)
+		{
+			ec.assign(0, ec.category());
+		}
 
-        boost::optional<std::pair<const_buffers_type, bool>>
-        get(error_code& ec)
-        {
-            ec.assign(0, ec.category());
-            return boost::none;
-        }
-    };
+		boost::optional<std::pair<const_buffers_type, bool>>
+		        get(error_code& ec)
+		{
+			ec.assign(0, ec.category());
+			return boost::none;
+		}
+	};
 #endif
 };
 

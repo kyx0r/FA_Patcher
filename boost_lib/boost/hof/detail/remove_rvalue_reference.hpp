@@ -8,19 +8,26 @@
 #ifndef BOOST_HOF_GUARD_FUNCTION_REMOVE_RVALUE_REFERENCE_H
 #define BOOST_HOF_GUARD_FUNCTION_REMOVE_RVALUE_REFERENCE_H
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class T>
 struct remove_rvalue_reference
 {
-    typedef T type;
+	typedef T type;
 };
 
 template<class T>
 struct remove_rvalue_reference<T&&>
-: remove_rvalue_reference<T>
+	: remove_rvalue_reference<T>
 {};
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif

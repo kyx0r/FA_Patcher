@@ -20,11 +20,15 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
 
-namespace {
+namespace
+{
 nfp::keyword<struct begin_t>    begin;
 nfp::keyword<struct end_t>      end;
 nfp::keyword<struct step_t>     step;

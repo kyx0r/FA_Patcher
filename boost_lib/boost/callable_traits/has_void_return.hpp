@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ has_void_return_hpp
 /*`[section:ref_has_void_return has_void_return]
@@ -27,15 +30,16 @@ struct has_void_return;
 //<-
 template<typename T>
 struct has_void_return
-    : std::is_same<typename detail::traits<
-        detail::shallow_decay<T>>::return_type, void> {};
+	: std::is_same<typename detail::traits<
+	  detail::shallow_decay<T>>::return_type, void> {};
 
 #ifdef BOOST_CLBL_TRTS_DISABLE_VARIABLE_TEMPLATES
 
 template<typename T>
-struct has_void_return_v {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "Variable templates not supported on this compiler.");
+struct has_void_return_v
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "Variable templates not supported on this compiler.");
 };
 
 #else
@@ -49,11 +53,12 @@ BOOST_CLBL_TRAITS_INLINE_VAR
 constexpr bool has_void_return_v = //see below
 //<-
     std::is_same<typename detail::traits<
-        detail::shallow_decay<T>>::return_type, void>::value;
+    detail::shallow_decay<T>>::return_type, void>::value;
 
 #endif
 
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 

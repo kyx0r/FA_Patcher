@@ -24,7 +24,9 @@
 #include <boost/geometry/util/select_most_precise.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -36,34 +38,35 @@ namespace boost { namespace geometry
 template <typename T1, typename T2 = void, typename T3 = void>
 struct select_coordinate_type
 {
-    typedef typename select_most_precise
-        <
-            typename coordinate_type<T1>::type,
-            typename coordinate_type<T2>::type,
-            typename coordinate_type<T3>::type
-        >::type type;
+	typedef typename select_most_precise
+	<
+	typename coordinate_type<T1>::type,
+	         typename coordinate_type<T2>::type,
+	         typename coordinate_type<T3>::type
+	         >::type type;
 };
 
 template <typename T1, typename T2>
 struct select_coordinate_type<T1, T2, void>
 {
-    typedef typename select_most_precise
-        <
-            typename coordinate_type<T1>::type,
-            typename coordinate_type<T2>::type
-        >::type type;
+	typedef typename select_most_precise
+	<
+	typename coordinate_type<T1>::type,
+	         typename coordinate_type<T2>::type
+	         >::type type;
 };
 
 template <typename T1>
 struct select_coordinate_type<T1, void, void>
 {
-    typedef typename select_most_precise
-        <
-            typename coordinate_type<T1>::type
-        >::type type;
+	typedef typename select_most_precise
+	<
+	typename coordinate_type<T1>::type
+	>::type type;
 };
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_UTIL_SELECT_COORDINATE_TYPE_HPP

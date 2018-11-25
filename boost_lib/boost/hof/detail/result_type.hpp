@@ -11,7 +11,12 @@
 #include <boost/hof/detail/holder.hpp>
 #include <utility>
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class F, class=void>
 struct function_result_type
@@ -19,25 +24,27 @@ struct function_result_type
 
 template<class F>
 struct function_result_type<F, typename holder<
-    typename F::result_type
->::type>
+	typename F::result_type
+	>::type>
 {
-    typedef typename F::result_type result_type;
+	typedef typename F::result_type result_type;
 };
 
 template<class F, class G, class=void>
 struct compose_function_result_type
-: function_result_type<F>
+	: function_result_type<F>
 {};
 
 template<class F, class G>
 struct compose_function_result_type<F, G, typename holder<
-    decltype(std::declval<F>()(std::declval<typename G::result_type>()))
+decltype(std::declval<F>()(std::declval<typename G::result_type>()))
 >::type>
 {
-    typedef decltype(std::declval<F>()(std::declval<typename G::result_type>())) result_type;
+	typedef decltype(std::declval<F>()(std::declval<typename G::result_type>())) result_type;
 };
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif

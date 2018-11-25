@@ -18,69 +18,72 @@
 #include <boost/proto/matches.hpp>
 #include <boost/proto/transform/fold.hpp>
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    /////////////////////////////////////////////////////////////////////////////
-    //
-    //  Calculate the arity of an expression using proto transforms
-    //
-    /////////////////////////////////////////////////////////////////////////////
-    
-    struct arity;
+namespace phoenix
+{
+/////////////////////////////////////////////////////////////////////////////
+//
+//  Calculate the arity of an expression using proto transforms
+//
+/////////////////////////////////////////////////////////////////////////////
 
-    namespace result_of
-    {
-        template <typename Expr>
-        struct arity
-            : mpl::int_<
-                evaluator::impl<
-                    Expr const&
-                  , vector2<
-                        mpl::int_<0>
-                      , boost::phoenix::arity
-                    >&
-                  , proto::empty_env
-                >::result_type::value
-            >
-        {};
-    }
+struct arity;
 
-    struct arity
-    {
-        template <typename Rule, typename Dummy = void>
-        struct when
-            : proto::fold<
-                proto::_
-              , mpl::int_<0>
-              , proto::make<mpl::max<
-                    proto::_state
-                  , proto::call<
-                        evaluator(
-                            proto::_
-                          , proto::call<
-                                functional::context(_env, _actions)
-                            >
-                        )
-                    >
-                >()>
-            >
-        {};
-    };
+namespace result_of
+{
+template <typename Expr>
+struct arity
+	: mpl::int_<
+	  evaluator::impl<
+	  Expr const&
+	, vector2<
+	  mpl::int_<0>
+	, boost::phoenix::arity
+	  >&
+	, proto::empty_env
+	  >::result_type::value
+	  >
+{};
+}
 
-    template <typename Dummy>
-    struct arity::when<rule::argument, Dummy>
-        : proto::make<is_placeholder<proto::_value>()>
-    {};
-    
-    template <typename Dummy>
-    struct arity::when<rule::custom_terminal, Dummy>
-        : proto::make<mpl::int_<0>()>
-    {};
-    
-    template <typename Dummy>
-    struct arity::when<rule::terminal, Dummy>
-        : proto::make<mpl::int_<0>()>
-    {};
-}}
+struct arity
+{
+	template <typename Rule, typename Dummy = void>
+	struct when
+		: proto::fold<
+		  proto::_
+		, mpl::int_<0>
+		, proto::make<mpl::max<
+		  proto::_state
+		, proto::call<
+	  evaluator(
+	      proto::_
+	      , proto::call<
+	      functional::context(_env, _actions)
+	      >
+	  )
+	  >
+	  >()>
+	  >
+	  {};
+};
+
+template <typename Dummy>
+struct arity::when<rule::argument, Dummy>
+: proto::make<is_placeholder<proto::_value>()>
+  {};
+
+template <typename Dummy>
+struct arity::when<rule::custom_terminal, Dummy>
+: proto::make<mpl::int_<0>()>
+  {};
+
+template <typename Dummy>
+struct arity::when<rule::terminal, Dummy>
+: proto::make<mpl::int_<0>()>
+  {};
+}
+}
 
 #endif

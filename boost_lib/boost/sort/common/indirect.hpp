@@ -37,29 +37,29 @@ namespace common
 template<class Iter_t, class Compare = util::compare_iter<Iter_t> >
 struct less_ptr_no_null
 {
-    //----------------------------- Variables -----------------------
-    Compare comp; // comparison object of the elements pointed by Iter_t
+	//----------------------------- Variables -----------------------
+	Compare comp; // comparison object of the elements pointed by Iter_t
 
-    //------------------------------------------------------------------------
-    //  function : less_ptr_no_null
-    /// @brief constructor from a Compare object
-    /// @param C1 : comparison object
-    //-----------------------------------------------------------------------
-    less_ptr_no_null(Compare C1 = Compare()): comp(C1) { };
+	//------------------------------------------------------------------------
+	//  function : less_ptr_no_null
+	/// @brief constructor from a Compare object
+	/// @param C1 : comparison object
+	//-----------------------------------------------------------------------
+	less_ptr_no_null(Compare C1 = Compare()): comp(C1) { };
 
-    //------------------------------------------------------------------------
-    //  function : operator ( )
-    /// @brief Make the comparison of the objects pointed by T1 and T2, using
-    //         the internal comp
-    //
-    /// @param  T1 : first iterator
-    /// @param  T2 : second iterator
-    /// @return bool result of the comparison
-    //-----------------------------------------------------------------------
-    bool operator( )(Iter_t T1, Iter_t T2) const
-    {
-        return comp(*T1, *T2);
-    };
+	//------------------------------------------------------------------------
+	//  function : operator ( )
+	/// @brief Make the comparison of the objects pointed by T1 and T2, using
+	//         the internal comp
+	//
+	/// @param  T1 : first iterator
+	/// @param  T2 : second iterator
+	/// @return bool result of the comparison
+	//-----------------------------------------------------------------------
+	bool operator( )(Iter_t T1, Iter_t T2) const
+	{
+		return comp(*T1, *T2);
+	};
 };
 //
 //-----------------------------------------------------------------------------
@@ -74,11 +74,11 @@ struct less_ptr_no_null
 template<class Iter_t>
 static void create_index(Iter_t first, Iter_t last, std::vector<Iter_t> &index)
 {
-    auto nelem = last - first;
-    assert(nelem >= 0);
-    index.clear();
-    index.reserve(nelem);
-    for (; first != last; ++first) index.push_back(first);
+	auto nelem = last - first;
+	assert(nelem >= 0);
+	index.clear();
+	index.reserve(nelem);
+	for (; first != last; ++first) index.push_back(first);
 };
 //
 //-----------------------------------------------------------------------------
@@ -92,55 +92,55 @@ static void create_index(Iter_t first, Iter_t last, std::vector<Iter_t> &index)
 template<class Iter_t>
 static void sort_index(Iter_t global_first, std::vector<Iter_t> &index)
 {
-    typedef util::value_iter<Iter_t> value_t;
+	typedef util::value_iter<Iter_t> value_t;
 
-    size_t pos_dest = 0;
-    size_t pos_src = 0;
-    size_t pos_in_vector = 0;
-    size_t nelem = index.size();
-    Iter_t it_dest, it_src;
+	size_t pos_dest = 0;
+	size_t pos_src = 0;
+	size_t pos_in_vector = 0;
+	size_t nelem = index.size();
+	Iter_t it_dest, it_src;
 
-    while (pos_in_vector < nelem)
-    {
-        while (pos_in_vector < nelem and
-               (size_t(index[pos_in_vector] - global_first)) == pos_in_vector)
-        {
-            ++pos_in_vector;
-        };
+	while (pos_in_vector < nelem)
+	{
+		while (pos_in_vector < nelem and
+		        (size_t(index[pos_in_vector] - global_first)) == pos_in_vector)
+		{
+			++pos_in_vector;
+		};
 
-        if (pos_in_vector == nelem) return;
-        pos_dest = pos_src = pos_in_vector;
-        it_dest = global_first + pos_dest;
-        value_t Aux = std::move(*it_dest);
+		if (pos_in_vector == nelem) return;
+		pos_dest = pos_src = pos_in_vector;
+		it_dest = global_first + pos_dest;
+		value_t Aux = std::move(*it_dest);
 
-        while ((pos_src = (size_t(index[pos_dest] - global_first)))
-               != pos_in_vector)
-        {
-            index[pos_dest] = it_dest;
-            it_src = global_first + pos_src;
-            *it_dest = std::move(*it_src);
-            it_dest = it_src;
-            pos_dest = pos_src;
-        };
+		while ((pos_src = (size_t(index[pos_dest] - global_first)))
+		        != pos_in_vector)
+		{
+			index[pos_dest] = it_dest;
+			it_src = global_first + pos_src;
+			*it_dest = std::move(*it_src);
+			it_dest = it_src;
+			pos_dest = pos_src;
+		};
 
-        *it_dest = std::move(Aux);
-        index[pos_dest] = it_dest;
-        ++pos_in_vector;
-    };
+		*it_dest = std::move(Aux);
+		index[pos_dest] = it_dest;
+		++pos_in_vector;
+	};
 };
 
 template<class func, class Iter_t, class Compare = compare_iter<Iter_t> >
 static void indirect_sort(func method, Iter_t first, Iter_t last, Compare comp)
 {
-    auto nelem = (last - first);
-    assert(nelem >= 0);
-    if (nelem < 2) return;
-    std::vector<Iter_t> index;
-    index.reserve((size_t) nelem);
-    create_index(first, last, index);
-    less_ptr_no_null<Iter_t, Compare> index_comp(comp);
-    method(index.begin(), index.end(), index_comp);
-    sort_index(first, index);
+	auto nelem = (last - first);
+	assert(nelem >= 0);
+	if (nelem < 2) return;
+	std::vector<Iter_t> index;
+	index.reserve((size_t) nelem);
+	create_index(first, last, index);
+	less_ptr_no_null<Iter_t, Compare> index_comp(comp);
+	method(index.begin(), index.end(), index_comp);
+	sort_index(first, index);
 };
 
 //

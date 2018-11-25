@@ -15,22 +15,25 @@
 
 #include <cstddef>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 /* ripped from http://pdimov.com/cpp2/simple_cxx11_metaprogramming.html */
 
-template<typename T,T... Ints> struct integer_sequence{};
+template<typename T,T... Ints> struct integer_sequence {};
 
 template<typename S> struct next_integer_sequence;
 
 template<typename T,T... Ints>
 struct next_integer_sequence<integer_sequence<T,Ints...>>
 {
-  using type=integer_sequence<T,Ints...,sizeof...(Ints)>;
+	using type=integer_sequence<T,Ints...,sizeof...(Ints)>;
 };
 
 template<typename T,T I,T N> struct make_int_seq_impl;
@@ -40,13 +43,13 @@ using make_integer_sequence=typename make_int_seq_impl<T,0,N>::type;
 
 template<typename T,T I,T N> struct make_int_seq_impl
 {
-  using type=typename next_integer_sequence<
-    typename make_int_seq_impl<T,I+1,N>::type>::type;
+	using type=typename next_integer_sequence<
+	           typename make_int_seq_impl<T,I+1,N>::type>::type;
 };
 
 template<typename T,T N> struct make_int_seq_impl<T,N,N>
 {
-  using type=integer_sequence<T>;
+	using type=integer_sequence<T>;
 };
 
 template<std::size_t... Ints>

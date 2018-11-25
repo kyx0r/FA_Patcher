@@ -16,28 +16,31 @@
 #include <boost/compute/types/fundamental.hpp>
 #include <boost/compute/type_traits/scalar_type.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // meta-function returning the result type for get<N>()
 template<size_t N, class Arg>
 struct get_result_type
 {
-    typedef typename scalar_type<Arg>::type type;
+	typedef typename scalar_type<Arg>::type type;
 };
 
 template<size_t N, class Arg, class T>
 struct invoked_get
 {
-    typedef typename get_result_type<N, T>::type result_type;
+	typedef typename get_result_type<N, T>::type result_type;
 
-    invoked_get(const Arg &arg)
-        : m_arg(arg)
-    {
-    }
+	invoked_get(const Arg &arg)
+		: m_arg(arg)
+	{
+	}
 
-    Arg m_arg;
+	Arg m_arg;
 };
 
 } // end detail namespace
@@ -49,25 +52,25 @@ struct invoked_get
 template<size_t N>
 struct get
 {
-    /// \internal_
-    template<class> struct result;
+	/// \internal_
+	template<class> struct result;
 
-    /// \internal_
-    template<class F, class Arg>
-    struct result<F(Arg)>
-    {
-        typedef typename detail::get_result_type<N, Arg>::type type;
-    };
+	/// \internal_
+	template<class F, class Arg>
+	struct result<F(Arg)>
+	{
+		typedef typename detail::get_result_type<N, Arg>::type type;
+	};
 
-    template<class Arg>
-    detail::invoked_get<
-        N, Arg, typename boost::remove_cv<typename Arg::result_type>::type
-    > operator()(const Arg &arg) const
-    {
-        typedef typename boost::remove_cv<typename Arg::result_type>::type T;
+	template<class Arg>
+	detail::invoked_get<
+	N, Arg, typename boost::remove_cv<typename Arg::result_type>::type
+	> operator()(const Arg &arg) const
+	{
+		typedef typename boost::remove_cv<typename Arg::result_type>::type T;
 
-        return detail::invoked_get<N, Arg, T>(arg);
-    }
+		return detail::invoked_get<N, Arg, T>(arg);
+	}
 };
 
 } // end compute namespace

@@ -34,7 +34,10 @@
             BOOST_FUNCTIONAL_DETAIL_arg_type, ~))
 
 // Do not use namespace ::detail because overloaded_function is already a class.
-namespace boost { namespace overloaded_function_detail {
+namespace boost
+{
+namespace overloaded_function_detail
+{
 
 template<typename F>
 class base {}; // Empty template cannot be used directly (only its spec).
@@ -44,7 +47,8 @@ class base {}; // Empty template cannot be used directly (only its spec).
                 "boost/functional/overloaded_function/detail/base.hpp"))
 #       include BOOST_PP_ITERATE() // Iterate over funciton arity.
 
-} } // namespace
+}
+} // namespace
 
 #undef BOOST_FUNCTIONAL_DETAIL_arg_type
 #undef BOOST_FUNCTIONAL_DETAIL_arg_name
@@ -61,24 +65,27 @@ template<
     typename R
     BOOST_PP_COMMA_IF(BOOST_FUNCTIONAL_DETAIL_arity)
     BOOST_PP_ENUM(BOOST_FUNCTIONAL_DETAIL_arity,
-            BOOST_FUNCTIONAL_DETAIL_arg_tparam, ~)
->
-class base< BOOST_FUNCTIONAL_DETAIL_f > {
+                  BOOST_FUNCTIONAL_DETAIL_arg_tparam, ~)
+    >
+class base< BOOST_FUNCTIONAL_DETAIL_f >
+{
 public:
-    /* implicit */ inline base(
-            // This requires specified type to be implicitly convertible to
-            // a boost::function<> functor.
-            boost::function< BOOST_FUNCTIONAL_DETAIL_f > const& f): f_(f)
-    {}
+	/* implicit */
+	inline base(
+	    // This requires specified type to be implicitly convertible to
+	    // a boost::function<> functor.
+	    boost::function< BOOST_FUNCTIONAL_DETAIL_f > const& f): f_(f)
+	{}
 
-    inline R operator()(BOOST_PP_ENUM(BOOST_FUNCTIONAL_DETAIL_arity,
-            BOOST_FUNCTIONAL_DETAIL_arg, ~)) const {
-        return f_(BOOST_PP_ENUM(BOOST_FUNCTIONAL_DETAIL_arity,
-                BOOST_FUNCTIONAL_DETAIL_arg_name, ~));
-    }
+	inline R operator()(BOOST_PP_ENUM(BOOST_FUNCTIONAL_DETAIL_arity,
+	                                  BOOST_FUNCTIONAL_DETAIL_arg, ~)) const
+	{
+		return f_(BOOST_PP_ENUM(BOOST_FUNCTIONAL_DETAIL_arity,
+		                        BOOST_FUNCTIONAL_DETAIL_arg_name, ~));
+	}
 
 private:
-    boost::function< BOOST_FUNCTIONAL_DETAIL_f > const f_;
+	boost::function< BOOST_FUNCTIONAL_DETAIL_f > const f_;
 };
 
 #   undef BOOST_FUNCTIONAL_DETAIL_arity

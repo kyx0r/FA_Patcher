@@ -26,37 +26,43 @@
 # pragma warning(disable:4251)
 #endif
 
-namespace boost {
-namespace fibers {
-namespace algo {
+namespace boost
+{
+namespace fibers
+{
+namespace algo
+{
 
-class BOOST_FIBERS_DECL round_robin : public algorithm {
+class BOOST_FIBERS_DECL round_robin : public algorithm
+{
 private:
-    typedef scheduler::ready_queue_type rqueue_type;
+	typedef scheduler::ready_queue_type rqueue_type;
 
-    rqueue_type                 rqueue_{};
-    std::mutex                  mtx_{};
-    std::condition_variable     cnd_{};
-    bool                        flag_{ false };
+	rqueue_type                 rqueue_{};
+	std::mutex                  mtx_{};
+	std::condition_variable     cnd_{};
+	bool                        flag_{ false };
 
 public:
-    round_robin() = default;
+	round_robin() = default;
 
-    round_robin( round_robin const&) = delete;
-    round_robin & operator=( round_robin const&) = delete;
+	round_robin( round_robin const&) = delete;
+	round_robin & operator=( round_robin const&) = delete;
 
-    virtual void awakened( context *) noexcept;
+	virtual void awakened( context *) noexcept;
 
-    virtual context * pick_next() noexcept;
+	virtual context * pick_next() noexcept;
 
-    virtual bool has_ready_fibers() const noexcept;
+	virtual bool has_ready_fibers() const noexcept;
 
-    virtual void suspend_until( std::chrono::steady_clock::time_point const&) noexcept;
+	virtual void suspend_until( std::chrono::steady_clock::time_point const&) noexcept;
 
-    virtual void notify() noexcept;
+	virtual void notify() noexcept;
 };
 
-}}}
+}
+}
+}
 
 #ifdef _MSC_VER
 # pragma warning(pop)

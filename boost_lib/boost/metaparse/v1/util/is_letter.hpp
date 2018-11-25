@@ -14,30 +14,30 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <class C = boost::mpl::na>
-        struct is_letter :
-          boost::mpl::bool_<
-            is_lcase_letter<C>::type::value || is_ucase_letter<C>::type::value
-          >
-        {};
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <class C = boost::mpl::na>
+struct is_letter :
+	boost::mpl::bool_<
+	is_lcase_letter<C>::type::value || is_ucase_letter<C>::type::value
+	>
+{};
 
-        template <>
-        struct is_letter<boost::mpl::na>
-        {
-          typedef is_letter type;
-          
-          template <class C = boost::mpl::na>
-          struct apply : is_letter<C> {};
-        };
-      }
-    }
-  }
+template <>
+struct is_letter<boost::mpl::na>
+{
+	typedef is_letter type;
+
+	template <class C = boost::mpl::na>
+	struct apply : is_letter<C> {};
+};
+}
+}
+}
 }
 
 #endif

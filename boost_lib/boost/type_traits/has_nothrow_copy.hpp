@@ -31,51 +31,55 @@
 #endif
 #endif
 
-namespace boost {
+namespace boost
+{
 
-template <class T> struct has_nothrow_copy_constructor : public integral_constant<bool, BOOST_HAS_NOTHROW_COPY(T)>{};
+template <class T> struct has_nothrow_copy_constructor : public integral_constant<bool, BOOST_HAS_NOTHROW_COPY(T)> {};
 
 #elif !defined(BOOST_NO_CXX11_NOEXCEPT)
 
 #include <boost/type_traits/declval.hpp>
 #include <boost/type_traits/is_copy_constructible.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace detail{
+namespace detail
+{
 
 template <class T, bool b>
-struct has_nothrow_copy_constructor_imp : public boost::integral_constant<bool, false>{};
+struct has_nothrow_copy_constructor_imp : public boost::integral_constant<bool, false> {};
 template <class T>
-struct has_nothrow_copy_constructor_imp<T, true> : public boost::integral_constant<bool, noexcept(T(boost::declval<const T&>()))>{};
+struct has_nothrow_copy_constructor_imp<T, true> : public boost::integral_constant<bool, noexcept(T(boost::declval<const T&>()))> {};
 
 }
 
-template <class T> struct has_nothrow_copy_constructor : public detail::has_nothrow_copy_constructor_imp<T, boost::is_copy_constructible<T>::value>{};
+template <class T> struct has_nothrow_copy_constructor : public detail::has_nothrow_copy_constructor_imp<T, boost::is_copy_constructible<T>::value> {};
 
 #else
 
 #include <boost/type_traits/has_trivial_copy.hpp>
 
-namespace boost{
+namespace boost
+{
 
-template <class T> struct has_nothrow_copy_constructor : public integral_constant<bool, ::boost::has_trivial_copy<T>::value>{};
+template <class T> struct has_nothrow_copy_constructor : public integral_constant<bool, ::boost::has_trivial_copy<T>::value> {};
 
 #endif
 
-template <> struct has_nothrow_copy_constructor<void> : public false_type{};
-template <class T> struct has_nothrow_copy_constructor<T volatile> : public false_type{};
-template <class T> struct has_nothrow_copy_constructor<T&> : public false_type{};
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) 
-template <class T> struct has_nothrow_copy_constructor<T&&> : public false_type{};
+template <> struct has_nothrow_copy_constructor<void> : public false_type {};
+template <class T> struct has_nothrow_copy_constructor<T volatile> : public false_type {};
+template <class T> struct has_nothrow_copy_constructor<T&> : public false_type {};
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+template <class T> struct has_nothrow_copy_constructor<T&&> : public false_type {};
 #endif
 #ifndef BOOST_NO_CV_VOID_SPECIALIZATIONS
-template <> struct has_nothrow_copy_constructor<void const> : public false_type{};
-template <> struct has_nothrow_copy_constructor<void volatile> : public false_type{};
-template <> struct has_nothrow_copy_constructor<void const volatile> : public false_type{};
+template <> struct has_nothrow_copy_constructor<void const> : public false_type {};
+template <> struct has_nothrow_copy_constructor<void volatile> : public false_type {};
+template <> struct has_nothrow_copy_constructor<void const volatile> : public false_type {};
 #endif
 
-template <class T> struct has_nothrow_copy : public has_nothrow_copy_constructor<T>{};
+template <class T> struct has_nothrow_copy : public has_nothrow_copy_constructor<T> {};
 
 } // namespace boost
 

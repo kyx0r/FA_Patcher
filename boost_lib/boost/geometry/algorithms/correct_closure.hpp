@@ -30,7 +30,9 @@
 #include <boost/geometry/algorithms/disjoint.hpp>
 #include <boost/geometry/algorithms/detail/multi_modify.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 // Silence warning C4127: conditional expression is constant
@@ -40,14 +42,16 @@ namespace boost { namespace geometry
 #endif
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace correct_closure
+namespace detail
+{
+namespace correct_closure
 {
 
 template <typename Geometry>
 struct nop
 {
-    static inline void apply(Geometry& )
-    {}
+	static inline void apply(Geometry& )
+	{}
 };
 
 
@@ -55,52 +59,53 @@ struct nop
 template <typename Ring>
 struct close_or_open_ring
 {
-    static inline void apply(Ring& r)
-    {
-        if (boost::size(r) <= 2)
-        {
-            return;
-        }
+	static inline void apply(Ring& r)
+	{
+		if (boost::size(r) <= 2)
+		{
+			return;
+		}
 
-        bool const disjoint = geometry::disjoint(*boost::begin(r),
-                                                 *(boost::end(r) - 1));
-        closure_selector const s = geometry::closure<Ring>::value;
+		bool const disjoint = geometry::disjoint(*boost::begin(r),
+		                      *(boost::end(r) - 1));
+		closure_selector const s = geometry::closure<Ring>::value;
 
-        if (disjoint && s == closed)
-        {
-            // Close it by adding first point
-            geometry::append(r, *boost::begin(r));
-        }
-        else if (! disjoint && s != closed)
-        {
-            // Open it by removing last point
-            geometry::traits::resize<Ring>::apply(r, boost::size(r) - 1);
-        }
-    }
+		if (disjoint && s == closed)
+		{
+			// Close it by adding first point
+			geometry::append(r, *boost::begin(r));
+		}
+		else if (! disjoint && s != closed)
+		{
+			// Open it by removing last point
+			geometry::traits::resize<Ring>::apply(r, boost::size(r) - 1);
+		}
+	}
 };
 
 // Close/open exterior ring and all its interior rings
 template <typename Polygon>
 struct close_or_open_polygon
 {
-    typedef typename ring_type<Polygon>::type ring_type;
+	typedef typename ring_type<Polygon>::type ring_type;
 
-    static inline void apply(Polygon& poly)
-    {
-        close_or_open_ring<ring_type>::apply(exterior_ring(poly));
+	static inline void apply(Polygon& poly)
+	{
+		close_or_open_ring<ring_type>::apply(exterior_ring(poly));
 
-        typename interior_return_type<Polygon>::type
-            rings = interior_rings(poly);
+		typename interior_return_type<Polygon>::type
+		rings = interior_rings(poly);
 
-        for (typename detail::interior_iterator<Polygon>::type
-                it = boost::begin(rings); it != boost::end(rings); ++it)
-        {
-            close_or_open_ring<ring_type>::apply(*it);
-        }
-    }
+		for (typename detail::interior_iterator<Polygon>::type
+		        it = boost::begin(rings); it != boost::end(rings); ++it)
+		{
+			close_or_open_ring<ring_type>::apply(*it);
+		}
+	}
 };
 
-}} // namespace detail::correct_closure
+}
+} // namespace detail::correct_closure
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -114,58 +119,58 @@ struct correct_closure: not_implemented<Tag>
 
 template <typename Point>
 struct correct_closure<Point, point_tag>
-    : detail::correct_closure::nop<Point>
+	: detail::correct_closure::nop<Point>
 {};
 
 template <typename LineString>
 struct correct_closure<LineString, linestring_tag>
-    : detail::correct_closure::nop<LineString>
+	: detail::correct_closure::nop<LineString>
 {};
 
 template <typename Segment>
 struct correct_closure<Segment, segment_tag>
-    : detail::correct_closure::nop<Segment>
+	: detail::correct_closure::nop<Segment>
 {};
 
 
 template <typename Box>
 struct correct_closure<Box, box_tag>
-    : detail::correct_closure::nop<Box>
+	: detail::correct_closure::nop<Box>
 {};
 
 template <typename Ring>
 struct correct_closure<Ring, ring_tag>
-    : detail::correct_closure::close_or_open_ring<Ring>
+	: detail::correct_closure::close_or_open_ring<Ring>
 {};
 
 template <typename Polygon>
 struct correct_closure<Polygon, polygon_tag>
-    : detail::correct_closure::close_or_open_polygon<Polygon>
+	: detail::correct_closure::close_or_open_polygon<Polygon>
 {};
 
 
 template <typename MultiPoint>
 struct correct_closure<MultiPoint, multi_point_tag>
-    : detail::correct_closure::nop<MultiPoint>
+	: detail::correct_closure::nop<MultiPoint>
 {};
 
 
 template <typename MultiLineString>
 struct correct_closure<MultiLineString, multi_linestring_tag>
-    : detail::correct_closure::nop<MultiLineString>
+	: detail::correct_closure::nop<MultiLineString>
 {};
 
 
 template <typename Geometry>
 struct correct_closure<Geometry, multi_polygon_tag>
-    : detail::multi_modify
-        <
-            Geometry,
-            detail::correct_closure::close_or_open_polygon
-                <
-                    typename boost::range_value<Geometry>::type
-                >
-        >
+	: detail::multi_modify
+	  <
+	  Geometry,
+	  detail::correct_closure::close_or_open_polygon
+	  <
+	  typename boost::range_value<Geometry>::type
+	  >
+	  >
 {};
 
 
@@ -179,31 +184,31 @@ namespace resolve_variant
 template <typename Geometry>
 struct correct_closure
 {
-    static inline void apply(Geometry& geometry)
-    {
-        concepts::check<Geometry const>();
-        dispatch::correct_closure<Geometry>::apply(geometry);
-    }
+	static inline void apply(Geometry& geometry)
+	{
+		concepts::check<Geometry const>();
+		dispatch::correct_closure<Geometry>::apply(geometry);
+	}
 };
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct correct_closure<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    struct visitor: boost::static_visitor<void>
-    {
-        template <typename Geometry>
-        void operator()(Geometry& geometry) const
-        {
-            correct_closure<Geometry>::apply(geometry);
-        }
-    };
+	struct visitor: boost::static_visitor<void>
+	{
+		template <typename Geometry>
+		void operator()(Geometry& geometry) const
+		{
+			correct_closure<Geometry>::apply(geometry);
+		}
+	};
 
-    static inline void
-    apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry)
-    {
-        visitor vis;
-        boost::apply_visitor(vis, geometry);
-    }
+	static inline void
+	apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry)
+	{
+		visitor vis;
+		boost::apply_visitor(vis, geometry);
+	}
 };
 
 } // namespace resolve_variant
@@ -221,7 +226,7 @@ struct correct_closure<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 template <typename Geometry>
 inline void correct_closure(Geometry& geometry)
 {
-    resolve_variant::correct_closure<Geometry>::apply(geometry);
+	resolve_variant::correct_closure<Geometry>::apply(geometry);
 }
 
 
@@ -229,7 +234,8 @@ inline void correct_closure(Geometry& geometry)
 #pragma warning(pop)
 #endif
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_CORRECT_CLOSURE_HPP

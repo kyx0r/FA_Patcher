@@ -24,38 +24,41 @@
 #include <boost/fusion/container/vector/vector_fwd.hpp>
 #include <boost/type_traits/declval.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct vector_tag;
+namespace fusion
+{
+struct vector_tag;
 
-    namespace vector_detail
-    {
-        template <std::size_t I, typename T>
-        struct store;
+namespace vector_detail
+{
+template <std::size_t I, typename T>
+struct store;
 
-        template <std::size_t N, typename U>
-        static inline BOOST_FUSION_GPU_ENABLED
-        U value_at_impl(store<N, U> const volatile*);
-    }
+template <std::size_t N, typename U>
+static inline BOOST_FUSION_GPU_ENABLED
+U value_at_impl(store<N, U> const volatile*);
+}
 
-    namespace extension
-    {
-        template <typename Tag>
-        struct value_at_impl;
+namespace extension
+{
+template <typename Tag>
+struct value_at_impl;
 
-        template <>
-        struct value_at_impl<vector_tag>
-        {
-            template <typename Sequence, typename N>
-            struct apply
-            {
-                typedef
-                    decltype(vector_detail::value_at_impl<N::value>(boost::declval<Sequence*>()))
-                type;
-            };
-        };
-    }
-}}
+template <>
+struct value_at_impl<vector_tag>
+{
+	template <typename Sequence, typename N>
+	struct apply
+	{
+		typedef
+		decltype(vector_detail::value_at_impl<N::value>(boost::declval<Sequence*>()))
+		type;
+	};
+};
+}
+}
+}
 
 #endif
 #endif

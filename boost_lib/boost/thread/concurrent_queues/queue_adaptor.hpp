@@ -25,127 +25,265 @@ namespace concurrent
 namespace detail
 {
 
-  template <typename Queue>
-  class queue_adaptor_copyable_only :
-    public boost::queue_base<typename Queue::value_type, typename Queue::size_type>
-  {
-      Queue queue;
-  public:
-    typedef typename Queue::value_type value_type;
-    typedef typename Queue::size_type size_type;
+template <typename Queue>
+class queue_adaptor_copyable_only :
+	public boost::queue_base<typename Queue::value_type, typename Queue::size_type>
+{
+	Queue queue;
+public:
+	typedef typename Queue::value_type value_type;
+	typedef typename Queue::size_type size_type;
 
-    // Constructors/Assignment/Destructors
-    queue_adaptor_copyable_only()  {}
+	// Constructors/Assignment/Destructors
+	queue_adaptor_copyable_only()  {}
 
-    // Observers
-    bool empty() const  { return queue.empty(); }
-    bool full() const { return queue.full(); }
-    size_type size() const { return queue.size(); }
-    bool closed() const { return queue.closed(); }
+	// Observers
+	bool empty() const
+	{
+		return queue.empty();
+	}
+	bool full() const
+	{
+		return queue.full();
+	}
+	size_type size() const
+	{
+		return queue.size();
+	}
+	bool closed() const
+	{
+		return queue.closed();
+	}
 
-    // Modifiers
-    void close() { queue.close(); }
+	// Modifiers
+	void close()
+	{
+		queue.close();
+	}
 
-    void push(const value_type& x) { queue.push(x); }
+	void push(const value_type& x)
+	{
+		queue.push(x);
+	}
 
-    void pull(value_type& x) { queue.pull(x); };
-    value_type pull() { return queue.pull(); }
+	void pull(value_type& x)
+	{
+		queue.pull(x);
+	};
+	value_type pull()
+	{
+		return queue.pull();
+	}
 
-    queue_op_status try_push(const value_type& x) { return queue.try_push(x); }
-    queue_op_status try_pull(value_type& x)  { return queue.try_pull(x); }
+	queue_op_status try_push(const value_type& x)
+	{
+		return queue.try_push(x);
+	}
+	queue_op_status try_pull(value_type& x)
+	{
+		return queue.try_pull(x);
+	}
 
-    queue_op_status nonblocking_push(const value_type& x) { return queue.nonblocking_push(x); }
-    queue_op_status nonblocking_pull(value_type& x)  { return queue.nonblocking_pull(x); }
+	queue_op_status nonblocking_push(const value_type& x)
+	{
+		return queue.nonblocking_push(x);
+	}
+	queue_op_status nonblocking_pull(value_type& x)
+	{
+		return queue.nonblocking_pull(x);
+	}
 
-    queue_op_status wait_push(const value_type& x) { return queue.wait_push(x); }
-    queue_op_status wait_pull(value_type& x) { return queue.wait_pull(x); }
+	queue_op_status wait_push(const value_type& x)
+	{
+		return queue.wait_push(x);
+	}
+	queue_op_status wait_pull(value_type& x)
+	{
+		return queue.wait_pull(x);
+	}
 
-  };
-  template <typename Queue>
-  class queue_adaptor_movable_only :
-    public boost::queue_base<typename Queue::value_type, typename Queue::size_type>
-  {
-      Queue queue;
-  public:
-    typedef typename Queue::value_type value_type;
-    typedef typename Queue::size_type size_type;
+};
+template <typename Queue>
+class queue_adaptor_movable_only :
+	public boost::queue_base<typename Queue::value_type, typename Queue::size_type>
+{
+	Queue queue;
+public:
+	typedef typename Queue::value_type value_type;
+	typedef typename Queue::size_type size_type;
 
-    // Constructors/Assignment/Destructors
+	// Constructors/Assignment/Destructors
 
-    queue_adaptor_movable_only()  {}
+	queue_adaptor_movable_only()  {}
 
-    // Observers
-    bool empty() const  { return queue.empty(); }
-    bool full() const { return queue.full(); }
-    size_type size() const { return queue.size(); }
-    bool closed() const { return queue.closed(); }
+	// Observers
+	bool empty() const
+	{
+		return queue.empty();
+	}
+	bool full() const
+	{
+		return queue.full();
+	}
+	size_type size() const
+	{
+		return queue.size();
+	}
+	bool closed() const
+	{
+		return queue.closed();
+	}
 
-    // Modifiers
-    void close() { queue.close(); }
-
-
-    void pull(value_type& x) { queue.pull(x); };
-    // enable_if is_nothrow_copy_movable<value_type>
-    value_type pull() { return queue.pull(); }
-
-    queue_op_status try_pull(value_type& x)  { return queue.try_pull(x); }
-
-    queue_op_status nonblocking_pull(value_type& x)  { return queue.nonblocking_pull(x); }
-
-    queue_op_status wait_pull(value_type& x) { return queue.wait_pull(x); }
-
-    void push(BOOST_THREAD_RV_REF(value_type) x) { queue.push(boost::move(x)); }
-    queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x) { return queue.try_push(boost::move(x)); }
-    queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x) { return queue.nonblocking_push(boost::move(x)); }
-    queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x) { return queue.wait_push(boost::move(x)); }
-  };
-
-  template <typename Queue>
-  class queue_adaptor_copyable_and_movable :
-    public boost::queue_base<typename Queue::value_type, typename Queue::size_type>
-  {
-      Queue queue;
-  public:
-    typedef typename Queue::value_type value_type;
-    typedef typename Queue::size_type size_type;
-
-    // Constructors/Assignment/Destructors
-
-    queue_adaptor_copyable_and_movable()  {}
-
-    // Observers
-    bool empty() const  { return queue.empty(); }
-    bool full() const { return queue.full(); }
-    size_type size() const { return queue.size(); }
-    bool closed() const { return queue.closed(); }
-
-    // Modifiers
-    void close() { queue.close(); }
-
-
-    void push(const value_type& x) { queue.push(x); }
-
-    void pull(value_type& x) { queue.pull(x); };
-    // enable_if is_nothrow_copy_movable<value_type>
-    value_type pull() { return queue.pull(); }
-
-    queue_op_status try_push(const value_type& x) { return queue.try_push(x); }
-    queue_op_status try_pull(value_type& x)  { return queue.try_pull(x); }
-
-    queue_op_status nonblocking_push(const value_type& x) { return queue.nonblocking_push(x); }
-    queue_op_status nonblocking_pull(value_type& x)  { return queue.nonblocking_pull(x); }
-
-    queue_op_status wait_push(const value_type& x) { return queue.wait_push(x); }
-    queue_op_status wait_pull(value_type& x) { return queue.wait_pull(x); }
-
-    void push(BOOST_THREAD_RV_REF(value_type) x) { queue.push(boost::move(x)); }
-    queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x) { return queue.try_push(boost::move(x)); }
-    queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x) { return queue.nonblocking_push(boost::move(x)); }
-    queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x) { return queue.wait_push(boost::move(x)); }
-  };
+	// Modifiers
+	void close()
+	{
+		queue.close();
+	}
 
 
-  template <class Q, class T,
+	void pull(value_type& x)
+	{
+		queue.pull(x);
+	};
+	// enable_if is_nothrow_copy_movable<value_type>
+	value_type pull()
+	{
+		return queue.pull();
+	}
+
+	queue_op_status try_pull(value_type& x)
+	{
+		return queue.try_pull(x);
+	}
+
+	queue_op_status nonblocking_pull(value_type& x)
+	{
+		return queue.nonblocking_pull(x);
+	}
+
+	queue_op_status wait_pull(value_type& x)
+	{
+		return queue.wait_pull(x);
+	}
+
+	void push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		queue.push(boost::move(x));
+	}
+	queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue.try_push(boost::move(x));
+	}
+	queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue.nonblocking_push(boost::move(x));
+	}
+	queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue.wait_push(boost::move(x));
+	}
+};
+
+template <typename Queue>
+class queue_adaptor_copyable_and_movable :
+	public boost::queue_base<typename Queue::value_type, typename Queue::size_type>
+{
+	Queue queue;
+public:
+	typedef typename Queue::value_type value_type;
+	typedef typename Queue::size_type size_type;
+
+	// Constructors/Assignment/Destructors
+
+	queue_adaptor_copyable_and_movable()  {}
+
+	// Observers
+	bool empty() const
+	{
+		return queue.empty();
+	}
+	bool full() const
+	{
+		return queue.full();
+	}
+	size_type size() const
+	{
+		return queue.size();
+	}
+	bool closed() const
+	{
+		return queue.closed();
+	}
+
+	// Modifiers
+	void close()
+	{
+		queue.close();
+	}
+
+
+	void push(const value_type& x)
+	{
+		queue.push(x);
+	}
+
+	void pull(value_type& x)
+	{
+		queue.pull(x);
+	};
+	// enable_if is_nothrow_copy_movable<value_type>
+	value_type pull()
+	{
+		return queue.pull();
+	}
+
+	queue_op_status try_push(const value_type& x)
+	{
+		return queue.try_push(x);
+	}
+	queue_op_status try_pull(value_type& x)
+	{
+		return queue.try_pull(x);
+	}
+
+	queue_op_status nonblocking_push(const value_type& x)
+	{
+		return queue.nonblocking_push(x);
+	}
+	queue_op_status nonblocking_pull(value_type& x)
+	{
+		return queue.nonblocking_pull(x);
+	}
+
+	queue_op_status wait_push(const value_type& x)
+	{
+		return queue.wait_push(x);
+	}
+	queue_op_status wait_pull(value_type& x)
+	{
+		return queue.wait_pull(x);
+	}
+
+	void push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		queue.push(boost::move(x));
+	}
+	queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue.try_push(boost::move(x));
+	}
+	queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue.nonblocking_push(boost::move(x));
+	}
+	queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue.wait_push(boost::move(x));
+	}
+};
+
+
+template <class Q, class T,
 #if ! defined  BOOST_NO_CXX11_RVALUE_REFERENCES
 #if defined __GNUC__ && ! defined __clang__
 #if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 5) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
@@ -171,34 +309,37 @@ namespace detail
           bool Copyable = is_copy_constructible<T>::value,
           bool Movable = has_move_emulation_enabled<T>::value
 #endif
-      >
-  struct queue_adaptor;
+          >
+struct queue_adaptor;
 
-  template <class Q, class T>
-  struct queue_adaptor<Q, T, true, true> {
-    typedef queue_adaptor_copyable_and_movable<Q> type;
-  };
-  template <class Q, class T>
-  struct queue_adaptor<Q, T, true, false> {
-    typedef queue_adaptor_copyable_only<Q> type;
-  };
-  template <class Q, class T>
-  struct queue_adaptor<Q, T, false, true> {
-    typedef queue_adaptor_movable_only<Q> type;
-  };
+template <class Q, class T>
+struct queue_adaptor<Q, T, true, true>
+{
+	typedef queue_adaptor_copyable_and_movable<Q> type;
+};
+template <class Q, class T>
+struct queue_adaptor<Q, T, true, false>
+{
+	typedef queue_adaptor_copyable_only<Q> type;
+};
+template <class Q, class T>
+struct queue_adaptor<Q, T, false, true>
+{
+	typedef queue_adaptor_movable_only<Q> type;
+};
 
 }
 
-  template <typename Queue>
-  class queue_adaptor :
-    public detail::queue_adaptor<Queue, typename Queue::value_type>::type
-  {
-  public:
-      typedef typename Queue::value_type value_type;
-      typedef typename Queue::size_type size_type;
-    // Constructors/Assignment/Destructors
-    virtual ~queue_adaptor() {};
-  };
+template <typename Queue>
+class queue_adaptor :
+	public detail::queue_adaptor<Queue, typename Queue::value_type>::type
+{
+public:
+	typedef typename Queue::value_type value_type;
+	typedef typename Queue::size_type size_type;
+	// Constructors/Assignment/Destructors
+	virtual ~queue_adaptor() {};
+};
 }
 using concurrent::queue_adaptor;
 

@@ -12,18 +12,18 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class Ch>
-      struct next_char :
-        next_char_impl<
-          typename boost::mpl::tag<typename P::type>::type
-        >::template apply<typename P::type, typename Ch::type>
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class Ch>
+struct next_char :
+	next_char_impl<
+	typename boost::mpl::tag<typename P::type>::type
+	>::template apply<typename P::type, typename Ch::type>
+{};
+}
+}
 }
 
 #endif

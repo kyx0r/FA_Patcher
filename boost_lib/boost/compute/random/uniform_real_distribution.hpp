@@ -19,8 +19,10 @@
 #include <boost/compute/detail/literal.hpp>
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// \class uniform_real_distribution
 /// \brief Produces uniformly distributed random floating-point numbers.
@@ -35,79 +37,79 @@ template<class RealType = float>
 class uniform_real_distribution
 {
 public:
-    typedef RealType result_type;
+	typedef RealType result_type;
 
-    /// Creates a new uniform distribution producing numbers in the range
-    /// [\p a, \p b).
-    /// Requires a < b
-    uniform_real_distribution(RealType a = 0.f, RealType b = 1.f)
-        : m_a(a),
-          m_b(b)
-    {
-        BOOST_ASSERT(a < b);
-    }
+	/// Creates a new uniform distribution producing numbers in the range
+	/// [\p a, \p b).
+	/// Requires a < b
+	uniform_real_distribution(RealType a = 0.f, RealType b = 1.f)
+		: m_a(a),
+		  m_b(b)
+	{
+		BOOST_ASSERT(a < b);
+	}
 
-    /// Destroys the uniform_real_distribution object.
-    ~uniform_real_distribution()
-    {
-    }
+	/// Destroys the uniform_real_distribution object.
+	~uniform_real_distribution()
+	{
+	}
 
-    /// Returns the minimum value of the distribution.
-    result_type a() const
-    {
-        return m_a;
-    }
+	/// Returns the minimum value of the distribution.
+	result_type a() const
+	{
+		return m_a;
+	}
 
-    /// Returns the maximum value of the distribution.
-    result_type b() const
-    {
-        return m_b;
-    }
+	/// Returns the maximum value of the distribution.
+	result_type b() const
+	{
+		return m_b;
+	}
 
-    /// Generates uniformly distributed floating-point numbers and stores
-    /// them to the range [\p first, \p last).
-    template<class OutputIterator, class Generator>
-    void generate(OutputIterator first,
-                  OutputIterator last,
-                  Generator &generator,
-                  command_queue &queue)
-    {
-        BOOST_COMPUTE_FUNCTION(RealType, scale_random, (const uint_ x),
-        {
-            return nextafter(LO + (convert_RealType(x) / MAX_RANDOM) * (HI - LO), (RealType) LO);
-        });
+	/// Generates uniformly distributed floating-point numbers and stores
+	/// them to the range [\p first, \p last).
+	template<class OutputIterator, class Generator>
+	void generate(OutputIterator first,
+	              OutputIterator last,
+	              Generator &generator,
+	              command_queue &queue)
+	{
+		BOOST_COMPUTE_FUNCTION(RealType, scale_random, (const uint_ x),
+		{
+			return nextafter(LO + (convert_RealType(x) / MAX_RANDOM) * (HI - LO), (RealType) LO);
+		});
 
-        scale_random.define("LO", detail::make_literal(m_a));
-        scale_random.define("HI", detail::make_literal(m_b));
-        scale_random.define("MAX_RANDOM", "UINT_MAX");
-        scale_random.define(
-            "convert_RealType", std::string("convert_") + type_name<RealType>()
-        );
-        scale_random.define("RealType", type_name<RealType>());
+		scale_random.define("LO", detail::make_literal(m_a));
+		scale_random.define("HI", detail::make_literal(m_b));
+		scale_random.define("MAX_RANDOM", "UINT_MAX");
+		scale_random.define(
+		    "convert_RealType", std::string("convert_") + type_name<RealType>()
+		);
+		scale_random.define("RealType", type_name<RealType>());
 
-        generator.generate(
-            first, last, scale_random, queue
-        );
-    }
+		generator.generate(
+		    first, last, scale_random, queue
+		);
+	}
 
-    /// \internal_ (deprecated)
-    template<class OutputIterator, class Generator>
-    void fill(OutputIterator first,
-              OutputIterator last,
-              Generator &g,
-              command_queue &queue)
-    {
-        generate(first, last, g, queue);
-    }
+	/// \internal_ (deprecated)
+	template<class OutputIterator, class Generator>
+	void fill(OutputIterator first,
+	          OutputIterator last,
+	          Generator &g,
+	          command_queue &queue)
+	{
+		generate(first, last, g, queue);
+	}
 
 private:
-    RealType m_a;
-    RealType m_b;
+	RealType m_a;
+	RealType m_b;
 
-    BOOST_STATIC_ASSERT_MSG(
-        boost::is_floating_point<RealType>::value,
-        "Template argument must be a floating point type"
-    );
+	BOOST_STATIC_ASSERT_MSG(
+	    boost::is_floating_point<RealType>::value,
+	    "Template argument must be a floating point type"
+	);
 };
 
 } // end compute namespace

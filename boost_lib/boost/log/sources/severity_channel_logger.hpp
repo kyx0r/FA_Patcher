@@ -31,11 +31,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sources {
+namespace sources
+{
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
@@ -44,17 +46,17 @@ namespace sources {
 //! Narrow-char logger with severity level and channel support
 template< typename LevelT = int, typename ChannelT = std::string >
 class severity_channel_logger :
-    public basic_composite_logger<
-        char,
-        severity_channel_logger< LevelT, ChannelT >,
-        single_thread_model,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	char,
+	severity_channel_logger< LevelT, ChannelT >,
+	single_thread_model,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(severity_channel_logger)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(severity_channel_logger)
 };
 
 #if !defined(BOOST_LOG_NO_THREADS)
@@ -62,17 +64,17 @@ class severity_channel_logger :
 //! Narrow-char thread-safe logger with severity level and channel support
 template< typename LevelT = int, typename ChannelT = std::string >
 class severity_channel_logger_mt :
-    public basic_composite_logger<
-        char,
-        severity_channel_logger_mt< LevelT, ChannelT >,
-        multi_thread_model< boost::log::aux::light_rw_mutex >,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	char,
+	severity_channel_logger_mt< LevelT, ChannelT >,
+	multi_thread_model< boost::log::aux::light_rw_mutex >,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(severity_channel_logger_mt)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(severity_channel_logger_mt)
 };
 
 #endif // !defined(BOOST_LOG_NO_THREADS)
@@ -84,17 +86,17 @@ class severity_channel_logger_mt :
 //! Wide-char logger with severity level and channel support
 template< typename LevelT = int, typename ChannelT = std::wstring >
 class wseverity_channel_logger :
-    public basic_composite_logger<
-        wchar_t,
-        wseverity_channel_logger< LevelT, ChannelT >,
-        single_thread_model,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	wchar_t,
+	wseverity_channel_logger< LevelT, ChannelT >,
+	single_thread_model,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(wseverity_channel_logger)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(wseverity_channel_logger)
 };
 
 #if !defined(BOOST_LOG_NO_THREADS)
@@ -102,17 +104,17 @@ class wseverity_channel_logger :
 //! Wide-char thread-safe logger with severity level and channel support
 template< typename LevelT = int, typename ChannelT = std::wstring >
 class wseverity_channel_logger_mt :
-    public basic_composite_logger<
-        wchar_t,
-        wseverity_channel_logger_mt< LevelT, ChannelT >,
-        multi_thread_model< boost::log::aux::light_rw_mutex >,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	wchar_t,
+	wseverity_channel_logger_mt< LevelT, ChannelT >,
+	multi_thread_model< boost::log::aux::light_rw_mutex >,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(wseverity_channel_logger_mt)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS_TEMPLATE(wseverity_channel_logger_mt)
 };
 
 #endif // !defined(BOOST_LOG_NO_THREADS)
@@ -128,38 +130,38 @@ class wseverity_channel_logger_mt :
  */
 template< typename LevelT = int, typename ChannelT = std::string >
 class severity_channel_logger :
-    public basic_composite_logger<
-        char,
-        severity_channel_logger< LevelT, ChannelT >,
-        single_thread_model,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	char,
+	severity_channel_logger< LevelT, ChannelT >,
+	single_thread_model,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
 public:
-    /*!
-     * Default constructor
-     */
-    severity_channel_logger();
-    /*!
-     * Copy constructor
-     */
-    severity_channel_logger(severity_channel_logger const& that);
-    /*!
-     * Constructor with named arguments
-     */
-    template< typename... ArgsT >
-    explicit severity_channel_logger(ArgsT... const& args);
-    /*!
-     * Assignment operator
-     */
-    severity_channel_logger& operator= (severity_channel_logger const& that)
-    /*!
-     * Swaps two loggers
-     */
-    void swap(severity_channel_logger& that);
+	/*!
+	 * Default constructor
+	 */
+	severity_channel_logger();
+	/*!
+	 * Copy constructor
+	 */
+	severity_channel_logger(severity_channel_logger const& that);
+	/*!
+	 * Constructor with named arguments
+	 */
+	template< typename... ArgsT >
+	explicit severity_channel_logger(ArgsT... const& args);
+	/*!
+	 * Assignment operator
+	 */
+	severity_channel_logger& operator= (severity_channel_logger const& that)
+	/*!
+	 * Swaps two loggers
+	 */
+	void swap(severity_channel_logger& that);
 };
 
 /*!
@@ -169,38 +171,38 @@ public:
  */
 template< typename LevelT = int, typename ChannelT = std::string >
 class severity_channel_logger_mt :
-    public basic_composite_logger<
-        char,
-        severity_channel_logger_mt< LevelT, ChannelT >,
-        multi_thread_model< implementation_defined >,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	char,
+	severity_channel_logger_mt< LevelT, ChannelT >,
+	multi_thread_model< implementation_defined >,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
 public:
-    /*!
-     * Default constructor
-     */
-    severity_channel_logger_mt();
-    /*!
-     * Copy constructor
-     */
-    severity_channel_logger_mt(severity_channel_logger_mt const& that);
-    /*!
-     * Constructor with named arguments
-     */
-    template< typename... ArgsT >
-    explicit severity_channel_logger_mt(ArgsT... const& args);
-    /*!
-     * Assignment operator
-     */
-    severity_channel_logger_mt& operator= (severity_channel_logger_mt const& that)
-    /*!
-     * Swaps two loggers
-     */
-    void swap(severity_channel_logger_mt& that);
+	/*!
+	 * Default constructor
+	 */
+	severity_channel_logger_mt();
+	/*!
+	 * Copy constructor
+	 */
+	severity_channel_logger_mt(severity_channel_logger_mt const& that);
+	/*!
+	 * Constructor with named arguments
+	 */
+	template< typename... ArgsT >
+	explicit severity_channel_logger_mt(ArgsT... const& args);
+	/*!
+	 * Assignment operator
+	 */
+	severity_channel_logger_mt& operator= (severity_channel_logger_mt const& that)
+	/*!
+	 * Swaps two loggers
+	 */
+	void swap(severity_channel_logger_mt& that);
 };
 
 /*!
@@ -210,38 +212,38 @@ public:
  */
 template< typename LevelT = int, typename ChannelT = std::wstring >
 class wseverity_channel_logger :
-    public basic_composite_logger<
-        wchar_t,
-        wseverity_channel_logger< LevelT, ChannelT >,
-        single_thread_model,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	wchar_t,
+	wseverity_channel_logger< LevelT, ChannelT >,
+	single_thread_model,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
 public:
-    /*!
-     * Default constructor
-     */
-    wseverity_channel_logger();
-    /*!
-     * Copy constructor
-     */
-    wseverity_channel_logger(wseverity_channel_logger const& that);
-    /*!
-     * Constructor with named arguments
-     */
-    template< typename... ArgsT >
-    explicit wseverity_channel_logger(ArgsT... const& args);
-    /*!
-     * Assignment operator
-     */
-    wseverity_channel_logger& operator= (wseverity_channel_logger const& that)
-    /*!
-     * Swaps two loggers
-     */
-    void swap(wseverity_channel_logger& that);
+	/*!
+	 * Default constructor
+	 */
+	wseverity_channel_logger();
+	/*!
+	 * Copy constructor
+	 */
+	wseverity_channel_logger(wseverity_channel_logger const& that);
+	/*!
+	 * Constructor with named arguments
+	 */
+	template< typename... ArgsT >
+	explicit wseverity_channel_logger(ArgsT... const& args);
+	/*!
+	 * Assignment operator
+	 */
+	wseverity_channel_logger& operator= (wseverity_channel_logger const& that)
+	/*!
+	 * Swaps two loggers
+	 */
+	void swap(wseverity_channel_logger& that);
 };
 
 /*!
@@ -251,38 +253,38 @@ public:
  */
 template< typename LevelT = int, typename ChannelT = std::wstring >
 class wseverity_channel_logger_mt :
-    public basic_composite_logger<
-        wchar_t,
-        wseverity_channel_logger_mt< LevelT, ChannelT >,
-        multi_thread_model< implementation_defined >,
-        features<
-            severity< LevelT >,
-            channel< ChannelT >
-        >
-    >
+	public basic_composite_logger<
+	wchar_t,
+	wseverity_channel_logger_mt< LevelT, ChannelT >,
+	multi_thread_model< implementation_defined >,
+	features<
+	severity< LevelT >,
+	channel< ChannelT >
+	>
+	>
 {
 public:
-    /*!
-     * Default constructor
-     */
-    wseverity_channel_logger_mt();
-    /*!
-     * Copy constructor
-     */
-    wseverity_channel_logger_mt(wseverity_channel_logger_mt const& that);
-    /*!
-     * Constructor with named arguments
-     */
-    template< typename... ArgsT >
-    explicit wseverity_channel_logger_mt(ArgsT... const& args);
-    /*!
-     * Assignment operator
-     */
-    wseverity_channel_logger_mt& operator= (wseverity_channel_logger_mt const& that)
-    /*!
-     * Swaps two loggers
-     */
-    void swap(wseverity_channel_logger_mt& that);
+	/*!
+	 * Default constructor
+	 */
+	wseverity_channel_logger_mt();
+	/*!
+	 * Copy constructor
+	 */
+	wseverity_channel_logger_mt(wseverity_channel_logger_mt const& that);
+	/*!
+	 * Constructor with named arguments
+	 */
+	template< typename... ArgsT >
+	explicit wseverity_channel_logger_mt(ArgsT... const& args);
+	/*!
+	 * Assignment operator
+	 */
+	wseverity_channel_logger_mt& operator= (wseverity_channel_logger_mt const& that)
+	/*!
+	 * Swaps two loggers
+	 */
+	void swap(wseverity_channel_logger_mt& that);
 };
 
 #endif // BOOST_LOG_DOXYGEN_PASS

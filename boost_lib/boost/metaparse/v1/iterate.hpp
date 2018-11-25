@@ -10,14 +10,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class N>
-      struct iterate : iterate_c<P, N::type::value> {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class N>
+struct iterate : iterate_c<P, N::type::value> {};
+}
+}
 }
 
 #endif

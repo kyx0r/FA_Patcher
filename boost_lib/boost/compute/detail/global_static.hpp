@@ -15,11 +15,11 @@
 
 #ifdef BOOST_COMPUTE_THREAD_SAFE
 #  ifdef BOOST_COMPUTE_HAVE_THREAD_LOCAL
-     // use c++11 thread local storage
+// use c++11 thread local storage
 #    define BOOST_COMPUTE_DETAIL_GLOBAL_STATIC(type, name, ctor) \
        thread_local type name ctor;
 #  else
-      // use thread_specific_ptr from boost.thread
+// use thread_specific_ptr from boost.thread
 #     include <boost/thread/tss.hpp>
 #     define BOOST_COMPUTE_DETAIL_GLOBAL_STATIC(type, name, ctor) \
         static ::boost::thread_specific_ptr< type > BOOST_PP_CAT(name, _tls_ptr_); \
@@ -29,7 +29,7 @@
         static type &name = *BOOST_PP_CAT(name, _tls_ptr_);
 #  endif
 #else
-   // no thread-safety, just use static
+// no thread-safety, just use static
 #  define BOOST_COMPUTE_DETAIL_GLOBAL_STATIC(type, name, ctor) \
      static type name ctor;
 #endif

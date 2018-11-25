@@ -28,7 +28,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -58,22 +60,22 @@ namespace core_detail
 template <typename DegreeOrRadian>
 struct coordinate_system_units
 {
-    BOOST_MPL_ASSERT_MSG
-        ((false),
-         COORDINATE_SYSTEM_UNITS_MUST_BE_DEGREES_OR_RADIANS,
-         (types<DegreeOrRadian>));
+	BOOST_MPL_ASSERT_MSG
+	((false),
+	 COORDINATE_SYSTEM_UNITS_MUST_BE_DEGREES_OR_RADIANS,
+	 (types<DegreeOrRadian>));
 };
 
 template <>
 struct coordinate_system_units<geometry::degree>
 {
-    typedef geometry::degree units;
+	typedef geometry::degree units;
 };
 
 template <>
 struct coordinate_system_units<geometry::radian>
 {
-    typedef geometry::radian units;
+	typedef geometry::radian units;
 };
 
 } // namespace core_detail
@@ -108,10 +110,10 @@ known as lat,long or lo,la or phi,lambda
 template<typename DegreeOrRadian>
 struct geographic
 {
-    typedef typename core_detail::coordinate_system_units
-        <
-            DegreeOrRadian
-        >::units units;
+	typedef typename core_detail::coordinate_system_units
+	<
+	DegreeOrRadian
+	>::units units;
 };
 
 
@@ -137,10 +139,10 @@ struct geographic
 template<typename DegreeOrRadian>
 struct spherical
 {
-    typedef typename core_detail::coordinate_system_units
-        <
-            DegreeOrRadian
-        >::units units;
+	typedef typename core_detail::coordinate_system_units
+	<
+	DegreeOrRadian
+	>::units units;
 };
 
 
@@ -157,10 +159,10 @@ struct spherical
 template<typename DegreeOrRadian>
 struct spherical_equatorial
 {
-    typedef typename core_detail::coordinate_system_units
-        <
-            DegreeOrRadian
-        >::units units;
+	typedef typename core_detail::coordinate_system_units
+	<
+	DegreeOrRadian
+	>::units units;
 };
 
 
@@ -175,10 +177,10 @@ struct spherical_equatorial
 template<typename DegreeOrRadian>
 struct polar
 {
-    typedef typename core_detail::coordinate_system_units
-        <
-            DegreeOrRadian
-        >::units units;
+	typedef typename core_detail::coordinate_system_units
+	<
+	DegreeOrRadian
+	>::units units;
 };
 
 
@@ -204,26 +206,26 @@ struct cs_tag
 template<typename DegreeOrRadian>
 struct cs_tag<cs::geographic<DegreeOrRadian> >
 {
-    typedef geographic_tag type;
+	typedef geographic_tag type;
 };
 
 template<typename DegreeOrRadian>
 struct cs_tag<cs::spherical<DegreeOrRadian> >
 {
-    typedef spherical_polar_tag type;
+	typedef spherical_polar_tag type;
 };
 
 template<typename DegreeOrRadian>
 struct cs_tag<cs::spherical_equatorial<DegreeOrRadian> >
 {
-    typedef spherical_equatorial_tag type;
+	typedef spherical_equatorial_tag type;
 };
 
 
 template<>
 struct cs_tag<cs::cartesian>
 {
-    typedef cartesian_tag type;
+	typedef cartesian_tag type;
 };
 
 
@@ -238,10 +240,10 @@ struct cs_tag<cs::cartesian>
 template <typename Geometry>
 struct cs_tag
 {
-    typedef typename traits::cs_tag
-        <
-            typename geometry::coordinate_system<Geometry>::type
-        >::type type;
+	typedef typename traits::cs_tag
+	<
+	typename geometry::coordinate_system<Geometry>::type
+	>::type type;
 };
 
 
@@ -264,6 +266,7 @@ struct is_radian< CoordinateSystem<degree> > : boost::false_type
 
 #endif // DOXYGEN_NO_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_CS_HPP

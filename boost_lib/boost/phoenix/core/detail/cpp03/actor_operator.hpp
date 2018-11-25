@@ -53,71 +53,71 @@
 
 #if BOOST_PHOENIX_ITERATION >= BOOST_PHOENIX_PERFECT_FORWARD_LIMIT
 
-        template <typename This, BOOST_PHOENIX_typename_A>
-        struct result<This(BOOST_PHOENIX_A)>
-            : result<This(BOOST_PHOENIX_A_const_ref)>
-        {};
+template <typename This, BOOST_PHOENIX_typename_A>
+struct result<This(BOOST_PHOENIX_A)>
+: result<This(BOOST_PHOENIX_A_const_ref)>
+{};
 
-        template <typename This, BOOST_PHOENIX_typename_A>
-        struct result<This(BOOST_PHOENIX_A_ref)>
-            : result_of::actor<proto_base_expr, BOOST_PHOENIX_A_ref>
-        {};
+template <typename This, BOOST_PHOENIX_typename_A>
+struct result<This(BOOST_PHOENIX_A_ref)>
+: result_of::actor<proto_base_expr, BOOST_PHOENIX_A_ref>
+{};
 
-        template <BOOST_PHOENIX_typename_A>
-        typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_ref>::type
-        operator()(BOOST_PHOENIX_A_ref_a)
-        {
-            typedef
-                BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
-                    const actor<Expr> *, BOOST_PHOENIX_A_ref
-                >
-                env_type;
-            env_type env = {this, BOOST_PHOENIX_a};
-            
-            return phoenix::eval(*this, phoenix::context(env, default_actions()));
-        }
+template <BOOST_PHOENIX_typename_A>
+typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_ref>::type
+operator()(BOOST_PHOENIX_A_ref_a)
+{
+	typedef
+	BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
+	const actor<Expr> *, BOOST_PHOENIX_A_ref
+	>
+	env_type;
+	env_type env = {this, BOOST_PHOENIX_a};
 
-        template <BOOST_PHOENIX_typename_A>
-        typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_ref>::type
-        operator()(BOOST_PHOENIX_A_ref_a) const
-        {
-            typedef
-                BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
-                    const actor<Expr> *, BOOST_PHOENIX_A_ref
-                >
-                env_type;
-            env_type env = {this, BOOST_PHOENIX_a};
-            
-            return phoenix::eval(*this, phoenix::context(env, default_actions()));
-        }
+	return phoenix::eval(*this, phoenix::context(env, default_actions()));
+}
 
-        template <BOOST_PHOENIX_typename_A>
-        typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_const_ref>::type
-        operator()(BOOST_PHOENIX_A_const_ref_a)
-        {
-            typedef
-                BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
-                    const actor<Expr> *, BOOST_PHOENIX_A_const_ref
-                >
-                env_type;
-            env_type env = {this, BOOST_PHOENIX_a};
-            
-            return phoenix::eval(*this, phoenix::context(env, default_actions()));
-        }
+template <BOOST_PHOENIX_typename_A>
+typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_ref>::type
+operator()(BOOST_PHOENIX_A_ref_a) const
+{
+	typedef
+	BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
+	const actor<Expr> *, BOOST_PHOENIX_A_ref
+	>
+	env_type;
+	env_type env = {this, BOOST_PHOENIX_a};
 
-        template <BOOST_PHOENIX_typename_A>
-        typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_const_ref>::type
-        operator()(BOOST_PHOENIX_A_const_ref_a) const
-        {
-            typedef
-                BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
-                    const actor<Expr> *, BOOST_PHOENIX_A_const_ref
-                >
-                env_type;
-            env_type env = {this, BOOST_PHOENIX_a};
-            
-            return phoenix::eval(*this, phoenix::context(env, default_actions()));
-        }
+	return phoenix::eval(*this, phoenix::context(env, default_actions()));
+}
+
+template <BOOST_PHOENIX_typename_A>
+typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_const_ref>::type
+operator()(BOOST_PHOENIX_A_const_ref_a)
+{
+	typedef
+	BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
+	const actor<Expr> *, BOOST_PHOENIX_A_const_ref
+	>
+	env_type;
+	env_type env = {this, BOOST_PHOENIX_a};
+
+	return phoenix::eval(*this, phoenix::context(env, default_actions()));
+}
+
+template <BOOST_PHOENIX_typename_A>
+typename result_of::actor<proto_base_expr, BOOST_PHOENIX_A_const_ref>::type
+operator()(BOOST_PHOENIX_A_const_ref_a) const
+{
+	typedef
+	BOOST_PP_CAT(vector, BOOST_PP_INC(BOOST_PHOENIX_ITERATION))<
+	const actor<Expr> *, BOOST_PHOENIX_A_const_ref
+	>
+	env_type;
+	env_type env = {this, BOOST_PHOENIX_a};
+
+	return phoenix::eval(*this, phoenix::context(env, default_actions()));
+}
 
 #else
 
@@ -163,12 +163,12 @@
         }                                                                       \
         /**/
 
-        template <typename This, BOOST_PHOENIX_typename_A>
-        struct result<This(BOOST_PHOENIX_A)>
-            : result<This(BOOST_PP_ENUM(BOOST_PHOENIX_ITERATION, M0, _))>
-        {};
+template <typename This, BOOST_PHOENIX_typename_A>
+struct result<This(BOOST_PHOENIX_A)>
+: result<This(BOOST_PP_ENUM(BOOST_PHOENIX_ITERATION, M0, _))>
+{};
 
-        BOOST_PP_REPEAT(BOOST_PHOENIX_PERM_SIZE, BOOST_PHOENIX_ACTOR_OPERATOR, _)
+BOOST_PP_REPEAT(BOOST_PHOENIX_PERM_SIZE, BOOST_PHOENIX_ACTOR_OPERATOR, _)
 
 #undef BOOST_PHOENIX_ACTOR_OPERATOR
 

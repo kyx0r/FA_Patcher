@@ -24,8 +24,10 @@
 #include <boost/intrusive/detail/iterator.hpp>
 #include <boost/move/utility_core.hpp>
 
-namespace boost {
-namespace container {
+namespace boost
+{
+namespace container
+{
 
 using ::boost::intrusive::iterator_traits;
 using ::boost::intrusive::iterator_distance;
@@ -38,29 +40,38 @@ using ::boost::intrusive::iterator_arrow_result;
 template <class Container>
 class back_emplacer
 {
-   private:
-   Container& container;
+private:
+	Container& container;
 
-   public:
-   typedef std::output_iterator_tag iterator_category;
-   typedef void                     value_type;
-   typedef void                     difference_type;
-   typedef void                     pointer;
-   typedef void                     reference;
+public:
+	typedef std::output_iterator_tag iterator_category;
+	typedef void                     value_type;
+	typedef void                     difference_type;
+	typedef void                     pointer;
+	typedef void                     reference;
 
-   back_emplacer(Container& x)
-      : container(x)
-   {}
+	back_emplacer(Container& x)
+		: container(x)
+	{}
 
-   template<class U>
-   back_emplacer& operator=(BOOST_FWD_REF(U) value)
-   {
-      container.emplace_back(boost::forward<U>(value));
-      return *this;
-   }
-   back_emplacer& operator*()    { return *this; }
-   back_emplacer& operator++()   { return *this; }
-   back_emplacer& operator++(int){ return *this; }
+	template<class U>
+	back_emplacer& operator=(BOOST_FWD_REF(U) value)
+	{
+		container.emplace_back(boost::forward<U>(value));
+		return *this;
+	}
+	back_emplacer& operator*()
+	{
+		return *this;
+	}
+	back_emplacer& operator++()
+	{
+		return *this;
+	}
+	back_emplacer& operator++(int)
+	{
+		return *this;
+	}
 };
 
 

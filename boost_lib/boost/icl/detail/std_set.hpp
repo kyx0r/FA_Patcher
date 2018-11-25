@@ -14,32 +14,39 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/icl/type_traits/is_set.hpp>
 
 
-namespace boost{namespace icl
+namespace boost
+{
+namespace icl
 {
 
 template <class Type>
 struct is_set<std::set<Type> >
-{ 
-    typedef is_set<std::set<Type> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true); 
+{
+	typedef is_set<std::set<Type> > type;
+	BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 
 template <class Type>
 struct type_to_string<std::set<Type> >
 {
-    static std::string apply()
-    { return "set<"+ type_to_string<Type>::apply() +">"; }
+	static std::string apply()
+	{
+		return "set<"+ type_to_string<Type>::apply() +">";
+	}
 };
 
 template <class Type>
 struct type_to_string<std::set<Type, std::greater<Type> > >
 {
-    static std::string apply()
-    { return "set<"+ type_to_string<Type>::apply() +" g>"; }
+	static std::string apply()
+	{
+		return "set<"+ type_to_string<Type>::apply() +" g>";
+	}
 };
 
-}} // namespace icl boost
+}
+} // namespace icl boost
 
 #endif // BOOST_ICL_DETAIL_STD_SET_HPP_JOFA_101007
 

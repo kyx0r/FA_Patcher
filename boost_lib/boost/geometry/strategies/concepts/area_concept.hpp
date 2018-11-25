@@ -19,7 +19,11 @@
 #include <boost/concept_check.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -32,42 +36,44 @@ class AreaStrategy
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 
-    // 1) must define state template,
-    typedef typename Strategy::template state<Geometry> state_type;
+	// 1) must define state template,
+	typedef typename Strategy::template state<Geometry> state_type;
 
-    // 2) must define result_type template,
-    typedef typename Strategy::template result_type<Geometry>::type return_type;
+	// 2) must define result_type template,
+	typedef typename Strategy::template result_type<Geometry>::type return_type;
 
-    struct check_methods
-    {
-        static void apply()
-        {
-            Strategy const* str = 0;
-            state_type *st = 0;
+	struct check_methods
+	{
+		static void apply()
+		{
+			Strategy const* str = 0;
+			state_type *st = 0;
 
-            // 3) must implement a method apply with the following signature
-            typename geometry::point_type<Geometry>::type const* sp = 0;
-            str->apply(*sp, *sp, *st);
+			// 3) must implement a method apply with the following signature
+			typename geometry::point_type<Geometry>::type const* sp = 0;
+			str->apply(*sp, *sp, *st);
 
-            // 4) must implement a static method result with the following signature
-            return_type r = str->result(*st);
+			// 4) must implement a static method result with the following signature
+			return_type r = str->result(*st);
 
-            boost::ignore_unused_variable_warning(r);
-            boost::ignore_unused_variable_warning(str);
-        }
-    };
+			boost::ignore_unused_variable_warning(r);
+			boost::ignore_unused_variable_warning(str);
+		}
+	};
 
 public :
-    BOOST_CONCEPT_USAGE(AreaStrategy)
-    {
-        check_methods::apply();
-    }
+	BOOST_CONCEPT_USAGE(AreaStrategy)
+	{
+		check_methods::apply();
+	}
 
 #endif
 };
 
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CONCEPTS_AREA_CONCEPT_HPP

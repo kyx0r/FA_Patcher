@@ -19,7 +19,9 @@
 #include <boost/geometry/strategies/area_result.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -31,11 +33,12 @@ namespace boost { namespace geometry
 
 template <typename Geometry>
 struct default_area_result
-    : area_result<Geometry>
+	: area_result<Geometry>
 {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_DEFAULT_AREA_RESULT_HPP

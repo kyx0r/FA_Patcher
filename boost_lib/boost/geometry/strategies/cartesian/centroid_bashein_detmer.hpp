@@ -34,13 +34,17 @@
 #include <boost/geometry/util/select_coordinate_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 // Note: when calling the namespace "centroid", it sometimes,
 // somehow, in gcc, gives compilation problems (confusion with function centroid).
 
-namespace strategy { namespace centroid
+namespace strategy
+{
+namespace centroid
 {
 
 
@@ -123,106 +127,106 @@ template
     typename Point,
     typename PointOfSegment = Point,
     typename CalculationType = void
->
+    >
 class bashein_detmer
 {
 private :
-    // If user specified a calculation type, use that type,
-    //   whatever it is and whatever the point-type(s) are.
-    // Else, use the most appropriate coordinate type
-    //    of the two points, but at least double
-    typedef typename
-        boost::mpl::if_c
-        <
-            boost::is_void<CalculationType>::type::value,
-            typename select_most_precise
-            <
-                typename select_coordinate_type
-                    <
-                        Point,
-                        PointOfSegment
-                    >::type,
-                double
-            >::type,
-            CalculationType
-        >::type calculation_type;
+	// If user specified a calculation type, use that type,
+	//   whatever it is and whatever the point-type(s) are.
+	// Else, use the most appropriate coordinate type
+	//    of the two points, but at least double
+	typedef typename
+	boost::mpl::if_c
+	<
+	boost::is_void<CalculationType>::type::value,
+	      typename select_most_precise
+	      <
+	      typename select_coordinate_type
+	      <
+	      Point,
+	      PointOfSegment
+	      >::type,
+	      double
+	      >::type,
+	      CalculationType
+	      >::type calculation_type;
 
-    /*! subclass to keep state */
-    class sums
-    {
-        friend class bashein_detmer;
-        std::size_t count;
-        calculation_type sum_a2;
-        calculation_type sum_x;
-        calculation_type sum_y;
+	/*! subclass to keep state */
+	class sums
+	{
+		friend class bashein_detmer;
+		std::size_t count;
+		calculation_type sum_a2;
+		calculation_type sum_x;
+		calculation_type sum_y;
 
-    public :
-        inline sums()
-            : count(0)
-            , sum_a2(calculation_type())
-            , sum_x(calculation_type())
-            , sum_y(calculation_type())
-        {}
-    };
+	public :
+		inline sums()
+			: count(0)
+			, sum_a2(calculation_type())
+			, sum_x(calculation_type())
+			, sum_y(calculation_type())
+		{}
+	};
 
 public :
-    typedef sums state_type;
+	typedef sums state_type;
 
-    static inline void apply(PointOfSegment const& p1,
-            PointOfSegment const& p2, sums& state)
-    {
-        /* Algorithm:
-        For each segment:
-        begin
-            ai = x1 * y2 - x2 * y1;
-            sum_a2 += ai;
-            sum_x += ai * (x1 + x2);
-            sum_y += ai * (y1 + y2);
-        end
-        return POINT(sum_x / (3 * sum_a2), sum_y / (3 * sum_a2) )
-        */
+	static inline void apply(PointOfSegment const& p1,
+	                         PointOfSegment const& p2, sums& state)
+	{
+		/* Algorithm:
+		For each segment:
+		begin
+		    ai = x1 * y2 - x2 * y1;
+		    sum_a2 += ai;
+		    sum_x += ai * (x1 + x2);
+		    sum_y += ai * (y1 + y2);
+		end
+		return POINT(sum_x / (3 * sum_a2), sum_y / (3 * sum_a2) )
+		*/
 
-        // Get coordinates and promote them to calculation_type
-        calculation_type const x1 = boost::numeric_cast<calculation_type>(get<0>(p1));
-        calculation_type const y1 = boost::numeric_cast<calculation_type>(get<1>(p1));
-        calculation_type const x2 = boost::numeric_cast<calculation_type>(get<0>(p2));
-        calculation_type const y2 = boost::numeric_cast<calculation_type>(get<1>(p2));
-        calculation_type const ai = geometry::detail::determinant<calculation_type>(p1, p2);
-        state.count++;
-        state.sum_a2 += ai;
-        state.sum_x += ai * (x1 + x2);
-        state.sum_y += ai * (y1 + y2);
-    }
+		// Get coordinates and promote them to calculation_type
+		calculation_type const x1 = boost::numeric_cast<calculation_type>(get<0>(p1));
+		calculation_type const y1 = boost::numeric_cast<calculation_type>(get<1>(p1));
+		calculation_type const x2 = boost::numeric_cast<calculation_type>(get<0>(p2));
+		calculation_type const y2 = boost::numeric_cast<calculation_type>(get<1>(p2));
+		calculation_type const ai = geometry::detail::determinant<calculation_type>(p1, p2);
+		state.count++;
+		state.sum_a2 += ai;
+		state.sum_x += ai * (x1 + x2);
+		state.sum_y += ai * (y1 + y2);
+	}
 
-    static inline bool result(sums const& state, Point& centroid)
-    {
-        calculation_type const zero = calculation_type();
-        if (state.count > 0 && ! math::equals(state.sum_a2, zero))
-        {
-            calculation_type const v3 = 3;
-            calculation_type const a3 = v3 * state.sum_a2;
+	static inline bool result(sums const& state, Point& centroid)
+	{
+		calculation_type const zero = calculation_type();
+		if (state.count > 0 && ! math::equals(state.sum_a2, zero))
+		{
+			calculation_type const v3 = 3;
+			calculation_type const a3 = v3 * state.sum_a2;
 
-            typedef typename geometry::coordinate_type
-                <
-                    Point
-                >::type coordinate_type;
+			typedef typename geometry::coordinate_type
+			<
+			Point
+			>::type coordinate_type;
 
-            // Prevent NaN centroid coordinates
-            if (boost::math::isfinite(a3))
-            {
-                // NOTE: above calculation_type is checked, not the centroid coordinate_type
-                // which means that the centroid can still be filled with INF
-                // if e.g. calculation_type is double and centroid contains floats
-                set<0>(centroid,
-                    boost::numeric_cast<coordinate_type>(state.sum_x / a3));
-                set<1>(centroid,
-                    boost::numeric_cast<coordinate_type>(state.sum_y / a3));
-                return true;
-            }
-        }
+			// Prevent NaN centroid coordinates
+			if (boost::math::isfinite(a3))
+			{
+				// NOTE: above calculation_type is checked, not the centroid coordinate_type
+				// which means that the centroid can still be filled with INF
+				// if e.g. calculation_type is double and centroid contains floats
+				set<0>(centroid,
+				       boost::numeric_cast<coordinate_type>(state.sum_x / a3));
+				set<1>(centroid,
+				       boost::numeric_cast<coordinate_type>(state.sum_y / a3));
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 };
 
@@ -235,11 +239,11 @@ namespace services
 template <typename Point, typename Geometry>
 struct default_strategy<cartesian_tag, areal_tag, 2, Point, Geometry>
 {
-    typedef bashein_detmer
-        <
-            Point,
-            typename point_type<Geometry>::type
-        > type;
+	typedef bashein_detmer
+	<
+	Point,
+	typename point_type<Geometry>::type
+	> type;
 };
 
 
@@ -249,10 +253,12 @@ struct default_strategy<cartesian_tag, areal_tag, 2, Point, Geometry>
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::centroid
+}
+} // namespace strategy::centroid
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_CENTROID_BASHEIN_DETMER_HPP

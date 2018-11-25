@@ -8,14 +8,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class Line, class Col, class PrevChar>
-      struct source_position;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class Line, class Col, class PrevChar>
+struct source_position;
+}
+}
 }
 
 #endif

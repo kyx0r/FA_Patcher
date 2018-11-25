@@ -41,259 +41,264 @@
 #include <boost/geometry/util/range.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace copy_segments
+namespace detail
+{
+namespace copy_segments
 {
 
 
 template <bool Reverse>
 struct copy_segments_ring
 {
-    template
-    <
-        typename Ring,
-        typename SegmentIdentifier,
-        typename SideStrategy,
-        typename RobustPolicy,
-        typename RangeOut
-    >
-    static inline void apply(Ring const& ring,
-            SegmentIdentifier const& seg_id,
-            signed_size_type to_index,
-            SideStrategy const& strategy,
-            RobustPolicy const& robust_policy,
-            RangeOut& current_output)
-    {
-        typedef typename closeable_view
-        <
-            Ring const,
-            closure<Ring>::value
-        >::type cview_type;
+	template
+	<
+	    typename Ring,
+	    typename SegmentIdentifier,
+	    typename SideStrategy,
+	    typename RobustPolicy,
+	    typename RangeOut
+	    >
+	static inline void apply(Ring const& ring,
+	                         SegmentIdentifier const& seg_id,
+	                         signed_size_type to_index,
+	                         SideStrategy const& strategy,
+	                         RobustPolicy const& robust_policy,
+	                         RangeOut& current_output)
+	{
+		typedef typename closeable_view
+		<
+		Ring const,
+		     closure<Ring>::value
+		     >::type cview_type;
 
-        typedef typename reversible_view
-        <
-            cview_type const,
-            Reverse ? iterate_reverse : iterate_forward
-        >::type rview_type;
+		typedef typename reversible_view
+		<
+		cview_type const,
+		           Reverse ? iterate_reverse : iterate_forward
+		           >::type rview_type;
 
-        typedef typename boost::range_iterator<rview_type const>::type iterator;
-        typedef geometry::ever_circling_iterator<iterator> ec_iterator;
+		typedef typename boost::range_iterator<rview_type const>::type iterator;
+		typedef geometry::ever_circling_iterator<iterator> ec_iterator;
 
 
-        cview_type cview(ring);
-        rview_type view(cview);
+		cview_type cview(ring);
+		rview_type view(cview);
 
-        // The problem: sometimes we want to from "3" to "2"
-        // -> end = "3" -> end == begin
-        // This is not convenient with iterators.
+		// The problem: sometimes we want to from "3" to "2"
+		// -> end = "3" -> end == begin
+		// This is not convenient with iterators.
 
-        // So we use the ever-circling iterator and determine when to step out
+		// So we use the ever-circling iterator and determine when to step out
 
-        signed_size_type const from_index = seg_id.segment_index + 1;
+		signed_size_type const from_index = seg_id.segment_index + 1;
 
-        // Sanity check
-        BOOST_GEOMETRY_ASSERT(from_index < static_cast<signed_size_type>(boost::size(view)));
+		// Sanity check
+		BOOST_GEOMETRY_ASSERT(from_index < static_cast<signed_size_type>(boost::size(view)));
 
-        ec_iterator it(boost::begin(view), boost::end(view),
-                    boost::begin(view) + from_index);
+		ec_iterator it(boost::begin(view), boost::end(view),
+		               boost::begin(view) + from_index);
 
-        // [2..4] -> 4 - 2 + 1 = 3 -> {2,3,4} -> OK
-        // [4..2],size=6 -> 6 - 4 + 2 + 1 = 5 -> {4,5,0,1,2} -> OK
-        // [1..1], travel the whole ring round
-        signed_size_type const count = from_index <= to_index
-            ? to_index - from_index + 1
-            : static_cast<signed_size_type>(boost::size(view))
-                - from_index + to_index + 1;
+		// [2..4] -> 4 - 2 + 1 = 3 -> {2,3,4} -> OK
+		// [4..2],size=6 -> 6 - 4 + 2 + 1 = 5 -> {4,5,0,1,2} -> OK
+		// [1..1], travel the whole ring round
+		signed_size_type const count = from_index <= to_index
+		                               ? to_index - from_index + 1
+		                               : static_cast<signed_size_type>(boost::size(view))
+		                               - from_index + to_index + 1;
 
-        for (signed_size_type i = 0; i < count; ++i, ++it)
-        {
-            detail::overlay::append_no_dups_or_spikes(current_output, *it, strategy, robust_policy);
-        }
-    }
+		for (signed_size_type i = 0; i < count; ++i, ++it)
+		{
+			detail::overlay::append_no_dups_or_spikes(current_output, *it, strategy, robust_policy);
+		}
+	}
 };
 
 template <bool Reverse, bool RemoveSpikes = true>
 class copy_segments_linestring
 {
 private:
-    // remove spikes
-    template <typename RangeOut, typename Point, typename SideStrategy, typename RobustPolicy>
-    static inline void append_to_output(RangeOut& current_output,
-                                        Point const& point,
-                                        SideStrategy const& strategy,
-                                        RobustPolicy const& robust_policy,
-                                        boost::true_type const&)
-    {
-        detail::overlay::append_no_dups_or_spikes(current_output, point,
-                                                  strategy,
-                                                  robust_policy);
-    }
+	// remove spikes
+	template <typename RangeOut, typename Point, typename SideStrategy, typename RobustPolicy>
+	static inline void append_to_output(RangeOut& current_output,
+	                                    Point const& point,
+	                                    SideStrategy const& strategy,
+	                                    RobustPolicy const& robust_policy,
+	                                    boost::true_type const&)
+	{
+		detail::overlay::append_no_dups_or_spikes(current_output, point,
+		        strategy,
+		        robust_policy);
+	}
 
-    // keep spikes
-    template <typename RangeOut, typename Point, typename SideStrategy, typename RobustPolicy>
-    static inline void append_to_output(RangeOut& current_output,
-                                        Point const& point,
-                                        SideStrategy const&,
-                                        RobustPolicy const&,
-                                        boost::false_type const&)
-    {
-        detail::overlay::append_no_duplicates(current_output, point);
-    }
+	// keep spikes
+	template <typename RangeOut, typename Point, typename SideStrategy, typename RobustPolicy>
+	static inline void append_to_output(RangeOut& current_output,
+	                                    Point const& point,
+	                                    SideStrategy const&,
+	                                    RobustPolicy const&,
+	                                    boost::false_type const&)
+	{
+		detail::overlay::append_no_duplicates(current_output, point);
+	}
 
 public:
-    template
-    <
-        typename LineString,
-        typename SegmentIdentifier,
-        typename SideStrategy,
-        typename RobustPolicy,
-        typename RangeOut
-    >
-    static inline void apply(LineString const& ls,
-            SegmentIdentifier const& seg_id,
-            signed_size_type to_index,
-            SideStrategy const& strategy,
-            RobustPolicy const& robust_policy,
-            RangeOut& current_output)
-    {
-        signed_size_type const from_index = seg_id.segment_index + 1;
+	template
+	<
+	    typename LineString,
+	    typename SegmentIdentifier,
+	    typename SideStrategy,
+	    typename RobustPolicy,
+	    typename RangeOut
+	    >
+	static inline void apply(LineString const& ls,
+	                         SegmentIdentifier const& seg_id,
+	                         signed_size_type to_index,
+	                         SideStrategy const& strategy,
+	                         RobustPolicy const& robust_policy,
+	                         RangeOut& current_output)
+	{
+		signed_size_type const from_index = seg_id.segment_index + 1;
 
-        // Sanity check
-        if ( from_index > to_index
-          || from_index < 0
-          || to_index >= static_cast<signed_size_type>(boost::size(ls)) )
-        {
-            return;
-        }
+		// Sanity check
+		if ( from_index > to_index
+		        || from_index < 0
+		        || to_index >= static_cast<signed_size_type>(boost::size(ls)) )
+		{
+			return;
+		}
 
-        signed_size_type const count = to_index - from_index + 1;
+		signed_size_type const count = to_index - from_index + 1;
 
-        typename boost::range_iterator<LineString const>::type
-            it = boost::begin(ls) + from_index;
+		typename boost::range_iterator<LineString const>::type
+		it = boost::begin(ls) + from_index;
 
-        for (signed_size_type i = 0; i < count; ++i, ++it)
-        {
-            append_to_output(current_output, *it, strategy, robust_policy,
-                             boost::integral_constant<bool, RemoveSpikes>());
-        }
-    }
+		for (signed_size_type i = 0; i < count; ++i, ++it)
+		{
+			append_to_output(current_output, *it, strategy, robust_policy,
+			                 boost::integral_constant<bool, RemoveSpikes>());
+		}
+	}
 };
 
 template <bool Reverse>
 struct copy_segments_polygon
 {
-    template
-    <
-        typename Polygon,
-        typename SegmentIdentifier,
-        typename SideStrategy,
-        typename RobustPolicy,
-        typename RangeOut
-    >
-    static inline void apply(Polygon const& polygon,
-            SegmentIdentifier const& seg_id,
-            signed_size_type to_index,
-            SideStrategy const& strategy,
-            RobustPolicy const& robust_policy,
-            RangeOut& current_output)
-    {
-        // Call ring-version with the right ring
-        copy_segments_ring<Reverse>::apply
-            (
-                seg_id.ring_index < 0
-                    ? geometry::exterior_ring(polygon)
-                    : range::at(geometry::interior_rings(polygon), seg_id.ring_index),
-                seg_id, to_index,
-                strategy,
-                robust_policy,
-                current_output
-            );
-    }
+	template
+	<
+	    typename Polygon,
+	    typename SegmentIdentifier,
+	    typename SideStrategy,
+	    typename RobustPolicy,
+	    typename RangeOut
+	    >
+	static inline void apply(Polygon const& polygon,
+	                         SegmentIdentifier const& seg_id,
+	                         signed_size_type to_index,
+	                         SideStrategy const& strategy,
+	                         RobustPolicy const& robust_policy,
+	                         RangeOut& current_output)
+	{
+		// Call ring-version with the right ring
+		copy_segments_ring<Reverse>::apply
+		(
+		    seg_id.ring_index < 0
+		    ? geometry::exterior_ring(polygon)
+		    : range::at(geometry::interior_rings(polygon), seg_id.ring_index),
+		    seg_id, to_index,
+		    strategy,
+		    robust_policy,
+		    current_output
+		);
+	}
 };
 
 
 template <bool Reverse>
 struct copy_segments_box
 {
-    template
-    <
-        typename Box,
-        typename SegmentIdentifier,
-        typename SideStrategy,
-        typename RobustPolicy,
-        typename RangeOut
-    >
-    static inline void apply(Box const& box,
-            SegmentIdentifier const& seg_id,
-            signed_size_type to_index,
-            SideStrategy const& strategy,
-            RobustPolicy const& robust_policy,
-            RangeOut& current_output)
-    {
-        signed_size_type index = seg_id.segment_index + 1;
-        BOOST_GEOMETRY_ASSERT(index < 5);
+	template
+	<
+	    typename Box,
+	    typename SegmentIdentifier,
+	    typename SideStrategy,
+	    typename RobustPolicy,
+	    typename RangeOut
+	    >
+	static inline void apply(Box const& box,
+	                         SegmentIdentifier const& seg_id,
+	                         signed_size_type to_index,
+	                         SideStrategy const& strategy,
+	                         RobustPolicy const& robust_policy,
+	                         RangeOut& current_output)
+	{
+		signed_size_type index = seg_id.segment_index + 1;
+		BOOST_GEOMETRY_ASSERT(index < 5);
 
-        signed_size_type const count = index <= to_index
-            ? to_index - index + 1
-            : 5 - index + to_index + 1;
+		signed_size_type const count = index <= to_index
+		                               ? to_index - index + 1
+		                               : 5 - index + to_index + 1;
 
-        // Create array of points, the fifth one closes it
-        boost::array<typename point_type<Box>::type, 5> bp;
-        assign_box_corners_oriented<Reverse>(box, bp);
-        bp[4] = bp[0];
+		// Create array of points, the fifth one closes it
+		boost::array<typename point_type<Box>::type, 5> bp;
+		assign_box_corners_oriented<Reverse>(box, bp);
+		bp[4] = bp[0];
 
-        // (possibly cyclic) copy to output
-        //    (see comments in ring-version)
-        for (signed_size_type i = 0; i < count; i++, index++)
-        {
-            detail::overlay::append_no_dups_or_spikes(current_output,
-                bp[index % 5], strategy, robust_policy);
+		// (possibly cyclic) copy to output
+		//    (see comments in ring-version)
+		for (signed_size_type i = 0; i < count; i++, index++)
+		{
+			detail::overlay::append_no_dups_or_spikes(current_output,
+			        bp[index % 5], strategy, robust_policy);
 
-        }
-    }
+		}
+	}
 };
 
 
 template<typename Policy>
 struct copy_segments_multi
 {
-    template
-    <
-        typename MultiGeometry,
-        typename SegmentIdentifier,
-        typename SideStrategy,
-        typename RobustPolicy,
-        typename RangeOut
-    >
-    static inline void apply(MultiGeometry const& multi_geometry,
-            SegmentIdentifier const& seg_id,
-            signed_size_type to_index,
-            SideStrategy const& strategy,
-            RobustPolicy const& robust_policy,
-            RangeOut& current_output)
-    {
+	template
+	<
+	    typename MultiGeometry,
+	    typename SegmentIdentifier,
+	    typename SideStrategy,
+	    typename RobustPolicy,
+	    typename RangeOut
+	    >
+	static inline void apply(MultiGeometry const& multi_geometry,
+	                         SegmentIdentifier const& seg_id,
+	                         signed_size_type to_index,
+	                         SideStrategy const& strategy,
+	                         RobustPolicy const& robust_policy,
+	                         RangeOut& current_output)
+	{
 
-        BOOST_GEOMETRY_ASSERT
-            (
-                seg_id.multi_index >= 0
-                && static_cast<std::size_t>(seg_id.multi_index) < boost::size(multi_geometry)
-            );
+		BOOST_GEOMETRY_ASSERT
+		(
+		    seg_id.multi_index >= 0
+		    && static_cast<std::size_t>(seg_id.multi_index) < boost::size(multi_geometry)
+		);
 
-        // Call the single-version
-        Policy::apply(range::at(multi_geometry, seg_id.multi_index),
-                      seg_id, to_index,
-                      strategy,
-                      robust_policy,
-                      current_output);
-    }
+		// Call the single-version
+		Policy::apply(range::at(multi_geometry, seg_id.multi_index),
+		              seg_id, to_index,
+		              strategy,
+		              robust_policy,
+		              current_output);
+	}
 };
 
 
-}} // namespace detail::copy_segments
+}
+} // namespace detail::copy_segments
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -305,40 +310,40 @@ template
 <
     typename Tag,
     bool Reverse
->
+    >
 struct copy_segments : not_implemented<Tag>
 {};
 
 
 template <bool Reverse>
 struct copy_segments<ring_tag, Reverse>
-    : detail::copy_segments::copy_segments_ring<Reverse>
+	: detail::copy_segments::copy_segments_ring<Reverse>
 {};
 
 
 template <bool Reverse>
 struct copy_segments<linestring_tag, Reverse>
-    : detail::copy_segments::copy_segments_linestring<Reverse>
+	: detail::copy_segments::copy_segments_linestring<Reverse>
 {};
 
 template <bool Reverse>
 struct copy_segments<polygon_tag, Reverse>
-    : detail::copy_segments::copy_segments_polygon<Reverse>
+	: detail::copy_segments::copy_segments_polygon<Reverse>
 {};
 
 
 template <bool Reverse>
 struct copy_segments<box_tag, Reverse>
-    : detail::copy_segments::copy_segments_box<Reverse>
+	: detail::copy_segments::copy_segments_box<Reverse>
 {};
 
 
 template<bool Reverse>
 struct copy_segments<multi_polygon_tag, Reverse>
-    : detail::copy_segments::copy_segments_multi
-        <
-            detail::copy_segments::copy_segments_polygon<Reverse>
-        >
+	: detail::copy_segments::copy_segments_multi
+	  <
+	  detail::copy_segments::copy_segments_polygon<Reverse>
+	  >
 {};
 
 
@@ -359,25 +364,26 @@ template
     typename SideStrategy,
     typename RobustPolicy,
     typename RangeOut
->
+    >
 inline void copy_segments(Geometry const& geometry,
-            SegmentIdentifier const& seg_id,
-            signed_size_type to_index,
-            SideStrategy const& strategy,
-            RobustPolicy const& robust_policy,
-            RangeOut& range_out)
+                          SegmentIdentifier const& seg_id,
+                          signed_size_type to_index,
+                          SideStrategy const& strategy,
+                          RobustPolicy const& robust_policy,
+                          RangeOut& range_out)
 {
-    concepts::check<Geometry const>();
+	concepts::check<Geometry const>();
 
-    dispatch::copy_segments
-        <
-            typename tag<Geometry>::type,
-            Reverse
-        >::apply(geometry, seg_id, to_index, strategy, robust_policy, range_out);
+	dispatch::copy_segments
+	<
+	typename tag<Geometry>::type,
+	         Reverse
+	         >::apply(geometry, seg_id, to_index, strategy, robust_policy, range_out);
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENTS_HPP

@@ -17,15 +17,18 @@
 # pragma warning(disable : 4714) // function 'xxx' marked as __forceinline not inlined
 #endif
 
-namespace boost { namespace proto
+namespace boost
 {
-    namespace detail
-    {
-        template<typename T>
-        BOOST_FORCEINLINE void ignore_unused(T const &)
-        {}
-    }
-}}
+namespace proto
+{
+namespace detail
+{
+template<typename T>
+BOOST_FORCEINLINE void ignore_unused(T const &)
+{}
+}
+}
+}
 
 #if defined(_MSC_VER)
 # pragma warning(pop)

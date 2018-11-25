@@ -18,8 +18,10 @@
 #include <boost/compute/iterator/zip_iterator.hpp>
 #include <boost/compute/functional/detail/unpack.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Transforms the elements in the range [\p first, \p last) using
 /// operator \p op and stores the results in the range beginning at
@@ -39,12 +41,12 @@ inline OutputIterator transform(InputIterator first,
                                 UnaryOperator op,
                                 command_queue &queue = system::default_queue())
 {
-    return copy(
-               ::boost::compute::make_transform_iterator(first, op),
-               ::boost::compute::make_transform_iterator(last, op),
-               result,
-               queue
-           );
+	return copy(
+	           ::boost::compute::make_transform_iterator(first, op),
+	           ::boost::compute::make_transform_iterator(last, op),
+	           result,
+	           queue
+	       );
 }
 
 /// \overload
@@ -59,17 +61,17 @@ inline OutputIterator transform(InputIterator1 first1,
                                 BinaryOperator op,
                                 command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator1>::difference_type difference_type;
+	typedef typename std::iterator_traits<InputIterator1>::difference_type difference_type;
 
-    difference_type n = std::distance(first1, last1);
+	difference_type n = std::distance(first1, last1);
 
-    return transform(
-               make_zip_iterator(boost::make_tuple(first1, first2)),
-               make_zip_iterator(boost::make_tuple(last1, first2 + n)),
-               result,
-               detail::unpack(op),
-               queue
-           );
+	return transform(
+	           make_zip_iterator(boost::make_tuple(first1, first2)),
+	           make_zip_iterator(boost::make_tuple(last1, first2 + n)),
+	           result,
+	           detail::unpack(op),
+	           queue
+	       );
 }
 
 } // end compute namespace

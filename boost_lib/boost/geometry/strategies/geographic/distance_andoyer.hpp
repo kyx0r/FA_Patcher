@@ -19,10 +19,14 @@
 #include <boost/geometry/strategies/geographic/parameters.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace distance
+namespace strategy
+{
+namespace distance
 {
 
 
@@ -47,26 +51,26 @@ template
 <
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class andoyer
-    : public strategy::distance::geographic
-        <
-            strategy::andoyer, Spheroid, CalculationType
-        >
+	: public strategy::distance::geographic
+	  <
+	  strategy::andoyer, Spheroid, CalculationType
+	  >
 {
-    typedef strategy::distance::geographic
-        <
-            strategy::andoyer, Spheroid, CalculationType
-        > base_type;
+	typedef strategy::distance::geographic
+	<
+	strategy::andoyer, Spheroid, CalculationType
+	> base_type;
 
 public :
-    inline andoyer()
-        : base_type()
-    {}
+	inline andoyer()
+		: base_type()
+	{}
 
-    explicit inline andoyer(Spheroid const& spheroid)
-        : base_type(spheroid)
-    {}
+	explicit inline andoyer(Spheroid const& spheroid)
+		: base_type(spheroid)
+	{}
 };
 
 
@@ -77,41 +81,41 @@ namespace services
 template <typename Spheroid, typename CalculationType>
 struct tag<andoyer<Spheroid, CalculationType> >
 {
-    typedef strategy_tag_distance_point_point type;
+	typedef strategy_tag_distance_point_point type;
 };
 
 
 template <typename Spheroid, typename CalculationType, typename P1, typename P2>
 struct return_type<andoyer<Spheroid, CalculationType>, P1, P2>
-    : andoyer<Spheroid, CalculationType>::template calculation_type<P1, P2>
+	: andoyer<Spheroid, CalculationType>::template calculation_type<P1, P2>
 {};
 
 
 template <typename Spheroid, typename CalculationType>
 struct comparable_type<andoyer<Spheroid, CalculationType> >
 {
-    typedef andoyer<Spheroid, CalculationType> type;
+	typedef andoyer<Spheroid, CalculationType> type;
 };
 
 
 template <typename Spheroid, typename CalculationType>
 struct get_comparable<andoyer<Spheroid, CalculationType> >
 {
-    static inline andoyer<Spheroid, CalculationType> apply(andoyer<Spheroid, CalculationType> const& input)
-    {
-        return input;
-    }
+	static inline andoyer<Spheroid, CalculationType> apply(andoyer<Spheroid, CalculationType> const& input)
+	{
+		return input;
+	}
 };
 
 template <typename Spheroid, typename CalculationType, typename P1, typename P2>
 struct result_from_distance<andoyer<Spheroid, CalculationType>, P1, P2>
 {
-    template <typename T>
-    static inline typename return_type<andoyer<Spheroid, CalculationType>, P1, P2>::type
-        apply(andoyer<Spheroid, CalculationType> const& , T const& value)
-    {
-        return value;
-    }
+	template <typename T>
+	static inline typename return_type<andoyer<Spheroid, CalculationType>, P1, P2>::type
+	apply(andoyer<Spheroid, CalculationType> const&, T const& value)
+	{
+		return value;
+	}
 };
 
 
@@ -119,10 +123,12 @@ struct result_from_distance<andoyer<Spheroid, CalculationType>, P1, P2>
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::distance
+}
+} // namespace strategy::distance
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_DISTANCE_DETAIL_HPP

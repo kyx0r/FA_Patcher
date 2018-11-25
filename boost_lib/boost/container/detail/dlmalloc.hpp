@@ -24,8 +24,10 @@
 
 #include <boost/container/detail/alloc_lib.h>
 
-namespace boost{
-namespace container{
+namespace boost
+{
+namespace container
+{
 
 typedef boost_cont_command_ret_t dlmalloc_command_ret_t;
 typedef boost_cont_memchain dlmalloc_memchain;
@@ -41,10 +43,10 @@ BOOST_CONTAINER_DECL void  dlmalloc_free(void* mem);
 BOOST_CONTAINER_DECL void* dlmalloc_memalign(size_t bytes, size_t alignment);
 
 BOOST_CONTAINER_DECL int dlmalloc_multialloc_nodes
-   (size_t n_elements, size_t elem_size, size_t contiguous_elements, boost_cont_memchain *pchain);
+(size_t n_elements, size_t elem_size, size_t contiguous_elements, boost_cont_memchain *pchain);
 
 BOOST_CONTAINER_DECL int dlmalloc_multialloc_arrays
-   (size_t n_elements, const size_t *sizes, size_t sizeof_element, size_t contiguous_elements, boost_cont_memchain *pchain);
+(size_t n_elements, const size_t *sizes, size_t sizeof_element, size_t contiguous_elements, boost_cont_memchain *pchain);
 
 BOOST_CONTAINER_DECL void dlmalloc_multidealloc(boost_cont_memchain *pchain);
 
@@ -73,13 +75,13 @@ BOOST_CONTAINER_DECL void* dlmalloc_alloc(size_t minbytes, size_t preferred_byte
 BOOST_CONTAINER_DECL int dlmalloc_malloc_check();
 
 BOOST_CONTAINER_DECL boost_cont_command_ret_t dlmalloc_allocation_command
-   ( allocation_type command
-   , size_t sizeof_object
-   , size_t limit_objects
-   , size_t preferred_objects
-   , size_t *received_objects
-   , void *reuse_ptr
-   );
+( allocation_type command
+  , size_t sizeof_object
+  , size_t limit_objects
+  , size_t preferred_objects
+  , size_t *received_objects
+  , void *reuse_ptr
+);
 
 BOOST_CONTAINER_DECL int dlmalloc_mallopt(int param_number, int value);
 

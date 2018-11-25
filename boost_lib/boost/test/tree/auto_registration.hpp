@@ -27,20 +27,24 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace ut_detail {
+namespace boost
+{
+namespace unit_test
+{
+namespace ut_detail
+{
 
 // ************************************************************************** //
 // **************           auto_test_unit_registrar           ************** //
 // ************************************************************************** //
 
-struct BOOST_TEST_DECL auto_test_unit_registrar {
-    // Constructors
-                auto_test_unit_registrar( test_case* tc, decorator::collector& decorators, counter_t exp_fail = 0 );
-    explicit    auto_test_unit_registrar( const_string ts_name, const_string ts_file, std::size_t ts_line, decorator::collector& decorators );
-    explicit    auto_test_unit_registrar( test_unit_generator const& tc_gen, decorator::collector& decorators );
-    explicit    auto_test_unit_registrar( int );
+struct BOOST_TEST_DECL auto_test_unit_registrar
+{
+	// Constructors
+	auto_test_unit_registrar( test_case* tc, decorator::collector& decorators, counter_t exp_fail = 0 );
+	explicit    auto_test_unit_registrar( const_string ts_name, const_string ts_file, std::size_t ts_line, decorator::collector& decorators );
+	explicit    auto_test_unit_registrar( test_unit_generator const& tc_gen, decorator::collector& decorators );
+	explicit    auto_test_unit_registrar( int );
 };
 
 } // namespace ut_detail

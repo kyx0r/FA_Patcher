@@ -20,9 +20,12 @@
 
 #include <boost/move/detail/iterator_to_raw_pointer.hpp>
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 using ::boost::movelib::iterator_to_raw_pointer;
 

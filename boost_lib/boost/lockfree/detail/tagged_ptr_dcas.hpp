@@ -14,9 +14,12 @@
 
 #include <boost/predef.h>
 
-namespace boost    {
-namespace lockfree {
-namespace detail   {
+namespace boost
+{
+namespace lockfree
+{
+namespace detail
+{
 
 
 
@@ -24,109 +27,109 @@ template <class T>
 class BOOST_ALIGNMENT(2 * sizeof(void*)) tagged_ptr
 {
 public:
-    typedef std::size_t tag_t;
+	typedef std::size_t tag_t;
 
-    /** uninitialized constructor */
-    tagged_ptr(void) BOOST_NOEXCEPT//: ptr(0), tag(0)
-    {}
+	/** uninitialized constructor */
+	tagged_ptr(void) BOOST_NOEXCEPT//: ptr(0), tag(0)
+	{}
 
 #ifdef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
-    tagged_ptr(tagged_ptr const & p):
-        ptr(p.ptr), tag(p.tag)
-    {}
+	tagged_ptr(tagged_ptr const & p):
+		ptr(p.ptr), tag(p.tag)
+	{}
 #else
-    tagged_ptr(tagged_ptr const & p) = default;
+	tagged_ptr(tagged_ptr const & p) = default;
 #endif
 
-    explicit tagged_ptr(T * p, tag_t t = 0):
-        ptr(p), tag(t)
-    {}
+	explicit tagged_ptr(T * p, tag_t t = 0):
+		ptr(p), tag(t)
+	{}
 
-    /** unsafe set operation */
-    /* @{ */
+	/** unsafe set operation */
+	/* @{ */
 #ifdef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
-    tagged_ptr & operator= (tagged_ptr const & p)
-    {
-        set(p.ptr, p.tag);
-        return *this;
-    }
+	tagged_ptr & operator= (tagged_ptr const & p)
+	{
+		set(p.ptr, p.tag);
+		return *this;
+	}
 #else
-    tagged_ptr & operator= (tagged_ptr const & p) = default;
+	tagged_ptr & operator= (tagged_ptr const & p) = default;
 #endif
 
-    void set(T * p, tag_t t)
-    {
-        ptr = p;
-        tag = t;
-    }
-    /* @} */
+	void set(T * p, tag_t t)
+	{
+		ptr = p;
+		tag = t;
+	}
+	/* @} */
 
-    /** comparing semantics */
-    /* @{ */
-    bool operator== (volatile tagged_ptr const & p) const
-    {
-        return (ptr == p.ptr) && (tag == p.tag);
-    }
+	/** comparing semantics */
+	/* @{ */
+	bool operator== (volatile tagged_ptr const & p) const
+	{
+		return (ptr == p.ptr) && (tag == p.tag);
+	}
 
-    bool operator!= (volatile tagged_ptr const & p) const
-    {
-        return !operator==(p);
-    }
-    /* @} */
+	bool operator!= (volatile tagged_ptr const & p) const
+	{
+		return !operator==(p);
+	}
+	/* @} */
 
-    /** pointer access */
-    /* @{ */
-    T * get_ptr(void) const
-    {
-        return ptr;
-    }
+	/** pointer access */
+	/* @{ */
+	T * get_ptr(void) const
+	{
+		return ptr;
+	}
 
-    void set_ptr(T * p)
-    {
-        ptr = p;
-    }
-    /* @} */
+	void set_ptr(T * p)
+	{
+		ptr = p;
+	}
+	/* @} */
 
-    /** tag access */
-    /* @{ */
-    tag_t get_tag() const
-    {
-        return tag;
-    }
+	/** tag access */
+	/* @{ */
+	tag_t get_tag() const
+	{
+		return tag;
+	}
 
-    tag_t get_next_tag() const
-    {
-        tag_t next = (get_tag() + 1) & (std::numeric_limits<tag_t>::max)();
-        return next;
-    }
+	tag_t get_next_tag() const
+	{
+		tag_t next = (get_tag() + 1) & (std::numeric_limits<tag_t>::max)();
+		return next;
+	}
 
-    void set_tag(tag_t t)
-    {
-        tag = t;
-    }
-    /* @} */
+	void set_tag(tag_t t)
+	{
+		tag = t;
+	}
+	/* @} */
 
-    /** smart pointer support  */
-    /* @{ */
-    T & operator*() const
-    {
-        return *ptr;
-    }
+	/** smart pointer support  */
+	/* @{ */
+	T & operator*() const
+	{
+		return *ptr;
+	}
 
-    T * operator->() const
-    {
-        return ptr;
-    }
+	T * operator->() const
+	{
+		return ptr;
+	}
 
-    operator bool(void) const
-    {
-        return ptr != 0;
-    }
-    /* @} */
+	operator bool(void) const
+	{
+		return ptr != 0;
+	}
+	/* @} */
 
 protected:
-    T * ptr;
-    tag_t tag;
+	T * ptr;
+	tag_t tag;
 };
 
 } /* namespace detail */

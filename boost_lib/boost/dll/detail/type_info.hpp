@@ -16,7 +16,12 @@
 #include <boost/winapi/basic_types.hpp>
 #endif
 
-namespace boost { namespace dll { namespace detail {
+namespace boost
+{
+namespace dll
+{
+namespace detail
+{
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
 
@@ -25,25 +30,25 @@ namespace boost { namespace dll { namespace detail {
 template<typename Class, typename Lib, typename Storage>
 const std::type_info& load_type_info(Lib & lib, Storage & storage)
 {
-    struct RTTICompleteObjectLocator
-    {
-        boost::winapi::DWORD_ signature; //always zero ?
-        boost::winapi::DWORD_ offset;    //offset of this vtable in the complete class
-        boost::winapi::DWORD_ cdOffset;  //constructor displacement offset
-        boost::winapi::DWORD_ pTypeDescriptorOffset; //TypeDescriptor of the complete class
-        boost::winapi::DWORD_ pClassDescriptorOffset; //describes inheritance hierarchy (ignored)
-    };
+	struct RTTICompleteObjectLocator
+	{
+		boost::winapi::DWORD_ signature; //always zero ?
+		boost::winapi::DWORD_ offset;    //offset of this vtable in the complete class
+		boost::winapi::DWORD_ cdOffset;  //constructor displacement offset
+		boost::winapi::DWORD_ pTypeDescriptorOffset; //TypeDescriptor of the complete class
+		boost::winapi::DWORD_ pClassDescriptorOffset; //describes inheritance hierarchy (ignored)
+	};
 
-    RTTICompleteObjectLocator** vtable_p = &lib.template get<RTTICompleteObjectLocator*>(storage.template get_vtable<Class>());
+	RTTICompleteObjectLocator** vtable_p = &lib.template get<RTTICompleteObjectLocator*>(storage.template get_vtable<Class>());
 
-    vtable_p--;
-    auto vtable = *vtable_p;
+	vtable_p--;
+	auto vtable = *vtable_p;
 
-    auto nat = reinterpret_cast<const char*>(lib.native());
+	auto nat = reinterpret_cast<const char*>(lib.native());
 
-    nat += vtable->pTypeDescriptorOffset;
+	nat += vtable->pTypeDescriptorOffset;
 
-    return *reinterpret_cast<const std::type_info*>(nat);
+	return *reinterpret_cast<const std::type_info*>(nat);
 
 }
 
@@ -52,20 +57,20 @@ const std::type_info& load_type_info(Lib & lib, Storage & storage)
 template<typename Class, typename Lib, typename Storage>
 const std::type_info& load_type_info(Lib & lib, Storage & storage)
 {
-    struct RTTICompleteObjectLocator
-    {
-        boost::winapi::DWORD_ signature; //always zero ?
-        boost::winapi::DWORD_ offset;    //offset of this vtable in the complete class
-        boost::winapi::DWORD_ cdOffset;  //constructor displacement offset
-        const std::type_info* pTypeDescriptor; //TypeDescriptor of the complete class
-        void* pClassDescriptor; //describes inheritance hierarchy (ignored)
-    };
+	struct RTTICompleteObjectLocator
+	{
+		boost::winapi::DWORD_ signature; //always zero ?
+		boost::winapi::DWORD_ offset;    //offset of this vtable in the complete class
+		boost::winapi::DWORD_ cdOffset;  //constructor displacement offset
+		const std::type_info* pTypeDescriptor; //TypeDescriptor of the complete class
+		void* pClassDescriptor; //describes inheritance hierarchy (ignored)
+	};
 
-    RTTICompleteObjectLocator** vtable_p = &lib.template get<RTTICompleteObjectLocator*>(storage.template get_vtable<Class>());
+	RTTICompleteObjectLocator** vtable_p = &lib.template get<RTTICompleteObjectLocator*>(storage.template get_vtable<Class>());
 
-    vtable_p--;
-    auto vtable = *vtable_p;
-    return *vtable->pTypeDescriptor;
+	vtable_p--;
+	auto vtable = *vtable_p;
+	return *vtable->pTypeDescriptor;
 
 }
 
@@ -76,12 +81,14 @@ const std::type_info& load_type_info(Lib & lib, Storage & storage)
 template<typename Class, typename Lib, typename Storage>
 const std::type_info& load_type_info(Lib & lib, Storage & storage)
 {
-    return lib.template get<const std::type_info>(storage.template get_type_info<Class>());
+	return lib.template get<const std::type_info>(storage.template get_type_info<Class>());
 
 }
 
 #endif
 
 
-}}}
+}
+}
+}
 #endif /* BOOST_DLL_DETAIL_TYPE_INFO_HPP_ */

@@ -20,102 +20,115 @@
 #include <sstream>
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace spirit
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Enablers
-    ///////////////////////////////////////////////////////////////////////////
-    template <>
-    struct use_terminal<qi::domain, tag::stream> // enables stream
-      : mpl::true_ {};
+namespace spirit
+{
+///////////////////////////////////////////////////////////////////////////
+// Enablers
+///////////////////////////////////////////////////////////////////////////
+template <>
+struct use_terminal<qi::domain, tag::stream> // enables stream
+	: mpl::true_ {};
 
-    template <>
-    struct use_terminal<qi::domain, tag::wstream> // enables wstream
-      : mpl::true_ {};
-}}
+template <>
+struct use_terminal<qi::domain, tag::wstream> // enables wstream
+	: mpl::true_ {};
+}
+}
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace spirit { namespace qi
+namespace boost
+{
+namespace spirit
+{
+namespace qi
 {
 #ifndef BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
-    using spirit::stream;
-    using spirit::wstream;
+using spirit::stream;
+using spirit::wstream;
 #endif
-    using spirit::stream_type;
-    using spirit::wstream_type;
+using spirit::stream_type;
+using spirit::wstream_type;
 
-    template <typename Char = char, typename T = spirit::basic_hold_any<char> >
-    struct stream_parser
-      : primitive_parser<stream_parser<Char, T> >
-    {
-        template <typename Context, typename Iterator>
-        struct attribute
-        {
-            typedef T type;
-        };
+template <typename Char = char, typename T = spirit::basic_hold_any<char> >
+struct stream_parser
+	: primitive_parser<stream_parser<Char, T> >
+{
+	template <typename Context, typename Iterator>
+	struct attribute
+	{
+		typedef T type;
+	};
 
-        template <typename Iterator, typename Context
-          , typename Skipper, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-          , Context& /*context*/, Skipper const& skipper
-          , Attribute& attr_) const
-        {
-            typedef qi::detail::iterator_source<Iterator> source_device;
-            typedef boost::iostreams::stream<source_device> instream;
+	template <typename Iterator, typename Context
+	          , typename Skipper, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context& /*context*/, Skipper const& skipper
+	           , Attribute& attr_) const
+	{
+		typedef qi::detail::iterator_source<Iterator> source_device;
+		typedef boost::iostreams::stream<source_device> instream;
 
-            qi::skip_over(first, last, skipper);
+		qi::skip_over(first, last, skipper);
 
-            instream in(first, last);           // copies 'first'
-            in >> attr_;                        // use existing operator>>()
+		instream in(first, last);           // copies 'first'
+		in >> attr_;                        // use existing operator>>()
 
-            // advance the iterator if everything is ok
-            if (in) {
-                if (!in.eof()) {
-                    typedef typename
-                        boost::iterator_difference<Iterator>::type diff_type;
+		// advance the iterator if everything is ok
+		if (in)
+		{
+			if (!in.eof())
+			{
+				typedef typename
+				boost::iterator_difference<Iterator>::type diff_type;
 
-                    diff_type pos = static_cast<diff_type>(in.tellg());
-                    std::advance(first, pos);
-                } else {
-                    first = last;
-                }
-                return true;
-            }
+				diff_type pos = static_cast<diff_type>(in.tellg());
+				std::advance(first, pos);
+			}
+			else
+			{
+				first = last;
+			}
+			return true;
+		}
 
-            return false;
-        }
+		return false;
+	}
 
-        template <typename Context>
-        info what(Context& /*context*/) const
-        {
-            return info("stream");
-        }
-    };
+	template <typename Context>
+	info what(Context& /*context*/) const
+	{
+		return info("stream");
+	}
+};
 
-    template <typename T, typename Char = char>
-    struct typed_stream
-      : proto::terminal<stream_parser<Char, T> >::type
-    {
-    };
+template <typename T, typename Char = char>
+struct typed_stream
+	: proto::terminal<stream_parser<Char, T> >::type
+{
+};
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Parser generators: make_xxx function (objects)
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Char>
-    struct make_stream
-    {
-        typedef stream_parser<Char> result_type;
-        result_type operator()(unused_type, unused_type) const
-        {
-            return result_type();
-        }
-    };
+///////////////////////////////////////////////////////////////////////////
+// Parser generators: make_xxx function (objects)
+///////////////////////////////////////////////////////////////////////////
+template <typename Char>
+struct make_stream
+{
+	typedef stream_parser<Char> result_type;
+	result_type operator()(unused_type, unused_type) const
+	{
+		return result_type();
+	}
+};
 
-    template <typename Modifiers>
-    struct make_primitive<tag::stream, Modifiers> : make_stream<char> {};
+template <typename Modifiers>
+struct make_primitive<tag::stream, Modifiers> : make_stream<char> {};
 
-    template <typename Modifiers>
-    struct make_primitive<tag::wstream, Modifiers> : make_stream<wchar_t> {};
-}}}
+template <typename Modifiers>
+struct make_primitive<tag::wstream, Modifiers> : make_stream<wchar_t> {};
+}
+}
+}
 
 #endif

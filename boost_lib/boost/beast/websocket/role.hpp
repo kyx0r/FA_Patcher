@@ -12,9 +12,12 @@
 
 #include <boost/beast/core/detail/config.hpp>
 
-namespace boost {
-namespace beast {
-namespace websocket {
+namespace boost
+{
+namespace beast
+{
+namespace websocket
+{
 
 /** The role of the websocket stream endpoint.
 
@@ -26,7 +29,7 @@ namespace websocket {
     Other next layer types including user-defined types
     may implement different role-based behavior when
     performing the close operation.
-    
+
     The default implementation for @ref stream when the next
     layer type is a `boost::asio::ip::tcp::socket` behaves
     as follows:
@@ -45,11 +48,11 @@ namespace websocket {
 */
 enum class role_type
 {
-    /// The stream is operating as a client.
-    client,
+	/// The stream is operating as a client.
+	client,
 
-    /// The stream is operating as a server.
-    server
+	/// The stream is operating as a server.
+	server
 };
 
 } // websocket

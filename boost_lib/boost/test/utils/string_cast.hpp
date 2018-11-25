@@ -25,9 +25,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace utils {
+namespace boost
+{
+namespace unit_test
+{
+namespace utils
+{
 
 // ************************************************************************** //
 // **************                  string_cast                 ************** //
@@ -37,9 +40,9 @@ template<typename T>
 inline std::string
 string_cast( T const& t )
 {
-    std::ostringstream buff;
-    buff << t;
-    return buff.str();
+	std::ostringstream buff;
+	buff << t;
+	return buff.str();
 }
 
 //____________________________________________________________________________//
@@ -52,10 +55,10 @@ template<typename T>
 inline bool
 string_as( const_string str, T& res )
 {
-    std::istringstream buff( std::string( str.begin(), str.end() ) );
-    buff >> res;
+	std::istringstream buff( std::string( str.begin(), str.end() ) );
+	buff >> res;
 
-    return !buff.fail() && buff.eof();
+	return !buff.fail() && buff.eof();
 }
 
 //____________________________________________________________________________//

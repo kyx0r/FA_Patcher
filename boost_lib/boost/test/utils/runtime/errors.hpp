@@ -30,50 +30,56 @@
 
 #include <boost/test/detail/suppress_warnings.hpp>
 
-namespace boost {
-namespace runtime {
+namespace boost
+{
+namespace runtime
+{
 
 // ************************************************************************** //
 // **************             runtime::param_error             ************** //
 // ************************************************************************** //
 
-class param_error : public std::exception {
+class param_error : public std::exception
+{
 public:
-    ~param_error() BOOST_NOEXCEPT_OR_NOTHROW {}
+	~param_error() BOOST_NOEXCEPT_OR_NOTHROW {}
 
-    virtual const char * what() const BOOST_NOEXCEPT_OR_NOTHROW
-    {
-        return msg.c_str();
-    }
+	virtual const char * what() const BOOST_NOEXCEPT_OR_NOTHROW
+	{
+		return msg.c_str();
+	}
 
-    cstring     param_name;
-    std::string msg;
+	cstring     param_name;
+	std::string msg;
 
 protected:
-    explicit    param_error( cstring param_name_ ) : param_name( param_name_) {}
+	explicit    param_error( cstring param_name_ ) : param_name( param_name_) {}
 };
 
 //____________________________________________________________________________//
 
-class init_error : public param_error {
+class init_error : public param_error
+{
 protected:
-    explicit    init_error( cstring param_name ) : param_error( param_name ) {}
-    ~init_error() BOOST_NOEXCEPT_OR_NOTHROW {}
+	explicit    init_error( cstring param_name ) : param_error( param_name ) {}
+	~init_error() BOOST_NOEXCEPT_OR_NOTHROW {}
 };
 
-class input_error : public param_error {
+class input_error : public param_error
+{
 protected:
-    explicit    input_error( cstring param_name ) : param_error( param_name ) {}
-    ~input_error() BOOST_NOEXCEPT_OR_NOTHROW {}
+	explicit    input_error( cstring param_name ) : param_error( param_name ) {}
+	~input_error() BOOST_NOEXCEPT_OR_NOTHROW {}
 };
 
 //____________________________________________________________________________//
 
 template<typename Derived, typename Base>
-class specific_param_error : public Base {
+class specific_param_error : public Base
+{
 protected:
-    explicit    specific_param_error( cstring param_name ) : Base( param_name ) {}
-    ~specific_param_error() BOOST_NOEXCEPT_OR_NOTHROW {}
+	explicit    specific_param_error( cstring param_name ) : Base( param_name ) {}
+	~specific_param_error() BOOST_NOEXCEPT_OR_NOTHROW {}
 
 public:
 
@@ -82,45 +88,45 @@ public:
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && \
     !defined(BOOST_NO_CXX11_REF_QUALIFIERS)
 
-    Derived operator<<(char const* val) &&
-    {
-        this->msg.append( val );
+	Derived operator<<(char const* val) &&
+	{
+		this->msg.append( val );
 
-        return static_cast<Derived&&>(*this);
-    }
+		return static_cast<Derived&&>(*this);
+	}
 
-    //____________________________________________________________________________//
+	//____________________________________________________________________________//
 
-    template<typename T>
-    Derived operator<<(T const& val) &&
-    {
-        this->msg.append( unit_test::utils::string_cast( val ) );
+	template<typename T>
+	Derived operator<<(T const& val) &&
+	{
+		this->msg.append( unit_test::utils::string_cast( val ) );
 
-        return static_cast<Derived&&>(*this);
-    }
+		return static_cast<Derived&&>(*this);
+	}
 
-    //____________________________________________________________________________//
+	//____________________________________________________________________________//
 
 #else
 
-    Derived const& operator<<(char const* val) const
-    {
-        const_cast<specific_param_error<Derived, Base>&>(*this).msg.append( val );
+	Derived const& operator<<(char const* val) const
+	{
+		const_cast<specific_param_error<Derived, Base>&>(*this).msg.append( val );
 
-        return static_cast<Derived const&>(*this);
-    }
+		return static_cast<Derived const&>(*this);
+	}
 
-    //____________________________________________________________________________//
+	//____________________________________________________________________________//
 
-    template<typename T>
-    Derived const& operator<<(T const& val) const
-    {
-        const_cast<specific_param_error<Derived, Base>&>(*this).msg.append( unit_test::utils::string_cast( val ) );
+	template<typename T>
+	Derived const& operator<<(T const& val) const
+	{
+		const_cast<specific_param_error<Derived, Base>&>(*this).msg.append( unit_test::utils::string_cast( val ) );
 
-        return static_cast<Derived const&>(*this);
-    }
+		return static_cast<Derived const&>(*this);
+	}
 
-    //____________________________________________________________________________//
+	//____________________________________________________________________________//
 
 #endif
 
@@ -155,36 +161,38 @@ SPECIFIC_EX_TYPE( missing_req_arg, input_error );
 
 #undef SPECIFIC_EX_TYPE
 
-class ambiguous_param : public specific_param_error<ambiguous_param, input_error> {
+class ambiguous_param : public specific_param_error<ambiguous_param, input_error>
+{
 public:
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    explicit    ambiguous_param( std::vector<cstring>&& amb_candidates )
-    : specific_param_error<ambiguous_param,input_error>( "" )
-    , m_amb_candidates( std::move( amb_candidates ) ) {}
+	explicit    ambiguous_param( std::vector<cstring>&& amb_candidates )
+		: specific_param_error<ambiguous_param,input_error>( "" )
+		, m_amb_candidates( std::move( amb_candidates ) ) {}
 #else
-    explicit    ambiguous_param( std::vector<cstring> const& amb_candidates )
-    : specific_param_error<ambiguous_param,input_error>( "" )
-    , m_amb_candidates( amb_candidates ) {}
+	explicit    ambiguous_param( std::vector<cstring> const& amb_candidates )
+		: specific_param_error<ambiguous_param,input_error>( "" )
+		, m_amb_candidates( amb_candidates ) {}
 #endif
-    ~ambiguous_param() BOOST_NOEXCEPT_OR_NOTHROW {}
+	~ambiguous_param() BOOST_NOEXCEPT_OR_NOTHROW {}
 
-    std::vector<cstring> m_amb_candidates;
+	std::vector<cstring> m_amb_candidates;
 };
 
-class unrecognized_param : public specific_param_error<unrecognized_param, input_error> {
+class unrecognized_param : public specific_param_error<unrecognized_param, input_error>
+{
 public:
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    explicit    unrecognized_param( std::vector<cstring>&& type_candidates )
-    : specific_param_error<unrecognized_param,input_error>( "" )
-    , m_typo_candidates( std::move( type_candidates ) ) {}
+	explicit    unrecognized_param( std::vector<cstring>&& type_candidates )
+		: specific_param_error<unrecognized_param,input_error>( "" )
+		, m_typo_candidates( std::move( type_candidates ) ) {}
 #else
-    explicit    unrecognized_param( std::vector<cstring> const& type_candidates )
-    : specific_param_error<unrecognized_param,input_error>( "" )
-    , m_typo_candidates( type_candidates ) {}
+	explicit    unrecognized_param( std::vector<cstring> const& type_candidates )
+		: specific_param_error<unrecognized_param,input_error>( "" )
+		, m_typo_candidates( type_candidates ) {}
 #endif
-    ~unrecognized_param() BOOST_NOEXCEPT_OR_NOTHROW {}
+	~unrecognized_param() BOOST_NOEXCEPT_OR_NOTHROW {}
 
-    std::vector<cstring> m_typo_candidates;
+	std::vector<cstring> m_typo_candidates;
 };
 
 } // namespace runtime

@@ -16,10 +16,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 namespace winapi {}
-namespace detail {
-namespace winapi {
+namespace detail
+{
+namespace winapi
+{
 using namespace boost::winapi;
 } // namespace winapi
 } // namespace detail

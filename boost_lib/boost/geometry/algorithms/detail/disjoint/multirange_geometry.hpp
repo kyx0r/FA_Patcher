@@ -17,12 +17,16 @@
 #include <boost/geometry/algorithms/dispatch/disjoint.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace disjoint
+namespace detail
+{
+namespace disjoint
 {
 
 
@@ -30,65 +34,67 @@ template <typename Geometry, typename Strategy, typename BinaryPredicate>
 class unary_disjoint_geometry_to_query_geometry
 {
 public:
-    unary_disjoint_geometry_to_query_geometry(Geometry const& geometry,
-                                              Strategy const& strategy)
-        : m_geometry(geometry)
-        , m_strategy(strategy)
-    {}
+	unary_disjoint_geometry_to_query_geometry(Geometry const& geometry,
+	        Strategy const& strategy)
+		: m_geometry(geometry)
+		, m_strategy(strategy)
+	{}
 
-    template <typename QueryGeometry>
-    inline bool apply(QueryGeometry const& query_geometry) const
-    {
-        return BinaryPredicate::apply(query_geometry, m_geometry, m_strategy);
-    }
+	template <typename QueryGeometry>
+	inline bool apply(QueryGeometry const& query_geometry) const
+	{
+		return BinaryPredicate::apply(query_geometry, m_geometry, m_strategy);
+	}
 
 private:
-    Geometry const& m_geometry;
-    Strategy const& m_strategy;
+	Geometry const& m_geometry;
+	Strategy const& m_strategy;
 };
 
 
 template<typename MultiRange, typename ConstantSizeGeometry>
 struct multirange_constant_size_geometry
 {
-    template <typename Strategy>
-    static inline bool apply(MultiRange const& multirange,
-                             ConstantSizeGeometry const& constant_size_geometry,
-                             Strategy const& strategy)
-    {
-        typedef unary_disjoint_geometry_to_query_geometry
-            <
-                ConstantSizeGeometry,
-                Strategy,
-                dispatch::disjoint
-                    <
-                        typename boost::range_value<MultiRange>::type,
-                        ConstantSizeGeometry
-                    >
-            > unary_predicate_type;
+	template <typename Strategy>
+	static inline bool apply(MultiRange const& multirange,
+	                         ConstantSizeGeometry const& constant_size_geometry,
+	                         Strategy const& strategy)
+	{
+		typedef unary_disjoint_geometry_to_query_geometry
+		<
+		ConstantSizeGeometry,
+		Strategy,
+		dispatch::disjoint
+		<
+		typename boost::range_value<MultiRange>::type,
+		ConstantSizeGeometry
+		>
+		> unary_predicate_type;
 
-        return detail::check_iterator_range
-            <
-                unary_predicate_type
-            >::apply(boost::begin(multirange), boost::end(multirange),
-                     unary_predicate_type(constant_size_geometry, strategy));
-    }
+		return detail::check_iterator_range
+		       <
+		       unary_predicate_type
+		       >::apply(boost::begin(multirange), boost::end(multirange),
+		                unary_predicate_type(constant_size_geometry, strategy));
+	}
 
-    template <typename Strategy>
-    static inline bool apply(ConstantSizeGeometry const& constant_size_geometry,
-                             MultiRange const& multirange,
-                             Strategy const& strategy)
-    {
-        return apply(multirange, constant_size_geometry, strategy);
-    }
+	template <typename Strategy>
+	static inline bool apply(ConstantSizeGeometry const& constant_size_geometry,
+	                         MultiRange const& multirange,
+	                         Strategy const& strategy)
+	{
+		return apply(multirange, constant_size_geometry, strategy);
+	}
 };
 
 
-}} // namespace detail::disjoint
+}
+} // namespace detail::disjoint
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISJOINT_MULTIRANGE_GEOMETRY_HPP

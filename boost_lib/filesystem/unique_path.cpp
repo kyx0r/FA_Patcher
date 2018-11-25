@@ -7,13 +7,13 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
-//--------------------------------------------------------------------------------------// 
+//--------------------------------------------------------------------------------------//
 
 // define BOOST_FILESYSTEM_SOURCE so that <boost/filesystem/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
-#define BOOST_FILESYSTEM_SOURCE 
+#define BOOST_FILESYSTEM_SOURCE
 
-#ifndef BOOST_SYSTEM_NO_DEPRECATED 
+#ifndef BOOST_SYSTEM_NO_DEPRECATED
 # define BOOST_SYSTEM_NO_DEPRECATED
 #endif
 
@@ -33,42 +33,43 @@
 #   endif
 # endif
 
-namespace {
+namespace
+{
 
 void fail(int err, boost::system::error_code* ec)
 {
-  if (ec == 0)
-    BOOST_FILESYSTEM_THROW( boost::system::system_error(err,
-      boost::system::system_category(),
-      "boost::filesystem::unique_path"));
+	if (ec == 0)
+		BOOST_FILESYSTEM_THROW( boost::system::system_error(err,
+		                        boost::system::system_category(),
+		                        "boost::filesystem::unique_path"));
 
-  ec->assign(err, boost::system::system_category());
-  return;
+	ec->assign(err, boost::system::system_category());
+	return;
 }
 
 #ifdef BOOST_WINDOWS_API
 
 int acquire_crypt_handle(HCRYPTPROV& handle)
 {
-  if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
-    return 0;
+	if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+		return 0;
 
-  int errval = ::GetLastError();
-  if (errval != NTE_BAD_KEYSET)
-    return errval;
+	int errval = ::GetLastError();
+	if (errval != NTE_BAD_KEYSET)
+		return errval;
 
-  if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_NEWKEYSET | CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
-    return 0;
+	if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_NEWKEYSET | CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+		return 0;
 
-  errval = ::GetLastError();
-  // Another thread could have attempted to create the keyset at the same time.
-  if (errval != NTE_EXISTS)
-    return errval;
+	errval = ::GetLastError();
+	// Another thread could have attempted to create the keyset at the same time.
+	if (errval != NTE_EXISTS)
+		return errval;
 
-  if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
-    return 0;
+	if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+		return 0;
 
-  return ::GetLastError();
+	return ::GetLastError();
 }
 
 #endif
@@ -77,101 +78,108 @@ void system_crypt_random(void* buf, std::size_t len, boost::system::error_code* 
 {
 # ifdef BOOST_POSIX_API
 
-  int file = open("/dev/urandom", O_RDONLY);
-  if (file == -1)
-  {
-    file = open("/dev/random", O_RDONLY);
-    if (file == -1)
-    {
-      fail(errno, ec);
-      return;
-    }
-  }
+	int file = open("/dev/urandom", O_RDONLY);
+	if (file == -1)
+	{
+		file = open("/dev/random", O_RDONLY);
+		if (file == -1)
+		{
+			fail(errno, ec);
+			return;
+		}
+	}
 
-  size_t bytes_read = 0;
-  while (bytes_read < len)
-  {
-    ssize_t n = read(file, buf, len - bytes_read);
-    if (n == -1)
-    {
-      close(file);
-      fail(errno, ec);
-      return;
-    }
-    bytes_read += n;
-    buf = static_cast<char*>(buf) + n;
-  }
+	size_t bytes_read = 0;
+	while (bytes_read < len)
+	{
+		ssize_t n = read(file, buf, len - bytes_read);
+		if (n == -1)
+		{
+			close(file);
+			fail(errno, ec);
+			return;
+		}
+		bytes_read += n;
+		buf = static_cast<char*>(buf) + n;
+	}
 
-  close(file);
+	close(file);
 
 # else // BOOST_WINDOWS_API
 
-  HCRYPTPROV handle;
-  int errval = acquire_crypt_handle(handle);
+	HCRYPTPROV handle;
+	int errval = acquire_crypt_handle(handle);
 
-  if (!errval)
-  {
-    BOOL gen_ok = ::CryptGenRandom(handle, static_cast<DWORD>(len), static_cast<unsigned char*>(buf));
-    if (!gen_ok)
-      errval = ::GetLastError();
-    ::CryptReleaseContext(handle, 0);
-  }
+	if (!errval)
+	{
+		BOOL gen_ok = ::CryptGenRandom(handle, static_cast<DWORD>(len), static_cast<unsigned char*>(buf));
+		if (!gen_ok)
+			errval = ::GetLastError();
+		::CryptReleaseContext(handle, 0);
+	}
 
-  if (!errval) return;
+	if (!errval) return;
 
-  fail(errval, ec);
+	fail(errval, ec);
 # endif
 }
 
 }  // unnamed namespace
 
-namespace boost { namespace filesystem { namespace detail {
+namespace boost
+{
+namespace filesystem
+{
+namespace detail
+{
 
 BOOST_FILESYSTEM_DECL
 path unique_path(const path& model, system::error_code* ec)
 {
-  // This function used wstring for fear of misidentifying
-  // a part of a multibyte character as a percent sign.
-  // However, double byte encodings only have 80-FF as lead
-  // bytes and 40-7F as trailing bytes, whereas % is 25.
-  // So, use string on POSIX and avoid conversions.
+	// This function used wstring for fear of misidentifying
+	// a part of a multibyte character as a percent sign.
+	// However, double byte encodings only have 80-FF as lead
+	// bytes and 40-7F as trailing bytes, whereas % is 25.
+	// So, use string on POSIX and avoid conversions.
 
-  path::string_type s( model.native() );
+	path::string_type s( model.native() );
 
 #ifdef BOOST_WINDOWS_API
-  const wchar_t hex[] = L"0123456789abcdef";
-  const wchar_t percent = L'%';
+	const wchar_t hex[] = L"0123456789abcdef";
+	const wchar_t percent = L'%';
 #else
-  const char hex[] = "0123456789abcdef";
-  const char percent = '%';
+	const char hex[] = "0123456789abcdef";
+	const char percent = '%';
 #endif
 
-  char ran[] = "123456789abcdef";  // init to avoid clang static analyzer message
-                                   // see ticket #8954
-  assert(sizeof(ran) == 16);
-  const int max_nibbles = 2 * sizeof(ran);   // 4-bits per nibble
+	char ran[] = "123456789abcdef";  // init to avoid clang static analyzer message
+	// see ticket #8954
+	assert(sizeof(ran) == 16);
+	const int max_nibbles = 2 * sizeof(ran);   // 4-bits per nibble
 
-  int nibbles_used = max_nibbles;
-  for(path::string_type::size_type i=0; i < s.size(); ++i)
-  {
-    if (s[i] == percent)                     // digit request
-    {
-      if (nibbles_used == max_nibbles)
-      {
-        system_crypt_random(ran, sizeof(ran), ec);
-        if (ec != 0 && *ec)
-          return "";
-        nibbles_used = 0;
-      }
-      int c = ran[nibbles_used/2];
-      c >>= 4 * (nibbles_used++ & 1);  // if odd, shift right 1 nibble
-      s[i] = hex[c & 0xf];             // convert to hex digit and replace
-    }
-  }
+	int nibbles_used = max_nibbles;
+	for(path::string_type::size_type i=0; i < s.size(); ++i)
+	{
+		if (s[i] == percent)                     // digit request
+		{
+			if (nibbles_used == max_nibbles)
+			{
+				system_crypt_random(ran, sizeof(ran), ec);
+				if (ec != 0 && *ec)
+					return "";
+				nibbles_used = 0;
+			}
+			int c = ran[nibbles_used/2];
+			c >>= 4 * (nibbles_used++ & 1);  // if odd, shift right 1 nibble
+			s[i] = hex[c & 0xf];             // convert to hex digit and replace
+		}
+	}
 
-  if (ec != 0) ec->clear();
+	if (ec != 0) ec->clear();
 
-  return s;
+	return s;
 }
 
-}}}
+}
+}
+}

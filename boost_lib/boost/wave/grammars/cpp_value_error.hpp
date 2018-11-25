@@ -19,9 +19,12 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost {
-namespace wave {
-namespace grammars {
+namespace boost
+{
+namespace wave
+{
+namespace grammars
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -31,11 +34,12 @@ namespace grammars {
 //    conditional preprocessor expression
 //
 ///////////////////////////////////////////////////////////////////////////////
-enum value_error {
-    error_noerror = 0x0,
-    error_division_by_zero = 0x1,
-    error_integer_overflow = 0x2,
-    error_character_overflow = 0x4
+enum value_error
+{
+	error_noerror = 0x0,
+	error_division_by_zero = 0x1,
+	error_integer_overflow = 0x2,
+	error_character_overflow = 0x4
 };
 
 ///////////////////////////////////////////////////////////////////////////////

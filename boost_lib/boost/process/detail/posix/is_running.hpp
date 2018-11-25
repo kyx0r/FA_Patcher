@@ -11,7 +11,14 @@
 #include <system_error>
 #include <sys/wait.h>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 // Use the "stopped" state (WIFSTOPPED) to indicate "not terminated".
 // This bit arrangement of status codes is not guaranteed by POSIX, but (according to comments in
@@ -21,57 +28,60 @@ static_assert(!WIFEXITED(still_active) && !WIFSIGNALED(still_active), "Internal 
 
 inline bool is_running(int code)
 {
-    return !WIFEXITED(code) && !WIFSIGNALED(code);
+	return !WIFEXITED(code) && !WIFSIGNALED(code);
 }
 
 inline bool is_running(const child_handle &p, int & exit_code, std::error_code &ec) noexcept
 {
-    int status;
-    auto ret = ::waitpid(p.pid, &status, WNOHANG);
+	int status;
+	auto ret = ::waitpid(p.pid, &status, WNOHANG);
 
-    if (ret == -1)
-    {
-        if (errno != ECHILD) //because it no child is running, than this one isn't either, obviously.
-            ec = ::boost::process::detail::get_last_error();
-        return false;
-    }
-    else if (ret == 0)
-        return true;
-    else
-    {
-        ec.clear();
+	if (ret == -1)
+	{
+		if (errno != ECHILD) //because it no child is running, than this one isn't either, obviously.
+			ec = ::boost::process::detail::get_last_error();
+		return false;
+	}
+	else if (ret == 0)
+		return true;
+	else
+	{
+		ec.clear();
 
-        if (!is_running(status))
-            exit_code = status;
+		if (!is_running(status))
+			exit_code = status;
 
-        return false;
-    }
+		return false;
+	}
 }
 
 inline bool is_running(const child_handle &p, int & exit_code)
 {
-    std::error_code ec;
-    bool b = is_running(p, exit_code, ec);
-    boost::process::detail::throw_error(ec, "waitpid(2) failed in is_running");
-    return b;
+	std::error_code ec;
+	bool b = is_running(p, exit_code, ec);
+	boost::process::detail::throw_error(ec, "waitpid(2) failed in is_running");
+	return b;
 }
 
 inline int eval_exit_status(int code)
 {
-    if (WIFEXITED(code))
-    {
-        return WEXITSTATUS(code);
-    }
-    else if (WIFSIGNALED(code))
-    {
-        return WTERMSIG(code);
-    }
-    else
-    {
-        return code;
-    }
+	if (WIFEXITED(code))
+	{
+		return WEXITSTATUS(code);
+	}
+	else if (WIFSIGNALED(code))
+	{
+		return WTERMSIG(code);
+	}
+	else
+	{
+		return code;
+	}
 }
 
-}}}}
+}
+}
+}
+}
 
 #endif

@@ -11,21 +11,24 @@
 #ifndef BOOST_COMPUTE_FUNCTIONAL_IDENTITY_HPP
 #define BOOST_COMPUTE_FUNCTIONAL_IDENTITY_HPP
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T, class Arg>
 struct invoked_identity
 {
-    typedef T result_type;
+	typedef T result_type;
 
-    invoked_identity(const Arg &arg)
-        : m_arg(arg)
-    {
-    }
+	invoked_identity(const Arg &arg)
+		: m_arg(arg)
+	{
+	}
 
-    Arg m_arg;
+	Arg m_arg;
 };
 
 } // end detail namespace
@@ -42,20 +45,20 @@ template<class T>
 class identity
 {
 public:
-    /// Identity function result type.
-    typedef T result_type;
+	/// Identity function result type.
+	typedef T result_type;
 
-    /// Creates a new identity function.
-    identity()
-    {
-    }
+	/// Creates a new identity function.
+	identity()
+	{
+	}
 
-    /// \internal_
-    template<class Arg>
-    detail::invoked_identity<T, Arg> operator()(const Arg &arg) const
-    {
-        return detail::invoked_identity<T, Arg>(arg);
-    }
+	/// \internal_
+	template<class Arg>
+	detail::invoked_identity<T, Arg> operator()(const Arg &arg) const
+	{
+		return detail::invoked_identity<T, Arg>(arg);
+	}
 };
 
 } // end compute namespace

@@ -20,7 +20,8 @@
 #include <boost/regex_fwd.hpp>
 #include <boost/regex/v4/match_flags.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template <class BidiIterator>
 struct sub_match;

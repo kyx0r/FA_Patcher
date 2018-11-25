@@ -24,9 +24,12 @@ Phil Endecott and Frank Gennari
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 
-namespace boost {
-namespace sort {
-namespace spreadsort {
+namespace boost
+{
+namespace sort
+{
+namespace spreadsort
+{
 
 /*! \brief String sort algorithm using random access iterators, allowing character-type overloads.\n
   (All variants fall back to @c std::sort if the data size is too small, < @c detail::min_sort_size).
@@ -70,16 +73,16 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
 
 */
 
-  template <class RandomAccessIter, class Unsigned_char_type>
-  inline void string_sort(RandomAccessIter first, RandomAccessIter last,
-                          Unsigned_char_type unused)
-  {
-    //Don't sort if it's too small to optimize
-    if (last - first < detail::min_sort_size)
-      std::sort(first, last);
-    else
-      detail::string_sort(first, last, unused);
-  }
+template <class RandomAccessIter, class Unsigned_char_type>
+inline void string_sort(RandomAccessIter first, RandomAccessIter last,
+                        Unsigned_char_type unused)
+{
+	//Don't sort if it's too small to optimize
+	if (last - first < detail::min_sort_size)
+		std::sort(first, last);
+	else
+		detail::string_sort(first, last, unused);
+}
 
 /*! \brief String sort algorithm using range, allowing character-type overloads.\n
   (All variants fall back to @c std::sort if the data size is too small, < @c detail::min_sort_size).
@@ -120,7 +123,7 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
 template <class Range, class Unsigned_char_type>
 inline void string_sort(Range& range, Unsigned_char_type unused)
 {
-  string_sort(boost::begin(range), boost::end(range), unused);
+	string_sort(boost::begin(range), boost::end(range), unused);
 }
 
 /*! \brief String sort algorithm using random access iterators, wraps using default of unsigned char.
@@ -161,12 +164,12 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
    \remark  *  S is a constant called max_splits, defaulting to 11 (except for strings where it is the log of the character size).
 
 */
-  template <class RandomAccessIter>
-  inline void string_sort(RandomAccessIter first, RandomAccessIter last)
-  {
-    unsigned char unused = '\0';
-    string_sort(first, last, unused);
-  }
+template <class RandomAccessIter>
+inline void string_sort(RandomAccessIter first, RandomAccessIter last)
+{
+	unsigned char unused = '\0';
+	string_sort(first, last, unused);
+}
 
 /*! \brief String sort algorithm using range, wraps using default of unsigned char.
   (All variants fall back to @c std::sort if the data size is too small, < @c detail::min_sort_size).
@@ -204,7 +207,7 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
 template <class Range>
 inline void string_sort(Range& range)
 {
-  string_sort(boost::begin(range), boost::end(range));
+	string_sort(boost::begin(range), boost::end(range));
 }
 
 /*! \brief String sort algorithm using random access iterators, allowing character-type overloads.
@@ -254,16 +257,16 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
    \remark  *  K is the log of the range in bits (32 for 32-bit integers using their full range),
    \remark  *  S is a constant called max_splits, defaulting to 11 (except for strings where it is the log of the character size).
 */
-  template <class RandomAccessIter, class Compare, class Unsigned_char_type>
-  inline void reverse_string_sort(RandomAccessIter first,
-                RandomAccessIter last, Compare comp, Unsigned_char_type unused)
-  {
-    //Don't sort if it's too small to optimize.
-    if (last - first < detail::min_sort_size)
-      std::sort(first, last, comp);
-    else
-      detail::reverse_string_sort(first, last, unused);
-  }
+template <class RandomAccessIter, class Compare, class Unsigned_char_type>
+inline void reverse_string_sort(RandomAccessIter first,
+                                RandomAccessIter last, Compare comp, Unsigned_char_type unused)
+{
+	//Don't sort if it's too small to optimize.
+	if (last - first < detail::min_sort_size)
+		std::sort(first, last, comp);
+	else
+		detail::reverse_string_sort(first, last, unused);
+}
 
 /*! \brief String sort algorithm using range, allowing character-type overloads.
 
@@ -309,7 +312,7 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
 template <class Range, class Compare, class Unsigned_char_type>
 inline void reverse_string_sort(Range& range, Compare comp, Unsigned_char_type unused)
 {
-  reverse_string_sort(boost::begin(range), boost::end(range), comp, unused);
+	reverse_string_sort(boost::begin(range), boost::end(range), comp, unused);
 }
 
 /*! \brief String sort algorithm using random access iterators,  wraps using default of @c unsigned char.
@@ -353,13 +356,13 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
    \remark  *  K is the log of the range in bits (32 for 32-bit integers using their full range),
    \remark  *  S is a constant called max_splits, defaulting to 11 (except for strings where it is the log of the character size).
 */
-  template <class RandomAccessIter, class Compare>
-  inline void reverse_string_sort(RandomAccessIter first,
-                                  RandomAccessIter last, Compare comp)
-  {
-    unsigned char unused = '\0';
-    reverse_string_sort(first, last, comp, unused);
-  }
+template <class RandomAccessIter, class Compare>
+inline void reverse_string_sort(RandomAccessIter first,
+                                RandomAccessIter last, Compare comp)
+{
+	unsigned char unused = '\0';
+	reverse_string_sort(first, last, comp, unused);
+}
 
 /*! \brief String sort algorithm using range, wraps using default of @c unsigned char.
 
@@ -400,7 +403,7 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
 template <class Range, class Compare>
 inline void reverse_string_sort(Range& range, Compare comp)
 {
-  reverse_string_sort(boost::begin(range), boost::end(range), comp);
+	reverse_string_sort(boost::begin(range), boost::end(range), comp);
 }
 
 /*! \brief String sort algorithm using random access iterators,  wraps using default of @c unsigned char.
@@ -446,23 +449,25 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
    \remark  *  S is a constant called max_splits, defaulting to 11 (except for strings where it is the log of the character size).
 
 */
-  template <class RandomAccessIter, class Get_char, class Get_length>
-  inline void string_sort(RandomAccessIter first, RandomAccessIter last,
-                          Get_char get_character, Get_length length)
-  {
-    //Don't sort if it's too small to optimize
-    if (last - first < detail::min_sort_size)
-      std::sort(first, last);
-    else {
-      //skipping past empties, which allows us to get the character type
-      //.empty() is not used so as not to require a user declaration of it
-      while (!length(*first)) {
-        if (++first == last)
-          return;
-      }
-      detail::string_sort(first, last, get_character, length, get_character((*first), 0));
-    }
-  }
+template <class RandomAccessIter, class Get_char, class Get_length>
+inline void string_sort(RandomAccessIter first, RandomAccessIter last,
+                        Get_char get_character, Get_length length)
+{
+	//Don't sort if it's too small to optimize
+	if (last - first < detail::min_sort_size)
+		std::sort(first, last);
+	else
+	{
+		//skipping past empties, which allows us to get the character type
+		//.empty() is not used so as not to require a user declaration of it
+		while (!length(*first))
+		{
+			if (++first == last)
+				return;
+		}
+		detail::string_sort(first, last, get_character, length, get_character((*first), 0));
+	}
+}
 
 /*! \brief String sort algorithm using range, wraps using default of @c unsigned char.
 
@@ -505,7 +510,7 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
 template <class Range, class Get_char, class Get_length>
 inline void string_sort(Range& range, Get_char get_character, Get_length length)
 {
-  string_sort(boost::begin(range), boost::end(range), get_character, length);
+	string_sort(boost::begin(range), boost::end(range), get_character, length);
 }
 
 
@@ -553,25 +558,27 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
    \remark  *  S is a constant called max_splits, defaulting to 11 (except for strings where it is the log of the character size).
 
 */
-  template <class RandomAccessIter, class Get_char, class Get_length,
-            class Compare>
-  inline void string_sort(RandomAccessIter first, RandomAccessIter last,
-                          Get_char get_character, Get_length length, Compare comp)
-  {
-    //Don't sort if it's too small to optimize
-    if (last - first < detail::min_sort_size)
-      std::sort(first, last, comp);
-    else {
-      //skipping past empties, which allows us to get the character type
-      //.empty() is not used so as not to require a user declaration of it
-      while (!length(*first)) {
-        if (++first == last)
-          return;
-      }
-      detail::string_sort(first, last, get_character, length, comp,
-                          get_character((*first), 0));
-    }
-  }
+template <class RandomAccessIter, class Get_char, class Get_length,
+          class Compare>
+inline void string_sort(RandomAccessIter first, RandomAccessIter last,
+                        Get_char get_character, Get_length length, Compare comp)
+{
+	//Don't sort if it's too small to optimize
+	if (last - first < detail::min_sort_size)
+		std::sort(first, last, comp);
+	else
+	{
+		//skipping past empties, which allows us to get the character type
+		//.empty() is not used so as not to require a user declaration of it
+		while (!length(*first))
+		{
+			if (++first == last)
+				return;
+		}
+		detail::string_sort(first, last, get_character, length, comp,
+		                    get_character((*first), 0));
+	}
+}
 
 /*! \brief String sort algorithm using range, wraps using default of @c unsigned char.
 
@@ -618,7 +625,7 @@ template <class Range, class Get_char, class Get_length, class Compare>
 inline void string_sort(Range& range,
                         Get_char get_character, Get_length length, Compare comp)
 {
-  string_sort(boost::begin(range), boost::end(range), get_character, length, comp);
+	string_sort(boost::begin(range), boost::end(range), get_character, length, comp);
 }
 
 /*! \brief Reverse String sort algorithm using random access iterators.
@@ -665,27 +672,29 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
    \remark  *  S is a constant called max_splits, defaulting to 11 (except for strings where it is the log of the character size).
 
 */
-  template <class RandomAccessIter, class Get_char, class Get_length,
-            class Compare>
-  inline void reverse_string_sort(RandomAccessIter first,
-    RandomAccessIter last, Get_char get_character, Get_length length, Compare comp)
-  {
-    //Don't sort if it's too small to optimize
-    if (last - first < detail::min_sort_size)
-      std::sort(first, last, comp);
-    else {
-      //skipping past empties, which allows us to get the character type
-      //.empty() is not used so as not to require a user declaration of it
-      while (!length(*(--last))) {
-        //If there is just one non-empty at the beginning, this is sorted
-        if (first == last)
-          return;
-      }
-      //making last just after the end of the non-empty part of the array
-      detail::reverse_string_sort(first, last + 1, get_character, length, comp,
-                                  get_character((*last), 0));
-    }
-  }
+template <class RandomAccessIter, class Get_char, class Get_length,
+          class Compare>
+inline void reverse_string_sort(RandomAccessIter first,
+                                RandomAccessIter last, Get_char get_character, Get_length length, Compare comp)
+{
+	//Don't sort if it's too small to optimize
+	if (last - first < detail::min_sort_size)
+		std::sort(first, last, comp);
+	else
+	{
+		//skipping past empties, which allows us to get the character type
+		//.empty() is not used so as not to require a user declaration of it
+		while (!length(*(--last)))
+		{
+			//If there is just one non-empty at the beginning, this is sorted
+			if (first == last)
+				return;
+		}
+		//making last just after the end of the non-empty part of the array
+		detail::reverse_string_sort(first, last + 1, get_character, length, comp,
+		                            get_character((*last), 0));
+	}
+}
 
 /*! \brief Reverse String sort algorithm using range.
 
@@ -729,10 +738,10 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
 
 */
 template <class Range, class Get_char, class Get_length,
-        class Compare>
+          class Compare>
 inline void reverse_string_sort(Range& range, Get_char get_character, Get_length length, Compare comp)
 {
-    reverse_string_sort(boost::begin(range), boost::end(range), get_character, length, comp);
+	reverse_string_sort(boost::begin(range), boost::end(range), get_character, length, comp);
 }
 }
 }

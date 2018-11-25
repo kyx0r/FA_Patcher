@@ -12,54 +12,69 @@
 # include <boost/python/detail/type_traits.hpp>
 #endif
 
-namespace boost { namespace python { 
+namespace boost
+{
+namespace python
+{
 
 template <class T>
 struct arg_from_python
-    : converter::select_arg_from_python<
+	: converter::select_arg_from_python<
 # if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400)) \
     || BOOST_WORKAROUND(BOOST_INTEL_WIN, BOOST_TESTED_AT(800))
-          typename detail::remove_cv<T>::type
+	  typename detail::remove_cv<T>::type
 # else
-          T
-# endif 
-      >::type
+	  T
+# endif
+	  >::type
 {
-    typedef typename converter::select_arg_from_python<
+	typedef typename converter::select_arg_from_python<
 # if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400)) \
     || BOOST_WORKAROUND(BOOST_INTEL_WIN, BOOST_TESTED_AT(800))
-          typename detail::remove_cv<T>::type
+	typename detail::remove_cv<T>::type
 # else
-          T
-# endif 
-        >::type base;
-    
-    arg_from_python(PyObject*);
+	T
+# endif
+	>::type base;
+
+	arg_from_python(PyObject*);
 };
 
 // specialization for PyObject*
 template <>
 struct arg_from_python<PyObject*>
 {
-    typedef PyObject* result_type;
-    
-    arg_from_python(PyObject* p) : m_source(p) {}
-    bool convertible() const { return true; }
-    PyObject* operator()() const { return m_source; }
- private:
-    PyObject* m_source;
+	typedef PyObject* result_type;
+
+	arg_from_python(PyObject* p) : m_source(p) {}
+	bool convertible() const
+	{
+		return true;
+	}
+	PyObject* operator()() const
+	{
+		return m_source;
+	}
+private:
+	PyObject* m_source;
 };
 
 template <>
 struct arg_from_python<PyObject* const&>
 {
-    typedef PyObject* const& result_type;
-    
-    arg_from_python(PyObject* p) : m_source(p) {}
-    bool convertible() const { return true; }
-    PyObject*const& operator()() const { return m_source; }
- private:
-    PyObject* m_source;
+	typedef PyObject* const& result_type;
+
+	arg_from_python(PyObject* p) : m_source(p) {}
+	bool convertible() const
+	{
+		return true;
+	}
+	PyObject*const& operator()() const
+	{
+		return m_source;
+	}
+private:
+	PyObject* m_source;
 };
 
 //
@@ -67,10 +82,11 @@ struct arg_from_python<PyObject* const&>
 //
 template <class T>
 inline arg_from_python<T>::arg_from_python(PyObject* source)
-    : base(source)
+	: base(source)
 {
 }
 
-}} // namespace boost::python
+}
+} // namespace boost::python
 
 #endif // ARG_FROM_PYTHON_DWA2002128_HPP

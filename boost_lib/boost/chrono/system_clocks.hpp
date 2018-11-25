@@ -92,19 +92,21 @@ TODO:
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-namespace boost {
-namespace chrono {
+namespace boost
+{
+namespace chrono
+{
 
-  // Clocks
-  class BOOST_CHRONO_DECL system_clock;
+// Clocks
+class BOOST_CHRONO_DECL system_clock;
 #ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
-  class BOOST_CHRONO_DECL steady_clock;
+class BOOST_CHRONO_DECL steady_clock;
 #endif
 
 #ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
-  typedef steady_clock high_resolution_clock;  // as permitted by [time.clock.hires]
+typedef steady_clock high_resolution_clock;  // as permitted by [time.clock.hires]
 #else
-  typedef system_clock high_resolution_clock;  // as permitted by [time.clock.hires]
+typedef system_clock high_resolution_clock;  // as permitted by [time.clock.hires]
 #endif
 
 //----------------------------------------------------------------------------//
@@ -124,23 +126,23 @@ namespace chrono {
 //      20.9.5.1 Class system_clock [time.clock.system]                       //
 //----------------------------------------------------------------------------//
 
-  class BOOST_CHRONO_DECL system_clock
-  {
-  public:
-      typedef BOOST_SYSTEM_CLOCK_DURATION          duration;
-      typedef duration::rep                        rep;
-      typedef duration::period                     period;
-      typedef chrono::time_point<system_clock>     time_point;
-      BOOST_STATIC_CONSTEXPR bool is_steady =             false;
+class BOOST_CHRONO_DECL system_clock
+{
+public:
+	typedef BOOST_SYSTEM_CLOCK_DURATION          duration;
+	typedef duration::rep                        rep;
+	typedef duration::period                     period;
+	typedef chrono::time_point<system_clock>     time_point;
+	BOOST_STATIC_CONSTEXPR bool is_steady =             false;
 
-      static BOOST_CHRONO_INLINE time_point  now() BOOST_NOEXCEPT;
+	static BOOST_CHRONO_INLINE time_point  now() BOOST_NOEXCEPT;
 #if !defined BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
-      static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);
+	static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);
 #endif
 
-      static BOOST_CHRONO_INLINE std::time_t to_time_t(const time_point& t) BOOST_NOEXCEPT;
-      static BOOST_CHRONO_INLINE time_point  from_time_t(std::time_t t) BOOST_NOEXCEPT;
-  };
+	static BOOST_CHRONO_INLINE std::time_t to_time_t(const time_point& t) BOOST_NOEXCEPT;
+	static BOOST_CHRONO_INLINE time_point  from_time_t(std::time_t t) BOOST_NOEXCEPT;
+};
 
 //----------------------------------------------------------------------------//
 //      20.9.5.2 Class steady_clock [time.clock.steady]                 //
@@ -150,20 +152,20 @@ namespace chrono {
 // The class steady_clock is conditionally supported.
 
 #ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
-  class BOOST_CHRONO_DECL steady_clock
-  {
-  public:
-      typedef nanoseconds                          duration;
-      typedef duration::rep                        rep;
-      typedef duration::period                     period;
-      typedef chrono::time_point<steady_clock>  time_point;
-      BOOST_STATIC_CONSTEXPR bool is_steady =             true;
+class BOOST_CHRONO_DECL steady_clock
+{
+public:
+	typedef nanoseconds                          duration;
+	typedef duration::rep                        rep;
+	typedef duration::period                     period;
+	typedef chrono::time_point<steady_clock>  time_point;
+	BOOST_STATIC_CONSTEXPR bool is_steady =             true;
 
-      static BOOST_CHRONO_INLINE time_point  now() BOOST_NOEXCEPT;
+	static BOOST_CHRONO_INLINE time_point  now() BOOST_NOEXCEPT;
 #if !defined BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
-      static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);
+	static BOOST_CHRONO_INLINE time_point  now(system::error_code & ec);
 #endif
-  };
+};
 #endif
 //----------------------------------------------------------------------------//
 //      20.9.5.3 Class high_resolution_clock [time.clock.hires]               //
@@ -173,50 +175,50 @@ namespace chrono {
 //  See synopsis.
 
 
-  template<class CharT>
-  struct clock_string<system_clock, CharT>
-  {
-    static std::basic_string<CharT> name()
-    {
-      static const CharT u[] =
-      { 's', 'y', 's', 't', 'e', 'm', '_', 'c', 'l', 'o', 'c', 'k' };
-      static const std::basic_string<CharT> str(u, u + sizeof(u)
-          / sizeof(u[0]));
-      return str;
-    }
-    static std::basic_string<CharT> since()
-    {
-      static const CharT
-          u[] =
-              { ' ', 's', 'i', 'n', 'c', 'e', ' ', 'J', 'a', 'n', ' ', '1', ',', ' ', '1', '9', '7', '0' };
-      static const std::basic_string<CharT> str(u, u + sizeof(u)
-          / sizeof(u[0]));
-      return str;
-    }
-  };
+template<class CharT>
+struct clock_string<system_clock, CharT>
+{
+	static std::basic_string<CharT> name()
+	{
+		static const CharT u[] =
+		{ 's', 'y', 's', 't', 'e', 'm', '_', 'c', 'l', 'o', 'c', 'k' };
+		static const std::basic_string<CharT> str(u, u + sizeof(u)
+		        / sizeof(u[0]));
+		return str;
+	}
+	static std::basic_string<CharT> since()
+	{
+		static const CharT
+		u[] =
+		{ ' ', 's', 'i', 'n', 'c', 'e', ' ', 'J', 'a', 'n', ' ', '1', ',', ' ', '1', '9', '7', '0' };
+		static const std::basic_string<CharT> str(u, u + sizeof(u)
+		        / sizeof(u[0]));
+		return str;
+	}
+};
 
 #ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
 
-  template<class CharT>
-  struct clock_string<steady_clock, CharT>
-  {
-    static std::basic_string<CharT> name()
-    {
-      static const CharT
-          u[] =
-              { 's', 't', 'e', 'a', 'd', 'y', '_', 'c', 'l', 'o', 'c', 'k' };
-      static const std::basic_string<CharT> str(u, u + sizeof(u)
-          / sizeof(u[0]));
-      return str;
-    }
-    static std::basic_string<CharT> since()
-    {
-      const CharT u[] =
-      { ' ', 's', 'i', 'n', 'c', 'e', ' ', 'b', 'o', 'o', 't' };
-      const std::basic_string<CharT> str(u, u + sizeof(u) / sizeof(u[0]));
-      return str;
-    }
-  };
+template<class CharT>
+struct clock_string<steady_clock, CharT>
+{
+	static std::basic_string<CharT> name()
+	{
+		static const CharT
+		u[] =
+		{ 's', 't', 'e', 'a', 'd', 'y', '_', 'c', 'l', 'o', 'c', 'k' };
+		static const std::basic_string<CharT> str(u, u + sizeof(u)
+		        / sizeof(u[0]));
+		return str;
+	}
+	static std::basic_string<CharT> since()
+	{
+		const CharT u[] =
+		{ ' ', 's', 'i', 'n', 'c', 'e', ' ', 'b', 'o', 'o', 't' };
+		const std::basic_string<CharT> str(u, u + sizeof(u) / sizeof(u[0]));
+		return str;
+	}
+};
 
 #endif
 

@@ -17,9 +17,12 @@
 #include <memory>
 #endif
 
-namespace boost {
-namespace beast {
-namespace detail {
+namespace boost
+{
+namespace beast
+{
+namespace detail
+{
 
 // This is a workaround for allocator_traits
 // implementations which falsely claim C++11

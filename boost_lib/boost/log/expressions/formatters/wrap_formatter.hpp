@@ -36,83 +36,86 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 //! Wrapped formatter stream output terminal
 template< typename LeftT, typename FunT >
 class wrapped_formatter_output_terminal
 {
 private:
-    //! Self type
-    typedef wrapped_formatter_output_terminal< LeftT, FunT > this_type;
+	//! Self type
+	typedef wrapped_formatter_output_terminal< LeftT, FunT > this_type;
 
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! Internal typedef for type categorization
-    typedef void _is_boost_log_terminal;
+	//! Internal typedef for type categorization
+	typedef void _is_boost_log_terminal;
 #endif
 
-    //! Wrapped function type
-    typedef FunT function_type;
+	//! Wrapped function type
+	typedef FunT function_type;
 
-    //! Result type definition
-    template< typename >
-    struct result;
+	//! Result type definition
+	template< typename >
+	struct result;
 
-    template< typename ThisT, typename ContextT >
-    struct result< ThisT(ContextT) >
-    {
-        typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
-        typedef typename phoenix::evaluator::impl<
-            typename LeftT::proto_base_expr&,
-            context_type,
-            phoenix::unused
-        >::result_type type;
-    };
+	template< typename ThisT, typename ContextT >
+	struct result< ThisT(ContextT) >
+	{
+		typedef typename remove_cv< typename remove_reference< ContextT >::type >::type context_type;
+		typedef typename phoenix::evaluator::impl<
+		typename LeftT::proto_base_expr&,
+		         context_type,
+		         phoenix::unused
+		         >::result_type type;
+	};
 
 private:
-    //! Left argument actor
-    LeftT m_left;
-    //! Wrapped function
-    function_type m_fun;
+	//! Left argument actor
+	LeftT m_left;
+	//! Wrapped function
+	function_type m_fun;
 
 public:
-    //! Initializing constructor
-    wrapped_formatter_output_terminal(LeftT const& left, function_type const& fun) : m_left(left), m_fun(fun)
-    {
-    }
-    //! Copy constructor
-    wrapped_formatter_output_terminal(wrapped_formatter_output_terminal const& that) : m_left(that.m_left), m_fun(that.m_fun)
-    {
-    }
+	//! Initializing constructor
+	wrapped_formatter_output_terminal(LeftT const& left, function_type const& fun) : m_left(left), m_fun(fun)
+	{
+	}
+	//! Copy constructor
+	wrapped_formatter_output_terminal(wrapped_formatter_output_terminal const& that) : m_left(that.m_left), m_fun(that.m_fun)
+	{
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
-    {
-        typedef typename result< this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
-        return strm;
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	typename result< this_type(ContextT const&) >::type operator() (ContextT const& ctx)
+	{
+		typedef typename result< this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
+		return strm;
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
-    {
-        typedef typename result< const this_type(ContextT const&) >::type result_type;
-        result_type strm = phoenix::eval(m_left, ctx);
-        m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
-        return strm;
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	typename result< const this_type(ContextT const&) >::type operator() (ContextT const& ctx) const
+	{
+		typedef typename result< const this_type(ContextT const&) >::type result_type;
+		result_type strm = phoenix::eval(m_left, ctx);
+		m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
+		return strm;
+	}
 
-    BOOST_DELETED_FUNCTION(wrapped_formatter_output_terminal())
+	BOOST_DELETED_FUNCTION(wrapped_formatter_output_terminal())
 };
 
 BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_char_type, char_type, false)
@@ -122,31 +125,31 @@ template<
     bool HasCharTypeV = has_char_type< FunT >::value,
     bool HasSecondArgumentV = boost::log::aux::has_second_argument_type< FunT >::value,
     bool HasArg2V = boost::log::aux::has_arg2_type< FunT >::value
->
+    >
 struct default_char_type
 {
-    // Use this char type if all detection fails
-    typedef char type;
+	// Use this char type if all detection fails
+	typedef char type;
 };
 
 template< typename FunT, bool HasSecondArgumentV, bool HasArg2V >
 struct default_char_type< FunT, true, HasSecondArgumentV, HasArg2V >
 {
-    typedef typename FunT::char_type type;
+	typedef typename FunT::char_type type;
 };
 
 template< typename FunT, bool HasArg2V >
 struct default_char_type< FunT, false, true, HasArg2V >
 {
-    typedef typename remove_cv< typename remove_reference< typename FunT::second_argument_type >::type >::type argument_type;
-    typedef typename argument_type::char_type type;
+	typedef typename remove_cv< typename remove_reference< typename FunT::second_argument_type >::type >::type argument_type;
+	typedef typename argument_type::char_type type;
 };
 
 template< typename FunT >
 struct default_char_type< FunT, false, false, true >
 {
-    typedef typename remove_cv< typename remove_reference< typename FunT::arg2_type >::type >::type argument_type;
-    typedef typename argument_type::char_type type;
+	typedef typename remove_cv< typename remove_reference< typename FunT::arg2_type >::type >::type argument_type;
+	typedef typename argument_type::char_type type;
 };
 
 } // namespace aux
@@ -159,63 +162,63 @@ class wrapped_formatter_terminal
 {
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! Internal typedef for type categorization
-    typedef void _is_boost_log_terminal;
+	//! Internal typedef for type categorization
+	typedef void _is_boost_log_terminal;
 #endif
 
-    //! Character type
-    typedef CharT char_type;
-    //! String type
-    typedef std::basic_string< char_type > string_type;
-    //! Formatting stream type
-    typedef basic_formatting_ostream< char_type > stream_type;
-    //! Wrapped function type
-    typedef FunT function_type;
+	//! Character type
+	typedef CharT char_type;
+	//! String type
+	typedef std::basic_string< char_type > string_type;
+	//! Formatting stream type
+	typedef basic_formatting_ostream< char_type > stream_type;
+	//! Wrapped function type
+	typedef FunT function_type;
 
-    //! Formatter result type
-    typedef string_type result_type;
+	//! Formatter result type
+	typedef string_type result_type;
 
 private:
-    //! Wrapped function
-    function_type m_fun;
+	//! Wrapped function
+	function_type m_fun;
 
 public:
-    //! Initializing construction
-    explicit wrapped_formatter_terminal(function_type const& fun) : m_fun(fun)
-    {
-    }
-    //! Copy constructor
-    wrapped_formatter_terminal(wrapped_formatter_terminal const& that) : m_fun(that.m_fun)
-    {
-    }
+	//! Initializing construction
+	explicit wrapped_formatter_terminal(function_type const& fun) : m_fun(fun)
+	{
+	}
+	//! Copy constructor
+	wrapped_formatter_terminal(wrapped_formatter_terminal const& that) : m_fun(that.m_fun)
+	{
+	}
 
-    //! Returns the wrapped function
-    function_type const& get_function() const
-    {
-        return m_fun;
-    }
+	//! Returns the wrapped function
+	function_type const& get_function() const
+	{
+		return m_fun;
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    result_type operator() (ContextT const& ctx)
-    {
-        string_type str;
-        stream_type strm(str);
-        m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
-        strm.flush();
-        return BOOST_LOG_NRVO_RESULT(str);
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	result_type operator() (ContextT const& ctx)
+	{
+		string_type str;
+		stream_type strm(str);
+		m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
+		strm.flush();
+		return BOOST_LOG_NRVO_RESULT(str);
+	}
 
-    //! Invokation operator
-    template< typename ContextT >
-    result_type operator() (ContextT const& ctx) const
-    {
-        string_type str;
-        stream_type strm(str);
-        m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
-        strm.flush();
-        return BOOST_LOG_NRVO_RESULT(str);
-    }
+	//! Invokation operator
+	template< typename ContextT >
+	result_type operator() (ContextT const& ctx) const
+	{
+		string_type str;
+		stream_type strm(str);
+		m_fun(fusion::at_c< 0 >(phoenix::env(ctx).args()), strm);
+		strm.flush();
+		return BOOST_LOG_NRVO_RESULT(str);
+	}
 };
 
 /*!
@@ -223,32 +226,32 @@ public:
  */
 template< typename FunT, typename CharT, template< typename > class ActorT = phoenix::actor >
 class wrapped_formatter_actor :
-    public ActorT< wrapped_formatter_terminal< FunT, CharT > >
+	public ActorT< wrapped_formatter_terminal< FunT, CharT > >
 {
 public:
-    //! Character type
-    typedef CharT char_type;
-    //! Wrapped function type
-    typedef FunT function_type;
-    //! Base terminal type
-    typedef wrapped_formatter_terminal< function_type, char_type > terminal_type;
+	//! Character type
+	typedef CharT char_type;
+	//! Wrapped function type
+	typedef FunT function_type;
+	//! Base terminal type
+	typedef wrapped_formatter_terminal< function_type, char_type > terminal_type;
 
-    //! Base actor type
-    typedef ActorT< terminal_type > base_type;
+	//! Base actor type
+	typedef ActorT< terminal_type > base_type;
 
 public:
-    //! Initializing constructor
-    explicit wrapped_formatter_actor(base_type const& act) : base_type(act)
-    {
-    }
+	//! Initializing constructor
+	explicit wrapped_formatter_actor(base_type const& act) : base_type(act)
+	{
+	}
 
-    /*!
-     * \returns The wrapped function
-     */
-    function_type const& get_function() const
-    {
-        return this->proto_expr_.child0.get_function();
-    }
+	/*!
+	 * \returns The wrapped function
+	 */
+	function_type const& get_function() const
+	{
+		return this->proto_expr_.child0.get_function();
+	}
 };
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
@@ -282,10 +285,10 @@ public:
 template< typename FunT >
 BOOST_FORCEINLINE wrapped_formatter_actor< FunT, typename aux::default_char_type< FunT >::type > wrap_formatter(FunT const& fun)
 {
-    typedef wrapped_formatter_actor< FunT, typename aux::default_char_type< FunT >::type > actor_type;
-    typedef typename actor_type::terminal_type terminal_type;
-    typename actor_type::base_type act = {{ terminal_type(fun) }};
-    return actor_type(act);
+	typedef wrapped_formatter_actor< FunT, typename aux::default_char_type< FunT >::type > actor_type;
+	typedef typename actor_type::terminal_type terminal_type;
+	typename actor_type::base_type act = {{ terminal_type(fun) }};
+	return actor_type(act);
 }
 
 /*!
@@ -301,10 +304,10 @@ BOOST_FORCEINLINE wrapped_formatter_actor< FunT, typename aux::default_char_type
 template< typename CharT, typename FunT >
 BOOST_FORCEINLINE wrapped_formatter_actor< FunT, CharT > wrap_formatter(FunT const& fun)
 {
-    typedef wrapped_formatter_actor< FunT, CharT > actor_type;
-    typedef typename actor_type::terminal_type terminal_type;
-    typename actor_type::base_type act = {{ terminal_type(fun) }};
-    return actor_type(act);
+	typedef wrapped_formatter_actor< FunT, CharT > actor_type;
+	typedef typename actor_type::terminal_type terminal_type;
+	typename actor_type::base_type act = {{ terminal_type(fun) }};
+	return actor_type(act);
 }
 
 } // namespace expressions
@@ -313,19 +316,21 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
-namespace phoenix {
+namespace phoenix
+{
 
-namespace result_of {
+namespace result_of
+{
 
 template< typename LeftT, typename FunT >
 struct is_nullary< custom_terminal< boost::log::expressions::aux::wrapped_formatter_output_terminal< LeftT, FunT > > > :
-    public mpl::false_
+	public mpl::false_
 {
 };
 
 template< typename FunT, typename CharT >
 struct is_nullary< custom_terminal< boost::log::expressions::wrapped_formatter_terminal< FunT, CharT > > > :
-    public mpl::false_
+	public mpl::false_
 {
 };
 

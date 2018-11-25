@@ -16,7 +16,12 @@
 #endif
 
 
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 //extended handler base.
 typedef api::handler_base_ext handler;
@@ -25,50 +30,51 @@ typedef api::handler_base_ext handler;
 template <class Handler>
 struct on_setup_ : handler
 {
-    explicit on_setup_(Handler handler) : handler_(handler) {}
+	explicit on_setup_(Handler handler) : handler_(handler) {}
 
-    template <class Executor>
-    void on_setup(Executor &e)
-    {
-        handler_(e);
-    }
+	template <class Executor>
+	void on_setup(Executor &e)
+	{
+		handler_(e);
+	}
 private:
-    Handler handler_;
+	Handler handler_;
 };
 
 template <class Handler>
 struct on_error_ : handler
 {
-    explicit on_error_(Handler handler) : handler_(handler) {}
+	explicit on_error_(Handler handler) : handler_(handler) {}
 
-    template <class Executor>
-    void on_error(Executor &e, const std::error_code &ec)
-    {
-        handler_(e, ec);
-    }
+	template <class Executor>
+	void on_error(Executor &e, const std::error_code &ec)
+	{
+		handler_(e, ec);
+	}
 private:
-    Handler handler_;
+	Handler handler_;
 };
 
 template <class Handler>
 struct on_success_ : handler
 {
-    explicit on_success_(Handler handler) : handler_(handler) {}
+	explicit on_success_(Handler handler) : handler_(handler) {}
 
-    template <class Executor>
-    void on_success(Executor &e)
-    {
-        handler_(e);
-    }
+	template <class Executor>
+	void on_success(Executor &e)
+	{
+		handler_(e);
+	}
 private:
-    Handler handler_;
+	Handler handler_;
 };
 
 }
 
 
 
-}}
+}
+}
 
 
 

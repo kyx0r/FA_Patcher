@@ -5,7 +5,7 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org for updates, documentation, and revision history. 
+//  See http://www.boost.org for updates, documentation, and revision history.
 
 #ifndef BOOST_INTEGER_INTEGER_MASK_HPP
 #define BOOST_INTEGER_INTEGER_MASK_HPP
@@ -42,13 +42,13 @@ namespace boost
 template < std::size_t Bit >
 struct high_bit_mask_t
 {
-    typedef typename uint_t<(Bit + 1)>::least  least;
-    typedef typename uint_t<(Bit + 1)>::fast   fast;
+	typedef typename uint_t<(Bit + 1)>::least  least;
+	typedef typename uint_t<(Bit + 1)>::fast   fast;
 
-    BOOST_STATIC_CONSTANT( least, high_bit = (least( 1u ) << Bit) );
-    BOOST_STATIC_CONSTANT( fast, high_bit_fast = (fast( 1u ) << Bit) );
+	BOOST_STATIC_CONSTANT( least, high_bit = (least( 1u ) << Bit) );
+	BOOST_STATIC_CONSTANT( fast, high_bit_fast = (fast( 1u ) << Bit) );
 
-    BOOST_STATIC_CONSTANT( std::size_t, bit_position = Bit );
+	BOOST_STATIC_CONSTANT( std::size_t, bit_position = Bit );
 
 };  // boost::high_bit_mask_t
 
@@ -65,13 +65,13 @@ struct high_bit_mask_t
 template < std::size_t Bits >
 struct low_bits_mask_t
 {
-    typedef typename uint_t<Bits>::least  least;
-    typedef typename uint_t<Bits>::fast   fast;
+	typedef typename uint_t<Bits>::least  least;
+	typedef typename uint_t<Bits>::fast   fast;
 
-    BOOST_STATIC_CONSTANT( least, sig_bits = least(~(least(~(least( 0u ))) << Bits )) );
-    BOOST_STATIC_CONSTANT( fast, sig_bits_fast = fast(sig_bits) );
+	BOOST_STATIC_CONSTANT( least, sig_bits = least(~(least(~(least( 0u ))) << Bits )) );
+	BOOST_STATIC_CONSTANT( fast, sig_bits_fast = fast(sig_bits) );
 
-    BOOST_STATIC_CONSTANT( std::size_t, bit_count = Bits );
+	BOOST_STATIC_CONSTANT( std::size_t, bit_count = Bits );
 
 };  // boost::low_bits_mask_t
 
@@ -109,16 +109,16 @@ BOOST_LOW_BITS_MASK_SPECIALIZE( unsigned long );
 #endif
 
 #if defined(BOOST_HAS_LONG_LONG)
-    #if ((defined(ULLONG_MAX) && (ULLONG_MAX > ULONG_MAX)) ||\
+#if ((defined(ULLONG_MAX) && (ULLONG_MAX > ULONG_MAX)) ||\
         (defined(ULONG_LONG_MAX) && (ULONG_LONG_MAX > ULONG_MAX)) ||\
         (defined(ULONGLONG_MAX) && (ULONGLONG_MAX > ULONG_MAX)) ||\
         (defined(_ULLONG_MAX) && (_ULLONG_MAX > ULONG_MAX)))
-    BOOST_LOW_BITS_MASK_SPECIALIZE( boost::ulong_long_type );
-    #endif
+BOOST_LOW_BITS_MASK_SPECIALIZE( boost::ulong_long_type );
+#endif
 #elif defined(BOOST_HAS_MS_INT64)
-    #if 18446744073709551615ui64 > ULONG_MAX
-    BOOST_LOW_BITS_MASK_SPECIALIZE( unsigned __int64 );
-    #endif
+#if 18446744073709551615ui64 > ULONG_MAX
+BOOST_LOW_BITS_MASK_SPECIALIZE( unsigned __int64 );
+#endif
 #endif
 
 #ifdef BOOST_MSVC

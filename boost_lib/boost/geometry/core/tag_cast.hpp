@@ -18,7 +18,9 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -50,20 +52,20 @@ template
     typename BaseTag5 = void,
     typename BaseTag6 = void,
     typename BaseTag7 = void
->
+    >
 struct tag_cast
 {
-    typedef typename boost::mpl::if_
-        <
-          typename boost::is_base_of<BaseTag, Tag>::type,
-          BaseTag,
-          // Try next one in line:
-          typename tag_cast
-            <
-                Tag, BaseTag2, BaseTag3, BaseTag4,
-                BaseTag5, BaseTag6, BaseTag7, void
-            >::type
-        >::type type;
+	typedef typename boost::mpl::if_
+	<
+	typename boost::is_base_of<BaseTag, Tag>::type,
+	         BaseTag,
+	         // Try next one in line:
+	         typename tag_cast
+	         <
+	         Tag, BaseTag2, BaseTag3, BaseTag4,
+	         BaseTag5, BaseTag6, BaseTag7, void
+	         >::type
+	         >::type type;
 };
 
 #ifndef DOXYGEN_NO_SPECIALIZATIONS
@@ -72,13 +74,14 @@ struct tag_cast
 template <typename Tag>
 struct tag_cast<Tag, void, void, void, void, void, void, void>
 {
-    // If not found, take specified tag, so do not cast
-    typedef Tag type;
+	// If not found, take specified tag, so do not cast
+	typedef Tag type;
 };
 
 #endif // DOXYGEN_NO_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_TAG_CAST_HPP

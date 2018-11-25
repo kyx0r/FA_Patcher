@@ -93,33 +93,71 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if defined(BOOST_ASIO_WINDOWS_RUNTIME)
 const int max_addr_v4_str_len = 256;
 const int max_addr_v6_str_len = 256;
 typedef unsigned __int32 u_long_type;
 typedef unsigned __int16 u_short_type;
-struct in4_addr_type { u_long_type s_addr; };
-struct in4_mreq_type { in4_addr_type imr_multiaddr, imr_interface; };
-struct in6_addr_type { unsigned char s6_addr[16]; };
-struct in6_mreq_type { in6_addr_type ipv6mr_multiaddr;
-  unsigned long ipv6mr_interface; };
-struct socket_addr_type { int sa_family; };
-struct sockaddr_in4_type { int sin_family;
-  in4_addr_type sin_addr; u_short_type sin_port; };
-struct sockaddr_in6_type { int sin6_family;
-  in6_addr_type sin6_addr; u_short_type sin6_port;
-  u_long_type sin6_flowinfo; u_long_type sin6_scope_id; };
-struct sockaddr_storage_type { int ss_family;
-  unsigned char ss_bytes[128 - sizeof(int)]; };
-struct addrinfo_type { int ai_flags;
-  int ai_family, ai_socktype, ai_protocol;
-  int ai_addrlen; const void* ai_addr;
-  const char* ai_canonname; addrinfo_type* ai_next; };
-struct linger_type { u_short_type l_onoff, l_linger; };
+struct in4_addr_type
+{
+	u_long_type s_addr;
+};
+struct in4_mreq_type
+{
+	in4_addr_type imr_multiaddr, imr_interface;
+};
+struct in6_addr_type
+{
+	unsigned char s6_addr[16];
+};
+struct in6_mreq_type
+{
+	in6_addr_type ipv6mr_multiaddr;
+	unsigned long ipv6mr_interface;
+};
+struct socket_addr_type
+{
+	int sa_family;
+};
+struct sockaddr_in4_type
+{
+	int sin_family;
+	in4_addr_type sin_addr;
+	u_short_type sin_port;
+};
+struct sockaddr_in6_type
+{
+	int sin6_family;
+	in6_addr_type sin6_addr;
+	u_short_type sin6_port;
+	u_long_type sin6_flowinfo;
+	u_long_type sin6_scope_id;
+};
+struct sockaddr_storage_type
+{
+	int ss_family;
+	unsigned char ss_bytes[128 - sizeof(int)];
+};
+struct addrinfo_type
+{
+	int ai_flags;
+	int ai_family, ai_socktype, ai_protocol;
+	int ai_addrlen;
+	const void* ai_addr;
+	const char* ai_canonname;
+	addrinfo_type* ai_next;
+};
+struct linger_type
+{
+	u_short_type l_onoff, l_linger;
+};
 typedef u_long_type ioctl_arg_type;
 typedef int signed_size_type;
 # define BOOST_ASIO_OS_DEF(c) BOOST_ASIO_OS_DEF_##c
@@ -301,8 +339,8 @@ typedef in_addr in4_addr_type;
 // HP-UX doesn't provide ip_mreq when _XOPEN_SOURCE_EXTENDED is defined.
 struct in4_mreq_type
 {
-  struct in_addr imr_multiaddr;
-  struct in_addr imr_interface;
+	struct in_addr imr_multiaddr;
+	struct in_addr imr_interface;
 };
 # else
 typedef ip_mreq in4_mreq_type;

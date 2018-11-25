@@ -45,40 +45,42 @@
 #endif
 #endif // BOOST_LOG_DOXYGEN_PASS
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 // The function creates and initializes the sink
 template< typename CharT, typename ArgsT >
 shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log(std::basic_ostream< CharT >& strm, ArgsT const& args)
 {
-    shared_ptr< std::basic_ostream< CharT > > pStream(&strm, boost::null_deleter());
+	shared_ptr< std::basic_ostream< CharT > > pStream(&strm, boost::null_deleter());
 
-    typedef sinks::basic_text_ostream_backend< CharT > backend_t;
-    shared_ptr< backend_t > pBackend = boost::make_shared< backend_t >();
+	typedef sinks::basic_text_ostream_backend< CharT > backend_t;
+	shared_ptr< backend_t > pBackend = boost::make_shared< backend_t >();
 
-    pBackend->add_stream(pStream);
-    pBackend->auto_flush(args[keywords::auto_flush | false]);
+	pBackend->add_stream(pStream);
+	pBackend->auto_flush(args[keywords::auto_flush | false]);
 
-    typedef BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL< backend_t > sink_t;
-    shared_ptr< sink_t > pSink = boost::make_shared< sink_t >(pBackend);
+	typedef BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL< backend_t > sink_t;
+	shared_ptr< sink_t > pSink = boost::make_shared< sink_t >(pBackend);
 
-    aux::setup_filter(*pSink, args,
-        typename is_void< typename parameter::binding< ArgsT, keywords::tag::filter, void >::type >::type());
+	aux::setup_filter(*pSink, args,
+	                  typename is_void< typename parameter::binding< ArgsT, keywords::tag::filter, void >::type >::type());
 
-    aux::setup_formatter(*pSink, args,
-        typename is_void< typename parameter::binding< ArgsT, keywords::tag::format, void >::type >::type());
+	aux::setup_formatter(*pSink, args,
+	                     typename is_void< typename parameter::binding< ArgsT, keywords::tag::format, void >::type >::type());
 
-    core::get()->add_sink(pSink);
+	core::get()->add_sink(pSink);
 
-    return pSink;
+	return pSink;
 }
 
 template< typename CharT >
@@ -88,7 +90,10 @@ struct default_console_stream;
 template< >
 struct default_console_stream< char >
 {
-    static std::ostream& get() { return std::clog; }
+	static std::ostream& get()
+	{
+		return std::clog;
+	}
 };
 #endif // BOOST_LOG_USE_CHAR
 
@@ -96,7 +101,10 @@ struct default_console_stream< char >
 template< >
 struct default_console_stream< wchar_t >
 {
-    static std::wostream& get() { return std::wclog; }
+	static std::wostream& get()
+	{
+		return std::wclog;
+	}
 };
 #endif // BOOST_LOG_USE_WCHAR_T
 
@@ -106,54 +114,54 @@ struct default_console_stream< wchar_t >
 
 template< typename CharT >
 inline shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log()
 {
-    return aux::add_console_log(
-        aux::default_console_stream< CharT >::get(), keywords::auto_flush = false);
+	return aux::add_console_log(
+	           aux::default_console_stream< CharT >::get(), keywords::auto_flush = false);
 }
 
 
 template< typename CharT >
 inline shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log(std::basic_ostream< CharT >& strm)
 {
-    return aux::add_console_log(strm, keywords::auto_flush = false);
+	return aux::add_console_log(strm, keywords::auto_flush = false);
 }
 
 template< typename CharT, typename ArgT1 >
 inline shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log(std::basic_ostream< CharT >& strm, ArgT1 const& arg1)
 {
-    return aux::add_console_log(strm, arg1);
+	return aux::add_console_log(strm, arg1);
 }
 
 template< typename CharT, typename ArgT1, typename ArgT2 >
 inline shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log(std::basic_ostream< CharT >& strm, ArgT1 const& arg1, ArgT2 const& arg2)
 {
-    return aux::add_console_log(strm, (arg1, arg2));
+	return aux::add_console_log(strm, (arg1, arg2));
 }
 
 template< typename CharT, typename ArgT1, typename ArgT2, typename ArgT3 >
 inline shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log(std::basic_ostream< CharT >& strm, ArgT1 const& arg1, ArgT2 const& arg2, ArgT3 const& arg3)
 {
-    return aux::add_console_log(strm, (arg1, arg2, arg3));
+	return aux::add_console_log(strm, (arg1, arg2, arg3));
 }
 
 #else // BOOST_LOG_DOXYGEN_PASS
@@ -174,9 +182,9 @@ inline shared_ptr<
  */
 template< typename CharT, typename... ArgsT >
 shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log(std::basic_ostream< CharT >& strm, ArgsT... const& args);
 
 /*!
@@ -187,9 +195,9 @@ shared_ptr<
  */
 template< typename CharT, typename... ArgsT >
 shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::basic_text_ostream_backend< CharT >
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::basic_text_ostream_backend< CharT >
+>
 > add_console_log(ArgsT... const& args);
 
 #endif // BOOST_LOG_DOXYGEN_PASS
@@ -204,12 +212,12 @@ shared_ptr<
  * \return Pointer to the constructed sink.
  */
 inline shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::text_ostream_backend
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::text_ostream_backend
+>
 > add_console_log()
 {
-    return add_console_log(std::clog);
+	return add_console_log(std::clog);
 }
 
 #endif // BOOST_LOG_USE_CHAR
@@ -222,12 +230,12 @@ inline shared_ptr<
  * \return Pointer to the constructed sink.
  */
 inline shared_ptr<
-    BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
-        sinks::wtext_ostream_backend
-    >
+BOOST_LOG_CONSOLE_SINK_FRONTEND_INTERNAL<
+sinks::wtext_ostream_backend
+>
 > wadd_console_log()
 {
-    return add_console_log(std::wclog);
+	return add_console_log(std::wclog);
 }
 
 #endif // BOOST_LOG_USE_WCHAR_T

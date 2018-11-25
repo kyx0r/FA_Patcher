@@ -17,8 +17,10 @@
 #include <boost/compute/algorithm/find_if.hpp>
 #include <boost/compute/type_traits/vector_size.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns an iterator pointing to the first element in the range
 /// [\p first, \p last) that equals \p value.
@@ -30,27 +32,29 @@ inline InputIterator find(InputIterator first,
                           const T &value,
                           command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator>::value_type value_type;
 
-    using ::boost::compute::_1;
-    using ::boost::compute::lambda::all;
+	using ::boost::compute::_1;
+	using ::boost::compute::lambda::all;
 
-    if(vector_size<value_type>::value == 1){
-        return ::boost::compute::find_if(
-                   first,
-                   last,
-                   _1 == value,
-                   queue
-               );
-    }
-    else {
-        return ::boost::compute::find_if(
-                   first,
-                   last,
-                   all(_1 == value),
-                   queue
-               );
-    }
+	if(vector_size<value_type>::value == 1)
+	{
+		return ::boost::compute::find_if(
+		           first,
+		           last,
+		           _1 == value,
+		           queue
+		       );
+	}
+	else
+	{
+		return ::boost::compute::find_if(
+		           first,
+		           last,
+		           all(_1 == value),
+		           queue
+		       );
+	}
 }
 
 } // end compute namespace

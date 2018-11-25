@@ -24,24 +24,24 @@
 
 namespace boost
 {
-    namespace range_detail
-    {
-        template< class T, bool B = has_type<range_iterator<T> >::value >
-        struct range_difference
-        { };
+namespace range_detail
+{
+template< class T, bool B = has_type<range_iterator<T> >::value >
+struct range_difference
+{ };
 
-        template< class T >
-        struct range_difference<T, true>
-          : iterator_difference<
-                BOOST_DEDUCED_TYPENAME range_iterator<T>::type
-            >
-        { };
-    }
+template< class T >
+struct range_difference<T, true>
+	: iterator_difference<
+	  BOOST_DEDUCED_TYPENAME range_iterator<T>::type
+	  >
+{ };
+}
 
-    template< class T >
-    struct range_difference
-      : range_detail::range_difference<BOOST_DEDUCED_TYPENAME remove_reference<T>::type>
-    { };
+template< class T >
+struct range_difference
+	: range_detail::range_difference<BOOST_DEDUCED_TYPENAME remove_reference<T>::type>
+{ };
 }
 
 #endif

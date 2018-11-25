@@ -45,7 +45,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace fusion_adapt_detail
@@ -53,27 +55,27 @@ namespace fusion_adapt_detail
 
 template <class Sequence>
 struct all_same :
-    boost::mpl::bool_<
-        boost::mpl::count_if<
-            Sequence,
-            boost::is_same<
-                typename boost::mpl::front<Sequence>::type,
-                boost::mpl::_
-            >
-        >::value == boost::mpl::size<Sequence>::value
-    >
+	boost::mpl::bool_<
+	boost::mpl::count_if<
+	Sequence,
+	boost::is_same<
+	typename boost::mpl::front<Sequence>::type,
+	boost::mpl::_
+	>
+	>::value == boost::mpl::size<Sequence>::value
+	>
 {};
 
 template <class Sequence>
 struct is_coordinate_size : boost::mpl::bool_<
-            boost::fusion::result_of::size<Sequence>::value == 2 ||
-            boost::fusion::result_of::size<Sequence>::value == 3> {};
+	boost::fusion::result_of::size<Sequence>::value == 2 ||
+	boost::fusion::result_of::size<Sequence>::value == 3> {};
 
 template<typename Sequence>
 struct is_fusion_sequence
-    : boost::mpl::and_<boost::fusion::traits::is_sequence<Sequence>,
-                fusion_adapt_detail::is_coordinate_size<Sequence>,
-                fusion_adapt_detail::all_same<Sequence> >
+	: boost::mpl::and_<boost::fusion::traits::is_sequence<Sequence>,
+	  fusion_adapt_detail::is_coordinate_size<Sequence>,
+	  fusion_adapt_detail::all_same<Sequence> >
 {};
 
 
@@ -87,67 +89,67 @@ namespace traits
 // Boost Fusion Sequence, 2D or 3D
 template <typename Sequence>
 struct coordinate_type
-    <
-        Sequence,
-        typename boost::enable_if
-            <
-                fusion_adapt_detail::is_fusion_sequence<Sequence>
-            >::type
-    >
+	<
+	Sequence,
+	typename boost::enable_if
+	<
+	fusion_adapt_detail::is_fusion_sequence<Sequence>
+	>::type
+	>
 {
-    typedef typename boost::mpl::front<Sequence>::type type;
+	typedef typename boost::mpl::front<Sequence>::type type;
 };
 
 
 template <typename Sequence>
 struct dimension
-    <
-        Sequence,
-        typename boost::enable_if
-            <
-                fusion_adapt_detail::is_fusion_sequence<Sequence>
-            >::type
-    > : boost::mpl::size<Sequence>
+	<
+	Sequence,
+	typename boost::enable_if
+	<
+	fusion_adapt_detail::is_fusion_sequence<Sequence>
+	>::type
+	> : boost::mpl::size<Sequence>
 {};
 
 
 template <typename Sequence, std::size_t Dimension>
 struct access
-    <
-        Sequence,
-        Dimension,
-        typename boost::enable_if
-            <
-                fusion_adapt_detail::is_fusion_sequence<Sequence>
-            >::type
-    >
+	<
+	Sequence,
+	Dimension,
+	typename boost::enable_if
+	<
+	fusion_adapt_detail::is_fusion_sequence<Sequence>
+	>::type
+	>
 {
-    typedef typename coordinate_type<Sequence>::type ctype;
+	typedef typename coordinate_type<Sequence>::type ctype;
 
-    static inline ctype get(Sequence const& point)
-    {
-        return boost::fusion::at_c<Dimension>(point);
-    }
+	static inline ctype get(Sequence const& point)
+	{
+		return boost::fusion::at_c<Dimension>(point);
+	}
 
-    template <class CoordinateType>
-    static inline void set(Sequence& point, CoordinateType const& value)
-    {
-        boost::fusion::at_c<Dimension>(point) = value;
-    }
+	template <class CoordinateType>
+	static inline void set(Sequence& point, CoordinateType const& value)
+	{
+		boost::fusion::at_c<Dimension>(point) = value;
+	}
 };
 
 
 template <typename Sequence>
 struct tag
-    <
-        Sequence,
-        typename boost::enable_if
-            <
-                fusion_adapt_detail::is_fusion_sequence<Sequence>
-            >::type
-    >
+	<
+	Sequence,
+	typename boost::enable_if
+	<
+	fusion_adapt_detail::is_fusion_sequence<Sequence>
+	>::type
+	>
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 
@@ -156,7 +158,8 @@ struct tag
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 // Convenience registration macro to bind a Fusion sequence to a CS

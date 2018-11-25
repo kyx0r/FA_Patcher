@@ -12,7 +12,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ qualified_class_of_hpp
 /*`
@@ -26,20 +29,21 @@ template<typename T>
 using qualified_class_of_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::traits<detail::shallow_decay<T>>::invoke_type,
-        type_is_not_a_member_pointer>;
+    typename detail::traits<detail::shallow_decay<T>>::invoke_type,
+    type_is_not_a_member_pointer>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct qualified_class_of_impl {};
+template<typename T, typename = std::false_type>
+struct qualified_class_of_impl {};
 
-    template<typename T>
-    struct qualified_class_of_impl <T, typename std::is_same<
-        qualified_class_of_t<T>, detail::dummy>::type>
-    {
-        using type = qualified_class_of_t<T>;
-    };
+template<typename T>
+struct qualified_class_of_impl <T, typename std::is_same<
+	qualified_class_of_t<T>, detail::dummy>::type>
+{
+	using type = qualified_class_of_t<T>;
+};
 }
 
 //->
@@ -48,7 +52,8 @@ template<typename T>
 struct qualified_class_of : detail::qualified_class_of_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

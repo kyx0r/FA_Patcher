@@ -11,9 +11,12 @@
 # include <boost/mpl/placeholders.hpp>
 # include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace boost {
-namespace iterators {
-namespace detail {
+namespace boost
+{
+namespace iterators
+{
+namespace detail
+{
 
 template <bool GreaterEqual, bool LessEqual>
 struct minimum_category_impl;
@@ -24,38 +27,38 @@ struct error_not_related_by_convertibility;
 template <>
 struct minimum_category_impl<true,false>
 {
-    template <class T1, class T2> struct apply
-    {
-        typedef T2 type;
-    };
+	template <class T1, class T2> struct apply
+	{
+		typedef T2 type;
+	};
 };
 
 template <>
 struct minimum_category_impl<false,true>
 {
-    template <class T1, class T2> struct apply
-    {
-        typedef T1 type;
-    };
+	template <class T1, class T2> struct apply
+	{
+		typedef T1 type;
+	};
 };
 
 template <>
 struct minimum_category_impl<true,true>
 {
-    template <class T1, class T2> struct apply
-    {
-        BOOST_STATIC_ASSERT((is_same<T1,T2>::value));
-        typedef T1 type;
-    };
+	template <class T1, class T2> struct apply
+	{
+		BOOST_STATIC_ASSERT((is_same<T1,T2>::value));
+		typedef T1 type;
+	};
 };
 
 template <>
 struct minimum_category_impl<false,false>
 {
-    template <class T1, class T2> struct apply
-      : error_not_related_by_convertibility<T1,T2>
-    {
-    };
+	template <class T1, class T2> struct apply
+		: error_not_related_by_convertibility<T1,T2>
+	{
+	};
 };
 
 } // namespace detail
@@ -67,25 +70,25 @@ struct minimum_category_impl<false,false>
 template <class T1 = mpl::_1, class T2 = mpl::_2>
 struct minimum_category
 {
-    typedef boost::iterators::detail::minimum_category_impl<
-        ::boost::is_convertible<T1,T2>::value
-      , ::boost::is_convertible<T2,T1>::value
-    > outer;
+	typedef boost::iterators::detail::minimum_category_impl<
+	::boost::is_convertible<T1,T2>::value
+	, ::boost::is_convertible<T2,T1>::value
+	> outer;
 
-    typedef typename outer::template apply<T1,T2> inner;
-    typedef typename inner::type type;
+	typedef typename outer::template apply<T1,T2> inner;
+	typedef typename inner::type type;
 
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(2,minimum_category,(T1,T2))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(2,minimum_category,(T1,T2))
 };
 
 template <>
 struct minimum_category<mpl::_1,mpl::_2>
 {
-    template <class T1, class T2>
-    struct apply : minimum_category<T1,T2>
-    {};
+	template <class T1, class T2>
+	struct apply : minimum_category<T1,T2>
+	{};
 
-    BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(2,minimum_category,(mpl::_1,mpl::_2))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(2,minimum_category,(mpl::_1,mpl::_2))
 };
 
 } // namespace iterators

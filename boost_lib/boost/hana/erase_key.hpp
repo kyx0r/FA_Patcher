@@ -17,21 +17,23 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Set, typename ...Args>
-    constexpr decltype(auto) erase_key_t::operator()(Set&& set, Args&& ...args) const {
-        return erase_key_impl<typename hana::tag_of<Set>::type>::apply(
-            static_cast<Set&&>(set),
-            static_cast<Args&&>(args)...
-        );
-    }
-    //! @endcond
+//! @cond
+template <typename Set, typename ...Args>
+constexpr decltype(auto) erase_key_t::operator()(Set&& set, Args&& ...args) const
+{
+	return erase_key_impl<typename hana::tag_of<Set>::type>::apply(
+	           static_cast<Set&&>(set),
+	           static_cast<Args&&>(args)...
+	       );
+}
+//! @endcond
 
-    template <typename T, bool condition>
-    struct erase_key_impl<T, when<condition>> : default_ {
-        template <typename ...Args>
-        static constexpr auto apply(Args&& ...) = delete;
-    };
+template <typename T, bool condition>
+struct erase_key_impl<T, when<condition>> : default_
+{
+	template <typename ...Args>
+	static constexpr auto apply(Args&& ...) = delete;
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_ERASE_KEY_HPP

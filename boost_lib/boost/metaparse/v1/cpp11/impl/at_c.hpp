@@ -12,23 +12,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S, int N>
-        struct at_c;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S, int N>
+struct at_c;
 
-        template <char C, char... Cs, int N>
-        struct at_c<string<C, Cs...>, N> : at_c<string<Cs...>, N - 1> {};
+template <char C, char... Cs, int N>
+struct at_c<string<C, Cs...>, N> : at_c<string<Cs...>, N - 1> {};
 
-        template <char C, char... Cs>
-        struct at_c<string<C, Cs...>, 0> : boost::mpl::char_<C> {};
-      }
-    }
-  }
+template <char C, char... Cs>
+struct at_c<string<C, Cs...>, 0> : boost::mpl::char_<C> {};
+}
+}
+}
 }
 
 #endif

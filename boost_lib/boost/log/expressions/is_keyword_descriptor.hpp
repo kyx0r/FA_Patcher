@@ -23,11 +23,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * Base class for keyword descriptors. All keyword descriptors must derive from this class to support the \c is_keyword_descriptor trait.
@@ -35,7 +37,7 @@ namespace expressions {
 struct keyword_descriptor
 {
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    typedef void _is_boost_log_keyword_descriptor;
+	typedef void _is_boost_log_keyword_descriptor;
 #endif // BOOST_LOG_DOXYGEN_PASS
 };
 
@@ -44,14 +46,14 @@ struct keyword_descriptor
  */
 template< typename T, typename VoidT = void >
 struct is_keyword_descriptor :
-    public mpl::false_
+	public mpl::false_
 {
 };
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 template< typename T >
 struct is_keyword_descriptor< T, typename T::_is_boost_log_keyword_descriptor > :
-    public mpl::true_
+	public mpl::true_
 {
 };
 #endif

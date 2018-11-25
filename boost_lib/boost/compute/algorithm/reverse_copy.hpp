@@ -18,32 +18,35 @@
 #include <boost/compute/algorithm/copy.hpp>
 #include <boost/compute/algorithm/reverse.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Iterator, class OutputIterator>
 struct reverse_copy_kernel : public meta_kernel
 {
-    reverse_copy_kernel(Iterator first, Iterator last, OutputIterator result)
-        : meta_kernel("reverse_copy")
-    {
-        // store size of the range
-        m_size = detail::iterator_range_size(first, last);
-        add_set_arg<const cl_uint>("size", static_cast<const cl_uint>(m_size));
+	reverse_copy_kernel(Iterator first, Iterator last, OutputIterator result)
+		: meta_kernel("reverse_copy")
+	{
+		// store size of the range
+		m_size = detail::iterator_range_size(first, last);
+		add_set_arg<const cl_uint>("size", static_cast<const cl_uint>(m_size));
 
-        *this <<
-            decl<cl_uint>("i") << " = get_global_id(0);\n" <<
-            decl<cl_uint>("j") << " = size - get_global_id(0) - 1;\n" <<
-            result[var<cl_uint>("j")] << "=" << first[var<cl_uint>("i")] << ";\n";
-    }
+		*this <<
+		      decl<cl_uint>("i") << " = get_global_id(0);\n" <<
+		      decl<cl_uint>("j") << " = size - get_global_id(0) - 1;\n" <<
+		      result[var<cl_uint>("j")] << "=" << first[var<cl_uint>("i")] << ";\n";
+	}
 
-    void exec(command_queue &queue)
-    {
-        exec_1d(queue, 0, m_size);
-    }
+	void exec(command_queue &queue)
+	{
+		exec_1d(queue, 0, m_size);
+	}
 
-    size_t m_size;
+	size_t m_size;
 };
 
 } // end detail namespace
@@ -61,18 +64,18 @@ reverse_copy(InputIterator first,
              OutputIterator result,
              command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<OutputIterator>::difference_type difference_type;
+	typedef typename std::iterator_traits<OutputIterator>::difference_type difference_type;
 
-    difference_type count = std::distance(first, last);
+	difference_type count = std::distance(first, last);
 
-    detail::reverse_copy_kernel<InputIterator, OutputIterator>
-        kernel(first, last, result);
+	detail::reverse_copy_kernel<InputIterator, OutputIterator>
+	kernel(first, last, result);
 
-    // run kernel
-    kernel.exec(queue);
+	// run kernel
+	kernel.exec(queue);
 
-    // return iterator to the end of result
-    return result + count;
+	// return iterator to the end of result
+	return result + count;
 }
 
 } // end compute namespace

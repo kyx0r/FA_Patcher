@@ -12,40 +12,46 @@
 #include <boost/range/rend.hpp>
 #include <boost/proto/proto_fwd.hpp>
 
-namespace boost { namespace proto { namespace functional
+namespace boost
+{
+namespace proto
+{
+namespace functional
 {
 
-    // A PolymorphicFunctionObject that wraps boost::rend()
-    struct rend
-    {
-        BOOST_PROTO_CALLABLE()
+// A PolymorphicFunctionObject that wraps boost::rend()
+struct rend
+{
+	BOOST_PROTO_CALLABLE()
 
-        template<typename Sig>
-        struct result;
+	template<typename Sig>
+	struct result;
 
-        template<typename This, typename Rng>
-        struct result<This(Rng)>
-          : boost::range_reverse_iterator<Rng const>
-        {};
+	template<typename This, typename Rng>
+	struct result<This(Rng)>
+: boost::range_reverse_iterator<Rng const>
+	{};
 
-        template<typename This, typename Rng>
-        struct result<This(Rng &)>
-          : boost::range_reverse_iterator<Rng>
-        {};
+	template<typename This, typename Rng>
+	struct result<This(Rng &)>
+: boost::range_reverse_iterator<Rng>
+	{};
 
-        template<typename Rng>
-        typename boost::range_reverse_iterator<Rng>::type operator()(Rng &rng) const
-        {
-            return boost::rend(rng);
-        }
+	template<typename Rng>
+	typename boost::range_reverse_iterator<Rng>::type operator()(Rng &rng) const
+	{
+		return boost::rend(rng);
+	}
 
-        template<typename Rng>
-        typename boost::range_reverse_iterator<Rng const>::type operator()(Rng const &rng) const
-        {
-            return boost::rend(rng);
-        }
-    };
+	template<typename Rng>
+	typename boost::range_reverse_iterator<Rng const>::type operator()(Rng const &rng) const
+	{
+		return boost::rend(rng);
+	}
+};
 
-}}}
+}
+}
+}
 
 #endif

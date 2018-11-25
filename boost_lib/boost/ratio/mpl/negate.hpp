@@ -13,17 +13,19 @@
 #include <boost/ratio/mpl/numeric_cast.hpp>
 #include <boost/mpl/negate.hpp>
 
-namespace boost { 
-namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 template<>
 struct negate_impl< rational_c_tag >
 {
-    template< typename R > struct apply
-        : ratio_negate<R>
-    {
-    };
-};    
+	template< typename R > struct apply
+		: ratio_negate<R>
+	{
+	};
+};
 }
 }
 

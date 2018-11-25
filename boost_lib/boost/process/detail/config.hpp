@@ -36,7 +36,11 @@ extern char **environ;
 #error "System API not supported by boost.process"
 #endif
 
-namespace boost { namespace process { namespace detail
+namespace boost
+{
+namespace process
+{
+namespace detail
 {
 
 #if !defined(BOOST_PROCESS_PIPE_SIZE)
@@ -44,12 +48,15 @@ namespace boost { namespace process { namespace detail
 #endif
 
 #if defined(BOOST_POSIX_API)
-namespace posix {namespace extensions {}}
+namespace posix
+{
+namespace extensions {}
+}
 namespace api = posix;
 
 inline std::error_code get_last_error() noexcept
 {
-    return std::error_code(errno, std::system_category());
+	return std::error_code(errno, std::system_category());
 }
 
 //copied from linux spec.
@@ -58,58 +65,87 @@ inline std::error_code get_last_error() noexcept
 #endif
 
 #elif defined(BOOST_WINDOWS_API)
-namespace windows {namespace extensions {}}
+namespace windows
+{
+namespace extensions {}
+}
 namespace api = windows;
 
 inline std::error_code get_last_error() noexcept
 {
-    return std::error_code(::boost::winapi::GetLastError(), std::system_category());
+	return std::error_code(::boost::winapi::GetLastError(), std::system_category());
 }
 #endif
 
 inline void throw_last_error(const std::string & msg)
 {
-    throw process_error(get_last_error(), msg);
+	throw process_error(get_last_error(), msg);
 }
 
 inline void throw_last_error(const char * msg)
 {
-    throw process_error(get_last_error(), msg);
+	throw process_error(get_last_error(), msg);
 }
 
 inline void throw_last_error()
 {
-    throw process_error(get_last_error());
+	throw process_error(get_last_error());
 }
 
 inline void throw_error(const std::error_code& ec)
 {
-    if (ec)
-        throw process_error(ec);
+	if (ec)
+		throw process_error(ec);
 }
 
 inline void throw_error(const std::error_code& ec, const char* msg)
 {
-    if (ec)
-        throw process_error(ec, msg);
+	if (ec)
+		throw process_error(ec, msg);
 }
 
 template<typename Char> constexpr Char null_char();
-template<> constexpr char     null_char<char>     (){return   '\0';}
-template<> constexpr wchar_t  null_char<wchar_t>  (){return  L'\0';}
+template<> constexpr char     null_char<char>     ()
+{
+	return   '\0';
+}
+template<> constexpr wchar_t  null_char<wchar_t>  ()
+{
+	return  L'\0';
+}
 
 template<typename Char> constexpr Char equal_sign();
-template<> constexpr char     equal_sign<char>    () {return  '='; }
-template<> constexpr wchar_t  equal_sign<wchar_t> () {return L'='; }
+template<> constexpr char     equal_sign<char>    ()
+{
+	return  '=';
+}
+template<> constexpr wchar_t  equal_sign<wchar_t> ()
+{
+	return L'=';
+}
 
 template<typename Char> constexpr Char quote_sign();
-template<> constexpr char     quote_sign<char>    () {return  '"'; }
-template<> constexpr wchar_t  quote_sign<wchar_t> () {return L'"'; }
+template<> constexpr char     quote_sign<char>    ()
+{
+	return  '"';
+}
+template<> constexpr wchar_t  quote_sign<wchar_t> ()
+{
+	return L'"';
+}
 
 template<typename Char> constexpr Char space_sign();
-template<> constexpr char     space_sign<char>    () {return  ' '; }
-template<> constexpr wchar_t  space_sign<wchar_t> () {return L' '; }
+template<> constexpr char     space_sign<char>    ()
+{
+	return  ' ';
+}
+template<> constexpr wchar_t  space_sign<wchar_t> ()
+{
+	return L' ';
+}
 
 
-}}}
+}
+}
+}
 #endif

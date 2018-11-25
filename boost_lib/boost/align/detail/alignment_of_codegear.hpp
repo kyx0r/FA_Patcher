@@ -11,13 +11,16 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/align/detail/integral_constant.hpp>
 #include <cstddef>
 
-namespace boost {
-namespace alignment {
-namespace detail {
+namespace boost
+{
+namespace alignment
+{
+namespace detail
+{
 
 template<class T>
 struct alignment_of
-    : integral_constant<std::size_t, alignof(T)> { };
+: integral_constant<std::size_t, alignof(T)> { };
 
 } /* detail */
 } /* alignment */

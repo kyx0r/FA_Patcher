@@ -11,9 +11,12 @@
 #ifndef BOOST_COMPUTE_LAMBDA_PLACEHOLDER_HPP
 #define BOOST_COMPUTE_LAMBDA_PLACEHOLDER_HPP
 
-namespace boost {
-namespace compute {
-namespace lambda {
+namespace boost
+{
+namespace compute
+{
+namespace lambda
+{
 
 // lambda placeholder type
 template<int I>

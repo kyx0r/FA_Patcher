@@ -22,58 +22,64 @@
 #include <boost/geometry/algorithms/validity_failure_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 template <typename Range, closure_selector Closure>
 struct has_duplicates
 {
-    template <typename VisitPolicy>
-    static inline bool apply(Range const& range, VisitPolicy& visitor)
-    {
-        boost::ignore_unused(visitor);
+	template <typename VisitPolicy>
+	static inline bool apply(Range const& range, VisitPolicy& visitor)
+	{
+		boost::ignore_unused(visitor);
 
-        typedef typename closeable_view<Range const, Closure>::type view_type;
-        typedef typename boost::range_const_iterator
-            <
-                view_type const
-            >::type const_iterator;
+		typedef typename closeable_view<Range const, Closure>::type view_type;
+		typedef typename boost::range_const_iterator
+		<
+		view_type const
+		>::type const_iterator;
 
-        view_type view(range);
+		view_type view(range);
 
-        if ( boost::size(view) < 2 )
-        {
-            return ! visitor.template apply<no_failure>();
-        }
+		if ( boost::size(view) < 2 )
+		{
+			return ! visitor.template apply<no_failure>();
+		}
 
-        geometry::equal_to<typename boost::range_value<Range>::type> equal;
+		geometry::equal_to<typename boost::range_value<Range>::type> equal;
 
-        const_iterator it = boost::const_begin(view);
-        const_iterator next = it;
-        ++next;
-        for (; next != boost::const_end(view); ++it, ++next)
-        {
-            if ( equal(*it, *next) )
-            {
-                return ! visitor.template apply<failure_duplicate_points>(*it);
-            }
-        }
-        return ! visitor.template apply<no_failure>();
-    }
+		const_iterator it = boost::const_begin(view);
+		const_iterator next = it;
+		++next;
+		for (; next != boost::const_end(view); ++it, ++next)
+		{
+			if ( equal(*it, *next) )
+			{
+				return ! visitor.template apply<failure_duplicate_points>(*it);
+			}
+		}
+		return ! visitor.template apply<no_failure>();
+	}
 };
 
 
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 

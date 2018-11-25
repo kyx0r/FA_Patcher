@@ -24,7 +24,11 @@
 #include <boost/geometry/geometries/concepts/point_concept.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -42,22 +46,22 @@ template <typename Geometry>
 class MultiPoint
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename boost::range_value<Geometry>::type point_type;
+	typedef typename boost::range_value<Geometry>::type point_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::Point<point_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Point<point_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 
 public :
 
-    BOOST_CONCEPT_USAGE(MultiPoint)
-    {
-        Geometry* mp = 0;
-        traits::clear<Geometry>::apply(*mp);
-        traits::resize<Geometry>::apply(*mp, 0);
-        point_type* point = 0;
-        traits::push_back<Geometry>::apply(*mp, *point);
-    }
+	BOOST_CONCEPT_USAGE(MultiPoint)
+	{
+		Geometry* mp = 0;
+		traits::clear<Geometry>::apply(*mp);
+		traits::resize<Geometry>::apply(*mp, 0);
+		point_type* point = 0;
+		traits::push_back<Geometry>::apply(*mp, *point);
+	}
 #endif
 };
 
@@ -70,21 +74,23 @@ template <typename Geometry>
 class ConstMultiPoint
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename boost::range_value<Geometry>::type point_type;
+	typedef typename boost::range_value<Geometry>::type point_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<point_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<point_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 
 public :
 
-    BOOST_CONCEPT_USAGE(ConstMultiPoint)
-    {
-    }
+	BOOST_CONCEPT_USAGE(ConstMultiPoint)
+	{
+	}
 #endif
 };
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_CONCEPTS_MULTI_POINT_CONCEPT_HPP

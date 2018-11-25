@@ -23,24 +23,33 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 // **************                test_case_counter             ************** //
 // ************************************************************************** //
 
 ///! Counts the number of enabled test cases
-class test_case_counter : public test_tree_visitor {
+class test_case_counter : public test_tree_visitor
+{
 public:
-    // Constructor
-    test_case_counter() : p_count( 0 ) {}
+	// Constructor
+	test_case_counter() : p_count( 0 ) {}
 
-    BOOST_READONLY_PROPERTY( counter_t, (test_case_counter)) p_count;
+	BOOST_READONLY_PROPERTY( counter_t, (test_case_counter)) p_count;
 private:
-    // test tree visitor interface
-    virtual void    visit( test_case const& tc )                { if( tc.is_enabled() ) ++p_count.value; }
-    virtual bool    test_suite_start( test_suite const& ts )    { return ts.is_enabled(); }
+	// test tree visitor interface
+	virtual void    visit( test_case const& tc )
+	{
+		if( tc.is_enabled() ) ++p_count.value;
+	}
+	virtual bool    test_suite_start( test_suite const& ts )
+	{
+		return ts.is_enabled();
+	}
 };
 
 } // namespace unit_test

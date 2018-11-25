@@ -24,8 +24,10 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 // ************************************************************************** //
 /// @brief Monitors the init of the framework
@@ -33,24 +35,28 @@ namespace unit_test {
 /// This class collects the state of the init/termination of the unit test framework.
 ///
 /// @see boost::unit_test::test_observer
-class BOOST_TEST_DECL framework_init_observer_t : public test_observer, public singleton<framework_init_observer_t> {
+class BOOST_TEST_DECL framework_init_observer_t : public test_observer, public singleton<framework_init_observer_t>
+{
 public:
 
-    virtual void        test_start( counter_t );
+	virtual void        test_start( counter_t );
 
-    virtual void        assertion_result( unit_test::assertion_result );
-    virtual void        exception_caught( execution_exception const& );
-    virtual void        test_aborted();
+	virtual void        assertion_result( unit_test::assertion_result );
+	virtual void        exception_caught( execution_exception const& );
+	virtual void        test_aborted();
 
-    virtual int         priority() { return 0; }
+	virtual int         priority()
+	{
+		return 0;
+	}
 
-    void                clear();
+	void                clear();
 
-    /// Indicates if a failure has been recorded so far
-    bool                has_failed( ) const;
+	/// Indicates if a failure has been recorded so far
+	bool                has_failed( ) const;
 
 private:
-    BOOST_TEST_SINGLETON_CONS( framework_init_observer_t )
+	BOOST_TEST_SINGLETON_CONS( framework_init_observer_t )
 };
 
 BOOST_TEST_SINGLETON_INST( framework_init_observer )

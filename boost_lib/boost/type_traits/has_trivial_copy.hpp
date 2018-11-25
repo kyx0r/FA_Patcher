@@ -26,35 +26,36 @@
 #include <boost/type_traits/add_lvalue_reference.hpp>
 #endif
 
-namespace boost {
+namespace boost
+{
 
-template <typename T> struct has_trivial_copy 
-: public integral_constant<bool, 
+template <typename T> struct has_trivial_copy
+	: public integral_constant<bool,
 #ifdef BOOST_HAS_TRIVIAL_COPY
-   BOOST_HAS_TRIVIAL_COPY(T) BOOST_TT_TRIVIAL_CONSTRUCT_FIX
+  BOOST_HAS_TRIVIAL_COPY(T) BOOST_TT_TRIVIAL_CONSTRUCT_FIX
 #else
-   ::boost::is_pod<T>::value
+	  ::boost::is_pod<T>::value
 #endif
->{};
+  > {};
 // Arrays are not explicitly copyable:
-template <typename T, std::size_t N> struct has_trivial_copy<T[N]> : public false_type{};
-template <typename T> struct has_trivial_copy<T[]> : public false_type{};
+template <typename T, std::size_t N> struct has_trivial_copy<T[N]> : public false_type {};
+template <typename T> struct has_trivial_copy<T[]> : public false_type {};
 // Are volatile types ever trivial?  We don't really know, so assume not:
-template <typename T> struct has_trivial_copy<T volatile> : public false_type{};
+template <typename T> struct has_trivial_copy<T volatile> : public false_type {};
 
-template <> struct has_trivial_copy<void> : public false_type{};
+template <> struct has_trivial_copy<void> : public false_type {};
 #ifndef BOOST_NO_CV_VOID_SPECIALIZATIONS
-template <> struct has_trivial_copy<void const> : public false_type{};
-template <> struct has_trivial_copy<void volatile> : public false_type{};
-template <> struct has_trivial_copy<void const volatile> : public false_type{};
+template <> struct has_trivial_copy<void const> : public false_type {};
+template <> struct has_trivial_copy<void volatile> : public false_type {};
+template <> struct has_trivial_copy<void const volatile> : public false_type {};
 #endif
 
-template <class T> struct has_trivial_copy<T&> : public false_type{};
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) 
-template <class T> struct has_trivial_copy<T&&> : public false_type{};
+template <class T> struct has_trivial_copy<T&> : public false_type {};
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+template <class T> struct has_trivial_copy<T&&> : public false_type {};
 #endif
 
-template <class T> struct has_trivial_copy_constructor : public has_trivial_copy<T>{};
+template <class T> struct has_trivial_copy_constructor : public has_trivial_copy<T> {};
 
 #undef BOOST_TT_TRIVIAL_CONSTRUCT_FIX
 

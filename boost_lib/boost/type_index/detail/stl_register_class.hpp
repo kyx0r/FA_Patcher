@@ -19,14 +19,22 @@
 # pragma once
 #endif
 
-namespace boost { namespace typeindex { namespace detail {
+namespace boost
+{
+namespace typeindex
+{
+namespace detail
+{
 
 template <class T>
-inline const stl_type_index::type_info_t& stl_construct_typeid_ref(const T*) BOOST_NOEXCEPT {
-    return typeid(T);
+inline const stl_type_index::type_info_t& stl_construct_typeid_ref(const T*) BOOST_NOEXCEPT
+{
+	return typeid(T);
 }
 
-}}} // namespace boost::typeindex::detail
+}
+}
+} // namespace boost::typeindex::detail
 
 /// @cond
 #define BOOST_TYPE_INDEX_REGISTER_CLASS                                                                                     \

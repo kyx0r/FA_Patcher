@@ -15,9 +15,12 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class OutputIterator, class T, class BinaryFunction>
 inline void serial_accumulate(InputIterator first,
@@ -27,26 +30,26 @@ inline void serial_accumulate(InputIterator first,
                               BinaryFunction function,
                               command_queue &queue)
 {
-    const context &context = queue.get_context();
-    size_t count = detail::iterator_range_size(first, last);
+	const context &context = queue.get_context();
+	size_t count = detail::iterator_range_size(first, last);
 
-    meta_kernel k("serial_accumulate");
-    size_t init_arg = k.add_arg<T>("init");
-    size_t count_arg = k.add_arg<cl_uint>("count");
+	meta_kernel k("serial_accumulate");
+	size_t init_arg = k.add_arg<T>("init");
+	size_t count_arg = k.add_arg<cl_uint>("count");
 
-    k <<
-        k.decl<T>("result") << " = init;\n" <<
-        "for(uint i = 0; i < count; i++)\n" <<
-        "    result = " << function(k.var<T>("result"),
-                                    first[k.var<cl_uint>("i")]) << ";\n" <<
-        result[0] << " = result;\n";
+	k <<
+	  k.decl<T>("result") << " = init;\n" <<
+	  "for(uint i = 0; i < count; i++)\n" <<
+	  "    result = " << function(k.var<T>("result"),
+	                              first[k.var<cl_uint>("i")]) << ";\n" <<
+	  result[0] << " = result;\n";
 
-    kernel kernel = k.compile(context);
+	kernel kernel = k.compile(context);
 
-    kernel.set_arg(init_arg, init);
-    kernel.set_arg(count_arg, static_cast<cl_uint>(count));
+	kernel.set_arg(init_arg, init);
+	kernel.set_arg(count_arg, static_cast<cl_uint>(count));
 
-    queue.enqueue_task(kernel);
+	queue.enqueue_task(kernel);
 }
 
 } // end detail namespace

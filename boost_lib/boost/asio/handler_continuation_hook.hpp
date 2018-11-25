@@ -19,8 +19,10 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 /// Default continuation function for handlers.
 /**
@@ -45,7 +47,7 @@ namespace asio {
  */
 inline bool asio_handler_is_continuation(...)
 {
-  return false;
+	return false;
 }
 
 } // namespace asio

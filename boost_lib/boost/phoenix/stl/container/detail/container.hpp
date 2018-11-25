@@ -2,7 +2,7 @@
     Copyright (c) 2004 Angus Leeming
     Copyright (c) 2004 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #ifndef BOOST_PHOENIX_CONTAINER_DETAIL_CONTAINER_HPP
@@ -14,7 +14,11 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
-namespace boost { namespace phoenix { namespace stl
+namespace boost
+{
+namespace phoenix
+{
+namespace stl
 {
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -38,20 +42,20 @@ namespace boost { namespace phoenix { namespace stl
         typedef typename C::MEMBER_TYPE type;                                   \
     }
 
-    MEMBER_TYPE_OF(allocator_type);
-    MEMBER_TYPE_OF(const_iterator);
-    MEMBER_TYPE_OF(const_reference);
-    MEMBER_TYPE_OF(const_reverse_iterator);
-    MEMBER_TYPE_OF(container_type);
-    MEMBER_TYPE_OF(data_type);
-    MEMBER_TYPE_OF(iterator);
-    MEMBER_TYPE_OF(key_compare);
-    MEMBER_TYPE_OF(key_type);
-    MEMBER_TYPE_OF(reference);
-    MEMBER_TYPE_OF(reverse_iterator);
-    MEMBER_TYPE_OF(size_type);
-    MEMBER_TYPE_OF(value_compare);
-    MEMBER_TYPE_OF(value_type);
+MEMBER_TYPE_OF(allocator_type);
+MEMBER_TYPE_OF(const_iterator);
+MEMBER_TYPE_OF(const_reference);
+MEMBER_TYPE_OF(const_reverse_iterator);
+MEMBER_TYPE_OF(container_type);
+MEMBER_TYPE_OF(data_type);
+MEMBER_TYPE_OF(iterator);
+MEMBER_TYPE_OF(key_compare);
+MEMBER_TYPE_OF(key_type);
+MEMBER_TYPE_OF(reference);
+MEMBER_TYPE_OF(reverse_iterator);
+MEMBER_TYPE_OF(size_type);
+MEMBER_TYPE_OF(value_compare);
+MEMBER_TYPE_OF(value_type);
 
 #undef MEMBER_TYPE_OF
 
@@ -71,41 +75,41 @@ namespace boost { namespace phoenix { namespace stl
 //      this return type automatically.
 //
 ///////////////////////////////////////////////////////////////////////////////
-    template <typename C>
-    struct const_qualified_reference_of
-    {
-        typedef typename
-            boost::mpl::eval_if_c<
-                boost::is_const<C>::value
-              , const_reference_of<C>
-              , reference_of<C>
-            >::type
-        type;
-    };
+template <typename C>
+struct const_qualified_reference_of
+{
+	typedef typename
+	boost::mpl::eval_if_c<
+	boost::is_const<C>::value
+	, const_reference_of<C>
+	, reference_of<C>
+	>::type
+	type;
+};
 
-    template <typename C>
-    struct const_qualified_iterator_of
-    {
-        typedef typename
-            boost::mpl::eval_if_c<
-                boost::is_const<C>::value
-              , const_iterator_of<C>
-              , iterator_of<C>
-            >::type
-        type;
-    };
+template <typename C>
+struct const_qualified_iterator_of
+{
+	typedef typename
+	boost::mpl::eval_if_c<
+	boost::is_const<C>::value
+	, const_iterator_of<C>
+	, iterator_of<C>
+	>::type
+	type;
+};
 
-    template <typename C>
-    struct const_qualified_reverse_iterator_of
-    {
-        typedef typename
-            boost::mpl::eval_if_c<
-                boost::is_const<C>::value
-              , const_reverse_iterator_of<C>
-              , reverse_iterator_of<C>
-            >::type
-        type;
-    };
+template <typename C>
+struct const_qualified_reverse_iterator_of
+{
+	typedef typename
+	boost::mpl::eval_if_c<
+	boost::is_const<C>::value
+	, const_reverse_iterator_of<C>
+	, reverse_iterator_of<C>
+	>::type
+	type;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -115,24 +119,30 @@ namespace boost { namespace phoenix { namespace stl
 //      or unordered_multimap by checking if it has a member type named "mapped_type".
 //
 ///////////////////////////////////////////////////////////////////////////////
-    namespace stl_impl
-    {
-        struct one { char a[1]; };
-        struct two { char a[2]; };
+namespace stl_impl
+{
+struct one
+{
+	char a[1];
+};
+struct two
+{
+	char a[2];
+};
 
-        template <typename C>
-        one has_mapped_type(typename C::mapped_type(*)());
+template <typename C>
+one has_mapped_type(typename C::mapped_type(*)());
 
-        template <typename C>
-        two has_mapped_type(...);
-    }
+template <typename C>
+two has_mapped_type(...);
+}
 
-    template <typename C>
-    struct has_mapped_type
-        : boost::mpl::bool_<
-            sizeof(stl_impl::has_mapped_type<C>(0)) == sizeof(stl_impl::one)
-        >
-    {};
+template <typename C>
+struct has_mapped_type
+	: boost::mpl::bool_<
+  sizeof(stl_impl::has_mapped_type<C>(0)) == sizeof(stl_impl::one)
+  >
+  {};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -142,21 +152,21 @@ namespace boost { namespace phoenix { namespace stl
 //      by checking if it has a member type named "key_type".
 //
 ///////////////////////////////////////////////////////////////////////////////
-    namespace stl_impl
-    {
-        template <typename C>
-        one has_key_type(typename C::key_type(*)());
+namespace stl_impl
+{
+template <typename C>
+one has_key_type(typename C::key_type(*)());
 
-        template <typename C>
-        two has_key_type(...);
-    }
+template <typename C>
+two has_key_type(...);
+}
 
-    template <typename C>
-    struct has_key_type
-        : boost::mpl::bool_<
-            sizeof(stl_impl::has_key_type<C>(0)) == sizeof(stl_impl::one)
-        >
-    {};
+template <typename C>
+struct has_key_type
+	: boost::mpl::bool_<
+  sizeof(stl_impl::has_key_type<C>(0)) == sizeof(stl_impl::one)
+  >
+  {};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -166,10 +176,10 @@ namespace boost { namespace phoenix { namespace stl
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-    template <typename C, typename Arg>
-    struct is_key_type_of
-        : boost::is_convertible<Arg, typename key_type_of<C>::type>
-    {};
+template <typename C, typename Arg>
+struct is_key_type_of
+	: boost::is_convertible<Arg, typename key_type_of<C>::type>
+{};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -180,32 +190,34 @@ namespace boost { namespace phoenix { namespace stl
 //      a multimap returns an iterator.
 //
 ///////////////////////////////////////////////////////////////////////////////
-    namespace stl_impl
-    {
-        //  Cool implementation of map_insert_returns_pair by Daniel Wallin.
-        //  Thanks Daniel!!! I owe you a Pizza!
+namespace stl_impl
+{
+//  Cool implementation of map_insert_returns_pair by Daniel Wallin.
+//  Thanks Daniel!!! I owe you a Pizza!
 
-        template<class A, class B>
-        one map_insert_returns_pair_check(std::pair<A,B> const&);
+template<class A, class B>
+one map_insert_returns_pair_check(std::pair<A,B> const&);
 
-        template <typename T>
-        two map_insert_returns_pair_check(T const&);
+template <typename T>
+two map_insert_returns_pair_check(T const&);
 
-        template <typename C>
-        struct map_insert_returns_pair
-        {
-            static typename C::value_type const& get;
-            BOOST_STATIC_CONSTANT(int,
-                value = sizeof(
-                    map_insert_returns_pair_check(((C*)0)->insert(get))));
-            typedef boost::mpl::bool_<value == sizeof(one)> type;
-        };
-    }
+template <typename C>
+struct map_insert_returns_pair
+{
+	static typename C::value_type const& get;
+	BOOST_STATIC_CONSTANT(int,
+	                      value = sizeof(
+	                                  map_insert_returns_pair_check(((C*)0)->insert(get))));
+	typedef boost::mpl::bool_<value == sizeof(one)> type;
+};
+}
 
-    template <typename C>
-    struct map_insert_returns_pair
-        : stl_impl::map_insert_returns_pair<C>::type {};
+template <typename C>
+struct map_insert_returns_pair
+	: stl_impl::map_insert_returns_pair<C>::type {};
 
-}}} // namespace boost::phoenix::stl
+}
+}
+} // namespace boost::phoenix::stl
 
 #endif // BOOST_PHOENIX_STL_CONTAINER_TRAITS_HPP

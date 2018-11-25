@@ -19,64 +19,64 @@
 namespace boost
 {
 
-    namespace range_detail
-    {
-        template< typename T >
-        struct range_begin;
+namespace range_detail
+{
+template< typename T >
+struct range_begin;
 
-        //////////////////////////////////////////////////////////////////////
-        // default
-        //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// default
+//////////////////////////////////////////////////////////////////////
 
-        template<>
-        struct range_begin<std_container_>
-        {
-            template< typename C >
-            static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type fun( C& c )
-            {
-                return c.begin();
-            };
-        };
+template<>
+struct range_begin<std_container_>
+{
+	template< typename C >
+	static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type fun( C& c )
+	{
+		return c.begin();
+	};
+};
 
-        //////////////////////////////////////////////////////////////////////
-        // pair
-        //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// pair
+//////////////////////////////////////////////////////////////////////
 
-        template<>
-        struct range_begin<std_pair_>
-        {
-            template< typename P >
-            static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<P>::type fun( const P& p )
-            {
-                return p.first;
-            }
-        };
+template<>
+struct range_begin<std_pair_>
+{
+	template< typename P >
+	static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<P>::type fun( const P& p )
+	{
+		return p.first;
+	}
+};
 
-        //////////////////////////////////////////////////////////////////////
-        // array
-        //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// array
+//////////////////////////////////////////////////////////////////////
 
-        template<>
-        struct range_begin<array_>
-        {
-            template<typename T>
-            static BOOST_RANGE_DEDUCED_TYPENAME range_value<T>::type* fun(T& t)
-            {
-                return t;
-            }
-        };
+template<>
+struct range_begin<array_>
+{
+	template<typename T>
+	static BOOST_RANGE_DEDUCED_TYPENAME range_value<T>::type* fun(T& t)
+	{
+		return t;
+	}
+};
 
-    } // namespace 'range_detail'
+} // namespace 'range_detail'
 
-    namespace range_adl_barrier
-    {
-        template< typename C >
-        inline BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type
-        begin( C& c )
-        {
-            return range_detail::range_begin< BOOST_RANGE_DEDUCED_TYPENAME range_detail::range<C>::type >::fun( c );
-        }
-    }
+namespace range_adl_barrier
+{
+template< typename C >
+inline BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type
+begin( C& c )
+{
+	return range_detail::range_begin< BOOST_RANGE_DEDUCED_TYPENAME range_detail::range<C>::type >::fun( c );
+}
+}
 } // namespace 'boost'
 
 

@@ -20,8 +20,10 @@
 #include <boost/compute/system.hpp>
 #include <boost/compute/algorithm/detail/reduce_by_key.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// The \c reduce_by_key() algorithm performs reduction for each contiguous
 /// subsequence of values determinate by equivalent keys.
@@ -68,10 +70,10 @@ reduce_by_key(InputKeyIterator keys_first,
               BinaryPredicate predicate,
               command_queue &queue = system::default_queue())
 {
-    return detail::dispatch_reduce_by_key(keys_first, keys_last, values_first,
-                                          keys_result, values_result,
-                                          function, predicate,
-                                          queue);
+	return detail::dispatch_reduce_by_key(keys_first, keys_last, values_first,
+	                                      keys_result, values_result,
+	                                      function, predicate,
+	                                      queue);
 }
 
 /// \overload
@@ -87,12 +89,12 @@ reduce_by_key(InputKeyIterator keys_first,
               BinaryFunction function,
               command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputKeyIterator>::value_type key_type;
+	typedef typename std::iterator_traits<InputKeyIterator>::value_type key_type;
 
-    return reduce_by_key(keys_first, keys_last, values_first,
-                         keys_result, values_result,
-                         function, equal_to<key_type>(),
-                         queue);
+	return reduce_by_key(keys_first, keys_last, values_first,
+	                     keys_result, values_result,
+	                     function, equal_to<key_type>(),
+	                     queue);
 }
 
 /// \overload
@@ -106,13 +108,13 @@ reduce_by_key(InputKeyIterator keys_first,
               OutputValueIterator values_result,
               command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputKeyIterator>::value_type key_type;
-    typedef typename std::iterator_traits<InputValueIterator>::value_type value_type;
+	typedef typename std::iterator_traits<InputKeyIterator>::value_type key_type;
+	typedef typename std::iterator_traits<InputValueIterator>::value_type value_type;
 
-    return reduce_by_key(keys_first, keys_last, values_first,
-                         keys_result, values_result,
-                         plus<value_type>(), equal_to<key_type>(),
-                         queue);
+	return reduce_by_key(keys_first, keys_last, values_first,
+	                     keys_result, values_result,
+	                     plus<value_type>(), equal_to<key_type>(),
+	                     queue);
 }
 
 } // end compute namespace

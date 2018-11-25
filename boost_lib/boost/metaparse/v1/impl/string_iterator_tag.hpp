@@ -8,19 +8,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct string_iterator_tag
-        {
-          typedef string_iterator_tag type;
-        };
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct string_iterator_tag
+{
+	typedef string_iterator_tag type;
+};
+}
+}
+}
 }
 
 #endif

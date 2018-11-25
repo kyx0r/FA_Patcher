@@ -15,43 +15,45 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Extract a value in a given comonadic context.
-    //! @ingroup group-Comonad
-    //!
-    //! Given a value inside a comonadic context, extract it from that
-    //! context, performing whatever effects are mandated by that context.
-    //! This can be seen as the dual operation to the `lift` method of the
-    //! Applicative concept.
-    //!
-    //!
-    //! Signature
-    //! ---------
-    //! Given a Comonad `W`, the signature is
-    //! \f$
-    //!     \mathtt{extract} : W(T) \to T
-    //! \f$
-    //!
-    //! @param w
-    //! The value to be extracted inside a comonadic context.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/extract.cpp
+//! Extract a value in a given comonadic context.
+//! @ingroup group-Comonad
+//!
+//! Given a value inside a comonadic context, extract it from that
+//! context, performing whatever effects are mandated by that context.
+//! This can be seen as the dual operation to the `lift` method of the
+//! Applicative concept.
+//!
+//!
+//! Signature
+//! ---------
+//! Given a Comonad `W`, the signature is
+//! \f$
+//!     \mathtt{extract} : W(T) \to T
+//! \f$
+//!
+//! @param w
+//! The value to be extracted inside a comonadic context.
+//!
+//!
+//! Example
+//! -------
+//! @include example/extract.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto extract = [](auto&& w) -> decltype(auto) {
-        return tag-dispatched;
-    };
+constexpr auto extract = [](auto&& w) -> decltype(auto)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename W, typename = void>
-    struct extract_impl : extract_impl<W, when<true>> { };
+template <typename W, typename = void>
+struct extract_impl : extract_impl<W, when<true>> { };
 
-    struct extract_t {
-        template <typename W_>
-        constexpr decltype(auto) operator()(W_&& w) const;
-    };
+struct extract_t
+{
+	template <typename W_>
+	constexpr decltype(auto) operator()(W_&& w) const;
+};
 
-    constexpr extract_t extract{};
+constexpr extract_t extract{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

@@ -10,20 +10,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <int Len, class S>
-        struct assert_string_length : S
-        {
-          BOOST_STATIC_ASSERT((Len <= BOOST_METAPARSE_LIMIT_STRING_SIZE));
-        };
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <int Len, class S>
+struct assert_string_length : S
+{
+	BOOST_STATIC_ASSERT((Len <= BOOST_METAPARSE_LIMIT_STRING_SIZE));
+};
+}
+}
+}
 }
 
 #endif

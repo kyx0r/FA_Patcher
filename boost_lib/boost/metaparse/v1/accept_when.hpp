@@ -15,44 +15,44 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class Pred, class Msg>
-      struct accept_when
-      {
-      private:
-        struct unchecked
-        {
-          template <class S, class Pos>
-          struct apply :
-            boost::mpl::eval_if<
-              typename Pred::template apply<
-                typename get_result<typename P::template apply<S, Pos> >::type
-              >::type,
-              typename P::template apply<S, Pos>,
-              reject<Msg, Pos>
-            >
-          {};
-        };
-      public:
-        typedef accept_when type;
-        
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::if_<
-            is_error<typename P::template apply<S, Pos> >,
-            P,
-            unchecked
-          >::type::template apply<
-            S,
-            Pos
-          >
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class Pred, class Msg>
+struct accept_when
+{
+private:
+	struct unchecked
+	{
+		template <class S, class Pos>
+		struct apply :
+			boost::mpl::eval_if<
+			typename Pred::template apply<
+			    typename get_result<typename P::template apply<S, Pos> >::type
+			    >::type,
+		typename P::template apply<S, Pos>,
+		         reject<Msg, Pos>
+		         >
+		         {};
+	};
+public:
+	typedef accept_when type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::if_<
+		is_error<typename P::template apply<S, Pos> >,
+	P,
+	unchecked
+	>::type::template apply<
+	    S,
+	    Pos
+	    >
+	{};
+};
+}
+}
 }
 
 #endif

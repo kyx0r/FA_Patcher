@@ -20,34 +20,38 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 inline barrier::barrier(unsigned int count)
-   : m_threshold(count), m_count(count), m_generation(0)
+	: m_threshold(count), m_count(count), m_generation(0)
 {
-   if (count == 0)
-      throw std::invalid_argument("count cannot be zero.");
+	if (count == 0)
+		throw std::invalid_argument("count cannot be zero.");
 }
 
-inline barrier::~barrier(){}
+inline barrier::~barrier() {}
 
 inline bool barrier::wait()
 {
-   scoped_lock<interprocess_mutex> lock(m_mutex);
-   unsigned int gen = m_generation;
+	scoped_lock<interprocess_mutex> lock(m_mutex);
+	unsigned int gen = m_generation;
 
-   if (--m_count == 0){
-      m_generation++;
-      m_count = m_threshold;
-      m_cond.notify_all();
-      return true;
-   }
+	if (--m_count == 0)
+	{
+		m_generation++;
+		m_count = m_threshold;
+		m_cond.notify_all();
+		return true;
+	}
 
-   while (gen == m_generation){
-      m_cond.wait(lock);
-   }
-   return false;
+	while (gen == m_generation)
+	{
+		m_cond.wait(lock);
+	}
+	return false;
 }
 
 }  //namespace interprocess {

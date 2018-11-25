@@ -20,42 +20,48 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename Key>
-    constexpr auto find_t::operator()(Xs&& xs, Key const& key) const {
-        using S = typename hana::tag_of<Xs>::type;
-        using Find = BOOST_HANA_DISPATCH_IF(find_impl<S>,
-            hana::Searchable<S>::value
-        );
+//! @cond
+template <typename Xs, typename Key>
+constexpr auto find_t::operator()(Xs&& xs, Key const& key) const
+{
+	using S = typename hana::tag_of<Xs>::type;
+	using Find = BOOST_HANA_DISPATCH_IF(find_impl<S>,
+	                                    hana::Searchable<S>::value
+	                                   );
 
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::Searchable<S>::value,
-        "hana::find(xs, key) requires 'xs' to be Searchable");
-    #endif
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::Searchable<S>::value,
+	              "hana::find(xs, key) requires 'xs' to be Searchable");
+#endif
 
-        return Find::apply(static_cast<Xs&&>(xs), key);
-    }
-    //! @endcond
+	return Find::apply(static_cast<Xs&&>(xs), key);
+}
+//! @endcond
 
-    namespace detail {
-        template <typename T>
-        struct equal_to {
-            T const& t;
-            template <typename U>
-            constexpr auto operator()(U const& u) const {
-                return hana::equal(t, u);
-            }
-        };
-    }
+namespace detail
+{
+template <typename T>
+struct equal_to
+{
+	T const& t;
+	template <typename U>
+	constexpr auto operator()(U const& u) const
+	{
+		return hana::equal(t, u);
+	}
+};
+}
 
-    template <typename S, bool condition>
-    struct find_impl<S, when<condition>> : default_ {
-        template <typename Xs, typename Key>
-        static constexpr auto apply(Xs&& xs, Key const& key) {
-            return hana::find_if(static_cast<Xs&&>(xs),
-                                 detail::equal_to<Key>{key});
-        }
-    };
+template <typename S, bool condition>
+struct find_impl<S, when<condition>> : default_
+{
+	template <typename Xs, typename Key>
+	static constexpr auto apply(Xs&& xs, Key const& key)
+	{
+		return hana::find_if(static_cast<Xs&&>(xs),
+		                     detail::equal_to<Key> {key});
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_FIND_HPP

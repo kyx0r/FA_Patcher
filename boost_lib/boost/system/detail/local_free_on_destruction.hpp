@@ -14,25 +14,28 @@
 
 #include <boost/winapi/local_memory.hpp>
 
-namespace boost {
-namespace system {
-namespace detail {
+namespace boost
+{
+namespace system
+{
+namespace detail
+{
 
 class local_free_on_destruction
 {
 public:
-  explicit local_free_on_destruction(void* p)
-    : p_(p) {}
+	explicit local_free_on_destruction(void* p)
+		: p_(p) {}
 
-  ~local_free_on_destruction()
-  {
-    boost::winapi::LocalFree(p_);
-  }
+	~local_free_on_destruction()
+	{
+		boost::winapi::LocalFree(p_);
+	}
 
 private:
-  void* p_;
-  local_free_on_destruction(const local_free_on_destruction&);  // = deleted
-  local_free_on_destruction& operator=(const local_free_on_destruction&);  // = deleted
+	void* p_;
+	local_free_on_destruction(const local_free_on_destruction&);  // = deleted
+	local_free_on_destruction& operator=(const local_free_on_destruction&);  // = deleted
 };
 
 } // namespace detail

@@ -15,19 +15,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      typedef
-        accept_when<
-          change_error_message<one_char, error::digit_expected>,
-          util::is_digit<>,
-          error::digit_expected
-        >
-        digit;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+typedef
+accept_when<
+change_error_message<one_char, error::digit_expected>,
+                     util::is_digit<>,
+                     error::digit_expected
+                     >
+                     digit;
+}
+}
 }
 
 #endif

@@ -8,40 +8,43 @@
 #ifndef BOOST_PHOENIX_OBJECT_DETAIL_CAST_TARGET_HPP
 #define BOOST_PHOENIX_OBJECT_DETAIL_CAST_TARGET_HPP
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    namespace detail
-    {
-        template <typename T>
-        struct target
-        {
-            typedef T type;
-        };
+namespace phoenix
+{
+namespace detail
+{
+template <typename T>
+struct target
+{
+	typedef T type;
+};
 
-        namespace result_of
-        {
-            template <typename T>
-            struct target
-            {
-                typedef
-                    typename proto::detail::uncvref<
-                        typename proto::result_of::value<T>::type
-                    >::type
-                    target_type;
-                typedef typename target_type::type type;
-            };
+namespace result_of
+{
+template <typename T>
+struct target
+{
+	typedef
+	typename proto::detail::uncvref<
+	typename proto::result_of::value<T>::type
+	>::type
+	target_type;
+	typedef typename target_type::type type;
+};
 
-            template <typename T>
-            struct target<T const&>
-                : target<T>
-            {};
+template <typename T>
+struct target<T const&>
+	: target<T>
+{};
 
-            template <typename T>
-            struct target<T&>
-                : target<T>
-            {};
-        }
-    }
-}}
+template <typename T>
+struct target<T&>
+	: target<T>
+{};
+}
+}
+}
+}
 
 #endif

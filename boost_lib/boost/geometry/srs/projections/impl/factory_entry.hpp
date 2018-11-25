@@ -17,7 +17,11 @@
 
 #include <boost/geometry/srs/projections/impl/base_dynamic.hpp>
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 namespace detail
@@ -32,8 +36,8 @@ class factory_entry
 {
 public:
 
-    virtual ~factory_entry() {}
-    virtual base_v<CT, P>* create_new(P const& par) const = 0;
+	virtual ~factory_entry() {}
+	virtual base_v<CT, P>* create_new(P const& par) const = 0;
 };
 
 template <typename CT, typename P>
@@ -41,11 +45,13 @@ class base_factory
 {
 public:
 
-    virtual ~base_factory() {}
-    virtual void add_to_factory(std::string const& name, factory_entry<CT, P>* sub) = 0;
+	virtual ~base_factory() {}
+	virtual void add_to_factory(std::string const& name, factory_entry<CT, P>* sub) = 0;
 };
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_FACTORY_ENTRY_HPP

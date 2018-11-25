@@ -1,5 +1,5 @@
 
-//  (C) Copyright John Maddock 2010. 
+//  (C) Copyright John Maddock 2010.
 //  Use, modification and distribution are subject to the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt).
@@ -12,7 +12,8 @@
 #include <boost/config.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template <class T> struct is_rvalue_reference : public false_type {};
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES

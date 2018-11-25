@@ -14,65 +14,73 @@
 #include <cstddef>
 #include <boost/geometry/core/access.hpp>
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
-namespace dispatch {
+namespace dispatch
+{
 
 template <typename Box,
           std::size_t Dimension = geometry::dimension<Box>::value>
 struct is_valid_box
 {
-    static inline bool apply(Box const& b)
-    {
-        return is_valid_box<Box, Dimension - 1>::apply(b) &&
-            ( get<min_corner, Dimension - 1>(b) <= get<max_corner, Dimension - 1>(b) );
-    }
+	static inline bool apply(Box const& b)
+	{
+		return is_valid_box<Box, Dimension - 1>::apply(b) &&
+		       ( get<min_corner, Dimension - 1>(b) <= get<max_corner, Dimension - 1>(b) );
+	}
 };
 
 template <typename Box>
 struct is_valid_box<Box, 1>
 {
-    static inline bool apply(Box const& b)
-    {
-        return get<min_corner, 0>(b) <= get<max_corner, 0>(b);
-    }
+	static inline bool apply(Box const& b)
+	{
+		return get<min_corner, 0>(b) <= get<max_corner, 0>(b);
+	}
 };
 
 template <typename Indexable,
           typename Tag = typename geometry::tag<Indexable>::type>
 struct is_valid
 {
-    BOOST_MPL_ASSERT_MSG(
-        (false),
-        NOT_IMPLEMENTED_FOR_THIS_INDEXABLE,
-        (is_valid));
+	BOOST_MPL_ASSERT_MSG(
+	    (false),
+	    NOT_IMPLEMENTED_FOR_THIS_INDEXABLE,
+	    (is_valid));
 };
 
 template <typename Indexable>
 struct is_valid<Indexable, point_tag>
 {
-    static inline bool apply(Indexable const&)
-    {
-        return true;
-    }
+	static inline bool apply(Indexable const&)
+	{
+		return true;
+	}
 };
 
 template <typename Indexable>
 struct is_valid<Indexable, box_tag>
 {
-    static inline bool apply(Indexable const& b)
-    {
-        return dispatch::is_valid_box<Indexable>::apply(b);
-    }
+	static inline bool apply(Indexable const& b)
+	{
+		return dispatch::is_valid_box<Indexable>::apply(b);
+	}
 };
 
 template <typename Indexable>
 struct is_valid<Indexable, segment_tag>
 {
-    static inline bool apply(Indexable const&)
-    {
-        return true;
-    }
+	static inline bool apply(Indexable const&)
+	{
+		return true;
+	}
 };
 
 } // namespace dispatch
@@ -80,12 +88,15 @@ struct is_valid<Indexable, segment_tag>
 template <typename Indexable>
 inline bool is_valid(Indexable const& b)
 {
-    // CONSIDER: detection of NaNs
-    // e.g. by comparison of b with copy of b
+	// CONSIDER: detection of NaNs
+	// e.g. by comparison of b with copy of b
 
-    return dispatch::is_valid<Indexable>::apply(b);
+	return dispatch::is_valid<Indexable>::apply(b);
 }
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_DETAIL_INDEX_ALGORITHMS_IS_VALID_HPP

@@ -28,7 +28,9 @@
 #include <boost/geometry/core/tags.hpp>
 #include <boost/geometry/util/bare_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -47,13 +49,13 @@ namespace boost { namespace geometry
 */
 enum order_selector
 {
-    /// Points are ordered clockwise
-    clockwise = 1,
-    /// Points are ordered counter clockwise
-    counterclockwise = 2,
-    /// Points might be stored in any order, algorithms will determine it on the
-    /// fly (not yet supported)
-    order_undetermined = 0
+	/// Points are ordered clockwise
+	clockwise = 1,
+	/// Points are ordered counter clockwise
+	counterclockwise = 2,
+	/// Points might be stored in any order, algorithms will determine it on the
+	/// fly (not yet supported)
+	order_undetermined = 0
 };
 
 namespace traits
@@ -68,7 +70,7 @@ namespace traits
 template <typename Ring>
 struct point_order
 {
-    static const order_selector value = clockwise;
+	static const order_selector value = clockwise;
 };
 
 
@@ -76,16 +78,19 @@ struct point_order
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace point_order
+namespace detail
+{
+namespace point_order
 {
 
 struct clockwise
 {
-    static const order_selector value = geometry::clockwise;
+	static const order_selector value = geometry::clockwise;
 };
 
 
-}} // namespace detail::point_order
+}
+} // namespace detail::point_order
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -97,67 +102,67 @@ namespace core_dispatch
 template <typename Tag, typename Geometry>
 struct point_order
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 template <typename Point>
 struct point_order<point_tag, Point>
-    : public detail::point_order::clockwise {};
+	: public detail::point_order::clockwise {};
 
 template <typename Segment>
 struct point_order<segment_tag, Segment>
-    : public detail::point_order::clockwise {};
+	: public detail::point_order::clockwise {};
 
 
 template <typename Box>
 struct point_order<box_tag, Box>
-    : public detail::point_order::clockwise {};
+	: public detail::point_order::clockwise {};
 
 template <typename LineString>
 struct point_order<linestring_tag, LineString>
-    : public detail::point_order::clockwise {};
+	: public detail::point_order::clockwise {};
 
 
 template <typename Ring>
 struct point_order<ring_tag, Ring>
 {
-    static const order_selector value
-        = geometry::traits::point_order<Ring>::value;
+	static const order_selector value
+	    = geometry::traits::point_order<Ring>::value;
 };
 
 // Specialization for polygon: the order is the order of its rings
 template <typename Polygon>
 struct point_order<polygon_tag, Polygon>
 {
-    static const order_selector value = core_dispatch::point_order
-        <
-            ring_tag,
-            typename ring_type<polygon_tag, Polygon>::type
-        >::value ;
+	static const order_selector value = core_dispatch::point_order
+	                                    <
+	                                    ring_tag,
+	                                    typename ring_type<polygon_tag, Polygon>::type
+	                                    >::value ;
 };
 
 template <typename MultiPoint>
 struct point_order<multi_point_tag, MultiPoint>
-    : public detail::point_order::clockwise {};
+	: public detail::point_order::clockwise {};
 
 template <typename MultiLinestring>
 struct point_order<multi_linestring_tag, MultiLinestring>
-    : public detail::point_order::clockwise {};
+	: public detail::point_order::clockwise {};
 
 
 // Specialization for multi_polygon: the order is the order of its polygons
 template <typename MultiPolygon>
 struct point_order<multi_polygon_tag, MultiPolygon>
 {
-    static const order_selector value = core_dispatch::point_order
-        <
-            polygon_tag,
-            typename boost::range_value<MultiPolygon>::type
-        >::value ;
+	static const order_selector value = core_dispatch::point_order
+	                                    <
+	                                    polygon_tag,
+	                                    typename boost::range_value<MultiPolygon>::type
+	                                    >::value ;
 };
 
 } // namespace core_dispatch
@@ -175,13 +180,14 @@ struct point_order<multi_polygon_tag, MultiPolygon>
 template <typename Geometry>
 struct point_order
 {
-    static const order_selector value = core_dispatch::point_order
-        <
-            typename tag<Geometry>::type,
-            typename util::bare_type<Geometry>::type
-        >::value;
+	static const order_selector value = core_dispatch::point_order
+	                                    <
+	                                    typename tag<Geometry>::type,
+	                                    typename util::bare_type<Geometry>::type
+	                                    >::value;
 };
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_POINT_ORDER_HPP

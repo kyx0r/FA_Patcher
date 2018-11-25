@@ -24,99 +24,102 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class buffered_stream_storage
 {
 public:
-  // The type of the bytes stored in the buffer.
-  typedef unsigned char byte_type;
+	// The type of the bytes stored in the buffer.
+	typedef unsigned char byte_type;
 
-  // The type used for offsets into the buffer.
-  typedef std::size_t size_type;
+	// The type used for offsets into the buffer.
+	typedef std::size_t size_type;
 
-  // Constructor.
-  explicit buffered_stream_storage(std::size_t buffer_capacity)
-    : begin_offset_(0),
-      end_offset_(0),
-      buffer_(buffer_capacity)
-  {
-  }
+	// Constructor.
+	explicit buffered_stream_storage(std::size_t buffer_capacity)
+		: begin_offset_(0),
+		  end_offset_(0),
+		  buffer_(buffer_capacity)
+	{
+	}
 
-  /// Clear the buffer.
-  void clear()
-  {
-    begin_offset_ = 0;
-    end_offset_ = 0;
-  }
+	/// Clear the buffer.
+	void clear()
+	{
+		begin_offset_ = 0;
+		end_offset_ = 0;
+	}
 
-  // Return a pointer to the beginning of the unread data.
-  mutable_buffer data()
-  {
-    return boost::asio::buffer(buffer_) + begin_offset_;
-  }
+	// Return a pointer to the beginning of the unread data.
+	mutable_buffer data()
+	{
+		return boost::asio::buffer(buffer_) + begin_offset_;
+	}
 
-  // Return a pointer to the beginning of the unread data.
-  const_buffer data() const
-  {
-    return boost::asio::buffer(buffer_) + begin_offset_;
-  }
+	// Return a pointer to the beginning of the unread data.
+	const_buffer data() const
+	{
+		return boost::asio::buffer(buffer_) + begin_offset_;
+	}
 
-  // Is there no unread data in the buffer.
-  bool empty() const
-  {
-    return begin_offset_ == end_offset_;
-  }
+	// Is there no unread data in the buffer.
+	bool empty() const
+	{
+		return begin_offset_ == end_offset_;
+	}
 
-  // Return the amount of unread data the is in the buffer.
-  size_type size() const
-  {
-    return end_offset_ - begin_offset_;
-  }
+	// Return the amount of unread data the is in the buffer.
+	size_type size() const
+	{
+		return end_offset_ - begin_offset_;
+	}
 
-  // Resize the buffer to the specified length.
-  void resize(size_type length)
-  {
-    BOOST_ASIO_ASSERT(length <= capacity());
-    if (begin_offset_ + length <= capacity())
-    {
-      end_offset_ = begin_offset_ + length;
-    }
-    else
-    {
-      using namespace std; // For memmove.
-      memmove(&buffer_[0], &buffer_[0] + begin_offset_, size());
-      end_offset_ = length;
-      begin_offset_ = 0;
-    }
-  }
+	// Resize the buffer to the specified length.
+	void resize(size_type length)
+	{
+		BOOST_ASIO_ASSERT(length <= capacity());
+		if (begin_offset_ + length <= capacity())
+		{
+			end_offset_ = begin_offset_ + length;
+		}
+		else
+		{
+			using namespace std; // For memmove.
+			memmove(&buffer_[0], &buffer_[0] + begin_offset_, size());
+			end_offset_ = length;
+			begin_offset_ = 0;
+		}
+	}
 
-  // Return the maximum size for data in the buffer.
-  size_type capacity() const
-  {
-    return buffer_.size();
-  }
+	// Return the maximum size for data in the buffer.
+	size_type capacity() const
+	{
+		return buffer_.size();
+	}
 
-  // Consume multiple bytes from the beginning of the buffer.
-  void consume(size_type count)
-  {
-    BOOST_ASIO_ASSERT(begin_offset_ + count <= end_offset_);
-    begin_offset_ += count;
-    if (empty())
-      clear();
-  }
+	// Consume multiple bytes from the beginning of the buffer.
+	void consume(size_type count)
+	{
+		BOOST_ASIO_ASSERT(begin_offset_ + count <= end_offset_);
+		begin_offset_ += count;
+		if (empty())
+			clear();
+	}
 
 private:
-  // The offset to the beginning of the unread data.
-  size_type begin_offset_;
+	// The offset to the beginning of the unread data.
+	size_type begin_offset_;
 
-  // The offset to the end of the unread data.
-  size_type end_offset_;
-  
-  // The data in the buffer.
-  std::vector<byte_type> buffer_;
+	// The offset to the end of the unread data.
+	size_type end_offset_;
+
+	// The data in the buffer.
+	std::vector<byte_type> buffer_;
 };
 
 } // namespace detail

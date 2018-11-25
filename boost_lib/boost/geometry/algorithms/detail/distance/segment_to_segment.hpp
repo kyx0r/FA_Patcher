@@ -31,12 +31,16 @@
 #include <boost/geometry/algorithms/dispatch/distance.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace distance
+namespace detail
+{
+namespace distance
 {
 
 
@@ -46,81 +50,82 @@ template<typename Segment1, typename Segment2, typename Strategy>
 class segment_to_segment
 {
 private:
-    typedef typename strategy::distance::services::comparable_type
-        <
-            Strategy
-        >::type comparable_strategy;
+	typedef typename strategy::distance::services::comparable_type
+	<
+	Strategy
+	>::type comparable_strategy;
 
-    typedef typename strategy::distance::services::return_type
-        <
-            comparable_strategy,
-            typename point_type<Segment1>::type,
-            typename point_type<Segment2>::type
-        >::type comparable_return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	comparable_strategy,
+	typename point_type<Segment1>::type,
+	typename point_type<Segment2>::type
+	>::type comparable_return_type;
 
 public:
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy,
-            typename point_type<Segment1>::type,
-            typename point_type<Segment2>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy,
+	typename point_type<Segment1>::type,
+	typename point_type<Segment2>::type
+	>::type return_type;
 
-    static inline return_type
-    apply(Segment1 const& segment1, Segment2 const& segment2,
-          Strategy const& strategy)
-    {
-        if (geometry::intersects(segment1, segment2))
-        {
-            return 0;
-        }
+	static inline return_type
+	apply(Segment1 const& segment1, Segment2 const& segment2,
+	      Strategy const& strategy)
+	{
+		if (geometry::intersects(segment1, segment2))
+		{
+			return 0;
+		}
 
-        typename point_type<Segment1>::type p[2];
-        detail::assign_point_from_index<0>(segment1, p[0]);
-        detail::assign_point_from_index<1>(segment1, p[1]);
+		typename point_type<Segment1>::type p[2];
+		detail::assign_point_from_index<0>(segment1, p[0]);
+		detail::assign_point_from_index<1>(segment1, p[1]);
 
-        typename point_type<Segment2>::type q[2];
-        detail::assign_point_from_index<0>(segment2, q[0]);
-        detail::assign_point_from_index<1>(segment2, q[1]);
+		typename point_type<Segment2>::type q[2];
+		detail::assign_point_from_index<0>(segment2, q[0]);
+		detail::assign_point_from_index<1>(segment2, q[1]);
 
-        comparable_strategy cstrategy =
-            strategy::distance::services::get_comparable
-                <
-                    Strategy
-                >::apply(strategy);
+		comparable_strategy cstrategy =
+		    strategy::distance::services::get_comparable
+		    <
+		    Strategy
+		    >::apply(strategy);
 
-        comparable_return_type d[4];
-        d[0] = cstrategy.apply(q[0], p[0], p[1]);
-        d[1] = cstrategy.apply(q[1], p[0], p[1]);
-        d[2] = cstrategy.apply(p[0], q[0], q[1]);
-        d[3] = cstrategy.apply(p[1], q[0], q[1]);
+		comparable_return_type d[4];
+		d[0] = cstrategy.apply(q[0], p[0], p[1]);
+		d[1] = cstrategy.apply(q[1], p[0], p[1]);
+		d[2] = cstrategy.apply(p[0], q[0], q[1]);
+		d[3] = cstrategy.apply(p[1], q[0], q[1]);
 
-        std::size_t imin = std::distance(boost::addressof(d[0]),
-                                         std::min_element(d, d + 4));
+		std::size_t imin = std::distance(boost::addressof(d[0]),
+		                                 std::min_element(d, d + 4));
 
-        if (BOOST_GEOMETRY_CONDITION(is_comparable<Strategy>::value))
-        {
-            return d[imin];
-        }
+		if (BOOST_GEOMETRY_CONDITION(is_comparable<Strategy>::value))
+		{
+			return d[imin];
+		}
 
-        switch (imin)
-        {
-        case 0:
-            return strategy.apply(q[0], p[0], p[1]);
-        case 1:
-            return strategy.apply(q[1], p[0], p[1]);
-        case 2:
-            return strategy.apply(p[0], q[0], q[1]);
-        default:
-            return strategy.apply(p[1], q[0], q[1]);
-        }
-    }
+		switch (imin)
+		{
+		case 0:
+			return strategy.apply(q[0], p[0], p[1]);
+		case 1:
+			return strategy.apply(q[1], p[0], p[1]);
+		case 2:
+			return strategy.apply(p[0], q[0], q[1]);
+		default:
+			return strategy.apply(p[1], q[0], q[1]);
+		}
+	}
 };
 
 
 
 
-}} // namespace detail::distance
+}
+} // namespace detail::distance
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -133,11 +138,11 @@ namespace dispatch
 // segment-segment
 template <typename Segment1, typename Segment2, typename Strategy>
 struct distance
-    <
-        Segment1, Segment2, Strategy, segment_tag, segment_tag,
-        strategy_tag_distance_point_segment, false
-    >
-    : detail::distance::segment_to_segment<Segment1, Segment2, Strategy>
+	<
+	Segment1, Segment2, Strategy, segment_tag, segment_tag,
+	strategy_tag_distance_point_segment, false
+	>
+	: detail::distance::segment_to_segment<Segment1, Segment2, Strategy>
 {};
 
 
@@ -146,7 +151,8 @@ struct distance
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISTANCE_SEGMENT_TO_SEGMENT_HPP

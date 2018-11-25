@@ -40,44 +40,50 @@
 //!\file
 //!Describes a class representing a pseudo-file implemented on top of xsi shared memory.
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 class xsi_shared_memory_file_wrapper
-   : public xsi_shared_memory
+	: public xsi_shared_memory
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-   BOOST_MOVABLE_BUT_NOT_COPYABLE(xsi_shared_memory_file_wrapper)
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
-   public:
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+	BOOST_MOVABLE_BUT_NOT_COPYABLE(xsi_shared_memory_file_wrapper)
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+public:
 
-   xsi_shared_memory_file_wrapper() : xsi_shared_memory() {}
+	xsi_shared_memory_file_wrapper() : xsi_shared_memory() {}
 
-   xsi_shared_memory_file_wrapper(create_only_t, const xsi_key &key, mode_t , std::size_t size, const permissions& perm = permissions())
-      : xsi_shared_memory(create_only_t(), key, size, perm.get_permissions())
-   {}
+	xsi_shared_memory_file_wrapper(create_only_t, const xsi_key &key, mode_t, std::size_t size, const permissions& perm = permissions())
+		: xsi_shared_memory(create_only_t(), key, size, perm.get_permissions())
+	{}
 
-   xsi_shared_memory_file_wrapper(open_or_create_t, const xsi_key &key, mode_t , std::size_t size, const permissions& perm = permissions())
-      : xsi_shared_memory(open_or_create_t(), key, size, perm.get_permissions())
-   {}
+	xsi_shared_memory_file_wrapper(open_or_create_t, const xsi_key &key, mode_t, std::size_t size, const permissions& perm = permissions())
+		: xsi_shared_memory(open_or_create_t(), key, size, perm.get_permissions())
+	{}
 
-   xsi_shared_memory_file_wrapper(open_only_t, const xsi_key &key, mode_t, const permissions& = permissions())
-      : xsi_shared_memory(open_only_t(), key)
-   {}
+	xsi_shared_memory_file_wrapper(open_only_t, const xsi_key &key, mode_t, const permissions& = permissions())
+		: xsi_shared_memory(open_only_t(), key)
+	{}
 
-   xsi_shared_memory_file_wrapper(BOOST_RV_REF(xsi_shared_memory_file_wrapper) moved)
-   {  this->swap(moved);   }
+	xsi_shared_memory_file_wrapper(BOOST_RV_REF(xsi_shared_memory_file_wrapper) moved)
+	{
+		this->swap(moved);
+	}
 
-   xsi_shared_memory_file_wrapper &operator=(BOOST_RV_REF(xsi_shared_memory_file_wrapper) moved)
-   {
-      xsi_shared_memory_file_wrapper tmp(boost::move(moved));
-      this->swap(tmp);
-      return *this;
-   }
+	xsi_shared_memory_file_wrapper &operator=(BOOST_RV_REF(xsi_shared_memory_file_wrapper) moved)
+	{
+		xsi_shared_memory_file_wrapper tmp(boost::move(moved));
+		this->swap(tmp);
+		return *this;
+	}
 
-   //!Swaps two xsi_shared_memory_file_wrapper. Does not throw
-   void swap(xsi_shared_memory_file_wrapper &other)
-   {  this->xsi_shared_memory::swap(other);  }
+	//!Swaps two xsi_shared_memory_file_wrapper. Does not throw
+	void swap(xsi_shared_memory_file_wrapper &other)
+	{
+		this->xsi_shared_memory::swap(other);
+	}
 };
 
 }  //namespace interprocess {

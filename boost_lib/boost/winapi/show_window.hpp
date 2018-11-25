@@ -18,20 +18,22 @@
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-BOOST_WINAPI_DETAIL_DECLARE_HANDLE(HWND);
+	BOOST_WINAPI_DETAIL_DECLARE_HANDLE(HWND);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI ShowWindow(
-    HWND hWnd,
-    int nCmdShow);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI ShowWindow(
+	    HWND hWnd,
+	    int nCmdShow);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI ShowWindowAsync(
-    HWND hWnd,
-    int nCmdShow);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI ShowWindowAsync(
+	    HWND hWnd,
+	    int nCmdShow);
 } // extern "C"
 #endif // BOOST_USE_WINDOWS_H
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 typedef ::HWND HWND_;
 using ::ShowWindow;

@@ -17,7 +17,12 @@
 #include <boost/python/numpy/config.hpp>
 
 
-namespace boost { namespace python { namespace numpy {
+namespace boost
+{
+namespace python
+{
+namespace numpy
+{
 
 /**
  *  @brief A boost.python "object manager" (subclass of object) for numpy.matrix.
@@ -29,30 +34,30 @@ namespace boost { namespace python { namespace numpy {
  *            bad things happen when Python shuts down.  I think this solution is safe, but I'd
  *            love to get that confirmed.
  */
-class BOOST_NUMPY_DECL matrix : public ndarray 
+class BOOST_NUMPY_DECL matrix : public ndarray
 {
-  static object construct(object_cref obj, dtype const & dt, bool copy);
-  static object construct(object_cref obj, bool copy);
+	static object construct(object_cref obj, dtype const & dt, bool copy);
+	static object construct(object_cref obj, bool copy);
 public:
 
-  BOOST_PYTHON_FORWARD_OBJECT_CONSTRUCTORS(matrix, ndarray);
+	BOOST_PYTHON_FORWARD_OBJECT_CONSTRUCTORS(matrix, ndarray);
 
-  /// @brief Equivalent to "numpy.matrix(obj,dt,copy)" in Python.
-  explicit matrix(object const & obj, dtype const & dt, bool copy=true)
-    : ndarray(extract<ndarray>(construct(obj, dt, copy))) {}
+	/// @brief Equivalent to "numpy.matrix(obj,dt,copy)" in Python.
+	explicit matrix(object const & obj, dtype const & dt, bool copy=true)
+		: ndarray(extract<ndarray>(construct(obj, dt, copy))) {}
 
-  /// @brief Equivalent to "numpy.matrix(obj,copy=copy)" in Python.
-  explicit matrix(object const & obj, bool copy=true)
-    : ndarray(extract<ndarray>(construct(obj, copy))) {}
+	/// @brief Equivalent to "numpy.matrix(obj,copy=copy)" in Python.
+	explicit matrix(object const & obj, bool copy=true)
+		: ndarray(extract<ndarray>(construct(obj, copy))) {}
 
-  /// \brief Return a view of the matrix with the given dtype.
-  matrix view(dtype const & dt) const;
+	/// \brief Return a view of the matrix with the given dtype.
+	matrix view(dtype const & dt) const;
 
-  /// \brief Copy the scalar (deep for all non-object fields).
-  matrix copy() const;
+	/// \brief Copy the scalar (deep for all non-object fields).
+	matrix copy() const;
 
-  /// \brief Transpose the matrix.
-  matrix transpose() const;
+	/// \brief Transpose the matrix.
+	matrix transpose() const;
 
 };
 
@@ -63,22 +68,24 @@ public:
 template <typename Base = default_call_policies>
 struct as_matrix : Base
 {
-  static PyObject * postcall(PyObject *, PyObject * result)
-  {
-    object a = object(handle<>(result));
-    numpy::matrix m(a, false);
-    Py_INCREF(m.ptr());
-    return m.ptr();
-  }
+	static PyObject * postcall(PyObject *, PyObject * result)
+	{
+		object a = object(handle<>(result));
+		numpy::matrix m(a, false);
+		Py_INCREF(m.ptr());
+		return m.ptr();
+	}
 };
 
 } // namespace boost::python::numpy
 
-namespace converter 
+namespace converter
 {
 
 NUMPY_OBJECT_MANAGER_TRAITS(numpy::matrix);
 
-}}} // namespace boost::python::converter
+}
+}
+} // namespace boost::python::converter
 
 #endif

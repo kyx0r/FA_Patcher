@@ -17,8 +17,10 @@
 
 #include <boost/asio/detail/config.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 class execution_context;
 
@@ -36,9 +38,12 @@ class execution_context;
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if defined(BOOST_ASIO_CUSTOM_HANDLER_TRACKING)
 
@@ -68,105 +73,105 @@ namespace detail {
 class handler_tracking
 {
 public:
-  class completion;
+	class completion;
 
-  // Base class for objects containing tracked handlers.
-  class tracked_handler
-  {
-  private:
-    // Only the handler_tracking class will have access to the id.
-    friend class handler_tracking;
-    friend class completion;
-    uint64_t id_;
+	// Base class for objects containing tracked handlers.
+	class tracked_handler
+	{
+	private:
+		// Only the handler_tracking class will have access to the id.
+		friend class handler_tracking;
+		friend class completion;
+		uint64_t id_;
 
-  protected:
-    // Constructor initialises with no id.
-    tracked_handler() : id_(0) {}
+	protected:
+		// Constructor initialises with no id.
+		tracked_handler() : id_(0) {}
 
-    // Prevent deletion through this type.
-    ~tracked_handler() {}
-  };
+		// Prevent deletion through this type.
+		~tracked_handler() {}
+	};
 
-  // Initialise the tracking system.
-  BOOST_ASIO_DECL static void init();
+	// Initialise the tracking system.
+	BOOST_ASIO_DECL static void init();
 
-  // Record the creation of a tracked handler.
-  BOOST_ASIO_DECL static void creation(
-      execution_context& context, tracked_handler& h,
-      const char* object_type, void* object,
-      uintmax_t native_handle, const char* op_name);
+	// Record the creation of a tracked handler.
+	BOOST_ASIO_DECL static void creation(
+	    execution_context& context, tracked_handler& h,
+	    const char* object_type, void* object,
+	    uintmax_t native_handle, const char* op_name);
 
-  class completion
-  {
-  public:
-    // Constructor records that handler is to be invoked with no arguments.
-    BOOST_ASIO_DECL explicit completion(const tracked_handler& h);
+	class completion
+	{
+	public:
+		// Constructor records that handler is to be invoked with no arguments.
+		BOOST_ASIO_DECL explicit completion(const tracked_handler& h);
 
-    // Destructor records only when an exception is thrown from the handler, or
-    // if the memory is being freed without the handler having been invoked.
-    BOOST_ASIO_DECL ~completion();
+		// Destructor records only when an exception is thrown from the handler, or
+		// if the memory is being freed without the handler having been invoked.
+		BOOST_ASIO_DECL ~completion();
 
-    // Records that handler is to be invoked with no arguments.
-    BOOST_ASIO_DECL void invocation_begin();
+		// Records that handler is to be invoked with no arguments.
+		BOOST_ASIO_DECL void invocation_begin();
 
-    // Records that handler is to be invoked with one arguments.
-    BOOST_ASIO_DECL void invocation_begin(const boost::system::error_code& ec);
+		// Records that handler is to be invoked with one arguments.
+		BOOST_ASIO_DECL void invocation_begin(const boost::system::error_code& ec);
 
-    // Constructor records that handler is to be invoked with two arguments.
-    BOOST_ASIO_DECL void invocation_begin(
-        const boost::system::error_code& ec, std::size_t bytes_transferred);
+		// Constructor records that handler is to be invoked with two arguments.
+		BOOST_ASIO_DECL void invocation_begin(
+		    const boost::system::error_code& ec, std::size_t bytes_transferred);
 
-    // Constructor records that handler is to be invoked with two arguments.
-    BOOST_ASIO_DECL void invocation_begin(
-        const boost::system::error_code& ec, int signal_number);
+		// Constructor records that handler is to be invoked with two arguments.
+		BOOST_ASIO_DECL void invocation_begin(
+		    const boost::system::error_code& ec, int signal_number);
 
-    // Constructor records that handler is to be invoked with two arguments.
-    BOOST_ASIO_DECL void invocation_begin(
-        const boost::system::error_code& ec, const char* arg);
+		// Constructor records that handler is to be invoked with two arguments.
+		BOOST_ASIO_DECL void invocation_begin(
+		    const boost::system::error_code& ec, const char* arg);
 
-    // Record that handler invocation has ended.
-    BOOST_ASIO_DECL void invocation_end();
+		// Record that handler invocation has ended.
+		BOOST_ASIO_DECL void invocation_end();
 
-  private:
-    friend class handler_tracking;
-    uint64_t id_;
-    bool invoked_;
-    completion* next_;
-  };
+	private:
+		friend class handler_tracking;
+		uint64_t id_;
+		bool invoked_;
+		completion* next_;
+	};
 
-  // Record an operation that is not directly associated with a handler.
-  BOOST_ASIO_DECL static void operation(execution_context& context,
-      const char* object_type, void* object,
-      uintmax_t native_handle, const char* op_name);
+	// Record an operation that is not directly associated with a handler.
+	BOOST_ASIO_DECL static void operation(execution_context& context,
+	                                      const char* object_type, void* object,
+	                                      uintmax_t native_handle, const char* op_name);
 
-  // Record that a descriptor has been registered with the reactor.
-  BOOST_ASIO_DECL static void reactor_registration(execution_context& context,
-      uintmax_t native_handle, uintmax_t registration);
+	// Record that a descriptor has been registered with the reactor.
+	BOOST_ASIO_DECL static void reactor_registration(execution_context& context,
+	        uintmax_t native_handle, uintmax_t registration);
 
-  // Record that a descriptor has been deregistered from the reactor.
-  BOOST_ASIO_DECL static void reactor_deregistration(execution_context& context,
-      uintmax_t native_handle, uintmax_t registration);
+	// Record that a descriptor has been deregistered from the reactor.
+	BOOST_ASIO_DECL static void reactor_deregistration(execution_context& context,
+	        uintmax_t native_handle, uintmax_t registration);
 
-  // Record a reactor-based operation that is associated with a handler.
-  BOOST_ASIO_DECL static void reactor_events(execution_context& context,
-      uintmax_t registration, unsigned events);
+	// Record a reactor-based operation that is associated with a handler.
+	BOOST_ASIO_DECL static void reactor_events(execution_context& context,
+	        uintmax_t registration, unsigned events);
 
-  // Record a reactor-based operation that is associated with a handler.
-  BOOST_ASIO_DECL static void reactor_operation(
-      const tracked_handler& h, const char* op_name,
-      const boost::system::error_code& ec);
+	// Record a reactor-based operation that is associated with a handler.
+	BOOST_ASIO_DECL static void reactor_operation(
+	    const tracked_handler& h, const char* op_name,
+	    const boost::system::error_code& ec);
 
-  // Record a reactor-based operation that is associated with a handler.
-  BOOST_ASIO_DECL static void reactor_operation(
-      const tracked_handler& h, const char* op_name,
-      const boost::system::error_code& ec, std::size_t bytes_transferred);
+	// Record a reactor-based operation that is associated with a handler.
+	BOOST_ASIO_DECL static void reactor_operation(
+	    const tracked_handler& h, const char* op_name,
+	    const boost::system::error_code& ec, std::size_t bytes_transferred);
 
-  // Write a line of output.
-  BOOST_ASIO_DECL static void write_line(const char* format, ...);
+	// Write a line of output.
+	BOOST_ASIO_DECL static void write_line(const char* format, ...);
 
 private:
-  struct tracking_state;
-  BOOST_ASIO_DECL static tracking_state* get_state();
+	struct tracking_state;
+	BOOST_ASIO_DECL static tracking_state* get_state();
 };
 
 # define BOOST_ASIO_INHERIT_TRACKED_HANDLER \

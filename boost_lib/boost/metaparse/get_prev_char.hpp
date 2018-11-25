@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::get_prev_char;
-  }
+namespace metaparse
+{
+using v1::get_prev_char;
+}
 }
 
 #endif

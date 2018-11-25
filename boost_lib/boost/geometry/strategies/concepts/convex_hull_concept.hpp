@@ -25,7 +25,11 @@
 #include <boost/concept_check.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -38,43 +42,45 @@ class ConvexHullStrategy
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 
-    // 1) must define state_type
-    typedef typename Strategy::state_type state_type;
+	// 1) must define state_type
+	typedef typename Strategy::state_type state_type;
 
-    // 2) must define point_type
-    typedef typename Strategy::point_type point_type;
+	// 2) must define point_type
+	typedef typename Strategy::point_type point_type;
 
-    // 3) must define geometry_type
-    typedef typename Strategy::geometry_type geometry_type;
+	// 3) must define geometry_type
+	typedef typename Strategy::geometry_type geometry_type;
 
-    struct check_methods
-    {
-        static void apply()
-        {
-            Strategy const* str = 0;
+	struct check_methods
+	{
+		static void apply()
+		{
+			Strategy const* str = 0;
 
-            state_type* st = 0;
-            geometry_type* sp = 0;
-            std::vector<point_type> *v = 0;
+			state_type* st = 0;
+			geometry_type* sp = 0;
+			std::vector<point_type> *v = 0;
 
-            // 4) must implement a method apply, iterating over a range
-            str->apply(*sp, *st);
+			// 4) must implement a method apply, iterating over a range
+			str->apply(*sp, *st);
 
-            // 5) must implement a method result, with an output iterator
-            str->result(*st, std::back_inserter(*v), true, true);
-        }
-    };
+			// 5) must implement a method result, with an output iterator
+			str->result(*st, std::back_inserter(*v), true, true);
+		}
+	};
 
 public :
-    BOOST_CONCEPT_USAGE(ConvexHullStrategy)
-    {
-        check_methods::apply();
-    }
+	BOOST_CONCEPT_USAGE(ConvexHullStrategy)
+	{
+		check_methods::apply();
+	}
 #endif
 };
 
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CONCEPTS_CONVEX_HULL_CONCEPT_HPP

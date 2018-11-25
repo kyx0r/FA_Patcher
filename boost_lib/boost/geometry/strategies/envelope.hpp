@@ -13,11 +13,17 @@
 
 #include <boost/mpl/assert.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace envelope { namespace services
+namespace strategy
+{
+namespace envelope
+{
+namespace services
 {
 
 /*!
@@ -29,17 +35,20 @@ namespace strategy { namespace envelope { namespace services
 template <typename CSTag, typename CalculationType = void>
 struct default_strategy
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_TYPE
-            , (types<CSTag>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_TYPE
+	    , (types<CSTag>)
+	);
 };
 
-}}} // namespace strategy::envelope::services
+}
+}
+} // namespace strategy::envelope::services
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_ENVELOPE_HPP
 

@@ -14,8 +14,10 @@
 #include <boost/compute/cl.hpp>
 #include <boost/compute/kernel.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// \class local_buffer
 /// \brief Represents a local memory buffer on the device.
@@ -35,53 +37,55 @@ template<class T>
 class local_buffer
 {
 public:
-    /// Creates a local buffer object for \p size elements.
-    local_buffer(const size_t size)
-        : m_size(size)
-    {
-    }
+	/// Creates a local buffer object for \p size elements.
+	local_buffer(const size_t size)
+		: m_size(size)
+	{
+	}
 
-    /// Creates a local buffer object as a copy of \p other.
-    local_buffer(const local_buffer &other)
-        : m_size(other.m_size)
-    {
-    }
+	/// Creates a local buffer object as a copy of \p other.
+	local_buffer(const local_buffer &other)
+		: m_size(other.m_size)
+	{
+	}
 
-    /// Copies \p other to \c *this.
-    local_buffer& operator=(const local_buffer &other)
-    {
-        if(this != &other){
-            m_size = other.m_size;
-        }
+	/// Copies \p other to \c *this.
+	local_buffer& operator=(const local_buffer &other)
+	{
+		if(this != &other)
+		{
+			m_size = other.m_size;
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    /// Destroys the local memory object.
-    ~local_buffer()
-    {
-    }
+	/// Destroys the local memory object.
+	~local_buffer()
+	{
+	}
 
-    /// Returns the number of elements in the local buffer.
-    size_t size() const
-    {
-        return m_size;
-    }
+	/// Returns the number of elements in the local buffer.
+	size_t size() const
+	{
+		return m_size;
+	}
 
 private:
-    size_t m_size;
+	size_t m_size;
 };
 
-namespace detail {
+namespace detail
+{
 
 // set_kernel_arg specialization for local_buffer<T>
 template<class T>
 struct set_kernel_arg<local_buffer<T> >
 {
-    void operator()(kernel &kernel_, size_t index, const local_buffer<T> &buffer)
-    {
-        kernel_.set_arg(index, buffer.size() * sizeof(T), 0);
-    }
+	void operator()(kernel &kernel_, size_t index, const local_buffer<T> &buffer)
+	{
+		kernel_.set_arg(index, buffer.size() * sizeof(T), 0);
+	}
 };
 
 } // end detail namespace

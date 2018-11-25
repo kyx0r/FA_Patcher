@@ -24,33 +24,36 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class macos_fenced_block
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  enum half_t { half };
-  enum full_t { full };
+	enum half_t { half };
+	enum full_t { full };
 
-  // Constructor for a half fenced block.
-  explicit macos_fenced_block(half_t)
-  {
-  }
+	// Constructor for a half fenced block.
+	explicit macos_fenced_block(half_t)
+	{
+	}
 
-  // Constructor for a full fenced block.
-  explicit macos_fenced_block(full_t)
-  {
-    OSMemoryBarrier();
-  }
+	// Constructor for a full fenced block.
+	explicit macos_fenced_block(full_t)
+	{
+		OSMemoryBarrier();
+	}
 
-  // Destructor.
-  ~macos_fenced_block()
-  {
-    OSMemoryBarrier();
-  }
+	// Destructor.
+	~macos_fenced_block()
+	{
+		OSMemoryBarrier();
+	}
 };
 
 } // namespace detail

@@ -14,49 +14,52 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/utility/declval.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct map_tag;
+namespace fusion
+{
+struct map_tag;
 
-    namespace extension
-    {
-        template <typename Tag>
-        struct at_key_impl;
+namespace extension
+{
+template <typename Tag>
+struct at_key_impl;
 
-        template <>
-        struct at_key_impl<map_tag>
-        {
-            template <typename Sequence, typename Key>
-            struct apply
-            {
-                typedef
-                    decltype(boost::declval<Sequence>().get(mpl::identity<Key>()))
-                type;
+template <>
+struct at_key_impl<map_tag>
+{
+	template <typename Sequence, typename Key>
+	struct apply
+	{
+		typedef
+		decltype(boost::declval<Sequence>().get(mpl::identity<Key>()))
+		type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type
-                call(Sequence& m)
-                {
-                    return m.get(mpl::identity<Key>());
-                }
-            };
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(Sequence& m)
+		{
+			return m.get(mpl::identity<Key>());
+		}
+	};
 
-            template <typename Sequence, typename Key>
-            struct apply<Sequence const, Key>
-            {
-                typedef
-                    decltype(boost::declval<Sequence const>().get(mpl::identity<Key>()))
-                type;
+	template <typename Sequence, typename Key>
+	struct apply<Sequence const, Key>
+	{
+		typedef
+		decltype(boost::declval<Sequence const>().get(mpl::identity<Key>()))
+		type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type
-                call(Sequence const& m)
-                {
-                    return m.get(mpl::identity<Key>());
-                }
-            };
-        };
-    }
-}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(Sequence const& m)
+		{
+			return m.get(mpl::identity<Key>());
+		}
+	};
+};
+}
+}
+}
 
 #endif

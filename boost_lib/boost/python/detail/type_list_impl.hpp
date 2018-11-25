@@ -16,20 +16,27 @@
 #  include <boost/preprocessor/iterate.hpp>
 #  include <boost/preprocessor/repetition/enum_trailing.hpp>
 
-namespace boost { namespace python { namespace detail { 
+namespace boost
+{
+namespace python
+{
+namespace detail
+{
 
 template <BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PYTHON_LIST_SIZE, class T, mpl::void_)>
 struct type_list
-    : BOOST_PP_CAT(mpl::vector,BOOST_PYTHON_LIST_SIZE)<BOOST_PP_ENUM_PARAMS_Z(1, BOOST_PYTHON_LIST_SIZE, T)>
-{
-};
+: BOOST_PP_CAT(mpl::vector,BOOST_PYTHON_LIST_SIZE)<BOOST_PP_ENUM_PARAMS_Z(1, BOOST_PYTHON_LIST_SIZE, T)>
+  {
+  };
 
 #  define BOOST_PP_ITERATION_PARAMS_1                                                                   \
         (3, (0, BOOST_PP_DEC(BOOST_PYTHON_LIST_SIZE), <boost/python/detail/type_list_impl.hpp>))
 #  include BOOST_PP_ITERATE()
 
 
-}}} // namespace boost::python::detail
+}
+}
+} // namespace boost::python::detail
 
 # endif // TYPE_LIST_IMPL_DWA2002913_HPP
 
@@ -42,12 +49,12 @@ template <
     BOOST_PP_ENUM_PARAMS_Z(1, N, class T)
     >
 struct type_list<
-    BOOST_PP_ENUM_PARAMS_Z(1, N, T)
-    BOOST_PP_COMMA_IF(N)
-    BOOST_PP_ENUM(
-        BOOST_PYTHON_VOID_ARGS, BOOST_PYTHON_FIXED, mpl::void_)
-    >
-   : BOOST_PP_CAT(mpl::vector,N)<BOOST_PP_ENUM_PARAMS_Z(1, N, T)>
+BOOST_PP_ENUM_PARAMS_Z(1, N, T)
+BOOST_PP_COMMA_IF(N)
+BOOST_PP_ENUM(
+    BOOST_PYTHON_VOID_ARGS, BOOST_PYTHON_FIXED, mpl::void_)
+>
+: BOOST_PP_CAT(mpl::vector,N)<BOOST_PP_ENUM_PARAMS_Z(1, N, T)>
 {
 };
 

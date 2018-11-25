@@ -13,17 +13,20 @@
 
 #include <boost/compute/type_traits/type_name.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T>
 struct capture_traits
 {
-    static std::string type_name()
-    {
-        return ::boost::compute::type_name<T>();
-    }
+	static std::string type_name()
+	{
+		return ::boost::compute::type_name<T>();
+	}
 };
 
 } // end detail namespace

@@ -22,13 +22,16 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 template< typename T, typename CharT, typename VoidT = void >
 struct date_time_formatter_generator_traits;

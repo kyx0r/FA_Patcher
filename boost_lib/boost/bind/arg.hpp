@@ -31,35 +31,35 @@ template<bool Eq> struct _arg_eq
 
 template<> struct _arg_eq<true>
 {
-    typedef void type;
+	typedef void type;
 };
 
 template< int I > struct arg
 {
-    BOOST_CONSTEXPR arg()
-    {
-    }
+	BOOST_CONSTEXPR arg()
+	{
+	}
 
-    template< class T > BOOST_CONSTEXPR arg( T const & /* t */, typename _arg_eq< I == is_placeholder<T>::value >::type * = 0 )
-    {
-    }
+	template< class T > BOOST_CONSTEXPR arg( T const & /* t */, typename _arg_eq< I == is_placeholder<T>::value >::type * = 0 )
+	{
+	}
 };
 
 template< int I > BOOST_CONSTEXPR bool operator==( arg<I> const &, arg<I> const & )
 {
-    return true;
+	return true;
 }
 
 #if !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
 
 template< int I > struct is_placeholder< arg<I> >
 {
-    enum _vt { value = I };
+	enum _vt { value = I };
 };
 
 template< int I > struct is_placeholder< arg<I> (*) () >
 {
-    enum _vt { value = I };
+	enum _vt { value = I };
 };
 
 #endif

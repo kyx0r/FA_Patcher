@@ -12,26 +12,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace util
-      {
-        template <class N = boost::mpl::na>
-        struct int_to_digit : int_to_digit_c<N::type::value> {};
+namespace metaparse
+{
+namespace v1
+{
+namespace util
+{
+template <class N = boost::mpl::na>
+struct int_to_digit : int_to_digit_c<N::type::value> {};
 
-        template <>
-        struct int_to_digit<boost::mpl::na>
-        {
-          typedef int_to_digit type;
+template <>
+struct int_to_digit<boost::mpl::na>
+{
+	typedef int_to_digit type;
 
-          template <class N = boost::mpl::na>
-          struct apply : int_to_digit<N> {};
-        };
-      }
-    }
-  }
+	template <class N = boost::mpl::na>
+	struct apply : int_to_digit<N> {};
+};
+}
+}
+}
 }
 
 #endif

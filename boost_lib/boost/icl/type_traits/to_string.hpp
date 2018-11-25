@@ -20,23 +20,26 @@ Function-templates for discrete Datatypes like int, unsigned or
 #include <string>
 #include <sstream>
 
-namespace boost{ namespace icl
-{    
+namespace boost
+{
+namespace icl
+{
 
 /// Static class template for the string representation of values
 template <class Type>
 struct to_string
 {
-    /** Converts all values of types to std::string that implement an operator << */
-    static std::string apply(const Type& value)
-    {
-        std::stringstream repr;
-        repr << value;
-        return repr.str();
-    }
+	/** Converts all values of types to std::string that implement an operator << */
+	static std::string apply(const Type& value)
+	{
+		std::stringstream repr;
+		repr << value;
+		return repr.str();
+	}
 };
 
-}} // namespace boost icl
+}
+} // namespace boost icl
 
 #endif
 

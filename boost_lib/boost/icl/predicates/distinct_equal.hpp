@@ -11,22 +11,27 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/icl/type_traits/predicate.hpp>
 #include <boost/icl/type_traits/type_to_string.hpp>
 
-namespace boost{namespace icl
+namespace boost
 {
-    template <class Type> 
-    struct distinct_equal : public relation<Type,Type>
-    {
-        bool operator()(const Type& lhs, const Type& rhs)const
-        {
-            return is_distinct_equal(lhs, rhs);
-        }
-    };
+namespace icl
+{
+template <class Type>
+struct distinct_equal : public relation<Type,Type>
+{
+	bool operator()(const Type& lhs, const Type& rhs)const
+	{
+		return is_distinct_equal(lhs, rhs);
+	}
+};
 
-    template<>
-    inline std::string unary_template_to_string<icl::distinct_equal>::apply()  
-    { return "==/0"; }
+template<>
+inline std::string unary_template_to_string<icl::distinct_equal>::apply()
+{
+	return "==/0";
+}
 
-}} // namespace icl boost
+}
+} // namespace icl boost
 
 #endif
 

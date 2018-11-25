@@ -5,7 +5,7 @@
 
 // See http://www.boost.org/libs/iostreams for documentation.
 
-// 
+//
 // Contains metafunctions char_type_of, category_of and mode_of used for
 // deducing the i/o category and i/o mode of a model of Filter or Device.
 //
@@ -17,24 +17,24 @@
 
 #if defined(_MSC_VER)
 # pragma once
-#endif              
+#endif
 
 #include <iosfwd>            // stream types, char_traits.
 #include <boost/config.hpp>  // partial spec, deduced typename.
 #include <boost/detail/workaround.hpp>
 #include <boost/iostreams/categories.hpp>
-#include <boost/iostreams/detail/bool_trait_def.hpp> 
+#include <boost/iostreams/detail/bool_trait_def.hpp>
 #include <boost/iostreams/detail/config/wide_streams.hpp>
-#include <boost/iostreams/detail/is_iterator_range.hpp>    
-#include <boost/iostreams/detail/select.hpp>        
-#include <boost/iostreams/detail/select_by_size.hpp>      
-#include <boost/iostreams/detail/wrap_unwrap.hpp>       
-#include <boost/iostreams/traits_fwd.hpp> 
-#include <boost/mpl/bool.hpp>   
+#include <boost/iostreams/detail/is_iterator_range.hpp>
+#include <boost/iostreams/detail/select.hpp>
+#include <boost/iostreams/detail/select_by_size.hpp>
+#include <boost/iostreams/detail/wrap_unwrap.hpp>
+#include <boost/iostreams/traits_fwd.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>      
-#include <boost/mpl/int.hpp>  
-#include <boost/mpl/or.hpp>                 
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/value_type.hpp>
 #include <boost/ref.hpp>
@@ -43,7 +43,10 @@
 // Must come last.
 #include <boost/iostreams/detail/config/disable_warnings.hpp>
 
-namespace boost { namespace iostreams {
+namespace boost
+{
+namespace iostreams
+{
 
 //----------Definitions of predicates for streams and stream buffers----------//
 
@@ -73,28 +76,28 @@ BOOST_IOSTREAMS_BOOL_TRAIT_DEF(is_streambuf, std::streambuf, 0)
 
 template<typename T>
 struct is_std_io
-    : mpl::or_< is_istream<T>, is_ostream<T>, is_streambuf<T> >
-    { };
+	: mpl::or_< is_istream<T>, is_ostream<T>, is_streambuf<T> >
+{ };
 
 template<typename T>
 struct is_std_file_device
-    : mpl::or_< 
-          is_ifstream<T>, 
-          is_ofstream<T>, 
-          is_fstream<T>, 
-          is_filebuf<T>
-      >
-    { };
+	: mpl::or_<
+	  is_ifstream<T>,
+	  is_ofstream<T>,
+	  is_fstream<T>,
+	  is_filebuf<T>
+	  >
+{ };
 
 template<typename T>
 struct is_std_string_device
-    : mpl::or_< 
-          is_istringstream<T>, 
-          is_ostringstream<T>, 
-          is_stringstream<T>, 
-          is_stringbuf<T>
-      >
-    { };
+	: mpl::or_<
+	  is_istringstream<T>,
+	  is_ostringstream<T>,
+	  is_stringstream<T>,
+	  is_stringbuf<T>
+	  >
+{ };
 
 template<typename Device, typename Tr, typename Alloc>
 struct stream;
@@ -102,23 +105,24 @@ struct stream;
 template<typename T, typename Tr, typename Alloc, typename Mode>
 class stream_buffer;
 
-template< typename Mode, typename Ch, typename Tr, 
+template< typename Mode, typename Ch, typename Tr,
           typename Alloc, typename Access >
 class filtering_stream;
 
-template< typename Mode, typename Ch, typename Tr, 
+template< typename Mode, typename Ch, typename Tr,
           typename Alloc, typename Access >
 class wfiltering_stream;
 
-template< typename Mode, typename Ch, typename Tr, 
+template< typename Mode, typename Ch, typename Tr,
           typename Alloc, typename Access >
 class filtering_streambuf;
 
-template< typename Mode, typename Ch, typename Tr, 
+template< typename Mode, typename Ch, typename Tr,
           typename Alloc, typename Access >
 class filtering_wstreambuf;
 
-namespace detail {
+namespace detail
+{
 
 template<typename T, typename Tr>
 class linked_streambuf;
@@ -145,145 +149,162 @@ BOOST_IOSTREAMS_BOOL_TRAIT_DEF(is_linked, linked_streambuf, 2)
 
 template<typename T>
 struct is_filtering_stream
-    : mpl::or_<
-          is_filtering_stream_impl<T>,
-          is_filtering_wstream_impl<T>
-      >
-    { };
+	: mpl::or_<
+	  is_filtering_stream_impl<T>,
+	  is_filtering_wstream_impl<T>
+	  >
+{ };
 
 template<typename T>
 struct is_filtering_streambuf
-    : mpl::or_<
-          is_filtering_streambuf_impl<T>,
-          is_filtering_wstreambuf_impl<T>
-      >
-    { };
+	: mpl::or_<
+	  is_filtering_streambuf_impl<T>,
+	  is_filtering_wstreambuf_impl<T>
+	  >
+{ };
 
 template<typename T>
 struct is_boost
-    : mpl::or_<
-          is_boost_stream<T>, 
-          is_boost_stream_buffer<T>, 
-          is_filtering_stream<T>, 
-          is_filtering_streambuf<T>
-      >
-    { };
+	: mpl::or_<
+	  is_boost_stream<T>,
+	  is_boost_stream_buffer<T>,
+	  is_filtering_stream<T>,
+	  is_filtering_streambuf<T>
+	  >
+{ };
 
 } // End namespace detail.
-                    
+
 //------------------Definitions of char_type_of-------------------------------//
 
-namespace detail {
+namespace detail
+{
 
 template<typename T>
-struct member_char_type { typedef typename T::char_type type; };
+struct member_char_type
+{
+	typedef typename T::char_type type;
+};
 
 } // End namespace detail.
 
 # ifndef BOOST_IOSTREAMS_NO_STREAM_TEMPLATES //-------------------------------//
 
 template<typename T>
-struct char_type_of 
-    : detail::member_char_type<
-          typename detail::unwrapped_type<T>::type
-      > 
-    { };
+struct char_type_of
+	: detail::member_char_type<
+	  typename detail::unwrapped_type<T>::type
+	  >
+{ };
 
 # else // # ifndef BOOST_IOSTREAMS_NO_STREAM_TEMPLATES //---------------------//
 
 template<typename T>
-struct char_type_of {
-    typedef typename detail::unwrapped_type<T>::type U;
-    typedef typename 
-            mpl::eval_if<
-                is_std_io<U>,
-                mpl::identity<char>,
-                detail::member_char_type<U>
-            >::type type;
+struct char_type_of
+{
+	typedef typename detail::unwrapped_type<T>::type U;
+	typedef typename
+	mpl::eval_if<
+	is_std_io<U>,
+	          mpl::identity<char>,
+	          detail::member_char_type<U>
+	          >::type type;
 };
 
 # endif // # ifndef BOOST_IOSTREAMS_NO_STREAM_TEMPLATES //--------------------//
 
 template<typename Iter>
-struct char_type_of< iterator_range<Iter> > {
-    typedef typename iterator_value<Iter>::type type;
+struct char_type_of< iterator_range<Iter> >
+{
+	typedef typename iterator_value<Iter>::type type;
 };
 
 
 //------------------Definitions of category_of--------------------------------//
 
-namespace detail {
+namespace detail
+{
 
 template<typename T>
-struct member_category { typedef typename T::category type; };
+struct member_category
+{
+	typedef typename T::category type;
+};
 
 } // End namespace detail.
 
 template<typename T>
-struct category_of {
-    template<typename U>
-    struct member_category { 
-        typedef typename U::category type; 
-    };
-    typedef typename detail::unwrapped_type<T>::type U;
-    typedef typename  
-            mpl::eval_if<
-                mpl::and_<
-                    is_std_io<U>,
-                    mpl::not_< detail::is_boost<U> >
-                >,
-                iostreams::select<  // Disambiguation for Tru64
-                    is_filebuf<U>,        filebuf_tag,
-                    is_ifstream<U>,       ifstream_tag,
-                    is_ofstream<U>,       ofstream_tag,
-                    is_fstream<U>,        fstream_tag,
-                    is_stringbuf<U>,      stringbuf_tag,
-                    is_istringstream<U>,  istringstream_tag,
-                    is_ostringstream<U>,  ostringstream_tag,
-                    is_stringstream<U>,   stringstream_tag,
-                    is_streambuf<U>,      generic_streambuf_tag,
-                    is_iostream<U>,       generic_iostream_tag,
-                    is_istream<U>,        generic_istream_tag, 
-                    is_ostream<U>,        generic_ostream_tag
-                >,
-                detail::member_category<U>
-            >::type type;
+struct category_of
+{
+	template<typename U>
+	struct member_category
+	{
+		typedef typename U::category type;
+	};
+	typedef typename detail::unwrapped_type<T>::type U;
+	typedef typename
+	mpl::eval_if<
+	mpl::and_<
+	is_std_io<U>,
+	          mpl::not_< detail::is_boost<U> >
+	          >,
+	          iostreams::select<  // Disambiguation for Tru64
+	          is_filebuf<U>,        filebuf_tag,
+	          is_ifstream<U>,       ifstream_tag,
+	          is_ofstream<U>,       ofstream_tag,
+	          is_fstream<U>,        fstream_tag,
+	          is_stringbuf<U>,      stringbuf_tag,
+	          is_istringstream<U>,  istringstream_tag,
+	          is_ostringstream<U>,  ostringstream_tag,
+	          is_stringstream<U>,   stringstream_tag,
+	          is_streambuf<U>,      generic_streambuf_tag,
+	          is_iostream<U>,       generic_iostream_tag,
+	          is_istream<U>,        generic_istream_tag,
+	          is_ostream<U>,        generic_ostream_tag
+	          >,
+	          detail::member_category<U>
+	          >::type type;
 };
 
 // Partial specialization for reference wrappers
 
 template<typename T>
 struct category_of< reference_wrapper<T> >
-    : category_of<T>
-    { };
+	: category_of<T>
+{ };
 
 
 //------------------Definition of get_category--------------------------------//
 
-// 
+//
 // Returns an object of type category_of<T>::type.
-// 
+//
 template<typename T>
-inline typename category_of<T>::type get_category(const T&) 
-{ typedef typename category_of<T>::type category; return category(); }
+inline typename category_of<T>::type get_category(const T&)
+{
+	typedef typename category_of<T>::type category;
+	return category();
+}
 
 //------------------Definition of int_type_of---------------------------------//
 
 template<typename T>
-struct int_type_of { 
+struct int_type_of
+{
 #ifndef BOOST_IOSTREAMS_NO_STREAM_TEMPLATES
-    typedef std::char_traits<
-                BOOST_DEDUCED_TYPENAME char_type_of<T>::type
-            > traits_type;      
-    typedef typename traits_type::int_type type; 
-#else  
-    typedef int                            type; 
+	typedef std::char_traits<
+	BOOST_DEDUCED_TYPENAME char_type_of<T>::type
+	> traits_type;
+	typedef typename traits_type::int_type type;
+#else
+	typedef int                            type;
 #endif
 };
 
 //------------------Definition of mode_of-------------------------------------//
 
-namespace detail {
+namespace detail
+{
 
 template<int N> struct io_mode_impl;
 
@@ -303,9 +324,10 @@ BOOST_IOSTREAMS_MODE_HELPER(dual_use, 9)
 #undef BOOST_IOSTREAMS_MODE_HELPER
 
 template<typename T>
-struct io_mode_id {
-    typedef typename category_of<T>::type category;
-    BOOST_SELECT_BY_SIZE(int, value, detail::io_mode_impl_helper(category()));
+struct io_mode_id
+{
+	typedef typename category_of<T>::type category;
+	BOOST_SELECT_BY_SIZE(int, value, detail::io_mode_impl_helper(category()));
 };
 
 } // End namespace detail.
@@ -317,24 +339,26 @@ struct mode_of : detail::io_mode_impl< detail::io_mode_id<T>::value > { };
 
 template<typename T>
 struct mode_of< reference_wrapper<T> >
-    : mode_of<T>
-    { };
+	: mode_of<T>
+{ };
 
-                    
+
 //------------------Definition of is_device, is_filter and is_direct----------//
 
-namespace detail {
+namespace detail
+{
 
 template<typename T, typename Tag>
-struct has_trait_impl {
-    typedef typename category_of<T>::type category;
-    BOOST_STATIC_CONSTANT(bool, value = (is_convertible<category, Tag>::value));
+struct has_trait_impl
+{
+	typedef typename category_of<T>::type category;
+	BOOST_STATIC_CONSTANT(bool, value = (is_convertible<category, Tag>::value));
 };
 
 template<typename T, typename Tag>
-struct has_trait 
-    : mpl::bool_<has_trait_impl<T, Tag>::value>
-    { }; 
+struct has_trait
+	: mpl::bool_<has_trait_impl<T, Tag>::value>
+{ };
 
 } // End namespace detail.
 
@@ -346,7 +370,7 @@ struct is_filter : detail::has_trait<T, filter_tag> { };
 
 template<typename T>
 struct is_direct : detail::has_trait<T, direct_tag> { };
-                    
+
 //------------------Definition of BOOST_IOSTREAMS_STREAMBUF_TYPEDEFS----------//
 
 #define BOOST_IOSTREAMS_STREAMBUF_TYPEDEFS(Tr) \
@@ -356,7 +380,8 @@ struct is_direct : detail::has_trait<T, direct_tag> { };
     typedef typename traits_type::pos_type  pos_type; \
     /**/
 
-} } // End namespaces iostreams, boost.
+}
+} // End namespaces iostreams, boost.
 
 #include <boost/iostreams/detail/config/enable_warnings.hpp>
 

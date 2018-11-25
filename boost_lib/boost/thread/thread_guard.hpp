@@ -18,27 +18,27 @@
 namespace boost
 {
 
-  /**
-   * Non-copyable RAII scoped thread guard joiner which join the thread if joinable when destroyed.
-   */
-  template <class CallableThread = join_if_joinable, class Thread=::boost::thread>
-  class thread_guard
-  {
-    Thread& t_;
-  public:
-    BOOST_THREAD_NO_COPYABLE( thread_guard)
+/**
+ * Non-copyable RAII scoped thread guard joiner which join the thread if joinable when destroyed.
+ */
+template <class CallableThread = join_if_joinable, class Thread=::boost::thread>
+class thread_guard
+{
+	Thread& t_;
+public:
+	BOOST_THREAD_NO_COPYABLE( thread_guard)
 
-    explicit thread_guard(Thread& t) :
-    t_(t)
-    {
-    }
-    ~thread_guard()
-    {
-      CallableThread on_destructor;
+	explicit thread_guard(Thread& t) :
+		t_(t)
+	{
+	}
+	~thread_guard()
+	{
+		CallableThread on_destructor;
 
-      on_destructor(t_);
-    }
-  };
+		on_destructor(t_);
+	}
+};
 
 }
 #include <boost/config/abi_suffix.hpp>

@@ -30,8 +30,10 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 /// Adds buffering to the write-related operations of a stream.
 /**
@@ -47,198 +49,198 @@ namespace asio {
  */
 template <typename Stream>
 class buffered_write_stream
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  /// The type of the next layer.
-  typedef typename remove_reference<Stream>::type next_layer_type;
+	/// The type of the next layer.
+	typedef typename remove_reference<Stream>::type next_layer_type;
 
-  /// The type of the lowest layer.
-  typedef typename next_layer_type::lowest_layer_type lowest_layer_type;
+	/// The type of the lowest layer.
+	typedef typename next_layer_type::lowest_layer_type lowest_layer_type;
 
-  /// The type of the executor associated with the object.
-  typedef typename lowest_layer_type::executor_type executor_type;
+	/// The type of the executor associated with the object.
+	typedef typename lowest_layer_type::executor_type executor_type;
 
 #if defined(GENERATING_DOCUMENTATION)
-  /// The default buffer size.
-  static const std::size_t default_buffer_size = implementation_defined;
+	/// The default buffer size.
+	static const std::size_t default_buffer_size = implementation_defined;
 #else
-  BOOST_ASIO_STATIC_CONSTANT(std::size_t, default_buffer_size = 1024);
+	BOOST_ASIO_STATIC_CONSTANT(std::size_t, default_buffer_size = 1024);
 #endif
 
-  /// Construct, passing the specified argument to initialise the next layer.
-  template <typename Arg>
-  explicit buffered_write_stream(Arg& a)
-    : next_layer_(a),
-      storage_(default_buffer_size)
-  {
-  }
+	/// Construct, passing the specified argument to initialise the next layer.
+	template <typename Arg>
+	explicit buffered_write_stream(Arg& a)
+		: next_layer_(a),
+		  storage_(default_buffer_size)
+	{
+	}
 
-  /// Construct, passing the specified argument to initialise the next layer.
-  template <typename Arg>
-  buffered_write_stream(Arg& a, std::size_t buffer_size)
-    : next_layer_(a),
-      storage_(buffer_size)
-  {
-  }
+	/// Construct, passing the specified argument to initialise the next layer.
+	template <typename Arg>
+	buffered_write_stream(Arg& a, std::size_t buffer_size)
+		: next_layer_(a),
+		  storage_(buffer_size)
+	{
+	}
 
-  /// Get a reference to the next layer.
-  next_layer_type& next_layer()
-  {
-    return next_layer_;
-  }
+	/// Get a reference to the next layer.
+	next_layer_type& next_layer()
+	{
+		return next_layer_;
+	}
 
-  /// Get a reference to the lowest layer.
-  lowest_layer_type& lowest_layer()
-  {
-    return next_layer_.lowest_layer();
-  }
+	/// Get a reference to the lowest layer.
+	lowest_layer_type& lowest_layer()
+	{
+		return next_layer_.lowest_layer();
+	}
 
-  /// Get a const reference to the lowest layer.
-  const lowest_layer_type& lowest_layer() const
-  {
-    return next_layer_.lowest_layer();
-  }
+	/// Get a const reference to the lowest layer.
+	const lowest_layer_type& lowest_layer() const
+	{
+		return next_layer_.lowest_layer();
+	}
 
-  /// Get the executor associated with the object.
-  executor_type get_executor() BOOST_ASIO_NOEXCEPT
-  {
-    return next_layer_.lowest_layer().get_executor();
-  }
+	/// Get the executor associated with the object.
+	executor_type get_executor() BOOST_ASIO_NOEXCEPT
+	{
+		return next_layer_.lowest_layer().get_executor();
+	}
 
 #if !defined(BOOST_ASIO_NO_DEPRECATED)
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  boost::asio::io_context& get_io_context()
-  {
-    return next_layer_.get_io_context();
-  }
+	/// (Deprecated: Use get_executor().) Get the io_context associated with the
+	/// object.
+	boost::asio::io_context& get_io_context()
+	{
+		return next_layer_.get_io_context();
+	}
 
-  /// (Deprecated: Use get_executor().) Get the io_context associated with the
-  /// object.
-  boost::asio::io_context& get_io_service()
-  {
-    return next_layer_.get_io_service();
-  }
+	/// (Deprecated: Use get_executor().) Get the io_context associated with the
+	/// object.
+	boost::asio::io_context& get_io_service()
+	{
+		return next_layer_.get_io_service();
+	}
 #endif // !defined(BOOST_ASIO_NO_DEPRECATED)
 
-  /// Close the stream.
-  void close()
-  {
-    next_layer_.close();
-  }
+	/// Close the stream.
+	void close()
+	{
+		next_layer_.close();
+	}
 
-  /// Close the stream.
-  BOOST_ASIO_SYNC_OP_VOID close(boost::system::error_code& ec)
-  {
-    next_layer_.close(ec);
-    BOOST_ASIO_SYNC_OP_VOID_RETURN(ec);
-  }
+	/// Close the stream.
+	BOOST_ASIO_SYNC_OP_VOID close(boost::system::error_code& ec)
+	{
+		next_layer_.close(ec);
+		BOOST_ASIO_SYNC_OP_VOID_RETURN(ec);
+	}
 
-  /// Flush all data from the buffer to the next layer. Returns the number of
-  /// bytes written to the next layer on the last write operation. Throws an
-  /// exception on failure.
-  std::size_t flush();
+	/// Flush all data from the buffer to the next layer. Returns the number of
+	/// bytes written to the next layer on the last write operation. Throws an
+	/// exception on failure.
+	std::size_t flush();
 
-  /// Flush all data from the buffer to the next layer. Returns the number of
-  /// bytes written to the next layer on the last write operation, or 0 if an
-  /// error occurred.
-  std::size_t flush(boost::system::error_code& ec);
+	/// Flush all data from the buffer to the next layer. Returns the number of
+	/// bytes written to the next layer on the last write operation, or 0 if an
+	/// error occurred.
+	std::size_t flush(boost::system::error_code& ec);
 
-  /// Start an asynchronous flush.
-  template <typename WriteHandler>
-  BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler,
-      void (boost::system::error_code, std::size_t))
-  async_flush(BOOST_ASIO_MOVE_ARG(WriteHandler) handler);
+	/// Start an asynchronous flush.
+	template <typename WriteHandler>
+	BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler,
+	                              void (boost::system::error_code, std::size_t))
+	async_flush(BOOST_ASIO_MOVE_ARG(WriteHandler) handler);
 
-  /// Write the given data to the stream. Returns the number of bytes written.
-  /// Throws an exception on failure.
-  template <typename ConstBufferSequence>
-  std::size_t write_some(const ConstBufferSequence& buffers);
+	/// Write the given data to the stream. Returns the number of bytes written.
+	/// Throws an exception on failure.
+	template <typename ConstBufferSequence>
+	std::size_t write_some(const ConstBufferSequence& buffers);
 
-  /// Write the given data to the stream. Returns the number of bytes written,
-  /// or 0 if an error occurred and the error handler did not throw.
-  template <typename ConstBufferSequence>
-  std::size_t write_some(const ConstBufferSequence& buffers,
-      boost::system::error_code& ec);
+	/// Write the given data to the stream. Returns the number of bytes written,
+	/// or 0 if an error occurred and the error handler did not throw.
+	template <typename ConstBufferSequence>
+	std::size_t write_some(const ConstBufferSequence& buffers,
+	                       boost::system::error_code& ec);
 
-  /// Start an asynchronous write. The data being written must be valid for the
-  /// lifetime of the asynchronous operation.
-  template <typename ConstBufferSequence, typename WriteHandler>
-  BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler,
-      void (boost::system::error_code, std::size_t))
-  async_write_some(const ConstBufferSequence& buffers,
-      BOOST_ASIO_MOVE_ARG(WriteHandler) handler);
+	/// Start an asynchronous write. The data being written must be valid for the
+	/// lifetime of the asynchronous operation.
+	template <typename ConstBufferSequence, typename WriteHandler>
+	BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler,
+	                              void (boost::system::error_code, std::size_t))
+	async_write_some(const ConstBufferSequence& buffers,
+	                 BOOST_ASIO_MOVE_ARG(WriteHandler) handler);
 
-  /// Read some data from the stream. Returns the number of bytes read. Throws
-  /// an exception on failure.
-  template <typename MutableBufferSequence>
-  std::size_t read_some(const MutableBufferSequence& buffers)
-  {
-    return next_layer_.read_some(buffers);
-  }
+	/// Read some data from the stream. Returns the number of bytes read. Throws
+	/// an exception on failure.
+	template <typename MutableBufferSequence>
+	std::size_t read_some(const MutableBufferSequence& buffers)
+	{
+		return next_layer_.read_some(buffers);
+	}
 
-  /// Read some data from the stream. Returns the number of bytes read or 0 if
-  /// an error occurred.
-  template <typename MutableBufferSequence>
-  std::size_t read_some(const MutableBufferSequence& buffers,
-      boost::system::error_code& ec)
-  {
-    return next_layer_.read_some(buffers, ec);
-  }
+	/// Read some data from the stream. Returns the number of bytes read or 0 if
+	/// an error occurred.
+	template <typename MutableBufferSequence>
+	std::size_t read_some(const MutableBufferSequence& buffers,
+	                      boost::system::error_code& ec)
+	{
+		return next_layer_.read_some(buffers, ec);
+	}
 
-  /// Start an asynchronous read. The buffer into which the data will be read
-  /// must be valid for the lifetime of the asynchronous operation.
-  template <typename MutableBufferSequence, typename ReadHandler>
-  BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-      void (boost::system::error_code, std::size_t))
-  async_read_some(const MutableBufferSequence& buffers,
-      BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
-  {
-    return next_layer_.async_read_some(buffers,
-        BOOST_ASIO_MOVE_CAST(ReadHandler)(handler));
-  }
+	/// Start an asynchronous read. The buffer into which the data will be read
+	/// must be valid for the lifetime of the asynchronous operation.
+	template <typename MutableBufferSequence, typename ReadHandler>
+	BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
+	                              void (boost::system::error_code, std::size_t))
+	async_read_some(const MutableBufferSequence& buffers,
+	                BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
+	{
+		return next_layer_.async_read_some(buffers,
+		                                   BOOST_ASIO_MOVE_CAST(ReadHandler)(handler));
+	}
 
-  /// Peek at the incoming data on the stream. Returns the number of bytes read.
-  /// Throws an exception on failure.
-  template <typename MutableBufferSequence>
-  std::size_t peek(const MutableBufferSequence& buffers)
-  {
-    return next_layer_.peek(buffers);
-  }
+	/// Peek at the incoming data on the stream. Returns the number of bytes read.
+	/// Throws an exception on failure.
+	template <typename MutableBufferSequence>
+	std::size_t peek(const MutableBufferSequence& buffers)
+	{
+		return next_layer_.peek(buffers);
+	}
 
-  /// Peek at the incoming data on the stream. Returns the number of bytes read,
-  /// or 0 if an error occurred.
-  template <typename MutableBufferSequence>
-  std::size_t peek(const MutableBufferSequence& buffers,
-      boost::system::error_code& ec)
-  {
-    return next_layer_.peek(buffers, ec);
-  }
+	/// Peek at the incoming data on the stream. Returns the number of bytes read,
+	/// or 0 if an error occurred.
+	template <typename MutableBufferSequence>
+	std::size_t peek(const MutableBufferSequence& buffers,
+	                 boost::system::error_code& ec)
+	{
+		return next_layer_.peek(buffers, ec);
+	}
 
-  /// Determine the amount of data that may be read without blocking.
-  std::size_t in_avail()
-  {
-    return next_layer_.in_avail();
-  }
+	/// Determine the amount of data that may be read without blocking.
+	std::size_t in_avail()
+	{
+		return next_layer_.in_avail();
+	}
 
-  /// Determine the amount of data that may be read without blocking.
-  std::size_t in_avail(boost::system::error_code& ec)
-  {
-    return next_layer_.in_avail(ec);
-  }
+	/// Determine the amount of data that may be read without blocking.
+	std::size_t in_avail(boost::system::error_code& ec)
+	{
+		return next_layer_.in_avail(ec);
+	}
 
 private:
-  /// Copy data into the internal buffer from the specified source buffer.
-  /// Returns the number of bytes copied.
-  template <typename ConstBufferSequence>
-  std::size_t copy(const ConstBufferSequence& buffers);
+	/// Copy data into the internal buffer from the specified source buffer.
+	/// Returns the number of bytes copied.
+	template <typename ConstBufferSequence>
+	std::size_t copy(const ConstBufferSequence& buffers);
 
-  /// The next layer.
-  Stream next_layer_;
+	/// The next layer.
+	Stream next_layer_;
 
-  // The data in the buffer.
-  detail::buffered_stream_storage storage_;
+	// The data in the buffer.
+	detail::buffered_stream_storage storage_;
 };
 
 } // namespace asio

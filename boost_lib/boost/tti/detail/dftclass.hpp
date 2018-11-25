@@ -14,30 +14,30 @@
 #include <boost/mpl/quote.hpp>
 
 namespace boost
-  {
-  namespace tti
-    {
-    namespace detail
-      {
-      template<class BOOST_TTI_DETAIL_TP_F>
-      struct class_type :
-          boost::mpl::at
-            <
-            typename
-            boost::function_types::parameter_types
-              <
-              BOOST_TTI_DETAIL_TP_F,
-              boost::mpl::quote1
-                <
-                boost::mpl::identity
-                >
-              >::type,
-              boost::mpl::int_<0>
-            >
-        {
-        };
-      }
-    }
-  }
-  
+{
+namespace tti
+{
+namespace detail
+{
+template<class BOOST_TTI_DETAIL_TP_F>
+struct class_type :
+	boost::mpl::at
+	<
+	typename
+	boost::function_types::parameter_types
+	<
+	BOOST_TTI_DETAIL_TP_F,
+	boost::mpl::quote1
+	<
+	boost::mpl::identity
+	>
+	>::type,
+	boost::mpl::int_<0>
+	>
+{
+};
+}
+}
+}
+
 #endif // BOOST_TTI_DETAIL_FTCLASS_HPP

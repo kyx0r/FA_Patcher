@@ -14,27 +14,33 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      struct fail_tag { typedef fail_tag type; };
+namespace metaparse
+{
+namespace v1
+{
+struct fail_tag
+{
+	typedef fail_tag type;
+};
 
-      template <>
-      struct get_message_impl<fail_tag>
-      {
-        template <class A>
-        struct apply { typedef typename A::message type; };
-      };
+template <>
+struct get_message_impl<fail_tag>
+{
+	template <class A>
+	struct apply
+	{
+		typedef typename A::message type;
+	};
+};
 
-      template <>
-      struct get_position_impl<fail_tag>
-      {
-        template <class A>
-        struct apply : A::source_position {};
-      };
-    }
-  }
+template <>
+struct get_position_impl<fail_tag>
+{
+	template <class A>
+	struct apply : A::source_position {};
+};
+}
+}
 }
 
 #endif

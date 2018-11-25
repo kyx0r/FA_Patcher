@@ -30,65 +30,66 @@ BOOST_CLBL_TRTS_NOEXCEPT_SPECIFIER - `noexcept` if
 
 template<typename Return, typename... Args>
 struct function<
-    BOOST_CLBL_TRTS_ST Return(BOOST_CLBL_TRTS_CC *)(Args...)
-    BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
-    BOOST_CLBL_TRTS_NOEXCEPT_SPEC>
- : default_callable_traits<> {
+BOOST_CLBL_TRTS_ST Return(BOOST_CLBL_TRTS_CC *)(Args...)
+BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
+BOOST_CLBL_TRTS_NOEXCEPT_SPEC>
+: default_callable_traits<>
+{
 
-    static constexpr bool value = true;
+	static constexpr bool value = true;
 
-    using traits = function;
+	using traits = function;
 
-    using return_type = Return;
+	using return_type = Return;
 
-    using arg_types = std::tuple<Args...>;
-    using non_invoke_arg_types = arg_types;
+	using arg_types = std::tuple<Args...>;
+	using non_invoke_arg_types = arg_types;
 
-    using type = BOOST_CLBL_TRTS_ST Return(BOOST_CLBL_TRTS_CC *)(Args...)
-        BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE;
+	using type = BOOST_CLBL_TRTS_ST Return(BOOST_CLBL_TRTS_CC *)(Args...)
+	             BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE;
 
-    using function_type = Return(Args...);
-    using qualified_function_type = function_type;
-    using remove_varargs = type;
+	using function_type = Return(Args...);
+	using qualified_function_type = function_type;
+	using remove_varargs = type;
 
-    using add_varargs =
-        BOOST_CLBL_TRTS_ST Return (BOOST_CLBL_TRTS_VARARGS_CC *)(Args..., ...)
-            BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
-            BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
+	using add_varargs =
+	    BOOST_CLBL_TRTS_ST Return (BOOST_CLBL_TRTS_VARARGS_CC *)(Args..., ...)
+	    BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
+	    BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
 
-    using is_noexcept = BOOST_CLBL_TRTS_IS_NOEXCEPT;
+	using is_noexcept = BOOST_CLBL_TRTS_IS_NOEXCEPT;
 
-    using remove_noexcept = Return(BOOST_CLBL_TRTS_CC *)(Args...)
-        BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE;
+	using remove_noexcept = Return(BOOST_CLBL_TRTS_CC *)(Args...)
+	                        BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE;
 
-    using add_noexcept = Return(BOOST_CLBL_TRTS_CC *)(Args...)
-        BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
-        BOOST_CLBL_TRTS_NOEXCEPT_SPECIFIER;
+	using add_noexcept = Return(BOOST_CLBL_TRTS_CC *)(Args...)
+	                     BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
+	                     BOOST_CLBL_TRTS_NOEXCEPT_SPECIFIER;
 
-    using is_transaction_safe = BOOST_CLBL_TRTS_IS_TRANSACTION_SAFE;
+	using is_transaction_safe = BOOST_CLBL_TRTS_IS_TRANSACTION_SAFE;
 
-    using remove_transaction_safe = Return(BOOST_CLBL_TRTS_CC *)(Args...)
-        BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
+	using remove_transaction_safe = Return(BOOST_CLBL_TRTS_CC *)(Args...)
+	                                BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
 
-    using add_transaction_safe = Return(BOOST_CLBL_TRTS_CC *)(Args...)
-        BOOST_CLBL_TRTS_TRANSACTION_SAFE_SPECIFIER
-        BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
+	using add_transaction_safe = Return(BOOST_CLBL_TRTS_CC *)(Args...)
+	                             BOOST_CLBL_TRTS_TRANSACTION_SAFE_SPECIFIER
+	                             BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
 
-    template<typename U>
-    using apply_member_pointer =
-        BOOST_CLBL_TRTS_ST Return(BOOST_CLBL_TRTS_CC U::*)(Args...)
-            BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
-            BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
+	template<typename U>
+	using apply_member_pointer =
+	    BOOST_CLBL_TRTS_ST Return(BOOST_CLBL_TRTS_CC U::*)(Args...)
+	    BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
+	    BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
 
-    template<typename NewReturn>
-    using apply_return =
-        BOOST_CLBL_TRTS_ST NewReturn(BOOST_CLBL_TRTS_CC *)(Args...)
-            BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
-            BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
+	template<typename NewReturn>
+	using apply_return =
+	    BOOST_CLBL_TRTS_ST NewReturn(BOOST_CLBL_TRTS_CC *)(Args...)
+	    BOOST_CLBL_TRTS_INCLUDE_TRANSACTION_SAFE
+	    BOOST_CLBL_TRTS_NOEXCEPT_SPEC;
 
-    template<template<class...> class Container>
-    using expand_args = Container<Args...>;
+	template<template<class...> class Container>
+	using expand_args = Container<Args...>;
 
-    using is_member_pointer = std::false_type;
+	using is_member_pointer = std::false_type;
 };
 

@@ -23,36 +23,39 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 struct win_static_mutex
 {
-  typedef boost::asio::detail::scoped_lock<win_static_mutex> scoped_lock;
+	typedef boost::asio::detail::scoped_lock<win_static_mutex> scoped_lock;
 
-  // Initialise the mutex.
-  BOOST_ASIO_DECL void init();
+	// Initialise the mutex.
+	BOOST_ASIO_DECL void init();
 
-  // Initialisation must be performed in a separate function to the "public"
-  // init() function since the compiler does not support the use of structured
-  // exceptions and C++ exceptions in the same function.
-  BOOST_ASIO_DECL int do_init();
+	// Initialisation must be performed in a separate function to the "public"
+	// init() function since the compiler does not support the use of structured
+	// exceptions and C++ exceptions in the same function.
+	BOOST_ASIO_DECL int do_init();
 
-  // Lock the mutex.
-  void lock()
-  {
-    ::EnterCriticalSection(&crit_section_);
-  }
+	// Lock the mutex.
+	void lock()
+	{
+		::EnterCriticalSection(&crit_section_);
+	}
 
-  // Unlock the mutex.
-  void unlock()
-  {
-    ::LeaveCriticalSection(&crit_section_);
-  }
+	// Unlock the mutex.
+	void unlock()
+	{
+		::LeaveCriticalSection(&crit_section_);
+	}
 
-  bool initialised_;
-  ::CRITICAL_SECTION crit_section_;
+	bool initialised_;
+	::CRITICAL_SECTION crit_section_;
 };
 
 #if defined(UNDER_CE)

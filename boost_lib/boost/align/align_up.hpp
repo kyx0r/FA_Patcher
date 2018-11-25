@@ -10,13 +10,15 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/align/detail/align_up.hpp>
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 BOOST_CONSTEXPR inline std::size_t
 align_up(std::size_t value, std::size_t alignment) BOOST_NOEXCEPT
 {
-    return (value + alignment - 1) & ~(alignment - 1);
+	return (value + alignment - 1) & ~(alignment - 1);
 }
 
 } /* alignment */

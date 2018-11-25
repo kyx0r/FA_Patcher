@@ -16,33 +16,36 @@
 #include <boost/geometry/srs/spheroid.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
 {
-    
+namespace geometry
+{
+
 namespace srs
 {
 
 
 struct iau2000
 {
-    explicit iau2000(int c)
-        : code(c)
-    {}
+	explicit iau2000(int c)
+		: code(c)
+	{}
 
-    int code;
+	int code;
 };
 
 
 template <int Code>
 struct static_iau2000
 {
-    static const int code = Code;
+	static const int code = Code;
 };
 
 
 } // namespace srs
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_SRS_PROJECTIONS_IAU2000_PARAMS_HPP

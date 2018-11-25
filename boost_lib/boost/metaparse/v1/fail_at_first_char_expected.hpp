@@ -19,39 +19,39 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P>
-      struct fail_at_first_char_expected
-      {
-      private:
-        template <class S, class Pos>
-        struct apply_err :
-          boost::mpl::eval_if<
-            typename boost::mpl::equal_to<
-              Pos,
-              typename get_position<typename P::template apply<S, Pos> >::type
-            >::type,
-            accept<impl::void_, S, Pos>,
-            typename P::template apply<S, Pos>
-          >
-        {};
-      public:
-        typedef fail_at_first_char_expected type;
+namespace metaparse
+{
+namespace v1
+{
+template <class P>
+struct fail_at_first_char_expected
+{
+private:
+	template <class S, class Pos>
+	struct apply_err :
+		boost::mpl::eval_if<
+		typename boost::mpl::equal_to<
+		Pos,
+		typename get_position<typename P::template apply<S, Pos> >::type
+	>::type,
+	accept<impl::void_, S, Pos>,
+	typename P::template apply<S, Pos>
+	>
+	{};
+public:
+	typedef fail_at_first_char_expected type;
 
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::eval_if<
-            typename is_error<typename P::template apply<S, Pos> >::type,
-            apply_err<S, Pos>,
-            reject<error::expected_to_fail, Pos>
-          >
-        {};
-      };
-    }
-  }
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<typename P::template apply<S, Pos> >::type,
+	apply_err<S, Pos>,
+	          reject<error::expected_to_fail, Pos>
+	          >
+	          {};
+};
+}
+}
 }
 
 #endif

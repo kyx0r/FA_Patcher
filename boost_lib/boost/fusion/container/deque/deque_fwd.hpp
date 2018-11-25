@@ -39,11 +39,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 // C++11 interface
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace fusion
+namespace boost
 {
-    template <typename ...T>
-    struct deque;
-}}
+namespace fusion
+{
+template <typename ...T>
+struct deque;
+}
+}
 
 #endif
 #endif

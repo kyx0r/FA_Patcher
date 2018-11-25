@@ -19,8 +19,10 @@
 #include <boost/parameter/aux_/void.hpp>
 #endif
 
-namespace boost    {
-namespace lockfree {
+namespace boost
+{
+namespace lockfree
+{
 
 // policies
 template <bool IsFixedSized>

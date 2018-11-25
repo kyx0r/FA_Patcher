@@ -14,17 +14,19 @@
 #include <boost/ratio/mpl/rational_c_tag.hpp>
 #include <boost/mpl/numeric_cast.hpp>
 
-namespace boost { 
-namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 template<> struct numeric_cast< integral_c_tag,rational_c_tag >
 {
-    template< typename N > struct apply
-        : ratio< N::value, 1 >
-    {
-    };
+	template< typename N > struct apply
+		: ratio< N::value, 1 >
+	{
+	};
 };
-    
+
 }
 }
 

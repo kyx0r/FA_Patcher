@@ -15,42 +15,45 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct deque_tag;
+namespace fusion
+{
+struct deque_tag;
 
-    namespace result_of
-    {
-        template <typename Sequence>
-        struct as_deque;
-    }
+namespace result_of
+{
+template <typename Sequence>
+struct as_deque;
+}
 
-    namespace extension
-    {
-        template <typename T>
-        struct convert_impl;
+namespace extension
+{
+template <typename T>
+struct convert_impl;
 
-        template <>
-        struct convert_impl<deque_tag>
-        {
-            template <typename Sequence>
-            struct apply
-            {
-                typedef result_of::as_deque<Sequence> gen;
-                typedef typename gen::type type;
+template <>
+struct convert_impl<deque_tag>
+{
+	template <typename Sequence>
+	struct apply
+	{
+		typedef result_of::as_deque<Sequence> gen;
+		typedef typename gen::type type;
 
-                BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-                static type call(Sequence& seq)
-                {
-                    return gen::call(fusion::begin(seq)
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type call(Sequence& seq)
+		{
+			return gen::call(fusion::begin(seq)
 #if defined(BOOST_FUSION_HAS_VARIADIC_DEQUE)
-                        , fusion::end(seq)
+			                 , fusion::end(seq)
 #endif
-                    );
-                }
-            };
-        };
-    }
-}}
+			                );
+		}
+	};
+};
+}
+}
+}
 
 #endif

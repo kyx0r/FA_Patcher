@@ -17,7 +17,7 @@ public:
 		icon_place_after_max_icon_id, //Icon(s) will be placed after all existing
 		icon_place_free_ids //New icon(s) will take all free IDs between existing icons
 	};
-	
+
 public:
 	resource_cursor_icon_writer(pe_resource_manager& res);
 
@@ -31,15 +31,15 @@ public:
 	//(Codepage of icon group and icons will not be changed in this case)
 	//icon_place_mode determines, how new icon(s) will be placed
 	void add_icon(const std::string& icon_file,
-		const std::wstring& icon_group_name,
-		uint32_t language, icon_place_mode mode = icon_place_after_max_icon_id,
-		uint32_t codepage = 0, uint32_t timestamp = 0);
+	              const std::wstring& icon_group_name,
+	              uint32_t language, icon_place_mode mode = icon_place_after_max_icon_id,
+	              uint32_t codepage = 0, uint32_t timestamp = 0);
 
 	void add_icon(const std::string& icon_file,
-		uint32_t icon_group_id,
-		uint32_t language, icon_place_mode mode = icon_place_after_max_icon_id,
-		uint32_t codepage = 0, uint32_t timestamp = 0);
-	
+	              uint32_t icon_group_id,
+	              uint32_t language, icon_place_mode mode = icon_place_after_max_icon_id,
+	              uint32_t codepage = 0, uint32_t timestamp = 0);
+
 	//Removes cursor group and all its cursors by name/ID and language
 	bool remove_cursor_group(const std::wstring& cursor_group_name, uint32_t language);
 	bool remove_cursor_group(uint32_t cursor_group_id, uint32_t language);
@@ -57,7 +57,7 @@ private:
 
 	//Add icon helper
 	void add_icon(const std::string& icon_file, const resource_data_info* group_icon_info /* or zero */, resource_directory_entry& new_icon_group_entry, const resource_directory::entry_finder& finder, uint32_t language, icon_place_mode mode, uint32_t codepage, uint32_t timestamp);
-	
+
 	//Remove icon group helper
 	void remove_icons_from_icon_group(const std::string& icon_group_data, uint32_t language);
 

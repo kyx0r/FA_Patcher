@@ -27,49 +27,49 @@
 
 namespace boost
 {
-    
-    template
-    < 
-        class T, 
-        class CloneAllocator = heap_clone_allocator,
-        class Allocator      = std::allocator<typename ptr_container_detail::void_ptr<T>::type>
+
+template
+<
+    class T,
+    class CloneAllocator = heap_clone_allocator,
+    class Allocator      = std::allocator<typename ptr_container_detail::void_ptr<T>::type>
     >
-    class ptr_deque : public 
-        ptr_sequence_adapter< T, std::deque<
-            typename ptr_container_detail::void_ptr<T>::type,Allocator>,
-                              CloneAllocator >
-    {
-         typedef   ptr_sequence_adapter< T, std::deque<
-             typename ptr_container_detail::void_ptr<T>::type,Allocator>,     
-                                         CloneAllocator >
-          base_class;
+class ptr_deque : public
+	ptr_sequence_adapter< T, std::deque<
+	typename ptr_container_detail::void_ptr<T>::type,Allocator>,
+	CloneAllocator >
+{
+	typedef   ptr_sequence_adapter< T, std::deque<
+	typename ptr_container_detail::void_ptr<T>::type,Allocator>,
+	         CloneAllocator >
+	         base_class;
 
-         typedef ptr_deque<T,CloneAllocator,Allocator> this_type; 
-         
-    public:
+	typedef ptr_deque<T,CloneAllocator,Allocator> this_type;
 
-      BOOST_PTR_CONTAINER_DEFINE_SEQEUENCE_MEMBERS( ptr_deque,
-                                                    base_class,
-                                                    this_type )
-    };
+public:
 
-    //////////////////////////////////////////////////////////////////////////////
-    // clonability
-    
-    template< typename T, typename CA, typename A >
-    inline ptr_deque<T,CA,A>* new_clone( const ptr_deque<T,CA,A>& r )
-    {
-        return r.clone().release();
-    }
+	BOOST_PTR_CONTAINER_DEFINE_SEQEUENCE_MEMBERS( ptr_deque,
+	        base_class,
+	        this_type )
+};
 
-    /////////////////////////////////////////////////////////////////////////
-    // swap
+//////////////////////////////////////////////////////////////////////////////
+// clonability
 
-    template< typename T, typename CA, typename A >
-    inline void swap( ptr_deque<T,CA,A>& l, ptr_deque<T,CA,A>& r )
-    {
-        l.swap(r);
-    }
+template< typename T, typename CA, typename A >
+inline ptr_deque<T,CA,A>* new_clone( const ptr_deque<T,CA,A>& r )
+{
+	return r.clone().release();
+}
+
+/////////////////////////////////////////////////////////////////////////
+// swap
+
+template< typename T, typename CA, typename A >
+inline void swap( ptr_deque<T,CA,A>& l, ptr_deque<T,CA,A>& r )
+{
+	l.swap(r);
+}
 }
 
 #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)

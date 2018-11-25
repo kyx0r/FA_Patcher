@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ has_varargs_hpp
 /*`[section:ref_has_varargs has_varargs]
@@ -28,18 +31,20 @@ struct has_varargs;
 //<-
 template<typename T>
 struct has_varargs : detail::traits<
-    detail::shallow_decay<T>>::has_varargs {
+	detail::shallow_decay<T>>::has_varargs
+{
 
-    using type = typename detail::traits<
-        detail::shallow_decay<T>>::has_varargs;
+	using type = typename detail::traits<
+	             detail::shallow_decay<T>>::has_varargs;
 };
 
 #ifdef BOOST_CLBL_TRTS_DISABLE_VARIABLE_TEMPLATES
 
 template<typename T>
-struct has_varargs_v {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "Variable templates not supported on this compiler.");
+struct has_varargs_v
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "Variable templates not supported on this compiler.");
 };
 
 #else
@@ -55,7 +60,8 @@ constexpr bool has_varargs_v = //see below
 
 #endif
 
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

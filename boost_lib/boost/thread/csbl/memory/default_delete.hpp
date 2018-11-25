@@ -19,23 +19,23 @@
 
 namespace boost
 {
-  namespace csbl
-  {
-    using ::boost::movelib::default_delete;
-  }
+namespace csbl
+{
+using ::boost::movelib::default_delete;
+}
 }
 #else
 namespace boost
 {
-  namespace csbl
-  {
-    using ::std::default_delete;
-  }
+namespace csbl
+{
+using ::std::default_delete;
+}
 }
 #endif // defined  BOOST_NO_CXX11_SMART_PTR
 
 namespace boost
 {
-  using ::boost::csbl::default_delete;
+using ::boost::csbl::default_delete;
 }
 #endif // header

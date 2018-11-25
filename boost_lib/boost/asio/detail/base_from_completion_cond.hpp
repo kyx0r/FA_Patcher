@@ -20,45 +20,48 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename CompletionCondition>
 class base_from_completion_cond
 {
 protected:
-  explicit base_from_completion_cond(CompletionCondition completion_condition)
-    : completion_condition_(completion_condition)
-  {
-  }
+	explicit base_from_completion_cond(CompletionCondition completion_condition)
+		: completion_condition_(completion_condition)
+	{
+	}
 
-  std::size_t check_for_completion(
-      const boost::system::error_code& ec,
-      std::size_t total_transferred)
-  {
-    return detail::adapt_completion_condition_result(
-        completion_condition_(ec, total_transferred));
-  }
+	std::size_t check_for_completion(
+	    const boost::system::error_code& ec,
+	    std::size_t total_transferred)
+	{
+		return detail::adapt_completion_condition_result(
+		           completion_condition_(ec, total_transferred));
+	}
 
 private:
-  CompletionCondition completion_condition_;
+	CompletionCondition completion_condition_;
 };
 
 template <>
 class base_from_completion_cond<transfer_all_t>
 {
 protected:
-  explicit base_from_completion_cond(transfer_all_t)
-  {
-  }
+	explicit base_from_completion_cond(transfer_all_t)
+	{
+	}
 
-  static std::size_t check_for_completion(
-      const boost::system::error_code& ec,
-      std::size_t total_transferred)
-  {
-    return transfer_all_t()(ec, total_transferred);
-  }
+	static std::size_t check_for_completion(
+	    const boost::system::error_code& ec,
+	    std::size_t total_transferred)
+	{
+		return transfer_all_t()(ec, total_transferred);
+	}
 };
 
 } // namespace detail

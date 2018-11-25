@@ -14,36 +14,42 @@
 #include <boost/geometry/algorithms/expand.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace section
+namespace detail
+{
+namespace section
 {
 
 struct get_section_box
 {
-    template <typename Box, typename Section>
-    static inline void apply(Box& total, Section const& section)
-    {
-        geometry::expand(total, section.bounding_box);
-    }
+	template <typename Box, typename Section>
+	static inline void apply(Box& total, Section const& section)
+	{
+		geometry::expand(total, section.bounding_box);
+	}
 };
 
 struct overlaps_section_box
 {
-    template <typename Box, typename Section>
-    static inline bool apply(Box const& box, Section const& section)
-    {
-        return ! detail::disjoint::disjoint_box_box(box, section.bounding_box);
-    }
+	template <typename Box, typename Section>
+	static inline bool apply(Box const& box, Section const& section)
+	{
+		return ! detail::disjoint::disjoint_box_box(box, section.bounding_box);
+	}
 };
 
 
-}} // namespace detail::section
+}
+} // namespace detail::section
 #endif
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_SECTIONS_SECTION_BOX_POLICIES_HPP

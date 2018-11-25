@@ -10,111 +10,111 @@
 
 /// BOOST_HOF_RETURNS
 /// ===========
-/// 
+///
 /// Description
 /// -----------
-/// 
+///
 /// The `BOOST_HOF_RETURNS` macro defines the function as the expression
 /// equivalence. It does this by deducing `noexcept` and the return type by
 /// using a trailing `decltype`. Instead of repeating the expression for the
 /// return type, `noexcept` clause and the function body, this macro will
 /// reduce the code duplication from that.
-/// 
+///
 /// Note: The expression used to deduce the return the type will also
 /// constrain the template function and deduce `noexcept` as well, which is
 /// different behaviour than using C++14's return type deduction.
-/// 
+///
 /// Synopsis
 /// --------
-/// 
-///     #define BOOST_HOF_RETURNS(...) 
-/// 
-/// 
+///
+///     #define BOOST_HOF_RETURNS(...)
+///
+///
 /// Example
 /// -------
-/// 
+///
 ///     #include <boost/hof.hpp>
 ///     #include <cassert>
-/// 
+///
 ///     template<class T, class U>
 ///     auto sum(T x, U y) BOOST_HOF_RETURNS(x+y);
-/// 
+///
 ///     int main() {
 ///         assert(3 == sum(1, 2));
 ///     }
-/// 
-/// 
+///
+///
 /// Incomplete this
 /// ---------------
-/// 
+///
 /// Description
 /// -----------
-/// 
+///
 /// On some non-conformant compilers, such as gcc, the `this` variable cannot
 /// be used inside the `BOOST_HOF_RETURNS` macro because it is considered an
 /// incomplete type. So the following macros are provided to help workaround
 /// the issue.
-/// 
-/// 
+///
+///
 /// Synopsis
 /// --------
-/// 
+///
 ///     // Declares the type of the `this` variable
-///     #define BOOST_HOF_RETURNS_CLASS(...) 
+///     #define BOOST_HOF_RETURNS_CLASS(...)
 ///     // Used to refer to the `this` variable in the BOOST_HOF_RETURNS macro
 ///     #define BOOST_HOF_THIS
 ///     // Used to refer to the const `this` variable in the BOOST_HOF_RETURNS macro
 ///     #define BOOST_HOF_CONST_THIS
-/// 
-/// 
+///
+///
 /// Example
 /// -------
-/// 
+///
 ///     #include <boost/hof.hpp>
 ///     #include <cassert>
-/// 
+///
 ///     struct add_1
 ///     {
 ///         int a;
 ///         add_1() : a(1) {}
-///         
+///
 ///         BOOST_HOF_RETURNS_CLASS(add_1);
-///         
+///
 ///         template<class T>
-///         auto operator()(T x) const 
+///         auto operator()(T x) const
 ///         BOOST_HOF_RETURNS(x+BOOST_HOF_CONST_THIS->a);
 ///     };
-/// 
+///
 ///     int main() {
 ///         assert(3 == add_1()(2));
 ///     }
-/// 
-/// 
+///
+///
 /// Mangling overloads
 /// ------------------
-/// 
+///
 /// Description
 /// -----------
-/// 
+///
 /// On older compilers some operations done in the expressions cannot be
 /// properly mangled. These macros help provide workarounds for these
 /// operations on older compilers.
-/// 
-/// 
+///
+///
 /// Synopsis
 /// --------
-/// 
+///
 ///     // Explicitly defines the type for name mangling
-///     #define BOOST_HOF_MANGLE_CAST(...) 
+///     #define BOOST_HOF_MANGLE_CAST(...)
 ///     // C cast for name mangling
-///     #define BOOST_HOF_RETURNS_C_CAST(...) 
+///     #define BOOST_HOF_RETURNS_C_CAST(...)
 ///     // Reinterpret cast for name mangling
-///     #define BOOST_HOF_RETURNS_REINTERPRET_CAST(...) 
+///     #define BOOST_HOF_RETURNS_REINTERPRET_CAST(...)
 ///     // Static cast for name mangling
-///     #define BOOST_HOF_RETURNS_STATIC_CAST(...) 
+///     #define BOOST_HOF_RETURNS_STATIC_CAST(...)
 ///     // Construction for name mangling
-///     #define BOOST_HOF_RETURNS_CONSTRUCT(...) 
-/// 
+///     #define BOOST_HOF_RETURNS_CONSTRUCT(...)
+///
 
 
 #include <boost/hof/config.hpp>
@@ -187,14 +187,21 @@ BOOST_HOF_RETURNS_DECLTYPE(__VA_ARGS__) \
 { BOOST_HOF_RETURNS_RETURN(__VA_ARGS__); }
 
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 template<class Assumed, class T>
 struct check_this
 {
-    static_assert(std::is_same<T, Assumed>::value, "Incorret BOOST_HOF_THIS or BOOST_HOF_CONST_THIS used.");
+	static_assert(std::is_same<T, Assumed>::value, "Incorret BOOST_HOF_THIS or BOOST_HOF_CONST_THIS used.");
 };
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif
 

@@ -22,9 +22,12 @@
 #include <boost/compute/container/vector.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // Space complexity O(1)
 template<class InputIterator, class T, class BinaryFunction>
@@ -34,23 +37,24 @@ inline T generic_accumulate(InputIterator first,
                             BinaryFunction function,
                             command_queue &queue)
 {
-    const context &context = queue.get_context();
+	const context &context = queue.get_context();
 
-    size_t size = iterator_range_size(first, last);
-    if(size == 0){
-        return init;
-    }
+	size_t size = iterator_range_size(first, last);
+	if(size == 0)
+	{
+		return init;
+	}
 
-    // accumulate on device
-    array<T, 1> device_result(context);
-    detail::serial_accumulate(
-        first, last, device_result.begin(), init, function, queue
-    );
+	// accumulate on device
+	array<T, 1> device_result(context);
+	detail::serial_accumulate(
+	    first, last, device_result.begin(), init, function, queue
+	);
 
-    // copy result to host
-    T result;
-    ::boost::compute::copy_n(device_result.begin(), 1, &result, queue);
-    return result;
+	// copy result to host
+	T result;
+	::boost::compute::copy_n(device_result.begin(), 1, &result, queue);
+	return result;
 }
 
 // returns true if we can use reduce() instead of accumulate() when
@@ -60,10 +64,10 @@ inline T generic_accumulate(InputIterator first,
 template<class T, class F>
 inline bool can_accumulate_with_reduce(T init, F function)
 {
-    (void) init;
-    (void) function;
+	(void) init;
+	(void) function;
 
-    return false;
+	return false;
 }
 
 /// \internal_
@@ -86,13 +90,13 @@ BOOST_PP_SEQ_FOR_EACH(
 template<class T>
 inline bool can_accumulate_with_reduce(T init, min<T>)
 {
-    return init == (std::numeric_limits<T>::max)();
+	return init == (std::numeric_limits<T>::max)();
 }
 
 template<class T>
 inline bool can_accumulate_with_reduce(T init, max<T>)
 {
-    return init == (std::numeric_limits<T>::min)();
+	return init == (std::numeric_limits<T>::min)();
 }
 
 #undef BOOST_COMPUTE_DETAIL_DECLARE_CAN_ACCUMULATE_WITH_REDUCE
@@ -104,19 +108,22 @@ inline T dispatch_accumulate(InputIterator first,
                              BinaryFunction function,
                              command_queue &queue)
 {
-    size_t size = iterator_range_size(first, last);
-    if(size == 0){
-        return init;
-    }
+	size_t size = iterator_range_size(first, last);
+	if(size == 0)
+	{
+		return init;
+	}
 
-    if(can_accumulate_with_reduce(init, function)){
-        T result;
-        reduce(first, last, &result, function, queue);
-        return result;
-    }
-    else {
-        return generic_accumulate(first, last, init, function, queue);
-    }
+	if(can_accumulate_with_reduce(init, function))
+	{
+		T result;
+		reduce(first, last, &result, function, queue);
+		return result;
+	}
+	else
+	{
+		return generic_accumulate(first, last, init, function, queue);
+	}
 }
 
 } // end detail namespace
@@ -167,7 +174,7 @@ inline T accumulate(InputIterator first,
                     BinaryFunction function,
                     command_queue &queue = system::default_queue())
 {
-    return detail::dispatch_accumulate(first, last, init, function, queue);
+	return detail::dispatch_accumulate(first, last, init, function, queue);
 }
 
 /// \overload
@@ -177,9 +184,9 @@ inline T accumulate(InputIterator first,
                     T init,
                     command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type IT;
+	typedef typename std::iterator_traits<InputIterator>::value_type IT;
 
-    return detail::dispatch_accumulate(first, last, init, plus<IT>(), queue);
+	return detail::dispatch_accumulate(first, last, init, plus<IT>(), queue);
 }
 
 } // end compute namespace

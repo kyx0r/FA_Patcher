@@ -18,10 +18,10 @@
 //#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
 #if !defined(BOOST_NO_MAY_ALIAS)
 
-  // GCC since 3.3 and some other compilers have may_alias attribute that helps
-  // to alleviate optimizer issues with regard to violation of the strict aliasing rules.
+// GCC since 3.3 and some other compilers have may_alias attribute that helps
+// to alleviate optimizer issues with regard to violation of the strict aliasing rules.
 
-  #define BOOST_THREAD_DETAIL_USE_ATTRIBUTE_MAY_ALIAS
+#define BOOST_THREAD_DETAIL_USE_ATTRIBUTE_MAY_ALIAS
 #endif
 #if defined(BOOST_MAY_ALIAS)
 #define BOOST_THREAD_ATTRIBUTE_MAY_ALIAS BOOST_MAY_ALIAS
@@ -407,22 +407,22 @@
 
 #if defined(BOOST_THREAD_PLATFORM_WIN32)
 #else
-  #   if defined(BOOST_HAS_PTHREAD_DELAY_NP) || defined(BOOST_HAS_NANOSLEEP)
-  #     define BOOST_THREAD_SLEEP_FOR_IS_STEADY
-  #   endif
+#   if defined(BOOST_HAS_PTHREAD_DELAY_NP) || defined(BOOST_HAS_NANOSLEEP)
+#     define BOOST_THREAD_SLEEP_FOR_IS_STEADY
+#   endif
 #endif
 
 #if defined(BOOST_THREAD_CHRONO_WINDOWS_API)
-  #define BOOST_THREAD_HAS_MONO_CLOCK
-  #define BOOST_THREAD_INTERNAL_CLOCK_IS_MONO
+#define BOOST_THREAD_HAS_MONO_CLOCK
+#define BOOST_THREAD_INTERNAL_CLOCK_IS_MONO
 #elif defined(BOOST_THREAD_CHRONO_MAC_API)
-  #define BOOST_THREAD_HAS_MONO_CLOCK
+#define BOOST_THREAD_HAS_MONO_CLOCK
 #else
-  #include <time.h> // check for CLOCK_MONOTONIC
-  #if defined(CLOCK_MONOTONIC)
-    #define BOOST_THREAD_HAS_MONO_CLOCK
-    #define BOOST_THREAD_INTERNAL_CLOCK_IS_MONO
-  #endif
+#include <time.h> // check for CLOCK_MONOTONIC
+#if defined(CLOCK_MONOTONIC)
+#define BOOST_THREAD_HAS_MONO_CLOCK
+#define BOOST_THREAD_INTERNAL_CLOCK_IS_MONO
+#endif
 #endif
 
 #if defined(BOOST_THREAD_PLATFORM_WIN32)
@@ -457,12 +457,12 @@
 #   if defined(BOOST_THREAD_PLATFORM_WIN32)
 #       if defined(BOOST_MSVC) || defined(BOOST_INTEL_WIN) \
       || defined(__MINGW32__) || defined(MINGW32) || defined(BOOST_MINGW32)
-      //For compilers supporting auto-tss cleanup
-            //with Boost.Threads lib, use Boost.Threads lib
+//For compilers supporting auto-tss cleanup
+//with Boost.Threads lib, use Boost.Threads lib
 #           define BOOST_THREAD_USE_LIB
 #       else
-            //For compilers not yet supporting auto-tss cleanup
-            //with Boost.Threads lib, use Boost.Threads dll
+//For compilers not yet supporting auto-tss cleanup
+//with Boost.Threads lib, use Boost.Threads dll
 #           define BOOST_THREAD_USE_DLL
 #       endif
 #   else

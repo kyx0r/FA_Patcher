@@ -20,23 +20,31 @@
 /* Null tracking policy: elements are never erased from the factory.
  */
 
-namespace boost{
+namespace boost
+{
 
-namespace flyweights{
+namespace flyweights
+{
 
 struct no_tracking:tracking_marker
 {
-  struct entry_type
-  {
-    template<typename Value,typename Key>
-    struct apply{typedef Value type;};
-  };
+	struct entry_type
+	{
+		template<typename Value,typename Key>
+		struct apply
+		{
+			typedef Value type;
+		};
+	};
 
-  struct handle_type
-  {
-    template<typename Handle,typename TrackingHelper>
-    struct apply{typedef Handle type;};
-  };
+	struct handle_type
+	{
+		template<typename Handle,typename TrackingHelper>
+		struct apply
+		{
+			typedef Handle type;
+		};
+	};
 };
 
 } /* namespace flyweights */

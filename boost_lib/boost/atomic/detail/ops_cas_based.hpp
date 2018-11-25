@@ -22,82 +22,85 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 template< typename Base >
 struct cas_based_exchange :
-    public Base
+	public Base
 {
-    typedef typename Base::storage_type storage_type;
+	typedef typename Base::storage_type storage_type;
 
-    static BOOST_FORCEINLINE storage_type exchange(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        storage_type old_val;
-        atomics::detail::non_atomic_load(storage, old_val);
-        while (!Base::compare_exchange_weak(storage, old_val, v, order, memory_order_relaxed)) {}
-        return old_val;
-    }
+	static BOOST_FORCEINLINE storage_type exchange(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		storage_type old_val;
+		atomics::detail::non_atomic_load(storage, old_val);
+		while (!Base::compare_exchange_weak(storage, old_val, v, order, memory_order_relaxed)) {}
+		return old_val;
+	}
 };
 
 template< typename Base >
 struct cas_based_operations :
-    public Base
+	public Base
 {
-    typedef typename Base::storage_type storage_type;
+	typedef typename Base::storage_type storage_type;
 
-    static BOOST_CONSTEXPR_OR_CONST bool full_cas_based = true;
+	static BOOST_CONSTEXPR_OR_CONST bool full_cas_based = true;
 
-    static BOOST_FORCEINLINE storage_type fetch_add(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        storage_type old_val;
-        atomics::detail::non_atomic_load(storage, old_val);
-        while (!Base::compare_exchange_weak(storage, old_val, old_val + v, order, memory_order_relaxed)) {}
-        return old_val;
-    }
+	static BOOST_FORCEINLINE storage_type fetch_add(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		storage_type old_val;
+		atomics::detail::non_atomic_load(storage, old_val);
+		while (!Base::compare_exchange_weak(storage, old_val, old_val + v, order, memory_order_relaxed)) {}
+		return old_val;
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_sub(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        storage_type old_val;
-        atomics::detail::non_atomic_load(storage, old_val);
-        while (!Base::compare_exchange_weak(storage, old_val, old_val - v, order, memory_order_relaxed)) {}
-        return old_val;
-    }
+	static BOOST_FORCEINLINE storage_type fetch_sub(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		storage_type old_val;
+		atomics::detail::non_atomic_load(storage, old_val);
+		while (!Base::compare_exchange_weak(storage, old_val, old_val - v, order, memory_order_relaxed)) {}
+		return old_val;
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_and(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        storage_type old_val;
-        atomics::detail::non_atomic_load(storage, old_val);
-        while (!Base::compare_exchange_weak(storage, old_val, old_val & v, order, memory_order_relaxed)) {}
-        return old_val;
-    }
+	static BOOST_FORCEINLINE storage_type fetch_and(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		storage_type old_val;
+		atomics::detail::non_atomic_load(storage, old_val);
+		while (!Base::compare_exchange_weak(storage, old_val, old_val & v, order, memory_order_relaxed)) {}
+		return old_val;
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_or(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        storage_type old_val;
-        atomics::detail::non_atomic_load(storage, old_val);
-        while (!Base::compare_exchange_weak(storage, old_val, old_val | v, order, memory_order_relaxed)) {}
-        return old_val;
-    }
+	static BOOST_FORCEINLINE storage_type fetch_or(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		storage_type old_val;
+		atomics::detail::non_atomic_load(storage, old_val);
+		while (!Base::compare_exchange_weak(storage, old_val, old_val | v, order, memory_order_relaxed)) {}
+		return old_val;
+	}
 
-    static BOOST_FORCEINLINE storage_type fetch_xor(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        storage_type old_val;
-        atomics::detail::non_atomic_load(storage, old_val);
-        while (!Base::compare_exchange_weak(storage, old_val, old_val ^ v, order, memory_order_relaxed)) {}
-        return old_val;
-    }
+	static BOOST_FORCEINLINE storage_type fetch_xor(storage_type volatile& storage, storage_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		storage_type old_val;
+		atomics::detail::non_atomic_load(storage, old_val);
+		while (!Base::compare_exchange_weak(storage, old_val, old_val ^ v, order, memory_order_relaxed)) {}
+		return old_val;
+	}
 
-    static BOOST_FORCEINLINE bool test_and_set(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
-    {
-        return !!Base::exchange(storage, (storage_type)1, order);
-    }
+	static BOOST_FORCEINLINE bool test_and_set(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
+	{
+		return !!Base::exchange(storage, (storage_type)1, order);
+	}
 
-    static BOOST_FORCEINLINE void clear(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
-    {
-        Base::store(storage, (storage_type)0, order);
-    }
+	static BOOST_FORCEINLINE void clear(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
+	{
+		Base::store(storage, (storage_type)0, order);
+	}
 };
 
 } // namespace detail

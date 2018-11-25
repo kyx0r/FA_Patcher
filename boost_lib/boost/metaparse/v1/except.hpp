@@ -14,26 +14,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class Result, class ErrorMsg>
-      struct except
-      {
-        typedef except type;
-        
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::if_<
-            is_error<typename P::template apply<S, Pos> >,
-            accept<Result, S, Pos>,
-            reject<ErrorMsg, Pos>
-          >
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class Result, class ErrorMsg>
+struct except
+{
+	typedef except type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::if_<
+		is_error<typename P::template apply<S, Pos> >,
+	accept<Result, S, Pos>,
+	       reject<ErrorMsg, Pos>
+	       >
+	       {};
+};
+}
+}
 }
 
 #endif

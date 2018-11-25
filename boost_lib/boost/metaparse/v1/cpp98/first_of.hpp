@@ -10,25 +10,25 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-          BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-          class P,
-          boost::mpl::na
-        )
-      >
-      struct first_of :
-        nth_of_c<
-          0,
-          BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE, P)
-        >
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+        class P,
+        boost::mpl::na
+    )
+    >
+struct first_of :
+	nth_of_c<
+	0,
+BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE, P)
+>
+{};
+}
+}
 }
 
 #endif

@@ -33,9 +33,9 @@ using namespace std;
 
 typedef struct predef_info
 {
-    const char * name;
-    const char * description;
-    unsigned value;
+	const char * name;
+	const char * description;
+	unsigned value;
 } predef_info;
 
 #ifdef __cplusplus
@@ -46,26 +46,26 @@ unsigned generated_predef_info_count = 0;
 predef_info* generated_predef_info = 0;
 void * add_predef_entry(const char * name, const char * description, unsigned value)
 {
-    if (0 == generated_predef_info_count)
-    {
-        generated_predef_info_count = 1;
-        generated_predef_info = (predef_info*)malloc(sizeof(predef_info));
-    }
-    else
-    {
-        generated_predef_info_count += 1;
-        generated_predef_info = (predef_info*)realloc(generated_predef_info,
-            generated_predef_info_count*sizeof(predef_info));
-    }
-    generated_predef_info[generated_predef_info_count-1].name = name;
-    generated_predef_info[generated_predef_info_count-1].description = description;
-    generated_predef_info[generated_predef_info_count-1].value = value;
-    return 0;
+	if (0 == generated_predef_info_count)
+	{
+		generated_predef_info_count = 1;
+		generated_predef_info = (predef_info*)malloc(sizeof(predef_info));
+	}
+	else
+	{
+		generated_predef_info_count += 1;
+		generated_predef_info = (predef_info*)realloc(generated_predef_info,
+		                        generated_predef_info_count*sizeof(predef_info));
+	}
+	generated_predef_info[generated_predef_info_count-1].name = name;
+	generated_predef_info[generated_predef_info_count-1].description = description;
+	generated_predef_info[generated_predef_info_count-1].value = value;
+	return 0;
 }
 
 int predef_info_compare(const void * a, const void * b)
 {
-    const predef_info * i = (const predef_info *)a;
-    const predef_info * j = (const predef_info *)b;
-    return strcmp(i->name,j->name);
+	const predef_info * i = (const predef_info *)a;
+	const predef_info * j = (const predef_info *)b;
+	return strcmp(i->name,j->name);
 }

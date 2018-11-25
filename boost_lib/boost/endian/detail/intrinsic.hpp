@@ -15,7 +15,7 @@
 #ifndef BOOST_ENDIAN_NO_INTRINSICS
 
 #ifndef __has_builtin         // Optional of course
-  #define __has_builtin(x) 0  // Compatibility with non-clang compilers
+#define __has_builtin(x) 0  // Compatibility with non-clang compilers
 #endif
 
 #if defined(_MSC_VER)

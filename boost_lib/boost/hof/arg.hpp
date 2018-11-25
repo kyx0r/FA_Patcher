@@ -15,71 +15,75 @@
 
 /// arg
 /// ===
-/// 
+///
 /// Description
 /// -----------
-/// 
+///
 /// The `arg` function returns a function object that returns the Nth argument
 /// passed to it. It actually starts at 1, so it is not the zero-based index
 /// of the argument.
-/// 
+///
 /// Synopsis
 /// --------
-/// 
+///
 ///     template<class IntegralConstant>
 ///     constexpr auto arg(IntegralConstant);
-/// 
+///
 ///     template<std::size_t N, class... Ts>
 ///     constexpr auto arg_c(Ts&&...);
-/// 
-/// 
+///
+///
 /// Example
 /// -------
-/// 
+///
 ///     #include <boost/hof.hpp>
 ///     #include <cassert>
 ///     using namespace boost::hof;
-/// 
+///
 ///     int main() {
 ///         assert(arg(std::integral_constant<int, 3>())(1,2,3,4,5) == 3);
 ///     }
-/// 
+///
 
-namespace boost { namespace hof {
+namespace boost
+{
+namespace hof
+{
 
-namespace detail {
+namespace detail
+{
 
 template<class T>
 struct perfect_ref
 {
-    typedef T type;
-    typedef typename std::remove_reference<T>::type value_type;
-    T&& value;
-    constexpr perfect_ref(value_type& x) noexcept
-    : value(BOOST_HOF_FORWARD(T)(x))
-    {}
+	typedef T type;
+	typedef typename std::remove_reference<T>::type value_type;
+	T&& value;
+	constexpr perfect_ref(value_type& x) noexcept
+		: value(BOOST_HOF_FORWARD(T)(x))
+	{}
 };
 
 template<std::size_t N>
 struct ignore
 {
-    template<class T>
-    constexpr ignore(T&&...) noexcept
-    {}
+	template<class T>
+	constexpr ignore(T&&...) noexcept
+	{}
 };
 
 template<std::size_t... N>
 struct args_at
 {
-    template<class T, class... Ts>
-    constexpr auto operator()(ignore<N>..., T x, Ts...) const 
-    BOOST_HOF_RETURNS(BOOST_HOF_FORWARD(typename T::type)(x.value));
+	template<class T, class... Ts>
+	constexpr auto operator()(ignore<N>..., T x, Ts...) const
+	BOOST_HOF_RETURNS(BOOST_HOF_FORWARD(typename T::type)(x.value));
 };
 
 template<std::size_t... N>
 constexpr args_at<N...> make_args_at(seq<N...>) noexcept
 {
-    return {};
+	return {};
 }
 
 template<std::size_t N, class... Ts>
@@ -91,20 +95,20 @@ constexpr auto get_args(Ts&&... xs) BOOST_HOF_RETURNS
 template<class T, T N>
 struct make_args_f
 {
-    template<class... Ts, class=typename std::enable_if<(N <= sizeof...(Ts))>::type>
-    constexpr auto operator()(Ts&&... xs) const BOOST_HOF_RETURNS
-    (
-        boost::hof::detail::get_args<N>(BOOST_HOF_FORWARD(Ts)(xs)...)
-    );
+	template<class... Ts, class=typename std::enable_if<(N <= sizeof...(Ts))>::type>
+	         constexpr auto operator()(Ts&&... xs) const BOOST_HOF_RETURNS
+	         (
+	             boost::hof::detail::get_args<N>(BOOST_HOF_FORWARD(Ts)(xs)...)
+	                                         );
 };
 
 struct arg_f
 {
-    template<class IntegralConstant>
-    constexpr make_args_f<std::size_t, IntegralConstant::value> operator()(IntegralConstant) const noexcept
-    {
-        return make_args_f<std::size_t, IntegralConstant::value>();
-    }
+	template<class IntegralConstant>
+	constexpr make_args_f<std::size_t, IntegralConstant::value> operator()(IntegralConstant) const noexcept
+	{
+		return make_args_f<std::size_t, IntegralConstant::value>();
+	}
 };
 
 }
@@ -116,11 +120,12 @@ template<std::size_t N, class... Ts>
 constexpr auto arg_c(Ts&&... xs) BOOST_HOF_RETURNS
 (
     boost::hof::detail::get_args<N>(BOOST_HOF_FORWARD(Ts)(xs)...)
-);
+                                );
 #endif
 
 BOOST_HOF_DECLARE_STATIC_VAR(arg, detail::arg_f);
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

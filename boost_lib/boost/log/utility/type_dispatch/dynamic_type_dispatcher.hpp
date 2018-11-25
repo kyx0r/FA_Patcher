@@ -30,7 +30,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -47,99 +48,99 @@ BOOST_LOG_OPEN_NAMESPACE
  * when an object of the type is dispatched.
  */
 class dynamic_type_dispatcher :
-    public type_dispatcher
+	public type_dispatcher
 {
 private:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    template< typename T, typename VisitorT >
-    class callback_impl :
-        public callback_base
-    {
-    private:
-        VisitorT m_Visitor;
+	template< typename T, typename VisitorT >
+	class callback_impl :
+		public callback_base
+	{
+	private:
+		VisitorT m_Visitor;
 
-    public:
-        explicit callback_impl(VisitorT const& visitor) : m_Visitor(visitor)
-        {
-            this->m_pVisitor = (void*)boost::addressof(m_Visitor);
-            typedef void (*trampoline_t)(void*, T const&);
-            BOOST_STATIC_ASSERT_MSG(sizeof(trampoline_t) == sizeof(void*), "Boost.Log: Unsupported platform, the size of a function pointer differs from the size of a pointer");
-            union
-            {
-                void* as_pvoid;
-                trampoline_t as_trampoline;
-            }
-            caster;
-            caster.as_trampoline = (trampoline_t)&callback_base::trampoline< VisitorT, T >;
-            this->m_pTrampoline = caster.as_pvoid;
-        }
-    };
+	public:
+		explicit callback_impl(VisitorT const& visitor) : m_Visitor(visitor)
+		{
+			this->m_pVisitor = (void*)boost::addressof(m_Visitor);
+			typedef void (*trampoline_t)(void*, T const&);
+			BOOST_STATIC_ASSERT_MSG(sizeof(trampoline_t) == sizeof(void*), "Boost.Log: Unsupported platform, the size of a function pointer differs from the size of a pointer");
+			union
+			{
+				void* as_pvoid;
+				trampoline_t as_trampoline;
+			}
+			caster;
+			caster.as_trampoline = (trampoline_t)&callback_base::trampoline< VisitorT, T >;
+			this->m_pTrampoline = caster.as_pvoid;
+		}
+	};
 #endif // BOOST_LOG_DOXYGEN_PASS
 
-    //! The dispatching map
-    typedef std::map< typeindex::type_index, shared_ptr< callback_base > > dispatching_map;
-    dispatching_map m_DispatchingMap;
+	//! The dispatching map
+	typedef std::map< typeindex::type_index, shared_ptr< callback_base > > dispatching_map;
+	dispatching_map m_DispatchingMap;
 
 public:
-    /*!
-     * Default constructor
-     */
-    dynamic_type_dispatcher() : type_dispatcher(&dynamic_type_dispatcher::get_callback)
-    {
-    }
+	/*!
+	 * Default constructor
+	 */
+	dynamic_type_dispatcher() : type_dispatcher(&dynamic_type_dispatcher::get_callback)
+	{
+	}
 
-    /*!
-     * Copy constructor
-     */
-    dynamic_type_dispatcher(dynamic_type_dispatcher const& that) :
-        type_dispatcher(static_cast< type_dispatcher const& >(that)),
-        m_DispatchingMap(that.m_DispatchingMap)
-    {
-    }
+	/*!
+	 * Copy constructor
+	 */
+	dynamic_type_dispatcher(dynamic_type_dispatcher const& that) :
+		type_dispatcher(static_cast< type_dispatcher const& >(that)),
+		m_DispatchingMap(that.m_DispatchingMap)
+	{
+	}
 
-    /*!
-     * Copy assignment
-     */
-    dynamic_type_dispatcher& operator= (dynamic_type_dispatcher const& that)
-    {
-        m_DispatchingMap = that.m_DispatchingMap;
-        return *this;
-    }
+	/*!
+	 * Copy assignment
+	 */
+	dynamic_type_dispatcher& operator= (dynamic_type_dispatcher const& that)
+	{
+		m_DispatchingMap = that.m_DispatchingMap;
+		return *this;
+	}
 
-    /*!
-     * The method registers a new type
-     *
-     * \param visitor Function object that will be associated with the type \c T
-     */
-    template< typename T, typename VisitorT >
-    void register_type(VisitorT const& visitor)
-    {
-        boost::shared_ptr< callback_base > p(
-            boost::make_shared< callback_impl< T, VisitorT > >(boost::cref(visitor)));
+	/*!
+	 * The method registers a new type
+	 *
+	 * \param visitor Function object that will be associated with the type \c T
+	 */
+	template< typename T, typename VisitorT >
+	void register_type(VisitorT const& visitor)
+	{
+		boost::shared_ptr< callback_base > p(
+		    boost::make_shared< callback_impl< T, VisitorT > >(boost::cref(visitor)));
 
-        typeindex::type_index wrapper(typeindex::type_id< T >());
-        m_DispatchingMap[wrapper].swap(p);
-    }
+		typeindex::type_index wrapper(typeindex::type_id< T >());
+		m_DispatchingMap[wrapper].swap(p);
+	}
 
-    /*!
-     * The method returns the number of registered types
-     */
-    dispatching_map::size_type registered_types_count() const
-    {
-        return m_DispatchingMap.size();
-    }
+	/*!
+	 * The method returns the number of registered types
+	 */
+	dispatching_map::size_type registered_types_count() const
+	{
+		return m_DispatchingMap.size();
+	}
 
 private:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    static callback_base get_callback(type_dispatcher* p, typeindex::type_index type)
-    {
-        dynamic_type_dispatcher* const self = static_cast< dynamic_type_dispatcher* >(p);
-        dispatching_map::iterator it = self->m_DispatchingMap.find(type);
-        if (it != self->m_DispatchingMap.end())
-            return *it->second;
-        else
-            return callback_base();
-    }
+	static callback_base get_callback(type_dispatcher* p, typeindex::type_index type)
+	{
+		dynamic_type_dispatcher* const self = static_cast< dynamic_type_dispatcher* >(p);
+		dispatching_map::iterator it = self->m_DispatchingMap.find(type);
+		if (it != self->m_DispatchingMap.end())
+			return *it->second;
+		else
+			return callback_base();
+	}
 #endif // BOOST_LOG_DOXYGEN_PASS
 };
 

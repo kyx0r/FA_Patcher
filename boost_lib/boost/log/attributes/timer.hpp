@@ -25,11 +25,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that makes an attribute value of the time interval since construction
@@ -51,25 +53,25 @@ namespace attributes {
  * fall back to another implementation based on Boost.DateTime.
  */
 class BOOST_LOG_API timer :
-    public attribute
+	public attribute
 {
 public:
-    //! Attribute value type
-    typedef utc_time_traits::time_type::time_duration_type value_type;
+	//! Attribute value type
+	typedef utc_time_traits::time_type::time_duration_type value_type;
 
 private:
-    //! Factory implementation
-    class BOOST_SYMBOL_VISIBLE impl;
+	//! Factory implementation
+	class BOOST_SYMBOL_VISIBLE impl;
 
 public:
-    /*!
-     * Constructor. Starts time counting.
-     */
-    timer();
-    /*!
-     * Constructor for casting support
-     */
-    explicit timer(cast_source const& source);
+	/*!
+	 * Constructor. Starts time counting.
+	 */
+	timer();
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit timer(cast_source const& source);
 };
 
 } // namespace attributes

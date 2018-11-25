@@ -15,31 +15,37 @@
 #include <boost/geometry/strategies/distance.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace distance
+namespace detail
+{
+namespace distance
 {
 
 
 // metafunction to determine is a strategy is comparable or not
 template <typename Strategy>
 struct is_comparable
-    : boost::is_same
-        <
-            Strategy,
-            typename strategy::distance::services::comparable_type
-              <
-                  Strategy
-              >::type
-        >
+	: boost::is_same
+	  <
+	  Strategy,
+	  typename strategy::distance::services::comparable_type
+	  <
+	  Strategy
+	  >::type
+	  >
 {};
 
 
-}} // namespace detail::distance
+}
+} // namespace detail::distance
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHS_DETAIL_DISTANCE_IS_COMPARABLE_HPP

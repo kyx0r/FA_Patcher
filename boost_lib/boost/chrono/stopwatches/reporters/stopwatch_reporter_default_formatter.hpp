@@ -12,16 +12,16 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    template <class CharT, class Stopwatch>
-    struct basic_stopwatch_reporter_default_formatter
-    : basic_clock_default_formatter<CharT, typename Stopwatch::clock>
-    {
-    };
+template <class CharT, class Stopwatch>
+struct basic_stopwatch_reporter_default_formatter
+	: basic_clock_default_formatter<CharT, typename Stopwatch::clock>
+{
+};
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 

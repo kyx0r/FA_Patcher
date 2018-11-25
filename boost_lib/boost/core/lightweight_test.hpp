@@ -41,51 +41,51 @@ namespace detail
 
 struct report_errors_reminder
 {
-    bool called_report_errors_function;
+	bool called_report_errors_function;
 
-    report_errors_reminder() : called_report_errors_function(false) {}
+	report_errors_reminder() : called_report_errors_function(false) {}
 
-    ~report_errors_reminder()
-    {
-        BOOST_ASSERT(called_report_errors_function);  // verify report_errors() was called  
-    }
+	~report_errors_reminder()
+	{
+		BOOST_ASSERT(called_report_errors_function);  // verify report_errors() was called
+	}
 };
 
 inline report_errors_reminder& report_errors_remind()
 {
-    static report_errors_reminder r;
-    return r;
+	static report_errors_reminder r;
+	return r;
 }
 
 inline int & test_errors()
 {
-    static int x = 0;
-    report_errors_remind();
-    return x;
+	static int x = 0;
+	report_errors_remind();
+	return x;
 }
 
 inline void test_failed_impl(char const * expr, char const * file, int line, char const * function)
 {
-    BOOST_LIGHTWEIGHT_TEST_OSTREAM
-      << file << "(" << line << "): test '" << expr << "' failed in function '"
-      << function << "'" << std::endl;
-    ++test_errors();
+	BOOST_LIGHTWEIGHT_TEST_OSTREAM
+	        << file << "(" << line << "): test '" << expr << "' failed in function '"
+	        << function << "'" << std::endl;
+	++test_errors();
 }
 
 inline void error_impl(char const * msg, char const * file, int line, char const * function)
 {
-    BOOST_LIGHTWEIGHT_TEST_OSTREAM
-      << file << "(" << line << "): " << msg << " in function '"
-      << function << "'" << std::endl;
-    ++test_errors();
+	BOOST_LIGHTWEIGHT_TEST_OSTREAM
+	        << file << "(" << line << "): " << msg << " in function '"
+	        << function << "'" << std::endl;
+	++test_errors();
 }
 
 inline void throw_failed_impl(char const * excep, char const * file, int line, char const * function)
 {
-   BOOST_LIGHTWEIGHT_TEST_OSTREAM
-    << file << "(" << line << "): Exception '" << excep << "' not thrown in function '"
-    << function << "'" << std::endl;
-   ++test_errors();
+	BOOST_LIGHTWEIGHT_TEST_OSTREAM
+	        << file << "(" << line << "): Exception '" << excep << "' not thrown in function '"
+	        << function << "'" << std::endl;
+	++test_errors();
 }
 
 // In the comparisons below, it is possible that T and U are signed and unsigned integer types, which generates warnings in some compilers.
@@ -105,153 +105,180 @@ inline void throw_failed_impl(char const * excep, char const * file, int line, c
 #endif
 
 // specialize test output for char pointers to avoid printing as cstring
-template <class T> inline const T& test_output_impl(const T& v) { return v; }
-inline const void* test_output_impl(const char* v) { return v; }
-inline const void* test_output_impl(const unsigned char* v) { return v; }
-inline const void* test_output_impl(const signed char* v) { return v; }
-inline const void* test_output_impl(char* v) { return v; }
-inline const void* test_output_impl(unsigned char* v) { return v; }
-inline const void* test_output_impl(signed char* v) { return v; }
-template<class T> inline const void* test_output_impl(T volatile* v) { return const_cast<T*>(v); }
+template <class T> inline const T& test_output_impl(const T& v)
+{
+	return v;
+}
+inline const void* test_output_impl(const char* v)
+{
+	return v;
+}
+inline const void* test_output_impl(const unsigned char* v)
+{
+	return v;
+}
+inline const void* test_output_impl(const signed char* v)
+{
+	return v;
+}
+inline const void* test_output_impl(char* v)
+{
+	return v;
+}
+inline const void* test_output_impl(unsigned char* v)
+{
+	return v;
+}
+inline const void* test_output_impl(signed char* v)
+{
+	return v;
+}
+template<class T> inline const void* test_output_impl(T volatile* v)
+{
+	return const_cast<T*>(v);
+}
 
 #if !defined( BOOST_NO_CXX11_NULLPTR )
-inline const void* test_output_impl(std::nullptr_t) { return nullptr; }
+inline const void* test_output_impl(std::nullptr_t)
+{
+	return nullptr;
+}
 #endif
 
 template<class T, class U> inline void test_eq_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, T const & t, U const & u )
+        char const * file, int line, char const * function, T const & t, U const & u )
 {
-    if( t == u )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " == " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << test_output_impl(t) << "' != '" << test_output_impl(u) << "'" << std::endl;
-        ++test_errors();
-    }
+	if( t == u )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " == " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << test_output_impl(t) << "' != '" << test_output_impl(u) << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 template<class T, class U> inline void test_ne_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, T const & t, U const & u )
+        char const * file, int line, char const * function, T const & t, U const & u )
 {
-    if( t != u )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " != " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << test_output_impl(t) << "' == '" << test_output_impl(u) << "'" << std::endl;
-        ++test_errors();
-    }
+	if( t != u )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " != " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << test_output_impl(t) << "' == '" << test_output_impl(u) << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 template<class T, class U> inline void test_lt_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, T const & t, U const & u )
+        char const * file, int line, char const * function, T const & t, U const & u )
 {
-    if( t < u )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " < " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << test_output_impl(t) << "' >= '" << test_output_impl(u) << "'" << std::endl;
-        ++test_errors();
-    }
+	if( t < u )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " < " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << test_output_impl(t) << "' >= '" << test_output_impl(u) << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 template<class T, class U> inline void test_le_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, T const & t, U const & u )
+        char const * file, int line, char const * function, T const & t, U const & u )
 {
-    if( t <= u )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " <= " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << test_output_impl(t) << "' > '" << test_output_impl(u) << "'" << std::endl;
-        ++test_errors();
-    }
+	if( t <= u )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " <= " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << test_output_impl(t) << "' > '" << test_output_impl(u) << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 template<class T, class U> inline void test_gt_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, T const & t, U const & u )
+        char const * file, int line, char const * function, T const & t, U const & u )
 {
-    if( t > u )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " > " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << test_output_impl(t) << "' <= '" << test_output_impl(u) << "'" << std::endl;
-        ++test_errors();
-    }
+	if( t > u )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " > " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << test_output_impl(t) << "' <= '" << test_output_impl(u) << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 template<class T, class U> inline void test_ge_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, T const & t, U const & u )
+        char const * file, int line, char const * function, T const & t, U const & u )
 {
-    if( t >= u )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " >= " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << test_output_impl(t) << "' < '" << test_output_impl(u) << "'" << std::endl;
-        ++test_errors();
-    }
+	if( t >= u )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " >= " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << test_output_impl(t) << "' < '" << test_output_impl(u) << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 inline void test_cstr_eq_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, char const * const t, char const * const u )
+                               char const * file, int line, char const * function, char const * const t, char const * const u )
 {
-    if( std::strcmp(t, u) == 0 )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " == " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << t << "' != '" << u << "'" << std::endl;
-        ++test_errors();
-    }
+	if( std::strcmp(t, u) == 0 )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " == " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << t << "' != '" << u << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 inline void test_cstr_ne_impl( char const * expr1, char const * expr2,
-  char const * file, int line, char const * function, char const * const t, char const * const u )
+                               char const * file, int line, char const * function, char const * const t, char const * const u )
 {
-    if( std::strcmp(t, u) != 0 )
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-            << file << "(" << line << "): test '" << expr1 << " == " << expr2
-            << "' failed in function '" << function << "': "
-            << "'" << t << "' == '" << u << "'" << std::endl;
-        ++test_errors();
-    }
+	if( std::strcmp(t, u) != 0 )
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << file << "(" << line << "): test '" << expr1 << " == " << expr2
+		        << "' failed in function '" << function << "': "
+		        << "'" << t << "' == '" << u << "'" << std::endl;
+		++test_errors();
+	}
 }
 
 template<class FormattedOutputFunction, class InputIterator1, class InputIterator2>
@@ -260,66 +287,67 @@ void test_all_eq_impl(FormattedOutputFunction& output,
                       InputIterator1 first_begin, InputIterator1 first_end,
                       InputIterator2 second_begin, InputIterator2 second_end)
 {
-    InputIterator1 first_it = first_begin;
-    InputIterator2 second_it = second_begin;
-    typename std::iterator_traits<InputIterator1>::difference_type first_index = 0;
-    typename std::iterator_traits<InputIterator2>::difference_type second_index = 0;
-    std::size_t error_count = 0;
-    const std::size_t max_count = 8;
-    do
-    {
-        while ((first_it != first_end) && (second_it != second_end) && (*first_it == *second_it))
-        {
-            ++first_it;
-            ++second_it;
-            ++first_index;
-            ++second_index;
-        }
-        if ((first_it == first_end) || (second_it == second_end))
-        {
-            break; // do-while
-        }
-        if (error_count == 0)
-        {
-            output << file << "(" << line << "): Container contents differ in function '" << function << "':";
-        }
-        else if (error_count >= max_count)
-        {
-            output << " ...";
-            break;
-        }
-        output << " [" << first_index << "] '" << test_output_impl(*first_it) << "' != '" << test_output_impl(*second_it) << "'";
-        ++first_it;
-        ++second_it;
-        ++first_index;
-        ++second_index;
-        ++error_count;
-    } while (first_it != first_end);
+	InputIterator1 first_it = first_begin;
+	InputIterator2 second_it = second_begin;
+	typename std::iterator_traits<InputIterator1>::difference_type first_index = 0;
+	typename std::iterator_traits<InputIterator2>::difference_type second_index = 0;
+	std::size_t error_count = 0;
+	const std::size_t max_count = 8;
+	do
+	{
+		while ((first_it != first_end) && (second_it != second_end) && (*first_it == *second_it))
+		{
+			++first_it;
+			++second_it;
+			++first_index;
+			++second_index;
+		}
+		if ((first_it == first_end) || (second_it == second_end))
+		{
+			break; // do-while
+		}
+		if (error_count == 0)
+		{
+			output << file << "(" << line << "): Container contents differ in function '" << function << "':";
+		}
+		else if (error_count >= max_count)
+		{
+			output << " ...";
+			break;
+		}
+		output << " [" << first_index << "] '" << test_output_impl(*first_it) << "' != '" << test_output_impl(*second_it) << "'";
+		++first_it;
+		++second_it;
+		++first_index;
+		++second_index;
+		++error_count;
+	}
+	while (first_it != first_end);
 
-    first_index += std::distance(first_it, first_end);
-    second_index += std::distance(second_it, second_end);
-    if (first_index != second_index)
-    {
-        if (error_count == 0)
-        {
-            output << file << "(" << line << "): Container sizes differ in function '" << function << "': size(" << first_index << ") != size(" << second_index << ")";
-        }
-        else
-        {
-            output << " [*] size(" << first_index << ") != size(" << second_index << ")";
-        }
-        ++error_count;
-    }
+	first_index += std::distance(first_it, first_end);
+	second_index += std::distance(second_it, second_end);
+	if (first_index != second_index)
+	{
+		if (error_count == 0)
+		{
+			output << file << "(" << line << "): Container sizes differ in function '" << function << "': size(" << first_index << ") != size(" << second_index << ")";
+		}
+		else
+		{
+			output << " [*] size(" << first_index << ") != size(" << second_index << ")";
+		}
+		++error_count;
+	}
 
-    if (error_count == 0)
-    {
-        boost::detail::report_errors_remind();
-    }
-    else
-    {
-        output << std::endl;
-        ++boost::detail::test_errors();
-    }
+	if (error_count == 0)
+	{
+		boost::detail::report_errors_remind();
+	}
+	else
+	{
+		output << std::endl;
+		++boost::detail::test_errors();
+	}
 }
 
 template<class FormattedOutputFunction, class InputIterator1, class InputIterator2, typename BinaryPredicate>
@@ -329,66 +357,67 @@ void test_all_with_impl(FormattedOutputFunction& output,
                         InputIterator2 second_begin, InputIterator2 second_end,
                         BinaryPredicate predicate)
 {
-    InputIterator1 first_it = first_begin;
-    InputIterator2 second_it = second_begin;
-    typename std::iterator_traits<InputIterator1>::difference_type first_index = 0;
-    typename std::iterator_traits<InputIterator2>::difference_type second_index = 0;
-    std::size_t error_count = 0;
-    const std::size_t max_count = 8;
-    do
-    {
-        while ((first_it != first_end) && (second_it != second_end) && predicate(*first_it, *second_it))
-        {
-            ++first_it;
-            ++second_it;
-            ++first_index;
-            ++second_index;
-        }
-        if ((first_it == first_end) || (second_it == second_end))
-        {
-            break; // do-while
-        }
-        if (error_count == 0)
-        {
-            output << file << "(" << line << "): Container contents differ in function '" << function << "':";
-        }
-        else if (error_count >= max_count)
-        {
-            output << " ...";
-            break;
-        }
-        output << " [" << first_index << "]";
-        ++first_it;
-        ++second_it;
-        ++first_index;
-        ++second_index;
-        ++error_count;
-    } while (first_it != first_end);
+	InputIterator1 first_it = first_begin;
+	InputIterator2 second_it = second_begin;
+	typename std::iterator_traits<InputIterator1>::difference_type first_index = 0;
+	typename std::iterator_traits<InputIterator2>::difference_type second_index = 0;
+	std::size_t error_count = 0;
+	const std::size_t max_count = 8;
+	do
+	{
+		while ((first_it != first_end) && (second_it != second_end) && predicate(*first_it, *second_it))
+		{
+			++first_it;
+			++second_it;
+			++first_index;
+			++second_index;
+		}
+		if ((first_it == first_end) || (second_it == second_end))
+		{
+			break; // do-while
+		}
+		if (error_count == 0)
+		{
+			output << file << "(" << line << "): Container contents differ in function '" << function << "':";
+		}
+		else if (error_count >= max_count)
+		{
+			output << " ...";
+			break;
+		}
+		output << " [" << first_index << "]";
+		++first_it;
+		++second_it;
+		++first_index;
+		++second_index;
+		++error_count;
+	}
+	while (first_it != first_end);
 
-    first_index += std::distance(first_it, first_end);
-    second_index += std::distance(second_it, second_end);
-    if (first_index != second_index)
-    {
-        if (error_count == 0)
-        {
-            output << file << "(" << line << "): Container sizes differ in function '" << function << "': size(" << first_index << ") != size(" << second_index << ")";
-        }
-        else
-        {
-            output << " [*] size(" << first_index << ") != size(" << second_index << ")";
-        }
-        ++error_count;
-    }
+	first_index += std::distance(first_it, first_end);
+	second_index += std::distance(second_it, second_end);
+	if (first_index != second_index)
+	{
+		if (error_count == 0)
+		{
+			output << file << "(" << line << "): Container sizes differ in function '" << function << "': size(" << first_index << ") != size(" << second_index << ")";
+		}
+		else
+		{
+			output << " [*] size(" << first_index << ") != size(" << second_index << ")";
+		}
+		++error_count;
+	}
 
-    if (error_count == 0)
-    {
-        report_errors_remind();
-    }
-    else
-    {
-        output << std::endl;
-        ++test_errors();
-    }
+	if (error_count == 0)
+	{
+		report_errors_remind();
+	}
+	else
+	{
+		output << std::endl;
+		++test_errors();
+	}
 }
 
 #if defined(_MSC_VER)
@@ -405,22 +434,22 @@ void test_all_with_impl(FormattedOutputFunction& output,
 
 inline int report_errors()
 {
-    boost::detail::report_errors_remind().called_report_errors_function = true;
+	boost::detail::report_errors_remind().called_report_errors_function = true;
 
-    int errors = boost::detail::test_errors();
+	int errors = boost::detail::test_errors();
 
-    if( errors == 0 )
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-          << "No errors detected." << std::endl;
-        return 0;
-    }
-    else
-    {
-        BOOST_LIGHTWEIGHT_TEST_OSTREAM
-          << errors << " error" << (errors == 1? "": "s") << " detected." << std::endl;
-        return 1;
-    }
+	if( errors == 0 )
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << "No errors detected." << std::endl;
+		return 0;
+	}
+	else
+	{
+		BOOST_LIGHTWEIGHT_TEST_OSTREAM
+		        << errors << " error" << (errors == 1? "": "s") << " detected." << std::endl;
+		return 1;
+	}
 }
 
 } // namespace boost
@@ -445,7 +474,7 @@ inline int report_errors()
 #define BOOST_TEST_ALL_WITH(begin1, end1, begin2, end2, predicate) ( ::boost::detail::test_all_with_impl(BOOST_LIGHTWEIGHT_TEST_OSTREAM, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION, begin1, end1, begin2, end2, predicate) )
 
 #ifndef BOOST_NO_EXCEPTIONS
-   #define BOOST_TEST_THROWS( EXPR, EXCEP )                    \
+#define BOOST_TEST_THROWS( EXPR, EXCEP )                    \
       try {                                                    \
          EXPR;                                                 \
          ::boost::detail::throw_failed_impl                    \
@@ -459,7 +488,7 @@ inline int report_errors()
       }                                                        \
    //
 #else
-   #define BOOST_TEST_THROWS( EXPR, EXCEP )
+#define BOOST_TEST_THROWS( EXPR, EXCEP )
 #endif
 
 #endif // #ifndef BOOST_CORE_LIGHTWEIGHT_TEST_HPP

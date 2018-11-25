@@ -13,17 +13,19 @@
 #include <boost/ratio/mpl/numeric_cast.hpp>
 #include <boost/mpl/equal_to.hpp>
 
-namespace boost { 
-namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 template<>
 struct equal_to_impl< rational_c_tag,rational_c_tag >
 {
-    template< typename R1, typename R2 > struct apply
-        : ratio_equal<R1, R2>
-    {
-    };
-};    
+	template< typename R1, typename R2 > struct apply
+		: ratio_equal<R1, R2>
+	{
+	};
+};
 }
 }
 

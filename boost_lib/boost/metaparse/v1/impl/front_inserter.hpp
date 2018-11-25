@@ -10,22 +10,22 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        struct front_inserter
-        {
-          typedef front_inserter type;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+struct front_inserter
+{
+	typedef front_inserter type;
 
-          template <class T0, class T1>
-          struct apply : boost::mpl::push_front<T0, T1> {};
-        };
-      }
-    }
-  }
+	template <class T0, class T1>
+	struct apply : boost::mpl::push_front<T0, T1> {};
+};
+}
+}
+}
 }
 
 #endif

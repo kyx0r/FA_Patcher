@@ -21,31 +21,39 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace tt_detail {
+namespace boost
+{
+namespace test_tools
+{
+namespace tt_detail
+{
 
 // ************************************************************************** //
 // **************         tt_detail::expression_holder         ************** //
 // ************************************************************************** //
 
-class expression_holder {
+class expression_holder
+{
 public:
-    virtual                     ~expression_holder() {}
-    virtual assertion_result    evaluate( bool no_message = false )  const = 0;
+	virtual                     ~expression_holder() {}
+	virtual assertion_result    evaluate( bool no_message = false )  const = 0;
 };
 
 //____________________________________________________________________________//
 
 template<typename E>
-class  expression_holder_t: public expression_holder {
+class  expression_holder_t: public expression_holder
+{
 public:
-    explicit                    expression_holder_t( E const& e ) : m_expr( e ) {}
+	explicit                    expression_holder_t( E const& e ) : m_expr( e ) {}
 
 private:
-    virtual assertion_result    evaluate( bool no_message = false )  const { return m_expr.evaluate( no_message ); }
+	virtual assertion_result    evaluate( bool no_message = false )  const
+	{
+		return m_expr.evaluate( no_message );
+	}
 
-    E                           m_expr;
+	E                           m_expr;
 };
 
 //____________________________________________________________________________//
@@ -54,7 +62,7 @@ template<typename E>
 expression_holder_t<E>
 hold_expression( E const& e )
 {
-    return expression_holder_t<E>( e );
+	return expression_holder_t<E>( e );
 }
 
 //____________________________________________________________________________//

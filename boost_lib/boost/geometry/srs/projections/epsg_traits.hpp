@@ -21,7 +21,11 @@
 #include <boost/geometry/srs/projections/srid_traits.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -39,9 +43,9 @@ namespace detail
 template <size_t EPSG>
 struct epsg_traits
 {
-    // Specializations define:
-    // - type to get projection type
-    // - function par to get parameters
+	// Specializations define:
+	// - type to get projection type
+	// - function par to get parameters
 };
 
 BOOST_GEOMETRY_PROJECTIONS_DETAIL_SRID_TRAITS_E (epsg, 2000, tmerc, clrk80, "+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +units=m +no_defs")
@@ -4410,7 +4414,9 @@ BOOST_GEOMETRY_PROJECTIONS_DETAIL_SRID_TRAITS_AB(epsg, 69036405, longlat, 637829
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 
 #endif

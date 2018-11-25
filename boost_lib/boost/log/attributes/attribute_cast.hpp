@@ -23,11 +23,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * The class holds a reference to the attribute factory implementation being casted
@@ -35,23 +37,26 @@ namespace attributes {
 class cast_source
 {
 private:
-    attribute::impl* m_pImpl;
+	attribute::impl* m_pImpl;
 
 public:
-    /*!
-     * Initializing constructor. Creates a source that refers to the specified factory implementation.
-     */
-    explicit cast_source(attribute::impl* p) : m_pImpl(p)
-    {
-    }
+	/*!
+	 * Initializing constructor. Creates a source that refers to the specified factory implementation.
+	 */
+	explicit cast_source(attribute::impl* p) : m_pImpl(p)
+	{
+	}
 
-    /*!
-     * The function attempts to cast the aggregated pointer to the implementation to the specified type.
-     *
-     * \return The converted pointer or \c NULL, if the conversion fails.
-     */
-    template< typename T >
-    T* as() const { return dynamic_cast< T* >(m_pImpl); }
+	/*!
+	 * The function attempts to cast the aggregated pointer to the implementation to the specified type.
+	 *
+	 * \return The converted pointer or \c NULL, if the conversion fails.
+	 */
+	template< typename T >
+	T* as() const
+	{
+		return dynamic_cast< T* >(m_pImpl);
+	}
 };
 
 } // namespace attributes
@@ -62,7 +67,7 @@ public:
 template< typename T >
 inline T attribute_cast(attribute const& attr)
 {
-    return T(attributes::cast_source(attr.get_impl()));
+	return T(attributes::cast_source(attr.get_impl()));
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

@@ -61,38 +61,38 @@ inline void throw_exception_assert_compatibility( std::exception const & ) { }
 
 template<class E> BOOST_NORETURN inline void throw_exception( E const & e )
 {
-    //All boost exceptions are required to derive from std::exception,
-    //to ensure compatibility with BOOST_NO_EXCEPTIONS.
-    throw_exception_assert_compatibility(e);
+	//All boost exceptions are required to derive from std::exception,
+	//to ensure compatibility with BOOST_NO_EXCEPTIONS.
+	throw_exception_assert_compatibility(e);
 
 #ifndef BOOST_EXCEPTION_DISABLE
-    throw enable_current_exception(enable_error_info(e));
+	throw enable_current_exception(enable_error_info(e));
 #else
-    throw e;
+	throw e;
 #endif
 }
 
 #endif
 
 #if !defined( BOOST_EXCEPTION_DISABLE )
-    namespace
-    exception_detail
-    {
-        template <class E>
-        BOOST_NORETURN
-        void
-        throw_exception_( E const & x, char const * current_function, char const * file, int line )
-        {
-            boost::throw_exception(
-                set_info(
-                    set_info(
-                        set_info(
-                            enable_error_info(x),
-                            throw_function(current_function)),
-                        throw_file(file)),
-                    throw_line(line)));
-        }
-    }
+namespace
+	exception_detail
+{
+template <class E>
+BOOST_NORETURN
+void
+throw_exception_( E const & x, char const * current_function, char const * file, int line )
+{
+	boost::throw_exception(
+	    set_info(
+	        set_info(
+	            set_info(
+	                enable_error_info(x),
+	                throw_function(current_function)),
+	            throw_file(file)),
+	        throw_line(line)));
+}
+}
 #endif
 } // namespace boost
 

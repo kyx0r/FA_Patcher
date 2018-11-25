@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
-namespace phoenix {
+namespace phoenix
+{
 
 template< typename >
 struct actor;
@@ -37,7 +39,8 @@ struct actor;
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * An attribute value extraction terminal
@@ -46,7 +49,7 @@ template<
     typename T,
     typename FallbackPolicyT = fallback_to_none,
     typename TagT = void
->
+    >
 class attribute_terminal;
 
 /*!
@@ -57,7 +60,7 @@ template<
     typename FallbackPolicyT = fallback_to_none,
     typename TagT = void,
     template< typename > class ActorT = phoenix::actor
->
+    >
 class attribute_actor;
 
 } // namespace expressions

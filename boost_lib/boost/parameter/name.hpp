@@ -21,7 +21,12 @@
 #  include <boost/utility/enable_if.hpp>
 #  include <boost/mpl/lambda.hpp>
 
-namespace boost { namespace parameter { namespace aux {
+namespace boost
+{
+namespace parameter
+{
+namespace aux
+{
 
 // Tag type passed to MPL lambda.
 struct lambda_tag;
@@ -35,27 +40,33 @@ struct name_tag
 
 template <class T>
 struct is_name_tag
-  : mpl::false_
+	: mpl::false_
 {};
 
-}}} // namespace boost::parameter::aux
+}
+}
+} // namespace boost::parameter::aux
 
-namespace boost { namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 template <class T>
 struct lambda<
-    T
-  , typename boost::enable_if<
-        parameter::aux::is_name_tag<T>, parameter::aux::lambda_tag
-    >::type
->
+	T
+	, typename boost::enable_if<
+	parameter::aux::is_name_tag<T>, parameter::aux::lambda_tag
+	>::type
+	>
 {
-    typedef true_ is_le;
-    typedef bind3< quote3<parameter::value_type>, arg<2>, T, void> result_;
-    typedef result_ type;
+	typedef true_ is_le;
+	typedef bind3< quote3<parameter::value_type>, arg<2>, T, void> result_;
+	typedef result_ type;
 };
 
-}} // namespace boost::mpl
+}
+} // namespace boost::mpl
 
 # endif
 

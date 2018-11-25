@@ -20,8 +20,10 @@
 #include <boost/compute/iterator/zip_iterator.hpp>
 #include <boost/compute/functional/detail/unpack.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns the inner product of the elements in the range
 /// [\p first1, \p last1) with the elements in the range beginning
@@ -36,26 +38,26 @@ inline T inner_product(InputIterator1 first1,
                        T init,
                        command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator1>::value_type input_type;
+	typedef typename std::iterator_traits<InputIterator1>::value_type input_type;
 
-    ptrdiff_t n = std::distance(first1, last1);
+	ptrdiff_t n = std::distance(first1, last1);
 
-    return ::boost::compute::accumulate(
-        ::boost::compute::make_transform_iterator(
-            ::boost::compute::make_zip_iterator(
-                boost::make_tuple(first1, first2)
-            ),
-            detail::unpack(multiplies<input_type>())
-        ),
-        ::boost::compute::make_transform_iterator(
-            ::boost::compute::make_zip_iterator(
-                boost::make_tuple(last1, first2 + n)
-            ),
-            detail::unpack(multiplies<input_type>())
-        ),
-        init,
-        queue
-    );
+	return ::boost::compute::accumulate(
+	           ::boost::compute::make_transform_iterator(
+	               ::boost::compute::make_zip_iterator(
+	                   boost::make_tuple(first1, first2)
+	               ),
+	               detail::unpack(multiplies<input_type>())
+	           ),
+	           ::boost::compute::make_transform_iterator(
+	               ::boost::compute::make_zip_iterator(
+	                   boost::make_tuple(last1, first2 + n)
+	               ),
+	               detail::unpack(multiplies<input_type>())
+	           ),
+	           init,
+	           queue
+	       );
 }
 
 /// \overload
@@ -72,22 +74,22 @@ inline T inner_product(InputIterator1 first1,
                        BinaryTransformFunction transform_function,
                        command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
+	typedef typename std::iterator_traits<InputIterator1>::value_type value_type;
 
-    size_t count = detail::iterator_range_size(first1, last1);
-    vector<value_type> result(count, queue.get_context());
-    transform(first1,
-              last1,
-              first2,
-              result.begin(),
-              transform_function,
-              queue);
+	size_t count = detail::iterator_range_size(first1, last1);
+	vector<value_type> result(count, queue.get_context());
+	transform(first1,
+	          last1,
+	          first2,
+	          result.begin(),
+	          transform_function,
+	          queue);
 
-    return ::boost::compute::accumulate(result.begin(),
-                                        result.end(),
-                                        init,
-                                        accumulate_function,
-                                        queue);
+	return ::boost::compute::accumulate(result.begin(),
+	                                    result.end(),
+	                                    init,
+	                                    accumulate_function,
+	                                    queue);
 }
 
 } // end compute namespace

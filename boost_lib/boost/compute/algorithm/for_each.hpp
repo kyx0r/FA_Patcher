@@ -16,29 +16,32 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class InputIterator, class Function>
 struct for_each_kernel : public meta_kernel
 {
-    for_each_kernel(InputIterator first, InputIterator last, Function function)
-        : meta_kernel("for_each")
-    {
-        // store range size
-        m_count = detail::iterator_range_size(first, last);
+	for_each_kernel(InputIterator first, InputIterator last, Function function)
+		: meta_kernel("for_each")
+	{
+		// store range size
+		m_count = detail::iterator_range_size(first, last);
 
-        // setup kernel source
-        *this << function(first[get_global_id(0)]) << ";\n";
-    }
+		// setup kernel source
+		*this << function(first[get_global_id(0)]) << ";\n";
+	}
 
-    void exec(command_queue &queue)
-    {
-        exec_1d(queue, 0, m_count);
-    }
+	void exec(command_queue &queue)
+	{
+		exec_1d(queue, 0, m_count);
+	}
 
-    size_t m_count;
+	size_t m_count;
 };
 
 } // end detail namespace
@@ -54,11 +57,11 @@ inline UnaryFunction for_each(InputIterator first,
                               UnaryFunction function,
                               command_queue &queue = system::default_queue())
 {
-    detail::for_each_kernel<InputIterator, UnaryFunction> kernel(first, last, function);
+	detail::for_each_kernel<InputIterator, UnaryFunction> kernel(first, last, function);
 
-    kernel.exec(queue);
+	kernel.exec(queue);
 
-    return function;
+	return function;
 }
 
 } // end compute namespace

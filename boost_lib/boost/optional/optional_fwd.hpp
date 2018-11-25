@@ -18,12 +18,13 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template<class T> class optional ;
 
 // This forward is needed to refer to namespace scope swap from the member swap
-template<class T> void swap ( optional<T>& , optional<T>& ) ;
+template<class T> void swap ( optional<T>&, optional<T>& ) ;
 
 template<class T> struct optional_swap_should_use_default_constructor ;
 
@@ -31,7 +32,7 @@ template<class T> struct optional_swap_should_use_default_constructor ;
 
 template<class T> class optional<T&> ;
 
-template<class T> void swap ( optional<T&>& , optional<T&>& ) BOOST_NOEXCEPT;
+template<class T> void swap ( optional<T&>&, optional<T&>& ) BOOST_NOEXCEPT;
 
 #endif
 

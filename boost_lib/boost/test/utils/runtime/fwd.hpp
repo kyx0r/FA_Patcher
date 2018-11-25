@@ -26,8 +26,10 @@
 // STL
 #include <map>
 
-namespace boost {
-namespace runtime {
+namespace boost
+{
+namespace runtime
+{
 
 typedef unit_test::const_string     cstring;
 

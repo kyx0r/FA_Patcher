@@ -11,14 +11,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <char C, class Result>
-      struct always_c : always<lit_c<C>, Result> {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <char C, class Result>
+struct always_c : always<lit_c<C>, Result> {};
+}
+}
 }
 
 #endif

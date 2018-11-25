@@ -20,39 +20,45 @@
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
+{
+namespace fusion
+{
+namespace detail
 {
 BOOST_FUSION_BARRIER_BEGIN
 
-    template <int size, bool is_assoc>
-    struct as_map
-    {
-        BOOST_STATIC_ASSERT_MSG(
-            size <= FUSION_MAX_MAP_SIZE
-          , "FUSION_MAX_MAP_SIZE limit is too low"
-        );
-    };
+template <int size, bool is_assoc>
+struct as_map
+{
+	BOOST_STATIC_ASSERT_MSG(
+	    size <= FUSION_MAX_MAP_SIZE
+	    , "FUSION_MAX_MAP_SIZE limit is too low"
+	);
+};
 
-    template <bool is_assoc>
-    struct as_map<0, is_assoc>
-    {
-        template <typename Iterator>
-        struct apply
-        {
-            typedef map<> type;
-        };
+template <bool is_assoc>
+struct as_map<0, is_assoc>
+{
+	template <typename Iterator>
+	struct apply
+	{
+		typedef map<> type;
+	};
 
-        template <typename Iterator>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static typename apply<Iterator>::type
-        call(Iterator)
-        {
-            return map<>();
-        }
-    };
+	template <typename Iterator>
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static typename apply<Iterator>::type
+	call(Iterator)
+	{
+		return map<>();
+	}
+};
 
 BOOST_FUSION_BARRIER_END
-}}}
+}
+}
+}
 
 #if !defined(BOOST_FUSION_DONT_USE_PREPROCESSED_FILES)
 #include <boost/fusion/container/map/detail/cpp03/preprocessed/as_map.hpp>
@@ -74,7 +80,11 @@ BOOST_FUSION_BARRIER_END
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
+{
+namespace fusion
+{
+namespace detail
 {
 BOOST_FUSION_BARRIER_BEGIN
 
@@ -103,7 +113,9 @@ BOOST_FUSION_BARRIER_BEGIN
 #undef BOOST_FUSION_DREF_CALL_ITERATOR
 
 BOOST_FUSION_BARRIER_END
-}}}
+}
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)
@@ -121,28 +133,28 @@ BOOST_FUSION_BARRIER_END
 
 #define N BOOST_PP_ITERATION()
 
-    template <bool is_assoc>
-    struct as_map<N, is_assoc>
-    {
-        template <typename I0>
-        struct apply
-        {
-            BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_ITERATOR, _)
-            BOOST_PP_REPEAT(N, BOOST_FUSION_PAIR_FROM_ITERATOR, _)
-            typedef map<BOOST_PP_ENUM_PARAMS(N, T)> type;
-        };
+template <bool is_assoc>
+struct as_map<N, is_assoc>
+{
+	template <typename I0>
+	struct apply
+	{
+		BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_ITERATOR, _)
+		BOOST_PP_REPEAT(N, BOOST_FUSION_PAIR_FROM_ITERATOR, _)
+		typedef map<BOOST_PP_ENUM_PARAMS(N, T)> type;
+	};
 
-        template <typename Iterator>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static typename apply<Iterator>::type
-        call(Iterator const& i0)
-        {
-            typedef apply<Iterator> gen;
-            typedef typename gen::type result;
-            BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_CALL_ITERATOR, _)
-            return result(BOOST_PP_ENUM(N, BOOST_FUSION_DREF_CALL_ITERATOR, _));
-        }
-    };
+	template <typename Iterator>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static typename apply<Iterator>::type
+	call(Iterator const& i0)
+	{
+		typedef apply<Iterator> gen;
+		typedef typename gen::type result;
+		BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_CALL_ITERATOR, _)
+		return result(BOOST_PP_ENUM(N, BOOST_FUSION_DREF_CALL_ITERATOR, _));
+	}
+};
 
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)

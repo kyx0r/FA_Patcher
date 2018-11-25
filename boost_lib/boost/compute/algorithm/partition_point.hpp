@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/detail/binary_find.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 ///
 /// \brief Partition point algorithm
@@ -35,11 +37,11 @@ namespace compute {
 ///
 template<class InputIterator, class UnaryPredicate>
 inline InputIterator partition_point(InputIterator first,
-                                    InputIterator last,
-                                    UnaryPredicate predicate,
-                                    command_queue &queue = system::default_queue())
+                                     InputIterator last,
+                                     UnaryPredicate predicate,
+                                     command_queue &queue = system::default_queue())
 {
-    return detail::binary_find(first, last, not1(predicate), queue);
+	return detail::binary_find(first, last, not1(predicate), queue);
 }
 
 } // end compute namespace

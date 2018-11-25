@@ -14,49 +14,49 @@ namespace boost
 {
 
 // Extension points
-    template<typename C, typename Enabler>
-    struct range_iterator;
+template<typename C, typename Enabler>
+struct range_iterator;
 
-    template<typename C, typename Enabler>
-    struct range_mutable_iterator;
+template<typename C, typename Enabler>
+struct range_mutable_iterator;
 
-    template<typename C, typename Enabler>
-    struct range_const_iterator;
+template<typename C, typename Enabler>
+struct range_const_iterator;
 
 // Core classes
-    template<typename IteratorT>
-    class iterator_range;
+template<typename IteratorT>
+class iterator_range;
 
-    template<typename ForwardRange>
-    class sub_range;
+template<typename ForwardRange>
+class sub_range;
 
 // Meta-functions
-    template<typename T>
-    struct range_category;
+template<typename T>
+struct range_category;
 
-    template<typename T>
-    struct range_difference;
+template<typename T>
+struct range_difference;
 
-    template<typename T>
-    struct range_pointer;
+template<typename T>
+struct range_pointer;
 
-    template<typename T>
-    struct range_reference;
+template<typename T>
+struct range_reference;
 
-    template<typename T>
-    struct range_reverse_iterator;
+template<typename T>
+struct range_reverse_iterator;
 
-    template<typename T>
-    struct range_size;
+template<typename T>
+struct range_size;
 
-    template<typename T>
-    struct range_value;
+template<typename T>
+struct range_value;
 
-    template<typename T>
-    struct has_range_iterator;
+template<typename T>
+struct has_range_iterator;
 
-    template<typename T>
-    struct has_range_const_iterator;
+template<typename T>
+struct has_range_const_iterator;
 
 } // namespace boost
 

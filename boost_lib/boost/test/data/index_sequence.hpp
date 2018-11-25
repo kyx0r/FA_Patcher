@@ -19,9 +19,12 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace data {
+namespace boost
+{
+namespace unit_test
+{
+namespace data
+{
 
 // ************************************************************************** //
 // **************             data::index_sequence             ************** //
@@ -34,19 +37,22 @@ template<typename IS1, typename IS2>
 struct merge_index_sequence;
 
 template <std::size_t... Ns1, std::size_t... Ns2>
-struct merge_index_sequence<index_sequence<Ns1...>, index_sequence<Ns2...>> {
-    typedef index_sequence<Ns1..., Ns2...> type;
+struct merge_index_sequence<index_sequence<Ns1...>, index_sequence<Ns2...>>
+{
+	typedef index_sequence<Ns1..., Ns2...> type;
 };
 
 template <std::size_t B, std::size_t E, typename Enabler = void>
-struct make_index_sequence {
-    typedef typename merge_index_sequence<typename make_index_sequence<B,(B+E)/2>::type,
-                                          typename make_index_sequence<(B+E)/2,E>::type>::type type;
+struct make_index_sequence
+{
+	typedef typename merge_index_sequence<typename make_index_sequence<B,(B+E)/2>::type,
+	        typename make_index_sequence<(B+E)/2,E>::type>::type type;
 };
 
 template <std::size_t B, std::size_t E>
-struct make_index_sequence<B,E,typename std::enable_if<E==B+1,void>::type> {
-    typedef index_sequence<B> type;
+struct make_index_sequence<B,E,typename std::enable_if<E==B+1,void>::type>
+{
+	typedef index_sequence<B> type;
 };
 
 template <typename... T>

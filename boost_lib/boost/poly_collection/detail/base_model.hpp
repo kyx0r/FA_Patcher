@@ -22,103 +22,119 @@
 #include <typeinfo>
 #include <utility>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 /* model for base_collection */
 
 template<typename Base>
 struct base_model
 {
-  using value_type=Base;
-  template<typename Derived>
-  using is_implementation=std::is_base_of<Base,Derived>;
-  template<typename T>
-  using is_terminal=is_final<T>; //TODO: should we say !is_polymorhpic||is_final?
+	using value_type=Base;
+	template<typename Derived>
+	using is_implementation=std::is_base_of<Base,Derived>;
+	template<typename T>
+	using is_terminal=is_final<T>; //TODO: should we say !is_polymorhpic||is_final?
 
 private:
-  template<typename T>
-  using enable_if_not_terminal=
-    typename std::enable_if<!is_terminal<T>::value>::type*;
-  template<typename T>
-  using enable_if_terminal=
-    typename std::enable_if<is_terminal<T>::value>::type*;
+	template<typename T>
+	using enable_if_not_terminal=
+	    typename std::enable_if<!is_terminal<T>::value>::type*;
+	template<typename T>
+	using enable_if_terminal=
+	    typename std::enable_if<is_terminal<T>::value>::type*;
 
 public:
-  template<typename T,enable_if_not_terminal<T> =nullptr>
-  static const std::type_info& subtypeid(const T& x){return typeid(x);}
+	template<typename T,enable_if_not_terminal<T> =nullptr>
+	static const std::type_info& subtypeid(const T& x)
+	{
+		return typeid(x);
+	}
 
-  template<typename T,enable_if_terminal<T> =nullptr>
-  static const std::type_info& subtypeid(const T&){return typeid(T);}
+	template<typename T,enable_if_terminal<T> =nullptr>
+	static const std::type_info& subtypeid(const T&)
+	{
+		return typeid(T);
+	}
 
-  template<typename T,enable_if_not_terminal<T> =nullptr>
-  static void* subaddress(T& x)
-  {
-    return dynamic_cast<void*>(boost::addressof(x));
-  }
+	template<typename T,enable_if_not_terminal<T> =nullptr>
+	static void* subaddress(T& x)
+	{
+		return dynamic_cast<void*>(boost::addressof(x));
+	}
 
-  template<typename T,enable_if_not_terminal<T> =nullptr>
-  static const void* subaddress(const T& x)
-  {
-    return dynamic_cast<const void*>(boost::addressof(x));
-  }
+	template<typename T,enable_if_not_terminal<T> =nullptr>
+	static const void* subaddress(const T& x)
+	{
+		return dynamic_cast<const void*>(boost::addressof(x));
+	}
 
-  template<typename T,enable_if_terminal<T> =nullptr>
-  static void* subaddress(T& x){return boost::addressof(x);}
+	template<typename T,enable_if_terminal<T> =nullptr>
+	static void* subaddress(T& x)
+	{
+		return boost::addressof(x);
+	}
 
-  template<typename T,enable_if_terminal<T> =nullptr>
-  static const void* subaddress(const T& x){return boost::addressof(x);}
+	template<typename T,enable_if_terminal<T> =nullptr>
+	static const void* subaddress(const T& x)
+	{
+		return boost::addressof(x);
+	}
 
-  using base_iterator=stride_iterator<Base>;
-  using const_base_iterator=stride_iterator<const Base>;
-  using base_sentinel=Base*;
-  using const_base_sentinel=const Base*;
-  template<typename Derived>
-  using iterator=Derived*;
-  template<typename Derived>
-  using const_iterator=const Derived*;
-  using segment_backend=detail::segment_backend<base_model>;
-  template<typename Derived,typename Allocator>
-  using segment_backend_implementation=packed_segment<
-    base_model,
-    Derived,
-    typename std::allocator_traits<Allocator>::template rebind_alloc<Derived>
-  >;
-  using segment_backend_unique_ptr=
-    typename segment_backend::segment_backend_unique_ptr;
+	using base_iterator=stride_iterator<Base>;
+	using const_base_iterator=stride_iterator<const Base>;
+	using base_sentinel=Base*;
+	using const_base_sentinel=const Base*;
+	template<typename Derived>
+	using iterator=Derived*;
+	template<typename Derived>
+	using const_iterator=const Derived*;
+	using segment_backend=detail::segment_backend<base_model>;
+	template<typename Derived,typename Allocator>
+	using segment_backend_implementation=packed_segment<
+	                                     base_model,
+	                                     Derived,
+	                                     typename std::allocator_traits<Allocator>::template rebind_alloc<Derived>
+	>;
+	using segment_backend_unique_ptr=
+	    typename segment_backend::segment_backend_unique_ptr;
 
-  static base_iterator nonconst_iterator(const_base_iterator it)
-  {
-    return {
-      const_cast<value_type*>(static_cast<const value_type*>(it)),
-      it.stride()
-    };
-  }
+	static base_iterator nonconst_iterator(const_base_iterator it)
+	{
+		return
+		{
+			const_cast<value_type*>(static_cast<const value_type*>(it)),
+			it.stride()
+		};
+	}
 
-  template<typename T>
-  static iterator<T> nonconst_iterator(const_iterator<T> it)
-  {
-    return const_cast<iterator<T>>(it);
-  }
+	template<typename T>
+	static iterator<T> nonconst_iterator(const_iterator<T> it)
+	{
+		return const_cast<iterator<T>>(it);
+	}
 
-  template<typename Derived,typename Allocator>
-  static segment_backend_unique_ptr make(const Allocator& al)
-  {
-    return segment_backend_implementation<Derived,Allocator>::new_(al,al);
-  }
+	template<typename Derived,typename Allocator>
+	static segment_backend_unique_ptr make(const Allocator& al)
+	{
+		return segment_backend_implementation<Derived,Allocator>::new_(al,al);
+	}
 
 private:
-  template<typename,typename,typename>
-  friend class packed_segment;
+	template<typename,typename,typename>
+	friend class packed_segment;
 
-  template<typename Derived>
-  static const Base* value_ptr(const Derived* p)noexcept
-  {
-    return p;
-  }
+	template<typename Derived>
+	static const Base* value_ptr(const Derived* p)noexcept
+	{
+		return p;
+	}
 };
 
 } /* namespace poly_collection::detail */

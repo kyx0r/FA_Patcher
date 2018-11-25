@@ -29,9 +29,9 @@ void resource_cursor_icon_writer::add_icon(const std::string& icon_file, const r
 		//Check icon entries
 		const icondirentry* icon_entry = reinterpret_cast<const icondirentry*>(&icon_file[sizeof(ico_header) + i * sizeof(icondirentry)]);
 		if(icon_entry->SizeInBytes == 0
-			|| icon_entry->ImageOffset < size_of_headers
-			|| !pe_utils::is_sum_safe(icon_entry->ImageOffset, icon_entry->SizeInBytes)
-			|| icon_entry->ImageOffset + icon_entry->SizeInBytes > icon_file.length())
+		        || icon_entry->ImageOffset < size_of_headers
+		        || !pe_utils::is_sum_safe(icon_entry->ImageOffset, icon_entry->SizeInBytes)
+		        || icon_entry->ImageOffset + icon_entry->SizeInBytes > icon_file.length())
 			throw pe_exception("Incorrect resource icon", pe_exception::resource_incorrect_icon);
 	}
 
@@ -185,9 +185,9 @@ void resource_cursor_icon_writer::add_cursor(const std::string& cursor_file, con
 		//Check cursor entries
 		const cursordirentry* cursor_entry = reinterpret_cast<const cursordirentry*>(&cursor_file[sizeof(cursor_header) + i * sizeof(cursordirentry)]);
 		if(cursor_entry->SizeInBytes == 0
-			|| cursor_entry->ImageOffset < size_of_headers
-			|| !pe_utils::is_sum_safe(cursor_entry->ImageOffset, cursor_entry->SizeInBytes)
-			|| cursor_entry->ImageOffset + cursor_entry->SizeInBytes > cursor_file.length())
+		        || cursor_entry->ImageOffset < size_of_headers
+		        || !pe_utils::is_sum_safe(cursor_entry->ImageOffset, cursor_entry->SizeInBytes)
+		        || cursor_entry->ImageOffset + cursor_entry->SizeInBytes > cursor_file.length())
 			throw pe_exception("Incorrect resource cursor", pe_exception::resource_incorrect_cursor);
 	}
 

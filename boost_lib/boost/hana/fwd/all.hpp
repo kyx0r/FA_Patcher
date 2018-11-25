@@ -15,31 +15,33 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Returns whether all the keys of the structure are true-valued.
-    //! @ingroup group-Searchable
-    //!
-    //! The keys of the structure must be `Logical`s. If the structure is not
-    //! finite, a false-valued key must appear at a finite "index" in order
-    //! for this method to finish.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/all.cpp
+//! Returns whether all the keys of the structure are true-valued.
+//! @ingroup group-Searchable
+//!
+//! The keys of the structure must be `Logical`s. If the structure is not
+//! finite, a false-valued key must appear at a finite "index" in order
+//! for this method to finish.
+//!
+//!
+//! Example
+//! -------
+//! @include example/all.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto all = [](auto&& xs) {
-        return tag-dispatched;
-    };
+constexpr auto all = [](auto&& xs)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename S, typename = void>
-    struct all_impl : all_impl<S, when<true>> { };
+template <typename S, typename = void>
+struct all_impl : all_impl<S, when<true>> { };
 
-    struct all_t {
-        template <typename Xs>
-        constexpr auto operator()(Xs&& xs) const;
-    };
+struct all_t
+{
+	template <typename Xs>
+	constexpr auto operator()(Xs&& xs) const;
+};
 
-    constexpr all_t all{};
+constexpr all_t all{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

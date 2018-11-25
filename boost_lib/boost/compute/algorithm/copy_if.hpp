@@ -14,9 +14,12 @@
 #include <boost/compute/algorithm/transform_if.hpp>
 #include <boost/compute/functional/identity.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // like the copy_if() algorithm but writes the indices of the values for which
 // predicate returns true.
@@ -27,11 +30,11 @@ inline OutputIterator copy_index_if(InputIterator first,
                                     Predicate predicate,
                                     command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type T;
+	typedef typename std::iterator_traits<InputIterator>::value_type T;
 
-    return detail::transform_if_impl(
-        first, last, result, identity<T>(), predicate, true, queue
-    );
+	return detail::transform_if_impl(
+	           first, last, result, identity<T>(), predicate, true, queue
+	       );
 }
 
 } // end detail namespace
@@ -47,11 +50,11 @@ inline OutputIterator copy_if(InputIterator first,
                               Predicate predicate,
                               command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator>::value_type T;
+	typedef typename std::iterator_traits<InputIterator>::value_type T;
 
-    return ::boost::compute::transform_if(
-        first, last, result, identity<T>(), predicate, queue
-    );
+	return ::boost::compute::transform_if(
+	           first, last, result, identity<T>(), predicate, queue
+	       );
 }
 
 } // end compute namespace

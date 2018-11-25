@@ -20,7 +20,9 @@
 #include <boost/throw_exception.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -28,70 +30,74 @@ namespace boost { namespace geometry
 class projection_exception : public geometry::exception
 {
 public:
-    explicit projection_exception(int code = 0)
-        : m_code(code)
-        , m_msg(projections::detail::pj_strerrno(code))
-    {}
+	explicit projection_exception(int code = 0)
+		: m_code(code)
+		, m_msg(projections::detail::pj_strerrno(code))
+	{}
 
-    explicit projection_exception(std::string const& msg)
-        : m_code(0)
-        , m_msg(msg)
-    {}
+	explicit projection_exception(std::string const& msg)
+		: m_code(0)
+		, m_msg(msg)
+	{}
 
-    projection_exception(int code, std::string const& msg)
-        : m_code(code)
-        , m_msg(msg)
-    {}
+	projection_exception(int code, std::string const& msg)
+		: m_code(code)
+		, m_msg(msg)
+	{}
 
-    virtual char const* what() const throw()
-    {
-        //return "Boost.Geometry Projection exception";
-        return m_msg.what();
-    }
+	virtual char const* what() const throw()
+	{
+		//return "Boost.Geometry Projection exception";
+		return m_msg.what();
+	}
 
-    int code() const { return m_code; }
+	int code() const
+	{
+		return m_code;
+	}
 private :
-    int m_code;
-    std::runtime_error m_msg;
+	int m_code;
+	std::runtime_error m_msg;
 };
 
 
 struct projection_not_named_exception
-    : projection_exception
+	: projection_exception
 {
-    projection_not_named_exception()
-        : projection_exception(-4)
-    {}
+	projection_not_named_exception()
+		: projection_exception(-4)
+	{}
 };
 
 struct projection_unknown_id_exception
-    : projection_exception
+	: projection_exception
 {
-    projection_unknown_id_exception(std::string const& proj_name)
-        : projection_exception(-5, msg(proj_name))
-    {}
+	projection_unknown_id_exception(std::string const& proj_name)
+		: projection_exception(-5, msg(proj_name))
+	{}
 
 private:
-    static std::string msg(std::string const& proj_name)
-    {
-        return projections::detail::pj_strerrno(-5) + " (" + proj_name + ")";
-    }
+	static std::string msg(std::string const& proj_name)
+	{
+		return projections::detail::pj_strerrno(-5) + " (" + proj_name + ")";
+	}
 };
 
 struct projection_not_invertible_exception
-    : projection_exception
+	: projection_exception
 {
-    projection_not_invertible_exception(std::string const& proj_name)
-        : projection_exception(-17, msg(proj_name))
-    {}
+	projection_not_invertible_exception(std::string const& proj_name)
+		: projection_exception(-17, msg(proj_name))
+	{}
 
 private:
-    static std::string msg(std::string const& proj_name)
-    {
-        return std::string("projection (") + proj_name + ") is not invertible";
-    }
+	static std::string msg(std::string const& proj_name)
+	{
+		return std::string("projection (") + proj_name + ") is not invertible";
+	}
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 #endif // BOOST_GEOMETRY_PROJECTIONS_EXCEPTION_HPP

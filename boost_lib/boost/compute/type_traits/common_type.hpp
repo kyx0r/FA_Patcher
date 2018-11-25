@@ -15,7 +15,8 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
+namespace boost
+{
 
 /// \internal_
 #define BOOST_COMPUTE_DECLARE_SCALAR_VECTOR_COMMON_TYPE(scalar, size) \

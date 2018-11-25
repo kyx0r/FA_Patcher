@@ -24,33 +24,36 @@
 
 #include <blaze/math/dense/DynamicVector.h>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
-template< typename T , bool TF >
-struct is_resizeable< blaze::DynamicVector< T , TF > > 
-{ 
-    typedef boost::true_type type;
-    const static bool value = type::value;
+template< typename T, bool TF >
+struct is_resizeable< blaze::DynamicVector< T, TF > >
+{
+	typedef boost::true_type type;
+	const static bool value = type::value;
 };
 
-template< typename T1 , bool TF1, typename T2 , bool TF2 >
-struct same_size_impl< blaze::DynamicVector< T1 , TF1 > , blaze::DynamicVector< T2 , TF2 > >
+template< typename T1, bool TF1, typename T2, bool TF2 >
+struct same_size_impl< blaze::DynamicVector< T1, TF1 >, blaze::DynamicVector< T2, TF2 > >
 {
-    static bool same_size( const blaze::DynamicVector< T1 , TF1 > &x1 , const blaze::DynamicVector< T2 , TF2 > &x2 )
-    {
-        return x1.size() == x2.size();
-    }
+	static bool same_size( const blaze::DynamicVector< T1, TF1 > &x1, const blaze::DynamicVector< T2, TF2 > &x2 )
+	{
+		return x1.size() == x2.size();
+	}
 };
 
-template< typename T1 , bool TF1, typename T2 , bool TF2 >
-struct resize_impl< blaze::DynamicVector< T1 , TF1 > , blaze::DynamicVector< T2 , TF2 > >
+template< typename T1, bool TF1, typename T2, bool TF2 >
+struct resize_impl< blaze::DynamicVector< T1, TF1 >, blaze::DynamicVector< T2, TF2 > >
 {
-    static void resize( blaze::DynamicVector< T1 , TF1 > &x1 , const blaze::DynamicVector< T2 , TF2 > &x2 )
-    {
-        x1.resize( x2.size() );
-    }
+	static void resize( blaze::DynamicVector< T1, TF1 > &x1, const blaze::DynamicVector< T2, TF2 > &x2 )
+	{
+		x1.resize( x2.size() );
+	}
 };
 
 

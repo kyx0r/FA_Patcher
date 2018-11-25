@@ -14,32 +14,39 @@
 
 #include "isotropy.hpp"
 
-namespace boost {
-namespace polygon {
+namespace boost
+{
+namespace polygon
+{
 
 template <typename Interval>
-struct interval_traits {
-  typedef Interval interval_type;
-  typedef typename interval_type::coordinate_type coordinate_type;
+struct interval_traits
+{
+	typedef Interval interval_type;
+	typedef typename interval_type::coordinate_type coordinate_type;
 
-  static coordinate_type get(const interval_type& interval, direction_1d dir) {
-    return interval.get(dir);
-  }
+	static coordinate_type get(const interval_type& interval, direction_1d dir)
+	{
+		return interval.get(dir);
+	}
 };
 
 template <typename Interval>
-struct interval_mutable_traits {
-  typedef Interval interval_type;
-  typedef typename interval_type::coordinate_type coordinate_type;
+struct interval_mutable_traits
+{
+	typedef Interval interval_type;
+	typedef typename interval_type::coordinate_type coordinate_type;
 
-  static void set(
-      interval_type& interval, direction_1d dir, coordinate_type value) {
-    interval.set(dir, value);
-  }
+	static void set(
+	    interval_type& interval, direction_1d dir, coordinate_type value)
+	{
+		interval.set(dir, value);
+	}
 
-  static interval_type construct(coordinate_type low, coordinate_type high) {
-    return interval_type(low, high);
-  }
+	static interval_type construct(coordinate_type low, coordinate_type high)
+	{
+		return interval_type(low, high);
+	}
 };
 }  // polygon
 }  // boost

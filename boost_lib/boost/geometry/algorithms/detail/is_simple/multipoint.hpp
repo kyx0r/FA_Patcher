@@ -27,40 +27,45 @@
 #include <boost/geometry/algorithms/dispatch/is_simple.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_simple
+namespace detail
+{
+namespace is_simple
 {
 
 
 template <typename MultiPoint>
 struct is_simple_multipoint
 {
-    template <typename Strategy>
-    static inline bool apply(MultiPoint const& multipoint, Strategy const&)
-    {
-        if (boost::empty(multipoint))
-        {
-            return true;
-        }
+	template <typename Strategy>
+	static inline bool apply(MultiPoint const& multipoint, Strategy const&)
+	{
+		if (boost::empty(multipoint))
+		{
+			return true;
+		}
 
-        MultiPoint mp(multipoint);
-        std::sort(boost::begin(mp), boost::end(mp),
-                  geometry::less<typename point_type<MultiPoint>::type>());
+		MultiPoint mp(multipoint);
+		std::sort(boost::begin(mp), boost::end(mp),
+		          geometry::less<typename point_type<MultiPoint>::type>());
 
-        simplicity_failure_policy policy;
-        return !detail::is_valid::has_duplicates
-            <
-                MultiPoint, closed
-            >::apply(mp, policy);
-    }
+		simplicity_failure_policy policy;
+		return !detail::is_valid::has_duplicates
+		       <
+		       MultiPoint, closed
+		       >::apply(mp, policy);
+	}
 };
 
 
-}} // namespace detail::is_simple
+}
+} // namespace detail::is_simple
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -77,7 +82,7 @@ namespace dispatch
 // Reference: OGC 06-103r4 (6.1.5)
 template <typename MultiPoint>
 struct is_simple<MultiPoint, multi_point_tag>
-    : detail::is_simple::is_simple_multipoint<MultiPoint>
+	: detail::is_simple::is_simple_multipoint<MultiPoint>
 {};
 
 
@@ -85,7 +90,8 @@ struct is_simple<MultiPoint, multi_point_tag>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_SIMPLE_MULTIPOINT_HPP

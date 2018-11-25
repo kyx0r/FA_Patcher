@@ -16,38 +16,44 @@
 #include <boost/geometry/algorithms/detail/overlay/segment_identifier.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace overlay
+namespace detail
+{
+namespace overlay
 {
 
 
 template <typename Point, typename SegmentRatio>
 struct traversal_turn_operation : public turn_operation<Point, SegmentRatio>
 {
-    enrichment_info<Point> enriched;
-    visit_info visited;
+	enrichment_info<Point> enriched;
+	visit_info visited;
 };
 
 template <typename Point, typename SegmentRatio>
 struct traversal_turn_info
-    : public turn_info
-                <
-                    Point,
-                    SegmentRatio,
-                    traversal_turn_operation<Point, SegmentRatio>
-                >
+	: public turn_info
+	  <
+	  Point,
+	  SegmentRatio,
+	  traversal_turn_operation<Point, SegmentRatio>
+	  >
 {};
 
 
 
-}} // namespace detail::overlay
+}
+} // namespace detail::overlay
 #endif //DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_TRAVERSAL_INFO_HPP

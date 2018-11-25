@@ -23,18 +23,23 @@
 #   pragma once
 #endif
 
-namespace boost { namespace detail {
+namespace boost
+{
+namespace detail
+{
 
-    template <typename TargetChar, typename SourceChar>
-    struct widest_char {
-        typedef BOOST_DEDUCED_TYPENAME boost::mpl::if_c<
-            (sizeof(TargetChar) > sizeof(SourceChar))
-            , TargetChar
-            , SourceChar
-        >::type type;
-    };
+template <typename TargetChar, typename SourceChar>
+struct widest_char
+{
+	typedef BOOST_DEDUCED_TYPENAME boost::mpl::if_c<
+	(sizeof(TargetChar) > sizeof(SourceChar))
+	, TargetChar
+	, SourceChar
+	>::type type;
+};
 
-}} // namespace boost::detail
+}
+} // namespace boost::detail
 
 #endif // BOOST_LEXICAL_CAST_DETAIL_WIDEST_CHAR_HPP
 

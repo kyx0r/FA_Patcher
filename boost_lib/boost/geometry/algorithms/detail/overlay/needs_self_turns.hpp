@@ -15,19 +15,23 @@
 #include <boost/geometry/algorithms/num_interior_rings.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace overlay
+namespace detail
+{
+namespace overlay
 {
 
 template
 <
     typename Geometry,
     typename Tag = typename tag<Geometry>::type
->
+    >
 struct needs_self_turns
 {
 };
@@ -35,49 +39,51 @@ struct needs_self_turns
 template <typename Geometry>
 struct needs_self_turns<Geometry, box_tag>
 {
-    static inline bool apply(Geometry const&)
-    {
-        return false;
-    }
+	static inline bool apply(Geometry const&)
+	{
+		return false;
+	}
 };
 
 template <typename Geometry>
 struct needs_self_turns<Geometry, ring_tag>
 {
-    static inline bool apply(Geometry const&)
-    {
-        return false;
-    }
+	static inline bool apply(Geometry const&)
+	{
+		return false;
+	}
 };
 
 template <typename Geometry>
 struct needs_self_turns<Geometry, polygon_tag>
 {
-    static inline bool apply(Geometry const& polygon)
-    {
-        return geometry::num_interior_rings(polygon) > 0;
-    }
+	static inline bool apply(Geometry const& polygon)
+	{
+		return geometry::num_interior_rings(polygon) > 0;
+	}
 };
 
 template <typename Geometry>
 struct needs_self_turns<Geometry, multi_polygon_tag>
 {
-    static inline bool apply(Geometry const& multi)
-    {
-        typedef typename boost::range_value<Geometry>::type polygon_type;
-        std::size_t const n = boost::size(multi);
-        return n > 1 || (n == 1
-             && needs_self_turns<polygon_type>
-                         ::apply(*boost::begin(multi)));
-    }
+	static inline bool apply(Geometry const& multi)
+	{
+		typedef typename boost::range_value<Geometry>::type polygon_type;
+		std::size_t const n = boost::size(multi);
+		return n > 1 || (n == 1
+		                 && needs_self_turns<polygon_type>
+		                 ::apply(*boost::begin(multi)));
+	}
 };
 
 
-}} // namespace detail::overlay
+}
+} // namespace detail::overlay
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_NEEDS_SELF_TURNS_HPP

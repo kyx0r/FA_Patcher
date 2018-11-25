@@ -24,42 +24,45 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class std_thread
-  : private noncopyable
+	: private noncopyable
 {
 public:
-  // Constructor.
-  template <typename Function>
-  std_thread(Function f, unsigned int = 0)
-    : thread_(f)
-  {
-  }
+	// Constructor.
+	template <typename Function>
+	std_thread(Function f, unsigned int = 0)
+		: thread_(f)
+	{
+	}
 
-  // Destructor.
-  ~std_thread()
-  {
-    join();
-  }
+	// Destructor.
+	~std_thread()
+	{
+		join();
+	}
 
-  // Wait for the thread to exit.
-  void join()
-  {
-    if (thread_.joinable())
-      thread_.join();
-  }
+	// Wait for the thread to exit.
+	void join()
+	{
+		if (thread_.joinable())
+			thread_.join();
+	}
 
-  // Get number of CPUs.
-  static std::size_t hardware_concurrency()
-  {
-    return std::thread::hardware_concurrency();
-  }
+	// Get number of CPUs.
+	static std::size_t hardware_concurrency()
+	{
+		return std::thread::hardware_concurrency();
+	}
 
 private:
-  std::thread thread_;
+	std::thread thread_;
 };
 
 } // namespace detail

@@ -10,15 +10,19 @@
 
 #include <utility>
 
-namespace boost { namespace hof {
+namespace boost
+{
+namespace hof
+{
 
 template<typename T>
 constexpr typename std::remove_reference<T>::type&&
 move(T&& x) noexcept
-{ 
-    return static_cast<typename std::remove_reference<T>::type&&>(x); 
+{
+	return static_cast<typename std::remove_reference<T>::type&&>(x);
 }
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

@@ -6,11 +6,11 @@
 
 __asm__
 (
-	".equ by_pass_address,"QU(dec_IssueMove)"-0x006F2670 \n"
+    ".equ by_pass_address,"QU(dec_IssueMove)"-0x006F2670 \n"
 );
 
-__asm__ volatile 
+__asm__ volatile
 (
-	"call . + by_pass_address \n"
-	".align 128, 0x0 \n"
+    "call . + by_pass_address \n"
+    ".align 128, 0x0 \n"
 );

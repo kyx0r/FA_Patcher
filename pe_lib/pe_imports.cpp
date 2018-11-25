@@ -15,13 +15,13 @@ using namespace pe_win;
 //to be able to modify IAT thunks
 import_rebuilder_settings::import_rebuilder_settings(bool set_to_pe_headers, bool auto_zero_directory_entry_iat)
 	:offset_from_section_start_(0),
-	build_original_iat_(true),
-	save_iat_and_original_iat_rvas_(true),
-	fill_missing_original_iats_(false),
-	set_to_pe_headers_(set_to_pe_headers),
-	zero_directory_entry_iat_(auto_zero_directory_entry_iat),
-	rewrite_iat_and_original_iat_contents_(false),
-	auto_strip_last_section_(true)
+	 build_original_iat_(true),
+	 save_iat_and_original_iat_rvas_(true),
+	 fill_missing_original_iats_(false),
+	 set_to_pe_headers_(set_to_pe_headers),
+	 zero_directory_entry_iat_(auto_zero_directory_entry_iat),
+	 rewrite_iat_and_original_iat_contents_(false),
+	 auto_strip_last_section_(true)
 {}
 
 //Returns offset from section start where import directory data will be placed
@@ -67,7 +67,7 @@ bool import_rebuilder_settings::auto_set_to_pe_headers() const
 //Returns true if IMAGE_DIRECTORY_ENTRY_IAT must be zeroed, works only if auto_set_to_pe_headers = true
 bool import_rebuilder_settings::zero_directory_entry_iat() const
 {
-	return zero_directory_entry_iat_;	
+	return zero_directory_entry_iat_;
 }
 
 //Returns true if the last section should be stripped automatically, if imports are inside it
@@ -257,15 +257,15 @@ void import_library::clear_imports()
 const imported_functions_list get_imported_functions(const pe_base& pe)
 {
 	return (pe.get_pe_type() == pe_type_32 ?
-		get_imported_functions_base<pe_types_class_32>(pe)
-		: get_imported_functions_base<pe_types_class_64>(pe));
+	        get_imported_functions_base<pe_types_class_32>(pe)
+	        : get_imported_functions_base<pe_types_class_64>(pe));
 }
 
 const image_directory rebuild_imports(pe_base& pe, const imported_functions_list& imports, section& import_section, const import_rebuilder_settings& import_settings)
 {
 	return (pe.get_pe_type() == pe_type_32 ?
-		rebuild_imports_base<pe_types_class_32>(pe, imports, import_section, import_settings)
-		: rebuild_imports_base<pe_types_class_64>(pe, imports, import_section, import_settings));
+	        rebuild_imports_base<pe_types_class_32>(pe, imports, import_section, import_settings)
+	        : rebuild_imports_base<pe_types_class_64>(pe, imports, import_section, import_settings));
 }
 
 //Returns imported functions list with related libraries info
@@ -421,7 +421,7 @@ const image_directory rebuild_imports_base(pe_base& pe, const imported_functions
 	uint32_t size_of_iat = 0; //Size of IAT structures
 
 	needed_size += static_cast<uint32_t>((1 /* ending null descriptor */ + imports.size()) * sizeof(image_import_descriptor));
-	
+
 	//Enumerate imported functions
 	for(imported_functions_list::const_iterator it = imports.begin(); it != imports.end(); ++it)
 	{
@@ -446,13 +446,13 @@ const image_directory rebuild_imports_base(pe_base& pe, const imported_functions
 		needed_size += size_of_iat;
 
 	needed_size += sizeof(typename PEClassType::BaseSize); //Maximum align for IAT and original IAT
-	
+
 	//Total needed size for import structures and strings
 	needed_size += needed_size_for_strings;
 
 	//Check if import_section is last one. If it's not, check if there's enough place for import data
-	if(&import_section != &*(pe.get_image_sections().end() - 1) && 
-		(import_section.empty() || pe_utils::align_up(import_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + import_settings.get_offset_from_section_start()))
+	if(&import_section != &*(pe.get_image_sections().end() - 1) &&
+	        (import_section.empty() || pe_utils::align_up(import_section.get_size_of_raw_data(), pe.get_file_alignment()) < needed_size + import_settings.get_offset_from_section_start()))
 		throw pe_exception("Insufficient space for import directory", pe_exception::insufficient_space);
 
 	std::string& raw_data = import_section.get_raw_data();
@@ -460,9 +460,9 @@ const image_directory rebuild_imports_base(pe_base& pe, const imported_functions
 	//This will be done only if image_section is the last section of image or for section with unaligned raw length of data
 	if(raw_data.length() < needed_size + import_settings.get_offset_from_section_start())
 		raw_data.resize(needed_size + import_settings.get_offset_from_section_start()); //Expand section raw data
-	
+
 	uint32_t current_string_pointer = import_settings.get_offset_from_section_start();/* we will paste structures after strings */
-	
+
 	//Position for IAT
 	uint32_t current_pos_for_iat = pe_utils::align_up(static_cast<uint32_t>(needed_size_for_strings + import_settings.get_offset_from_section_start() + (1 + imports.size()) * sizeof(image_import_descriptor)), sizeof(typename PEClassType::BaseSize));
 	//Position for original IAT
@@ -500,7 +500,7 @@ const image_directory rebuild_imports_base(pe_base& pe, const imported_functions
 				descr.OriginalFirstThunk = import_settings.build_original_iat() ? pe.rva_from_section_offset(import_section, current_pos_for_original_iat) : 0;
 			else
 				descr.OriginalFirstThunk = import_settings.build_original_iat() ? (*it).get_rva_to_original_iat() : 0;
-			
+
 			descr.FirstThunk = (*it).get_rva_to_iat();
 
 			original_first_thunk = descr.OriginalFirstThunk;
@@ -523,7 +523,7 @@ const image_directory rebuild_imports_base(pe_base& pe, const imported_functions
 			descr.OriginalFirstThunk = import_settings.build_original_iat() ? pe.rva_from_section_offset(import_section, current_pos_for_original_iat) : 0;
 			descr.FirstThunk = pe.rva_from_section_offset(import_section, current_pos_for_iat);
 		}
-		
+
 		//Save import descriptor
 		memcpy(&raw_data[current_pos_for_descriptors], &descr, sizeof(descr));
 		current_pos_for_descriptors += sizeof(descr);
@@ -531,7 +531,7 @@ const image_directory rebuild_imports_base(pe_base& pe, const imported_functions
 		//Save library name
 		memcpy(&raw_data[current_string_pointer], (*it).get_name().c_str(), (*it).get_name().length() + 1 /* nullbyte */);
 		current_string_pointer += static_cast<uint32_t>((*it).get_name().length() + 1 /* nullbyte */);
-		
+
 		//List all imported functions
 		const import_library::imported_list& funcs = (*it).get_imported_functions();
 		for(import_library::imported_list::const_iterator f = funcs.begin(); f != funcs.end(); ++f)

@@ -14,8 +14,10 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined( BOOST_USE_WINDOWS_H )
 
@@ -39,8 +41,8 @@ const DWORD_ PAGE_WRITECOMBINE_ = 0x400;
 
 #endif // defined( BOOST_USE_WINDOWS_H )
 
-// The PAGE_EXECUTE flags were put into the DESKTOP UWP partition in Windows SDK 8.0 and 8.1 
-// and then moved to be globally available again in SDK 10.0.  Due to this, we simply define 
+// The PAGE_EXECUTE flags were put into the DESKTOP UWP partition in Windows SDK 8.0 and 8.1
+// and then moved to be globally available again in SDK 10.0.  Due to this, we simply define
 // them unconditionally to work around the issue and consider the 8.x SDKs in error.
 
 const DWORD_ PAGE_EXECUTE_ = 0x10;

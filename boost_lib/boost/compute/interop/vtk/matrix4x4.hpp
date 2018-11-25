@@ -15,29 +15,33 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Converts a \c vtkMatrix4x4 to a \c float16_.
 inline float16_ vtk_matrix4x4_to_float16(const vtkMatrix4x4 *matrix)
 {
-    float16_ result;
+	float16_ result;
 
-    for(int i = 0; i < 4; i++){
-        for(int j = 0; j < 4; j++){
-            result[i*4+j] = matrix->GetElement(i, j);
-        }
-    }
+	for(int i = 0; i < 4; i++)
+	{
+		for(int j = 0; j < 4; j++)
+		{
+			result[i*4+j] = matrix->GetElement(i, j);
+		}
+	}
 
-    return result;
+	return result;
 }
 
 /// Converts a \c vtkMatrix4x4 to a \c double16_;
 inline double16_ vtk_matrix4x4_to_double16(const vtkMatrix4x4 *matrix)
 {
-    double16_ result;
-    std::memcpy(&result, matrix->Element, 16 * sizeof(double));
-    return result;
+	double16_ result;
+	std::memcpy(&result, matrix->Element, 16 * sizeof(double));
+	return result;
 }
 
 } // end compute namespace

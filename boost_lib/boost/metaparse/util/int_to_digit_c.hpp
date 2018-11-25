@@ -10,13 +10,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace util
-    {
-      using v1::util::int_to_digit_c;
-    }
-  }
+namespace metaparse
+{
+namespace util
+{
+using v1::util::int_to_digit_c;
+}
+}
 }
 
 #endif

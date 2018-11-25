@@ -25,7 +25,9 @@
 #include <boost/variant/variant_fwd.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -38,79 +40,83 @@ template
 <
     typename Geometry,
     typename Strategy = default_strategy
->
+    >
 struct area_result
-    : Strategy::template result_type<Geometry>
+	: Strategy::template result_type<Geometry>
 {};
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T), typename Strategy>
 struct area_result<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>, Strategy>
-    : geometry::area_result
-        <
-            typename geometry::util::select_sequence_element
-                <
-                    typename boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>::types
-                >::type,
-            Strategy
-        >
+: geometry::area_result
+<
+typename geometry::util::select_sequence_element
+<
+typename boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>::types
+>::type,
+Strategy
+>
 {};
 
 template <typename Geometry>
 struct area_result<Geometry, default_strategy>
-    : geometry::area_result
-        <
-            Geometry,
-            typename geometry::strategy::area::services::default_strategy
-                <
-                    typename cs_tag<Geometry>::type
-                >::type
-        >
+	: geometry::area_result
+	  <
+	  Geometry,
+	  typename geometry::strategy::area::services::default_strategy
+	  <
+	  typename cs_tag<Geometry>::type
+	  >::type
+	  >
 {};
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace area
+namespace detail
+{
+namespace area
 {
 
 template <typename Curr, typename Next>
 struct pred_more_precise_default_area_result
 {
-    typedef typename geometry::area_result<Curr, default_strategy>::type curr_result_t;
-    typedef typename geometry::area_result<Next, default_strategy>::type next_result_t;
+	typedef typename geometry::area_result<Curr, default_strategy>::type curr_result_t;
+	typedef typename geometry::area_result<Next, default_strategy>::type next_result_t;
 
-    typedef typename boost::mpl::if_c
-        <
-            boost::is_same
-                <
-                    curr_result_t,
-                    typename geometry::select_most_precise
-                        <
-                            curr_result_t,
-                            next_result_t
-                        >::type
-                >::value,
-            Curr,
-            Next
-        >::type type;
+	typedef typename boost::mpl::if_c
+	<
+	boost::is_same
+	<
+	curr_result_t,
+	typename geometry::select_most_precise
+	<
+	curr_result_t,
+	next_result_t
+	>::type
+	>::value,
+	Curr,
+	Next
+	>::type type;
 };
 
-}} // namespace detail::area
+}
+} // namespace detail::area
 #endif //DOXYGEN_NO_DETAIL
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct area_result<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>, default_strategy>
-    : geometry::area_result
-        <
-            typename geometry::util::select_sequence_element
-                <
-                    typename boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>::types,
-                    geometry::detail::area::pred_more_precise_default_area_result
-                >::type,
-            default_strategy
-        >
-{};
+: geometry::area_result
+<
+typename geometry::util::select_sequence_element
+<
+typename boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>::types,
+         geometry::detail::area::pred_more_precise_default_area_result
+         >::type,
+         default_strategy
+         >
+         {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_AREA_RESULT_HPP

@@ -46,123 +46,132 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct august {};
+namespace par4
+{
+struct august {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace august
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace august
+{
 
-            //static const double M = 1.333333333333333;
+//static const double M = 1.333333333333333;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_august_spheroid : public base_t_f<base_august_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_august_spheroid : public base_t_f<base_august_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_august_spheroid(const Parameters& par)
-                    : base_t_f<base_august_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_august_spheroid(const Parameters& par)
+		: base_t_f<base_august_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType M = 1.333333333333333333333333333333333333;
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType M = 1.333333333333333333333333333333333333;
 
-                    CalculationType t, c1, c, x1, x12, y1, y12;
+		CalculationType t, c1, c, x1, x12, y1, y12;
 
-                    t = tan(.5 * lp_lat);
-                    c1 = sqrt(1. - t * t);
-                    c = 1. + c1 * cos(lp_lon *= .5);
-                    x1 = sin(lp_lon) *  c1 / c;
-                    y1 =  t / c;
-                    xy_x = M * x1 * (3. + (x12 = x1 * x1) - 3. * (y12 = y1 *  y1));
-                    xy_y = M * y1 * (3. + 3. * x12 - y12);
-                }
+		t = tan(.5 * lp_lat);
+		c1 = sqrt(1. - t * t);
+		c = 1. + c1 * cos(lp_lon *= .5);
+		x1 = sin(lp_lon) *  c1 / c;
+		y1 =  t / c;
+		xy_x = M * x1 * (3. + (x12 = x1 * x1) - 3. * (y12 = y1 *  y1));
+		xy_y = M * y1 * (3. + 3. * x12 - y12);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "august_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "august_spheroid";
+	}
 
-            };
+};
 
-            // August Epicycloidal
-            template <typename Parameters>
-            inline void setup_august(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// August Epicycloidal
+template <typename Parameters>
+inline void setup_august(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::august
-    #endif // doxygen
+}
+} // namespace detail::august
+#endif // doxygen
 
-    /*!
-        \brief August Epicycloidal projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_august.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct august_spheroid : public detail::august::base_august_spheroid<CalculationType, Parameters>
-    {
-        inline august_spheroid(const Parameters& par) : detail::august::base_august_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::august::setup_august(this->m_par);
-        }
-    };
+/*!
+    \brief August Epicycloidal projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_august.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct august_spheroid : public detail::august::base_august_spheroid<CalculationType, Parameters>
+{
+	inline august_spheroid(const Parameters& par) : detail::august::base_august_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::august::setup_august(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::august, august_spheroid, august_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::august, august_spheroid, august_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class august_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<august_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class august_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<august_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void august_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("august", new august_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void august_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("august", new august_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_AUGUST_HPP
 

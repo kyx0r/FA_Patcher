@@ -34,11 +34,15 @@
 #include <boost/geometry/algorithms/dispatch/envelope.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace envelope
+namespace detail
+{
+namespace envelope
 {
 
 
@@ -47,99 +51,100 @@ template
     std::size_t Index,
     std::size_t Dimension,
     std::size_t DimensionCount
->
+    >
 struct envelope_indexed_box
 {
-    template <typename BoxIn, typename BoxOut>
-    static inline void apply(BoxIn const& box_in, BoxOut& mbr)
-    {
-        detail::indexed_point_view<BoxIn const, Index> box_in_corner(box_in);
-        detail::indexed_point_view<BoxOut, Index> mbr_corner(mbr);
+	template <typename BoxIn, typename BoxOut>
+	static inline void apply(BoxIn const& box_in, BoxOut& mbr)
+	{
+		detail::indexed_point_view<BoxIn const, Index> box_in_corner(box_in);
+		detail::indexed_point_view<BoxOut, Index> mbr_corner(mbr);
 
-        detail::conversion::point_to_point
-            <
-                detail::indexed_point_view<BoxIn const, Index>,
-                detail::indexed_point_view<BoxOut, Index>,
-                Dimension,
-                DimensionCount
-            >::apply(box_in_corner, mbr_corner);
-    }
+		detail::conversion::point_to_point
+		<
+		detail::indexed_point_view<BoxIn const, Index>,
+		       detail::indexed_point_view<BoxOut, Index>,
+		       Dimension,
+		       DimensionCount
+		       >::apply(box_in_corner, mbr_corner);
+	}
 };
 
 template
 <
     std::size_t Index,
     std::size_t DimensionCount
->
+    >
 struct envelope_indexed_box_on_spheroid
 {
-    template <typename BoxIn, typename BoxOut>
-    static inline void apply(BoxIn const& box_in, BoxOut& mbr)
-    {
-        // transform() does not work with boxes of dimension higher
-        // than 2; to account for such boxes we transform the min/max
-        // points of the boxes using the indexed_point_view
-        detail::indexed_point_view<BoxIn const, Index> box_in_corner(box_in);
-        detail::indexed_point_view<BoxOut, Index> mbr_corner(mbr);
+	template <typename BoxIn, typename BoxOut>
+	static inline void apply(BoxIn const& box_in, BoxOut& mbr)
+	{
+		// transform() does not work with boxes of dimension higher
+		// than 2; to account for such boxes we transform the min/max
+		// points of the boxes using the indexed_point_view
+		detail::indexed_point_view<BoxIn const, Index> box_in_corner(box_in);
+		detail::indexed_point_view<BoxOut, Index> mbr_corner(mbr);
 
-        // first transform the units
-        transform_units(box_in_corner, mbr_corner);
+		// first transform the units
+		transform_units(box_in_corner, mbr_corner);
 
-        // now transform the remaining coordinates
-        detail::conversion::point_to_point
-            <
-                detail::indexed_point_view<BoxIn const, Index>,
-                detail::indexed_point_view<BoxOut, Index>,
-                2,
-                DimensionCount
-            >::apply(box_in_corner, mbr_corner);
-    }
+		// now transform the remaining coordinates
+		detail::conversion::point_to_point
+		<
+		detail::indexed_point_view<BoxIn const, Index>,
+		       detail::indexed_point_view<BoxOut, Index>,
+		       2,
+		       DimensionCount
+		       >::apply(box_in_corner, mbr_corner);
+	}
 };
 
 
 struct envelope_box
 {
-    template<typename BoxIn, typename BoxOut, typename Strategy>
-    static inline void apply(BoxIn const& box_in,
-                             BoxOut& mbr,
-                             Strategy const&)
-    {
-        envelope_indexed_box
-            <
-                min_corner, 0, dimension<BoxIn>::value
-            >::apply(box_in, mbr);
+	template<typename BoxIn, typename BoxOut, typename Strategy>
+	static inline void apply(BoxIn const& box_in,
+	                         BoxOut& mbr,
+	                         Strategy const&)
+	{
+		envelope_indexed_box
+		<
+		min_corner, 0, dimension<BoxIn>::value
+		>::apply(box_in, mbr);
 
-        envelope_indexed_box
-            <
-                max_corner, 0, dimension<BoxIn>::value
-            >::apply(box_in, mbr);
-    }
+		envelope_indexed_box
+		<
+		max_corner, 0, dimension<BoxIn>::value
+		>::apply(box_in, mbr);
+	}
 };
 
 
 struct envelope_box_on_spheroid
 {
-    template <typename BoxIn, typename BoxOut, typename Strategy>
-    static inline void apply(BoxIn const& box_in,
-                             BoxOut& mbr,
-                             Strategy const&)
-    {
-        BoxIn box_in_normalized = detail::return_normalized<BoxIn>(box_in);
+	template <typename BoxIn, typename BoxOut, typename Strategy>
+	static inline void apply(BoxIn const& box_in,
+	                         BoxOut& mbr,
+	                         Strategy const&)
+	{
+		BoxIn box_in_normalized = detail::return_normalized<BoxIn>(box_in);
 
-        envelope_indexed_box_on_spheroid
-            <
-                min_corner, dimension<BoxIn>::value
-            >::apply(box_in_normalized, mbr);
+		envelope_indexed_box_on_spheroid
+		<
+		min_corner, dimension<BoxIn>::value
+		>::apply(box_in_normalized, mbr);
 
-        envelope_indexed_box_on_spheroid
-            <
-                max_corner, dimension<BoxIn>::value
-            >::apply(box_in_normalized, mbr);
-    }
+		envelope_indexed_box_on_spheroid
+		<
+		max_corner, dimension<BoxIn>::value
+		>::apply(box_in_normalized, mbr);
+	}
 };
 
 
-}} // namespace detail::envelope
+}
+} // namespace detail::envelope
 #endif // DOXYGEN_NO_DETAIL
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -149,31 +154,32 @@ namespace dispatch
 
 template <typename Box>
 struct envelope<Box, box_tag, cartesian_tag>
-    : detail::envelope::envelope_box
+	: detail::envelope::envelope_box
 {};
 
 
 template <typename Box>
 struct envelope<Box, box_tag, spherical_polar_tag>
-    : detail::envelope::envelope_box_on_spheroid
+	: detail::envelope::envelope_box_on_spheroid
 {};
 
 
 template <typename Box>
 struct envelope<Box, box_tag, spherical_equatorial_tag>
-    : detail::envelope::envelope_box_on_spheroid
+	: detail::envelope::envelope_box_on_spheroid
 {};
 
 
 template <typename Box>
 struct envelope<Box, box_tag, geographic_tag>
-    : detail::envelope::envelope_box_on_spheroid
+	: detail::envelope::envelope_box_on_spheroid
 {};
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_ENVELOPE_BOX_HPP

@@ -24,26 +24,27 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! The function object that outputs its second operand to the first one
 struct output_fun
 {
-    typedef void result_type;
+	typedef void result_type;
 
-    template< typename StreamT, typename T >
-    void operator() (StreamT& strm, T const& val) const
-    {
-        strm << val;
-    }
+	template< typename StreamT, typename T >
+	void operator() (StreamT& strm, T const& val) const
+	{
+		strm << val;
+	}
 };
 
 template< typename StreamT >
 BOOST_FORCEINLINE binder1st< output_fun, StreamT& > bind_output(StreamT& strm)
 {
-    return binder1st< output_fun, StreamT& >(output_fun(), strm);
+	return binder1st< output_fun, StreamT& >(output_fun(), strm);
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

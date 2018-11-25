@@ -26,9 +26,13 @@
 # include <boost/mpl/aux_/lambda_support.hpp>
 
 
-namespace boost { namespace detail {
+namespace boost
+{
+namespace detail
+{
 
-namespace indirect_traits {
+namespace indirect_traits
+{
 
 template <class T>
 struct is_reference_to_const : mpl::false_
@@ -45,7 +49,7 @@ template<class T>
 struct is_reference_to_const<T const volatile&> : mpl::true_
 {
 };
-#   endif 
+#   endif
 
 template <class T>
 struct is_reference_to_function : mpl::false_
@@ -76,50 +80,50 @@ struct is_reference_to_member_function_pointer_impl : mpl::false_
 
 template <class T>
 struct is_reference_to_member_function_pointer_impl<T&>
-    : is_member_function_pointer<typename remove_cv<T>::type>
+	: is_member_function_pointer<typename remove_cv<T>::type>
 {
 };
 
 
 template <class T>
 struct is_reference_to_member_function_pointer
-    : is_reference_to_member_function_pointer_impl<T>
+	: is_reference_to_member_function_pointer_impl<T>
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_reference_to_member_function_pointer,(T))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_reference_to_member_function_pointer,(T))
 };
 
 template <class T>
 struct is_reference_to_function_pointer_aux
-    : mpl::and_<
-          is_reference<T>
-        , is_pointer_to_function<
-              typename remove_cv<
-                  typename remove_reference<T>::type
-              >::type
-          >
-      >
+	: mpl::and_<
+	  is_reference<T>
+	, is_pointer_to_function<
+	  typename remove_cv<
+	  typename remove_reference<T>::type
+	  >::type
+	  >
+	  >
 {
-    // There's no such thing as a pointer-to-cv-function, so we don't need specializations for those
+	// There's no such thing as a pointer-to-cv-function, so we don't need specializations for those
 };
 
 template <class T>
 struct is_reference_to_function_pointer
-    : mpl::if_<
-          is_reference_to_function<T>
-        , mpl::false_
-        , is_reference_to_function_pointer_aux<T>
-     >::type
+	: mpl::if_<
+	  is_reference_to_function<T>
+	, mpl::false_
+	, is_reference_to_function_pointer_aux<T>
+	  >::type
 {
 };
 
 template <class T>
 struct is_reference_to_non_const
-    : mpl::and_<
-          is_reference<T>
-        , mpl::not_<
-             is_reference_to_const<T>
-          >
-      >
+	: mpl::and_<
+	  is_reference<T>
+	, mpl::not_<
+	  is_reference_to_const<T>
+	  >
+	  >
 {
 };
 
@@ -138,7 +142,7 @@ template <class T>
 struct is_reference_to_volatile<T const volatile&> : mpl::true_
 {
 };
-#   endif 
+#   endif
 
 
 template <class T>
@@ -168,30 +172,30 @@ struct is_reference_to_pointer<T* const volatile&> : mpl::true_
 
 template <class T>
 struct is_reference_to_class
-    : mpl::and_<
-          is_reference<T>
-        , is_class<
-              typename remove_cv<
-                  typename remove_reference<T>::type
-              >::type
-          >
-      >
+	: mpl::and_<
+	  is_reference<T>
+	, is_class<
+	  typename remove_cv<
+	  typename remove_reference<T>::type
+	  >::type
+	  >
+	  >
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_reference_to_class,(T))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_reference_to_class,(T))
 };
 
 template <class T>
 struct is_pointer_to_class
-    : mpl::and_<
-          is_pointer<T>
-        , is_class<
-              typename remove_cv<
-                  typename remove_pointer<T>::type
-              >::type
-          >
-      >
+	: mpl::and_<
+	  is_pointer<T>
+	, is_class<
+	  typename remove_cv<
+	  typename remove_pointer<T>::type
+	  >::type
+	  >
+	  >
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_pointer_to_class,(T))
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_pointer_to_class,(T))
 };
 
 
@@ -199,6 +203,7 @@ struct is_pointer_to_class
 
 using namespace indirect_traits;
 
-}} // namespace boost::python::detail
+}
+} // namespace boost::python::detail
 
 #endif // INDIRECT_TRAITS_DWA2002131_HPP

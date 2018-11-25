@@ -12,12 +12,14 @@ or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 template<class...>
-struct make_void {
-    typedef void type;
+struct make_void
+{
+	typedef void type;
 };
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
@@ -32,8 +34,9 @@ template<class = void,
          class = void,
          class = void,
          class = void>
-struct make_void {
-    typedef void type;
+struct make_void
+{
+	typedef void type;
 };
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)

@@ -56,94 +56,103 @@
 
 #define FUSION_HASH #
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
-    struct fusion_sequence_tag;
+namespace fusion
+{
+struct void_;
+struct fusion_sequence_tag;
 
-    template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_MAP_SIZE, typename T)>
-    struct map : sequence_base<map<BOOST_PP_ENUM_PARAMS(FUSION_MAX_MAP_SIZE, T)> >
-    {
-        struct category : random_access_traversal_tag, associative_tag {};
+template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_MAP_SIZE, typename T)>
+struct map : sequence_base<map<BOOST_PP_ENUM_PARAMS(FUSION_MAX_MAP_SIZE, T)> >
+{
+	struct category : random_access_traversal_tag, associative_tag {};
 
-        typedef map_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::false_ is_view;
+	typedef map_tag fusion_tag;
+	typedef fusion_sequence_tag tag; // this gets picked up by MPL
+	typedef mpl::false_ is_view;
 
-        typedef vector<
-            BOOST_PP_ENUM_PARAMS(FUSION_MAX_MAP_SIZE, T)>
-        storage_type;
+	typedef vector<
+	BOOST_PP_ENUM_PARAMS(FUSION_MAX_MAP_SIZE, T)>
+	storage_type;
 
-        typedef typename storage_type::size size;
+	typedef typename storage_type::size size;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        map()
-            : data() {}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	map()
+		: data() {}
 
-        BOOST_FUSION_GPU_ENABLED
-        map(map const& rhs)
-            : data(rhs.data) {}
+	BOOST_FUSION_GPU_ENABLED
+	map(map const& rhs)
+		: data(rhs.data) {}
 
-        template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
-        map(Sequence const& rhs)
-            : data(rhs) {}
+	template <typename Sequence>
+	BOOST_FUSION_GPU_ENABLED
+	map(Sequence const& rhs)
+		: data(rhs) {}
 
-        #include <boost/fusion/container/map/detail/cpp03/map_forward_ctor.hpp>
+#include <boost/fusion/container/map/detail/cpp03/map_forward_ctor.hpp>
 
-        template <typename T>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        map& operator=(T const& rhs)
-        {
-            data = rhs;
-            return *this;
-        }
+	template <typename T>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	map& operator=(T const& rhs)
+	{
+		data = rhs;
+		return *this;
+	}
 
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        map& operator=(map const& rhs)
-        {
-            data = rhs.data;
-            return *this;
-        }
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	map& operator=(map const& rhs)
+	{
+		data = rhs.data;
+		return *this;
+	}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
-FUSION_HASH if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+	FUSION_HASH if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #endif
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || \
     (defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES))
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        map(map&& rhs)
-            : data(std::move(rhs.data)) {}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		map(map&& rhs)
+			: data(std::move(rhs.data)) {}
 
-        template <typename T>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        map& operator=(T&& rhs)
-        {
-            data = BOOST_FUSION_FWD_ELEM(T, rhs);
-            return *this;
-        }
+	template <typename T>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	map& operator=(T&& rhs)
+	{
+		data = BOOST_FUSION_FWD_ELEM(T, rhs);
+		return *this;
+	}
 
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        map& operator=(map&& rhs)
-        {
-            data = std::move(rhs.data);
-            return *this;
-        }
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	map& operator=(map&& rhs)
+	{
+		data = std::move(rhs.data);
+		return *this;
+	}
 #endif
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
-FUSION_HASH endif
+	FUSION_HASH endif
 #endif
 
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type& get_data() { return data; }
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        storage_type const& get_data() const { return data; }
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type& get_data()
+	{
+		return data;
+	}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	storage_type const& get_data() const
+	{
+		return data;
+	}
 
-    private:
+private:
 
-        storage_type data;
-    };
-}}
+	storage_type data;
+};
+}
+}
 
 #undef FUSION_HASH
 

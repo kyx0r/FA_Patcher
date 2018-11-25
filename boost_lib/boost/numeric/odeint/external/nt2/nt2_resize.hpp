@@ -13,40 +13,47 @@
 
 #include <boost/numeric/odeint/util/same_size.hpp>
 
-namespace boost { namespace numeric { namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 template<typename T, typename S>
 struct is_resizeable< nt2::container::table<T,S> >
 {
-  typedef boost::true_type type;
-  static const bool value = type::value;
+	typedef boost::true_type type;
+	static const bool value = type::value;
 };
 
 template<typename T, typename S>
 struct same_size_impl< nt2::container::table<T,S>
-                     , nt2::container::table<T,S>
-                     >
+	, nt2::container::table<T,S>
+	>
 {
-  static bool same_size ( const nt2::container::table<T,S> &v1
-                        , const nt2::container::table<T,S> &v2
-                        )
-  {
-    return v1.extent() == v2.extent();
-  }
+	static bool same_size ( const nt2::container::table<T,S> &v1
+	                        , const nt2::container::table<T,S> &v2
+	                      )
+	{
+		return v1.extent() == v2.extent();
+	}
 };
 
 template<typename T, typename S>
 struct resize_impl< nt2::container::table<T,S>
-                  , nt2::container::table<T,S>
-                  >
+	, nt2::container::table<T,S>
+	>
 {
-  static void resize ( nt2::container::table<T,S> &v1
-                     , const nt2::container::table<T,S> &v2
-                     )
-  {
-    v1.resize( v2.extent() );
-  }
+	static void resize ( nt2::container::table<T,S> &v1
+	                     , const nt2::container::table<T,S> &v2
+	                   )
+	{
+		v1.resize( v2.extent() );
+	}
 };
-} } }
+}
+}
+}
 
 #endif

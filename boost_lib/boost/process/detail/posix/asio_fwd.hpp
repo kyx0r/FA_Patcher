@@ -8,7 +8,10 @@
 
 #include <memory>
 
-namespace boost { namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 class mutable_buffer;
 class mutable_buffers_1;
@@ -36,7 +39,8 @@ class signal_set;
 template <typename Handler>
 class basic_yield_context;
 
-namespace posix {
+namespace posix
+{
 
 #if defined(BOOST_ASIO_ENABLE_OLD_SERVICES)
 class stream_descriptor_service;
@@ -51,7 +55,12 @@ class stream_descriptor;
 } //posix
 } //asio
 
-namespace process { namespace detail { namespace posix {
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 class async_pipe;
 

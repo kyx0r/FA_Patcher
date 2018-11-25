@@ -30,8 +30,10 @@
 #include <boost/intrusive/detail/mpl.hpp>
 #include <boost/intrusive/detail/tree_node.hpp>
 
-namespace boost {
-namespace intrusive {
+namespace boost
+{
+namespace intrusive
+{
 
 /////////////////////////////////////////////////////////////////////////////
 //                                                                         //
@@ -43,24 +45,24 @@ namespace intrusive {
 template<class VoidPointer>
 struct compact_rbtree_node
 {
-   typedef compact_rbtree_node<VoidPointer> node;
-   typedef typename pointer_rebind<VoidPointer, node >::type         node_ptr;
-   typedef typename pointer_rebind<VoidPointer, const node >::type   const_node_ptr;
-   enum color { red_t, black_t };
-   node_ptr parent_, left_, right_;
+	typedef compact_rbtree_node<VoidPointer> node;
+	typedef typename pointer_rebind<VoidPointer, node >::type         node_ptr;
+	typedef typename pointer_rebind<VoidPointer, const node >::type   const_node_ptr;
+	enum color { red_t, black_t };
+	node_ptr parent_, left_, right_;
 };
 
 //This is the normal representation: 3 pointers + enum
 template<class VoidPointer>
 struct rbtree_node
 {
-   typedef rbtree_node<VoidPointer> node;
-   typedef typename pointer_rebind<VoidPointer, node >::type         node_ptr;
-   typedef typename pointer_rebind<VoidPointer, const node >::type   const_node_ptr;
+	typedef rbtree_node<VoidPointer> node;
+	typedef typename pointer_rebind<VoidPointer, node >::type         node_ptr;
+	typedef typename pointer_rebind<VoidPointer, const node >::type   const_node_ptr;
 
-   enum color { red_t, black_t };
-   node_ptr parent_, left_, right_;
-   color color_;
+	enum color { red_t, black_t };
+	node_ptr parent_, left_, right_;
+	color color_;
 };
 
 //This is the default node traits implementation
@@ -68,53 +70,81 @@ struct rbtree_node
 template<class VoidPointer>
 struct default_rbtree_node_traits_impl
 {
-   typedef rbtree_node<VoidPointer> node;
-   typedef typename node::node_ptr        node_ptr;
-   typedef typename node::const_node_ptr  const_node_ptr;
+	typedef rbtree_node<VoidPointer> node;
+	typedef typename node::node_ptr        node_ptr;
+	typedef typename node::const_node_ptr  const_node_ptr;
 
-   typedef typename node::color color;
+	typedef typename node::color color;
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const const_node_ptr & n)
-   {  return n->parent_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const const_node_ptr & n)
+	{
+		return n->parent_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const node_ptr & n)
-   {  return n->parent_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const node_ptr & n)
+	{
+		return n->parent_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_parent(const node_ptr & n, const node_ptr & p)
-   {  n->parent_ = p;  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_parent(const node_ptr & n, const node_ptr & p)
+	{
+		n->parent_ = p;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const const_node_ptr & n)
-   {  return n->left_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const const_node_ptr & n)
+	{
+		return n->left_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const node_ptr & n)
-   {  return n->left_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const node_ptr & n)
+	{
+		return n->left_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_left(const node_ptr & n, const node_ptr & l)
-   {  n->left_ = l;  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_left(const node_ptr & n, const node_ptr & l)
+	{
+		n->left_ = l;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const const_node_ptr & n)
-   {  return n->right_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const const_node_ptr & n)
+	{
+		return n->right_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const node_ptr & n)
-   {  return n->right_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const node_ptr & n)
+	{
+		return n->right_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_right(const node_ptr & n, const node_ptr & r)
-   {  n->right_ = r;  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_right(const node_ptr & n, const node_ptr & r)
+	{
+		n->right_ = r;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color get_color(const const_node_ptr & n)
-   {  return n->color_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static color get_color(const const_node_ptr & n)
+	{
+		return n->color_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color get_color(const node_ptr & n)
-   {  return n->color_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static color get_color(const node_ptr & n)
+	{
+		return n->color_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_color(const node_ptr & n, color c)
-   {  n->color_ = c;  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_color(const node_ptr & n, color c)
+	{
+		n->color_ = c;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color black()
-   {  return node::black_t;  }
+	BOOST_INTRUSIVE_FORCEINLINE static color black()
+	{
+		return node::black_t;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color red()
-   {  return node::red_t;  }
+	BOOST_INTRUSIVE_FORCEINLINE static color red()
+	{
+		return node::red_t;
+	}
 };
 
 //This is the compact node traits implementation
@@ -122,80 +152,108 @@ struct default_rbtree_node_traits_impl
 template<class VoidPointer>
 struct compact_rbtree_node_traits_impl
 {
-   typedef compact_rbtree_node<VoidPointer> node;
-   typedef typename node::node_ptr        node_ptr;
-   typedef typename node::const_node_ptr  const_node_ptr;
+	typedef compact_rbtree_node<VoidPointer> node;
+	typedef typename node::node_ptr        node_ptr;
+	typedef typename node::const_node_ptr  const_node_ptr;
 
-   typedef pointer_plus_bits<node_ptr, 1> ptr_bit;
+	typedef pointer_plus_bits<node_ptr, 1> ptr_bit;
 
-   typedef typename node::color color;
+	typedef typename node::color color;
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const const_node_ptr & n)
-   {  return ptr_bit::get_pointer(n->parent_);  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const const_node_ptr & n)
+	{
+		return ptr_bit::get_pointer(n->parent_);
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const node_ptr & n)
-   {  return ptr_bit::get_pointer(n->parent_);  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_parent(const node_ptr & n)
+	{
+		return ptr_bit::get_pointer(n->parent_);
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_parent(const node_ptr & n, const node_ptr & p)
-   {  ptr_bit::set_pointer(n->parent_, p);  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_parent(const node_ptr & n, const node_ptr & p)
+	{
+		ptr_bit::set_pointer(n->parent_, p);
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const const_node_ptr & n)
-   {  return n->left_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const const_node_ptr & n)
+	{
+		return n->left_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const node_ptr & n)
-   {  return n->left_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_left(const node_ptr & n)
+	{
+		return n->left_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_left(const node_ptr & n, const node_ptr & l)
-   {  n->left_ = l;  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_left(const node_ptr & n, const node_ptr & l)
+	{
+		n->left_ = l;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const const_node_ptr & n)
-   {  return n->right_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const const_node_ptr & n)
+	{
+		return n->right_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const node_ptr & n)
-   {  return n->right_;  }
+	BOOST_INTRUSIVE_FORCEINLINE static node_ptr get_right(const node_ptr & n)
+	{
+		return n->right_;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_right(const node_ptr & n, const node_ptr & r)
-   {  n->right_ = r;  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_right(const node_ptr & n, const node_ptr & r)
+	{
+		n->right_ = r;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color get_color(const const_node_ptr & n)
-   {  return (color)ptr_bit::get_bits(n->parent_);  }
+	BOOST_INTRUSIVE_FORCEINLINE static color get_color(const const_node_ptr & n)
+	{
+		return (color)ptr_bit::get_bits(n->parent_);
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color get_color(const node_ptr & n)
-   {  return (color)ptr_bit::get_bits(n->parent_);  }
+	BOOST_INTRUSIVE_FORCEINLINE static color get_color(const node_ptr & n)
+	{
+		return (color)ptr_bit::get_bits(n->parent_);
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static void set_color(const node_ptr & n, color c)
-   {  ptr_bit::set_bits(n->parent_, c != 0);  }
+	BOOST_INTRUSIVE_FORCEINLINE static void set_color(const node_ptr & n, color c)
+	{
+		ptr_bit::set_bits(n->parent_, c != 0);
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color black()
-   {  return node::black_t;  }
+	BOOST_INTRUSIVE_FORCEINLINE static color black()
+	{
+		return node::black_t;
+	}
 
-   BOOST_INTRUSIVE_FORCEINLINE static color red()
-   {  return node::red_t;  }
+	BOOST_INTRUSIVE_FORCEINLINE static color red()
+	{
+		return node::red_t;
+	}
 };
 
 //Dispatches the implementation based on the boolean
 template<class VoidPointer, bool Compact>
 struct rbtree_node_traits_dispatch
-   :  public default_rbtree_node_traits_impl<VoidPointer>
+	:  public default_rbtree_node_traits_impl<VoidPointer>
 {};
 
 template<class VoidPointer>
 struct rbtree_node_traits_dispatch<VoidPointer, true>
-   :  public compact_rbtree_node_traits_impl<VoidPointer>
+	:  public compact_rbtree_node_traits_impl<VoidPointer>
 {};
 
 //Inherit from rbtree_node_traits_dispatch depending on the embedding capabilities
 template<class VoidPointer, bool OptimizeSize = false>
 struct rbtree_node_traits
-   :  public rbtree_node_traits_dispatch
-         < VoidPointer
-         ,  OptimizeSize &&
-           (max_pointer_plus_bits
-            < VoidPointer
-            , detail::alignment_of<compact_rbtree_node<VoidPointer> >::value
-            >::value >= 1)
-         >
-{};
+	:  public rbtree_node_traits_dispatch
+	   < VoidPointer
+	,  OptimizeSize &&
+   (max_pointer_plus_bits
+    < VoidPointer
+    , detail::alignment_of<compact_rbtree_node<VoidPointer> >::value
+    >::value >= 1)
+   >
+   {};
 
 } //namespace intrusive
 } //namespace boost

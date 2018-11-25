@@ -55,7 +55,7 @@
 #if (defined(_MSC_VER) && _MSC_VER <= 1800)
 // on MSCV 2013 and earlier an unwanted temporary is created when you assign from
 // a const lvalue of integral type. Thus we bind not to the original address but
-// to a temporary. 
+// to a temporary.
 # define BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
 #endif
 
@@ -97,8 +97,8 @@
 #endif // defined(__GNUC__)
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800) && !BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40500) && !defined(__SUNPRO_CC)
-  // this condition is a copy paste from is_constructible.hpp
-  // I also disable SUNPRO, as it seems not to support type_traits correctly
+// this condition is a copy paste from is_constructible.hpp
+// I also disable SUNPRO, as it seems not to support type_traits correctly
 #else
 # define BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT
 #endif

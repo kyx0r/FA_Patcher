@@ -22,7 +22,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -34,100 +36,100 @@ namespace traits
 template <typename CoordinateType>
 struct tag<boost::polygon::rectangle_data<CoordinateType> >
 {
-    typedef box_tag type;
+	typedef box_tag type;
 };
 
 
 template <typename CoordinateType>
 struct point_type<boost::polygon::rectangle_data<CoordinateType> >
 {
-    // Not sure what to do here. Boost.Polygon's rectangle does NOT define its
-    // point_type (but uses it...)
-    typedef boost::polygon::point_data<CoordinateType> type;
+	// Not sure what to do here. Boost.Polygon's rectangle does NOT define its
+	// point_type (but uses it...)
+	typedef boost::polygon::point_data<CoordinateType> type;
 };
 
 
 template <typename CoordinateType>
 struct indexed_access
-<
-    boost::polygon::rectangle_data<CoordinateType>,
-    min_corner, 0
->
+	<
+	boost::polygon::rectangle_data<CoordinateType>,
+	min_corner, 0
+	>
 {
-    typedef boost::polygon::rectangle_data<CoordinateType> box_type;
+	typedef boost::polygon::rectangle_data<CoordinateType> box_type;
 
-    static inline CoordinateType get(box_type const& b)
-    {
-        return boost::polygon::xl(b);
-    }
+	static inline CoordinateType get(box_type const& b)
+	{
+		return boost::polygon::xl(b);
+	}
 
-    static inline void set(box_type& b, CoordinateType const& value)
-    {
-        boost::polygon::xl(b, value);
-    }
+	static inline void set(box_type& b, CoordinateType const& value)
+	{
+		boost::polygon::xl(b, value);
+	}
 };
 
 
 template <typename CoordinateType>
 struct indexed_access
-<
-    boost::polygon::rectangle_data<CoordinateType>,
-    min_corner, 1
->
+	<
+	boost::polygon::rectangle_data<CoordinateType>,
+	min_corner, 1
+	>
 {
-    typedef boost::polygon::rectangle_data<CoordinateType> box_type;
+	typedef boost::polygon::rectangle_data<CoordinateType> box_type;
 
-    static inline CoordinateType get(box_type const& b)
-    {
-        return boost::polygon::yl(b);
-    }
+	static inline CoordinateType get(box_type const& b)
+	{
+		return boost::polygon::yl(b);
+	}
 
-    static inline void set(box_type& b, CoordinateType const& value)
-    {
-        boost::polygon::yl(b, value);
-    }
+	static inline void set(box_type& b, CoordinateType const& value)
+	{
+		boost::polygon::yl(b, value);
+	}
 };
 
 
 template <typename CoordinateType>
 struct indexed_access
-<
-    boost::polygon::rectangle_data<CoordinateType>,
-    max_corner, 0
->
+	<
+	boost::polygon::rectangle_data<CoordinateType>,
+	max_corner, 0
+	>
 {
-    typedef boost::polygon::rectangle_data<CoordinateType> box_type;
+	typedef boost::polygon::rectangle_data<CoordinateType> box_type;
 
-    static inline CoordinateType get(box_type const& b)
-    {
-        return boost::polygon::xh(b);
-    }
+	static inline CoordinateType get(box_type const& b)
+	{
+		return boost::polygon::xh(b);
+	}
 
-    static inline void set(box_type& b, CoordinateType const& value)
-    {
-        boost::polygon::xh(b, value);
-    }
+	static inline void set(box_type& b, CoordinateType const& value)
+	{
+		boost::polygon::xh(b, value);
+	}
 };
 
 
 template <typename CoordinateType>
 struct indexed_access
-<
-    boost::polygon::rectangle_data<CoordinateType>,
-    max_corner, 1
->
+	<
+	boost::polygon::rectangle_data<CoordinateType>,
+	max_corner, 1
+	>
 {
-    typedef boost::polygon::rectangle_data<CoordinateType> box_type;
+	typedef boost::polygon::rectangle_data<CoordinateType> box_type;
 
-    static inline CoordinateType get(box_type const& b)
-    {
-        return boost::polygon::yh(b);
-    }
+	static inline CoordinateType get(box_type const& b)
+	{
+		return boost::polygon::yh(b);
+	}
 
-    static inline void set(box_type& b, CoordinateType const& value)
-    {
-        boost::polygon::yh(b, value);
-    }
+	static inline void set(box_type& b, CoordinateType const& value)
+	{
+		boost::polygon::yh(b, value);
+	}
 };
 
 
@@ -135,7 +137,8 @@ struct indexed_access
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_ADAPTED_BOOST_POLYGON_BOX_HPP

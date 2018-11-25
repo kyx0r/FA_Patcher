@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword allows to specify minimum free space on the drive
 BOOST_PARAMETER_KEYWORD(tag, min_free_space)

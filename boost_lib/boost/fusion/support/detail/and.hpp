@@ -14,26 +14,33 @@
 #error fusion::detail::and_ requires variadic templates
 #endif
 
-namespace boost { namespace fusion { namespace detail {
-    template<typename ...Cond>
-    struct and_impl : false_type {};
+namespace boost
+{
+namespace fusion
+{
+namespace detail
+{
+template<typename ...Cond>
+struct and_impl : false_type {};
 
-    template<typename ...T>
-    struct and_impl<integral_constant<T, true>...> : true_type {};
+template<typename ...T>
+struct and_impl<integral_constant<T, true>...> : true_type {};
 
-    // This specialization is necessary to avoid MSVC-12 variadics bug.
-    template<bool ...Cond>
-    struct and_impl1 : and_impl<integral_constant<bool, Cond>...> {};
+// This specialization is necessary to avoid MSVC-12 variadics bug.
+template<bool ...Cond>
+struct and_impl1 : and_impl<integral_constant<bool, Cond>...> {};
 
-    /* fusion::detail::and_ differs from mpl::and_ in the following ways:
-       - The empty set is valid and returns true
-       - A single element set is valid and returns the identity
-       - There is no upper bound on the set size
-       - The conditions are evaluated at once, and are not short-circuited. This
-         reduces instantations when returning true; the implementation is not
-         recursive. */
-    template<typename ...Cond>
-    struct and_ : and_impl1<Cond::value...> {};
-}}}
+/* fusion::detail::and_ differs from mpl::and_ in the following ways:
+   - The empty set is valid and returns true
+   - A single element set is valid and returns the identity
+   - There is no upper bound on the set size
+   - The conditions are evaluated at once, and are not short-circuited. This
+     reduces instantations when returning true; the implementation is not
+     recursive. */
+template<typename ...Cond>
+struct and_ : and_impl1<Cond::value...> {};
+}
+}
+}
 
 #endif // FUSION_AND_07152016_1625

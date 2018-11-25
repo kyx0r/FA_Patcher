@@ -17,18 +17,18 @@
 
 namespace boost
 {
-  namespace csbl
-  {
-    using ::boost::intrusive::pointer_traits;
-  }
+namespace csbl
+{
+using ::boost::intrusive::pointer_traits;
+}
 }
 #else
 namespace boost
 {
-  namespace csbl
-  {
-    using ::std::pointer_traits;
-  }
+namespace csbl
+{
+using ::std::pointer_traits;
+}
 }
 #endif // BOOST_NO_CXX11_ALLOCATOR
 

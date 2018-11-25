@@ -71,110 +71,119 @@ struct NAME                                                                     
 
 BOOST_PHOENIX_DEFINE_EXPRESSION(
     (boost)(phoenix)(dynamic_member)
-  , (proto::terminal<proto::_>)
+    , (proto::terminal<proto::_>)
     (proto::terminal<proto::_>)
 )
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    template <typename DynamicScope>
-    struct dynamic_frame : noncopyable
-    {
-        typedef typename DynamicScope::tuple_type tuple_type;
+namespace phoenix
+{
+template <typename DynamicScope>
+struct dynamic_frame : noncopyable
+{
+	typedef typename DynamicScope::tuple_type tuple_type;
 
-        dynamic_frame(DynamicScope const& s)
-            : tuple()
-            , save(s.frame)
-            , scope(s)
-        {
-            scope.frame = this;
-        }
+	dynamic_frame(DynamicScope const& s)
+		: tuple()
+		, save(s.frame)
+		, scope(s)
+	{
+		scope.frame = this;
+	}
 
-        template <typename Tuple>
-        dynamic_frame(DynamicScope const& s, Tuple const& init)
-            : tuple(init)
-            , save(s.frame)
-            , scope(s)
-        {
-            scope.frame = this;
-        }
+	template <typename Tuple>
+	dynamic_frame(DynamicScope const& s, Tuple const& init)
+		: tuple(init)
+		, save(s.frame)
+		, scope(s)
+	{
+		scope.frame = this;
+	}
 
-        ~dynamic_frame()
-        {
-            scope.frame = save;
-        }
+	~dynamic_frame()
+	{
+		scope.frame = save;
+	}
 
-        tuple_type& data() { return tuple; }
-        tuple_type const& data() const { return tuple; }
+	tuple_type& data()
+	{
+		return tuple;
+	}
+	tuple_type const& data() const
+	{
+		return tuple;
+	}
 
-        private:
-            tuple_type tuple;
-            dynamic_frame *save;
-            DynamicScope const& scope;
-    };
+private:
+	tuple_type tuple;
+	dynamic_frame *save;
+	DynamicScope const& scope;
+};
 
-    struct dynamic_member_eval
-    {
-        template <typename Sig>
-        struct result;
+struct dynamic_member_eval
+{
+	template <typename Sig>
+	struct result;
 
-        template <typename This, typename N, typename Scope, typename Context>
-        struct result<This(N, Scope, Context)>
-        {
-            typedef
-                typename boost::remove_pointer<
-                    typename proto::detail::uncvref<
-                        typename proto::result_of::value<Scope>::type
-                    >::type
-                >::type
-                scope_type;
-            typedef 
-                typename scope_type::dynamic_frame_type::tuple_type
-                tuple_type;
+	template <typename This, typename N, typename Scope, typename Context>
+	struct result<This(N, Scope, Context)>
+	{
+		typedef
+		typename boost::remove_pointer<
+		typename proto::detail::uncvref<
+		typename proto::result_of::value<Scope>::type
+		>::type
+		>::type
+		scope_type;
+		typedef
+		typename scope_type::dynamic_frame_type::tuple_type
+		tuple_type;
 
-            typedef
-                typename fusion::result_of::at_c<
-                    tuple_type
-                  , proto::detail::uncvref<
-                        typename proto::result_of::value<N>::type
-                    >::type::value
-                >::type
-                type;
+		typedef
+		typename fusion::result_of::at_c<
+		tuple_type
+		, proto::detail::uncvref<
+		typename proto::result_of::value<N>::type
+		>::type::value
+		>::type
+		type;
 
-        };
+	};
 
-        template <typename N, typename Scope, typename Context>
-        typename result<dynamic_member_eval(N, Scope, Context)>::type
-        operator()(N, Scope s, Context const &) const
-        {
-            return
-                fusion::at_c<
-                    proto::detail::uncvref<
-                        typename proto::result_of::value<N>::type
-                    >::type::value
-                >(
-                    proto::value(s)->frame->data()
-                );
-        }
-    };
+	template <typename N, typename Scope, typename Context>
+	typename result<dynamic_member_eval(N, Scope, Context)>::type
+	operator()(N, Scope s, Context const &) const
+	{
+		return
+		    fusion::at_c<
+		    proto::detail::uncvref<
+		    typename proto::result_of::value<N>::type
+		    >::type::value
+		    >(
+		        proto::value(s)->frame->data()
+		    );
+	}
+};
 
-    template <typename Dummy>
-    struct default_actions::when<rule::dynamic_member, Dummy>
-        : call<dynamic_member_eval>
-    {};
+template <typename Dummy>
+struct default_actions::when<rule::dynamic_member, Dummy>
+	: call<dynamic_member_eval>
+{};
 
 //#if defined(BOOST_PHOENIX_NO_VARIADIC_SCOPE)
-    template <
-        BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_DYNAMIC_LIMIT)
-      , typename Dummy = void
+template <
+    BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_DYNAMIC_LIMIT)
+    , typename Dummy = void
     >
-    struct dynamic;
+struct dynamic;
 
-    // Bring in the rest ...
-    #include <boost/phoenix/scope/detail/cpp03/dynamic.hpp>
+// Bring in the rest ...
+#include <boost/phoenix/scope/detail/cpp03/dynamic.hpp>
 //#else
 //    // TODO:
 //#endif
-}}
+}
+}
 
 #endif

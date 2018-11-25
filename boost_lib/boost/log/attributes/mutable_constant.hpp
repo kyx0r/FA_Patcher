@@ -32,11 +32,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that holds a single constant value with ability to change it
@@ -60,150 +62,150 @@ template<
     typename MutexT = void,
     typename ScopedWriteLockT =
 #ifndef BOOST_LOG_NO_THREADS
-        typename mpl::if_c<
-            boost::log::aux::is_exclusively_lockable< MutexT >::value,
-            boost::log::aux::exclusive_lock_guard< MutexT >,
-            void
+    typename mpl::if_c<
+        boost::log::aux::is_exclusively_lockable< MutexT >::value,
+        boost::log::aux::exclusive_lock_guard< MutexT >,
+        void
         >::type,
 #else
-        void,
+    void,
 #endif // BOOST_LOG_NO_THREADS
     typename ScopedReadLockT =
 #ifndef BOOST_LOG_NO_THREADS
-        typename mpl::if_c<
-            boost::log::aux::is_shared_lockable< MutexT >::value,
-            boost::log::aux::shared_lock_guard< MutexT >,
-            ScopedWriteLockT
+    typename mpl::if_c<
+        boost::log::aux::is_shared_lockable< MutexT >::value,
+        boost::log::aux::shared_lock_guard< MutexT >,
+        ScopedWriteLockT
         >::type
 #else
-        ScopedWriteLockT
+    ScopedWriteLockT
 #endif // BOOST_LOG_NO_THREADS
 #endif // BOOST_LOG_DOXYGEN_PASS
 >
 class mutable_constant :
-    public attribute
+	public attribute
 {
 public:
-    //! The attribute value type
-    typedef T value_type;
+	//! The attribute value type
+	typedef T value_type;
 
 protected:
-    //! Factory implementation
-    class BOOST_SYMBOL_VISIBLE impl :
-        public attribute::impl
-    {
-    private:
-        //! Mutex type
-        typedef MutexT mutex_type;
-        //! Shared lock type
-        typedef ScopedReadLockT scoped_read_lock;
-        //! Exclusive lock type
-        typedef ScopedWriteLockT scoped_write_lock;
-        BOOST_STATIC_ASSERT_MSG(!(is_void< mutex_type >::value || is_void< scoped_read_lock >::value || is_void< scoped_write_lock >::value), "Boost.Log: Mutex and both lock types either must not be void or must all be void");
-        //! Attribute value wrapper
-        typedef attribute_value_impl< value_type > attr_value;
+	//! Factory implementation
+	class BOOST_SYMBOL_VISIBLE impl :
+		public attribute::impl
+	{
+	private:
+		//! Mutex type
+		typedef MutexT mutex_type;
+		//! Shared lock type
+		typedef ScopedReadLockT scoped_read_lock;
+		//! Exclusive lock type
+		typedef ScopedWriteLockT scoped_write_lock;
+		BOOST_STATIC_ASSERT_MSG(!(is_void< mutex_type >::value || is_void< scoped_read_lock >::value || is_void< scoped_write_lock >::value), "Boost.Log: Mutex and both lock types either must not be void or must all be void");
+		//! Attribute value wrapper
+		typedef attribute_value_impl< value_type > attr_value;
 
-    private:
-        //! Thread protection mutex
-        mutable mutex_type m_Mutex;
-        //! Pointer to the actual attribute value
-        intrusive_ptr< attr_value > m_Value;
+	private:
+		//! Thread protection mutex
+		mutable mutex_type m_Mutex;
+		//! Pointer to the actual attribute value
+		intrusive_ptr< attr_value > m_Value;
 
-    public:
-        /*!
-         * Initializing constructor
-         */
-        explicit impl(value_type const& value) : m_Value(new attr_value(value))
-        {
-        }
-        /*!
-         * Initializing constructor
-         */
-        explicit impl(BOOST_RV_REF(value_type) value) : m_Value(new attr_value(boost::move(value)))
-        {
-        }
+	public:
+		/*!
+		 * Initializing constructor
+		 */
+		explicit impl(value_type const& value) : m_Value(new attr_value(value))
+		{
+		}
+		/*!
+		 * Initializing constructor
+		 */
+		explicit impl(BOOST_RV_REF(value_type) value) : m_Value(new attr_value(boost::move(value)))
+		{
+		}
 
-        attribute_value get_value()
-        {
-            scoped_read_lock lock(m_Mutex);
-            return attribute_value(m_Value);
-        }
+		attribute_value get_value()
+		{
+			scoped_read_lock lock(m_Mutex);
+			return attribute_value(m_Value);
+		}
 
-        void set(value_type const& value)
-        {
-            intrusive_ptr< attr_value > p = new attr_value(value);
-            scoped_write_lock lock(m_Mutex);
-            m_Value.swap(p);
-        }
+		void set(value_type const& value)
+		{
+			intrusive_ptr< attr_value > p = new attr_value(value);
+			scoped_write_lock lock(m_Mutex);
+			m_Value.swap(p);
+		}
 
-        void set(BOOST_RV_REF(value_type) value)
-        {
-            intrusive_ptr< attr_value > p = new attr_value(boost::move(value));
-            scoped_write_lock lock(m_Mutex);
-            m_Value.swap(p);
-        }
+		void set(BOOST_RV_REF(value_type) value)
+		{
+			intrusive_ptr< attr_value > p = new attr_value(boost::move(value));
+			scoped_write_lock lock(m_Mutex);
+			m_Value.swap(p);
+		}
 
-        value_type get() const
-        {
-            scoped_read_lock lock(m_Mutex);
-            return m_Value->get();
-        }
-    };
+		value_type get() const
+		{
+			scoped_read_lock lock(m_Mutex);
+			return m_Value->get();
+		}
+	};
 
 public:
-    /*!
-     * Constructor with the stored value initialization
-     */
-    explicit mutable_constant(value_type const& value) : attribute(new impl(value))
-    {
-    }
-    /*!
-     * Constructor with the stored value initialization
-     */
-    explicit mutable_constant(BOOST_RV_REF(value_type) value) : attribute(new impl(boost::move(value)))
-    {
-    }
-    /*!
-     * Constructor for casting support
-     */
-    explicit mutable_constant(cast_source const& source) : attribute(source.as< impl >())
-    {
-    }
+	/*!
+	 * Constructor with the stored value initialization
+	 */
+	explicit mutable_constant(value_type const& value) : attribute(new impl(value))
+	{
+	}
+	/*!
+	 * Constructor with the stored value initialization
+	 */
+	explicit mutable_constant(BOOST_RV_REF(value_type) value) : attribute(new impl(boost::move(value)))
+	{
+	}
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit mutable_constant(cast_source const& source) : attribute(source.as< impl >())
+	{
+	}
 
-    /*!
-     * The method sets a new attribute value. The implementation exclusively locks the mutex in order
-     * to protect the value assignment.
-     */
-    void set(value_type const& value)
-    {
-        get_impl()->set(value);
-    }
+	/*!
+	 * The method sets a new attribute value. The implementation exclusively locks the mutex in order
+	 * to protect the value assignment.
+	 */
+	void set(value_type const& value)
+	{
+		get_impl()->set(value);
+	}
 
-    /*!
-     * The method sets a new attribute value.
-     */
-    void set(BOOST_RV_REF(value_type) value)
-    {
-        get_impl()->set(boost::move(value));
-    }
+	/*!
+	 * The method sets a new attribute value.
+	 */
+	void set(BOOST_RV_REF(value_type) value)
+	{
+		get_impl()->set(boost::move(value));
+	}
 
-    /*!
-     * The method acquires the current attribute value. The implementation non-exclusively locks the mutex in order
-     * to protect the value acquisition.
-     */
-    value_type get() const
-    {
-        return get_impl()->get();
-    }
+	/*!
+	 * The method acquires the current attribute value. The implementation non-exclusively locks the mutex in order
+	 * to protect the value acquisition.
+	 */
+	value_type get() const
+	{
+		return get_impl()->get();
+	}
 
 protected:
-    /*!
-     * \returns Pointer to the factory implementation
-     */
-    impl* get_impl() const
-    {
-        return static_cast< impl* >(attribute::get_impl());
-    }
+	/*!
+	 * \returns Pointer to the factory implementation
+	 */
+	impl* get_impl() const
+	{
+		return static_cast< impl* >(attribute::get_impl());
+	}
 };
 
 
@@ -214,111 +216,111 @@ protected:
  */
 template< typename T >
 class mutable_constant< T, void, void, void > :
-    public attribute
+	public attribute
 {
 public:
-    //! The attribute value type
-    typedef T value_type;
+	//! The attribute value type
+	typedef T value_type;
 
 protected:
-    //! Factory implementation
-    class BOOST_SYMBOL_VISIBLE impl :
-        public attribute::impl
-    {
-    private:
-        //! Attribute value wrapper
-        typedef attribute_value_impl< value_type > attr_value;
+	//! Factory implementation
+	class BOOST_SYMBOL_VISIBLE impl :
+		public attribute::impl
+	{
+	private:
+		//! Attribute value wrapper
+		typedef attribute_value_impl< value_type > attr_value;
 
-    private:
-        //! The actual value
-        intrusive_ptr< attr_value > m_Value;
+	private:
+		//! The actual value
+		intrusive_ptr< attr_value > m_Value;
 
-    public:
-        /*!
-         * Initializing constructor
-         */
-        explicit impl(value_type const& value) : m_Value(new attr_value(value))
-        {
-        }
-        /*!
-         * Initializing constructor
-         */
-        explicit impl(BOOST_RV_REF(value_type) value) : m_Value(new attr_value(boost::move(value)))
-        {
-        }
+	public:
+		/*!
+		 * Initializing constructor
+		 */
+		explicit impl(value_type const& value) : m_Value(new attr_value(value))
+		{
+		}
+		/*!
+		 * Initializing constructor
+		 */
+		explicit impl(BOOST_RV_REF(value_type) value) : m_Value(new attr_value(boost::move(value)))
+		{
+		}
 
-        attribute_value get_value()
-        {
-            return attribute_value(m_Value);
-        }
+		attribute_value get_value()
+		{
+			return attribute_value(m_Value);
+		}
 
-        void set(value_type const& value)
-        {
-            m_Value = new attr_value(value);
-        }
-        void set(BOOST_RV_REF(value_type) value)
-        {
-            m_Value = new attr_value(boost::move(value));
-        }
+		void set(value_type const& value)
+		{
+			m_Value = new attr_value(value);
+		}
+		void set(BOOST_RV_REF(value_type) value)
+		{
+			m_Value = new attr_value(boost::move(value));
+		}
 
-        value_type get() const
-        {
-            return m_Value->get();
-        }
-    };
+		value_type get() const
+		{
+			return m_Value->get();
+		}
+	};
 
 public:
-    /*!
-     * Constructor with the stored value initialization
-     */
-    explicit mutable_constant(value_type const& value) : attribute(new impl(value))
-    {
-    }
-    /*!
-     * Constructor with the stored value initialization
-     */
-    explicit mutable_constant(BOOST_RV_REF(value_type) value) : attribute(new impl(boost::move(value)))
-    {
-    }
-    /*!
-     * Constructor for casting support
-     */
-    explicit mutable_constant(cast_source const& source) : attribute(source.as< impl >())
-    {
-    }
+	/*!
+	 * Constructor with the stored value initialization
+	 */
+	explicit mutable_constant(value_type const& value) : attribute(new impl(value))
+	{
+	}
+	/*!
+	 * Constructor with the stored value initialization
+	 */
+	explicit mutable_constant(BOOST_RV_REF(value_type) value) : attribute(new impl(boost::move(value)))
+	{
+	}
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit mutable_constant(cast_source const& source) : attribute(source.as< impl >())
+	{
+	}
 
-    /*!
-     * The method sets a new attribute value.
-     */
-    void set(value_type const& value)
-    {
-        get_impl()->set(value);
-    }
+	/*!
+	 * The method sets a new attribute value.
+	 */
+	void set(value_type const& value)
+	{
+		get_impl()->set(value);
+	}
 
-    /*!
-     * The method sets a new attribute value.
-     */
-    void set(BOOST_RV_REF(value_type) value)
-    {
-        get_impl()->set(boost::move(value));
-    }
+	/*!
+	 * The method sets a new attribute value.
+	 */
+	void set(BOOST_RV_REF(value_type) value)
+	{
+		get_impl()->set(boost::move(value));
+	}
 
-    /*!
-     * The method acquires the current attribute value.
-     */
-    value_type get() const
-    {
-        return get_impl()->get();
-    }
+	/*!
+	 * The method acquires the current attribute value.
+	 */
+	value_type get() const
+	{
+		return get_impl()->get();
+	}
 
 protected:
-    /*!
-     * \returns Pointer to the factory implementation
-     */
-    impl* get_impl() const
-    {
-        return static_cast< impl* >(attribute::get_impl());
-    }
+	/*!
+	 * \returns Pointer to the factory implementation
+	 */
+	impl* get_impl() const
+	{
+		return static_cast< impl* >(attribute::get_impl());
+	}
 };
 
 } // namespace attributes

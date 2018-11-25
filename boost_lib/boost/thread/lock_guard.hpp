@@ -22,64 +22,64 @@
 namespace boost
 {
 
-  template <typename Mutex>
-  class lock_guard
-  {
-  private:
-    Mutex& m;
+template <typename Mutex>
+class lock_guard
+{
+private:
+	Mutex& m;
 
-  public:
-    typedef Mutex mutex_type;
-    BOOST_THREAD_NO_COPYABLE( lock_guard )
+public:
+	typedef Mutex mutex_type;
+	BOOST_THREAD_NO_COPYABLE( lock_guard )
 
-    explicit lock_guard(Mutex& m_) :
-      m(m_)
-    {
-      m.lock();
-    }
+	explicit lock_guard(Mutex& m_) :
+		m(m_)
+	{
+		m.lock();
+	}
 
-    lock_guard(Mutex& m_, adopt_lock_t) :
-      m(m_)
-    {
+	lock_guard(Mutex& m_, adopt_lock_t) :
+		m(m_)
+	{
 #if ! defined BOOST_THREAD_PROVIDES_NESTED_LOCKS
-      BOOST_ASSERT(is_locked_by_this_thread(m));
+		BOOST_ASSERT(is_locked_by_this_thread(m));
 #endif
-    }
+	}
 
 #if ! defined BOOST_THREAD_NO_CXX11_HDR_INITIALIZER_LIST
-    lock_guard(std::initializer_list<thread_detail::lockable_wrapper<Mutex> > l_) :
-      m(*(const_cast<thread_detail::lockable_wrapper<Mutex>*>(l_.begin())->m))
-    {
-      m.lock();
-    }
+	lock_guard(std::initializer_list<thread_detail::lockable_wrapper<Mutex> > l_) :
+		m(*(const_cast<thread_detail::lockable_wrapper<Mutex>*>(l_.begin())->m))
+	{
+		m.lock();
+	}
 
-    lock_guard(std::initializer_list<thread_detail::lockable_adopt_wrapper<Mutex> > l_) :
-      m(*(const_cast<thread_detail::lockable_adopt_wrapper<Mutex>*>(l_.begin())->m))
-    {
+	lock_guard(std::initializer_list<thread_detail::lockable_adopt_wrapper<Mutex> > l_) :
+		m(*(const_cast<thread_detail::lockable_adopt_wrapper<Mutex>*>(l_.begin())->m))
+	{
 #if ! defined BOOST_THREAD_PROVIDES_NESTED_LOCKS
-      BOOST_ASSERT(is_locked_by_this_thread(m));
+		BOOST_ASSERT(is_locked_by_this_thread(m));
 #endif
-    }
+	}
 
 #endif
-    ~lock_guard()
-    {
-      m.unlock();
-    }
-  };
+	~lock_guard()
+	{
+		m.unlock();
+	}
+};
 
 
 #if ! defined BOOST_THREAD_NO_MAKE_LOCK_GUARD
-  template <typename Lockable>
-  lock_guard<Lockable> make_lock_guard(Lockable& mtx)
-  {
-    return { thread_detail::lockable_wrapper<Lockable>(mtx) };
-  }
-  template <typename Lockable>
-  lock_guard<Lockable> make_lock_guard(Lockable& mtx, adopt_lock_t)
-  {
-    return { thread_detail::lockable_adopt_wrapper<Lockable>(mtx) };
-  }
+template <typename Lockable>
+lock_guard<Lockable> make_lock_guard(Lockable& mtx)
+{
+	return { thread_detail::lockable_wrapper<Lockable>(mtx) };
+}
+template <typename Lockable>
+lock_guard<Lockable> make_lock_guard(Lockable& mtx, adopt_lock_t)
+{
+	return { thread_detail::lockable_adopt_wrapper<Lockable>(mtx) };
+}
 #endif
 }
 

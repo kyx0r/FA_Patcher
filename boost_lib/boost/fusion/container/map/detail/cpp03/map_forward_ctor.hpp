@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2011 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #ifndef BOOST_PP_IS_ITERATING
@@ -26,33 +26,33 @@
 
 #define N BOOST_PP_ITERATION()
 
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
 #if N == 1
-    explicit
+explicit
 #endif
-    map(BOOST_PP_ENUM_BINARY_PARAMS(N, typename detail::call_param<T, >::type arg))
-        : data(BOOST_PP_ENUM_PARAMS(N, arg)) {}
+map(BOOST_PP_ENUM_BINARY_PARAMS(N, typename detail::call_param<T, >::type arg))
+	: data(BOOST_PP_ENUM_PARAMS(N, arg)) {}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #endif
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || \
     (defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES))
-    template <BOOST_PP_ENUM_PARAMS(N, typename U)>
-    BOOST_FUSION_GPU_ENABLED
+	template <BOOST_PP_ENUM_PARAMS(N, typename U)>
+BOOST_FUSION_GPU_ENABLED
 #if N == 1
-    explicit
+explicit
 #endif
-    map(BOOST_PP_ENUM_BINARY_PARAMS(N, U, && arg)
+map(BOOST_PP_ENUM_BINARY_PARAMS(N, U, && arg)
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES) && \
     N == 1
     // workaround for MSVC 10
-FUSION_HASH if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
-        , typename enable_if<is_same<U0, T0> >::type* = 0
-FUSION_HASH endif
+    FUSION_HASH if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
+    , typename enable_if<is_same<U0, T0> >::type* = 0
+    FUSION_HASH endif
 #endif
-        )
-        : data(BOOST_PP_ENUM(N, FUSION_FORWARD_CTOR_FORWARD, arg)) {}
+   )
+		: data(BOOST_PP_ENUM(N, FUSION_FORWARD_CTOR_FORWARD, arg)) {}
 #endif
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH endif

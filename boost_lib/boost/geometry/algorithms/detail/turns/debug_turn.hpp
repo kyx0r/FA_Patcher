@@ -21,11 +21,15 @@
 #endif // BOOST_GEOMETRY_DEBUG_TURNS
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace turns
+namespace detail
+{
+namespace turns
 {
 
 
@@ -34,32 +38,34 @@ template <typename Turn, typename Operation>
 inline void debug_turn(Turn const& turn, Operation op,
                        std::string const& header)
 {
-    std::cout << header
-        << " at " << op.seg_id
-        << " meth: " << method_char(turn.method)
-        << " op: " << operation_char(op.operation)
-        << " of: " << operation_char(turn.operations[0].operation)
-        << operation_char(turn.operations[1].operation)
-        << " " << geometry::wkt(turn.point)
-        << std::endl;
+	std::cout << header
+	          << " at " << op.seg_id
+	          << " meth: " << method_char(turn.method)
+	          << " op: " << operation_char(op.operation)
+	          << " of: " << operation_char(turn.operations[0].operation)
+	          << operation_char(turn.operations[1].operation)
+	          << " " << geometry::wkt(turn.point)
+	          << std::endl;
 
-    if (boost::contains(header, "Finished"))
-    {
-        std::cout << std::endl;
-    }
+	if (boost::contains(header, "Finished"))
+	{
+		std::cout << std::endl;
+	}
 }
 #else
 template <typename Turn, typename Operation>
-inline void debug_turn(Turn const& , Operation, const char*)
+inline void debug_turn(Turn const&, Operation, const char*)
 {
 }
 #endif // BOOST_GEOMETRY_DEBUG_TURNS
 
 
-}} // namespace detail::turns
+}
+} // namespace detail::turns
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost:geometry
+}
+} // namespace boost:geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_TURNS_DEBUG_TURN_HPP

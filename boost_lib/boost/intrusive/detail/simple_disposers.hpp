@@ -21,26 +21,31 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace intrusive {
-namespace detail {
+namespace boost
+{
+namespace intrusive
+{
+namespace detail
+{
 
 class null_disposer
 {
-   public:
-   template <class Pointer>
-   void operator()(Pointer)
-   {}
+public:
+	template <class Pointer>
+	void operator()(Pointer)
+	{}
 };
 
 template<class NodeAlgorithms>
 class init_disposer
 {
-   typedef typename NodeAlgorithms::node_ptr node_ptr;
+	typedef typename NodeAlgorithms::node_ptr node_ptr;
 
-   public:
-   void operator()(const node_ptr & p)
-   {  NodeAlgorithms::init(p);   }
+public:
+	void operator()(const node_ptr & p)
+	{
+		NodeAlgorithms::init(p);
+	}
 };
 
 }  //namespace detail{

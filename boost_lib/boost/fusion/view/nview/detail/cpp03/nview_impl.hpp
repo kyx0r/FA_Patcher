@@ -27,18 +27,24 @@
     /**/
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace fusion { namespace result_of
+namespace boost
 {
-    template <typename Sequence
-      , BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(FUSION_MAX_VECTOR_SIZE, int I, INT_MAX)>
-    struct as_nview
-    {
-        typedef mpl::vector_c<
-            int, BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, I)
-        > index_type;
-        typedef nview<Sequence, index_type> type;
-    };
-}}}
+namespace fusion
+{
+namespace result_of
+{
+template <typename Sequence
+          , BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(FUSION_MAX_VECTOR_SIZE, int I, INT_MAX)>
+struct as_nview
+{
+	typedef mpl::vector_c<
+	int, BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, I)
+	> index_type;
+	typedef nview<Sequence, index_type> type;
+};
+}
+}
+}
 
 #include BOOST_PP_ITERATE()
 
@@ -52,29 +58,38 @@ namespace boost { namespace fusion { namespace result_of
 #define N BOOST_PP_ITERATION()
 
 #if N < FUSION_MAX_VECTOR_SIZE
-namespace boost { namespace fusion { namespace result_of
+namespace boost
 {
-    template <typename Sequence, BOOST_PP_ENUM_PARAMS(N, int I)>
-    struct as_nview<Sequence, BOOST_PP_ENUM_PARAMS(N, I)>
-    {
-        typedef mpl::vector_c<int, BOOST_PP_ENUM_PARAMS(N, I)> index_type;
-        typedef nview<Sequence, index_type> type;
-    };
-}}}
+namespace fusion
+{
+namespace result_of
+{
+template <typename Sequence, BOOST_PP_ENUM_PARAMS(N, int I)>
+struct as_nview<Sequence, BOOST_PP_ENUM_PARAMS(N, I)>
+{
+	typedef mpl::vector_c<int, BOOST_PP_ENUM_PARAMS(N, I)> index_type;
+	typedef nview<Sequence, index_type> type;
+};
+}
+}
+}
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    template<BOOST_PP_ENUM_PARAMS(N, int I), typename Sequence>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline nview<Sequence, mpl::vector_c<int, BOOST_PP_ENUM_PARAMS(N, I)> >
-    as_nview(Sequence& s)
-    {
-        typedef mpl::vector_c<int, BOOST_PP_ENUM_PARAMS(N, I)> index_type;
-        return nview<Sequence, index_type>(s);
-    }
+namespace fusion
+{
+template<BOOST_PP_ENUM_PARAMS(N, int I), typename Sequence>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline nview<Sequence, mpl::vector_c<int, BOOST_PP_ENUM_PARAMS(N, I)> >
+as_nview(Sequence& s)
+{
+	typedef mpl::vector_c<int, BOOST_PP_ENUM_PARAMS(N, I)> index_type;
+	return nview<Sequence, index_type>(s);
+}
 
-}}
+}
+}
 
 #undef N
 

@@ -23,7 +23,11 @@
 #include <boost/geometry/core/point_type.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -49,36 +53,36 @@ template <typename Geometry>
 class Segment
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename point_type<Geometry>::type point_type;
+	typedef typename point_type<Geometry>::type point_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::Point<point_type>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Point<point_type>) );
 
 
-    template <size_t Index, size_t Dimension, size_t DimensionCount>
-    struct dimension_checker
-    {
-        static void apply()
-        {
-            Geometry* s = 0;
-            geometry::set<Index, Dimension>(*s, geometry::get<Index, Dimension>(*s));
-            dimension_checker<Index, Dimension + 1, DimensionCount>::apply();
-        }
-    };
+	template <size_t Index, size_t Dimension, size_t DimensionCount>
+	struct dimension_checker
+	{
+		static void apply()
+		{
+			Geometry* s = 0;
+			geometry::set<Index, Dimension>(*s, geometry::get<Index, Dimension>(*s));
+			dimension_checker<Index, Dimension + 1, DimensionCount>::apply();
+		}
+	};
 
-    template <size_t Index, size_t DimensionCount>
-    struct dimension_checker<Index, DimensionCount, DimensionCount>
-    {
-        static void apply() {}
-    };
+	template <size_t Index, size_t DimensionCount>
+	struct dimension_checker<Index, DimensionCount, DimensionCount>
+	{
+		static void apply() {}
+	};
 
 public :
 
-    BOOST_CONCEPT_USAGE(Segment)
-    {
-        static const size_t n = dimension<point_type>::type::value;
-        dimension_checker<0, 0, n>::apply();
-        dimension_checker<1, 0, n>::apply();
-    }
+	BOOST_CONCEPT_USAGE(Segment)
+	{
+		static const size_t n = dimension<point_type>::type::value;
+		dimension_checker<0, 0, n>::apply();
+		dimension_checker<1, 0, n>::apply();
+	}
 #endif
 };
 
@@ -93,43 +97,45 @@ template <typename Geometry>
 class ConstSegment
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename point_type<Geometry>::type point_type;
-    typedef typename coordinate_type<Geometry>::type coordinate_type;
+	typedef typename point_type<Geometry>::type point_type;
+	typedef typename coordinate_type<Geometry>::type coordinate_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<point_type>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<point_type>) );
 
 
-    template <size_t Index, size_t Dimension, size_t DimensionCount>
-    struct dimension_checker
-    {
-        static void apply()
-        {
-            const Geometry* s = 0;
-            coordinate_type coord(geometry::get<Index, Dimension>(*s));
-            boost::ignore_unused_variable_warning(coord);
-            dimension_checker<Index, Dimension + 1, DimensionCount>::apply();
-        }
-    };
+	template <size_t Index, size_t Dimension, size_t DimensionCount>
+	struct dimension_checker
+	{
+		static void apply()
+		{
+			const Geometry* s = 0;
+			coordinate_type coord(geometry::get<Index, Dimension>(*s));
+			boost::ignore_unused_variable_warning(coord);
+			dimension_checker<Index, Dimension + 1, DimensionCount>::apply();
+		}
+	};
 
-    template <size_t Index, size_t DimensionCount>
-    struct dimension_checker<Index, DimensionCount, DimensionCount>
-    {
-        static void apply() {}
-    };
+	template <size_t Index, size_t DimensionCount>
+	struct dimension_checker<Index, DimensionCount, DimensionCount>
+	{
+		static void apply() {}
+	};
 
 public :
 
-    BOOST_CONCEPT_USAGE(ConstSegment)
-    {
-        static const size_t n = dimension<point_type>::type::value;
-        dimension_checker<0, 0, n>::apply();
-        dimension_checker<1, 0, n>::apply();
-    }
+	BOOST_CONCEPT_USAGE(ConstSegment)
+	{
+		static const size_t n = dimension<point_type>::type::value;
+		dimension_checker<0, 0, n>::apply();
+		dimension_checker<1, 0, n>::apply();
+	}
 #endif
 };
 
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_CONCEPTS_SEGMENT_CONCEPT_HPP

@@ -14,12 +14,19 @@
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 #include <boost/numeric/odeint/algebra/algebra_dispatcher.hpp>
 
-namespace boost { namespace numeric { namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 template<typename T, typename S>
 struct algebra_dispatcher<nt2::container::table<T,S> >
 {
-  typedef vector_space_algebra algebra_type;
+	typedef vector_space_algebra algebra_type;
 };
-} } }
+}
+}
+}
 
 #endif

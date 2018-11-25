@@ -22,7 +22,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -30,25 +31,25 @@ BOOST_LOG_OPEN_NAMESPACE
 template< typename FunT, typename AssigneeT >
 struct save_result_wrapper
 {
-    typedef void result_type;
+	typedef void result_type;
 
-    save_result_wrapper(FunT fun, AssigneeT& assignee) : m_fun(fun), m_assignee(assignee) {}
+	save_result_wrapper(FunT fun, AssigneeT& assignee) : m_fun(fun), m_assignee(assignee) {}
 
-    template< typename ArgT >
-    result_type operator() (ArgT const& arg) const
-    {
-        m_assignee = m_fun(arg);
-    }
+	template< typename ArgT >
+	result_type operator() (ArgT const& arg) const
+	{
+		m_assignee = m_fun(arg);
+	}
 
 private:
-    FunT m_fun;
-    AssigneeT& m_assignee;
+	FunT m_fun;
+	AssigneeT& m_assignee;
 };
 
 template< typename FunT, typename AssigneeT >
 BOOST_FORCEINLINE save_result_wrapper< FunT, AssigneeT > save_result(FunT const& fun, AssigneeT& assignee)
 {
-    return save_result_wrapper< FunT, AssigneeT >(fun, assignee);
+	return save_result_wrapper< FunT, AssigneeT >(fun, assignee);
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

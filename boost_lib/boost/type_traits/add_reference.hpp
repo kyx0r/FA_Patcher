@@ -12,9 +12,11 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace detail {
+namespace detail
+{
 
 //
 // We can't filter out rvalue_references at the same level as
@@ -24,14 +26,14 @@ namespace detail {
 template <typename T>
 struct add_reference_impl
 {
-    typedef T& type;
+	typedef T& type;
 };
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template <typename T>
 struct add_reference_impl<T&&>
 {
-    typedef T&& type;
+	typedef T&& type;
 };
 #endif
 
@@ -39,19 +41,31 @@ struct add_reference_impl<T&&>
 
 template <class T> struct add_reference
 {
-   typedef typename boost::detail::add_reference_impl<T>::type type;
+	typedef typename boost::detail::add_reference_impl<T>::type type;
 };
 template <class T> struct add_reference<T&>
 {
-   typedef T& type;
+	typedef T& type;
 };
 
 // these full specialisations are always required:
-template <> struct add_reference<void> { typedef void type; };
+template <> struct add_reference<void>
+{
+	typedef void type;
+};
 #ifndef BOOST_NO_CV_VOID_SPECIALIZATIONS
-template <> struct add_reference<const void> { typedef const void type; };
-template <> struct add_reference<const volatile void> { typedef const volatile void type; };
-template <> struct add_reference<volatile void> { typedef volatile void type; };
+template <> struct add_reference<const void>
+{
+	typedef const void type;
+};
+template <> struct add_reference<const volatile void>
+{
+	typedef const volatile void type;
+};
+template <> struct add_reference<volatile void>
+{
+	typedef volatile void type;
+};
 #endif
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)

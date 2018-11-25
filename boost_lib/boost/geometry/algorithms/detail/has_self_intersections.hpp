@@ -35,7 +35,9 @@
 #endif
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -50,118 +52,122 @@ class overlay_invalid_input_exception : public geometry::exception
 {
 public:
 
-    inline overlay_invalid_input_exception() {}
+	inline overlay_invalid_input_exception() {}
 
-    virtual char const* what() const throw()
-    {
-        return "Boost.Geometry Overlay invalid input exception";
-    }
+	virtual char const* what() const throw()
+	{
+		return "Boost.Geometry Overlay invalid input exception";
+	}
 };
 
 #endif
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace overlay
+namespace detail
+{
+namespace overlay
 {
 
 
 template <typename Geometry, typename Strategy, typename RobustPolicy>
 inline bool has_self_intersections(Geometry const& geometry,
-        Strategy const& strategy,
-        RobustPolicy const& robust_policy,
-        bool throw_on_self_intersection = true)
+                                   Strategy const& strategy,
+                                   RobustPolicy const& robust_policy,
+                                   bool throw_on_self_intersection = true)
 {
-    typedef typename point_type<Geometry>::type point_type;
-    typedef turn_info
-    <
-        point_type,
-        typename segment_ratio_type<point_type, RobustPolicy>::type
-    > turn_info;
-    std::deque<turn_info> turns;
-    detail::disjoint::disjoint_interrupt_policy policy;
+	typedef typename point_type<Geometry>::type point_type;
+	typedef turn_info
+	<
+	point_type,
+	typename segment_ratio_type<point_type, RobustPolicy>::type
+	> turn_info;
+	std::deque<turn_info> turns;
+	detail::disjoint::disjoint_interrupt_policy policy;
 
-    detail::self_get_turn_points::self_turns
-        <
-            false,
-            detail::overlay::assign_null_policy
-        >(geometry, strategy, robust_policy, turns, policy, 0, false);
+	detail::self_get_turn_points::self_turns
+	<
+	false,
+	detail::overlay::assign_null_policy
+	>(geometry, strategy, robust_policy, turns, policy, 0, false);
 
 #ifdef BOOST_GEOMETRY_DEBUG_HAS_SELF_INTERSECTIONS
-    bool first = true;
+	bool first = true;
 #endif
-    for(typename std::deque<turn_info>::const_iterator it = boost::begin(turns);
-        it != boost::end(turns); ++it)
-    {
-        turn_info const& info = *it;
-        bool const both_union_turn =
-            info.operations[0].operation == detail::overlay::operation_union
-            && info.operations[1].operation == detail::overlay::operation_union;
-        bool const both_intersection_turn =
-            info.operations[0].operation == detail::overlay::operation_intersection
-            && info.operations[1].operation == detail::overlay::operation_intersection;
+	for(typename std::deque<turn_info>::const_iterator it = boost::begin(turns);
+	        it != boost::end(turns); ++it)
+	{
+		turn_info const& info = *it;
+		bool const both_union_turn =
+		    info.operations[0].operation == detail::overlay::operation_union
+		    && info.operations[1].operation == detail::overlay::operation_union;
+		bool const both_intersection_turn =
+		    info.operations[0].operation == detail::overlay::operation_intersection
+		    && info.operations[1].operation == detail::overlay::operation_intersection;
 
-        bool const valid = (both_union_turn || both_intersection_turn)
-            && (info.method == detail::overlay::method_touch
-                || info.method == detail::overlay::method_touch_interior);
+		bool const valid = (both_union_turn || both_intersection_turn)
+		                   && (info.method == detail::overlay::method_touch
+		                       || info.method == detail::overlay::method_touch_interior);
 
-        if (! valid)
-        {
+		if (! valid)
+		{
 #ifdef BOOST_GEOMETRY_DEBUG_HAS_SELF_INTERSECTIONS
-            if (first)
-            {
-                std::cout << "turn points: " << std::endl;
-                first = false;
-            }
-            std::cout << method_char(info.method);
-            for (int i = 0; i < 2; i++)
-            {
-                std::cout << " " << operation_char(info.operations[i].operation);
-                std::cout << " " << info.operations[i].seg_id;
-            }
-            std::cout << " " << geometry::dsv(info.point) << std::endl;
+			if (first)
+			{
+				std::cout << "turn points: " << std::endl;
+				first = false;
+			}
+			std::cout << method_char(info.method);
+			for (int i = 0; i < 2; i++)
+			{
+				std::cout << " " << operation_char(info.operations[i].operation);
+				std::cout << " " << info.operations[i].seg_id;
+			}
+			std::cout << " " << geometry::dsv(info.point) << std::endl;
 #endif
 
 #if ! defined(BOOST_GEOMETRY_OVERLAY_NO_THROW)
-            if (throw_on_self_intersection)
-            {
-                BOOST_THROW_EXCEPTION(overlay_invalid_input_exception());
-            }
+			if (throw_on_self_intersection)
+			{
+				BOOST_THROW_EXCEPTION(overlay_invalid_input_exception());
+			}
 #endif
-            return true;
-        }
+			return true;
+		}
 
-    }
-    return false;
+	}
+	return false;
 }
 
 // For backward compatibility
 template <typename Geometry>
 inline bool has_self_intersections(Geometry const& geometry,
-                    bool throw_on_self_intersection = true)
+                                   bool throw_on_self_intersection = true)
 {
-    typedef typename geometry::point_type<Geometry>::type point_type;
-    typedef typename geometry::rescale_policy_type<point_type>::type
-        rescale_policy_type;
+	typedef typename geometry::point_type<Geometry>::type point_type;
+	typedef typename geometry::rescale_policy_type<point_type>::type
+	rescale_policy_type;
 
-    typename strategy::intersection::services::default_strategy
-        <
-            typename cs_tag<Geometry>::type
-        >::type strategy;
+	typename strategy::intersection::services::default_strategy
+	<
+	typename cs_tag<Geometry>::type
+	>::type strategy;
 
-    rescale_policy_type robust_policy
-            = geometry::get_rescale_policy<rescale_policy_type>(geometry);
+	rescale_policy_type robust_policy
+	    = geometry::get_rescale_policy<rescale_policy_type>(geometry);
 
-    return has_self_intersections(geometry, strategy, robust_policy,
-                                  throw_on_self_intersection);
+	return has_self_intersections(geometry, strategy, robust_policy,
+	                              throw_on_self_intersection);
 }
 
 
-}} // namespace detail::overlay
+}
+} // namespace detail::overlay
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_HAS_SELF_INTERSECTIONS_HPP

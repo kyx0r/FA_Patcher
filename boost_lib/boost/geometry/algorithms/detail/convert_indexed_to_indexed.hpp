@@ -23,11 +23,15 @@
 #include <boost/geometry/core/coordinate_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace conversion
+namespace detail
+{
+namespace conversion
 {
 
 
@@ -37,26 +41,26 @@ template
     typename Destination,
     std::size_t Dimension,
     std::size_t DimensionCount
->
+    >
 struct indexed_to_indexed
 {
-    static inline void apply(Source const& source, Destination& destination)
-    {
-        typedef typename coordinate_type<Destination>::type coordinate_type;
+	static inline void apply(Source const& source, Destination& destination)
+	{
+		typedef typename coordinate_type<Destination>::type coordinate_type;
 
-        geometry::set<min_corner, Dimension>(destination,
-            boost::numeric_cast<coordinate_type>(
-                geometry::get<min_corner, Dimension>(source)));
-        geometry::set<max_corner, Dimension>(destination,
-            boost::numeric_cast<coordinate_type>(
-                geometry::get<max_corner, Dimension>(source)));
+		geometry::set<min_corner, Dimension>(destination,
+		                                     boost::numeric_cast<coordinate_type>(
+		                                             geometry::get<min_corner, Dimension>(source)));
+		geometry::set<max_corner, Dimension>(destination,
+		                                     boost::numeric_cast<coordinate_type>(
+		                                             geometry::get<max_corner, Dimension>(source)));
 
-        indexed_to_indexed
-            <
-                Source, Destination,
-                Dimension + 1, DimensionCount
-            >::apply(source, destination);
-    }
+		indexed_to_indexed
+		<
+		Source, Destination,
+		        Dimension + 1, DimensionCount
+		        >::apply(source, destination);
+	}
 };
 
 template
@@ -64,17 +68,19 @@ template
     typename Source,
     typename Destination,
     std::size_t DimensionCount
->
+    >
 struct indexed_to_indexed<Source, Destination, DimensionCount, DimensionCount>
 {
-    static inline void apply(Source const& , Destination& )
-    {}
+	static inline void apply(Source const&, Destination& )
+	{}
 };
 
 
-}} // namespace detail::conversion
+}
+} // namespace detail::conversion
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_CONVERT_INDEXED_TO_INDEXED_HPP

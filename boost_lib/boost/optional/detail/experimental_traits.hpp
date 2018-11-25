@@ -16,8 +16,11 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/type_traits.hpp>
 
-namespace boost { namespace optional_detail {
-  
+namespace boost
+{
+namespace optional_detail
+{
+
 // The condition to use POD implementation
 
 #ifdef BOOST_OPTIONAL_CONFIG_NO_POD_SPEC
@@ -46,7 +49,7 @@ namespace boost { namespace optional_detail {
 #  elif (defined BOOST_CLANG)
 #    define BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
 #  endif
-#endif  
+#endif
 
 
 #ifndef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
@@ -54,45 +57,46 @@ namespace boost { namespace optional_detail {
 #else
 #  define BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T) std::is_trivially_default_constructible<T>::value
 #endif
-  
-  
-  
+
+
+
 #ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
 template <typename T>
 struct is_type_trivially_copyable
-  : boost::conditional<(boost::has_trivial_copy_constructor<T>::value &&
-                        boost::has_trivial_move_constructor<T>::value &&
-                        boost::has_trivial_destructor<T>::value &&
-                        boost::has_trivial_move_assign<T>::value &&
-                        boost::has_trivial_assign<T>::value),
-                        boost::true_type, boost::false_type>::type
-{};
+: boost::conditional<(boost::has_trivial_copy_constructor<T>::value &&
+                      boost::has_trivial_move_constructor<T>::value &&
+                      boost::has_trivial_destructor<T>::value &&
+                      boost::has_trivial_move_assign<T>::value &&
+                      boost::has_trivial_assign<T>::value),
+  boost::true_type, boost::false_type>::type
+  {};
 #else
 template <typename T>
 struct is_type_trivially_copyable
 : boost::conditional<(boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value),
-                     boost::true_type, boost::false_type>::type
-{};
+  boost::true_type, boost::false_type>::type
+  {};
 #endif
 
 
 
-#ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES  
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
 template <typename T>
 struct optional_uses_direct_storage_for_
-  : boost::conditional< (is_type_trivially_copyable<T>::value && BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T)) ||
-                        (boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
-                      , boost::true_type, boost::false_type>::type
-{};
+: boost::conditional< (is_type_trivially_copyable<T>::value && BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T)) ||
+  (boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
+  , boost::true_type, boost::false_type>::type
+  {};
 #else
 template <typename T>
 struct optional_uses_direct_storage_for_
-  : boost::conditional<(boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
-                      , boost::true_type, boost::false_type>::type
-{};
+: boost::conditional<(boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
+  , boost::true_type, boost::false_type>::type
+  {};
 #endif
 
 
-}} // boost::optional_detail
+}
+} // boost::optional_detail
 
 #endif

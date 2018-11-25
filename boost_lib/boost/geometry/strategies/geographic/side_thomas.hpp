@@ -18,11 +18,15 @@
 #include <boost/geometry/strategies/geographic/side.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace side
+namespace strategy
+{
+namespace side
 {
 
 /*!
@@ -36,25 +40,27 @@ template
 <
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class thomas
-    : public side::geographic<strategy::thomas, Spheroid, CalculationType>
+	: public side::geographic<strategy::thomas, Spheroid, CalculationType>
 {
-    typedef side::geographic<strategy::thomas, Spheroid, CalculationType> base_t;
+	typedef side::geographic<strategy::thomas, Spheroid, CalculationType> base_t;
 
 public:
-    thomas()
-    {}
+	thomas()
+	{}
 
-    explicit thomas(Spheroid const& model)
-        : base_t(model)
-    {}
+	explicit thomas(Spheroid const& model)
+		: base_t(model)
+	{}
 };
 
-}} // namespace strategy::side
+}
+} // namespace strategy::side
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_SIDE_THOMAS_HPP

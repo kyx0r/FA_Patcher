@@ -13,9 +13,11 @@
 
 #include <boost/mpl/bool.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace type_erasure {
+namespace type_erasure
+{
 
 #ifdef BOOST_TYPE_ERASURE_DOXYGEN
 
@@ -30,7 +32,7 @@ struct is_placeholder : ::boost::mpl::false_ {};
 
 template<class T>
 struct is_placeholder<T, typename T::_boost_type_erasure_is_placeholder> :
-    ::boost::mpl::true_ {};
+	::boost::mpl::true_ {};
 
 #endif
 

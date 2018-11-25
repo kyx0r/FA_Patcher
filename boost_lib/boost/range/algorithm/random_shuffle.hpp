@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function random_shuffle
 ///
@@ -29,40 +29,40 @@ namespace boost
 template<class RandomAccessRange>
 inline RandomAccessRange& random_shuffle(RandomAccessRange& rng)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::random_shuffle(boost::begin(rng), boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::random_shuffle(boost::begin(rng), boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange>
 inline const RandomAccessRange& random_shuffle(const RandomAccessRange& rng)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::random_shuffle(boost::begin(rng), boost::end(rng));
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::random_shuffle(boost::begin(rng), boost::end(rng));
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class Generator>
 inline RandomAccessRange& random_shuffle(RandomAccessRange& rng, Generator& gen)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
-    std::random_shuffle(boost::begin(rng), boost::end(rng), gen);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<RandomAccessRange> ));
+	std::random_shuffle(boost::begin(rng), boost::end(rng), gen);
+	return rng;
 }
 
 /// \overload
 template<class RandomAccessRange, class Generator>
 inline const RandomAccessRange& random_shuffle(const RandomAccessRange& rng, Generator& gen)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
-    std::random_shuffle(boost::begin(rng), boost::end(rng), gen);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( RandomAccessRangeConcept<const RandomAccessRange> ));
+	std::random_shuffle(boost::begin(rng), boost::end(rng), gen);
+	return rng;
 }
 
-    } // namespace range
-    using range::random_shuffle;
+} // namespace range
+using range::random_shuffle;
 } // namespace boost
 
 #endif // include guard

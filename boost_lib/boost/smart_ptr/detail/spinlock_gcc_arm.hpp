@@ -37,77 +37,77 @@ class spinlock
 {
 public:
 
-    int v_;
+	int v_;
 
 public:
 
-    bool try_lock()
-    {
-        int r;
+	bool try_lock()
+	{
+		int r;
 
 #ifdef BOOST_SP_ARM_HAS_LDREX
 
-        __asm__ __volatile__(
-            "ldrex %0, [%2]; \n"
-            "cmp %0, %1; \n"
-            "strexne %0, %1, [%2]; \n"
-            BOOST_SP_ARM_BARRIER :
-            "=&r"( r ): // outputs
-            "r"( 1 ), "r"( &v_ ): // inputs
-            "memory", "cc" );
+		__asm__ __volatile__(
+		    "ldrex %0, [%2]; \n"
+		    "cmp %0, %1; \n"
+		    "strexne %0, %1, [%2]; \n"
+		    BOOST_SP_ARM_BARRIER :
+		    "=&r"( r ): // outputs
+		    "r"( 1 ), "r"( &v_ ): // inputs
+		    "memory", "cc" );
 
 #else
 
-        __asm__ __volatile__(
-            "swp %0, %1, [%2];\n"
-            BOOST_SP_ARM_BARRIER :
-            "=&r"( r ): // outputs
-            "r"( 1 ), "r"( &v_ ): // inputs
-            "memory", "cc" );
+		__asm__ __volatile__(
+		    "swp %0, %1, [%2];\n"
+		    BOOST_SP_ARM_BARRIER :
+		    "=&r"( r ): // outputs
+		    "r"( 1 ), "r"( &v_ ): // inputs
+		    "memory", "cc" );
 
 #endif
 
-        return r == 0;
-    }
+		return r == 0;
+	}
 
-    void lock()
-    {
-        for( unsigned k = 0; !try_lock(); ++k )
-        {
-            boost::detail::yield( k );
-        }
-    }
+	void lock()
+	{
+		for( unsigned k = 0; !try_lock(); ++k )
+		{
+			boost::detail::yield( k );
+		}
+	}
 
-    void unlock()
-    {
-        __asm__ __volatile__( BOOST_SP_ARM_BARRIER ::: "memory" );
-        *const_cast< int volatile* >( &v_ ) = 0;
-        __asm__ __volatile__( BOOST_SP_ARM_BARRIER ::: "memory" );
-    }
+	void unlock()
+	{
+		__asm__ __volatile__( BOOST_SP_ARM_BARRIER ::: "memory" );
+		*const_cast< int volatile* >( &v_ ) = 0;
+		__asm__ __volatile__( BOOST_SP_ARM_BARRIER ::: "memory" );
+	}
 
 public:
 
-    class scoped_lock
-    {
-    private:
+	class scoped_lock
+	{
+	private:
 
-        spinlock & sp_;
+		spinlock & sp_;
 
-        scoped_lock( scoped_lock const & );
-        scoped_lock & operator=( scoped_lock const & );
+		scoped_lock( scoped_lock const & );
+		scoped_lock & operator=( scoped_lock const & );
 
-    public:
+	public:
 
-        explicit scoped_lock( spinlock & sp ): sp_( sp )
-        {
-            sp.lock();
-        }
+		explicit scoped_lock( spinlock & sp ): sp_( sp )
+		{
+			sp.lock();
+		}
 
-        ~scoped_lock()
-        {
-            sp_.unlock();
-        }
-    };
+		~scoped_lock()
+		{
+			sp_.unlock();
+		}
+	};
 };
 
 } // namespace detail

@@ -10,13 +10,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace error
-    {
-      using v1::error::none_of_the_expected_cases_found;
-    }
-  }
+namespace metaparse
+{
+namespace error
+{
+using v1::error::none_of_the_expected_cases_found;
+}
+}
 }
 
 #endif

@@ -14,23 +14,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class Ps, class S, class Pos>
-        struct sequence_impl :
-          boost::mpl::fold<
-            Ps,
-            accept<boost::mpl::deque<>, S, Pos>,
-            apply_parser
-          >
-        {};
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class Ps, class S, class Pos>
+struct sequence_impl :
+	boost::mpl::fold<
+	Ps,
+	accept<boost::mpl::deque<>, S, Pos>,
+	apply_parser
+	>
+{};
+}
+}
+}
 }
 
 #endif

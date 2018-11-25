@@ -8,17 +8,17 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class>
-      struct get_remaining_impl;
+namespace metaparse
+{
+namespace v1
+{
+template <class>
+struct get_remaining_impl;
 
-      template <class>
-      struct get_remaining;
-    }
-  }
+template <class>
+struct get_remaining;
+}
+}
 }
 
 #endif

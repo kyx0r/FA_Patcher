@@ -12,15 +12,17 @@
 
 BOOST_HEADER_DEPRECATED("<boost/integer/common_factor_rt.hpp>");
 
-namespace boost {
-   namespace math {
-      using boost::integer::gcd;
-      using boost::integer::lcm;
-      using boost::integer::gcd_range;
-      using boost::integer::lcm_range;
-      using boost::integer::gcd_evaluator;
-      using boost::integer::lcm_evaluator;
-   }
+namespace boost
+{
+namespace math
+{
+using boost::integer::gcd;
+using boost::integer::lcm;
+using boost::integer::gcd_range;
+using boost::integer::lcm_range;
+using boost::integer::gcd_evaluator;
+using boost::integer::lcm_evaluator;
+}
 }
 
 #endif  // BOOST_MATH_COMMON_FACTOR_RT_HPP

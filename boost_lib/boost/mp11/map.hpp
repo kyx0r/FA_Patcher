@@ -36,13 +36,16 @@ template<class M, class T> struct mp_map_replace_impl;
 
 template<template<class...> class M, class... U, class T> struct mp_map_replace_impl<M<U...>, T>
 {
-    using K = mp_first<T>;
+	using K = mp_first<T>;
 
-    // mp_replace_if is inlined here using a struct _f because of msvc-14.0
+	// mp_replace_if is inlined here using a struct _f because of msvc-14.0
 
-    template<class V> struct _f { using type = mp_if< std::is_same<mp_first<V>, K>, T, V >; };
+	template<class V> struct _f
+	{
+		using type = mp_if< std::is_same<mp_first<V>, K>, T, V >;
+	};
 
-    using type = mp_if< mp_map_contains<M<U...>, K>, M<typename _f<U>::type...>, M<U..., T> >;
+	using type = mp_if< mp_map_contains<M<U...>, K>, M<typename _f<U>::type...>, M<U..., T> >;
 };
 
 } // namespace detail
@@ -55,12 +58,12 @@ namespace detail
 
 template<class M, class T, template<class...> class F> struct mp_map_update_impl
 {
-    template<class U> using _f = std::is_same<mp_first<T>, mp_first<U>>;
+	template<class U> using _f = std::is_same<mp_first<T>, mp_first<U>>;
 
-    // _f3<L<X, Y...>> -> L<X, F<X, Y...>>
-    template<class L> using _f3 = mp_assign<L, mp_list<mp_first<L>, mp_rename<L, F>>>;
+	// _f3<L<X, Y...>> -> L<X, F<X, Y...>>
+	template<class L> using _f3 = mp_assign<L, mp_list<mp_first<L>, mp_rename<L, F>>>;
 
-    using type = mp_if< mp_map_contains<M, mp_first<T>>, mp_transform_if<_f, _f3, M>, mp_push_back<M, T> >;
+	using type = mp_if< mp_map_contains<M, mp_first<T>>, mp_transform_if<_f, _f3, M>, mp_push_back<M, T> >;
 };
 
 } // namespace detail
@@ -74,8 +77,8 @@ namespace detail
 
 template<class M, class K> struct mp_map_erase_impl
 {
-    template<class T> using _f = std::is_same<mp_first<T>, K>;
-    using type = mp_remove_if<M, _f>;
+	template<class T> using _f = std::is_same<mp_first<T>, K>;
+	using type = mp_remove_if<M, _f>;
 };
 
 } // namespace detail
@@ -101,12 +104,12 @@ template<class M> using mp_keys_are_set = mp_is_set<mp_map_keys<M>>;
 
 template<class M> struct mp_is_map_impl
 {
-    using type = mp_false;
+	using type = mp_false;
 };
 
 template<template<class...> class M, class... T> struct mp_is_map_impl<M<T...>>
 {
-    using type = mp_eval_if<mp_not<mp_all<mp_is_map_element<T>...>>, mp_false, mp_keys_are_set, M<T...>>;
+	using type = mp_eval_if<mp_not<mp_all<mp_is_map_element<T>...>>, mp_false, mp_keys_are_set, M<T...>>;
 };
 
 } // namespace detail

@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ remove_member_volatile_hpp
 /*`
@@ -25,20 +28,21 @@ template<typename T>
 using remove_member_volatile_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::traits<T>::remove_member_volatile,
-        member_qualifiers_are_illegal_for_this_type>;
+    typename detail::traits<T>::remove_member_volatile,
+    member_qualifiers_are_illegal_for_this_type>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct remove_member_volatile_impl {};
+template<typename T, typename = std::false_type>
+struct remove_member_volatile_impl {};
 
-    template<typename T>
-    struct remove_member_volatile_impl <T, typename std::is_same<
-        remove_member_volatile_t<T>, detail::dummy>::type>
-    {
-        using type = remove_member_volatile_t<T>;
-    };
+template<typename T>
+struct remove_member_volatile_impl <T, typename std::is_same<
+	remove_member_volatile_t<T>, detail::dummy>::type>
+{
+	using type = remove_member_volatile_t<T>;
+};
 }
 
 //->
@@ -47,7 +51,8 @@ template<typename T>
 struct remove_member_volatile : detail::remove_member_volatile_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

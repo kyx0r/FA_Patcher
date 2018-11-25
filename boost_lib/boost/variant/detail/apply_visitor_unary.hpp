@@ -35,7 +35,8 @@
 #   include <boost/variant/detail/has_result_type.hpp>
 #endif
 
-namespace boost {
+namespace boost
+{
 
 //////////////////////////////////////////////////////////////////////////
 // function template apply_visitor(visitor, visitable)
@@ -67,18 +68,18 @@ namespace boost {
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template <typename Visitor, typename Visitable>
 inline
-    BOOST_VARIANT_AUX_APPLY_VISITOR_NON_CONST_RESULT_TYPE(Visitor)
+BOOST_VARIANT_AUX_APPLY_VISITOR_NON_CONST_RESULT_TYPE(Visitor)
 apply_visitor(Visitor& visitor, Visitable&& visitable)
 {
-    return ::boost::forward<Visitable>(visitable).apply_visitor(visitor);
+	return ::boost::forward<Visitable>(visitable).apply_visitor(visitor);
 }
 #else
 template <typename Visitor, typename Visitable>
 inline
-    BOOST_VARIANT_AUX_APPLY_VISITOR_NON_CONST_RESULT_TYPE(Visitor)
+BOOST_VARIANT_AUX_APPLY_VISITOR_NON_CONST_RESULT_TYPE(Visitor)
 apply_visitor(Visitor& visitor, Visitable& visitable)
 {
-    return visitable.apply_visitor(visitor);
+	return visitable.apply_visitor(visitor);
 }
 #endif
 
@@ -91,18 +92,18 @@ apply_visitor(Visitor& visitor, Visitable& visitable)
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template <typename Visitor, typename Visitable>
 inline
-    BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(typename Visitor::result_type)
+BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(typename Visitor::result_type)
 apply_visitor(const Visitor& visitor, Visitable&& visitable)
 {
-    return ::boost::forward<Visitable>(visitable).apply_visitor(visitor);
+	return ::boost::forward<Visitable>(visitable).apply_visitor(visitor);
 }
 #else
 template <typename Visitor, typename Visitable>
 inline
-    BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(typename Visitor::result_type)
+BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(typename Visitor::result_type)
 apply_visitor(const Visitor& visitor, Visitable& visitable)
 {
-    return visitable.apply_visitor(visitor);
+	return visitable.apply_visitor(visitor);
 }
 #endif
 
@@ -110,72 +111,84 @@ apply_visitor(const Visitor& visitor, Visitable& visitable)
 #if !defined(BOOST_NO_CXX14_DECLTYPE_AUTO) && !defined(BOOST_NO_CXX11_DECLTYPE_N3276)
 
 // C++14
-namespace detail { namespace variant {
+namespace detail
+{
+namespace variant
+{
 
 // This class serves only metaprogramming purposes. none of its methods must be called at runtime!
 template <class Visitor, class Variant>
-struct result_multideduce1 {
-    typedef typename Variant::types                 types;
-    typedef typename boost::mpl::begin<types>::type begin_it;
-    typedef typename boost::mpl::advance<
-        begin_it, boost::mpl::int_<boost::mpl::size<types>::type::value - 1>
-    >::type                                         last_it;
+struct result_multideduce1
+{
+	typedef typename Variant::types                 types;
+	typedef typename boost::mpl::begin<types>::type begin_it;
+	typedef typename boost::mpl::advance<
+	begin_it, boost::mpl::int_<boost::mpl::size<types>::type::value - 1>
+	>::type                                         last_it;
 
-    // For metaprogramming purposes ONLY! Do not use this method (and class) at runtime!
-    static Visitor& vis() BOOST_NOEXCEPT {
-        // Functions that work with lambdas must be defined in same translation unit.
-        // Because of that, we can not use `boost::decval<Visitor&>()` here.
-        Visitor&(*f)() = 0; // pointer to function
-        return f();
-    }
+	// For metaprogramming purposes ONLY! Do not use this method (and class) at runtime!
+	static Visitor& vis() BOOST_NOEXCEPT
+	{
+		// Functions that work with lambdas must be defined in same translation unit.
+		// Because of that, we can not use `boost::decval<Visitor&>()` here.
+		Visitor&(*f)() = 0; // pointer to function
+		return f();
+	}
 
-    static decltype(auto) deduce_impl(last_it, unsigned /*helper*/) {
-        typedef typename boost::mpl::deref<last_it>::type value_t;
-        return vis()( boost::declval< value_t& >() );
-    }
+	static decltype(auto) deduce_impl(last_it, unsigned /*helper*/)
+	{
+		typedef typename boost::mpl::deref<last_it>::type value_t;
+		return vis()( boost::declval< value_t& >() );
+	}
 
-    template <class It>
-    static decltype(auto) deduce_impl(It, unsigned helper) {
-        typedef typename boost::mpl::next<It>::type next_t;
-        typedef typename boost::mpl::deref<It>::type value_t;
-        if (helper == boost::mpl::distance<begin_it, It>::type::value) {
-            return deduce_impl(next_t(), ++helper);
-        }
+	template <class It>
+	static decltype(auto) deduce_impl(It, unsigned helper)
+	{
+		typedef typename boost::mpl::next<It>::type next_t;
+		typedef typename boost::mpl::deref<It>::type value_t;
+		if (helper == boost::mpl::distance<begin_it, It>::type::value)
+		{
+			return deduce_impl(next_t(), ++helper);
+		}
 
-        return vis()( boost::declval< value_t& >() );
-    }
+		return vis()( boost::declval< value_t& >() );
+	}
 
-    static decltype(auto) deduce() {
-        return deduce_impl(begin_it(), 0);
-    }
+	static decltype(auto) deduce()
+	{
+		return deduce_impl(begin_it(), 0);
+	}
 };
 
 template <class Visitor, class Variant>
 struct result_wrapper1
 {
-    typedef decltype(result_multideduce1<Visitor, Variant>::deduce()) result_type;
+	typedef decltype(result_multideduce1<Visitor, Variant>::deduce()) result_type;
 
-    Visitor&& visitor_;
-    explicit result_wrapper1(Visitor&& visitor) BOOST_NOEXCEPT
-        : visitor_(::boost::forward<Visitor>(visitor))
-    {}
+	Visitor&& visitor_;
+	explicit result_wrapper1(Visitor&& visitor) BOOST_NOEXCEPT
+:
+	visitor_(::boost::forward<Visitor>(visitor))
+	{}
 
-    template <class T>
-    result_type operator()(T&& val) const {
-        return visitor_(::boost::forward<T>(val));
-    }
+	template <class T>
+	result_type operator()(T&& val) const
+	{
+		return visitor_(::boost::forward<T>(val));
+	}
 };
 
-}} // namespace detail::variant
+}
+} // namespace detail::variant
 
 template <typename Visitor, typename Visitable>
 inline decltype(auto) apply_visitor(Visitor&& visitor, Visitable&& visitable,
-    typename boost::disable_if<
-        boost::detail::variant::has_result_type<Visitor>
-    >::type* = 0)
+                                    typename boost::disable_if<
+                                    boost::detail::variant::has_result_type<Visitor>
+                                    >::type* = 0)
 {
-    boost::detail::variant::result_wrapper1<Visitor, typename remove_reference<Visitable>::type> cpp14_vis(::boost::forward<Visitor>(visitor));
-    return ::boost::forward<Visitable>(visitable).apply_visitor(cpp14_vis);
+	boost::detail::variant::result_wrapper1<Visitor, typename remove_reference<Visitable>::type> cpp14_vis(::boost::forward<Visitor>(visitor));
+	return ::boost::forward<Visitable>(visitable).apply_visitor(cpp14_vis);
 }
 
 #endif // !defined(BOOST_NO_CXX14_DECLTYPE_AUTO) && !defined(BOOST_NO_CXX11_DECLTYPE_N3276)

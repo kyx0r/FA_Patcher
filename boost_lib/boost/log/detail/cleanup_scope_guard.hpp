@@ -23,25 +23,30 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! Cleanup scope guard
 template< typename T >
 struct cleanup_guard
 {
-    explicit cleanup_guard(T& obj) : m_Obj(obj) {}
-    ~cleanup_guard() { m_Obj.clear(); }
+	explicit cleanup_guard(T& obj) : m_Obj(obj) {}
+	~cleanup_guard()
+	{
+		m_Obj.clear();
+	}
 
-    // Copying prohibited
-    BOOST_DELETED_FUNCTION(cleanup_guard(cleanup_guard const&))
-    BOOST_DELETED_FUNCTION(cleanup_guard& operator= (cleanup_guard const&))
+	// Copying prohibited
+	BOOST_DELETED_FUNCTION(cleanup_guard(cleanup_guard const&))
+	BOOST_DELETED_FUNCTION(cleanup_guard& operator= (cleanup_guard const&))
 
 private:
-    T& m_Obj;
+	T& m_Obj;
 };
 
 } // namespace aux

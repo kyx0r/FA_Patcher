@@ -14,22 +14,31 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/msm/common.hpp>
 
-namespace boost { namespace msm { namespace back
+namespace boost
+{
+namespace msm
+{
+namespace back
 {
 // used for disable_if
-template <int> struct dummy { dummy(int) {} };
+template <int> struct dummy
+{
+	dummy(int) {}
+};
 // return value for transition handling
 typedef enum
 {
-    HANDLED_FALSE=0,
-    HANDLED_TRUE =1,
-    HANDLED_GUARD_REJECT=2,
-    HANDLED_DEFERRED=4
+	HANDLED_FALSE=0,
+	HANDLED_TRUE =1,
+	HANDLED_GUARD_REJECT=2,
+	HANDLED_DEFERRED=4
 } HandledEnum;
 
 typedef HandledEnum execute_return;
 
-}}}
+}
+}
+}
 
 #endif //BOOST_MSM_COMMON_TYPES_H
 

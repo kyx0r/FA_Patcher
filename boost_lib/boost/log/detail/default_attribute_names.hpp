@@ -24,13 +24,16 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
-namespace default_attribute_names {
+namespace default_attribute_names
+{
 
 BOOST_LOG_API attribute_name severity();
 BOOST_LOG_API attribute_name channel();

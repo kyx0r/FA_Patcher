@@ -32,31 +32,38 @@ Distributed under the Boost Software License, Version 1.0.
 #include <utility>
 
 
-BOOST_HANA_NAMESPACE_BEGIN namespace struct_detail {
-    template <typename Memptr, Memptr ptr>
-    struct member_ptr {
-        template <typename T>
-        constexpr decltype(auto) operator()(T&& t) const
-        { return static_cast<T&&>(t).*ptr; }
-    };
+BOOST_HANA_NAMESPACE_BEGIN namespace struct_detail
+{
+template <typename Memptr, Memptr ptr>
+struct member_ptr
+{
+	template <typename T>
+	constexpr decltype(auto) operator()(T&& t) const
+	{
+		return static_cast<T&&>(t).*ptr;
+	}
+};
 
-    constexpr std::size_t strlen(char const* s) {
-        std::size_t n = 0;
-        while (*s++ != '\0')
-            ++n;
-        return n;
-    }
+constexpr std::size_t strlen(char const* s)
+{
+	std::size_t n = 0;
+	while (*s++ != '\0')
+		++n;
+	return n;
+}
 
-    template <std::size_t n, typename Names, std::size_t ...i>
-    constexpr auto prepare_member_name_impl(std::index_sequence<i...>) {
-        return hana::string_c<hana::at_c<n>(Names::get())[i]...>;
-    }
+template <std::size_t n, typename Names, std::size_t ...i>
+constexpr auto prepare_member_name_impl(std::index_sequence<i...>)
+{
+	return hana::string_c<hana::at_c<n>(Names::get())[i]...>;
+}
 
-    template <std::size_t n, typename Names>
-    constexpr auto prepare_member_name() {
-        constexpr std::size_t len = strlen(hana::at_c<n>(Names::get()));
-        return prepare_member_name_impl<n, Names>(std::make_index_sequence<len>{});
-    }
+template <std::size_t n, typename Names>
+constexpr auto prepare_member_name()
+{
+	constexpr std::size_t len = strlen(hana::at_c<n>(Names::get()));
+	return prepare_member_name_impl<n, Names>(std::make_index_sequence<len> {});
+}
 } BOOST_HANA_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////////

@@ -21,13 +21,13 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    template <typename M>
-    struct MonadPlus
-        : hana::integral_constant<bool,
-            !is_default<concat_impl<typename tag_of<M>::type>>::value &&
-            !is_default<empty_impl<typename tag_of<M>::type>>::value
-        >
-    { };
+template <typename M>
+struct MonadPlus
+	: hana::integral_constant<bool,
+	  !is_default<concat_impl<typename tag_of<M>::type>>::value &&
+	  !is_default<empty_impl<typename tag_of<M>::type>>::value
+	  >
+{ };
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CONCEPT_MONAD_PLUS_HPP

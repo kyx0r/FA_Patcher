@@ -18,34 +18,38 @@
 #include <boost/geometry/util/select_calculation_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace envelope
+namespace strategy
+{
+namespace envelope
 {
 
 template
 <
     typename CalculationType = void
->
+    >
 class cartesian_segment
 {
 public :
 
-    template <typename Point1, typename Point2, typename Box>
-    inline void
-    apply(Point1 const& point1, Point2 const& point2, Box& box) const
-    {
-        geometry::detail::envelope::envelope_one_segment
-                <
-                    0,
-                    dimension<Point1>::value
-                >
-                ::apply(point1,
-                        point2,
-                        box,
-                        strategy::envelope::cartesian_segment<CalculationType>());
-    }
+	template <typename Point1, typename Point2, typename Box>
+	inline void
+	apply(Point1 const& point1, Point2 const& point2, Box& box) const
+	{
+		geometry::detail::envelope::envelope_one_segment
+		<
+		0,
+		dimension<Point1>::value
+		>
+		::apply(point1,
+		        point2,
+		        box,
+		        strategy::envelope::cartesian_segment<CalculationType>());
+	}
 
 };
 
@@ -57,7 +61,7 @@ namespace services
 template <typename CalculationType>
 struct default_strategy<cartesian_tag, CalculationType>
 {
-    typedef strategy::envelope::cartesian_segment<CalculationType> type;
+	typedef strategy::envelope::cartesian_segment<CalculationType> type;
 };
 
 }
@@ -65,8 +69,10 @@ struct default_strategy<cartesian_tag, CalculationType>
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::envelope
+}
+} // namespace strategy::envelope
 
-}} //namepsace boost::geometry
+}
+} //namepsace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_ENVELOPE_SEGMENT_HPP

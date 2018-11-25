@@ -10,25 +10,31 @@
 
 #include <boost/uuid/uuid.hpp>
 
-namespace boost {
-namespace uuids {
+namespace boost
+{
+namespace uuids
+{
 
 // generate a nil uuid
-struct nil_generator {
-    typedef uuid result_type;
-    
-    uuid operator()() const {
-        // initialize to all zeros
-        uuid u = {{0}};
-        return u;
-    }
+struct nil_generator
+{
+	typedef uuid result_type;
+
+	uuid operator()() const
+	{
+		// initialize to all zeros
+		uuid u = {{0}};
+		return u;
+	}
 };
 
-inline uuid nil_uuid() {
-    return nil_generator()();
+inline uuid nil_uuid()
+{
+	return nil_generator()();
 }
 
-}} // namespace boost::uuids
+}
+} // namespace boost::uuids
 
 #endif // BOOST_UUID_NIL_GENERATOR_HPP
 

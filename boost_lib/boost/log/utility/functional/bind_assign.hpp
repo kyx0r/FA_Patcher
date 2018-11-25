@@ -24,26 +24,27 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! The function object that assigns its second operand to the first one
 struct assign_fun
 {
-    typedef void result_type;
+	typedef void result_type;
 
-    template< typename LeftT, typename RightT >
-    void operator() (LeftT& assignee, RightT const& val) const
-    {
-        assignee = val;
-    }
+	template< typename LeftT, typename RightT >
+	void operator() (LeftT& assignee, RightT const& val) const
+	{
+		assignee = val;
+	}
 };
 
 template< typename AssigneeT >
 BOOST_FORCEINLINE binder1st< assign_fun, AssigneeT& > bind_assign(AssigneeT& assignee)
 {
-    return binder1st< assign_fun, AssigneeT& >(assign_fun(), assignee);
+	return binder1st< assign_fun, AssigneeT& >(assign_fun(), assignee);
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

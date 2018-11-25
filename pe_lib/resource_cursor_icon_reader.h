@@ -24,7 +24,7 @@ public:
 	const std::string get_icon_by_id_lang(uint32_t language, uint32_t icon_group_id) const;
 	//Returns icon data of group of icons by ID and index in language directory (instead of language) (minimum checks of format correctness)
 	const std::string get_icon_by_id(uint32_t icon_group_id, uint32_t index = 0) const;
-	
+
 	//Returns single cursor data by ID and language (minimum checks of format correctness)
 	const std::string get_single_cursor_by_id_lang(uint32_t language, uint32_t id) const;
 	//Returns single cursor data by ID and index in language directory (instead of language) (minimum checks of format correctness)
@@ -45,7 +45,7 @@ private:
 	//Helper function of creating icon headers from ICON_GROUP resource data
 	//Returns icon count
 	static uint16_t format_icon_headers(std::string& ico_data, const std::string& resource_data);
-	
+
 	//Helper function of creating cursor headers from CURSOR_GROUP resource data
 	//Returns cursor count
 	uint16_t format_cursor_headers(std::string& cur_data, const std::string& resource_data, uint32_t language, uint32_t index = 0xFFFFFFFF) const;

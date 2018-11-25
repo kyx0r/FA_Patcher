@@ -8,16 +8,16 @@
 #define BOOST_TTI_DETAIL_NOTYPE_HPP
 
 namespace boost
-  {
-  namespace tti
-    {
-    namespace detail
-      {
-      struct notype
-        {
-        };
-      }
-    }
-  }
-  
+{
+namespace tti
+{
+namespace detail
+{
+struct notype
+{
+};
+}
+}
+}
+
 #endif // BOOST_TTI_DETAIL_NOTYPE_HPP

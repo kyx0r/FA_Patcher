@@ -9,25 +9,34 @@
 
 namespace boost
 {
-    namespace cnv
-    {
-        struct adjust { enum type { left, right, center };};
-        struct base { enum type { bin =2, dec =10, hex =16, oct =8 };};
-        struct notation { enum type { fixed, scientific };};
+namespace cnv
+{
+struct adjust
+{
+	enum type { left, right, center };
+};
+struct base
+{
+	enum type { bin =2, dec =10, hex =16, oct =8 };
+};
+struct notation
+{
+	enum type { fixed, scientific };
+};
 
-        namespace parameter
-        {
-            BOOST_PARAMETER_KEYWORD(type,     adjust)
-            BOOST_PARAMETER_KEYWORD(type,       base)
-            BOOST_PARAMETER_KEYWORD(type,       fill)
-            BOOST_PARAMETER_KEYWORD(type,     locale)
-            BOOST_PARAMETER_KEYWORD(type,   notation)
-            BOOST_PARAMETER_KEYWORD(type,  precision)
-            BOOST_PARAMETER_KEYWORD(type,     skipws)
-            BOOST_PARAMETER_KEYWORD(type,  uppercase)
-            BOOST_PARAMETER_KEYWORD(type,      width)
-        }
-    }
+namespace parameter
+{
+BOOST_PARAMETER_KEYWORD(type,     adjust)
+BOOST_PARAMETER_KEYWORD(type,       base)
+BOOST_PARAMETER_KEYWORD(type,       fill)
+BOOST_PARAMETER_KEYWORD(type,     locale)
+BOOST_PARAMETER_KEYWORD(type,   notation)
+BOOST_PARAMETER_KEYWORD(type,  precision)
+BOOST_PARAMETER_KEYWORD(type,     skipws)
+BOOST_PARAMETER_KEYWORD(type,  uppercase)
+BOOST_PARAMETER_KEYWORD(type,      width)
+}
+}
 }
 
 #endif // BOOST_CONVERT_PARAMETERS_HPP

@@ -7,34 +7,44 @@
 
 # include <boost/python/cast.hpp>
 
-namespace boost { namespace python { namespace converter { 
+namespace boost
+{
+namespace python
+{
+namespace converter
+{
 
 BOOST_PYTHON_DECL inline
 PyObject* checked_downcast_impl(PyObject *obj, PyTypeObject *type)
 {
-  return (PyType_IsSubtype(Py_TYPE(obj), type) ? obj : NULL);
+	return (PyType_IsSubtype(Py_TYPE(obj), type) ? obj : NULL);
 }
 // Used as a base class for specializations which need to provide
 // Python type checking capability.
 template <class Object, PyTypeObject* pytype>
-struct pyobject_type 
+struct pyobject_type
 {
-    static bool check(PyObject* x)
-    {
-        return ::PyObject_IsInstance(x, (PyObject*)pytype);
-    }
+	static bool check(PyObject* x)
+	{
+		return ::PyObject_IsInstance(x, (PyObject*)pytype);
+	}
 
-    static Object* checked_downcast(PyObject* x)
-    {
-        return python::downcast<Object>(
-            (checked_downcast_impl)(x, pytype)
-            );
-    }
+	static Object* checked_downcast(PyObject* x)
+	{
+		return python::downcast<Object>(
+		           (checked_downcast_impl)(x, pytype)
+		       );
+	}
 #ifndef BOOST_PYTHON_NO_PY_SIGNATURES
-    static PyTypeObject const* get_pytype() { return pytype; }
+	static PyTypeObject const* get_pytype()
+	{
+		return pytype;
+	}
 #endif
 };
 
-}}} // namespace boost::python::converter
+}
+}
+} // namespace boost::python::converter
 
 #endif // PYOBJECT_TYPE_DWA2002720_HPP

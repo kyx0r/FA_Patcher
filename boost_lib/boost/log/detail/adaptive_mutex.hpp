@@ -57,74 +57,76 @@ extern "C" void _ReadWriteBarrier(void);
 
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A mutex that performs spinning or thread yielding in case of contention
 class adaptive_mutex
 {
 private:
-    enum state
-    {
-        initial_pause = 2,
-        max_pause = 16
-    };
+	enum state
+	{
+		initial_pause = 2,
+		max_pause = 16
+	};
 
-    long m_State;
+	long m_State;
 
 public:
-    adaptive_mutex() : m_State(0) {}
+	adaptive_mutex() : m_State(0) {}
 
-    bool try_lock()
-    {
-        return (BOOST_INTERLOCKED_COMPARE_EXCHANGE(&m_State, 1L, 0L) == 0L);
-    }
+	bool try_lock()
+	{
+		return (BOOST_INTERLOCKED_COMPARE_EXCHANGE(&m_State, 1L, 0L) == 0L);
+	}
 
-    void lock()
-    {
+	void lock()
+	{
 #if defined(BOOST_LOG_AUX_PAUSE)
-        unsigned int pause_count = initial_pause;
+		unsigned int pause_count = initial_pause;
 #endif
-        while (!try_lock())
-        {
+		while (!try_lock())
+		{
 #if defined(BOOST_LOG_AUX_PAUSE)
-            if (pause_count < max_pause)
-            {
-                for (unsigned int i = 0; i < pause_count; ++i)
-                {
-                    BOOST_LOG_AUX_PAUSE;
-                }
-                pause_count += pause_count;
-            }
-            else
-            {
-                // Restart spinning after waking up this thread
-                pause_count = initial_pause;
-                boost::winapi::SwitchToThread();
-            }
+			if (pause_count < max_pause)
+			{
+				for (unsigned int i = 0; i < pause_count; ++i)
+				{
+					BOOST_LOG_AUX_PAUSE;
+				}
+				pause_count += pause_count;
+			}
+			else
+			{
+				// Restart spinning after waking up this thread
+				pause_count = initial_pause;
+				boost::winapi::SwitchToThread();
+			}
 #else
-            boost::winapi::SwitchToThread();
+			boost::winapi::SwitchToThread();
 #endif
-        }
-    }
+		}
+	}
 
-    void unlock()
-    {
+	void unlock()
+	{
 #if (defined(_M_IX86) || defined(_M_AMD64)) && defined(BOOST_LOG_COMPILER_BARRIER)
-        BOOST_LOG_COMPILER_BARRIER;
-        m_State = 0L;
-        BOOST_LOG_COMPILER_BARRIER;
+		BOOST_LOG_COMPILER_BARRIER;
+		m_State = 0L;
+		BOOST_LOG_COMPILER_BARRIER;
 #else
-        BOOST_INTERLOCKED_EXCHANGE(&m_State, 0L);
+		BOOST_INTERLOCKED_EXCHANGE(&m_State, 0L);
 #endif
-    }
+	}
 
-    //  Non-copyable
-    BOOST_DELETED_FUNCTION(adaptive_mutex(adaptive_mutex const&))
-    BOOST_DELETED_FUNCTION(adaptive_mutex& operator= (adaptive_mutex const&))
+	//  Non-copyable
+	BOOST_DELETED_FUNCTION(adaptive_mutex(adaptive_mutex const&))
+	BOOST_DELETED_FUNCTION(adaptive_mutex& operator= (adaptive_mutex const&))
 };
 
 #undef BOOST_LOG_AUX_PAUSE
@@ -148,76 +150,78 @@ BOOST_LOG_CLOSE_NAMESPACE // namespace log
 #define BOOST_LOG_ADAPTIVE_MUTEX_USE_PTHREAD_MUTEX_ADAPTIVE_NP
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A mutex that performs spinning or thread yielding in case of contention
 class adaptive_mutex
 {
 private:
-    pthread_mutex_t m_State;
+	pthread_mutex_t m_State;
 
 public:
-    adaptive_mutex()
-    {
+	adaptive_mutex()
+	{
 #if defined(BOOST_LOG_ADAPTIVE_MUTEX_USE_PTHREAD_MUTEX_ADAPTIVE_NP)
-        pthread_mutexattr_t attrs;
-        pthread_mutexattr_init(&attrs);
-        pthread_mutexattr_settype(&attrs, PTHREAD_MUTEX_ADAPTIVE_NP);
+		pthread_mutexattr_t attrs;
+		pthread_mutexattr_init(&attrs);
+		pthread_mutexattr_settype(&attrs, PTHREAD_MUTEX_ADAPTIVE_NP);
 
-        const int err = pthread_mutex_init(&m_State, &attrs);
-        pthread_mutexattr_destroy(&attrs);
+		const int err = pthread_mutex_init(&m_State, &attrs);
+		pthread_mutexattr_destroy(&attrs);
 #else
-        const int err = pthread_mutex_init(&m_State, NULL);
+		const int err = pthread_mutex_init(&m_State, NULL);
 #endif
-        if (BOOST_UNLIKELY(err != 0))
-            throw_exception< thread_resource_error >(err, "Failed to initialize an adaptive mutex", "adaptive_mutex::adaptive_mutex()", __FILE__, __LINE__);
-    }
+		if (BOOST_UNLIKELY(err != 0))
+			throw_exception< thread_resource_error >(err, "Failed to initialize an adaptive mutex", "adaptive_mutex::adaptive_mutex()", __FILE__, __LINE__);
+	}
 
-    ~adaptive_mutex()
-    {
-        BOOST_VERIFY(pthread_mutex_destroy(&m_State) == 0);
-    }
+	~adaptive_mutex()
+	{
+		BOOST_VERIFY(pthread_mutex_destroy(&m_State) == 0);
+	}
 
-    bool try_lock()
-    {
-        const int err = pthread_mutex_trylock(&m_State);
-        if (err == 0)
-            return true;
-        if (BOOST_UNLIKELY(err != EBUSY))
-            throw_exception< lock_error >(err, "Failed to lock an adaptive mutex", "adaptive_mutex::try_lock()", __FILE__, __LINE__);
-        return false;
-    }
+	bool try_lock()
+	{
+		const int err = pthread_mutex_trylock(&m_State);
+		if (err == 0)
+			return true;
+		if (BOOST_UNLIKELY(err != EBUSY))
+			throw_exception< lock_error >(err, "Failed to lock an adaptive mutex", "adaptive_mutex::try_lock()", __FILE__, __LINE__);
+		return false;
+	}
 
-    void lock()
-    {
-        const int err = pthread_mutex_lock(&m_State);
-        if (BOOST_UNLIKELY(err != 0))
-            throw_exception< lock_error >(err, "Failed to lock an adaptive mutex", "adaptive_mutex::lock()", __FILE__, __LINE__);
-    }
+	void lock()
+	{
+		const int err = pthread_mutex_lock(&m_State);
+		if (BOOST_UNLIKELY(err != 0))
+			throw_exception< lock_error >(err, "Failed to lock an adaptive mutex", "adaptive_mutex::lock()", __FILE__, __LINE__);
+	}
 
-    void unlock()
-    {
-        BOOST_VERIFY(pthread_mutex_unlock(&m_State) == 0);
-    }
+	void unlock()
+	{
+		BOOST_VERIFY(pthread_mutex_unlock(&m_State) == 0);
+	}
 
-    //  Non-copyable
-    BOOST_DELETED_FUNCTION(adaptive_mutex(adaptive_mutex const&))
-    BOOST_DELETED_FUNCTION(adaptive_mutex& operator= (adaptive_mutex const&))
+	//  Non-copyable
+	BOOST_DELETED_FUNCTION(adaptive_mutex(adaptive_mutex const&))
+	BOOST_DELETED_FUNCTION(adaptive_mutex& operator= (adaptive_mutex const&))
 
 private:
-    template< typename ExceptionT >
-    static BOOST_NOINLINE BOOST_LOG_NORETURN void throw_exception(int err, const char* descr, const char* func, const char* file, int line)
-    {
+	template< typename ExceptionT >
+	static BOOST_NOINLINE BOOST_LOG_NORETURN void throw_exception(int err, const char* descr, const char* func, const char* file, int line)
+	{
 #if !defined(BOOST_EXCEPTION_DISABLE)
-        boost::exception_detail::throw_exception_(ExceptionT(err, descr), func, file, line);
+		boost::exception_detail::throw_exception_(ExceptionT(err, descr), func, file, line);
 #else
-        boost::throw_exception(ExceptionT(err, descr));
+		boost::throw_exception(ExceptionT(err, descr));
 #endif
-    }
+	}
 };
 
 } // namespace aux

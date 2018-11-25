@@ -41,18 +41,26 @@
 
 #include <boost/geometry/util/math.hpp>
 
-namespace boost { namespace geometry { namespace projections {
-namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
+namespace detail
+{
 
-    /* determine small t */
-    template <typename T>
-    inline T pj_tsfn(T const& phi, T sinphi, T const& e)
-    {
-        sinphi *= e;
-        return (tan (.5 * (geometry::math::half_pi<T>() - phi)) /
-           pow((1. - sinphi) / (1. + sinphi), .5 * e));
-    }
+/* determine small t */
+template <typename T>
+inline T pj_tsfn(T const& phi, T sinphi, T const& e)
+{
+	sinphi *= e;
+	return (tan (.5 * (geometry::math::half_pi<T>() - phi)) /
+	        pow((1. - sinphi) / (1. + sinphi), .5 * e));
+}
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 #endif

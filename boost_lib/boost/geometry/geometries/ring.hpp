@@ -32,7 +32,9 @@
 #include <initializer_list>
 #endif
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace model
@@ -60,31 +62,31 @@ template
     bool ClockWise = true, bool Closed = true,
     template<typename, typename> class Container = std::vector,
     template<typename> class Allocator = std::allocator
->
+    >
 class ring : public Container<Point, Allocator<Point> >
 {
-    BOOST_CONCEPT_ASSERT( (concepts::Point<Point>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Point<Point>) );
 
-    typedef Container<Point, Allocator<Point> > base_type;
+	typedef Container<Point, Allocator<Point> > base_type;
 
 public :
-    /// \constructor_default{ring}
-    inline ring()
-        : base_type()
-    {}
+	/// \constructor_default{ring}
+	inline ring()
+		: base_type()
+	{}
 
-    /// \constructor_begin_end{ring}
-    template <typename Iterator>
-    inline ring(Iterator begin, Iterator end)
-        : base_type(begin, end)
-    {}
+	/// \constructor_begin_end{ring}
+	template <typename Iterator>
+	inline ring(Iterator begin, Iterator end)
+		: base_type(begin, end)
+	{}
 
 #ifndef BOOST_NO_CXX11_HDR_INITIALIZER_LIST
 
-    /// \constructor_initializer_list{ring}
-    inline ring(std::initializer_list<Point> l)
-        : base_type(l.begin(), l.end())
-    {}
+	/// \constructor_initializer_list{ring}
+	inline ring(std::initializer_list<Point> l)
+		: base_type(l.begin(), l.end())
+	{}
 
 // Commented out for now in order to support Boost.Assign
 // Without this assignment operator first the object should be created
@@ -115,10 +117,10 @@ template
     bool ClockWise, bool Closed,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct tag<model::ring<Point, ClockWise, Closed, Container, Allocator> >
 {
-    typedef ring_tag type;
+	typedef ring_tag type;
 };
 
 
@@ -128,10 +130,10 @@ template
     bool Closed,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct point_order<model::ring<Point, false, Closed, Container, Allocator> >
 {
-    static const order_selector value = counterclockwise;
+	static const order_selector value = counterclockwise;
 };
 
 
@@ -141,10 +143,10 @@ template
     bool Closed,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct point_order<model::ring<Point, true, Closed, Container, Allocator> >
 {
-    static const order_selector value = clockwise;
+	static const order_selector value = clockwise;
 };
 
 template
@@ -153,10 +155,10 @@ template
     bool PointOrder,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct closure<model::ring<Point, PointOrder, true, Container, Allocator> >
 {
-    static const closure_selector value = closed;
+	static const closure_selector value = closed;
 };
 
 template
@@ -165,10 +167,10 @@ template
     bool PointOrder,
     template<typename, typename> class Container,
     template<typename> class Allocator
->
+    >
 struct closure<model::ring<Point, PointOrder, false, Container, Allocator> >
 {
-    static const closure_selector value = open;
+	static const closure_selector value = open;
 };
 
 
@@ -176,6 +178,7 @@ struct closure<model::ring<Point, PointOrder, false, Container, Allocator> >
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_RING_HPP

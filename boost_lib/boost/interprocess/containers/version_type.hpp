@@ -22,8 +22,10 @@
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/container/detail/version_type.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 using boost::container::dtl::version_type;
 using boost::container::dtl::version;

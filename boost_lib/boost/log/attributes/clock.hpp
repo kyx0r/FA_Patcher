@@ -27,11 +27,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that makes an attribute value of the current date and time
@@ -46,37 +48,37 @@ namespace attributes {
  */
 template< typename TimeTraitsT >
 class basic_clock :
-    public attribute
+	public attribute
 {
 public:
-    //! Generated value type
-    typedef typename TimeTraitsT::time_type value_type;
+	//! Generated value type
+	typedef typename TimeTraitsT::time_type value_type;
 
 protected:
-    //! Attribute factory implementation
-    struct BOOST_SYMBOL_VISIBLE impl :
-        public attribute::impl
-    {
-        attribute_value get_value()
-        {
-            typedef attribute_value_impl< value_type > result_value;
-            return attribute_value(new result_value(TimeTraitsT::get_clock()));
-        }
-    };
+	//! Attribute factory implementation
+	struct BOOST_SYMBOL_VISIBLE impl :
+		public attribute::impl
+	{
+		attribute_value get_value()
+		{
+			typedef attribute_value_impl< value_type > result_value;
+			return attribute_value(new result_value(TimeTraitsT::get_clock()));
+		}
+	};
 
 public:
-    /*!
-     * Default constructor
-     */
-    basic_clock() : attribute(new impl())
-    {
-    }
-    /*!
-     * Constructor for casting support
-     */
-    explicit basic_clock(cast_source const& source) : attribute(source.as< impl >())
-    {
-    }
+	/*!
+	 * Default constructor
+	 */
+	basic_clock() : attribute(new impl())
+	{
+	}
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit basic_clock(cast_source const& source) : attribute(source.as< impl >())
+	{
+	}
 };
 
 //! Attribute that returns current UTC time

@@ -8,18 +8,32 @@
 # include <boost/python/detail/prefix.hpp>
 # include <boost/python/converter/pyobject_type.hpp>
 
-namespace boost { namespace python { namespace converter { 
+namespace boost
+{
+namespace python
+{
+namespace converter
+{
 
 template <class> struct pyobject_traits;
 
 template <>
 struct pyobject_traits<PyObject>
 {
-    // All objects are convertible to PyObject
-    static bool check(PyObject*) { return true; }
-    static PyObject* checked_downcast(PyObject* x) { return x; }
+	// All objects are convertible to PyObject
+	static bool check(PyObject*)
+	{
+		return true;
+	}
+	static PyObject* checked_downcast(PyObject* x)
+	{
+		return x;
+	}
 #ifndef BOOST_PYTHON_NO_PY_SIGNATURES
-    static PyTypeObject const* get_pytype() { return 0; }
+	static PyTypeObject const* get_pytype()
+	{
+		return 0;
+	}
 #endif
 };
 
@@ -41,6 +55,8 @@ BOOST_PYTHON_BUILTIN_OBJECT_TRAITS(Long);
 BOOST_PYTHON_BUILTIN_OBJECT_TRAITS(Dict);
 BOOST_PYTHON_BUILTIN_OBJECT_TRAITS(Tuple);
 
-}}} // namespace boost::python::converter
+}
+}
+} // namespace boost::python::converter
 
 #endif // PYOBJECT_TRAITS_DWA2002720_HPP

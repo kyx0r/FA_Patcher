@@ -19,46 +19,55 @@
 # include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines2 {
-namespace detail {
+namespace boost
+{
+namespace coroutines2
+{
+namespace detail
+{
 
 template< typename Fn1, typename Fn2  >
-class wrapper {
+class wrapper
+{
 private:
-    typename std::decay< Fn1 >::type    fn1_;
-    typename std::decay< Fn2 >::type    fn2_;
+	typename std::decay< Fn1 >::type    fn1_;
+	typename std::decay< Fn2 >::type    fn2_;
 
 public:
-    wrapper( Fn1 && fn1, Fn2 && fn2) :
-        fn1_( std::move( fn1) ),
-        fn2_( std::move( fn2) ) {
-    }
+	wrapper( Fn1 && fn1, Fn2 && fn2) :
+		fn1_( std::move( fn1) ),
+		fn2_( std::move( fn2) )
+	{
+	}
 
-    wrapper( wrapper const&) = delete;
-    wrapper & operator=( wrapper const&) = delete;
+	wrapper( wrapper const&) = delete;
+	wrapper & operator=( wrapper const&) = delete;
 
-    wrapper( wrapper && other) = default;
-    wrapper & operator=( wrapper && other) = default;
+	wrapper( wrapper && other) = default;
+	wrapper & operator=( wrapper && other) = default;
 
-    boost::context::fiber
-    operator()( boost::context::fiber && c) {
-        return boost::context::detail::invoke(
-                std::move( fn1_),
-                fn2_,
-                std::forward< boost::context::fiber >( c) );
-    }
+	boost::context::fiber
+	operator()( boost::context::fiber && c)
+	{
+		return boost::context::detail::invoke(
+		           std::move( fn1_),
+		           fn2_,
+		           std::forward< boost::context::fiber >( c) );
+	}
 };
 
 template< typename Fn1, typename Fn2 >
 wrapper< Fn1, Fn2 >
-wrap( Fn1 && fn1, Fn2 && fn2) {
-    return wrapper< Fn1, Fn2 >(
-            std::forward< Fn1 >( fn1),
-            std::forward< Fn2 >( fn2) );
+wrap( Fn1 && fn1, Fn2 && fn2)
+{
+	return wrapper< Fn1, Fn2 >(
+	           std::forward< Fn1 >( fn1),
+	           std::forward< Fn2 >( fn2) );
 }
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #include BOOST_ABI_SUFFIX

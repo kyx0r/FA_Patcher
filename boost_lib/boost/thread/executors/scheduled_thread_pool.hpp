@@ -15,30 +15,30 @@ namespace boost
 namespace executors
 {
 
-  class scheduled_thread_pool : public detail::scheduled_executor_base<>
-  {
-  private:
-    thread_group _workers;
-  public:
+class scheduled_thread_pool : public detail::scheduled_executor_base<>
+{
+private:
+	thread_group _workers;
+public:
 
-    scheduled_thread_pool(size_t num_threads) : super()
-    {
-      for(size_t i = 0; i < num_threads; i++)
-      {
-        _workers.create_thread(bind(&super::loop, this));
-      }
-    }
+	scheduled_thread_pool(size_t num_threads) : super()
+	{
+		for(size_t i = 0; i < num_threads; i++)
+		{
+			_workers.create_thread(bind(&super::loop, this));
+		}
+	}
 
-    ~scheduled_thread_pool()
-    {
-      this->close();
-      _workers.interrupt_all();
-      _workers.join_all();
-    }
+	~scheduled_thread_pool()
+	{
+		this->close();
+		_workers.interrupt_all();
+		_workers.join_all();
+	}
 
-  private:
-    typedef detail::scheduled_executor_base<> super;
-  }; //end class
+private:
+	typedef detail::scheduled_executor_base<> super;
+}; //end class
 
 } //end executors namespace
 

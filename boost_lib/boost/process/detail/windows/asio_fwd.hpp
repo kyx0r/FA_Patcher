@@ -8,7 +8,10 @@
 
 #include <memory>
 
-namespace boost { namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 class mutable_buffer;
 class mutable_buffers_1;
@@ -24,7 +27,8 @@ class io_context;
 template <typename Handler>
 class basic_yield_context;
 
-namespace windows {
+namespace windows
+{
 
 #if defined(BOOST_ASIO_ENABLE_OLD_SERVICES)
 class stream_handle_service;
@@ -52,7 +56,12 @@ class object_handle;
 } //windows
 } //asio
 
-namespace process { namespace detail { namespace windows {
+namespace process
+{
+namespace detail
+{
+namespace windows
+{
 
 class async_pipe;
 

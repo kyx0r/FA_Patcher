@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2014 Erik Erlandson
@@ -13,12 +13,17 @@
 #include <boost/units/systems/information/byte.hpp>
 #include <boost/units/base_units/information/shannon.hpp>
 
-namespace boost {
-namespace units { 
-namespace information {
+namespace boost
+{
+namespace units
+{
+namespace information
+{
 
-namespace hu {
-namespace shannon {
+namespace hu
+{
+namespace shannon
+{
 typedef unit<information_dimension, make_system<shannon_base_unit>::type> info;
 } // namespace bit
 } // namespace hu

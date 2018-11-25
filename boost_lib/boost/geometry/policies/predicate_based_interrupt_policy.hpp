@@ -15,12 +15,16 @@
 #include <boost/geometry/algorithms/detail/check_iterator_range.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace overlay
+namespace detail
+{
+namespace overlay
 {
 
 
@@ -28,29 +32,29 @@ template
 <
     typename IsAcceptableTurnPredicate,
     bool AllowEmptyTurnRange = true // by default, allow an empty turn range
->
+    >
 struct stateless_predicate_based_interrupt_policy
 {
-    static bool const enabled = true;
-    bool has_intersections; // set to true if there is at least one
-                            // unacceptable turn
+	static bool const enabled = true;
+	bool has_intersections; // set to true if there is at least one
+	// unacceptable turn
 
-    inline stateless_predicate_based_interrupt_policy()
-        : has_intersections(false)
-    {}
+	inline stateless_predicate_based_interrupt_policy()
+		: has_intersections(false)
+	{}
 
-    template <typename Range>
-    inline bool apply(Range const& range)
-    {
-        // if there is at least one unacceptable turn in the range, return false
-        has_intersections = !detail::check_iterator_range
-            <
-                IsAcceptableTurnPredicate,
-                AllowEmptyTurnRange
-            >::apply(boost::begin(range), boost::end(range));
+	template <typename Range>
+	inline bool apply(Range const& range)
+	{
+		// if there is at least one unacceptable turn in the range, return false
+		has_intersections = !detail::check_iterator_range
+		                    <
+		                    IsAcceptableTurnPredicate,
+		                    AllowEmptyTurnRange
+		                    >::apply(boost::begin(range), boost::end(range));
 
-        return has_intersections;
-    }
+		return has_intersections;
+	}
 };
 
 
@@ -60,42 +64,44 @@ template
 <
     typename IsAcceptableTurnPredicate,
     bool AllowEmptyTurnRange = true // by default, allow an empty turn range
->
+    >
 struct predicate_based_interrupt_policy
 {
-    static bool const enabled = true;
-    bool has_intersections; // set to true if there is at least one
-                            // unacceptable turn
-    IsAcceptableTurnPredicate const& m_predicate;
+	static bool const enabled = true;
+	bool has_intersections; // set to true if there is at least one
+	// unacceptable turn
+	IsAcceptableTurnPredicate const& m_predicate;
 
-    inline
-    predicate_based_interrupt_policy(IsAcceptableTurnPredicate const& predicate)
-        : has_intersections(false)
-        , m_predicate(predicate)
-    {}
+	inline
+	predicate_based_interrupt_policy(IsAcceptableTurnPredicate const& predicate)
+		: has_intersections(false)
+		, m_predicate(predicate)
+	{}
 
-    template <typename Range>
-    inline bool apply(Range const& range)
-    {
-        // if there is at least one unacceptable turn in the range, return false
-        has_intersections = !detail::check_iterator_range
-            <
-                IsAcceptableTurnPredicate,
-                AllowEmptyTurnRange
-            >::apply(boost::begin(range), boost::end(range), m_predicate);
+	template <typename Range>
+	inline bool apply(Range const& range)
+	{
+		// if there is at least one unacceptable turn in the range, return false
+		has_intersections = !detail::check_iterator_range
+		                    <
+		                    IsAcceptableTurnPredicate,
+		                    AllowEmptyTurnRange
+		                    >::apply(boost::begin(range), boost::end(range), m_predicate);
 
-        return has_intersections;
-    }
+		return has_intersections;
+	}
 };
 
 
 
 
-}} // namespace detail::overlay
+}
+} // namespace detail::overlay
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_POLICIES_PREDICATE_BASED_INTERRUPT_POLICY_HPP

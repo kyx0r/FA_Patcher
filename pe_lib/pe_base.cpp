@@ -76,12 +76,12 @@ pe_base::pe_base(const pe_properties& props, uint32_t section_alignment, bool dl
 
 pe_base::pe_base(const pe_base& pe)
 	:dos_header_(pe.dos_header_),
-	rich_overlay_(pe.rich_overlay_),
-	sections_(pe.sections_),
-	has_overlay_(pe.has_overlay_),
-	full_headers_data_(pe.full_headers_data_),
-	debug_data_(pe.debug_data_),
-	props_(0)
+	 rich_overlay_(pe.rich_overlay_),
+	 sections_(pe.sections_),
+	 has_overlay_(pe.has_overlay_),
+	 full_headers_data_(pe.full_headers_data_),
+	 debug_data_(pe.debug_data_),
+	 props_(0)
 {
 	props_ = pe.props_->duplicate().release();
 }
@@ -322,13 +322,13 @@ const section& pe_base::section_from_rva(uint32_t rva) const
 //Returns section from directory ID
 section& pe_base::section_from_directory(uint32_t directory_id)
 {
-	return section_from_rva(get_directory_rva(directory_id));		
+	return section_from_rva(get_directory_rva(directory_id));
 }
 
 //Returns section from directory ID
 const section& pe_base::section_from_directory(uint32_t directory_id) const
 {
-	return section_from_rva(get_directory_rva(directory_id));	
+	return section_from_rva(get_directory_rva(directory_id));
 }
 
 //Sets section virtual size (actual for the last one of this PE or for unbound section)
@@ -383,7 +383,7 @@ bool pe_base::expand_section(section& s, uint32_t needed_rva, uint32_t needed_si
 		set_section_virtual_size(s, needed_rva - s.get_virtual_address() + needed_size);
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -452,8 +452,8 @@ void pe_base::prepare_section(section& s)
 	{
 		//Else calculate its virtual size
 		s.set_virtual_size(
-			std::max<uint32_t>(pe_utils::align_up(s.get_size_of_raw_data(), get_file_alignment()),
-			pe_utils::align_up(s.get_virtual_size(), get_section_alignment())));
+		    std::max<uint32_t>(pe_utils::align_up(s.get_size_of_raw_data(), get_file_alignment()),
+		                       pe_utils::align_up(s.get_virtual_size(), get_section_alignment())));
 	}
 }
 
@@ -478,9 +478,9 @@ section& pe_base::add_section(section s)
 	else
 	{
 		s.set_virtual_address(
-			s.get_virtual_address() == 0
-			? pe_utils::align_up(get_size_of_headers(), get_section_alignment())
-			: pe_utils::align_up(s.get_virtual_address(), get_section_alignment()));
+		    s.get_virtual_address() == 0
+		    ? pe_utils::align_up(get_size_of_headers(), get_section_alignment())
+		    : pe_utils::align_up(s.get_virtual_address(), get_section_alignment()));
 	}
 
 	//Add section to the end of section list
@@ -676,7 +676,7 @@ uint32_t pe_base::section_data_length_from_rva(uint32_t rva, uint32_t rva_inside
 
 	//Calculate remaining length of section data from "rva" address
 	long length = static_cast<long>(datatype == section_data_raw ? s.get_raw_data().length() /* instead of SizeOfRawData */ : s.get_aligned_virtual_size(get_section_alignment()))
-		+ s.get_virtual_address() - rva_inside;
+	              + s.get_virtual_address() - rva_inside;
 
 	if(length < 0)
 		return 0;
@@ -704,7 +704,7 @@ uint32_t pe_base::section_data_length_from_rva(const section& s, uint32_t rva_in
 	{
 		//Calculate remaining length of section data from "rva" address
 		int32_t length = static_cast<int32_t>(datatype == section_data_raw ? s.get_raw_data().length() /* instead of SizeOfRawData */ : s.get_aligned_virtual_size(get_section_alignment()))
-			+ s.get_virtual_address() - rva_inside;
+		                 + s.get_virtual_address() - rva_inside;
 
 		if(length < 0)
 			return 0;
@@ -835,7 +835,7 @@ void pe_base::read_pe(std::istream& file, bool read_debug_raw_data)
 	//Check size of image
 	if(pe_utils::align_up(get_size_of_image(), get_section_alignment()) == 0)
 		throw pe_exception("Incorrect size of image", pe_exception::incorrect_size_of_image);
-	
+
 	//Read rich data overlay / DOS stub (if any)
 	if(static_cast<uint32_t>(dos_header_.e_lfanew) > sizeof(image_dos_header))
 	{
@@ -878,7 +878,7 @@ void pe_base::read_pe(std::istream& file, bool read_debug_raw_data)
 
 		//Check for adequate values of section fields
 		if(!pe_utils::is_sum_safe(s.get_virtual_address(), s.get_virtual_size()) || s.get_virtual_size() > pe_utils::two_gb
-			|| !pe_utils::is_sum_safe(s.get_pointer_to_raw_data(), s.get_size_of_raw_data()) || s.get_size_of_raw_data() > pe_utils::two_gb)
+		        || !pe_utils::is_sum_safe(s.get_pointer_to_raw_data(), s.get_size_of_raw_data()) || s.get_size_of_raw_data() > pe_utils::two_gb)
 			throw pe_exception("Incorrect section address or size", pe_exception::section_incorrect_addr_or_size);
 
 		if(s.get_size_of_raw_data() != 0)
@@ -892,8 +892,8 @@ void pe_base::read_pe(std::istream& file, bool read_debug_raw_data)
 
 			//Check virtual and raw section sizes and addresses
 			if(s.get_virtual_address() + pe_utils::align_up(s.get_virtual_size(), get_section_alignment()) > pe_utils::align_up(get_size_of_image(), get_section_alignment())
-				||
-				pe_utils::align_down(s.get_pointer_to_raw_data(), get_file_alignment()) + s.get_size_of_raw_data() > static_cast<uint32_t>(filesize))
+			        ||
+			        pe_utils::align_down(s.get_pointer_to_raw_data(), get_file_alignment()) + s.get_size_of_raw_data() > static_cast<uint32_t>(filesize))
 				throw pe_exception("Incorrect section address or size", pe_exception::section_incorrect_addr_or_size);
 
 			//Seek to section raw data
@@ -976,13 +976,13 @@ void pe_base::read_pe(std::istream& file, bool read_debug_raw_data)
 
 			//Iterate over all IMAGE_DEBUG_DIRECTORY directories
 			while(directory.PointerToRawData
-				&& current_pos < get_directory_rva(image_directory_entry_debug) + get_directory_size(image_directory_entry_debug))
+			        && current_pos < get_directory_rva(image_directory_entry_debug) + get_directory_size(image_directory_entry_debug))
 			{
 				//If we have something to read
 				if((directory.Type == image_debug_type_codeview
-					|| directory.Type == image_debug_type_misc
-					|| directory.Type == image_debug_type_coff)
-					&& directory.SizeOfData)
+				        || directory.Type == image_debug_type_misc
+				        || directory.Type == image_debug_type_coff)
+				        && directory.SizeOfData)
 				{
 					std::string data;
 					data.resize(directory.SizeOfData);
@@ -1371,7 +1371,7 @@ section_list::iterator pe_base::file_offset_to_section(uint32_t offset)
 	section_list::iterator it = std::find_if(sections_.begin(), sections_.end(), section_by_raw_offset(offset));
 	if(it == sections_.end())
 		throw pe_exception("No section found by presented file offset", pe_exception::no_section_found);
-	
+
 	return it;
 }
 
@@ -1561,7 +1561,7 @@ void pe_base::recalculate_section_sizes(section& s, bool auto_strip)
 				if(raw_data[i - 1] != 0)
 					break;
 			}
-			
+
 			raw_data.resize(i);
 		}
 

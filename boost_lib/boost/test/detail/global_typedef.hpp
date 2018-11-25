@@ -23,8 +23,10 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 typedef unsigned long   counter_t;
 
@@ -41,7 +43,7 @@ enum output_format { OF_INVALID,
                      OF_JUNIT,    ///< JUNIT format for report and log,
                      OF_CUSTOM_LOGGER, ///< User specified logger.
                      OF_DOT       ///< dot format for output content
-};
+                   };
 
 //____________________________________________________________________________//
 
@@ -63,27 +65,31 @@ const test_unit_id MIN_TEST_SUITE_ID = 0x00000001;
 
 //____________________________________________________________________________//
 
-namespace ut_detail {
+namespace ut_detail
+{
 
 inline test_unit_type
 test_id_2_unit_type( test_unit_id id )
 {
-    return (id & 0xFFFF0000) != 0 ? TUT_CASE : TUT_SUITE;
+	return (id & 0xFFFF0000) != 0 ? TUT_CASE : TUT_SUITE;
 }
 
 //! Helper class for restoring the current test unit ID in a RAII manner
-struct test_unit_id_restore {
-    test_unit_id_restore(test_unit_id& to_restore_, test_unit_id new_value)
-    : to_restore(to_restore_)
-    , bkup(to_restore_) {
-        to_restore = new_value;
-    }
-    ~test_unit_id_restore() {
-        to_restore = bkup;
-    }
+struct test_unit_id_restore
+{
+	test_unit_id_restore(test_unit_id& to_restore_, test_unit_id new_value)
+		: to_restore(to_restore_)
+		, bkup(to_restore_)
+	{
+		to_restore = new_value;
+	}
+	~test_unit_id_restore()
+	{
+		to_restore = bkup;
+	}
 private:
-    test_unit_id& to_restore;
-    test_unit_id bkup;
+	test_unit_id& to_restore;
+	test_unit_id bkup;
 };
 
 //____________________________________________________________________________//
@@ -92,8 +98,9 @@ private:
 
 // helper templates to prevent ODR violations
 template<class T>
-struct static_constant {
-    static T value;
+struct static_constant
+{
+	static T value;
 };
 
 template<class T>

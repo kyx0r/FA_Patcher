@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::entire_input;
-  }
+namespace metaparse
+{
+using v1::entire_input;
+}
 }
 
 #endif

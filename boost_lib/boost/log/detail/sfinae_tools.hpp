@@ -24,11 +24,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A distinct type that can be used as a fake argument type in constructors filtered by SFINAE
 struct sfinae_dummy {};

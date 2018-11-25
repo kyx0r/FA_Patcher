@@ -19,59 +19,63 @@
 #include <boost/type_traits/is_void.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace azimuth
+namespace strategy
+{
+namespace azimuth
 {
 
 template
 <
     typename CalculationType = void
->
+    >
 class spherical
 {
 public :
 
-    inline spherical()
-    {}
+	inline spherical()
+	{}
 
-    template <typename T>
-    static inline void apply(T const& lon1_rad, T const& lat1_rad,
-                             T const& lon2_rad, T const& lat2_rad,
-                             T& a1, T& a2)
-    {
-        typedef typename boost::mpl::if_
-            <
-                boost::is_void<CalculationType>, T, CalculationType
-            >::type calc_t;
+	template <typename T>
+	static inline void apply(T const& lon1_rad, T const& lat1_rad,
+	                         T const& lon2_rad, T const& lat2_rad,
+	                         T& a1, T& a2)
+	{
+		typedef typename boost::mpl::if_
+		<
+		boost::is_void<CalculationType>, T, CalculationType
+		>::type calc_t;
 
-        geometry::formula::result_spherical<calc_t>
-            result = geometry::formula::spherical_azimuth<calc_t, true>(
-                        calc_t(lon1_rad), calc_t(lat1_rad),
-                        calc_t(lon2_rad), calc_t(lat2_rad));
+		geometry::formula::result_spherical<calc_t>
+		result = geometry::formula::spherical_azimuth<calc_t, true>(
+		             calc_t(lon1_rad), calc_t(lat1_rad),
+		             calc_t(lon2_rad), calc_t(lat2_rad));
 
-        a1 = result.azimuth;
-        a2 = result.reverse_azimuth;
-    }
+		a1 = result.azimuth;
+		a2 = result.reverse_azimuth;
+	}
 
-    template <typename T>
-    inline void apply(T const& lon1_rad, T const& lat1_rad,
-                      T const& lon2_rad, T const& lat2_rad,
-                      T& a1) const
-    {
-         typedef typename boost::mpl::if_
-            <
-                boost::is_void<CalculationType>, T, CalculationType
-            >::type calc_t;
+	template <typename T>
+	inline void apply(T const& lon1_rad, T const& lat1_rad,
+	                  T const& lon2_rad, T const& lat2_rad,
+	                  T& a1) const
+	{
+		typedef typename boost::mpl::if_
+		<
+		boost::is_void<CalculationType>, T, CalculationType
+		>::type calc_t;
 
-        geometry::formula::result_spherical<calc_t>
-            result = geometry::formula::spherical_azimuth<calc_t, false>(
-                        calc_t(lon1_rad), calc_t(lat1_rad),
-                        calc_t(lon2_rad), calc_t(lat2_rad));
+		geometry::formula::result_spherical<calc_t>
+		result = geometry::formula::spherical_azimuth<calc_t, false>(
+		             calc_t(lon1_rad), calc_t(lat1_rad),
+		             calc_t(lon2_rad), calc_t(lat2_rad));
 
-        a1 = result.azimuth;
-    }
+		a1 = result.azimuth;
+	}
 
 };
 
@@ -83,7 +87,7 @@ namespace services
 template <typename CalculationType>
 struct default_strategy<spherical_equatorial_tag, CalculationType>
 {
-    typedef strategy::azimuth::spherical<CalculationType> type;
+	typedef strategy::azimuth::spherical<CalculationType> type;
 };
 
 /*
@@ -97,9 +101,11 @@ struct default_strategy<spherical_polar_tag, CalculationType>
 
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
-}} // namespace strategy::azimuth
+}
+} // namespace strategy::azimuth
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_SPHERICAL_AZIMUTH_HPP

@@ -7,27 +7,27 @@
 #define UUID_8C06FE26A3E711DEA02C88BA55D89593
 
 namespace
-boost
-    {
-    namespace
-    qvm
-        {
-        template <class M>
-        struct
-        mat_traits
-            {
-            static int const rows=0;
-            static int const cols=0;
-            typedef void scalar_type;
-            };
+	boost
+{
+namespace
+	qvm
+{
+template <class M>
+struct
+	mat_traits
+{
+	static int const rows=0;
+	static int const cols=0;
+	typedef void scalar_type;
+};
 
-        template <class T>
-        struct
-        is_mat
-            {
-            static bool const value=mat_traits<T>::rows>0 && mat_traits<T>::cols>0;
-            };
-        }
-    }
+template <class T>
+struct
+	is_mat
+{
+	static bool const value=mat_traits<T>::rows>0 && mat_traits<T>::cols>0;
+};
+}
+}
 
 #endif

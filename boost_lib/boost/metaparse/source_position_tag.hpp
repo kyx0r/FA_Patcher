@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::source_position_tag;
-  }
+namespace metaparse
+{
+using v1::source_position_tag;
+}
 }
 
 #endif

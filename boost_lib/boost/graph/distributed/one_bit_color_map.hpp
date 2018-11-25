@@ -20,95 +20,108 @@
 #include <boost/property_map/parallel/distributed_property_map.hpp>
 #include <boost/property_map/parallel/local_property_map.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template<typename ProcessGroup, typename GlobalMap, typename StorageMap>
 class one_bit_color_map<local_property_map<ProcessGroup,GlobalMap,StorageMap> >
-  : public parallel::distributed_property_map<ProcessGroup, GlobalMap,
-                                              one_bit_color_map<StorageMap> >
+	: public parallel::distributed_property_map<ProcessGroup, GlobalMap,
+	  one_bit_color_map<StorageMap> >
 {
-  typedef one_bit_color_map<StorageMap> local_map;
+	typedef one_bit_color_map<StorageMap> local_map;
 
-  typedef parallel::distributed_property_map<ProcessGroup, GlobalMap, 
-                                             local_map >
-    inherited;
+	typedef parallel::distributed_property_map<ProcessGroup, GlobalMap,
+	        local_map >
+	        inherited;
 
-  typedef local_property_map<ProcessGroup, GlobalMap, StorageMap>
-    index_map_type;
+	typedef local_property_map<ProcessGroup, GlobalMap, StorageMap>
+	index_map_type;
 
 public:
-  one_bit_color_map(std::size_t inital_size, 
-                    const index_map_type& index = index_map_type())
-    : inherited(index.process_group(),  index.global(),
-                local_map(inital_size, index.base())) { }
+	one_bit_color_map(std::size_t inital_size,
+	                  const index_map_type& index = index_map_type())
+		: inherited(index.process_group(),  index.global(),
+		            local_map(inital_size, index.base())) { }
 
-  inherited&       base()       { return *this; }
-  const inherited& base() const { return *this; }
+	inherited&       base()
+	{
+		return *this;
+	}
+	const inherited& base() const
+	{
+		return *this;
+	}
 };
 
 template<typename ProcessGroup, typename GlobalMap, typename StorageMap>
 inline one_bit_color_type
 get(one_bit_color_map<local_property_map<ProcessGroup,GlobalMap,StorageMap> >
-      const& pm,
+    const& pm,
     typename property_traits<GlobalMap>::key_type key)
 {
-  return get(pm.base(), key);
+	return get(pm.base(), key);
 }
 
 template<typename ProcessGroup, typename GlobalMap, typename StorageMap>
 inline void
 put(one_bit_color_map<local_property_map<ProcessGroup,GlobalMap,StorageMap> >
-      const& pm, 
+    const& pm,
     typename property_traits<GlobalMap>::key_type key,
     one_bit_color_type value)
 {
-  put(pm.base(), key, value);
+	put(pm.base(), key, value);
 }
 
 template<typename ProcessGroup, typename GlobalMap, typename StorageMap>
 class one_bit_color_map<parallel::distributed_property_map<
-                          ProcessGroup, GlobalMap, StorageMap> > 
-  : public parallel::distributed_property_map<
-             ProcessGroup, GlobalMap, one_bit_color_map<StorageMap> >
+	ProcessGroup, GlobalMap, StorageMap> >
+	: public parallel::distributed_property_map<
+	  ProcessGroup, GlobalMap, one_bit_color_map<StorageMap> >
 {
-  typedef one_bit_color_map<StorageMap> local_map;
+	typedef one_bit_color_map<StorageMap> local_map;
 
-  typedef parallel::distributed_property_map<ProcessGroup,GlobalMap,local_map>
-    inherited;
+	typedef parallel::distributed_property_map<ProcessGroup,GlobalMap,local_map>
+	inherited;
 
-  typedef parallel::distributed_property_map<ProcessGroup, GlobalMap,  
-                                             StorageMap>
-    index_map_type;
+	typedef parallel::distributed_property_map<ProcessGroup, GlobalMap,
+	        StorageMap>
+	        index_map_type;
 
 public:
-  one_bit_color_map(std::size_t inital_size, 
-                    const index_map_type& index = index_map_type())
-    : inherited(index.process_group(),  index.global(),
-                local_map(inital_size, index.base())) { }
+	one_bit_color_map(std::size_t inital_size,
+	                  const index_map_type& index = index_map_type())
+		: inherited(index.process_group(),  index.global(),
+		            local_map(inital_size, index.base())) { }
 
-  inherited&       base()       { return *this; }
-  const inherited& base() const { return *this; }
+	inherited&       base()
+	{
+		return *this;
+	}
+	const inherited& base() const
+	{
+		return *this;
+	}
 };
 
 template<typename ProcessGroup, typename GlobalMap, typename StorageMap>
 inline one_bit_color_type
 get(one_bit_color_map<
-      parallel::distributed_property_map<
-        ProcessGroup, GlobalMap, one_bit_color_map<StorageMap> > > const& pm,
+    parallel::distributed_property_map<
+    ProcessGroup, GlobalMap, one_bit_color_map<StorageMap> > > const& pm,
     typename property_traits<GlobalMap>::key_type key)
 {
-  return get(pm.base(), key);
+	return get(pm.base(), key);
 }
 
 template<typename ProcessGroup, typename GlobalMap, typename StorageMap>
 inline void
 put(one_bit_color_map<
-      parallel::distributed_property_map<
-        ProcessGroup, GlobalMap, one_bit_color_map<StorageMap> > > const& pm, 
+    parallel::distributed_property_map<
+    ProcessGroup, GlobalMap, one_bit_color_map<StorageMap> > > const& pm,
     typename property_traits<GlobalMap>::key_type key,
     one_bit_color_type value)
 {
-  put(pm.base(), key, value);
+	put(pm.base(), key, value);
 }
 
 } // end namespace boost

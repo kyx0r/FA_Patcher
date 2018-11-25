@@ -22,7 +22,8 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace boost {
+namespace boost
+{
 
 //////////////////////////////////////////////////////////////////////////
 // class template static_visitor
@@ -31,29 +32,30 @@ namespace boost {
 // visitor. The class is analogous to std::unary_function in this role.
 //
 
-namespace detail {
+namespace detail
+{
 
-    struct is_static_visitor_tag { };
+struct is_static_visitor_tag { };
 
-    typedef void static_visitor_default_return;
+typedef void static_visitor_default_return;
 
 } // namespace detail
 
 template <typename R = ::boost::detail::static_visitor_default_return>
 class static_visitor
-    : public detail::is_static_visitor_tag
+	: public detail::is_static_visitor_tag
 {
 public: // typedefs
 
-    typedef R result_type;
+	typedef R result_type;
 
 protected: // for use as base class only
 #if !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS) && !defined(BOOST_NO_CXX11_NON_PUBLIC_DEFAULTED_FUNCTIONS)
-    static_visitor() = default;
-    ~static_visitor() = default;
+	static_visitor() = default;
+	~static_visitor() = default;
 #else
-    static_visitor()  BOOST_NOEXCEPT { }
-    ~static_visitor()  BOOST_NOEXCEPT { }
+	static_visitor()  BOOST_NOEXCEPT { }
+	~static_visitor()  BOOST_NOEXCEPT { }
 #endif
 };
 
@@ -69,26 +71,27 @@ protected: // for use as base class only
 // NOTE #2: This template never needs to be specialized!
 //
 
-namespace detail {
+namespace detail
+{
 
 template <typename T>
 struct is_static_visitor_impl
 {
-    BOOST_STATIC_CONSTANT(bool, value = 
-        (::boost::is_base_and_derived< 
-            detail::is_static_visitor_tag,
-            T
-        >::value));
+	BOOST_STATIC_CONSTANT(bool, value =
+	                          (::boost::is_base_and_derived<
+	                           detail::is_static_visitor_tag,
+	                           T
+	                           >::value));
 };
 
 } // namespace detail
 
 template< typename T > struct is_static_visitor
-	: public ::boost::integral_constant<bool,(::boost::detail::is_static_visitor_impl<T>::value)>
-{
-public:
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_static_visitor,(T))
-};
+: public ::boost::integral_constant<bool,(::boost::detail::is_static_visitor_impl<T>::value)>
+  {
+      public:
+      BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_static_visitor,(T))
+  };
 
 } // namespace boost
 

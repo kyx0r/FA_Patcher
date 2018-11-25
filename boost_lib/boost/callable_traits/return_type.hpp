@@ -12,7 +12,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 BOOST_CLBL_TRTS_DEFINE_SFINAE_ERROR_ORIGIN(return_type)
 BOOST_CLBL_TRTS_SFINAE_MSG(return_type, unable_to_determine_return_type)
@@ -29,20 +32,21 @@ template<typename T>
 using return_type_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::traits<detail::shallow_decay<T>>::return_type,
-        unable_to_determine_return_type>;
+    typename detail::traits<detail::shallow_decay<T>>::return_type,
+    unable_to_determine_return_type>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct return_type_impl {};
+template<typename T, typename = std::false_type>
+struct return_type_impl {};
 
-    template<typename T>
-    struct return_type_impl <T, typename std::is_same<
-        return_type_t<T>, detail::dummy>::type>
-    {
-        using type = return_type_t<T>;
-    };
+template<typename T>
+struct return_type_impl <T, typename std::is_same<
+	return_type_t<T>, detail::dummy>::type>
+{
+	using type = return_type_t<T>;
+};
 }
 
 //->
@@ -51,7 +55,8 @@ template<typename T>
 struct return_type : detail::return_type_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

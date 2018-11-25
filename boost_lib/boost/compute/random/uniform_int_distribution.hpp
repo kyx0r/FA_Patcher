@@ -23,8 +23,10 @@
 #include <boost/compute/algorithm/copy_if.hpp>
 #include <boost/compute/algorithm/transform.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// \class uniform_int_distribution
 /// \brief Produces uniformily distributed random integers
@@ -38,79 +40,79 @@ template<class IntType = uint_>
 class uniform_int_distribution
 {
 public:
-    typedef IntType result_type;
+	typedef IntType result_type;
 
-    /// Creates a new uniform distribution producing numbers in the range
-    /// [\p a, \p b].
-    explicit uniform_int_distribution(IntType a = 0,
-                                      IntType b = (std::numeric_limits<IntType>::max)())
-        : m_a(a),
-          m_b(b)
-    {
-    }
+	/// Creates a new uniform distribution producing numbers in the range
+	/// [\p a, \p b].
+	explicit uniform_int_distribution(IntType a = 0,
+	                                  IntType b = (std::numeric_limits<IntType>::max)())
+		: m_a(a),
+		  m_b(b)
+	{
+	}
 
-    /// Destroys the uniform_int_distribution object.
-    ~uniform_int_distribution()
-    {
-    }
+	/// Destroys the uniform_int_distribution object.
+	~uniform_int_distribution()
+	{
+	}
 
-    /// Returns the minimum value of the distribution.
-    result_type a() const
-    {
-        return m_a;
-    }
+	/// Returns the minimum value of the distribution.
+	result_type a() const
+	{
+		return m_a;
+	}
 
-    /// Returns the maximum value of the distribution.
-    result_type b() const
-    {
-        return m_b;
-    }
+	/// Returns the maximum value of the distribution.
+	result_type b() const
+	{
+		return m_b;
+	}
 
-    /// Generates uniformily distributed integers and stores
-    /// them to the range [\p first, \p last).
-    template<class OutputIterator, class Generator>
-    void generate(OutputIterator first,
-                  OutputIterator last,
-                  Generator &generator,
-                  command_queue &queue)
-    {
-        size_t size = std::distance(first, last);
-        typedef typename Generator::result_type g_result_type;
+	/// Generates uniformily distributed integers and stores
+	/// them to the range [\p first, \p last).
+	template<class OutputIterator, class Generator>
+	void generate(OutputIterator first,
+	              OutputIterator last,
+	              Generator &generator,
+	              command_queue &queue)
+	{
+		size_t size = std::distance(first, last);
+		typedef typename Generator::result_type g_result_type;
 
-        vector<g_result_type> tmp(size, queue.get_context());
-        vector<g_result_type> tmp2(size, queue.get_context());
+		vector<g_result_type> tmp(size, queue.get_context());
+		vector<g_result_type> tmp2(size, queue.get_context());
 
-        uint_ bound = ((uint_(-1))/(m_b-m_a+1))*(m_b-m_a+1);
+		uint_ bound = ((uint_(-1))/(m_b-m_a+1))*(m_b-m_a+1);
 
-        buffer_iterator<g_result_type> tmp2_iter;
+		buffer_iterator<g_result_type> tmp2_iter;
 
-        while(size>0)
-        {
-            generator.generate(tmp.begin(), tmp.begin() + size, queue);
-            tmp2_iter = copy_if(tmp.begin(), tmp.begin() + size, tmp2.begin(),
-                                _1 <= bound, queue);
-            size = std::distance(tmp2_iter, tmp2.end());
-        }
+		while(size>0)
+		{
+			generator.generate(tmp.begin(), tmp.begin() + size, queue);
+			tmp2_iter = copy_if(tmp.begin(), tmp.begin() + size, tmp2.begin(),
+			                    _1 <= bound, queue);
+			size = std::distance(tmp2_iter, tmp2.end());
+		}
 
-        BOOST_COMPUTE_FUNCTION(IntType, scale_random, (const g_result_type x),
-        {
-            return LO + (x % (HI-LO+1));
-        });
+		BOOST_COMPUTE_FUNCTION(IntType, scale_random, (const g_result_type x),
+		{
+			return LO + (x % (HI-LO+1));
+		});
 
-        scale_random.define("LO", boost::lexical_cast<std::string>(m_a));
-        scale_random.define("HI", boost::lexical_cast<std::string>(m_b));
+		scale_random.define("LO", boost::lexical_cast<std::string>(m_a));
+		scale_random.define("HI", boost::lexical_cast<std::string>(m_b));
 
-        transform(tmp2.begin(), tmp2.end(), first, scale_random, queue);
-    }
+		transform(tmp2.begin(), tmp2.end(), first, scale_random, queue);
+	}
 
 private:
-    IntType m_a;
-    IntType m_b;
+	IntType m_a;
+	IntType m_b;
 
-    BOOST_STATIC_ASSERT_MSG(
-        boost::is_integral<IntType>::value,
-        "Template argument must be integral"
-    );
+	BOOST_STATIC_ASSERT_MSG(
+	    boost::is_integral<IntType>::value,
+	    "Template argument must be integral"
+	);
 };
 
 } // end compute namespace

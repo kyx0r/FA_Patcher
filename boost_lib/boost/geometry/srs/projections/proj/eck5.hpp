@@ -46,123 +46,132 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct eck5 {};
+namespace par4
+{
+struct eck5 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace eck5
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace eck5
+{
 
-            static const double XF = 0.44101277172455148219;
-            static const double RXF = 2.26750802723822639137;
-            static const double YF = 0.88202554344910296438;
-            static const double RYF = 1.13375401361911319568;
+static const double XF = 0.44101277172455148219;
+static const double RXF = 2.26750802723822639137;
+static const double YF = 0.88202554344910296438;
+static const double RYF = 1.13375401361911319568;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_eck5_spheroid : public base_t_fi<base_eck5_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_eck5_spheroid : public base_t_fi<base_eck5_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_eck5_spheroid(const Parameters& par)
-                    : base_t_fi<base_eck5_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_eck5_spheroid(const Parameters& par)
+		: base_t_fi<base_eck5_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    xy_x = XF * (1. + cos(lp_lat)) * lp_lon;
-                    xy_y = YF * lp_lat;
-                }
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		xy_x = XF * (1. + cos(lp_lat)) * lp_lon;
+		xy_y = YF * lp_lat;
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    lp_lon = RXF * xy_x / (1. + cos( lp_lat = RYF * xy_y));
-                }
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		lp_lon = RXF * xy_x / (1. + cos( lp_lat = RYF * xy_y));
+	}
 
-                static inline std::string get_name()
-                {
-                    return "eck5_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "eck5_spheroid";
+	}
 
-            };
+};
 
-            // Eckert V
-            template <typename Parameters>
-            inline void setup_eck5(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Eckert V
+template <typename Parameters>
+inline void setup_eck5(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::eck5
-    #endif // doxygen
+}
+} // namespace detail::eck5
+#endif // doxygen
 
-    /*!
-        \brief Eckert V projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_eck5.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct eck5_spheroid : public detail::eck5::base_eck5_spheroid<CalculationType, Parameters>
-    {
-        inline eck5_spheroid(const Parameters& par) : detail::eck5::base_eck5_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::eck5::setup_eck5(this->m_par);
-        }
-    };
+/*!
+    \brief Eckert V projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_eck5.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct eck5_spheroid : public detail::eck5::base_eck5_spheroid<CalculationType, Parameters>
+{
+	inline eck5_spheroid(const Parameters& par) : detail::eck5::base_eck5_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::eck5::setup_eck5(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eck5, eck5_spheroid, eck5_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eck5, eck5_spheroid, eck5_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class eck5_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<eck5_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class eck5_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<eck5_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void eck5_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("eck5", new eck5_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void eck5_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("eck5", new eck5_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_ECK5_HPP
 

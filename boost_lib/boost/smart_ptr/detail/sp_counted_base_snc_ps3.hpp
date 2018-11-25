@@ -30,130 +30,130 @@ namespace detail
 
 inline uint32_t compare_and_swap( uint32_t * dest_, uint32_t compare_, uint32_t swap_ )
 {
-    return __builtin_cellAtomicCompareAndSwap32(dest_,compare_,swap_);
+	return __builtin_cellAtomicCompareAndSwap32(dest_,compare_,swap_);
 }
 
 inline uint32_t atomic_fetch_and_add( uint32_t * pw, uint32_t dv )
 {
-    // long r = *pw;
-    // *pw += dv;
-    // return r;
+	// long r = *pw;
+	// *pw += dv;
+	// return r;
 
-    for( ;; )
-    {
-        uint32_t r = *pw;
+	for( ;; )
+	{
+		uint32_t r = *pw;
 
-        if( __builtin_expect((compare_and_swap(pw, r, r + dv) == r), 1) )
-        {
-            return r;
-        }
-    }
+		if( __builtin_expect((compare_and_swap(pw, r, r + dv) == r), 1) )
+		{
+			return r;
+		}
+	}
 }
 
 inline void atomic_increment( uint32_t * pw )
 {
-    (void) __builtin_cellAtomicIncr32( pw );
+	(void) __builtin_cellAtomicIncr32( pw );
 }
 
 inline uint32_t atomic_decrement( uint32_t * pw )
 {
-    return __builtin_cellAtomicDecr32( pw );
+	return __builtin_cellAtomicDecr32( pw );
 }
 
 inline uint32_t atomic_conditional_increment( uint32_t * pw )
 {
-    // long r = *pw;
-    // if( r != 0 ) ++*pw;
-    // return r;
+	// long r = *pw;
+	// if( r != 0 ) ++*pw;
+	// return r;
 
-    for( ;; )
-    {
-        uint32_t r = *pw;
+	for( ;; )
+	{
+		uint32_t r = *pw;
 
-        if( r == 0 )
-        {
-            return r;
-        }
+		if( r == 0 )
+		{
+			return r;
+		}
 
-        if( __builtin_expect( ( compare_and_swap( pw, r, r + 1 ) == r ), 1 ) )
-        {
-            return r;
-        }
-    }    
+		if( __builtin_expect( ( compare_and_swap( pw, r, r + 1 ) == r ), 1 ) )
+		{
+			return r;
+		}
+	}
 }
 
 class sp_counted_base
 {
 private:
 
-    sp_counted_base( sp_counted_base const & );
-    sp_counted_base & operator= ( sp_counted_base const & );
+	sp_counted_base( sp_counted_base const & );
+	sp_counted_base & operator= ( sp_counted_base const & );
 
-    uint32_t use_count_;        // #shared
-    uint32_t weak_count_;       // #weak + (#shared != 0)
+	uint32_t use_count_;        // #shared
+	uint32_t weak_count_;       // #weak + (#shared != 0)
 
 public:
 
-    sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
-    {
-    }
+	sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
+	{
+	}
 
-    virtual ~sp_counted_base() // nothrow
-    {
-    }
+	virtual ~sp_counted_base() // nothrow
+	{
+	}
 
-    // dispose() is called when use_count_ drops to zero, to release
-    // the resources managed by *this.
+	// dispose() is called when use_count_ drops to zero, to release
+	// the resources managed by *this.
 
-    virtual void dispose() = 0; // nothrow
+	virtual void dispose() = 0; // nothrow
 
-    // destroy() is called when weak_count_ drops to zero.
+	// destroy() is called when weak_count_ drops to zero.
 
-    virtual void destroy() // nothrow
-    {
-        delete this;
-    }
+	virtual void destroy() // nothrow
+	{
+		delete this;
+	}
 
-    virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_untyped_deleter() = 0;
+	virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_untyped_deleter() = 0;
 
-    void add_ref_copy()
-    {
-        atomic_increment( &use_count_ );
-    }
+	void add_ref_copy()
+	{
+		atomic_increment( &use_count_ );
+	}
 
-    bool add_ref_lock() // true on success
-    {
-        return atomic_conditional_increment( &use_count_ ) != 0;
-    }
+	bool add_ref_lock() // true on success
+	{
+		return atomic_conditional_increment( &use_count_ ) != 0;
+	}
 
-    void release() // nothrow
-    {
-        if( atomic_decrement( &use_count_ ) == 1 )
-        {
-            dispose();
-            weak_release();
-        }
-    }
+	void release() // nothrow
+	{
+		if( atomic_decrement( &use_count_ ) == 1 )
+		{
+			dispose();
+			weak_release();
+		}
+	}
 
-    void weak_add_ref() // nothrow
-    {
-        atomic_increment( &weak_count_ );
-    }
+	void weak_add_ref() // nothrow
+	{
+		atomic_increment( &weak_count_ );
+	}
 
-    void weak_release() // nothrow
-    {
-        if( atomic_decrement( &weak_count_ ) == 1 )
-        {
-            destroy();
-        }
-    }
+	void weak_release() // nothrow
+	{
+		if( atomic_decrement( &weak_count_ ) == 1 )
+		{
+			destroy();
+		}
+	}
 
-    long use_count() const // nothrow
-    {
-        return const_cast< uint32_t const volatile & >( use_count_ );
-    }
+	long use_count() const // nothrow
+	{
+		return const_cast< uint32_t const volatile & >( use_count_ );
+	}
 };
 
 } // namespace detail

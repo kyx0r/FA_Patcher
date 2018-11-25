@@ -1,6 +1,6 @@
 
 //  (C) Copyright Dave Abrahams, Steve Cleary, Beman Dawes, Howard
-//  Hinnant & John Maddock 2000.  
+//  Hinnant & John Maddock 2000.
 //  Use, modification and distribution are subject to the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt).
@@ -13,7 +13,8 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 // * convert a type T to a const volatile type - add_cv<T>
 // this is not required since the result is always
@@ -26,19 +27,25 @@ namespace boost {
 // references with MSVC6.
 #   pragma warning(push)
 #   pragma warning(disable:4181) // warning C4181: qualifier applied to reference type ignored
-#endif 
+#endif
 
-template <class T> struct add_cv{ typedef T const volatile type; };
+template <class T> struct add_cv
+{
+	typedef T const volatile type;
+};
 
 #if defined(BOOST_MSVC)
 #   pragma warning(pop)
-#endif 
+#endif
 
-template <class T> struct add_cv<T&>{ typedef T& type; };
+template <class T> struct add_cv<T&>
+{
+	typedef T& type;
+};
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
-   template <class T> using add_cv_t = typename add_cv<T>::type;
+template <class T> using add_cv_t = typename add_cv<T>::type;
 
 #endif
 

@@ -11,21 +11,23 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/align/detail/is_alignment.hpp>
 #include <boost/assert.hpp>
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 inline bool
 is_aligned(const void* ptr, std::size_t alignment) BOOST_NOEXCEPT
 {
-    BOOST_ASSERT(detail::is_alignment(alignment));
-    return (reinterpret_cast<std::size_t>(ptr) & (alignment - 1)) == 0;
+	BOOST_ASSERT(detail::is_alignment(alignment));
+	return (reinterpret_cast<std::size_t>(ptr) & (alignment - 1)) == 0;
 }
 
 inline bool
 is_aligned(std::size_t alignment, const void* ptr) BOOST_NOEXCEPT
 {
-    BOOST_ASSERT(detail::is_alignment(alignment));
-    return (reinterpret_cast<std::size_t>(ptr) & (alignment - 1)) == 0;
+	BOOST_ASSERT(detail::is_alignment(alignment));
+	return (reinterpret_cast<std::size_t>(ptr) & (alignment - 1)) == 0;
 }
 
 } /* alignment */

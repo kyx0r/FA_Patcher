@@ -23,39 +23,43 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ssl {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace ssl
+{
+namespace detail
+{
 
 class password_callback_base
 {
 public:
-  virtual ~password_callback_base()
-  {
-  }
+	virtual ~password_callback_base()
+	{
+	}
 
-  virtual std::string call(std::size_t size,
-      context_base::password_purpose purpose) = 0;
+	virtual std::string call(std::size_t size,
+	                         context_base::password_purpose purpose) = 0;
 };
 
 template <typename PasswordCallback>
 class password_callback : public password_callback_base
 {
 public:
-  explicit password_callback(PasswordCallback callback)
-    : callback_(callback)
-  {
-  }
+	explicit password_callback(PasswordCallback callback)
+		: callback_(callback)
+	{
+	}
 
-  virtual std::string call(std::size_t size,
-      context_base::password_purpose purpose)
-  {
-    return callback_(size, purpose);
-  }
+	virtual std::string call(std::size_t size,
+	                         context_base::password_purpose purpose)
+	{
+		return callback_(size, purpose);
+	}
 
 private:
-  PasswordCallback callback_;
+	PasswordCallback callback_;
 };
 
 } // namespace detail

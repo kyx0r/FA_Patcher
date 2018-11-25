@@ -10,15 +10,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 // forward declarations only
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost { namespace spirit 
-{ 
-    class utree;
-}}
+namespace boost
+{
+namespace spirit
+{
+class utree;
+}
+}
 
 namespace boost
 {
-    template <typename T>
-    inline T get(boost::spirit::utree const& x);
+template <typename T>
+inline T get(boost::spirit::utree const& x);
 }
 
 #endif

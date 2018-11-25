@@ -27,30 +27,35 @@
 #include <boost/geometry/algorithms/dispatch/envelope.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace envelope
+namespace detail
+{
+namespace envelope
 {
 
 
 struct envelope_linestring_on_spheroid
 {
-    template <typename Linestring, typename Box, typename Strategy>
-    static inline void apply(Linestring const& linestring,
-                             Box& mbr,
-                             Strategy const& strategy)
-    {
-        envelope_range::apply(geometry::segments_begin(linestring),
-                              geometry::segments_end(linestring),
-                              mbr,
-                              strategy);
-    }
+	template <typename Linestring, typename Box, typename Strategy>
+	static inline void apply(Linestring const& linestring,
+	                         Box& mbr,
+	                         Strategy const& strategy)
+	{
+		envelope_range::apply(geometry::segments_begin(linestring),
+		                      geometry::segments_end(linestring),
+		                      mbr,
+		                      strategy);
+	}
 };
 
 
-}} // namespace detail::envelope
+}
+} // namespace detail::envelope
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -61,54 +66,55 @@ namespace dispatch
 
 template <typename Linestring, typename CS_Tag>
 struct envelope<Linestring, linestring_tag, CS_Tag>
-    : detail::envelope::envelope_range
+	: detail::envelope::envelope_range
 {};
 
 template <typename Linestring>
 struct envelope<Linestring, linestring_tag, spherical_equatorial_tag>
-    : detail::envelope::envelope_linestring_on_spheroid
+	: detail::envelope::envelope_linestring_on_spheroid
 {};
 
 template <typename Linestring>
 struct envelope<Linestring, linestring_tag, geographic_tag>
-    : detail::envelope::envelope_linestring_on_spheroid
+	: detail::envelope::envelope_linestring_on_spheroid
 {};
 
 
 template <typename MultiLinestring, typename CS_Tag>
 struct envelope
-    <
-        MultiLinestring, multi_linestring_tag, CS_Tag
-    > : detail::envelope::envelope_multi_range
-        <
-            detail::envelope::envelope_range
-        >
+	<
+	MultiLinestring, multi_linestring_tag, CS_Tag
+	> : detail::envelope::envelope_multi_range
+	<
+	detail::envelope::envelope_range
+	>
 {};
 
 template <typename MultiLinestring>
 struct envelope
-    <
-        MultiLinestring, multi_linestring_tag, spherical_equatorial_tag
-    > : detail::envelope::envelope_multi_range_on_spheroid
-        <
-            detail::envelope::envelope_linestring_on_spheroid
-        >
+	<
+	MultiLinestring, multi_linestring_tag, spherical_equatorial_tag
+	> : detail::envelope::envelope_multi_range_on_spheroid
+	<
+	detail::envelope::envelope_linestring_on_spheroid
+	>
 {};
 
 template <typename MultiLinestring>
 struct envelope
-    <
-        MultiLinestring, multi_linestring_tag, geographic_tag
-    > : detail::envelope::envelope_multi_range_on_spheroid
-        <
-            detail::envelope::envelope_linestring_on_spheroid
-        >
+	<
+	MultiLinestring, multi_linestring_tag, geographic_tag
+	> : detail::envelope::envelope_multi_range_on_spheroid
+	<
+	detail::envelope::envelope_linestring_on_spheroid
+	>
 {};
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_ENVELOPE_LINEAR_HPP

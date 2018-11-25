@@ -23,18 +23,21 @@
 #include <boost/interprocess/detail/workaround.hpp>
 #include <boost/interprocess/sync/windows/mutex.hpp>
 
-namespace boost {
-namespace interprocess {
-namespace ipcdetail {
+namespace boost
+{
+namespace interprocess
+{
+namespace ipcdetail
+{
 
 //Windows mutex is already recursive
 class windows_recursive_mutex
-   : public windows_mutex
+	: public windows_mutex
 {
-   windows_recursive_mutex(const windows_recursive_mutex &);
-   windows_recursive_mutex &operator=(const windows_recursive_mutex &);
-   public:
-   windows_recursive_mutex() : windows_mutex() {}
+	windows_recursive_mutex(const windows_recursive_mutex &);
+	windows_recursive_mutex &operator=(const windows_recursive_mutex &);
+public:
+	windows_recursive_mutex() : windows_mutex() {}
 };
 
 }  //namespace ipcdetail {

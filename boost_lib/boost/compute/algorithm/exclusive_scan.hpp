@@ -16,8 +16,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/detail/scan.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Performs an exclusive scan of the elements in the range [\p first, \p last)
 /// and stores the results in the range beginning at \p result.
@@ -58,7 +60,7 @@ exclusive_scan(InputIterator first,
                BinaryOperator binary_op,
                command_queue &queue = system::default_queue())
 {
-    return detail::scan(first, last, result, true, init, binary_op, queue);
+	return detail::scan(first, last, result, true, init, binary_op, queue);
 }
 
 /// \overload
@@ -70,12 +72,12 @@ exclusive_scan(InputIterator first,
                T init,
                command_queue &queue = system::default_queue())
 {
-    typedef typename
-        std::iterator_traits<OutputIterator>::value_type output_type;
+	typedef typename
+	std::iterator_traits<OutputIterator>::value_type output_type;
 
-    return detail::scan(first, last, result, true,
-                        init, boost::compute::plus<output_type>(),
-                        queue);
+	return detail::scan(first, last, result, true,
+	                    init, boost::compute::plus<output_type>(),
+	                    queue);
 }
 
 /// \overload
@@ -86,12 +88,12 @@ exclusive_scan(InputIterator first,
                OutputIterator result,
                command_queue &queue = system::default_queue())
 {
-    typedef typename
-        std::iterator_traits<OutputIterator>::value_type output_type;
+	typedef typename
+	std::iterator_traits<OutputIterator>::value_type output_type;
 
-    return detail::scan(first, last, result, true,
-                        output_type(0), boost::compute::plus<output_type>(),
-                        queue);
+	return detail::scan(first, last, result, true,
+	                    output_type(0), boost::compute::plus<output_type>(),
+	                    queue);
 }
 
 } // end compute namespace

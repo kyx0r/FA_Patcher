@@ -11,7 +11,9 @@
 #define BOOST_GEOMETRY_ITERATORS_HAS_ONE_ELEMENT_HPP
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -19,11 +21,12 @@ namespace boost { namespace geometry
 template <typename Iterator>
 inline bool has_one_element(Iterator first, Iterator beyond)
 {
-    return first != beyond && ++first == beyond;
+	return first != beyond && ++first == beyond;
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ITERATORS_HAS_ONE_ELEMENT_HPP

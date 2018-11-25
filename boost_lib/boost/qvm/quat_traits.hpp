@@ -7,43 +7,43 @@
 #define UUID_EF321CBE275911E084A4550FDFD72085
 
 namespace
-boost
-    {
-    namespace
-    qvm
-        {
-        template <class Q>
-        struct
-        quat_traits
-            {
-            typedef void scalar_type;
-            };
+	boost
+{
+namespace
+	qvm
+{
+template <class Q>
+struct
+	quat_traits
+{
+	typedef void scalar_type;
+};
 
-        namespace
-        is_quaternion_detail
-            {
-            template <class>
-            struct
-            is_void
-                {
-                static bool const value=false;
-                };
+namespace
+	is_quaternion_detail
+{
+template <class>
+struct
+	is_void
+{
+	static bool const value=false;
+};
 
-            template <>
-            struct
-            is_void<void>
-                {
-                static bool const value=true;
-                };
-            }
+template <>
+struct
+	is_void<void>
+{
+	static bool const value=true;
+};
+}
 
-        template <class T>
-        struct
-        is_quat
-            {
-            static bool const value=!is_quaternion_detail::is_void<typename quat_traits<T>::scalar_type>::value;
-            };
-        }
-    }
+template <class T>
+struct
+	is_quat
+{
+	static bool const value=!is_quaternion_detail::is_void<typename quat_traits<T>::scalar_type>::value;
+};
+}
+}
 
 #endif

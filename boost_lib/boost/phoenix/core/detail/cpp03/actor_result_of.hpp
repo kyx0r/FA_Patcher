@@ -33,25 +33,25 @@
 #pragma wave option(preserve: 1)
 #endif
 
-        template <typename Expr
-            , BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_ACTOR_LIMIT)
-            , typename Dummy = void>
-        struct actor;
+template <typename Expr
+          , BOOST_PHOENIX_typename_A_void(BOOST_PHOENIX_ACTOR_LIMIT)
+          , typename Dummy = void>
+struct actor;
 
-        template <typename Expr>
-        struct nullary_actor_result
-        {
-            typedef
-                typename boost::phoenix::evaluator::impl<
-                    Expr const&
-                  , vector2<
-                        vector1<const ::boost::phoenix::actor<Expr> *> &
-                      , default_actions
-                    > const &
-                  , proto::empty_env
-                >::result_type
-                type;
-        };
+template <typename Expr>
+struct nullary_actor_result
+{
+	typedef
+	typename boost::phoenix::evaluator::impl<
+	Expr const&
+	, vector2<
+	vector1<const ::boost::phoenix::actor<Expr> *> &
+	, default_actions
+	> const &
+	, proto::empty_env
+	>::result_type
+	type;
+};
 
 #define BOOST_PHOENIX_ITERATION_PARAMS                                          \
     (3, (1, BOOST_PHOENIX_ACTOR_LIMIT,                                          \
@@ -66,24 +66,24 @@
 
 #else
 
-        template <typename Expr, BOOST_PHOENIX_typename_A>
-        struct actor<Expr, BOOST_PHOENIX_A>
-        {
-            typedef
-                typename phoenix::evaluator::
-                    impl<
-                        Expr const&
-                      , vector2<
-                            BOOST_PP_CAT(
-                                vector
-                              , BOOST_PP_INC(BOOST_PHOENIX_ITERATION)
-                            )<const ::boost::phoenix::actor<Expr> *, BOOST_PHOENIX_A> &
-                          , default_actions
-                        > const &
-                      , proto::empty_env
-                    >::result_type
-                type;
-        };
+template <typename Expr, BOOST_PHOENIX_typename_A>
+struct actor<Expr, BOOST_PHOENIX_A>
+{
+	typedef
+	typename phoenix::evaluator::
+	impl<
+	Expr const&
+	, vector2<
+	BOOST_PP_CAT(
+	    vector
+	    , BOOST_PP_INC(BOOST_PHOENIX_ITERATION)
+	)<const ::boost::phoenix::actor<Expr> *, BOOST_PHOENIX_A> &
+	, default_actions
+	> const &
+	, proto::empty_env
+	>::result_type
+	type;
+};
 
 #endif
 

@@ -15,42 +15,47 @@
 
 #include <boost/spirit/home/classic/dynamic/stored_rule_fwd.hpp>
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    // if.hpp
-    template <class ParsableT, typename CondT> struct if_parser;
-    template <class ParsableTrueT, class ParsableFalseT, typename CondT>
-    struct if_else_parser;
+// if.hpp
+template <class ParsableT, typename CondT> struct if_parser;
+template <class ParsableTrueT, class ParsableFalseT, typename CondT>
+struct if_else_parser;
 
-    // for.hpp
-    namespace impl {
-    template<typename InitF, typename CondT, typename StepF, class ParsableT>
-    struct for_parser;
-    }
+// for.hpp
+namespace impl
+{
+template<typename InitF, typename CondT, typename StepF, class ParsableT>
+struct for_parser;
+}
 
-    // while.hpp
-    template<typename ParsableT, typename CondT, bool is_do_parser>
-    struct while_parser;
+// while.hpp
+template<typename ParsableT, typename CondT, bool is_do_parser>
+struct while_parser;
 
-    // lazy.hpp
-    template<typename ActorT> struct lazy_parser;
+// lazy.hpp
+template<typename ActorT> struct lazy_parser;
 
-    // rule_alias.hpp
-    template <typename ParserT> class rule_alias; 
+// rule_alias.hpp
+template <typename ParserT> class rule_alias;
 
-    // switch.hpp
-    template <typename CaseT, typename CondT>       struct switch_parser;
-    template <int N, class ParserT, bool IsDefault> struct case_parser;
+// switch.hpp
+template <typename CaseT, typename CondT>       struct switch_parser;
+template <int N, class ParserT, bool IsDefault> struct case_parser;
 
-    // select.hpp
-    template <typename TupleT, typename BehaviourT, typename T> 
-    struct select_parser;
+// select.hpp
+template <typename TupleT, typename BehaviourT, typename T>
+struct select_parser;
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-}} // namespace BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace BOOST_SPIRIT_CLASSIC_NS
 
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()

@@ -18,51 +18,57 @@
 #endif
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct debug_validity_phase
 {
-    static inline void apply(int)
-    {
-    }
+	static inline void apply(int)
+	{
+	}
 };
 
 #ifdef BOOST_GEOMETRY_TEST_DEBUG
 template <typename Polygon>
 struct debug_validity_phase<Polygon, polygon_tag>
 {
-    static inline void apply(int phase)
-    {
-        switch (phase)
-        {
-        case 1:
-            std::cout << "checking exterior ring..." << std::endl;
-            break;
-        case 2:
-            std::cout << "checking interior rings..." << std::endl;
-            break;
-        case 3:
-            std::cout << "computing and analyzing turns..." << std::endl;
-            break;
-        case 4:
-            std::cout << "checking if interior rings are inside "
-                      << "the exterior ring..." << std::endl;
-            break;
-        case 5:
-            std::cout << "checking connectivity of interior..." << std::endl;
-            break;
-        }
-    }
+	static inline void apply(int phase)
+	{
+		switch (phase)
+		{
+		case 1:
+			std::cout << "checking exterior ring..." << std::endl;
+			break;
+		case 2:
+			std::cout << "checking interior rings..." << std::endl;
+			break;
+		case 3:
+			std::cout << "computing and analyzing turns..." << std::endl;
+			break;
+		case 4:
+			std::cout << "checking if interior rings are inside "
+			          << "the exterior ring..." << std::endl;
+			break;
+		case 5:
+			std::cout << "checking connectivity of interior..." << std::endl;
+			break;
+		}
+	}
 };
 #endif
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_DEBUG_VALIDITY_PHASE_HPP

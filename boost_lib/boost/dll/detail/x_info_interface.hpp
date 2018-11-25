@@ -16,17 +16,25 @@
 #include <string>
 #include <vector>
 
-namespace boost { namespace dll { namespace detail {
+namespace boost
+{
+namespace dll
+{
+namespace detail
+{
 
-class x_info_interface {
+class x_info_interface
+{
 public:
-    virtual std::vector<std::string> sections() = 0;
-    virtual std::vector<std::string> symbols() = 0;
-    virtual std::vector<std::string> symbols(const char* section_name) = 0;
+	virtual std::vector<std::string> sections() = 0;
+	virtual std::vector<std::string> symbols() = 0;
+	virtual std::vector<std::string> symbols(const char* section_name) = 0;
 
-    virtual ~x_info_interface() BOOST_NOEXCEPT {}
+	virtual ~x_info_interface() BOOST_NOEXCEPT {}
 };
 
-}}} // namespace boost::dll::detail
+}
+}
+} // namespace boost::dll::detail
 
 #endif // BOOST_DLL_DETAIL_X_INFO_INTERFACE_HPP

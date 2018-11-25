@@ -20,9 +20,12 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace ip {
+namespace boost
+{
+namespace asio
+{
+namespace ip
+{
 
 /// The resolver_query_base class is used as a base for the
 /// basic_resolver_query class templates to provide a common place to define
@@ -30,10 +33,10 @@ namespace ip {
 class resolver_query_base : public resolver_base
 {
 protected:
-  /// Protected destructor to prevent deletion through this type.
-  ~resolver_query_base()
-  {
-  }
+	/// Protected destructor to prevent deletion through this type.
+	~resolver_query_base()
+	{
+	}
 };
 
 } // namespace ip

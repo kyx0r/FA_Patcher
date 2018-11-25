@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::last_of;
-  }
+namespace metaparse
+{
+using v1::last_of;
+}
 }
 
 #endif

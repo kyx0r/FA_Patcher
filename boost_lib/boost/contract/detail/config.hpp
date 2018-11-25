@@ -13,12 +13,12 @@
 // BOOST_CONTRACT_DETAIL_NDEBUG
 
 #ifndef BOOST_CONTRACT_DETAIL_NAME_INFIX
-    // Do not use underscore "_" to avoid generating reserved names with "__".
-    #define BOOST_CONTRACT_DETAIL_NAME_INFIX X
+// Do not use underscore "_" to avoid generating reserved names with "__".
+#define BOOST_CONTRACT_DETAIL_NAME_INFIX X
 #endif
 
 #ifndef BOOST_CONTRACT_DETAIL_NAME_PREFIX
-    #define BOOST_CONTRACT_DETAIL_NAME_PREFIX \
+#define BOOST_CONTRACT_DETAIL_NAME_PREFIX \
         BOOST_PP_CAT(boost_contract_detail, BOOST_CONTRACT_DETAIL_NAME_INFIX)
 #endif
 

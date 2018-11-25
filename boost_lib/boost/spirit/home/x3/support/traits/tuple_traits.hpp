@@ -13,45 +13,54 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
 
-namespace boost { namespace spirit { namespace x3 { namespace traits
+namespace boost
 {
-    template <typename A, typename B>
-    struct has_same_size
-      : mpl::bool_<(
-            fusion::result_of::size<A>::value ==
-            fusion::result_of::size<B>::value
-        )>
-    {};
+namespace spirit
+{
+namespace x3
+{
+namespace traits
+{
+template <typename A, typename B>
+struct has_same_size
+: mpl::bool_<(
+      fusion::result_of::size<A>::value ==
+      fusion::result_of::size<B>::value
+  )>
+  {};
 
-    template <typename T, std::size_t N>
-    struct has_size
-      : mpl::bool_<(fusion::result_of::size<T>::value == N)>
-    {};
+template <typename T, std::size_t N>
+struct has_size
+: mpl::bool_<(fusion::result_of::size<T>::value == N)>
+  {};
 
-    template <typename A, typename B>
-    struct is_same_size_sequence
-      : mpl::and_<
-            fusion::traits::is_sequence<A>
-          , fusion::traits::is_sequence<B>
-          , has_same_size<A, B>
-        >
-    {};
+template <typename A, typename B>
+struct is_same_size_sequence
+	: mpl::and_<
+	  fusion::traits::is_sequence<A>
+	, fusion::traits::is_sequence<B>
+	, has_same_size<A, B>
+	  >
+{};
 
-    template <typename Seq>
-    struct is_size_one_sequence
-      : mpl::and_<
-            fusion::traits::is_sequence<Seq>
-          , has_size<Seq, 1>
-        >
-    {};
+template <typename Seq>
+struct is_size_one_sequence
+	: mpl::and_<
+	  fusion::traits::is_sequence<Seq>
+	, has_size<Seq, 1>
+	  >
+{};
 
-    template <typename View>
-    struct is_size_one_view
-      : mpl::and_<
-            fusion::traits::is_view<View>
-          , has_size<View, 1>
-        >
-    {};
-}}}}
+template <typename View>
+struct is_size_one_view
+	: mpl::and_<
+	  fusion::traits::is_view<View>
+	, has_size<View, 1>
+	  >
+{};
+}
+}
+}
+}
 
 #endif

@@ -41,17 +41,17 @@
 #endif
 
 #else
-        template <typename This, BOOST_PHOENIX_typename_A>
-        struct result<This(BOOST_PHOENIX_A_const_ref)>
-            : detail::expression::function_eval<F, BOOST_PHOENIX_A>
-        {};
+template <typename This, BOOST_PHOENIX_typename_A>
+struct result<This(BOOST_PHOENIX_A_const_ref)>
+: detail::expression::function_eval<F, BOOST_PHOENIX_A>
+{};
 
-        template <BOOST_PHOENIX_typename_A>
-        typename detail::expression::function_eval<F, BOOST_PHOENIX_A>::type const
-        operator()(BOOST_PHOENIX_A_const_ref_a) const
-        {
-            return detail::expression::function_eval<F, BOOST_PHOENIX_A>::make(f, BOOST_PHOENIX_a);
-        }
+template <BOOST_PHOENIX_typename_A>
+typename detail::expression::function_eval<F, BOOST_PHOENIX_A>::type const
+operator()(BOOST_PHOENIX_A_const_ref_a) const
+{
+	return detail::expression::function_eval<F, BOOST_PHOENIX_A>::make(f, BOOST_PHOENIX_a);
+}
 
 #endif
 

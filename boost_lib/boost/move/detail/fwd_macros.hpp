@@ -21,12 +21,23 @@
 
 #include <boost/move/detail/workaround.hpp>
 
-namespace boost {
-namespace move_detail {
+namespace boost
+{
+namespace move_detail
+{
 
-template <typename T> struct unvoid { typedef T type; };
-template <> struct unvoid<void> { struct type { }; };
-template <> struct unvoid<const void> { struct type { }; };
+template <typename T> struct unvoid
+{
+	typedef T type;
+};
+template <> struct unvoid<void>
+{
+	struct type { };
+};
+template <> struct unvoid<const void>
+{
+	struct type { };
+};
 
 }  //namespace move_detail {
 }  //namespace boost {
@@ -35,27 +46,35 @@ template <> struct unvoid<const void> { struct type { }; };
 
 #if defined(BOOST_MOVE_MSVC_10_MEMBER_RVALUE_REF_BUG)
 
-namespace boost {
-namespace move_detail {
+namespace boost
+{
+namespace move_detail
+{
 
-   template<class T>
-   struct mref;
+template<class T>
+struct mref;
 
-   template<class T>
-   struct mref<T &>
-   {
-      explicit mref(T &t) : t_(t){}
-      T &t_;
-      T & get() {  return t_;   }
-   };
+template<class T>
+struct mref<T &>
+{
+	explicit mref(T &t) : t_(t) {}
+	T &t_;
+	T & get()
+	{
+		return t_;
+	}
+};
 
-   template<class T>
-   struct mref
-   {
-      explicit mref(T &&t) : t_(t) {}
-      T &t_;
-      T &&get() {  return ::boost::move(t_);   }
-   };
+template<class T>
+struct mref
+{
+	explicit mref(T &&t) : t_(t) {}
+	T &t_;
+	T &&get()
+	{
+		return ::boost::move(t_);
+	}
+};
 
 }  //namespace move_detail {
 }  //namespace boost {
@@ -202,13 +221,13 @@ namespace move_detail {
 #define BOOST_MOVE_DECLVALQ9 BOOST_MOVE_DECLVALQ8, ::boost::move_detail::declval<Q8>()
 
 #ifdef BOOST_MOVE_MSVC_10_MEMBER_RVALUE_REF_BUG
-   #define BOOST_MOVE_MREF(T)    ::boost::move_detail::mref<T>
-   #define BOOST_MOVE_MFWD(N)    ::boost::forward<P##N>(this->m_p##N.get())
-   #define BOOST_MOVE_MFWDQ(N)   ::boost::forward<Q##N>(this->m_q##N.get())
+#define BOOST_MOVE_MREF(T)    ::boost::move_detail::mref<T>
+#define BOOST_MOVE_MFWD(N)    ::boost::forward<P##N>(this->m_p##N.get())
+#define BOOST_MOVE_MFWDQ(N)   ::boost::forward<Q##N>(this->m_q##N.get())
 #else
-   #define BOOST_MOVE_MREF(T)    BOOST_FWD_REF(T)
-   #define BOOST_MOVE_MFWD(N)    ::boost::forward<P##N>(this->m_p##N)
-   #define BOOST_MOVE_MFWDQ(N)   ::boost::forward<Q##N>(this->m_q##N)
+#define BOOST_MOVE_MREF(T)    BOOST_FWD_REF(T)
+#define BOOST_MOVE_MFWD(N)    ::boost::forward<P##N>(this->m_p##N)
+#define BOOST_MOVE_MFWDQ(N)   ::boost::forward<Q##N>(this->m_q##N)
 #endif
 #define BOOST_MOVE_MITFWD(N)  *this->m_p##N
 #define BOOST_MOVE_MINC(N)    ++this->m_p##N

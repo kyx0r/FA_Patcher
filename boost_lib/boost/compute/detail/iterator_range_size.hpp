@@ -15,9 +15,12 @@
 #include <algorithm>
 #include <iterator>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // This is a convenience function which returns the size of a range
 // bounded by two iterators. This function has two differences from
@@ -26,15 +29,15 @@ namespace detail {
 template<class Iterator>
 inline size_t iterator_range_size(Iterator first, Iterator last)
 {
-    typedef typename
-        std::iterator_traits<Iterator>::difference_type
-        difference_type;
+	typedef typename
+	std::iterator_traits<Iterator>::difference_type
+	difference_type;
 
-    difference_type difference = std::distance(first, last);
+	difference_type difference = std::distance(first, last);
 
-    return static_cast<size_t>(
-        (std::max)(difference, static_cast<difference_type>(0))
-    );
+	return static_cast<size_t>(
+	           (std::max)(difference, static_cast<difference_type>(0))
+	       );
 }
 
 } // end detail namespace

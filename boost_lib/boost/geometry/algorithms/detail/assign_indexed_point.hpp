@@ -21,7 +21,9 @@
 #include <boost/geometry/algorithms/detail/assign_values.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -46,13 +48,13 @@ namespace detail
 template <std::size_t Index, typename Geometry, typename Point>
 inline void assign_point_to_index(Point const& point, Geometry& geometry)
 {
-    concepts::check<Point const>();
-    concepts::check<Geometry>();
+	concepts::check<Point const>();
+	concepts::check<Geometry>();
 
-    detail::assign::assign_point_to_index
-        <
-            Geometry, Point, Index, 0, dimension<Geometry>::type::value
-        >::apply(point, geometry);
+	detail::assign::assign_point_to_index
+	<
+	Geometry, Point, Index, 0, dimension<Geometry>::type::value
+	>::apply(point, geometry);
 }
 
 
@@ -74,13 +76,13 @@ inline void assign_point_to_index(Point const& point, Geometry& geometry)
 template <std::size_t Index, typename Point, typename Geometry>
 inline void assign_point_from_index(Geometry const& geometry, Point& point)
 {
-    concepts::check<Geometry const>();
-    concepts::check<Point>();
+	concepts::check<Geometry const>();
+	concepts::check<Point>();
 
-    detail::assign::assign_point_from_index
-        <
-            Geometry, Point, Index, 0, dimension<Geometry>::type::value
-        >::apply(geometry, point);
+	detail::assign::assign_point_from_index
+	<
+	Geometry, Point, Index, 0, dimension<Geometry>::type::value
+	>::apply(geometry, point);
 }
 
 
@@ -88,7 +90,8 @@ inline void assign_point_from_index(Geometry const& geometry, Point& point)
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_ASSIGN_INDEXED_POINT_HPP

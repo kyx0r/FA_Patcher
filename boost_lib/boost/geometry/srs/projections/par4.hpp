@@ -25,9 +25,15 @@
 #include <boost/type_traits/is_void.hpp>
 
 
-namespace boost { namespace geometry { namespace srs { namespace par4
+namespace boost
 {
-    
+namespace geometry
+{
+namespace srs
+{
+namespace par4
+{
+
 // proj
 // defined in projections' implementation files
 
@@ -91,7 +97,7 @@ struct OSGB36 {};
 template <typename P>
 struct proj
 {
-    typedef P type;
+	typedef P type;
 };
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -102,22 +108,25 @@ template
 <
     typename E,
     typename Tag = typename geometry::tag<E>::type
->
+    >
 struct ellps_impl
-    : private E // empty base optimization
+	: private E // empty base optimization
 {
-    typedef E type;
-    
-    ellps_impl() : E() {}
-    explicit ellps_impl(E const& e) : E(e) {}
+	typedef E type;
 
-    E const& model() const { return *this; }
+	ellps_impl() : E() {}
+	explicit ellps_impl(E const& e) : E(e) {}
+
+	E const& model() const
+	{
+		return *this;
+	}
 };
 
 template <typename E>
 struct ellps_impl<E, void>
 {
-    typedef E type;
+	typedef E type;
 };
 
 } // namespace detail
@@ -125,24 +134,24 @@ struct ellps_impl<E, void>
 
 template<typename E>
 struct ellps
-    : par4::detail::ellps_impl<E>
+	: par4::detail::ellps_impl<E>
 {
-    ellps() {}
-    explicit ellps(E const& e)
-        : par4::detail::ellps_impl<E>(e)
-    {}
+	ellps() {}
+	explicit ellps(E const& e)
+		: par4::detail::ellps_impl<E>(e)
+	{}
 };
 
 template <typename D>
 struct datum
 {
-    typedef D type;
+	typedef D type;
 };
 
 template <typename P>
 struct o_proj
 {
-    typedef P type;
+	typedef P type;
 };
 
 struct guam {};
@@ -153,18 +162,21 @@ namespace detail
 
 inline double b_from_a_rf(double a, double rf)
 {
-    return a * (1.0 - 1.0 / rf);
+	return a * (1.0 - 1.0 / rf);
 }
 
 template
 <
     typename Ellps,
     typename Tag = typename geometry::tag<typename Ellps::type>::type
->
+    >
 struct ellps_traits
 {
-    typedef typename Ellps::type model_type;
-    static model_type model(Ellps const& e) { return e.model(); }
+	typedef typename Ellps::type model_type;
+	static model_type model(Ellps const& e)
+	{
+		return e.model();
+	}
 };
 
 #define BOOST_GEOMETRY_PROJECTIONS_DETAIL_REGISTER_ELLPS_A_B(NAME, A, B) \
@@ -239,9 +251,15 @@ BOOST_GEOMETRY_PROJECTIONS_DETAIL_REGISTER_SPHERE    (sphere, 6370997.0)
 template <typename D>
 struct datum_traits
 {
-    typedef void ellps_type;
-    static std::string id() { return ""; }
-    static std::string definition() { return ""; }
+	typedef void ellps_type;
+	static std::string id()
+	{
+		return "";
+	}
+	static std::string definition()
+	{
+		return "";
+	}
 };
 
 #define BOOST_GEOMETRY_PROJECTIONS_DETAIL_REGISTER_DATUM(NAME, ID, ELLPS, DEF) \
@@ -271,14 +289,14 @@ template
     template <typename> class IsSamePred,
     int I = 0,
     int N = boost::tuples::length<Tuple>::value
->
+    >
 struct tuples_find_index_if
-    : boost::mpl::if_c
-        <
-            IsSamePred<typename boost::tuples::element<I, Tuple>::type>::value,
-            boost::integral_constant<int, I>,
-            typename tuples_find_index_if<Tuple, IsSamePred, I+1, N>::type
-        >::type
+	: boost::mpl::if_c
+	  <
+	  IsSamePred<typename boost::tuples::element<I, Tuple>::type>::value,
+	  boost::integral_constant<int, I>,
+	  typename tuples_find_index_if<Tuple, IsSamePred, I+1, N>::type
+	  >::type
 {};
 
 template
@@ -286,9 +304,9 @@ template
     typename Tuple,
     template <typename> class IsSamePred,
     int N
->
+    >
 struct tuples_find_index_if<Tuple, IsSamePred, N, N>
-    : boost::integral_constant<int, N>
+	: boost::integral_constant<int, N>
 {};
 
 template
@@ -297,9 +315,9 @@ template
     template <typename> class IsSamePred,
     int I = tuples_find_index_if<Tuple, IsSamePred>::value,
     int N = boost::tuples::length<Tuple>::value
->
+    >
 struct tuples_find_if
-    : boost::tuples::element<I, Tuple>
+	: boost::tuples::element<I, Tuple>
 {};
 
 template
@@ -307,10 +325,10 @@ template
     typename Tuple,
     template <typename> class IsSamePred,
     int N
->
+    >
 struct tuples_find_if<Tuple, IsSamePred, N, N>
 {
-    typedef void type;
+	typedef void type;
 };
 
 /*template <typename Param>
@@ -376,15 +394,15 @@ struct is_same_t<Param<T>, Param> : boost::true_type {};
 template <typename Param>
 struct is_param
 {
-    template <typename T>
-    struct pred : boost::is_same<T, Param> {};
+	template <typename T>
+	struct pred : boost::is_same<T, Param> {};
 };
 
 template <template <typename> class Param>
 struct is_param_t
 {
-    template <typename T>
-    struct pred : is_same_t<T, Param> {};
+	template <typename T>
+	struct pred : is_same_t<T, Param> {};
 };
 
 // pick proj static name
@@ -392,102 +410,102 @@ struct is_param_t
 template <typename Tuple>
 struct pick_proj_tag
 {
-    typedef typename tuples_find_if
-        <
-            Tuple,
-            // is_proj
-            is_param_t<proj>::pred
-        >::type proj_type;
+	typedef typename tuples_find_if
+	<
+	Tuple,
+	// is_proj
+	is_param_t<proj>::pred
+	>::type proj_type;
 
-    static const bool is_non_void = ! boost::is_void<proj_type>::value;
+	static const bool is_non_void = ! boost::is_void<proj_type>::value;
 
-    BOOST_MPL_ASSERT_MSG((is_non_void), PROJECTION_NOT_NAMED, (Tuple));
+	BOOST_MPL_ASSERT_MSG((is_non_void), PROJECTION_NOT_NAMED, (Tuple));
 
-    typedef typename proj_type::type type;
+	typedef typename proj_type::type type;
 };
 
 
 template <typename Ellps, typename Datum, int EllpsIndex>
 struct pick_ellps_impl
 {
-    typedef Ellps type;
-    typedef typename ellps_traits<Ellps>::model_type model_type;
-    template <typename Tuple>
-    static model_type model(Tuple const& tup)
-    {
-        return ellps_traits<Ellps>::model(boost::get<EllpsIndex>(tup));
-    }
+	typedef Ellps type;
+	typedef typename ellps_traits<Ellps>::model_type model_type;
+	template <typename Tuple>
+	static model_type model(Tuple const& tup)
+	{
+		return ellps_traits<Ellps>::model(boost::get<EllpsIndex>(tup));
+	}
 };
 
 template <typename Ellps, int EllpsIndex>
 struct pick_ellps_impl<Ellps, void, EllpsIndex>
 {
-    typedef Ellps type;
-    typedef typename ellps_traits<Ellps>::model_type model_type;
-    template <typename Tuple>
-    static model_type model(Tuple const& tup)
-    {
-        return ellps_traits<Ellps>::model(boost::get<EllpsIndex>(tup));
-    }
+	typedef Ellps type;
+	typedef typename ellps_traits<Ellps>::model_type model_type;
+	template <typename Tuple>
+	static model_type model(Tuple const& tup)
+	{
+		return ellps_traits<Ellps>::model(boost::get<EllpsIndex>(tup));
+	}
 };
 
 template <typename Datum, int EllpsIndex>
 struct pick_ellps_impl<void, Datum, EllpsIndex>
 {
-    typedef typename datum_traits<Datum>::ellps_type type;
+	typedef typename datum_traits<Datum>::ellps_type type;
 
-    static const bool is_datum_known = ! boost::is_void<type>::value;
-    BOOST_MPL_ASSERT_MSG((is_datum_known), UNKNOWN_DATUM, (types<Datum>));
+	static const bool is_datum_known = ! boost::is_void<type>::value;
+	BOOST_MPL_ASSERT_MSG((is_datum_known), UNKNOWN_DATUM, (types<Datum>));
 
-    typedef typename ellps_traits<type>::model_type model_type;
-    template <typename Tuple>
-    static model_type model(Tuple const& )
-    {
-        return ellps_traits<type>::model(type());
-    }
+	typedef typename ellps_traits<type>::model_type model_type;
+	template <typename Tuple>
+	static model_type model(Tuple const& )
+	{
+		return ellps_traits<type>::model(type());
+	}
 };
 
 template <int EllpsIndex>
 struct pick_ellps_impl<void, void, EllpsIndex>
 {
-    // default ellipsoid
-    typedef ellps<WGS84> type;
-    typedef typename ellps_traits<type>::model_type model_type;
-    template <typename Tuple>
-    static model_type model(Tuple const& )
-    {
-        return ellps_traits<type>::model(type());
-    }
+	// default ellipsoid
+	typedef ellps<WGS84> type;
+	typedef typename ellps_traits<type>::model_type model_type;
+	template <typename Tuple>
+	static model_type model(Tuple const& )
+	{
+		return ellps_traits<type>::model(type());
+	}
 };
 
 // Pick spheroid/sphere model from ellps or datum
 // mimic pj_init() calling pj_datum_set() and pj_ell_set()
 template <typename Tuple>
 struct pick_ellps
-    : pick_ellps_impl
-        <
-            typename tuples_find_if<Tuple, /*is_ellps*/is_param_t<ellps>::pred>::type,
-            typename tuples_find_if<Tuple, /*is_datum*/is_param_t<datum>::pred>::type,
-            tuples_find_index_if<Tuple, /*is_ellps*/is_param_t<ellps>::pred>::value
-        >
+	: pick_ellps_impl
+	  <
+	  typename tuples_find_if<Tuple, /*is_ellps*/is_param_t<ellps>::pred>::type,
+	  typename tuples_find_if<Tuple, /*is_datum*/is_param_t<datum>::pred>::type,
+	  tuples_find_index_if<Tuple, /*is_ellps*/is_param_t<ellps>::pred>::value
+	  >
 {};
 
 
 template <typename Tuple>
 struct pick_o_proj_tag
 {
-    typedef typename tuples_find_if
-        <
-            Tuple,
-            //is_o_proj
-            is_param_t<o_proj>::pred
-        >::type proj_type;
+	typedef typename tuples_find_if
+	<
+	Tuple,
+	//is_o_proj
+	is_param_t<o_proj>::pred
+	>::type proj_type;
 
-    static const bool is_non_void = ! boost::is_void<proj_type>::value;
+	static const bool is_non_void = ! boost::is_void<proj_type>::value;
 
-    BOOST_MPL_ASSERT_MSG((is_non_void), PROJECTION_NOT_NAMED, (Tuple));
+	BOOST_MPL_ASSERT_MSG((is_non_void), PROJECTION_NOT_NAMED, (Tuple));
 
-    typedef typename proj_type::type type;
+	typedef typename proj_type::type type;
 };
 
 
@@ -495,7 +513,10 @@ struct pick_o_proj_tag
 #endif // DOXYGEN_NO_DETAIL
 
 
-}}}} // namespace boost::geometry::srs::par4
+}
+}
+}
+} // namespace boost::geometry::srs::par4
 
 
 #endif // BOOST_GEOMETRY_SRS_PROJECTIONS_PAR4_HPP

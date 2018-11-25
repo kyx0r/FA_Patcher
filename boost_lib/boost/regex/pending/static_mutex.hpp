@@ -3,20 +3,20 @@
  * Copyright (c) 2004
  * John Maddock
  *
- * Use, modification and distribution are subject to the 
- * Boost Software License, Version 1.0. (See accompanying file 
+ * Use, modification and distribution are subject to the
+ * Boost Software License, Version 1.0. (See accompanying file
  * LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  */
- 
- /*
-  *   LOCATION:    see http://www.boost.org for most recent version.
-  *   FILE         static_mutex.hpp
-  *   VERSION      see <boost/version.hpp>
-  *   DESCRIPTION: Declares static_mutex lock type, there are three different
-  *                implementations: POSIX pthreads, WIN32 threads, and portable,
-  *                these are described in more detail below.
-  */
+
+/*
+ *   LOCATION:    see http://www.boost.org for most recent version.
+ *   FILE         static_mutex.hpp
+ *   VERSION      see <boost/version.hpp>
+ *   DESCRIPTION: Declares static_mutex lock type, there are three different
+ *                implementations: POSIX pthreads, WIN32 threads, and portable,
+ *                these are described in more detail below.
+ */
 
 #ifndef BOOST_REGEX_STATIC_MUTEX_HPP
 #define BOOST_REGEX_STATIC_MUTEX_HPP
@@ -34,7 +34,8 @@
 // simple wrap around a pthread_mutex_t initialized with
 // PTHREAD_MUTEX_INITIALIZER.
 //
-namespace boost{
+namespace boost
+{
 
 class static_mutex;
 
@@ -43,28 +44,28 @@ class static_mutex;
 class BOOST_REGEX_DECL scoped_static_mutex_lock
 {
 public:
-   scoped_static_mutex_lock(static_mutex& mut, bool lk = true);
-   ~scoped_static_mutex_lock();
-   inline bool locked()const
-   {
-      return m_have_lock;
-   }
-   inline operator void const*()const
-   {
-      return locked() ? this : 0;
-   }
-   void lock();
-   void unlock();
+	scoped_static_mutex_lock(static_mutex& mut, bool lk = true);
+	~scoped_static_mutex_lock();
+	inline bool locked()const
+	{
+		return m_have_lock;
+	}
+	inline operator void const*()const
+	{
+		return locked() ? this : 0;
+	}
+	void lock();
+	void unlock();
 private:
-   static_mutex& m_mutex;
-   bool m_have_lock;
+	static_mutex& m_mutex;
+	bool m_have_lock;
 };
 
 class static_mutex
 {
 public:
-   typedef scoped_static_mutex_lock scoped_lock;
-   pthread_mutex_t m_mutex;
+	typedef scoped_static_mutex_lock scoped_lock;
+	pthread_mutex_t m_mutex;
 };
 
 } // namespace boost
@@ -77,15 +78,16 @@ public:
 
 #include <boost/cstdint.hpp>
 
-namespace boost{
+namespace boost
+{
 
 class BOOST_REGEX_DECL scoped_static_mutex_lock;
 
 class static_mutex
 {
 public:
-   typedef scoped_static_mutex_lock scoped_lock;
-   boost::int32_t m_mutex;
+	typedef scoped_static_mutex_lock scoped_lock;
+	boost::int32_t m_mutex;
 };
 
 #define BOOST_STATIC_MUTEX_INIT { 0, }
@@ -93,23 +95,23 @@ public:
 class BOOST_REGEX_DECL scoped_static_mutex_lock
 {
 public:
-   scoped_static_mutex_lock(static_mutex& mut, bool lk = true);
-   ~scoped_static_mutex_lock();
-   operator void const*()const
-   {
-      return locked() ? this : 0;
-   }
-   bool locked()const
-   {
-      return m_have_lock;
-   }
-   void lock();
-   void unlock();
+	scoped_static_mutex_lock(static_mutex& mut, bool lk = true);
+	~scoped_static_mutex_lock();
+	operator void const*()const
+	{
+		return locked() ? this : 0;
+	}
+	bool locked()const
+	{
+		return m_have_lock;
+	}
+	void lock();
+	void unlock();
 private:
-   static_mutex& m_mutex;
-   bool m_have_lock;
-   scoped_static_mutex_lock(const scoped_static_mutex_lock&);
-   scoped_static_mutex_lock& operator=(const scoped_static_mutex_lock&);
+	static_mutex& m_mutex;
+	bool m_have_lock;
+	scoped_static_mutex_lock(const scoped_static_mutex_lock&);
+	scoped_static_mutex_lock& operator=(const scoped_static_mutex_lock&);
 };
 
 } // namespace
@@ -135,7 +137,8 @@ private:
 #undef BOOST_REGEX_H2
 #undef BOOST_REGEX_H3
 
-namespace boost{
+namespace boost
+{
 
 class BOOST_REGEX_DECL scoped_static_mutex_lock;
 extern "C" BOOST_REGEX_DECL void boost_regex_free_static_mutex();
@@ -143,10 +146,10 @@ extern "C" BOOST_REGEX_DECL void boost_regex_free_static_mutex();
 class BOOST_REGEX_DECL static_mutex
 {
 public:
-   typedef scoped_static_mutex_lock scoped_lock;
-   static void init();
-   static boost::recursive_mutex* m_pmutex;
-   static boost::once_flag m_once;
+	typedef scoped_static_mutex_lock scoped_lock;
+	static void init();
+	static boost::recursive_mutex* m_pmutex;
+	static boost::once_flag m_once;
 };
 
 #define BOOST_STATIC_MUTEX_INIT {  }
@@ -154,25 +157,25 @@ public:
 class BOOST_REGEX_DECL scoped_static_mutex_lock
 {
 public:
-   scoped_static_mutex_lock(static_mutex& mut, bool lk = true);
-   ~scoped_static_mutex_lock();
-   operator void const*()const;
-   bool locked()const;
-   void lock();
-   void unlock();
+	scoped_static_mutex_lock(static_mutex& mut, bool lk = true);
+	~scoped_static_mutex_lock();
+	operator void const*()const;
+	bool locked()const;
+	void lock();
+	void unlock();
 private:
-   boost::unique_lock<boost::recursive_mutex>* m_plock;
-   bool m_have_lock;
+	boost::unique_lock<boost::recursive_mutex>* m_plock;
+	bool m_have_lock;
 };
 
 inline scoped_static_mutex_lock::operator void const*()const
 {
-   return locked() ? this : 0;
+	return locked() ? this : 0;
 }
 
 inline bool scoped_static_mutex_lock::locked()const
 {
-   return m_have_lock;
+	return m_have_lock;
 }
 
 } // namespace

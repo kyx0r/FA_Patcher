@@ -8,16 +8,16 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      struct string_tag
-      {
-        typedef string_tag type;
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+struct string_tag
+{
+	typedef string_tag type;
+};
+}
+}
 }
 
 #endif

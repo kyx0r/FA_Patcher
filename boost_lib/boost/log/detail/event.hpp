@@ -45,33 +45,35 @@
 
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 #if defined(BOOST_LOG_EVENT_USE_FUTEX)
 
 class futex_based_event
 {
 private:
-    boost::atomic< int > m_state;
+	boost::atomic< int > m_state;
 
 public:
-    //! Default constructor
-    BOOST_LOG_API futex_based_event();
-    //! Destructor
-    BOOST_LOG_API ~futex_based_event();
+	//! Default constructor
+	BOOST_LOG_API futex_based_event();
+	//! Destructor
+	BOOST_LOG_API ~futex_based_event();
 
-    //! Waits for the object to become signalled
-    BOOST_LOG_API void wait();
-    //! Sets the object to a signalled state
-    BOOST_LOG_API void set_signalled();
+	//! Waits for the object to become signalled
+	BOOST_LOG_API void wait();
+	//! Sets the object to a signalled state
+	BOOST_LOG_API void set_signalled();
 
-    //  Copying prohibited
-    BOOST_DELETED_FUNCTION(futex_based_event(futex_based_event const&))
-    BOOST_DELETED_FUNCTION(futex_based_event& operator= (futex_based_event const&))
+	//  Copying prohibited
+	BOOST_DELETED_FUNCTION(futex_based_event(futex_based_event const&))
+	BOOST_DELETED_FUNCTION(futex_based_event& operator= (futex_based_event const&))
 };
 
 typedef futex_based_event event;
@@ -81,23 +83,23 @@ typedef futex_based_event event;
 class sem_based_event
 {
 private:
-    boost::atomic_flag m_state;
-    sem_t m_semaphore;
+	boost::atomic_flag m_state;
+	sem_t m_semaphore;
 
 public:
-    //! Default constructor
-    BOOST_LOG_API sem_based_event();
-    //! Destructor
-    BOOST_LOG_API ~sem_based_event();
+	//! Default constructor
+	BOOST_LOG_API sem_based_event();
+	//! Destructor
+	BOOST_LOG_API ~sem_based_event();
 
-    //! Waits for the object to become signalled
-    BOOST_LOG_API void wait();
-    //! Sets the object to a signalled state
-    BOOST_LOG_API void set_signalled();
+	//! Waits for the object to become signalled
+	BOOST_LOG_API void wait();
+	//! Sets the object to a signalled state
+	BOOST_LOG_API void set_signalled();
 
-    //  Copying prohibited
-    BOOST_DELETED_FUNCTION(sem_based_event(sem_based_event const&))
-    BOOST_DELETED_FUNCTION(sem_based_event& operator= (sem_based_event const&))
+	//  Copying prohibited
+	BOOST_DELETED_FUNCTION(sem_based_event(sem_based_event const&))
+	BOOST_DELETED_FUNCTION(sem_based_event& operator= (sem_based_event const&))
 };
 
 typedef sem_based_event event;
@@ -107,23 +109,23 @@ typedef sem_based_event event;
 class winapi_based_event
 {
 private:
-    boost::uint32_t m_state;
-    void* m_event;
+	boost::uint32_t m_state;
+	void* m_event;
 
 public:
-    //! Default constructor
-    BOOST_LOG_API winapi_based_event();
-    //! Destructor
-    BOOST_LOG_API ~winapi_based_event();
+	//! Default constructor
+	BOOST_LOG_API winapi_based_event();
+	//! Destructor
+	BOOST_LOG_API ~winapi_based_event();
 
-    //! Waits for the object to become signalled
-    BOOST_LOG_API void wait();
-    //! Sets the object to a signalled state
-    BOOST_LOG_API void set_signalled();
+	//! Waits for the object to become signalled
+	BOOST_LOG_API void wait();
+	//! Sets the object to a signalled state
+	BOOST_LOG_API void set_signalled();
 
-    //  Copying prohibited
-    BOOST_DELETED_FUNCTION(winapi_based_event(winapi_based_event const&))
-    BOOST_DELETED_FUNCTION(winapi_based_event& operator= (winapi_based_event const&))
+	//  Copying prohibited
+	BOOST_DELETED_FUNCTION(winapi_based_event(winapi_based_event const&))
+	BOOST_DELETED_FUNCTION(winapi_based_event& operator= (winapi_based_event const&))
 };
 
 typedef winapi_based_event event;
@@ -133,24 +135,24 @@ typedef winapi_based_event event;
 class generic_event
 {
 private:
-    boost::mutex m_mutex;
-    boost::condition_variable m_cond;
-    bool m_state;
+	boost::mutex m_mutex;
+	boost::condition_variable m_cond;
+	bool m_state;
 
 public:
-    //! Default constructor
-    BOOST_LOG_API generic_event();
-    //! Destructor
-    BOOST_LOG_API ~generic_event();
+	//! Default constructor
+	BOOST_LOG_API generic_event();
+	//! Destructor
+	BOOST_LOG_API ~generic_event();
 
-    //! Waits for the object to become signalled
-    BOOST_LOG_API void wait();
-    //! Sets the object to a signalled state
-    BOOST_LOG_API void set_signalled();
+	//! Waits for the object to become signalled
+	BOOST_LOG_API void wait();
+	//! Sets the object to a signalled state
+	BOOST_LOG_API void set_signalled();
 
-    //  Copying prohibited
-    BOOST_DELETED_FUNCTION(generic_event(generic_event const&))
-    BOOST_DELETED_FUNCTION(generic_event& operator= (generic_event const&))
+	//  Copying prohibited
+	BOOST_DELETED_FUNCTION(generic_event(generic_event const&))
+	BOOST_DELETED_FUNCTION(generic_event& operator= (generic_event const&))
 };
 
 typedef generic_event event;

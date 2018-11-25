@@ -19,33 +19,37 @@
 #include <boost/spirit/home/classic/utility/distinct_fwd.hpp>
 #include <boost/spirit/home/classic/utility/grammar_def_fwd.hpp>
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    // chset.hpp
-    template<typename CharT> class chset;        
+// chset.hpp
+template<typename CharT> class chset;
 
-    // functor_parser.hpp
-    template<typename FunctorT> struct functor_parser;
+// functor_parser.hpp
+template<typename FunctorT> struct functor_parser;
 
-    // loops.hpp
-    template<class ParserT, typename ExactT> class fixed_loop;
-    template<class ParserT, typename MinT, typename MaxT> class finite_loop;
-    template<class ParserT, typename MinT> class infinite_loop;
+// loops.hpp
+template<class ParserT, typename ExactT> class fixed_loop;
+template<class ParserT, typename MinT, typename MaxT> class finite_loop;
+template<class ParserT, typename MinT> class infinite_loop;
 
-    // regex.hpp
-    template<typename CharT> struct rxstrlit;
+// regex.hpp
+template<typename CharT> struct rxstrlit;
 
-    // flush_multi_pass.hpp
-    class flush_multi_pass_parser;  
+// flush_multi_pass.hpp
+class flush_multi_pass_parser;
 
-    // scoped_lock.hpp
-    template<class MutexT, class ParserT> struct scoped_lock_parser;
+// scoped_lock.hpp
+template<class MutexT, class ParserT> struct scoped_lock_parser;
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-}} // namespace BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace BOOST_SPIRIT_CLASSIC_NS
 
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()

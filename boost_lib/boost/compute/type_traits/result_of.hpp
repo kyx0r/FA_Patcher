@@ -13,8 +13,10 @@
 
 #include <boost/utility/result_of.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns the result of \c Function when called with \c Args.
 ///
@@ -26,11 +28,11 @@ namespace compute {
 template<class Signature>
 struct result_of
 {
-    // the default implementation uses the TR1-style result_of protocol. note
-    // that we explicitly do *not* use the C++11 decltype operator as we want
-    // the result type as it would be on an OpenCL device, not the actual C++
-    // type resulting from "invoking" the function on the host.
-    typedef typename ::boost::tr1_result_of<Signature>::type type;
+	// the default implementation uses the TR1-style result_of protocol. note
+	// that we explicitly do *not* use the C++11 decltype operator as we want
+	// the result type as it would be on an OpenCL device, not the actual C++
+	// type resulting from "invoking" the function on the host.
+	typedef typename ::boost::tr1_result_of<Signature>::type type;
 };
 
 } // end compute namespace

@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace keywords {
+namespace keywords
+{
 
 //! The keyword allows to pass interprocess queue overflow policy to the queue constructor
 BOOST_PARAMETER_KEYWORD(tag, overflow_policy)

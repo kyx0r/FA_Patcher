@@ -13,20 +13,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class From, class To>
-      struct range :
-        accept_when<
-          one_char,
-          util::in_range_c<char, From::type::value, To::type::value>,
-          error::unexpected_character
-        >
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class From, class To>
+struct range :
+	accept_when<
+	one_char,
+	util::in_range_c<char, From::type::value, To::type::value>,
+	error::unexpected_character
+	>
+{};
+}
+}
 }
 
 #endif

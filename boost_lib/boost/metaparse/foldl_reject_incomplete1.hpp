@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::foldl_reject_incomplete1;
-  }
+namespace metaparse
+{
+using v1::foldl_reject_incomplete1;
+}
 }
 
 #endif

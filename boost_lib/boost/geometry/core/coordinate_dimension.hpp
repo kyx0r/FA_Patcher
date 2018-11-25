@@ -23,7 +23,9 @@
 #include <boost/geometry/core/point_type.hpp>
 #include <boost/geometry/util/bare_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -40,10 +42,10 @@ namespace traits
 template <typename Point, typename Enable = void>
 struct dimension
 {
-   BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE, (types<Point>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE, (types<Point>)
+	);
 };
 
 } // namespace traits
@@ -58,13 +60,13 @@ struct dimension : dimension<point_tag, typename point_type<T, G>::type> {};
 
 template <typename P>
 struct dimension<point_tag, P>
-    : traits::dimension<typename geometry::util::bare_type<P>::type>
+	: traits::dimension<typename geometry::util::bare_type<P>::type>
 {
-    BOOST_MPL_ASSERT_MSG(
-        (traits::dimension<typename geometry::util::bare_type<P>::type>::value > 0),
-        INVALID_DIMENSION_VALUE,
-        (traits::dimension<typename geometry::util::bare_type<P>::type>)
-    );
+	BOOST_MPL_ASSERT_MSG(
+	    (traits::dimension<typename geometry::util::bare_type<P>::type>::value > 0),
+	    INVALID_DIMENSION_VALUE,
+	    (traits::dimension<typename geometry::util::bare_type<P>::type>)
+	);
 };
 
 } // namespace core_dispatch
@@ -79,11 +81,11 @@ struct dimension<point_tag, P>
 */
 template <typename Geometry>
 struct dimension
-    : core_dispatch::dimension
-        <
-            typename tag<Geometry>::type,
-            typename geometry::util::bare_type<Geometry>::type
-        >
+	: core_dispatch::dimension
+	  <
+	  typename tag<Geometry>::type,
+	  typename geometry::util::bare_type<Geometry>::type
+	  >
 {};
 
 /*!
@@ -93,7 +95,7 @@ struct dimension
 template <typename Geometry, int Dimensions>
 inline void assert_dimension()
 {
-    BOOST_STATIC_ASSERT(( static_cast<int>(dimension<Geometry>::value) == Dimensions ));
+	BOOST_STATIC_ASSERT(( static_cast<int>(dimension<Geometry>::value) == Dimensions ));
 }
 
 /*!
@@ -103,13 +105,13 @@ inline void assert_dimension()
 template <typename Geometry, int Dimensions>
 inline void assert_dimension_less_equal()
 {
-    BOOST_STATIC_ASSERT(( static_cast<int>(dimension<Geometry>::type::value) <= Dimensions ));
+	BOOST_STATIC_ASSERT(( static_cast<int>(dimension<Geometry>::type::value) <= Dimensions ));
 }
 
 template <typename Geometry, int Dimensions>
 inline void assert_dimension_greater_equal()
 {
-    BOOST_STATIC_ASSERT(( static_cast<int>(dimension<Geometry>::type::value) >= Dimensions ));
+	BOOST_STATIC_ASSERT(( static_cast<int>(dimension<Geometry>::type::value) >= Dimensions ));
 }
 
 /*!
@@ -119,9 +121,10 @@ inline void assert_dimension_greater_equal()
 template <typename G1, typename G2>
 inline void assert_dimension_equal()
 {
-    BOOST_STATIC_ASSERT(( static_cast<size_t>(dimension<G1>::type::value) == static_cast<size_t>(dimension<G2>::type::value) ));
+	BOOST_STATIC_ASSERT(( static_cast<size_t>(dimension<G1>::type::value) == static_cast<size_t>(dimension<G2>::type::value) ));
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_CORE_COORDINATE_DIMENSION_HPP

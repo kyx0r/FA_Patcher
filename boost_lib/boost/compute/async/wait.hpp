@@ -14,23 +14,26 @@
 #include <boost/compute/config.hpp>
 #include <boost/compute/utility/wait_list.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 #ifndef BOOST_COMPUTE_NO_VARIADIC_TEMPLATES
 template<class Event>
 inline void insert_events_variadic(wait_list &l, Event&& event)
 {
-    l.insert(std::forward<Event>(event));
+	l.insert(std::forward<Event>(event));
 }
 
 template<class Event, class... Rest>
 inline void insert_events_variadic(wait_list &l, Event&& event, Rest&&... rest)
 {
-    l.insert(std::forward<Event>(event));
+	l.insert(std::forward<Event>(event));
 
-    insert_events_variadic(l, std::forward<Rest>(rest)...);
+	insert_events_variadic(l, std::forward<Rest>(rest)...);
 }
 #endif // BOOST_COMPUTE_NO_VARIADIC_TEMPLATES
 
@@ -44,9 +47,9 @@ inline void insert_events_variadic(wait_list &l, Event&& event, Rest&&... rest)
 template<class... Events>
 inline void wait_for_all(Events&&... events)
 {
-    wait_list l;
-    detail::insert_events_variadic(l, std::forward<Events>(events)...);
-    l.wait();
+	wait_list l;
+	detail::insert_events_variadic(l, std::forward<Events>(events)...);
+	l.wait();
 }
 #endif // BOOST_COMPUTE_NO_VARIADIC_TEMPLATES
 

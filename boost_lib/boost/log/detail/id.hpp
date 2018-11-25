@@ -23,54 +23,61 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! Generic identifier class
 template< typename DescriptorT >
 class id
 {
 public:
-    //! Native type of the process id
-    typedef typename DescriptorT::native_type native_type;
+	//! Native type of the process id
+	typedef typename DescriptorT::native_type native_type;
 
 private:
-    native_type m_NativeID;
+	native_type m_NativeID;
 
 public:
-    BOOST_CONSTEXPR id() BOOST_NOEXCEPT : m_NativeID(0) {}
+BOOST_CONSTEXPR id() BOOST_NOEXCEPT :
+	m_NativeID(0) {}
 
-    explicit id(native_type native) BOOST_NOEXCEPT : m_NativeID(native) {}
+explicit id(native_type native) BOOST_NOEXCEPT :
+	m_NativeID(native) {}
 
-    native_type native_id() const BOOST_NOEXCEPT { return m_NativeID; }
+	native_type native_id() const BOOST_NOEXCEPT
+	{
+		return m_NativeID;
+	}
 
-    bool operator== (id const& that) const BOOST_NOEXCEPT
-    {
-        return (m_NativeID == that.m_NativeID);
-    }
-    bool operator!= (id const& that) const BOOST_NOEXCEPT
-    {
-        return (m_NativeID != that.m_NativeID);
-    }
-    bool operator< (id const& that) const BOOST_NOEXCEPT
-    {
-        return (m_NativeID < that.m_NativeID);
-    }
-    bool operator> (id const& that) const BOOST_NOEXCEPT
-    {
-        return (m_NativeID > that.m_NativeID);
-    }
-    bool operator<= (id const& that) const BOOST_NOEXCEPT
-    {
-        return (m_NativeID <= that.m_NativeID);
-    }
-    bool operator>= (id const& that) const BOOST_NOEXCEPT
-    {
-        return (m_NativeID >= that.m_NativeID);
-    }
+	bool operator== (id const& that) const BOOST_NOEXCEPT
+	{
+		return (m_NativeID == that.m_NativeID);
+	}
+	bool operator!= (id const& that) const BOOST_NOEXCEPT
+	{
+		return (m_NativeID != that.m_NativeID);
+	}
+	bool operator< (id const& that) const BOOST_NOEXCEPT
+	{
+		return (m_NativeID < that.m_NativeID);
+	}
+	bool operator> (id const& that) const BOOST_NOEXCEPT
+	{
+		return (m_NativeID > that.m_NativeID);
+	}
+	bool operator<= (id const& that) const BOOST_NOEXCEPT
+	{
+		return (m_NativeID <= that.m_NativeID);
+	}
+	bool operator>= (id const& that) const BOOST_NOEXCEPT
+	{
+		return (m_NativeID >= that.m_NativeID);
+	}
 };
 
 } // namespace aux

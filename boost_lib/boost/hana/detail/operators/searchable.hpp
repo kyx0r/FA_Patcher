@@ -14,27 +14,32 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/fwd/at_key.hpp>
 
 
-BOOST_HANA_NAMESPACE_BEGIN namespace detail {
-    template <typename Derived>
-    struct searchable_operators {
-        template <typename Key>
-        constexpr decltype(auto) operator[](Key&& key) & {
-            return hana::at_key(static_cast<Derived&>(*this),
-                                static_cast<Key&&>(key));
-        }
+BOOST_HANA_NAMESPACE_BEGIN namespace detail
+{
+template <typename Derived>
+struct searchable_operators
+{
+	template <typename Key>
+	constexpr decltype(auto) operator[](Key&& key) &
+	{
+		return hana::at_key(static_cast<Derived&>(*this),
+		                    static_cast<Key&&>(key));
+	}
 
-        template <typename Key>
-        constexpr decltype(auto) operator[](Key&& key) && {
-            return hana::at_key(static_cast<Derived&&>(*this),
-                                static_cast<Key&&>(key));
-        }
+	template <typename Key>
+	constexpr decltype(auto) operator[](Key&& key) &&
+	{
+		return hana::at_key(static_cast<Derived&&>(*this),
+		                    static_cast<Key&&>(key));
+	}
 
-        template <typename Key>
-        constexpr decltype(auto) operator[](Key&& key) const& {
-            return hana::at_key(static_cast<Derived const&>(*this),
-                                static_cast<Key&&>(key));
-        }
-    };
+	template <typename Key>
+	constexpr decltype(auto) operator[](Key&& key) const&
+	{
+		return hana::at_key(static_cast<Derived const&>(*this),
+		                    static_cast<Key&&>(key));
+	}
+};
 } BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_OPERATORS_SEARCHABLE_HPP

@@ -26,50 +26,50 @@
 
 #define M BOOST_PP_ITERATION()
 
-    // XXX:
+// XXX:
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH if !defined(BOOST_CLANG)
-    BOOST_CONSTEXPR
-FUSION_HASH endif
+	BOOST_CONSTEXPR
+	FUSION_HASH endif
 #else
 #if !defined(BOOST_CLANG)
-    BOOST_CONSTEXPR
+BOOST_CONSTEXPR
 #endif
 #endif
-    BOOST_FUSION_GPU_ENABLED
+	BOOST_FUSION_GPU_ENABLED
 #if M == 1
-    explicit
+	explicit
 #endif
-    vector(BOOST_PP_ENUM_BINARY_PARAMS(
-        M, typename detail::call_param<T, >::type arg))
-        : vec(BOOST_PP_ENUM_PARAMS(M, arg)) {}
+	vector(BOOST_PP_ENUM_BINARY_PARAMS(
+	           M, typename detail::call_param<T, >::type arg))
+		: vec(BOOST_PP_ENUM_PARAMS(M, arg)) {}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #endif
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || \
     (defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES))
-    template <BOOST_PP_ENUM_PARAMS(M, typename U)>
-    // XXX:
+	template <BOOST_PP_ENUM_PARAMS(M, typename U)>
+// XXX:
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH if !defined(BOOST_CLANG)
-    BOOST_CXX14_CONSTEXPR
-FUSION_HASH endif
+	BOOST_CXX14_CONSTEXPR
+	FUSION_HASH endif
 #else
 #if !defined(BOOST_CLANG)
-    BOOST_CXX14_CONSTEXPR
+BOOST_CXX14_CONSTEXPR
 #endif
 #endif
-    BOOST_FUSION_GPU_ENABLED
+	BOOST_FUSION_GPU_ENABLED
 #if M == 1
-    explicit
+	explicit
 #endif
-    vector(BOOST_PP_ENUM_BINARY_PARAMS(M, U, && arg)
+	vector(BOOST_PP_ENUM_BINARY_PARAMS(M, U, && arg)
 #if M == 1
-        , typename boost::disable_if_c<boost::is_same<vector, typename boost::remove_cv_ref<U0>::type>::value, detail::enabler_>::type = detail::enabler
+	       , typename boost::disable_if_c<boost::is_same<vector, typename boost::remove_cv_ref<U0>::type>::value, detail::enabler_>::type = detail::enabler
 #endif
-        )
-        : vec(BOOST_PP_ENUM(M, FUSION_FORWARD_CTOR_FORWARD, arg)) {}
+	      )
+		: vec(BOOST_PP_ENUM(M, FUSION_FORWARD_CTOR_FORWARD, arg)) {}
 #endif
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 FUSION_HASH endif

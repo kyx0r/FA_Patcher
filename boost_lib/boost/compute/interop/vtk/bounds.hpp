@@ -20,8 +20,10 @@
 #include <boost/compute/algorithm/reduce.hpp>
 #include <boost/compute/container/array.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Calculates the bounds for the points in the range [\p first, \p last) and
 /// stores the result in \p bounds.
@@ -34,23 +36,26 @@ inline void vtk_compute_bounds(PointIterator first,
                                double bounds[6],
                                command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<PointIterator>::value_type T;
+	typedef typename std::iterator_traits<PointIterator>::value_type T;
 
-    const context &context = queue.get_context();
+	const context &context = queue.get_context();
 
-    // compute min and max point
-    array<T, 2> extrema(context);
-    reduce(first, last, extrema.begin() + 0, min<T>(), queue);
-    reduce(first, last, extrema.begin() + 1, max<T>(), queue);
+	// compute min and max point
+	array<T, 2> extrema(context);
+	reduce(first, last, extrema.begin() + 0, min<T>(), queue);
+	reduce(first, last, extrema.begin() + 1, max<T>(), queue);
 
-    // copy results to host buffer
-    std::vector<T> buffer(2);
-    copy_n(extrema.begin(), 2, buffer.begin(), queue);
+	// copy results to host buffer
+	std::vector<T> buffer(2);
+	copy_n(extrema.begin(), 2, buffer.begin(), queue);
 
-    // copy to vtk-style bounds
-    bounds[0] = buffer[0][0]; bounds[1] = buffer[1][0];
-    bounds[2] = buffer[0][1]; bounds[3] = buffer[1][1];
-    bounds[4] = buffer[0][2]; bounds[5] = buffer[1][2];
+	// copy to vtk-style bounds
+	bounds[0] = buffer[0][0];
+	bounds[1] = buffer[1][0];
+	bounds[2] = buffer[0][1];
+	bounds[3] = buffer[1][1];
+	bounds[4] = buffer[0][2];
+	bounds[5] = buffer[1][2];
 }
 
 } // end compute namespace

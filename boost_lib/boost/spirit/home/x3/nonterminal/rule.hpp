@@ -18,126 +18,130 @@
 #include <typeinfo>
 #endif
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    // default parse_rule implementation
-    template <typename ID, typename Attribute, typename Iterator
-      , typename Context, typename ActualAttribute>
-    inline detail::default_parse_rule_result
-    parse_rule(
-        rule<ID, Attribute> /* rule_ */
-      , Iterator& first, Iterator const& last
-      , Context const& context, ActualAttribute& attr)
-    {
-        static_assert(!is_same<decltype(get<ID>(context)), unused_type>::value,
-            "BOOST_SPIRIT_DEFINE undefined for this rule.");
-        return get<ID>(context).parse(first, last, context, unused, attr);
-    }
+namespace spirit
+{
+namespace x3
+{
+// default parse_rule implementation
+template <typename ID, typename Attribute, typename Iterator
+          , typename Context, typename ActualAttribute>
+inline detail::default_parse_rule_result
+parse_rule(
+    rule<ID, Attribute> /* rule_ */
+    , Iterator& first, Iterator const& last
+    , Context const& context, ActualAttribute& attr)
+{
+	static_assert(!is_same<decltype(get<ID>(context)), unused_type>::value,
+	              "BOOST_SPIRIT_DEFINE undefined for this rule.");
+	return get<ID>(context).parse(first, last, context, unused, attr);
+}
 
-    template <typename ID, typename RHS, typename Attribute, bool force_attribute_>
-    struct rule_definition : parser<rule_definition<ID, RHS, Attribute, force_attribute_>>
-    {
-        typedef rule_definition<ID, RHS, Attribute, force_attribute_> this_type;
-        typedef ID id;
-        typedef RHS rhs_type;
-        typedef rule<ID, Attribute> lhs_type;
-        typedef Attribute attribute_type;
+template <typename ID, typename RHS, typename Attribute, bool force_attribute_>
+struct rule_definition : parser<rule_definition<ID, RHS, Attribute, force_attribute_>>
+{
+	typedef rule_definition<ID, RHS, Attribute, force_attribute_> this_type;
+	typedef ID id;
+	typedef RHS rhs_type;
+	typedef rule<ID, Attribute> lhs_type;
+	typedef Attribute attribute_type;
 
-        static bool const has_attribute =
-            !is_same<Attribute, unused_type>::value;
-        static bool const handles_container =
-            traits::is_container<Attribute>::value;
-        static bool const force_attribute =
-            force_attribute_;
+	static bool const has_attribute =
+	    !is_same<Attribute, unused_type>::value;
+	static bool const handles_container =
+	    traits::is_container<Attribute>::value;
+	static bool const force_attribute =
+	    force_attribute_;
 
-        rule_definition(RHS const& rhs, char const* name)
-          : rhs(rhs), name(name) {}
+	rule_definition(RHS const& rhs, char const* name)
+		: rhs(rhs), name(name) {}
 
-        template <typename Iterator, typename Context, typename Attribute_>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, unused_type, Attribute_& attr) const
-        {
-            return detail::rule_parser<attribute_type, ID>
-                ::call_rule_definition(
-                    rhs, name, first, last
-                  , context
-                  , attr
-                  , mpl::bool_<force_attribute>());
-        }
+	template <typename Iterator, typename Context, typename Attribute_>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, unused_type, Attribute_& attr) const
+	{
+		return detail::rule_parser<attribute_type, ID>
+		       ::call_rule_definition(
+		           rhs, name, first, last
+		           , context
+		           , attr
+		           , mpl::bool_<force_attribute>());
+	}
 
-        RHS rhs;
-        char const* name;
-    };
+	RHS rhs;
+	char const* name;
+};
 
-    template <typename ID, typename Attribute, bool force_attribute_>
-    struct rule : parser<rule<ID, Attribute>>
-    {
-        typedef ID id;
-        typedef Attribute attribute_type;
-        static bool const has_attribute =
-            !is_same<Attribute, unused_type>::value;
-        static bool const handles_container =
-            traits::is_container<Attribute>::value;
-        static bool const force_attribute = force_attribute_;
+template <typename ID, typename Attribute, bool force_attribute_>
+struct rule : parser<rule<ID, Attribute>>
+{
+	typedef ID id;
+	typedef Attribute attribute_type;
+	static bool const has_attribute =
+	    !is_same<Attribute, unused_type>::value;
+	static bool const handles_container =
+	    traits::is_container<Attribute>::value;
+	static bool const force_attribute = force_attribute_;
 
 #if !defined(BOOST_SPIRIT_X3_NO_RTTI)
-        rule() : name(typeid(rule).name()) {}
+	rule() : name(typeid(rule).name()) {}
 #else
-        rule() : name("unnamed") {}
+	rule() : name("unnamed") {}
 #endif
 
-        rule(char const* name)
-          : name(name) {}
+	rule(char const* name)
+		: name(name) {}
 
-        template <typename RHS>
-        rule_definition<
-            ID, typename extension::as_parser<RHS>::value_type, Attribute, force_attribute_>
-        operator=(RHS const& rhs) const
-        {
-            return { as_parser(rhs), name };
-        }
+	template <typename RHS>
+	rule_definition<
+	ID, typename extension::as_parser<RHS>::value_type, Attribute, force_attribute_>
+	operator=(RHS const& rhs) const
+	{
+		return { as_parser(rhs), name };
+	}
 
-        template <typename RHS>
-        rule_definition<
-            ID, typename extension::as_parser<RHS>::value_type, Attribute, true>
-        operator%=(RHS const& rhs) const
-        {
-            return { as_parser(rhs), name };
-        }
+	template <typename RHS>
+	rule_definition<
+	ID, typename extension::as_parser<RHS>::value_type, Attribute, true>
+	operator%=(RHS const& rhs) const
+	{
+		return { as_parser(rhs), name };
+	}
 
 
-        template <typename Iterator, typename Context, typename Attribute_>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, unused_type, Attribute_& attr) const
-        {
-            return parse_rule(*this, first, last, context, attr);
-        }
+	template <typename Iterator, typename Context, typename Attribute_>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, unused_type, Attribute_& attr) const
+	{
+		return parse_rule(*this, first, last, context, attr);
+	}
 
-        char const* name;
-    };
+	char const* name;
+};
 
-    namespace traits
-    {
-        template <typename T, typename Enable = void>
-        struct is_rule : mpl::false_ {};
+namespace traits
+{
+template <typename T, typename Enable = void>
+struct is_rule : mpl::false_ {};
 
-        template <typename ID, typename Attribute>
-        struct is_rule<rule<ID, Attribute>> : mpl::true_ {};
+template <typename ID, typename Attribute>
+struct is_rule<rule<ID, Attribute>> : mpl::true_ {};
 
-        template <typename ID, typename Attribute, typename RHS, bool force_attribute>
-        struct is_rule<rule_definition<ID, RHS, Attribute, force_attribute>> : mpl::true_ {};
-    }
+template <typename ID, typename Attribute, typename RHS, bool force_attribute>
+struct is_rule<rule_definition<ID, RHS, Attribute, force_attribute>> : mpl::true_ {};
+}
 
-    template <typename T>
-    struct get_info<T, typename enable_if<traits::is_rule<T>>::type>
-    {
-        typedef std::string result_type;
-        std::string operator()(T const& r) const
-        {
-            BOOST_ASSERT_MSG(r.name, "uninitialized rule"); // static initialization order fiasco
-            return r.name? r.name : "uninitialized";
-        }
-    };
+template <typename T>
+struct get_info<T, typename enable_if<traits::is_rule<T>>::type>
+{
+	typedef std::string result_type;
+	std::string operator()(T const& r) const
+	{
+		BOOST_ASSERT_MSG(r.name, "uninitialized rule"); // static initialization order fiasco
+		return r.name? r.name : "uninitialized";
+	}
+};
 
 #define BOOST_SPIRIT_DECLARE_(r, data, rule_type)                               \
     template <typename Iterator, typename Context, typename Attribute>          \
@@ -192,6 +196,8 @@ namespace boost { namespace spirit { namespace x3
     /***/
 
 
-}}}
+}
+}
+}
 
 #endif

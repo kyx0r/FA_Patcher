@@ -48,148 +48,160 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct lagrng {};
+namespace par4
+{
+struct lagrng {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace lagrng
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace lagrng
+{
 
-            static const double TOL = 1e-10;
+static const double TOL = 1e-10;
 
-            template <typename T>
-            struct par_lagrng
-            {
-                T    hrw;
-                T    rw;
-                T    a1;
-            };
+template <typename T>
+struct par_lagrng
+{
+	T    hrw;
+	T    rw;
+	T    a1;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_lagrng_spheroid : public base_t_f<base_lagrng_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_lagrng_spheroid : public base_t_f<base_lagrng_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_lagrng<CalculationType> m_proj_parm;
+	par_lagrng<CalculationType> m_proj_parm;
 
-                inline base_lagrng_spheroid(const Parameters& par)
-                    : base_t_f<base_lagrng_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_lagrng_spheroid(const Parameters& par)
+		: base_t_f<base_lagrng_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
 
-                    CalculationType v, c;
+		CalculationType v, c;
 
-                    if (fabs(fabs(lp_lat) - HALFPI) < TOL) {
-                        xy_x = 0;
-                        xy_y = lp_lat < 0 ? -2. : 2.;
-                    } else {
-                        lp_lat = sin(lp_lat);
-                        v = this->m_proj_parm.a1 * pow((1. + lp_lat)/(1. - lp_lat), this->m_proj_parm.hrw);
-                        if ((c = 0.5 * (v + 1./v) + cos(lp_lon *= this->m_proj_parm.rw)) < TOL)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        xy_x = 2. * sin(lp_lon) / c;
-                        xy_y = (v - 1./v) / c;
-                    }
-                }
+		if (fabs(fabs(lp_lat) - HALFPI) < TOL)
+		{
+			xy_x = 0;
+			xy_y = lp_lat < 0 ? -2. : 2.;
+		}
+		else
+		{
+			lp_lat = sin(lp_lat);
+			v = this->m_proj_parm.a1 * pow((1. + lp_lat)/(1. - lp_lat), this->m_proj_parm.hrw);
+			if ((c = 0.5 * (v + 1./v) + cos(lp_lon *= this->m_proj_parm.rw)) < TOL)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			xy_x = 2. * sin(lp_lon) / c;
+			xy_y = (v - 1./v) / c;
+		}
+	}
 
-                static inline std::string get_name()
-                {
-                    return "lagrng_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "lagrng_spheroid";
+	}
 
-            };
+};
 
-            // Lagrange
-            template <typename Parameters, typename T>
-            inline void setup_lagrng(Parameters& par, par_lagrng<T>& proj_parm)
-            {
-                T phi1;
+// Lagrange
+template <typename Parameters, typename T>
+inline void setup_lagrng(Parameters& par, par_lagrng<T>& proj_parm)
+{
+	T phi1;
 
-                if ((proj_parm.rw = pj_param(par.params, "dW").f) <= 0)
-                    BOOST_THROW_EXCEPTION( projection_exception(-27) );
-                proj_parm.hrw = 0.5 * (proj_parm.rw = 1. / proj_parm.rw);
-                phi1 = pj_param(par.params, "rlat_1").f;
-                if (fabs(fabs(phi1 = sin(phi1)) - 1.) < TOL)
-                    BOOST_THROW_EXCEPTION( projection_exception(-22) );
-                proj_parm.a1 = pow((1. - phi1)/(1. + phi1), proj_parm.hrw);
-                par.es = 0.;
-            }
+	if ((proj_parm.rw = pj_param(par.params, "dW").f) <= 0)
+		BOOST_THROW_EXCEPTION( projection_exception(-27) );
+	proj_parm.hrw = 0.5 * (proj_parm.rw = 1. / proj_parm.rw);
+	phi1 = pj_param(par.params, "rlat_1").f;
+	if (fabs(fabs(phi1 = sin(phi1)) - 1.) < TOL)
+		BOOST_THROW_EXCEPTION( projection_exception(-22) );
+	proj_parm.a1 = pow((1. - phi1)/(1. + phi1), proj_parm.hrw);
+	par.es = 0.;
+}
 
-    }} // namespace detail::lagrng
-    #endif // doxygen
+}
+} // namespace detail::lagrng
+#endif // doxygen
 
-    /*!
-        \brief Lagrange projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Projection parameters
-         - W (real)
-         - lat_1: Latitude of first standard parallel (degrees)
-        \par Example
-        \image html ex_lagrng.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct lagrng_spheroid : public detail::lagrng::base_lagrng_spheroid<CalculationType, Parameters>
-    {
-        inline lagrng_spheroid(const Parameters& par) : detail::lagrng::base_lagrng_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::lagrng::setup_lagrng(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Lagrange projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Projection parameters
+     - W (real)
+     - lat_1: Latitude of first standard parallel (degrees)
+    \par Example
+    \image html ex_lagrng.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct lagrng_spheroid : public detail::lagrng::base_lagrng_spheroid<CalculationType, Parameters>
+{
+	inline lagrng_spheroid(const Parameters& par) : detail::lagrng::base_lagrng_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::lagrng::setup_lagrng(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::lagrng, lagrng_spheroid, lagrng_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::lagrng, lagrng_spheroid, lagrng_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class lagrng_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<lagrng_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class lagrng_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<lagrng_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void lagrng_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("lagrng", new lagrng_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void lagrng_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("lagrng", new lagrng_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_LAGRNG_HPP
 

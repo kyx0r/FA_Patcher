@@ -13,19 +13,19 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      typedef
-        source_position<
-          boost::mpl::int_<1>,
-          boost::mpl::int_<1>,
-          boost::mpl::char_<0>
-        >
-        start;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+typedef
+source_position<
+boost::mpl::int_<1>,
+      boost::mpl::int_<1>,
+      boost::mpl::char_<0>
+      >
+      start;
+}
+}
 }
 
 #endif

@@ -18,11 +18,15 @@
 #include <boost/geometry/strategies/geographic/side.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace side
+namespace strategy
+{
+namespace side
 {
 
 /*!
@@ -36,25 +40,27 @@ template
 <
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class vincenty
-    : public side::geographic<strategy::vincenty, Spheroid, CalculationType>
+	: public side::geographic<strategy::vincenty, Spheroid, CalculationType>
 {
-    typedef side::geographic<strategy::vincenty, Spheroid, CalculationType> base_t;
+	typedef side::geographic<strategy::vincenty, Spheroid, CalculationType> base_t;
 
 public:
-    vincenty()
-    {}
+	vincenty()
+	{}
 
-    explicit vincenty(Spheroid const& model)
-        : base_t(model)
-    {}
+	explicit vincenty(Spheroid const& model)
+		: base_t(model)
+	{}
 };
 
-}} // namespace strategy::side
+}
+} // namespace strategy::side
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_SIDE_VINCENTY_HPP

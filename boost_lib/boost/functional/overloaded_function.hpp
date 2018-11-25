@@ -122,59 +122,61 @@
 // For type-of emulation: This must be included at this pp iteration level.
 #   include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 
-namespace boost {
+namespace boost
+{
 
 template<
     BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_f_tparam_dflt,
-            BOOST_FUNCTIONAL_is_tspec)
->
+                  BOOST_FUNCTIONAL_is_tspec)
+    >
 class overloaded_function
-    // Template specialization.
-    BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND(BOOST_FUNCTIONAL_is_tspec), <)
-    BOOST_PP_IIF(BOOST_FUNCTIONAL_is_tspec,
-        BOOST_PP_ENUM
-    ,
-        BOOST_PP_TUPLE_EAT(3)
-    )(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_f_type, ~)
-    BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND(BOOST_FUNCTIONAL_is_tspec), >)
-    // Bases (overloads >= 2 so always at least 2 bases).
-    : BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
-            BOOST_FUNCTIONAL_inherit, ~)
+// Template specialization.
+	BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND(BOOST_FUNCTIONAL_is_tspec), <)
+	BOOST_PP_IIF(BOOST_FUNCTIONAL_is_tspec,
+	             BOOST_PP_ENUM
+	             ,
+	             BOOST_PP_TUPLE_EAT(3)
+	            )(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_f_type, ~)
+	BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND(BOOST_FUNCTIONAL_is_tspec), >)
+// Bases (overloads >= 2 so always at least 2 bases).
+		: BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
+		                BOOST_FUNCTIONAL_inherit, ~)
 {
 public:
-    template<
-        BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_g_tparam, ~)
-    > /* implicit */ inline overloaded_function(
-            BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
-                    BOOST_FUNCTIONAL_g_arg_decl, ~))
-            // Overloads >= 2 so always at least 2 bases to initialize.
-            : BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
-                    BOOST_FUNCTIONAL_base_init, ~)
-    {}
+	template<
+	    BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_g_tparam, ~)
+	    > /* implicit */ inline overloaded_function(
+	        BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
+	                      BOOST_FUNCTIONAL_g_arg_decl, ~))
+	// Overloads >= 2 so always at least 2 bases to initialize.
+		: BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
+		                BOOST_FUNCTIONAL_base_init, ~)
+	{}
 
-    BOOST_PP_REPEAT(BOOST_FUNCTIONAL_overloads, 
-            BOOST_FUNCTIONAL_using_operator_call, ~)
+	BOOST_PP_REPEAT(BOOST_FUNCTIONAL_overloads,
+	                BOOST_FUNCTIONAL_using_operator_call, ~)
 };
 
 template<
     BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_f_tparam, ~)
->
+    >
 overloaded_function<
-    BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_function_type, ~)
+BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_function_type, ~)
 > make_overloaded_function(
     BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_f_arg_decl, ~)
-) {
-    return overloaded_function<
-        BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
-                BOOST_FUNCTIONAL_function_type, ~)
-    >(BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_f_arg, ~));
+)
+{
+	return overloaded_function<
+	       BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads,
+	                     BOOST_FUNCTIONAL_function_type, ~)
+	       >(BOOST_PP_ENUM(BOOST_FUNCTIONAL_overloads, BOOST_FUNCTIONAL_f_arg, ~));
 }
 
 } // namespace
 
 // For type-of emulation: Register overloaded function type (for _AUTO, etc).
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::overloaded_function,
-    BOOST_FUNCTIONAL_overloads)
+                               BOOST_FUNCTIONAL_overloads)
 
 #   undef BOOST_FUNCTIONAL_overloads
 #   undef BOOST_FUNCTIONAL_is_tspec
@@ -189,7 +191,8 @@ BOOST_TYPEOF_REGISTER_TEMPLATE(boost::overloaded_function,
 monomorphic function objects into a single function object.
 */
 
-namespace boost {
+namespace boost
+{
 
 /**
 @brief Function object to overload functions with distinct signatures.
@@ -228,49 +231,50 @@ configuration macro.
 Boost.Function.
 */
 template<typename F1, typename F2, ...>
-class overloaded_function {
+class overloaded_function
+{
 public:
-    /**
-    @brief Construct the overloaded function object.
+	/**
+	@brief Construct the overloaded function object.
 
-    Any function pointer, function reference, and monomorphic function object
-    that can be converted to a <c>boost::function</c> function object can be
-    specified as parameter.
+	Any function pointer, function reference, and monomorphic function object
+	that can be converted to a <c>boost::function</c> function object can be
+	specified as parameter.
 
-    @Note Unfortunately, it is not possible to support polymorphic function
-    objects (as explained <a
-    href="http://lists.boost.org/Archives/boost/2012/03/191744.php">here</a>).
-    */
-    overloaded_function(const boost::function<F1>&,
-            const boost::function<F2>&, ...);
+	@Note Unfortunately, it is not possible to support polymorphic function
+	objects (as explained <a
+	href="http://lists.boost.org/Archives/boost/2012/03/191744.php">here</a>).
+	*/
+	overloaded_function(const boost::function<F1>&,
+	                    const boost::function<F2>&, ...);
 
-    /**
-    @brief Call operator matching the signature of the function type specified
-    as 1st template parameter.
+	/**
+	@brief Call operator matching the signature of the function type specified
+	as 1st template parameter.
 
-    This will in turn invoke the call operator of the 1st function passed to
-    the constructor.
-    */
-    typename boost::function_traits<F1>::result_type operator()(
-            typename boost::function_traits<F1>::arg1_type,
-            typename boost::function_traits<F1>::arg2_type,
-            ...) const;
+	This will in turn invoke the call operator of the 1st function passed to
+	the constructor.
+	*/
+	typename boost::function_traits<F1>::result_type operator()(
+	    typename boost::function_traits<F1>::arg1_type,
+	    typename boost::function_traits<F1>::arg2_type,
+	    ...) const;
 
-    /**
-    @brief Call operator matching the signature of the function type specified
-    as 2nd template parameter.
+	/**
+	@brief Call operator matching the signature of the function type specified
+	as 2nd template parameter.
 
-    This will in turn invoke the call operator of the 2nd function passed to
-    the constructor.
+	This will in turn invoke the call operator of the 2nd function passed to
+	the constructor.
 
-    @Note Similar call operators are present for all specified function types
-    <c>F1</c>, <c>F2</c>, etc (even if not exhaustively listed by this
-    documentation).
-    */
-    typename boost::function_traits<F2>::result_type operator()(
-            typename boost::function_traits<F2>::arg1_type,
-            typename boost::function_traits<F2>::arg2_type,
-            ...) const;
+	@Note Similar call operators are present for all specified function types
+	<c>F1</c>, <c>F2</c>, etc (even if not exhaustively listed by this
+	documentation).
+	*/
+	typename boost::function_traits<F2>::result_type operator()(
+	    typename boost::function_traits<F2>::arg1_type,
+	    typename boost::function_traits<F2>::arg2_type,
+	    ...) const;
 };
 
 /**
@@ -302,7 +306,7 @@ symbol that is specific to the implementation of this library.
 */
 template<typename F1, typename F2, ...>
 overloaded_function<
-    __function_type__<F1>, __function_type__<F2>, ...
+__function_type__<F1>, __function_type__<F2>, ...
 > make_overloaded_function(F1 f1, F2 f2, ...);
 
 } // namespace

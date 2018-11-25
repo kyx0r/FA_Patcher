@@ -25,50 +25,67 @@
 // **************                  lazy_ostream                ************** //
 // ************************************************************************** //
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
-class lazy_ostream {
+class lazy_ostream
+{
 public:
-    virtual                 ~lazy_ostream()                                         {}
+	virtual                 ~lazy_ostream()                                         {}
 
-    static lazy_ostream&    instance()                                              { static lazy_ostream inst; return inst; }
+	static lazy_ostream&    instance()
+	{
+		static lazy_ostream inst;
+		return inst;
+	}
 
-    friend std::ostream&    operator<<( std::ostream& ostr, lazy_ostream const& o ) { return o( ostr ); }
+	friend std::ostream&    operator<<( std::ostream& ostr, lazy_ostream const& o )
+	{
+		return o( ostr );
+	}
 
-    // access method
-    bool                    empty() const                                           { return m_empty; }
+	// access method
+	bool                    empty() const
+	{
+		return m_empty;
+	}
 
-    // actual printing interface; to be accessed only by this class and children
-    virtual std::ostream&   operator()( std::ostream& ostr ) const                  { return ostr; }
+	// actual printing interface; to be accessed only by this class and children
+	virtual std::ostream&   operator()( std::ostream& ostr ) const
+	{
+		return ostr;
+	}
 protected:
-    explicit                lazy_ostream( bool p_empty = true ) : m_empty( p_empty )    {}
+	explicit                lazy_ostream( bool p_empty = true ) : m_empty( p_empty )    {}
 
 private:
-    // Data members
-    bool                    m_empty;
+	// Data members
+	bool                    m_empty;
 };
 
 //____________________________________________________________________________//
 
 template<typename PrevType, typename T, typename StorageT=T const&>
-class lazy_ostream_impl : public lazy_ostream {
+class lazy_ostream_impl : public lazy_ostream
+{
 public:
-    lazy_ostream_impl( PrevType const& prev, T const& value )
-    : lazy_ostream( false )
-    , m_prev( prev )
-    , m_value( value )
-    {
-    }
+	lazy_ostream_impl( PrevType const& prev, T const& value )
+		: lazy_ostream( false )
+		, m_prev( prev )
+		, m_value( value )
+	{
+	}
 
-    virtual std::ostream&   operator()( std::ostream& ostr ) const
-    {
-        return m_prev(ostr) << m_value;
-    }
+	virtual std::ostream&   operator()( std::ostream& ostr ) const
+	{
+		return m_prev(ostr) << m_value;
+	}
 private:
-    // Data members
-    PrevType const&         m_prev;
-    StorageT                m_value;
+	// Data members
+	PrevType const&         m_prev;
+	StorageT                m_value;
 };
 
 //____________________________________________________________________________//
@@ -77,7 +94,7 @@ template<typename T>
 inline lazy_ostream_impl<lazy_ostream,T>
 operator<<( lazy_ostream const& prev, T const& v )
 {
-    return lazy_ostream_impl<lazy_ostream,T>( prev, v );
+	return lazy_ostream_impl<lazy_ostream,T>( prev, v );
 }
 
 //____________________________________________________________________________//
@@ -86,8 +103,8 @@ template<typename PrevPrevType, typename TPrev, typename T>
 inline lazy_ostream_impl<lazy_ostream_impl<PrevPrevType,TPrev>,T>
 operator<<( lazy_ostream_impl<PrevPrevType,TPrev> const& prev, T const& v )
 {
-    typedef lazy_ostream_impl<PrevPrevType,TPrev> PrevType;
-    return lazy_ostream_impl<PrevType,T>( prev, v );
+	typedef lazy_ostream_impl<PrevPrevType,TPrev> PrevType;
+	return lazy_ostream_impl<PrevType,T>( prev, v );
 }
 
 //____________________________________________________________________________//
@@ -98,9 +115,9 @@ template<typename R,typename S>
 inline lazy_ostream_impl<lazy_ostream,R& (BOOST_TEST_CALL_DECL *)(S&),R& (BOOST_TEST_CALL_DECL *)(S&)>
 operator<<( lazy_ostream const& prev, R& (BOOST_TEST_CALL_DECL *man)(S&) )
 {
-    typedef R& (BOOST_TEST_CALL_DECL * ManipType)(S&);
+	typedef R& (BOOST_TEST_CALL_DECL * ManipType)(S&);
 
-    return lazy_ostream_impl<lazy_ostream,ManipType,ManipType>( prev, man );
+	return lazy_ostream_impl<lazy_ostream,ManipType,ManipType>( prev, man );
 }
 
 //____________________________________________________________________________//
@@ -109,9 +126,9 @@ template<typename PrevPrevType, typename TPrev,typename R,typename S>
 inline lazy_ostream_impl<lazy_ostream_impl<PrevPrevType,TPrev>,R& (BOOST_TEST_CALL_DECL *)(S&),R& (BOOST_TEST_CALL_DECL *)(S&)>
 operator<<( lazy_ostream_impl<PrevPrevType,TPrev> const& prev, R& (BOOST_TEST_CALL_DECL *man)(S&) )
 {
-    typedef R& (BOOST_TEST_CALL_DECL * ManipType)(S&);
+	typedef R& (BOOST_TEST_CALL_DECL * ManipType)(S&);
 
-    return lazy_ostream_impl<lazy_ostream_impl<PrevPrevType,TPrev>,ManipType,ManipType>( prev, man );
+	return lazy_ostream_impl<lazy_ostream_impl<PrevPrevType,TPrev>,ManipType,ManipType>( prev, man );
 }
 
 //____________________________________________________________________________//

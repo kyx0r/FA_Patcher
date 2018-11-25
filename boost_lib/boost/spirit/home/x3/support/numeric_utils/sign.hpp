@@ -13,32 +13,38 @@
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/math/special_functions/sign.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template<typename T>
-    inline bool (signbit)(T x)
-    {
-        return (boost::math::signbit)(x) ? true : false;
-    }
+namespace spirit
+{
+namespace x3
+{
+template<typename T>
+inline bool (signbit)(T x)
+{
+	return (boost::math::signbit)(x) ? true : false;
+}
 
-    // This routine has been taken and adapted from Johan Rade's fp_traits
-    // library
-    template<typename T>
-    inline T (changesign)(T x)
-    {
+// This routine has been taken and adapted from Johan Rade's fp_traits
+// library
+template<typename T>
+inline T (changesign)(T x)
+{
 #if defined(BOOST_MATH_USE_STD_FPCLASSIFY) && !defined(BOOST_MATH_DISABLE_STD_FPCLASSIFY)
-        return -x;
+	return -x;
 #else
-        typedef typename math::detail::fp_traits<T>::type traits_type;
+	typedef typename math::detail::fp_traits<T>::type traits_type;
 
-        typename traits_type::bits a;
-        traits_type::get_bits(x, a);
-        a ^= traits_type::sign;
-        traits_type::set_bits(x, a);
-        return x;
+	typename traits_type::bits a;
+	traits_type::get_bits(x, a);
+	a ^= traits_type::sign;
+	traits_type::set_bits(x, a);
+	return x;
 #endif
-    }
+}
 
-}}}
+}
+}
+}
 
 #endif

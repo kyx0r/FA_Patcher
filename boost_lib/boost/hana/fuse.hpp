@@ -18,30 +18,35 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    namespace detail {
-        template <typename F>
-        struct fused {
-            F f;
-            template <typename Xs>
-            constexpr decltype(auto) operator()(Xs&& xs) const&
-            { return hana::unpack(static_cast<Xs&&>(xs), f); }
+namespace detail
+{
+template <typename F>
+struct fused
+{
+	F f;
+	template <typename Xs>
+	constexpr decltype(auto) operator()(Xs&& xs) const&
+	{
+		return hana::unpack(static_cast<Xs&&>(xs), f);
+	}
 
-            template <typename Xs>
-            constexpr decltype(auto) operator()(Xs&& xs) &
-            { return hana::unpack(static_cast<Xs&&>(xs), f); }
+	template <typename Xs>
+	constexpr decltype(auto) operator()(Xs&& xs) &
+	{ return hana::unpack(static_cast<Xs&&>(xs), f); }
 
-            template <typename Xs>
-            constexpr decltype(auto) operator()(Xs&& xs) &&
-            { return hana::unpack(static_cast<Xs&&>(xs), static_cast<F&&>(f)); }
-        };
-    }
+	template <typename Xs>
+	constexpr decltype(auto) operator()(Xs&& xs) &&
+	{ return hana::unpack(static_cast<Xs&&>(xs), static_cast<F&&>(f)); }
+};
+}
 
-    //! @cond
-    template <typename F>
-    constexpr auto fuse_t::operator()(F&& f) const {
-        return detail::fused<typename detail::decay<F>::type>{static_cast<F&&>(f)};
-    }
-    //! @endcond
+//! @cond
+template <typename F>
+constexpr auto fuse_t::operator()(F&& f) const
+{
+	return detail::fused<typename detail::decay<F>::type> {static_cast<F&&>(f)};
+}
+//! @endcond
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_FUSE_HPP

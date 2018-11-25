@@ -46,12 +46,14 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-namespace boost {
-    //! Namespace containing everything in the library.
-    namespace hana {
-        //! Namespace containing C++14 user-defined literals provided by Hana.
-        namespace literals {}
-    }
+namespace boost
+{
+//! Namespace containing everything in the library.
+namespace hana
+{
+//! Namespace containing C++14 user-defined literals provided by Hana.
+namespace literals {}
+}
 }
 #endif
 

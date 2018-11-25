@@ -23,9 +23,12 @@
 # include <boost/chrono/system_clocks.hpp>
 #endif // defined(BOOST_ASIO_HAS_BOOST_CHRONO)
 
-namespace boost {
-namespace asio {
-namespace chrono {
+namespace boost
+{
+namespace asio
+{
+namespace chrono
+{
 
 #if defined(BOOST_ASIO_HAS_STD_CHRONO)
 using std::chrono::duration;

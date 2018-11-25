@@ -10,7 +10,12 @@
 #include <boost/python/detail/is_xxx.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace boost { namespace python { namespace detail { 
+namespace boost
+{
+namespace python
+{
+namespace detail
+{
 
 BOOST_PYTHON_IS_XXX_DEF(shared_ptr, shared_ptr, 1)
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
@@ -18,6 +23,8 @@ template <typename T>
 struct is_shared_ptr<std::shared_ptr<T> > : std::true_type {};
 #endif
 
-}}} // namespace boost::python::detail
+}
+}
+} // namespace boost::python::detail
 
 #endif

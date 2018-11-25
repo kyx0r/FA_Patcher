@@ -14,24 +14,27 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @ingroup group-functional
-    //! The identity function -- returns its argument unchanged.
-    //!
-    //! ### Example
-    //! @include example/functional/id.cpp
+//! @ingroup group-functional
+//! The identity function -- returns its argument unchanged.
+//!
+//! ### Example
+//! @include example/functional/id.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto id = [](auto&& x) -> decltype(auto) {
-        return forwarded(x);
-    };
+constexpr auto id = [](auto&& x) -> decltype(auto)
+{
+	return forwarded(x);
+};
 #else
-    struct id_t {
-        template <typename T>
-        constexpr T operator()(T&& t) const {
-            return static_cast<T&&>(t);
-        }
-    };
+struct id_t
+{
+	template <typename T>
+	constexpr T operator()(T&& t) const
+	{
+		return static_cast<T&&>(t);
+	}
+};
 
-    constexpr id_t id{};
+constexpr id_t id{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

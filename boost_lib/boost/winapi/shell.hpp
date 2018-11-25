@@ -23,34 +23,36 @@
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
 
-BOOST_WINAPI_DETAIL_DECLARE_HANDLE(HICON);
+	BOOST_WINAPI_DETAIL_DECLARE_HANDLE(HICON);
 
 #if !defined( BOOST_NO_ANSI_APIS )
-struct _SHFILEINFOA;
+	struct _SHFILEINFOA;
 #endif
-struct _SHFILEINFOW;
+	struct _SHFILEINFOW;
 
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_PTR_ WINAPI SHGetFileInfoA(
-    boost::winapi::LPCSTR_ pszPath,
-    boost::winapi::DWORD_ dwFileAttributes,
-    ::_SHFILEINFOA *psfinsigned,
-    boost::winapi::UINT_ cbFileInfons,
-    boost::winapi::UINT_ uFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_PTR_ WINAPI SHGetFileInfoA(
+	    boost::winapi::LPCSTR_ pszPath,
+	    boost::winapi::DWORD_ dwFileAttributes,
+	    ::_SHFILEINFOA *psfinsigned,
+	    boost::winapi::UINT_ cbFileInfons,
+	    boost::winapi::UINT_ uFlags);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_PTR_ WINAPI SHGetFileInfoW(
-    boost::winapi::LPCWSTR_ pszPath,
-    boost::winapi::DWORD_ dwFileAttributes,
-    ::_SHFILEINFOW *psfinsigned,
-    boost::winapi::UINT_ cbFileInfons,
-    boost::winapi::UINT_ uFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_PTR_ WINAPI SHGetFileInfoW(
+	    boost::winapi::LPCWSTR_ pszPath,
+	    boost::winapi::DWORD_ dwFileAttributes,
+	    ::_SHFILEINFOW *psfinsigned,
+	    boost::winapi::UINT_ cbFileInfons,
+	    boost::winapi::UINT_ uFlags);
 
 } // extern "C"
 #endif // !defined( BOOST_USE_WINDOWS_H )
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 typedef ::HICON HICON_;
 
@@ -104,44 +106,46 @@ const DWORD_ SHGFI_USEFILEATTRIBUTES_ = 0x000000010;
 const DWORD_ SHGFI_ADDOVERLAYS_       = 0x000000020;
 const DWORD_ SHGFI_OVERLAYINDEX_      = 0x000000040;
 
-typedef struct BOOST_MAY_ALIAS _SHFILEINFOA {
-    HICON_ hIcon;
-    int iIcon;
-    DWORD_ dwAttributes;
-    CHAR_ szDisplayName[MAX_PATH_];
-    CHAR_ szTypeName[80];
+typedef struct BOOST_MAY_ALIAS _SHFILEINFOA
+{
+	HICON_ hIcon;
+	int iIcon;
+	DWORD_ dwAttributes;
+	CHAR_ szDisplayName[MAX_PATH_];
+	CHAR_ szTypeName[80];
 } SHFILEINFOA_;
 
-typedef struct BOOST_MAY_ALIAS _SHFILEINFOW {
-    HICON_ hIcon;
-    int iIcon;
-    DWORD_ dwAttributes;
-    WCHAR_ szDisplayName[MAX_PATH_];
-    WCHAR_ szTypeName[80];
+typedef struct BOOST_MAY_ALIAS _SHFILEINFOW
+{
+	HICON_ hIcon;
+	int iIcon;
+	DWORD_ dwAttributes;
+	WCHAR_ szDisplayName[MAX_PATH_];
+	WCHAR_ szTypeName[80];
 } SHFILEINFOW_;
 
 #if !defined( BOOST_NO_ANSI_APIS )
 
 BOOST_FORCEINLINE DWORD_PTR_ SHGetFileInfoA(LPCSTR_ pszPath, DWORD_ dwFileAttributes, SHFILEINFOA_* psfinsigned, UINT_ cbFileInfons, UINT_ uFlags)
 {
-    return ::SHGetFileInfoA(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOA* >(psfinsigned), cbFileInfons, uFlags);
+	return ::SHGetFileInfoA(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOA* >(psfinsigned), cbFileInfons, uFlags);
 }
 
 BOOST_FORCEINLINE DWORD_PTR_ sh_get_file_info(LPCSTR_ pszPath, DWORD_ dwFileAttributes, SHFILEINFOA_* psfinsigned, UINT_ cbFileInfons, UINT_ uFlags)
 {
-    return ::SHGetFileInfoA(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOA* >(psfinsigned), cbFileInfons, uFlags);
+	return ::SHGetFileInfoA(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOA* >(psfinsigned), cbFileInfons, uFlags);
 }
 
 #endif // BOOST_NO_ANSI_APIS
 
 BOOST_FORCEINLINE DWORD_PTR_ SHGetFileInfoW(LPCWSTR_ pszPath, DWORD_ dwFileAttributes, SHFILEINFOW_* psfinsigned, UINT_ cbFileInfons, UINT_ uFlags)
 {
-    return ::SHGetFileInfoW(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOW* >(psfinsigned), cbFileInfons, uFlags);
+	return ::SHGetFileInfoW(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOW* >(psfinsigned), cbFileInfons, uFlags);
 }
 
 BOOST_FORCEINLINE DWORD_PTR_ sh_get_file_info(LPCWSTR_ pszPath, DWORD_ dwFileAttributes, SHFILEINFOW_* psfinsigned, UINT_ cbFileInfons, UINT_ uFlags)
 {
-    return ::SHGetFileInfoW(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOW* >(psfinsigned), cbFileInfons, uFlags);
+	return ::SHGetFileInfoW(pszPath, dwFileAttributes, reinterpret_cast< ::_SHFILEINFOW* >(psfinsigned), cbFileInfons, uFlags);
 }
 
 }

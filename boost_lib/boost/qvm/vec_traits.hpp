@@ -7,26 +7,26 @@
 #define UUID_01224884FC4111DF9570F7E4DED72085
 
 namespace
-boost
-    {
-    namespace
-    qvm
-        {
-        template <class V>
-        struct
-        vec_traits
-            {
-            static int const dim=0;
-            typedef void scalar_type;
-            };
+	boost
+{
+namespace
+	qvm
+{
+template <class V>
+struct
+	vec_traits
+{
+	static int const dim=0;
+	typedef void scalar_type;
+};
 
-        template <class T>
-        struct
-        is_vec
-            {
-            static bool const value=vec_traits<T>::dim>0;
-            };
-        }
-    }
+template <class T>
+struct
+	is_vec
+{
+	static bool const value=vec_traits<T>::dim>0;
+};
+}
+}
 
 #endif

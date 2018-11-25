@@ -18,8 +18,10 @@
 #include <boost/compute/algorithm/max_element.hpp>
 #include <boost/compute/algorithm/min_element.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns a pair of iterators with the first pointing to the minimum
 /// element and the second pointing to the maximum element in the range
@@ -42,13 +44,14 @@ minmax_element(InputIterator first,
                Compare compare,
                command_queue &queue = system::default_queue())
 {
-    if(first == last){
-        // empty range
-        return std::make_pair(first, first);
-    }
+	if(first == last)
+	{
+		// empty range
+		return std::make_pair(first, first);
+	}
 
-    return std::make_pair(min_element(first, last, compare, queue),
-                          max_element(first, last, compare, queue));
+	return std::make_pair(min_element(first, last, compare, queue),
+	                      max_element(first, last, compare, queue));
 }
 
 ///\overload
@@ -58,13 +61,14 @@ minmax_element(InputIterator first,
                InputIterator last,
                command_queue &queue = system::default_queue())
 {
-    if(first == last){
-        // empty range
-        return std::make_pair(first, first);
-    }
+	if(first == last)
+	{
+		// empty range
+		return std::make_pair(first, first);
+	}
 
-    return std::make_pair(min_element(first, last, queue),
-                          max_element(first, last, queue));
+	return std::make_pair(min_element(first, last, queue),
+	                      max_element(first, last, queue));
 }
 
 } // end compute namespace

@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -15,31 +15,34 @@
 #include <string>
 #include <boost/core/demangle.hpp>
 
-namespace boost {
+namespace boost
+{
 
-namespace units {
+namespace units
+{
 
-namespace detail {
+namespace detail
+{
 
 inline
 std::string
 demangle(const char* name)
 {
-    std::string demangled = core::demangle(name);
+	std::string demangled = core::demangle(name);
 
-    const std::string::size_type prefix_len = sizeof("boost::units::") - 1;
-    std::string::size_type i = 0;
-    for (;;)
-    {
-        std::string::size_type pos = demangled.find("boost::units::", i, prefix_len);
-        if (pos == std::string::npos)
-            break;
+	const std::string::size_type prefix_len = sizeof("boost::units::") - 1;
+	std::string::size_type i = 0;
+	for (;;)
+	{
+		std::string::size_type pos = demangled.find("boost::units::", i, prefix_len);
+		if (pos == std::string::npos)
+			break;
 
-        demangled.erase(pos, prefix_len);
-        i = pos;
-    }
+		demangled.erase(pos, prefix_len);
+		i = pos;
+	}
 
-    return demangled;
+	return demangled;
 }
 
 } // namespace detail
@@ -47,7 +50,7 @@ demangle(const char* name)
 template<class L>
 inline std::string simplify_typename(const L& /*source*/)
 {
-    return detail::demangle(typeid(L).name());
+	return detail::demangle(typeid(L).name());
 }
 
 } // namespace units

@@ -31,7 +31,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -52,35 +53,35 @@ BOOST_LOG_OPEN_NAMESPACE
  */
 template< typename FunT = less >
 class abstract_ordering :
-    private FunT
+	private FunT
 {
 public:
-    //! Result type
-    typedef bool result_type;
+	//! Result type
+	typedef bool result_type;
 
 public:
-    /*!
-     * Default constructor. Requires \c FunT to be default constructible.
-     */
-    abstract_ordering() : FunT()
-    {
-    }
-    /*!
-     * Initializing constructor. Constructs \c FunT instance as a copy of the \a fun argument.
-     */
-    explicit abstract_ordering(FunT const& fun) : FunT(fun)
-    {
-    }
+	/*!
+	 * Default constructor. Requires \c FunT to be default constructible.
+	 */
+	abstract_ordering() : FunT()
+	{
+	}
+	/*!
+	 * Initializing constructor. Constructs \c FunT instance as a copy of the \a fun argument.
+	 */
+	explicit abstract_ordering(FunT const& fun) : FunT(fun)
+	{
+	}
 
-    /*!
-     * Ordering operator
-     */
-    result_type operator() (record_view const& left, record_view const& right) const
-    {
-        // We rely on the fact that the attribute_values() method returns a reference to the object in the record implementation,
-        // so we can compare pointers.
-        return FunT::operator() (static_cast< const void* >(&left.attribute_values()), static_cast< const void* >(&right.attribute_values()));
-    }
+	/*!
+	 * Ordering operator
+	 */
+	result_type operator() (record_view const& left, record_view const& right) const
+	{
+		// We rely on the fact that the attribute_values() method returns a reference to the object in the record implementation,
+		// so we can compare pointers.
+		return FunT::operator() (static_cast< const void* >(&left.attribute_values()), static_cast< const void* >(&right.attribute_values()));
+	}
 };
 
 /*!
@@ -94,89 +95,89 @@ public:
  */
 template< typename ValueT, typename FunT = less >
 class attribute_value_ordering :
-    private FunT
+	private FunT
 {
 public:
-    //! Result type
-    typedef bool result_type;
-    //! Compared attribute value type
-    typedef ValueT value_type;
+	//! Result type
+	typedef bool result_type;
+	//! Compared attribute value type
+	typedef ValueT value_type;
 
 private:
-    template< typename LeftT >
-    struct l2_visitor
-    {
-        typedef void result_type;
+	template< typename LeftT >
+	struct l2_visitor
+	{
+		typedef void result_type;
 
-        l2_visitor(FunT const& fun, LeftT const& left, bool& result) :
-            m_fun(fun), m_left(left), m_result(result)
-        {
-        }
+		l2_visitor(FunT const& fun, LeftT const& left, bool& result) :
+			m_fun(fun), m_left(left), m_result(result)
+		{
+		}
 
-        template< typename RightT >
-        result_type operator() (RightT const& right) const
-        {
-            m_result = m_fun(m_left, right);
-        }
+		template< typename RightT >
+		result_type operator() (RightT const& right) const
+		{
+			m_result = m_fun(m_left, right);
+		}
 
-    private:
-        FunT const& m_fun;
-        LeftT const& m_left;
-        bool& m_result;
-    };
+	private:
+		FunT const& m_fun;
+		LeftT const& m_left;
+		bool& m_result;
+	};
 
-    struct l1_visitor;
-    friend struct l1_visitor;
-    struct l1_visitor
-    {
-        typedef void result_type;
+	struct l1_visitor;
+	friend struct l1_visitor;
+	struct l1_visitor
+	{
+		typedef void result_type;
 
-        l1_visitor(attribute_value_ordering const& owner, record_view const& right, bool& result) :
-            m_owner(owner), m_right(right), m_result(result)
-        {
-        }
+		l1_visitor(attribute_value_ordering const& owner, record_view const& right, bool& result) :
+			m_owner(owner), m_right(right), m_result(result)
+		{
+		}
 
-        template< typename LeftT >
-        result_type operator() (LeftT const& left) const
-        {
-            boost::log::visit< value_type >(m_owner.m_name, m_right, l2_visitor< LeftT >(static_cast< FunT const& >(m_owner), left, m_result));
-        }
+		template< typename LeftT >
+		result_type operator() (LeftT const& left) const
+		{
+			boost::log::visit< value_type >(m_owner.m_name, m_right, l2_visitor< LeftT >(static_cast< FunT const& >(m_owner), left, m_result));
+		}
 
-    private:
-        attribute_value_ordering const& m_owner;
-        record_view const& m_right;
-        bool& m_result;
-    };
+	private:
+		attribute_value_ordering const& m_owner;
+		record_view const& m_right;
+		bool& m_result;
+	};
 
 private:
-    //! Attribute value name
-    const attribute_name m_name;
+	//! Attribute value name
+	const attribute_name m_name;
 
 public:
-    /*!
-     * Initializing constructor.
-     *
-     * \param name The attribute value name to be compared
-     * \param fun The ordering functor
-     */
-    explicit attribute_value_ordering(attribute_name const& name, FunT const& fun = FunT()) :
-        FunT(fun),
-        m_name(name)
-    {
-    }
+	/*!
+	 * Initializing constructor.
+	 *
+	 * \param name The attribute value name to be compared
+	 * \param fun The ordering functor
+	 */
+	explicit attribute_value_ordering(attribute_name const& name, FunT const& fun = FunT()) :
+		FunT(fun),
+		m_name(name)
+	{
+	}
 
-    /*!
-     * Ordering operator
-     */
-    result_type operator() (record_view const& left, record_view const& right) const
-    {
-        bool result = false;
-        if (!boost::log::visit< value_type >(m_name, left, l1_visitor(*this, right, result)))
-        {
-            return !boost::log::visit< value_type >(m_name, right, nop());
-        }
-        return result;
-    }
+	/*!
+	 * Ordering operator
+	 */
+	result_type operator() (record_view const& left, record_view const& right) const
+	{
+		bool result = false;
+		if (!boost::log::visit< value_type >(m_name, left, l1_visitor(*this, right, result)))
+		{
+			return !boost::log::visit< value_type >(m_name, right, nop());
+		}
+		return result;
+	}
 };
 
 /*!
@@ -185,26 +186,27 @@ public:
 template< typename ValueT, typename FunT >
 inline attribute_value_ordering< ValueT, FunT > make_attr_ordering(attribute_name const& name, FunT const& fun)
 {
-    typedef attribute_value_ordering< ValueT, FunT > ordering_t;
-    return ordering_t(name, fun);
+	typedef attribute_value_ordering< ValueT, FunT > ordering_t;
+	return ordering_t(name, fun);
 }
 
 #if !defined(BOOST_LOG_NO_FUNCTION_TRAITS)
 
-namespace aux {
+namespace aux
+{
 
-    //! An ordering predicate constructor that uses SFINAE to disable invalid instantiations
-    template<
-        typename FunT,
-        typename ArityCheckT = typename boost::enable_if_c< aux::arity_of< FunT >::value == 2 >::type,
-        typename Arg1T = typename aux::first_argument_type_of< FunT >::type,
-        typename Arg2T = typename aux::second_argument_type_of< FunT >::type,
-        typename ArgsCheckT = typename boost::enable_if_c< is_same< Arg1T, Arg2T >::value >::type
+//! An ordering predicate constructor that uses SFINAE to disable invalid instantiations
+template<
+    typename FunT,
+    typename ArityCheckT = typename boost::enable_if_c< aux::arity_of< FunT >::value == 2 >::type,
+    typename Arg1T = typename aux::first_argument_type_of< FunT >::type,
+    typename Arg2T = typename aux::second_argument_type_of< FunT >::type,
+    typename ArgsCheckT = typename boost::enable_if_c< is_same< Arg1T, Arg2T >::value >::type
     >
-    struct make_attr_ordering_type
-    {
-        typedef attribute_value_ordering< Arg1T, FunT > type;
-    };
+struct make_attr_ordering_type
+{
+	typedef attribute_value_ordering< Arg1T, FunT > type;
+};
 
 } // namespace aux
 
@@ -214,8 +216,8 @@ namespace aux {
 template< typename FunT >
 inline typename aux::make_attr_ordering_type< FunT >::type make_attr_ordering(attribute_name const& name, FunT const& fun)
 {
-    typedef typename aux::make_attr_ordering_type< FunT >::type ordering_t;
-    return ordering_t(name, fun);
+	typedef typename aux::make_attr_ordering_type< FunT >::type ordering_t;
+	return ordering_t(name, fun);
 }
 
 #endif // BOOST_LOG_NO_FUNCTION_TRAITS

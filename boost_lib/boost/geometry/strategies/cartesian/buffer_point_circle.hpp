@@ -23,10 +23,14 @@
 #include <boost/geometry/strategies/buffer.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace buffer
+namespace strategy
+{
+namespace buffer
 {
 
 /*!
@@ -51,65 +55,67 @@ namespace strategy { namespace buffer
 class point_circle
 {
 public :
-    //! \brief Constructs the strategy
-    //! \param count number of points for the created circle (if count
-    //! is smaller than 3, count is internally set to 3)
-    explicit point_circle(std::size_t count = 90)
-        : m_count((count < 3u) ? 3u : count)
-    {}
+	//! \brief Constructs the strategy
+	//! \param count number of points for the created circle (if count
+	//! is smaller than 3, count is internally set to 3)
+	explicit point_circle(std::size_t count = 90)
+		: m_count((count < 3u) ? 3u : count)
+	{}
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-    //! Fills output_range with a circle around point using distance_strategy
-    template
-    <
-        typename Point,
-        typename OutputRange,
-        typename DistanceStrategy
-    >
-    inline void apply(Point const& point,
-                DistanceStrategy const& distance_strategy,
-                OutputRange& output_range) const
-    {
-        typedef typename boost::range_value<OutputRange>::type output_point_type;
+	//! Fills output_range with a circle around point using distance_strategy
+	template
+	<
+	    typename Point,
+	    typename OutputRange,
+	    typename DistanceStrategy
+	    >
+	inline void apply(Point const& point,
+	                  DistanceStrategy const& distance_strategy,
+	                  OutputRange& output_range) const
+	{
+		typedef typename boost::range_value<OutputRange>::type output_point_type;
 
-        typedef typename geometry::select_most_precise
-            <
-                typename geometry::select_most_precise
-                    <
-                        typename geometry::coordinate_type<Point>::type,
-                        typename geometry::coordinate_type<output_point_type>::type
-                    >::type,
-                double
-            >::type promoted_type;
+		typedef typename geometry::select_most_precise
+		<
+		typename geometry::select_most_precise
+		<
+		typename geometry::coordinate_type<Point>::type,
+		         typename geometry::coordinate_type<output_point_type>::type
+		         >::type,
+		         double
+		         >::type promoted_type;
 
-        promoted_type const buffer_distance = distance_strategy.apply(point, point,
-                        strategy::buffer::buffer_side_left);
+		promoted_type const buffer_distance = distance_strategy.apply(point, point,
+		                                      strategy::buffer::buffer_side_left);
 
-        promoted_type const two_pi = geometry::math::two_pi<promoted_type>();
+		promoted_type const two_pi = geometry::math::two_pi<promoted_type>();
 
-        promoted_type const diff = two_pi / promoted_type(m_count);
-        promoted_type a = 0;
+		promoted_type const diff = two_pi / promoted_type(m_count);
+		promoted_type a = 0;
 
-        for (std::size_t i = 0; i < m_count; i++, a -= diff)
-        {
-            output_point_type p;
-            set<0>(p, get<0>(point) + buffer_distance * cos(a));
-            set<1>(p, get<1>(point) + buffer_distance * sin(a));
-            output_range.push_back(p);
-        }
+		for (std::size_t i = 0; i < m_count; i++, a -= diff)
+		{
+			output_point_type p;
+			set<0>(p, get<0>(point) + buffer_distance * cos(a));
+			set<1>(p, get<1>(point) + buffer_distance * sin(a));
+			output_range.push_back(p);
+		}
 
-        // Close it:
-        output_range.push_back(output_range.front());
-    }
+		// Close it:
+		output_range.push_back(output_range.front());
+	}
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
 private :
-    std::size_t m_count;
+	std::size_t m_count;
 };
 
 
-}} // namespace strategy::buffer
+}
+} // namespace strategy::buffer
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_BUFFER_POINT_CIRCLE_HPP

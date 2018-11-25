@@ -17,29 +17,33 @@
 #include <boost/msm/row_tags.hpp>
 #include <boost/msm/back/metafunctions.hpp>
 
-namespace boost { namespace msm { namespace front
+namespace boost
+{
+namespace msm
+{
+namespace front
 {
 
-struct no_sm_ptr 
+struct no_sm_ptr
 {
-    // tags
-    typedef ::boost::mpl::bool_<false>   needs_sm;
+	// tags
+	typedef ::boost::mpl::bool_<false>   needs_sm;
 };
-struct sm_ptr 
+struct sm_ptr
 {
-    // tags
-    typedef ::boost::mpl::bool_<true>    needs_sm;
+	// tags
+	typedef ::boost::mpl::bool_<true>    needs_sm;
 };
 // kept for backward compatibility
-struct NoSMPtr 
+struct NoSMPtr
 {
-    // tags
-    typedef ::boost::mpl::bool_<false>   needs_sm;
+	// tags
+	typedef ::boost::mpl::bool_<false>   needs_sm;
 };
-struct SMPtr 
+struct SMPtr
 {
-    // tags
-    typedef ::boost::mpl::bool_<true>    needs_sm;
+	// tags
+	typedef ::boost::mpl::bool_<true>    needs_sm;
 };
 
 // provides the typedefs and interface. Concrete states derive from it.
@@ -47,12 +51,12 @@ struct SMPtr
 template<class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct state :  public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 {
-    // tags
-    // default: no flag
-    typedef ::boost::mpl::vector0<>       flag_list;
-    typedef ::boost::mpl::vector0<>       internal_flag_list;
-    //default: no deferred events
-    typedef ::boost::mpl::vector0<>       deferred_events;
+	// tags
+	// default: no flag
+	typedef ::boost::mpl::vector0<>       flag_list;
+	typedef ::boost::mpl::vector0<>       internal_flag_list;
+	//default: no deferred events
+	typedef ::boost::mpl::vector0<>       deferred_events;
 };
 
 // terminate state simply defines the TerminateFlag flag
@@ -60,11 +64,11 @@ struct state :  public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 template<class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct terminate_state : public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 {
-    // tags
-    typedef ::boost::mpl::vector0<>                               flag_list;
-    typedef ::boost::mpl::vector< boost::msm::TerminateFlag>      internal_flag_list;
-    //default: no deferred events
-    typedef ::boost::mpl::vector0<>                               deferred_events;
+	// tags
+	typedef ::boost::mpl::vector0<>                               flag_list;
+	typedef ::boost::mpl::vector< boost::msm::TerminateFlag>      internal_flag_list;
+	//default: no deferred events
+	typedef ::boost::mpl::vector0<>                               deferred_events;
 };
 
 // terminate state simply defines the InterruptedFlag and EndInterruptFlag<EndInterruptEvent> flags
@@ -73,23 +77,23 @@ struct terminate_state : public boost::msm::front::detail::state_base<BASE>, SMP
 template <class EndInterruptEvent,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct interrupt_state : public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 {
-    // tags
-    typedef ::boost::mpl::vector0<>                           flag_list;
-    typedef typename boost::msm::back::build_interrupt_state_flag_list<
-        typename boost::msm::back::get_interrupt_events<EndInterruptEvent>::type
-    >::type internal_flag_list; 
+	// tags
+	typedef ::boost::mpl::vector0<>                           flag_list;
+	typedef typename boost::msm::back::build_interrupt_state_flag_list<
+	typename boost::msm::back::get_interrupt_events<EndInterruptEvent>::type
+	>::type internal_flag_list;
 
-    //default: no deferred events
-    typedef ::boost::mpl::vector0<>                           deferred_events;
+	//default: no deferred events
+	typedef ::boost::mpl::vector0<>                           deferred_events;
 };
 
 // not a state but a bunch of extra typedefs to handle direct entry into a composite state. To be derived from
 // template argument: zone index of this state
 template <int ZoneIndex=-1>
-struct explicit_entry 
+struct explicit_entry
 {
-    typedef int explicit_entry_state;
-    enum {zone_index=ZoneIndex};
+	typedef int explicit_entry_state;
+	enum {zone_index=ZoneIndex};
 };
 
 // to be derived from. Makes a type an entry (pseudo) state. Actually an almost full-fledged state
@@ -98,38 +102,40 @@ struct explicit_entry
 // template argument: pointer-to-fsm policy
 template<int ZoneIndex=-1,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct entry_pseudo_state
-    :  public boost::msm::front::detail::state_base<BASE>,SMPtrPolicy
+	:  public boost::msm::front::detail::state_base<BASE>,SMPtrPolicy
 {
-    // tags
-    typedef int                          pseudo_entry;
-    enum {zone_index=ZoneIndex};
-    typedef int explicit_entry_state;
-    // default: no flag
-    typedef ::boost::mpl::vector0<>       flag_list;
-    typedef ::boost::mpl::vector0<>       internal_flag_list;
-    //default: no deferred events
-    typedef ::boost::mpl::vector0<>       deferred_events;
+	// tags
+	typedef int                          pseudo_entry;
+	enum {zone_index=ZoneIndex};
+	typedef int explicit_entry_state;
+	// default: no flag
+	typedef ::boost::mpl::vector0<>       flag_list;
+	typedef ::boost::mpl::vector0<>       internal_flag_list;
+	//default: no deferred events
+	typedef ::boost::mpl::vector0<>       deferred_events;
 };
 
 // to be derived from. Makes a state an exit (pseudo) state. Actually an almost full-fledged state
 // template argument: event to forward
 // template argument: pointer-to-fsm policy
 template<class Event,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
-struct exit_pseudo_state : public boost::msm::front::detail::state_base<BASE> , SMPtrPolicy
+struct exit_pseudo_state : public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 {
-    typedef Event       event;
-    typedef BASE        Base;
-    typedef SMPtrPolicy PtrPolicy;
-    typedef int         pseudo_exit;
+	typedef Event       event;
+	typedef BASE        Base;
+	typedef SMPtrPolicy PtrPolicy;
+	typedef int         pseudo_exit;
 
-    // default: no flag
-    typedef ::boost::mpl::vector0<>  flag_list;
-    typedef ::boost::mpl::vector0<>  internal_flag_list;
-    //default: no deferred events
-    typedef ::boost::mpl::vector0<>  deferred_events;
+	// default: no flag
+	typedef ::boost::mpl::vector0<>  flag_list;
+	typedef ::boost::mpl::vector0<>  internal_flag_list;
+	//default: no deferred events
+	typedef ::boost::mpl::vector0<>  deferred_events;
 };
 
-}}}
+}
+}
+}
 
 #endif //BOOST_MSM_FRONT_STATES_H
 

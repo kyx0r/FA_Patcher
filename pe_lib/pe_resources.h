@@ -21,10 +21,10 @@ public:
 	uint32_t get_codepage() const;
 	//Returns resource data
 	const std::string& get_data() const;
-		
+
 public: //These functions do not change everything inside image, they are used by PE class
 	//You can also use them to rebuild resource directory
-		
+
 	//Sets resource data codepage
 	void set_codepage(uint32_t codepage);
 	//Sets resource data
@@ -75,7 +75,7 @@ public: //These functions do not change everything inside image, they are used b
 	void set_name(const std::wstring& name);
 	//Sets entry ID
 	void set_id(uint32_t id);
-		
+
 	//Returns resource_directory if entry includes it, otherwise throws an exception
 	resource_directory& get_resource_directory();
 	//Returns resource_data_entry if entry includes it, otherwise throws an exception
@@ -160,7 +160,7 @@ public: //These functions do not change everything inside image, they are used b
 	void set_major_version(uint16_t major_version);
 	//Sets minor version of directory
 	void get_minor_version(uint16_t minor_version);
-		
+
 	//Returns resource_directory_entry array
 	entry_list& get_entry_list();
 

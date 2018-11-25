@@ -52,118 +52,127 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct geocent {};
+namespace par4
+{
+struct geocent {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace geocent
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace geocent
+{
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_geocent_other : public base_t_fi<base_geocent_other<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_geocent_other : public base_t_fi<base_geocent_other<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_geocent_other(const Parameters& par)
-                    : base_t_fi<base_geocent_other<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_geocent_other(const Parameters& par)
+		: base_t_fi<base_geocent_other<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(forward)
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                        xy_x = lp_lon;
-                        xy_y = lp_lat;
-                }
+	// FORWARD(forward)
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		xy_x = lp_lon;
+		xy_y = lp_lat;
+	}
 
-                // INVERSE(inverse)
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                        lp_lat = xy_y;
-                        lp_lon = xy_x;
-                }
+	// INVERSE(inverse)
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		lp_lat = xy_y;
+		lp_lon = xy_x;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "geocent_other";
-                }
+	static inline std::string get_name()
+	{
+		return "geocent_other";
+	}
 
-            };
+};
 
-            // Geocentric
-            template <typename Parameters>
-            inline void setup_geocent(Parameters& par)
-            {
-                par.is_geocent = 1;
-                par.x0 = 0.0;
-                par.y0 = 0.0;
-            }
+// Geocentric
+template <typename Parameters>
+inline void setup_geocent(Parameters& par)
+{
+	par.is_geocent = 1;
+	par.x0 = 0.0;
+	par.y0 = 0.0;
+}
 
-    }} // namespace detail::geocent
-    #endif // doxygen
+}
+} // namespace detail::geocent
+#endif // doxygen
 
-    /*!
-        \brief Geocentric projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Example
-        \image html ex_geocent.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct geocent_other : public detail::geocent::base_geocent_other<CalculationType, Parameters>
-    {
-        inline geocent_other(const Parameters& par) : detail::geocent::base_geocent_other<CalculationType, Parameters>(par)
-        {
-            detail::geocent::setup_geocent(this->m_par);
-        }
-    };
+/*!
+    \brief Geocentric projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Example
+    \image html ex_geocent.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct geocent_other : public detail::geocent::base_geocent_other<CalculationType, Parameters>
+{
+	inline geocent_other(const Parameters& par) : detail::geocent::base_geocent_other<CalculationType, Parameters>(par)
+	{
+		detail::geocent::setup_geocent(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::geocent, geocent_other, geocent_other)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::geocent, geocent_other, geocent_other)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class geocent_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<geocent_other<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class geocent_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<geocent_other<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void geocent_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("geocent", new geocent_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void geocent_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("geocent", new geocent_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_GEOCENT_HPP
 

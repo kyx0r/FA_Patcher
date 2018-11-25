@@ -10,60 +10,66 @@
 #include <boost/spirit/home/x3/support/context.hpp>
 #include <boost/spirit/home/x3/directive/expect.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    enum class error_handler_result
-    {
-        fail
-      , retry
-      , accept
-      , rethrow
-    };
+namespace spirit
+{
+namespace x3
+{
+enum class error_handler_result
+{
+	fail
+	, retry
+	, accept
+	, rethrow
+};
 
-    template <typename Subject, typename Handler>
-    struct guard : unary_parser<Subject, guard<Subject, Handler>>
-    {
-        typedef unary_parser<Subject, guard<Subject, Handler>> base_type;
-        static bool const is_pass_through_unary = true;
+template <typename Subject, typename Handler>
+struct guard : unary_parser<Subject, guard<Subject, Handler>>
+{
+	typedef unary_parser<Subject, guard<Subject, Handler>> base_type;
+	static bool const is_pass_through_unary = true;
 
-        guard(Subject const& subject, Handler handler)
-          : base_type(subject), handler(handler) {}
+	guard(Subject const& subject, Handler handler)
+		: base_type(subject), handler(handler) {}
 
-        template <typename Iterator, typename Context
-          , typename RuleContext, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, RuleContext& rcontext, Attribute& attr) const
-        {
-            for (;;)
-            {
-                try
-                {
-                    Iterator i = first;
-                    bool r = this->subject.parse(i, last, context, rcontext, attr);
-                    if (r)
-                        first = i;
-                    return r;
-                }
-                catch (expectation_failure<Iterator> const& x)
-                {
-                    switch (handler(first, last, x, context))
-                    {
-                        case error_handler_result::fail:
-                            return false;
-                        case error_handler_result::retry:
-                            continue;
-                        case error_handler_result::accept:
-                            return true;
-                        case error_handler_result::rethrow:
-                            throw;
-                    }
-                }
-            }
-            return false;
-        }
+	template <typename Iterator, typename Context
+	          , typename RuleContext, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, RuleContext& rcontext, Attribute& attr) const
+	{
+		for (;;)
+		{
+			try
+			{
+				Iterator i = first;
+				bool r = this->subject.parse(i, last, context, rcontext, attr);
+				if (r)
+					first = i;
+				return r;
+			}
+			catch (expectation_failure<Iterator> const& x)
+			{
+				switch (handler(first, last, x, context))
+				{
+				case error_handler_result::fail:
+					return false;
+				case error_handler_result::retry:
+					continue;
+				case error_handler_result::accept:
+					return true;
+				case error_handler_result::rethrow:
+					throw;
+				}
+			}
+		}
+		return false;
+	}
 
-        Handler handler;
-    };
-}}}
+	Handler handler;
+};
+}
+}
+}
 
 #endif

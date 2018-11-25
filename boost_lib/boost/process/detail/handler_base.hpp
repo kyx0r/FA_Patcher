@@ -13,37 +13,53 @@
 
 #include <system_error>
 
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 template<template <class> class Template>
 struct make_handler_t
 {
-    constexpr make_handler_t() {}
-    template<typename Handler>
-    constexpr Template<Handler> operator()(Handler handler) const {return Template<Handler>(handler);}
-    template<typename Handler>
-    constexpr Template<Handler> operator= (Handler handler) const {return Template<Handler>(handler);}
-    template<typename Handler>
-    constexpr Template<Handler> operator+=(Handler handler) const {return Template<Handler>(handler);}
+	constexpr make_handler_t() {}
+	template<typename Handler>
+	constexpr Template<Handler> operator()(Handler handler) const
+	{
+		return Template<Handler>(handler);
+	}
+	template<typename Handler>
+	constexpr Template<Handler> operator= (Handler handler) const
+	{
+		return Template<Handler>(handler);
+	}
+	template<typename Handler>
+	constexpr Template<Handler> operator+=(Handler handler) const
+	{
+		return Template<Handler>(handler);
+	}
 };
 
 
 struct handler_base
 {
-    using resource_type = void;
+	using resource_type = void;
 
-    template <class Executor>
-    void on_setup(Executor&) const {}
+	template <class Executor>
+	void on_setup(Executor&) const {}
 
-    template <class Executor>
-    void on_error(Executor&, const std::error_code &) const {}
+	template <class Executor>
+	void on_error(Executor&, const std::error_code &) const {}
 
-    template <class Executor>
-    void on_success(Executor&) const {}
+	template <class Executor>
+	void on_success(Executor&) const {}
 
 };
 
 
-}}}
+}
+}
+}
 
 #endif

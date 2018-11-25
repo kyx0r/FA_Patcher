@@ -19,77 +19,82 @@
 #include <boost/geometry/algorithms/detail/distance/linear_to_linear.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace distance
+namespace detail
+{
+namespace distance
 {
 
 
 template <typename Linear, typename Areal, typename Strategy>
 struct linear_to_areal
 {
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy,
-            typename point_type<Linear>::type,
-            typename point_type<Areal>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy,
+	typename point_type<Linear>::type,
+	typename point_type<Areal>::type
+	>::type return_type;
 
-    static inline return_type apply(Linear const& linear,
-                                    Areal const& areal,
-                                    Strategy const& strategy)
-    {
-        if ( geometry::intersects(linear, areal) )
-        {
-            return 0;
-        }
+	static inline return_type apply(Linear const& linear,
+	                                Areal const& areal,
+	                                Strategy const& strategy)
+	{
+		if ( geometry::intersects(linear, areal) )
+		{
+			return 0;
+		}
 
-        return linear_to_linear
-            <
-                Linear, Areal, Strategy
-            >::apply(linear, areal, strategy, false);
-    }
+		return linear_to_linear
+		       <
+		       Linear, Areal, Strategy
+		       >::apply(linear, areal, strategy, false);
+	}
 
 
-    static inline return_type apply(Areal const& areal,
-                                    Linear const& linear,
-                                    Strategy const& strategy)
-    {
-        return apply(linear, areal, strategy);
-    }
+	static inline return_type apply(Areal const& areal,
+	                                Linear const& linear,
+	                                Strategy const& strategy)
+	{
+		return apply(linear, areal, strategy);
+	}
 };
 
 
 template <typename Areal1, typename Areal2, typename Strategy>
 struct areal_to_areal
 {
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy,
-            typename point_type<Areal1>::type,
-            typename point_type<Areal2>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy,
+	typename point_type<Areal1>::type,
+	typename point_type<Areal2>::type
+	>::type return_type;
 
-    static inline return_type apply(Areal1 const& areal1,
-                                    Areal2 const& areal2,
-                                    Strategy const& strategy)
-    {
-        if ( geometry::intersects(areal1, areal2) )
-        {
-            return 0;
-        }
+	static inline return_type apply(Areal1 const& areal1,
+	                                Areal2 const& areal2,
+	                                Strategy const& strategy)
+	{
+		if ( geometry::intersects(areal1, areal2) )
+		{
+			return 0;
+		}
 
-        return linear_to_linear
-            <
-                Areal1, Areal2, Strategy
-            >::apply(areal1, areal2, strategy, false);
-    }
+		return linear_to_linear
+		       <
+		       Areal1, Areal2, Strategy
+		       >::apply(areal1, areal2, strategy, false);
+	}
 };
 
 
-}} // namespace detail::distance
+}
+} // namespace detail::distance
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -99,49 +104,50 @@ namespace dispatch
 
 template <typename Linear, typename Areal, typename Strategy>
 struct distance
-    <
-        Linear, Areal, Strategy,
-        linear_tag, areal_tag, 
-        strategy_tag_distance_point_segment, false
-    >
-    : detail::distance::linear_to_areal
-        <
-            Linear, Areal, Strategy
-        >
+	<
+	Linear, Areal, Strategy,
+	linear_tag, areal_tag,
+	strategy_tag_distance_point_segment, false
+	>
+	: detail::distance::linear_to_areal
+	  <
+	  Linear, Areal, Strategy
+	  >
 {};
 
 
 template <typename Areal, typename Linear, typename Strategy>
 struct distance
-    <
-        Areal, Linear, Strategy,
-        areal_tag, linear_tag, 
-        strategy_tag_distance_point_segment, false
-    >
-    : detail::distance::linear_to_areal
-        <
-            Linear, Areal, Strategy
-        >
+	<
+	Areal, Linear, Strategy,
+	areal_tag, linear_tag,
+	strategy_tag_distance_point_segment, false
+	>
+	: detail::distance::linear_to_areal
+	  <
+	  Linear, Areal, Strategy
+	  >
 {};
 
 
 template <typename Areal1, typename Areal2, typename Strategy>
 struct distance
-    <
-        Areal1, Areal2, Strategy,
-        areal_tag, areal_tag, 
-        strategy_tag_distance_point_segment, false
-    >
-    : detail::distance::areal_to_areal
-        <
-            Areal1, Areal2, Strategy
-        >
+	<
+	Areal1, Areal2, Strategy,
+	areal_tag, areal_tag,
+	strategy_tag_distance_point_segment, false
+	>
+	: detail::distance::areal_to_areal
+	  <
+	  Areal1, Areal2, Strategy
+	  >
 {};
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISTANCE_LINEAR_OR_AREAL_TO_AREAL_HPP

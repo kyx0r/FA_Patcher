@@ -12,7 +12,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 BOOST_CLBL_TRTS_DEFINE_SFINAE_ERROR_ORIGIN(remove_transaction_safe)
 BOOST_CLBL_TRTS_SFINAE_MSG(remove_transaction_safe, cannot_remove_transaction_safe_from_this_type)
@@ -29,20 +32,21 @@ template<typename T>
 using remove_transaction_safe_t = //see below
 //<-
     detail::try_but_fail_if_invalid<
-        typename detail::traits<T>::remove_transaction_safe,
-        cannot_remove_transaction_safe_from_this_type>;
+    typename detail::traits<T>::remove_transaction_safe,
+    cannot_remove_transaction_safe_from_this_type>;
 
-namespace detail {
+namespace detail
+{
 
-    template<typename T, typename = std::false_type>
-    struct remove_transaction_safe_impl {};
+template<typename T, typename = std::false_type>
+struct remove_transaction_safe_impl {};
 
-    template<typename T>
-    struct remove_transaction_safe_impl <T, typename std::is_same<
-        remove_transaction_safe_t<T>, detail::dummy>::type>
-    {
-        using type = remove_transaction_safe_t<T>;
-    };
+template<typename T>
+struct remove_transaction_safe_impl <T, typename std::is_same<
+	remove_transaction_safe_t<T>, detail::dummy>::type>
+{
+	using type = remove_transaction_safe_t<T>;
+};
 }
 
 //->
@@ -51,7 +55,8 @@ template<typename T>
 struct remove_transaction_safe : detail::remove_transaction_safe_impl<T> {};
 
 //<-
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

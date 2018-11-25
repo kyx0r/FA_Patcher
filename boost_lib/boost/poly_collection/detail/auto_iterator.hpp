@@ -15,11 +15,14 @@
 
 #include <boost/iterator/iterator_adaptor.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 /* auto_iterator<Iterator> (for want of a better name) behaves like Iterator
  * save for the fact that it derefs to Iterator& rather than
@@ -30,21 +33,21 @@ namespace detail{
 
 template<typename Iterator>
 class auto_iterator:
-  public boost::iterator_adaptor<auto_iterator<Iterator>,Iterator,Iterator>
+	public boost::iterator_adaptor<auto_iterator<Iterator>,Iterator,Iterator>
 {
 public:
-  auto_iterator()=default;
-  auto_iterator(const Iterator& it):auto_iterator::iterator_adaptor_{it}{}
-  auto_iterator(const auto_iterator&)=default;
-  auto_iterator& operator=(const auto_iterator&)=default;
+	auto_iterator()=default;
+	auto_iterator(const Iterator& it):auto_iterator::iterator_adaptor_{it} {}
+	auto_iterator(const auto_iterator&)=default;
+	auto_iterator& operator=(const auto_iterator&)=default;
 
 private:
-  friend class boost::iterator_core_access;
+	friend class boost::iterator_core_access;
 
-  Iterator& dereference()const noexcept
-  {
-    return const_cast<auto_iterator*>(this)->base_reference();
-  }
+	Iterator& dereference()const noexcept
+	{
+		return const_cast<auto_iterator*>(this)->base_reference();
+	}
 };
 
 } /* namespace poly_collection::detail */

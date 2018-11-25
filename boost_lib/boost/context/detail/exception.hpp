@@ -15,21 +15,28 @@
 # include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace context {
-namespace detail {
+namespace boost
+{
+namespace context
+{
+namespace detail
+{
 
-struct forced_unwind {
-    fcontext_t  fctx{ nullptr };
+struct forced_unwind
+{
+	fcontext_t  fctx{ nullptr };
 
-    forced_unwind() = default;
+	forced_unwind() = default;
 
-    forced_unwind( fcontext_t fctx_) :
-        fctx( fctx_) {
-    }
+	forced_unwind( fcontext_t fctx_) :
+		fctx( fctx_)
+	{
+	}
 };
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #include BOOST_ABI_SUFFIX

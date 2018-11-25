@@ -37,16 +37,18 @@ extern "C" void _mm_pause(void);
 #    define BOOST_LOG_AUX_PAUSE __asm__ __volatile__("pause;")
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 BOOST_FORCEINLINE void pause() BOOST_NOEXCEPT
 {
 #if defined(BOOST_LOG_AUX_PAUSE)
-    BOOST_LOG_AUX_PAUSE;
+	BOOST_LOG_AUX_PAUSE;
 #endif
 }
 

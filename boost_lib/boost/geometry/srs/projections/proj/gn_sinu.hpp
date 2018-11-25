@@ -50,377 +50,395 @@
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 #include <boost/geometry/srs/projections/impl/pj_mlfn.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct gn_sinu {};
-    struct sinu {};
-    struct eck6 {};
-    struct mbtfps {};
+namespace par4
+{
+struct gn_sinu {};
+struct sinu {};
+struct eck6 {};
+struct mbtfps {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace gn_sinu
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace gn_sinu
+{
 
-            static const double EPS10 = 1e-10;
-            static const int MAX_ITER = 8;
-            static const double LOOP_TOL = 1e-7;
+static const double EPS10 = 1e-10;
+static const int MAX_ITER = 8;
+static const double LOOP_TOL = 1e-7;
 
-            template <typename T>
-            struct par_gn_sinu
-            {
-                T    en[EN_SIZE];
-                T    m, n, C_x, C_y;
-            };
+template <typename T>
+struct par_gn_sinu
+{
+	T    en[EN_SIZE];
+	T    m, n, C_x, C_y;
+};
 
-            /* Ellipsoidal Sinusoidal only */
+/* Ellipsoidal Sinusoidal only */
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_gn_sinu_ellipsoid : public base_t_fi<base_gn_sinu_ellipsoid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_gn_sinu_ellipsoid : public base_t_fi<base_gn_sinu_ellipsoid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_gn_sinu<CalculationType> m_proj_parm;
+	par_gn_sinu<CalculationType> m_proj_parm;
 
-                inline base_gn_sinu_ellipsoid(const Parameters& par)
-                    : base_t_fi<base_gn_sinu_ellipsoid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_gn_sinu_ellipsoid(const Parameters& par)
+		: base_t_fi<base_gn_sinu_ellipsoid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(e_forward)  ellipsoid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType s, c;
+	// FORWARD(e_forward)  ellipsoid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType s, c;
 
-                    xy_y = pj_mlfn(lp_lat, s = sin(lp_lat), c = cos(lp_lat), this->m_proj_parm.en);
-                    xy_x = lp_lon * c / sqrt(1. - this->m_par.es * s * s);
-                }
+		xy_y = pj_mlfn(lp_lat, s = sin(lp_lat), c = cos(lp_lat), this->m_proj_parm.en);
+		xy_x = lp_lon * c / sqrt(1. - this->m_par.es * s * s);
+	}
 
-                // INVERSE(e_inverse)  ellipsoid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+	// INVERSE(e_inverse)  ellipsoid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
 
-                    CalculationType s;
+		CalculationType s;
 
-                    if ((s = fabs(lp_lat = pj_inv_mlfn(xy_y, this->m_par.es, this->m_proj_parm.en))) < HALFPI) {
-                        s = sin(lp_lat);
-                        lp_lon = xy_x * sqrt(1. - this->m_par.es * s * s) / cos(lp_lat);
-                    } else if ((s - EPS10) < HALFPI)
-                        lp_lon = 0.;
-                    else
-                        BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                }
-                /* General spherical sinusoidals */
+		if ((s = fabs(lp_lat = pj_inv_mlfn(xy_y, this->m_par.es, this->m_proj_parm.en))) < HALFPI)
+		{
+			s = sin(lp_lat);
+			lp_lon = xy_x * sqrt(1. - this->m_par.es * s * s) / cos(lp_lat);
+		}
+		else if ((s - EPS10) < HALFPI)
+			lp_lon = 0.;
+		else
+			BOOST_THROW_EXCEPTION( projection_exception(-20) );
+	}
+	/* General spherical sinusoidals */
 
-                static inline std::string get_name()
-                {
-                    return "gn_sinu_ellipsoid";
-                }
+	static inline std::string get_name()
+	{
+		return "gn_sinu_ellipsoid";
+	}
 
-            };
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_gn_sinu_spheroid : public base_t_fi<base_gn_sinu_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_gn_sinu_spheroid : public base_t_fi<base_gn_sinu_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_gn_sinu<CalculationType> m_proj_parm;
+	par_gn_sinu<CalculationType> m_proj_parm;
 
-                inline base_gn_sinu_spheroid(const Parameters& par)
-                    : base_t_fi<base_gn_sinu_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_gn_sinu_spheroid(const Parameters& par)
+		: base_t_fi<base_gn_sinu_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  sphere
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    if (!this->m_proj_parm.m)
-                        lp_lat = this->m_proj_parm.n != 1. ? aasin(this->m_proj_parm.n * sin(lp_lat)): lp_lat;
-                    else {
-                        CalculationType k, V;
-                        int i;
+	// FORWARD(s_forward)  sphere
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		if (!this->m_proj_parm.m)
+			lp_lat = this->m_proj_parm.n != 1. ? aasin(this->m_proj_parm.n * sin(lp_lat)): lp_lat;
+		else
+		{
+			CalculationType k, V;
+			int i;
 
-                        k = this->m_proj_parm.n * sin(lp_lat);
-                        for (i = MAX_ITER; i ; --i) {
-                            lp_lat -= V = (this->m_proj_parm.m * lp_lat + sin(lp_lat) - k) /
-                                (this->m_proj_parm.m + cos(lp_lat));
-                            if (fabs(V) < LOOP_TOL)
-                                break;
-                        }
-                        if (!i)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                    }
-                    xy_x = this->m_proj_parm.C_x * lp_lon * (this->m_proj_parm.m + cos(lp_lat));
-                    xy_y = this->m_proj_parm.C_y * lp_lat;
-                }
+			k = this->m_proj_parm.n * sin(lp_lat);
+			for (i = MAX_ITER; i ; --i)
+			{
+				lp_lat -= V = (this->m_proj_parm.m * lp_lat + sin(lp_lat) - k) /
+				              (this->m_proj_parm.m + cos(lp_lat));
+				if (fabs(V) < LOOP_TOL)
+					break;
+			}
+			if (!i)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+		}
+		xy_x = this->m_proj_parm.C_x * lp_lon * (this->m_proj_parm.m + cos(lp_lat));
+		xy_y = this->m_proj_parm.C_y * lp_lat;
+	}
 
-                // INVERSE(s_inverse)  sphere
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    xy_y /= this->m_proj_parm.C_y;
-                    lp_lat = this->m_proj_parm.m ? aasin((this->m_proj_parm.m * xy_y + sin(xy_y)) / this->m_proj_parm.n) :
-                        ( this->m_proj_parm.n != 1. ? aasin(sin(xy_y) / this->m_proj_parm.n) : xy_y );
-                    lp_lon = xy_x / (this->m_proj_parm.C_x * (this->m_proj_parm.m + cos(xy_y)));
-                }
+	// INVERSE(s_inverse)  sphere
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		xy_y /= this->m_proj_parm.C_y;
+		lp_lat = this->m_proj_parm.m ? aasin((this->m_proj_parm.m * xy_y + sin(xy_y)) / this->m_proj_parm.n) :
+		         ( this->m_proj_parm.n != 1. ? aasin(sin(xy_y) / this->m_proj_parm.n) : xy_y );
+		lp_lon = xy_x / (this->m_proj_parm.C_x * (this->m_proj_parm.m + cos(xy_y)));
+	}
 
-                static inline std::string get_name()
-                {
-                    return "gn_sinu_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "gn_sinu_spheroid";
+	}
 
-            };
+};
 
-            template <typename Parameters, typename T>
-            inline void setup(Parameters& par, par_gn_sinu<T>& proj_parm) 
-            {
-                par.es = 0;
-                proj_parm.C_x = (proj_parm.C_y = sqrt((proj_parm.m + 1.) / proj_parm.n))/(proj_parm.m + 1.);
-            }
+template <typename Parameters, typename T>
+inline void setup(Parameters& par, par_gn_sinu<T>& proj_parm)
+{
+	par.es = 0;
+	proj_parm.C_x = (proj_parm.C_y = sqrt((proj_parm.m + 1.) / proj_parm.n))/(proj_parm.m + 1.);
+}
 
 
-            // General Sinusoidal Series
-            template <typename Parameters, typename T>
-            inline void setup_gn_sinu(Parameters& par, par_gn_sinu<T>& proj_parm)
-            {
-                if (pj_param(par.params, "tn").i && pj_param(par.params, "tm").i) {
-                    proj_parm.n = pj_param(par.params, "dn").f;
-                    proj_parm.m = pj_param(par.params, "dm").f;
-                } else
-                    BOOST_THROW_EXCEPTION( projection_exception(-99) );
-                setup(par, proj_parm);
-            }
+// General Sinusoidal Series
+template <typename Parameters, typename T>
+inline void setup_gn_sinu(Parameters& par, par_gn_sinu<T>& proj_parm)
+{
+	if (pj_param(par.params, "tn").i && pj_param(par.params, "tm").i)
+	{
+		proj_parm.n = pj_param(par.params, "dn").f;
+		proj_parm.m = pj_param(par.params, "dm").f;
+	}
+	else
+		BOOST_THROW_EXCEPTION( projection_exception(-99) );
+	setup(par, proj_parm);
+}
 
-            // Sinusoidal (Sanson-Flamsteed)
-            template <typename Parameters, typename T>
-            inline void setup_sinu(Parameters& par, par_gn_sinu<T>& proj_parm)
-            {
-                if (!pj_enfn(par.es, proj_parm.en))
-                    BOOST_THROW_EXCEPTION( projection_exception(0) );
-                if (par.es) {
-                } else {
-                    proj_parm.n = 1.;
-                    proj_parm.m = 0.;
-                    setup(par, proj_parm);
-                }
-            }
+// Sinusoidal (Sanson-Flamsteed)
+template <typename Parameters, typename T>
+inline void setup_sinu(Parameters& par, par_gn_sinu<T>& proj_parm)
+{
+	if (!pj_enfn(par.es, proj_parm.en))
+		BOOST_THROW_EXCEPTION( projection_exception(0) );
+	if (par.es)
+	{
+	}
+	else
+	{
+		proj_parm.n = 1.;
+		proj_parm.m = 0.;
+		setup(par, proj_parm);
+	}
+}
 
-            // Eckert VI
-            template <typename Parameters, typename T>
-            inline void setup_eck6(Parameters& par, par_gn_sinu<T>& proj_parm)
-            {
-                proj_parm.m = 1.;
-                proj_parm.n = 2.570796326794896619231321691;
-                setup(par, proj_parm);
-            }
+// Eckert VI
+template <typename Parameters, typename T>
+inline void setup_eck6(Parameters& par, par_gn_sinu<T>& proj_parm)
+{
+	proj_parm.m = 1.;
+	proj_parm.n = 2.570796326794896619231321691;
+	setup(par, proj_parm);
+}
 
-            // McBryde-Thomas Flat-Polar Sinusoidal
-            template <typename Parameters, typename T>
-            inline void setup_mbtfps(Parameters& par, par_gn_sinu<T>& proj_parm)
-            {
-                proj_parm.m = 0.5;
-                proj_parm.n = 1.785398163397448309615660845;
-                setup(par, proj_parm);
-            }
+// McBryde-Thomas Flat-Polar Sinusoidal
+template <typename Parameters, typename T>
+inline void setup_mbtfps(Parameters& par, par_gn_sinu<T>& proj_parm)
+{
+	proj_parm.m = 0.5;
+	proj_parm.n = 1.785398163397448309615660845;
+	setup(par, proj_parm);
+}
 
-    }} // namespace detail::gn_sinu
-    #endif // doxygen
+}
+} // namespace detail::gn_sinu
+#endif // doxygen
 
-    /*!
-        \brief General Sinusoidal Series projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Projection parameters
-         - m (real)
-         - n (real)
-        \par Example
-        \image html ex_gn_sinu.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct gn_sinu_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
-    {
-        inline gn_sinu_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::gn_sinu::setup_gn_sinu(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief General Sinusoidal Series projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Projection parameters
+     - m (real)
+     - n (real)
+    \par Example
+    \image html ex_gn_sinu.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct gn_sinu_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
+{
+	inline gn_sinu_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::gn_sinu::setup_gn_sinu(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief Sinusoidal (Sanson-Flamsteed) projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-         - Ellipsoid
-        \par Example
-        \image html ex_sinu.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct sinu_ellipsoid : public detail::gn_sinu::base_gn_sinu_ellipsoid<CalculationType, Parameters>
-    {
-        inline sinu_ellipsoid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_ellipsoid<CalculationType, Parameters>(par)
-        {
-            detail::gn_sinu::setup_sinu(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Sinusoidal (Sanson-Flamsteed) projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+     - Ellipsoid
+    \par Example
+    \image html ex_sinu.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct sinu_ellipsoid : public detail::gn_sinu::base_gn_sinu_ellipsoid<CalculationType, Parameters>
+{
+	inline sinu_ellipsoid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_ellipsoid<CalculationType, Parameters>(par)
+	{
+		detail::gn_sinu::setup_sinu(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief Sinusoidal (Sanson-Flamsteed) projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-         - Ellipsoid
-        \par Example
-        \image html ex_sinu.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct sinu_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
-    {
-        inline sinu_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::gn_sinu::setup_sinu(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Sinusoidal (Sanson-Flamsteed) projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+     - Ellipsoid
+    \par Example
+    \image html ex_sinu.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct sinu_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
+{
+	inline sinu_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::gn_sinu::setup_sinu(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief Eckert VI projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_eck6.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct eck6_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
-    {
-        inline eck6_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::gn_sinu::setup_eck6(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Eckert VI projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_eck6.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct eck6_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
+{
+	inline eck6_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::gn_sinu::setup_eck6(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief McBryde-Thomas Flat-Polar Sinusoidal projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_mbtfps.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct mbtfps_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
-    {
-        inline mbtfps_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::gn_sinu::setup_mbtfps(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief McBryde-Thomas Flat-Polar Sinusoidal projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_mbtfps.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct mbtfps_spheroid : public detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>
+{
+	inline mbtfps_spheroid(const Parameters& par) : detail::gn_sinu::base_gn_sinu_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::gn_sinu::setup_mbtfps(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::gn_sinu, gn_sinu_spheroid, gn_sinu_spheroid)
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::sinu, sinu_spheroid, sinu_ellipsoid)
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eck6, eck6_spheroid, eck6_spheroid)
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mbtfps, mbtfps_spheroid, mbtfps_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::gn_sinu, gn_sinu_spheroid, gn_sinu_spheroid)
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::sinu, sinu_spheroid, sinu_ellipsoid)
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eck6, eck6_spheroid, eck6_spheroid)
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mbtfps, mbtfps_spheroid, mbtfps_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class gn_sinu_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<gn_sinu_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class gn_sinu_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<gn_sinu_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        class sinu_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    if (par.es)
-                        return new base_v_fi<sinu_ellipsoid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                    else
-                        return new base_v_fi<sinu_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+template <typename CalculationType, typename Parameters>
+class sinu_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		if (par.es)
+			return new base_v_fi<sinu_ellipsoid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+		else
+			return new base_v_fi<sinu_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        class eck6_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<eck6_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+template <typename CalculationType, typename Parameters>
+class eck6_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<eck6_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        class mbtfps_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<mbtfps_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+template <typename CalculationType, typename Parameters>
+class mbtfps_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<mbtfps_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void gn_sinu_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("gn_sinu", new gn_sinu_entry<CalculationType, Parameters>);
-            factory.add_to_factory("sinu", new sinu_entry<CalculationType, Parameters>);
-            factory.add_to_factory("eck6", new eck6_entry<CalculationType, Parameters>);
-            factory.add_to_factory("mbtfps", new mbtfps_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void gn_sinu_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("gn_sinu", new gn_sinu_entry<CalculationType, Parameters>);
+	factory.add_to_factory("sinu", new sinu_entry<CalculationType, Parameters>);
+	factory.add_to_factory("eck6", new eck6_entry<CalculationType, Parameters>);
+	factory.add_to_factory("mbtfps", new mbtfps_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_GN_SINU_HPP
 

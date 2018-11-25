@@ -13,17 +13,17 @@
 
 namespace boost
 {
-  namespace executors
-  {
-    typedef detail::nullary_function<void()> work;
+namespace executors
+{
+typedef detail::nullary_function<void()> work;
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    typedef detail::nullary_function<void()> work_pq;
-    //typedef csbl::function<void()> work_pq;
+typedef detail::nullary_function<void()> work_pq;
+//typedef csbl::function<void()> work_pq;
 #else
-    typedef csbl::function<void()> work_pq;
+typedef csbl::function<void()> work_pq;
 #endif
-  }
+}
 } // namespace boost
 
 

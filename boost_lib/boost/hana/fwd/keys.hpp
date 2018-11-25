@@ -15,35 +15,37 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    // Note: This function is documented per datatype/concept only.
-    //! @cond
-    template <typename T, typename = void>
-    struct keys_impl : keys_impl<T, when<true>> { };
-    //! @endcond
+// Note: This function is documented per datatype/concept only.
+//! @cond
+template <typename T, typename = void>
+struct keys_impl : keys_impl<T, when<true>> { };
+//! @endcond
 
-    struct keys_t {
-        template <typename Map>
-        constexpr auto operator()(Map&& map) const;
-    };
+struct keys_t
+{
+	template <typename Map>
+	constexpr auto operator()(Map&& map) const;
+};
 
-    constexpr keys_t keys{};
+constexpr keys_t keys{};
 
-    //! Returns a `Sequence` containing the name of the members of
-    //! the data structure.
-    //! @ingroup group-Struct
-    //!
-    //! Given a `Struct` object, `keys` returns a `Sequence` containing the
-    //! name of all the members of the `Struct`, in the same order as they
-    //! appear in the `accessors` sequence.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/struct/keys.cpp
+//! Returns a `Sequence` containing the name of the members of
+//! the data structure.
+//! @ingroup group-Struct
+//!
+//! Given a `Struct` object, `keys` returns a `Sequence` containing the
+//! name of all the members of the `Struct`, in the same order as they
+//! appear in the `accessors` sequence.
+//!
+//!
+//! Example
+//! -------
+//! @include example/struct/keys.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto keys = [](auto&& object) {
-        return implementation_defined;
-    };
+constexpr auto keys = [](auto&& object)
+{
+	return implementation_defined;
+};
 #endif
 BOOST_HANA_NAMESPACE_END
 

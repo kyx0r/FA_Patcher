@@ -24,12 +24,16 @@
 #include <boost/geometry/algorithms/detail/disjoint/point_point.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace equals
+namespace detail
+{
+namespace equals
 {
 
 /*!
@@ -39,14 +43,16 @@ namespace detail { namespace equals
 template <typename Point1, typename Point2>
 inline bool equals_point_point(Point1 const& point1, Point2 const& point2)
 {
-    return ! detail::disjoint::disjoint_point_point(point1, point2);
+	return ! detail::disjoint::disjoint_point_point(point1, point2);
 }
 
 
-}} // namespace detail::equals
+}
+} // namespace detail::equals
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_EQUALS_POINT_POINT_HPP

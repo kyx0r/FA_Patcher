@@ -16,8 +16,10 @@
 #include <boost/compute/container/vector.hpp>
 #include <boost/compute/functional/logical.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Removes each element for which \p predicate returns \c true in the
 /// range [\p first, \p last).
@@ -31,16 +33,16 @@ inline Iterator remove_if(Iterator first,
                           Predicate predicate,
                           command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-    // temporary storage for the input data
-    ::boost::compute::vector<value_type> tmp(first, last, queue);
+	// temporary storage for the input data
+	::boost::compute::vector<value_type> tmp(first, last, queue);
 
-    return ::boost::compute::copy_if(tmp.begin(),
-                                     tmp.end(),
-                                     first,
-                                     not1(predicate),
-                                     queue);
+	return ::boost::compute::copy_if(tmp.begin(),
+	                                 tmp.end(),
+	                                 first,
+	                                 not1(predicate),
+	                                 queue);
 }
 
 } // end compute namespace

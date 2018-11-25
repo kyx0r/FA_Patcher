@@ -20,70 +20,88 @@
 #include <boost/spirit/home/support/handles_container.hpp>
 #include <boost/spirit/home/support/info.hpp>
 
-namespace boost { namespace spirit
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Enablers
-    ///////////////////////////////////////////////////////////////////////////
-    template <>
-    struct use_operator<qi::domain, proto::tag::greater> // enables >
-      : mpl::true_ {};
-
-    template <>
-    struct flatten_tree<qi::domain, proto::tag::greater> // flattens >
-      : mpl::true_ {};
-}}
-
-namespace boost { namespace spirit { namespace qi
+namespace spirit
 {
-    template <typename Elements>
-    struct expect_operator : sequence_base<expect_operator<Elements>, Elements>
-    {
-        friend struct sequence_base<expect_operator<Elements>, Elements>;
+///////////////////////////////////////////////////////////////////////////
+// Enablers
+///////////////////////////////////////////////////////////////////////////
+template <>
+struct use_operator<qi::domain, proto::tag::greater> // enables >
+	: mpl::true_ {};
 
-        expect_operator(Elements const& elements)
-          : sequence_base<expect_operator<Elements>, Elements>(elements) {}
+template <>
+struct flatten_tree<qi::domain, proto::tag::greater> // flattens >
+	: mpl::true_ {};
+}
+}
 
-    private:
-
-        template <typename Iterator, typename Context, typename Skipper>
-        static detail::expect_function<
-            Iterator, Context, Skipper
-          , expectation_failure<Iterator> >
-        fail_function(
-            Iterator& first, Iterator const& last
-          , Context& context, Skipper const& skipper)
-        {
-            return detail::expect_function<
-                Iterator, Context, Skipper, expectation_failure<Iterator> >
-                (first, last, context, skipper);
-        }
-
-        std::string id() const { return "expect_operator"; }
-    };
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Parser generators: make_xxx function (objects)
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Elements, typename Modifiers>
-    struct make_composite<proto::tag::greater, Elements, Modifiers>
-      : make_nary_composite<Elements, expect_operator>
-    {};
-}}}
-
-namespace boost { namespace spirit { namespace traits
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Elements>
-    struct has_semantic_action<qi::expect_operator<Elements> >
-      : nary_has_semantic_action<Elements> {};
+namespace spirit
+{
+namespace qi
+{
+template <typename Elements>
+struct expect_operator : sequence_base<expect_operator<Elements>, Elements>
+{
+	friend struct sequence_base<expect_operator<Elements>, Elements>;
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Elements, typename Attribute, typename Context
-      , typename Iterator>
-    struct handles_container<qi::expect_operator<Elements>, Attribute, Context
-          , Iterator>
-      : mpl::true_ {};
-}}}
+	expect_operator(Elements const& elements)
+		: sequence_base<expect_operator<Elements>, Elements>(elements) {}
+
+private:
+
+	template <typename Iterator, typename Context, typename Skipper>
+	static detail::expect_function<
+	Iterator, Context, Skipper
+	, expectation_failure<Iterator> >
+	fail_function(
+	    Iterator& first, Iterator const& last
+	    , Context& context, Skipper const& skipper)
+	{
+		return detail::expect_function<
+		       Iterator, Context, Skipper, expectation_failure<Iterator> >
+		       (first, last, context, skipper);
+	}
+
+	std::string id() const
+	{
+		return "expect_operator";
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////
+// Parser generators: make_xxx function (objects)
+///////////////////////////////////////////////////////////////////////////
+template <typename Elements, typename Modifiers>
+struct make_composite<proto::tag::greater, Elements, Modifiers>
+	: make_nary_composite<Elements, expect_operator>
+{};
+}
+}
+}
+
+namespace boost
+{
+namespace spirit
+{
+namespace traits
+{
+///////////////////////////////////////////////////////////////////////////
+template <typename Elements>
+struct has_semantic_action<qi::expect_operator<Elements> >
+	: nary_has_semantic_action<Elements> {};
+
+///////////////////////////////////////////////////////////////////////////
+template <typename Elements, typename Attribute, typename Context
+          , typename Iterator>
+struct handles_container<qi::expect_operator<Elements>, Attribute, Context
+	, Iterator>
+	: mpl::true_ {};
+}
+}
+}
 
 #endif

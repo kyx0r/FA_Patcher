@@ -23,10 +23,14 @@
 #include <boost/geometry/util/select_most_precise.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace densify
+namespace strategy
+{
+namespace densify
 {
 
 
@@ -48,68 +52,68 @@ template
     typename FormulaPolicy = strategy::andoyer,
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class geographic
 {
 public:
-    geographic()
-        : m_spheroid()
-    {}
+	geographic()
+		: m_spheroid()
+	{}
 
-    explicit geographic(Spheroid const& spheroid)
-        : m_spheroid(spheroid)
-    {}
+	explicit geographic(Spheroid const& spheroid)
+		: m_spheroid(spheroid)
+	{}
 
-    template <typename Point, typename AssignPolicy, typename T>
-    inline void apply(Point const& p0, Point const& p1, AssignPolicy & policy, T const& length_threshold) const
-    {
-        typedef typename AssignPolicy::point_type out_point_t;
-        typedef typename select_most_precise
-            <
-                typename coordinate_type<Point>::type,
-                typename coordinate_type<out_point_t>::type,
-                CalculationType
-            >::type calc_t;
+	template <typename Point, typename AssignPolicy, typename T>
+	inline void apply(Point const& p0, Point const& p1, AssignPolicy & policy, T const& length_threshold) const
+	{
+		typedef typename AssignPolicy::point_type out_point_t;
+		typedef typename select_most_precise
+		<
+		typename coordinate_type<Point>::type,
+		         typename coordinate_type<out_point_t>::type,
+		         CalculationType
+		         >::type calc_t;
 
-        typedef typename FormulaPolicy::template direct<calc_t, true, false, false, false> direct_t;
-        typedef typename FormulaPolicy::template inverse<calc_t, true, true, false, false, false> inverse_t;
+		typedef typename FormulaPolicy::template direct<calc_t, true, false, false, false> direct_t;
+		typedef typename FormulaPolicy::template inverse<calc_t, true, true, false, false, false> inverse_t;
 
-        typename inverse_t::result_type
-            inv_r = inverse_t::apply(get_as_radian<0>(p0), get_as_radian<1>(p0),
-                                     get_as_radian<0>(p1), get_as_radian<1>(p1),
-                                     m_spheroid);
+		typename inverse_t::result_type
+		inv_r = inverse_t::apply(get_as_radian<0>(p0), get_as_radian<1>(p0),
+		                         get_as_radian<0>(p1), get_as_radian<1>(p1),
+		                         m_spheroid);
 
-        BOOST_GEOMETRY_ASSERT(length_threshold > T(0));
+		BOOST_GEOMETRY_ASSERT(length_threshold > T(0));
 
-        signed_size_type n = signed_size_type(inv_r.distance / length_threshold);
-        if (n <= 0)
-            return;
+		signed_size_type n = signed_size_type(inv_r.distance / length_threshold);
+		if (n <= 0)
+			return;
 
-        calc_t step = inv_r.distance / (n + 1);
+		calc_t step = inv_r.distance / (n + 1);
 
-        calc_t current = step;
-        for (signed_size_type i = 0 ; i < n ; ++i, current += step)
-        {
-            typename direct_t::result_type
-                dir_r = direct_t::apply(get_as_radian<0>(p0), get_as_radian<1>(p0),
-                                        current, inv_r.azimuth,
-                                        m_spheroid);
+		calc_t current = step;
+		for (signed_size_type i = 0 ; i < n ; ++i, current += step)
+		{
+			typename direct_t::result_type
+			dir_r = direct_t::apply(get_as_radian<0>(p0), get_as_radian<1>(p0),
+			                        current, inv_r.azimuth,
+			                        m_spheroid);
 
-            out_point_t p;
-            set_from_radian<0>(p, dir_r.lon2);
-            set_from_radian<1>(p, dir_r.lat2);
-            geometry::detail::conversion::point_to_point
-                <
-                    Point, out_point_t,
-                    2, dimension<out_point_t>::value
-                >::apply(p0, p);
+			out_point_t p;
+			set_from_radian<0>(p, dir_r.lon2);
+			set_from_radian<1>(p, dir_r.lat2);
+			geometry::detail::conversion::point_to_point
+			<
+			Point, out_point_t,
+			       2, dimension<out_point_t>::value
+			       >::apply(p0, p);
 
-            policy.apply(p);
-        }
-    }
+			policy.apply(p);
+		}
+	}
 
 private:
-    Spheroid m_spheroid;
+	Spheroid m_spheroid;
 };
 
 
@@ -120,7 +124,7 @@ namespace services
 template <>
 struct default_strategy<geographic_tag>
 {
-    typedef strategy::densify::geographic<> type;
+	typedef strategy::densify::geographic<> type;
 };
 
 
@@ -128,9 +132,11 @@ struct default_strategy<geographic_tag>
 #endif // DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
 
 
-}} // namespace strategy::densify
+}
+} // namespace strategy::densify
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DENSIFY_HPP

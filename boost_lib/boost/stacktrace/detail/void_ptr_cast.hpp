@@ -20,27 +20,35 @@
 #   pragma GCC system_header
 #endif
 
-namespace boost { namespace stacktrace { namespace detail {
+namespace boost
+{
+namespace stacktrace
+{
+namespace detail
+{
 
 // GCC warns when reinterpret_cast between function pointer and object pointer occur.
 // This functionsuppress the warnings and ensures that such casts are safe.
 template <class To, class From>
-To void_ptr_cast(From* v) BOOST_NOEXCEPT {
-    BOOST_STATIC_ASSERT_MSG(
-        boost::is_pointer<To>::value,
-        "`void_ptr_cast` function must be used only for casting to or from void pointers."
-    );
+To void_ptr_cast(From* v) BOOST_NOEXCEPT
+{
+	BOOST_STATIC_ASSERT_MSG(
+	    boost::is_pointer<To>::value,
+	    "`void_ptr_cast` function must be used only for casting to or from void pointers."
+	);
 
-    BOOST_STATIC_ASSERT_MSG(
-        sizeof(From*) == sizeof(To),
-        "Pointer to function and pointer to object differ in size on your platform."
-    );
+	BOOST_STATIC_ASSERT_MSG(
+	    sizeof(From*) == sizeof(To),
+	    "Pointer to function and pointer to object differ in size on your platform."
+	);
 
-    return reinterpret_cast<To>(v);
+	return reinterpret_cast<To>(v);
 }
 
 
-}}} // boost::stacktrace::detail
+}
+}
+} // boost::stacktrace::detail
 
 #endif // BOOST_STACKTRACE_DETAIL_VOID_PTR_CAST_HPP
 

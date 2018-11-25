@@ -19,8 +19,10 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
+namespace boost
+{
+namespace coroutines
+{
 
 #if defined(BOOST_USE_SEGMENTED_STACKS)
 typedef segmented_stack_allocator   stack_allocator;
@@ -28,7 +30,8 @@ typedef segmented_stack_allocator   stack_allocator;
 typedef standard_stack_allocator    stack_allocator;
 #endif
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

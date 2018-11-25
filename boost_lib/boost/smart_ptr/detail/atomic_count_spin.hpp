@@ -25,34 +25,34 @@ private:
 
 public:
 
-    explicit atomic_count( long v ): value_( v )
-    {
-    }
+	explicit atomic_count( long v ): value_( v )
+	{
+	}
 
-    long operator++()
-    {
-        spinlock_pool<0>::scoped_lock lock( &value_ );
-        return ++value_;
-    }
+	long operator++()
+	{
+		spinlock_pool<0>::scoped_lock lock( &value_ );
+		return ++value_;
+	}
 
-    long operator--()
-    {
-        spinlock_pool<0>::scoped_lock lock( &value_ );
-        return --value_;
-    }
+	long operator--()
+	{
+		spinlock_pool<0>::scoped_lock lock( &value_ );
+		return --value_;
+	}
 
-    operator long() const
-    {
-        spinlock_pool<0>::scoped_lock lock( &value_ );
-        return value_;
-    }
+	operator long() const
+	{
+		spinlock_pool<0>::scoped_lock lock( &value_ );
+		return value_;
+	}
 
 private:
 
-    atomic_count(atomic_count const &);
-    atomic_count & operator=(atomic_count const &);
+	atomic_count(atomic_count const &);
+	atomic_count & operator=(atomic_count const &);
 
-    long value_;
+	long value_;
 };
 
 } // namespace detail

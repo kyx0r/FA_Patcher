@@ -14,23 +14,26 @@
 #include <boost/any.hpp>
 #include <boost/mpl/bool.hpp>
 
-namespace boost { namespace msm
+namespace boost
+{
+namespace msm
 {
 
-template< typename Event > 
+template< typename Event >
 struct is_kleene_event
 {
-  // default: no event is a kleene event (kleene: matches any event in a transitions)
-  typedef ::boost::mpl::false_ type;
+	// default: no event is a kleene event (kleene: matches any event in a transitions)
+	typedef ::boost::mpl::false_ type;
 };
 
 // add this way in this namespace specializations for events which you want to use as kleene
 // requirement: a copy-constructor matching the events which will be converted to this kleene
-template<> 
+template<>
 struct is_kleene_event< boost::any >
-{ 
-  typedef ::boost::mpl::true_ type;
+{
+	typedef ::boost::mpl::true_ type;
 };
 
-} } // boost::msm
+}
+} // boost::msm
 #endif //BOOST_MSM_EVENT_TRAITS_H

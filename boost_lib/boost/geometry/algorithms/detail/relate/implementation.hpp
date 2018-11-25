@@ -30,30 +30,34 @@
 #include <boost/geometry/strategies/within.hpp>
 
 
-namespace boost { namespace geometry {
+namespace boost
+{
+namespace geometry
+{
 
 
 #ifndef DOXYGEN_NO_DISPATCH
-namespace dispatch {
+namespace dispatch
+{
 
 template <typename Point1, typename Point2>
 struct relate<Point1, Point2, point_tag, point_tag, 0, 0, false>
-    : detail::relate::point_point<Point1, Point2>
+	: detail::relate::point_point<Point1, Point2>
 {};
 
 template <typename Point, typename MultiPoint>
 struct relate<Point, MultiPoint, point_tag, multi_point_tag, 0, 0, false>
-    : detail::relate::point_multipoint<Point, MultiPoint>
+	: detail::relate::point_multipoint<Point, MultiPoint>
 {};
 
 template <typename MultiPoint, typename Point>
 struct relate<MultiPoint, Point, multi_point_tag, point_tag, 0, 0, false>
-    : detail::relate::multipoint_point<MultiPoint, Point>
+	: detail::relate::multipoint_point<MultiPoint, Point>
 {};
 
 template <typename MultiPoint1, typename MultiPoint2>
 struct relate<MultiPoint1, MultiPoint2, multi_point_tag, multi_point_tag, 0, 0, false>
-    : detail::relate::multipoint_multipoint<MultiPoint1, MultiPoint2>
+	: detail::relate::multipoint_multipoint<MultiPoint1, MultiPoint2>
 {};
 
 // TODO - for now commented out because before implementing it we must consider:
@@ -74,51 +78,52 @@ struct relate<MultiPoint1, MultiPoint2, multi_point_tag, multi_point_tag, 0, 0, 
 
 template <typename Point, typename Geometry, typename Tag2, int TopDim2>
 struct relate<Point, Geometry, point_tag, Tag2, 0, TopDim2, true>
-    : detail::relate::point_geometry<Point, Geometry>
+	: detail::relate::point_geometry<Point, Geometry>
 {};
 
 template <typename Geometry, typename Point, typename Tag1, int TopDim1>
 struct relate<Geometry, Point, Tag1, point_tag, TopDim1, 0, true>
-    : detail::relate::geometry_point<Geometry, Point>
+	: detail::relate::geometry_point<Geometry, Point>
 {};
 
 template <typename MultiPoint, typename Geometry, typename Tag2, int TopDim2>
 struct relate<MultiPoint, Geometry, multi_point_tag, Tag2, 0, TopDim2, false>
-    : detail::relate::multi_point_geometry<MultiPoint, Geometry>
+	: detail::relate::multi_point_geometry<MultiPoint, Geometry>
 {};
 
 template <typename Geometry, typename MultiPoint, typename Tag1, int TopDim1>
 struct relate<Geometry, MultiPoint, Tag1, multi_point_tag, TopDim1, 0, false>
-    : detail::relate::geometry_multi_point<Geometry, MultiPoint>
+	: detail::relate::geometry_multi_point<Geometry, MultiPoint>
 {};
 
 
 template <typename Linear1, typename Linear2, typename Tag1, typename Tag2>
 struct relate<Linear1, Linear2, Tag1, Tag2, 1, 1, true>
-    : detail::relate::linear_linear<Linear1, Linear2>
+	: detail::relate::linear_linear<Linear1, Linear2>
 {};
 
 
 template <typename Linear, typename Areal, typename Tag1, typename Tag2>
 struct relate<Linear, Areal, Tag1, Tag2, 1, 2, true>
-    : detail::relate::linear_areal<Linear, Areal>
+	: detail::relate::linear_areal<Linear, Areal>
 {};
 
 template <typename Areal, typename Linear, typename Tag1, typename Tag2>
 struct relate<Areal, Linear, Tag1, Tag2, 2, 1, true>
-    : detail::relate::areal_linear<Areal, Linear>
+	: detail::relate::areal_linear<Areal, Linear>
 {};
 
 
 template <typename Areal1, typename Areal2, typename Tag1, typename Tag2>
 struct relate<Areal1, Areal2, Tag1, Tag2, 2, 2, true>
-    : detail::relate::areal_areal<Areal1, Areal2>
+	: detail::relate::areal_areal<Areal1, Areal2>
 {};
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_RELATE_IMPLEMENTATION_HPP

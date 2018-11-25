@@ -18,217 +18,222 @@
 
 namespace boost
 {
-  namespace detail
-  {
+namespace detail
+{
 
-    template <typename F>
-    class nullary_function;
-    template <>
-    class nullary_function<void()>
-    {
-      struct impl_base
-      {
-        virtual void call()=0;
-        virtual ~impl_base()
-        {
-        }
-      };
-      csbl::shared_ptr<impl_base> impl;
-      template <typename F>
-      struct impl_type: impl_base
-      {
-        F f;
+template <typename F>
+class nullary_function;
+template <>
+class nullary_function<void()>
+{
+	struct impl_base
+	{
+		virtual void call()=0;
+		virtual ~impl_base()
+		{
+		}
+	};
+	csbl::shared_ptr<impl_base> impl;
+	template <typename F>
+	struct impl_type: impl_base
+	{
+		F f;
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-        impl_type(F &f_)
-          : f(f_)
-        {}
+		impl_type(F &f_)
+			: f(f_)
+		{}
 #endif
-        impl_type(BOOST_THREAD_RV_REF(F) f_)
-          : f(boost::move(f_))
-        {}
+		impl_type(BOOST_THREAD_RV_REF(F) f_)
+			: f(boost::move(f_))
+		{}
 
-        void call()
-        {
-          f();
-        }
-      };
-      struct impl_type_ptr: impl_base
-      {
-        void (*f)();
-        impl_type_ptr(void (*f_)())
-          : f(f_)
-        {}
-        void call()
-        {
-          f();
-        }
-      };
-    public:
-      BOOST_THREAD_COPYABLE_AND_MOVABLE(nullary_function)
+		void call()
+		{
+			f();
+		}
+	};
+	struct impl_type_ptr: impl_base
+	{
+		void (*f)();
+		impl_type_ptr(void (*f_)())
+			: f(f_)
+		{}
+		void call()
+		{
+			f();
+		}
+	};
+public:
+	BOOST_THREAD_COPYABLE_AND_MOVABLE(nullary_function)
 
-      explicit nullary_function(void (*f)()):
-      impl(new impl_type_ptr(f))
-      {}
+	explicit nullary_function(void (*f)()):
+		impl(new impl_type_ptr(f))
+	{}
 
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-      template<typename F>
-      explicit nullary_function(F& f):
-      impl(new impl_type<F>(f))
-      {}
+	template<typename F>
+	explicit nullary_function(F& f):
+		impl(new impl_type<F>(f))
+	{}
 #endif
-      template<typename F>
-      nullary_function(BOOST_THREAD_RV_REF(F) f):
-      impl(new impl_type<typename decay<F>::type>(thread_detail::decay_copy(boost::forward<F>(f))))
-      {}
+	template<typename F>
+	nullary_function(BOOST_THREAD_RV_REF(F) f):
+		impl(new impl_type<typename decay<F>::type>(thread_detail::decay_copy(boost::forward<F>(f))))
+	{}
 
-      nullary_function()
-        : impl()
-      {
-      }
-      nullary_function(nullary_function const& other) BOOST_NOEXCEPT :
-      impl(other.impl)
-      {
-      }
-      nullary_function(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT :
+	nullary_function()
+		: impl()
+	{
+	}
+nullary_function(nullary_function const& other) BOOST_NOEXCEPT :
+	impl(other.impl)
+	{
+	}
+nullary_function(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT :
 #if defined BOOST_NO_CXX11_SMART_PTR
-      impl(BOOST_THREAD_RV(other).impl)
-      {
-        BOOST_THREAD_RV(other).impl.reset();
-      }
+	impl(BOOST_THREAD_RV(other).impl)
+	{
+		BOOST_THREAD_RV(other).impl.reset();
+	}
 #else
-      impl(boost::move(other.impl))
-      {
-      }
+	impl(boost::move(other.impl))
+	{
+	}
 #endif
-      ~nullary_function()
-      {
-      }
+	~nullary_function()
+	{
+	}
 
-      nullary_function& operator=(BOOST_THREAD_COPY_ASSIGN_REF(nullary_function) other) BOOST_NOEXCEPT
-      {
-        impl=other.impl;
-        return *this;
-      }
-      nullary_function& operator=(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT
-      {
+	nullary_function& operator=(BOOST_THREAD_COPY_ASSIGN_REF(nullary_function) other) BOOST_NOEXCEPT
+	{
+		impl=other.impl;
+		return *this;
+	}
+	nullary_function& operator=(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT
+	{
 #if defined BOOST_NO_CXX11_SMART_PTR
-        impl=BOOST_THREAD_RV(other).impl;
-        BOOST_THREAD_RV(other).impl.reset();
+		impl=BOOST_THREAD_RV(other).impl;
+		BOOST_THREAD_RV(other).impl.reset();
 #else
-        impl = boost::move(other.impl);
+		impl = boost::move(other.impl);
 #endif
-        return *this;
-      }
+		return *this;
+	}
 
 
-      void operator()()
-      { if (impl) impl->call();}
+	void operator()()
+	{
+		if (impl) impl->call();
+	}
 
-    };
+};
 
-    template <typename R>
-    class nullary_function<R()>
-    {
-      struct impl_base
-      {
-        virtual R call()=0;
-        virtual ~impl_base()
-        {
-        }
-      };
-      csbl::shared_ptr<impl_base> impl;
-      template <typename F>
-      struct impl_type: impl_base
-      {
-        F f;
+template <typename R>
+class nullary_function<R()>
+{
+	struct impl_base
+	{
+		virtual R call()=0;
+		virtual ~impl_base()
+		{
+		}
+	};
+	csbl::shared_ptr<impl_base> impl;
+	template <typename F>
+	struct impl_type: impl_base
+	{
+		F f;
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-        impl_type(F &f_)
-          : f(f_)
-        {}
+		impl_type(F &f_)
+			: f(f_)
+		{}
 #endif
-        impl_type(BOOST_THREAD_RV_REF(F) f_)
-          : f(boost::move(f_))
-        {}
+		impl_type(BOOST_THREAD_RV_REF(F) f_)
+			: f(boost::move(f_))
+		{}
 
-        R call()
-        {
-          return f();
-        }
-      };
-      struct impl_type_ptr: impl_base
-      {
-        R (*f)();
-        impl_type_ptr(R (*f_)())
-          : f(f_)
-        {}
+		R call()
+		{
+			return f();
+		}
+	};
+	struct impl_type_ptr: impl_base
+	{
+		R (*f)();
+		impl_type_ptr(R (*f_)())
+			: f(f_)
+		{}
 
-        R call()
-        {
-          return f();
-        }
-      };
-    public:
-      BOOST_THREAD_COPYABLE_AND_MOVABLE(nullary_function)
+		R call()
+		{
+			return f();
+		}
+	};
+public:
+	BOOST_THREAD_COPYABLE_AND_MOVABLE(nullary_function)
 
-      nullary_function(R (*f)()):
-      impl(new impl_type_ptr(f))
-      {}
+	nullary_function(R (*f)()):
+		impl(new impl_type_ptr(f))
+	{}
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-      template<typename F>
-      nullary_function(F& f):
-      impl(new impl_type<F>(f))
-      {}
+	template<typename F>
+	nullary_function(F& f):
+		impl(new impl_type<F>(f))
+	{}
 #endif
-      template<typename F>
-      nullary_function(BOOST_THREAD_RV_REF(F) f):
-      impl(new impl_type<typename decay<F>::type>(thread_detail::decay_copy(boost::forward<F>(f))))
-      {}
+	template<typename F>
+	nullary_function(BOOST_THREAD_RV_REF(F) f):
+		impl(new impl_type<typename decay<F>::type>(thread_detail::decay_copy(boost::forward<F>(f))))
+	{}
 
-      nullary_function(nullary_function const& other) BOOST_NOEXCEPT :
-      impl(other.impl)
-      {
-      }
-      nullary_function(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT :
+nullary_function(nullary_function const& other) BOOST_NOEXCEPT :
+	impl(other.impl)
+	{
+	}
+nullary_function(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT :
 #if defined BOOST_NO_CXX11_SMART_PTR
-      impl(BOOST_THREAD_RV(other).impl)
-      {
-        BOOST_THREAD_RV(other).impl.reset();
-      }
+	impl(BOOST_THREAD_RV(other).impl)
+	{
+		BOOST_THREAD_RV(other).impl.reset();
+	}
 #else
-      impl(boost::move(other.impl))
-      {
-      }
+	impl(boost::move(other.impl))
+	{
+	}
 #endif
-      nullary_function()
-        : impl()
-      {
-      }
-      ~nullary_function()
-      {
-      }
+	nullary_function()
+		: impl()
+	{
+	}
+	~nullary_function()
+	{
+	}
 
-      nullary_function& operator=(BOOST_THREAD_COPY_ASSIGN_REF(nullary_function) other) BOOST_NOEXCEPT
-      {
-        impl=other.impl;
-        return *this;
-      }
-      nullary_function& operator=(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT
-      {
+	nullary_function& operator=(BOOST_THREAD_COPY_ASSIGN_REF(nullary_function) other) BOOST_NOEXCEPT
+	{
+		impl=other.impl;
+		return *this;
+	}
+	nullary_function& operator=(BOOST_THREAD_RV_REF(nullary_function) other) BOOST_NOEXCEPT
+	{
 #if defined BOOST_NO_CXX11_SMART_PTR
-        impl=BOOST_THREAD_RV(other).impl;
-        BOOST_THREAD_RV(other).impl.reset();
+		impl=BOOST_THREAD_RV(other).impl;
+		BOOST_THREAD_RV(other).impl.reset();
 #else
-        impl = boost::move(other.impl);
+		impl = boost::move(other.impl);
 #endif
-        return *this;
-      }
+		return *this;
+	}
 
-      R operator()()
-      { if (impl) return impl->call(); else return R();}
+	R operator()()
+	{
+		if (impl) return impl->call();
+		else return R();
+	}
 
-    };
-  }
-  BOOST_THREAD_DCL_MOVABLE_BEG(F) detail::nullary_function<F> BOOST_THREAD_DCL_MOVABLE_END
+};
+}
+BOOST_THREAD_DCL_MOVABLE_BEG(F) detail::nullary_function<F> BOOST_THREAD_DCL_MOVABLE_END
 }
 
 #endif // header

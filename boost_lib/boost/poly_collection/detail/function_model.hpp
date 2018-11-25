@@ -24,11 +24,14 @@
 #include <typeinfo>
 #include <utility>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 /* model for function_collection */
 
@@ -38,94 +41,107 @@ struct function_model;
 /* is_terminal defined out-class to allow for partial specialization */
 
 template<typename T>
-struct function_model_is_terminal:std::true_type{};
+struct function_model_is_terminal:std::true_type {};
 
 template<typename Signature>
 struct function_model_is_terminal<callable_wrapper<Signature>>:
-  std::false_type{};
+	        std::false_type {};
 
 template<typename R,typename... Args>
 struct function_model<R(Args...)>
 {
-  using value_type=callable_wrapper<R(Args...)>;
+	using value_type=callable_wrapper<R(Args...)>;
 
-  template<typename Callable>
-  using is_implementation=is_invocable_r<R,Callable&,Args...>;
+	template<typename Callable>
+	using is_implementation=is_invocable_r<R,Callable&,Args...>;
 
-  template<typename T>
-  using is_terminal=function_model_is_terminal<T>;
+	template<typename T>
+	using is_terminal=function_model_is_terminal<T>;
 
-  template<typename T>
-  static const std::type_info& subtypeid(const T&){return typeid(T);}
+	template<typename T>
+	static const std::type_info& subtypeid(const T&)
+	{
+		return typeid(T);
+	}
 
-  template<typename Signature>
-  static const std::type_info& subtypeid(
-    const callable_wrapper<Signature>& f)
-  {
-    return f.target_type();
-  }
+	template<typename Signature>
+	static const std::type_info& subtypeid(
+	    const callable_wrapper<Signature>& f)
+	{
+		return f.target_type();
+	}
 
-  template<typename T>
-  static void* subaddress(T& x){return boost::addressof(x);}
+	template<typename T>
+	static void* subaddress(T& x)
+	{
+		return boost::addressof(x);
+	}
 
-  template<typename T>
-  static const void* subaddress(const T& x){return boost::addressof(x);}
+	template<typename T>
+	static const void* subaddress(const T& x)
+	{
+		return boost::addressof(x);
+	}
 
-  template<typename Signature>
-  static void* subaddress(callable_wrapper<Signature>& f)
-  {
-    return f.data();
-  }
-  
-  template<typename Signature>
-  static const void* subaddress(const callable_wrapper<Signature>& f)
-  {
-    return f.data();
-  }
+	template<typename Signature>
+	static void* subaddress(callable_wrapper<Signature>& f)
+	{
+		return f.data();
+	}
 
-  using base_iterator=callable_wrapper_iterator<value_type>;
-  using const_base_iterator=callable_wrapper_iterator<const value_type>;
-  using base_sentinel=value_type*;
-  using const_base_sentinel=const value_type*;
-  template<typename Callable>
-  using iterator=Callable*;
-  template<typename Callable>
-  using const_iterator=const Callable*;
-  using segment_backend=detail::segment_backend<function_model>;
-  template<typename Callable,typename Allocator>
-  using segment_backend_implementation=split_segment<
-    function_model,
-    Callable,
-    typename std::allocator_traits<Allocator>::
-      template rebind_alloc<Callable>
-  >;
-  using segment_backend_unique_ptr=
-    typename segment_backend::segment_backend_unique_ptr;
+	template<typename Signature>
+	static const void* subaddress(const callable_wrapper<Signature>& f)
+	{
+		return f.data();
+	}
 
-  static base_iterator nonconst_iterator(const_base_iterator it)
-  {
-    return base_iterator{
-      const_cast<value_type*>(static_cast<const value_type*>(it))};
-  }
+	using base_iterator=callable_wrapper_iterator<value_type>;
+	using const_base_iterator=callable_wrapper_iterator<const value_type>;
+	using base_sentinel=value_type*;
+	using const_base_sentinel=const value_type*;
+	template<typename Callable>
+	using iterator=Callable*;
+	template<typename Callable>
+	using const_iterator=const Callable*;
+	using segment_backend=detail::segment_backend<function_model>;
+	template<typename Callable,typename Allocator>
+	using segment_backend_implementation=split_segment<
+	                                     function_model,
+	                                     Callable,
+	                                     typename std::allocator_traits<Allocator>::
+	                                     template rebind_alloc<Callable>
+	>;
+	using segment_backend_unique_ptr=
+	    typename segment_backend::segment_backend_unique_ptr;
 
-  template<typename T>
-  static iterator<T> nonconst_iterator(const_iterator<T> it)
-  {
-    return const_cast<iterator<T>>(it);
-  }
+	static base_iterator nonconst_iterator(const_base_iterator it)
+	{
+		return base_iterator
+		{
+			const_cast<value_type*>(static_cast<const value_type*>(it))};
+	}
 
-  template<typename Callable,typename Allocator>
-  static segment_backend_unique_ptr make(const Allocator& al)
-  {
-    return segment_backend_implementation<Callable,Allocator>::new_(al,al);
-  }
+	template<typename T>
+	static iterator<T> nonconst_iterator(const_iterator<T> it)
+	{
+		return const_cast<iterator<T>>(it);
+	}
+
+	template<typename Callable,typename Allocator>
+	static segment_backend_unique_ptr make(const Allocator& al)
+	{
+		return segment_backend_implementation<Callable,Allocator>::new_(al,al);
+	}
 
 private:
-  template<typename,typename,typename>
-  friend class split_segment;
+	template<typename,typename,typename>
+	friend class split_segment;
 
-  template<typename Callable>
-  static value_type make_value_type(Callable& x){return value_type{x};}
+	template<typename Callable>
+	static value_type make_value_type(Callable& x)
+	{
+		return value_type{x};
+	}
 };
 
 } /* namespace poly_collection::detail */

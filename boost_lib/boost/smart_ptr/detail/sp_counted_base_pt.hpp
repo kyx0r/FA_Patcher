@@ -32,103 +32,103 @@ class sp_counted_base
 {
 private:
 
-    sp_counted_base( sp_counted_base const & );
-    sp_counted_base & operator= ( sp_counted_base const & );
+	sp_counted_base( sp_counted_base const & );
+	sp_counted_base & operator= ( sp_counted_base const & );
 
-    long use_count_;        // #shared
-    long weak_count_;       // #weak + (#shared != 0)
+	long use_count_;        // #shared
+	long weak_count_;       // #weak + (#shared != 0)
 
-    mutable pthread_mutex_t m_;
+	mutable pthread_mutex_t m_;
 
 public:
 
-    sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
-    {
+	sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
+	{
 // HPUX 10.20 / DCE has a nonstandard pthread_mutex_init
 
 #if defined(__hpux) && defined(_DECTHREADS_)
-        BOOST_VERIFY( pthread_mutex_init( &m_, pthread_mutexattr_default ) == 0 );
+		BOOST_VERIFY( pthread_mutex_init( &m_, pthread_mutexattr_default ) == 0 );
 #else
-        BOOST_VERIFY( pthread_mutex_init( &m_, 0 ) == 0 );
+		BOOST_VERIFY( pthread_mutex_init( &m_, 0 ) == 0 );
 #endif
-    }
+	}
 
-    virtual ~sp_counted_base() // nothrow
-    {
-        BOOST_VERIFY( pthread_mutex_destroy( &m_ ) == 0 );
-    }
+	virtual ~sp_counted_base() // nothrow
+	{
+		BOOST_VERIFY( pthread_mutex_destroy( &m_ ) == 0 );
+	}
 
-    // dispose() is called when use_count_ drops to zero, to release
-    // the resources managed by *this.
+	// dispose() is called when use_count_ drops to zero, to release
+	// the resources managed by *this.
 
-    virtual void dispose() = 0; // nothrow
+	virtual void dispose() = 0; // nothrow
 
-    // destroy() is called when weak_count_ drops to zero.
+	// destroy() is called when weak_count_ drops to zero.
 
-    virtual void destroy() // nothrow
-    {
-        delete this;
-    }
+	virtual void destroy() // nothrow
+	{
+		delete this;
+	}
 
-    virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_untyped_deleter() = 0;
+	virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_untyped_deleter() = 0;
 
-    void add_ref_copy()
-    {
-        BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
-        ++use_count_;
-        BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
-    }
+	void add_ref_copy()
+	{
+		BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
+		++use_count_;
+		BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
+	}
 
-    bool add_ref_lock() // true on success
-    {
-        BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
-        bool r = use_count_ == 0? false: ( ++use_count_, true );
-        BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
-        return r;
-    }
+	bool add_ref_lock() // true on success
+	{
+		BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
+		bool r = use_count_ == 0? false: ( ++use_count_, true );
+		BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
+		return r;
+	}
 
-    void release() // nothrow
-    {
-        BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
-        long new_use_count = --use_count_;
-        BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
+	void release() // nothrow
+	{
+		BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
+		long new_use_count = --use_count_;
+		BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
 
-        if( new_use_count == 0 )
-        {
-            dispose();
-            weak_release();
-        }
-    }
+		if( new_use_count == 0 )
+		{
+			dispose();
+			weak_release();
+		}
+	}
 
-    void weak_add_ref() // nothrow
-    {
-        BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
-        ++weak_count_;
-        BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
-    }
+	void weak_add_ref() // nothrow
+	{
+		BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
+		++weak_count_;
+		BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
+	}
 
-    void weak_release() // nothrow
-    {
-        BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
-        long new_weak_count = --weak_count_;
-        BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
+	void weak_release() // nothrow
+	{
+		BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
+		long new_weak_count = --weak_count_;
+		BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
 
-        if( new_weak_count == 0 )
-        {
-            destroy();
-        }
-    }
+		if( new_weak_count == 0 )
+		{
+			destroy();
+		}
+	}
 
-    long use_count() const // nothrow
-    {
-        BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
-        long r = use_count_;
-        BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
+	long use_count() const // nothrow
+	{
+		BOOST_VERIFY( pthread_mutex_lock( &m_ ) == 0 );
+		long r = use_count_;
+		BOOST_VERIFY( pthread_mutex_unlock( &m_ ) == 0 );
 
-        return r;
-    }
+		return r;
+	}
 };
 
 } // namespace detail

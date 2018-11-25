@@ -30,7 +30,9 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -44,7 +46,7 @@ template
     typename Tag = typename tag<Geometry>::type,
     typename CSTagOut = typename cs_tag<GeometryOut>::type,
     typename CSTag = typename cs_tag<Geometry>::type
->
+    >
 struct expand : not_implemented<TagOut, Tag>
 {};
 
@@ -52,6 +54,7 @@ struct expand : not_implemented<TagOut, Tag>
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DISPATCH_EXPAND_HPP

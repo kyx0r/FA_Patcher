@@ -7,13 +7,19 @@
 #if !defined(BOOST_FUSION_MAP_INDEX_02032013_2233)
 #define BOOST_FUSION_MAP_INDEX_02032013_2233
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
 {
-    template <int N>
-    struct map_index
-    {
-        static int const value = N;
-    };
-}}}
+namespace fusion
+{
+namespace detail
+{
+template <int N>
+struct map_index
+{
+	static int const value = N;
+};
+}
+}
+}
 
 #endif

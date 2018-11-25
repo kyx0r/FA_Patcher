@@ -12,30 +12,39 @@
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/bool.hpp>
 
-namespace boost { namespace spirit { namespace x3 { namespace traits
+namespace boost
 {
-    namespace detail
-    {
-        // By declaring a nested struct in your class/struct, you tell
-        // spirit that it is regarded as a variant type. The minimum
-        // required interface for such a variant is that it has constructors
-        // for various types supported by your variant and a typedef 'types'
-        // which is an mpl sequence of the contained types.
-        //
-        // This is an intrusive interface. For a non-intrusive interface,
-        // use the is_variant trait.
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(adapted_variant_tag)
-    }
+namespace spirit
+{
+namespace x3
+{
+namespace traits
+{
+namespace detail
+{
+// By declaring a nested struct in your class/struct, you tell
+// spirit that it is regarded as a variant type. The minimum
+// required interface for such a variant is that it has constructors
+// for various types supported by your variant and a typedef 'types'
+// which is an mpl sequence of the contained types.
+//
+// This is an intrusive interface. For a non-intrusive interface,
+// use the is_variant trait.
+BOOST_MPL_HAS_XXX_TRAIT_DEF(adapted_variant_tag)
+}
 
-    template <typename T, typename Enable = void>
-    struct is_variant
-      : detail::has_adapted_variant_tag<T>
-    {};
+template <typename T, typename Enable = void>
+struct is_variant
+	: detail::has_adapted_variant_tag<T>
+{};
 
-    template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    struct is_variant<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>>
-      : mpl::true_
-    {};
-}}}}
+template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
+struct is_variant<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>>
+        : mpl::true_
+{};
+}
+}
+}
+}
 
 #endif

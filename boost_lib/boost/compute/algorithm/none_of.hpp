@@ -14,8 +14,10 @@
 #include <boost/compute/system.hpp>
 #include <boost/compute/algorithm/find_if.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns \c true if \p predicate returns \c true for none of the elements in
 /// the range [\p first, \p last).
@@ -29,7 +31,7 @@ inline bool none_of(InputIterator first,
                     UnaryPredicate predicate,
                     command_queue &queue = system::default_queue())
 {
-    return ::boost::compute::find_if(first, last, predicate, queue) == last;
+	return ::boost::compute::find_if(first, last, predicate, queue) == last;
 }
 
 } // end compute namespace

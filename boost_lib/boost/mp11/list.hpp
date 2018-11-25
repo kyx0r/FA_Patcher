@@ -29,12 +29,12 @@ namespace detail
 
 template<class L> struct mp_is_list_impl
 {
-    using type = mp_false;
+	using type = mp_false;
 };
 
 template<template<class...> class L, class... T> struct mp_is_list_impl<L<T...>>
 {
-    using type = mp_true;
+	using type = mp_true;
 };
 
 } // namespace detail
@@ -52,7 +52,7 @@ template<class L> struct mp_size_impl
 
 template<template<class...> class L, class... T> struct mp_size_impl<L<T...>>
 {
-    using type = mp_size_t<sizeof...(T)>;
+	using type = mp_size_t<sizeof...(T)>;
 };
 
 } // namespace detail
@@ -70,7 +70,7 @@ template<class L1, class L2> struct mp_assign_impl;
 
 template<template<class...> class L1, class... T, template<class...> class L2, class... U> struct mp_assign_impl<L1<T...>, L2<U...>>
 {
-    using type = L1<U...>;
+	using type = L1<U...>;
 };
 
 } // namespace detail
@@ -92,7 +92,7 @@ template<class L> struct mp_front_impl
 
 template<template<class...> class L, class T1, class... T> struct mp_front_impl<L<T1, T...>>
 {
-    using type = T1;
+	using type = T1;
 };
 
 } // namespace detail
@@ -111,7 +111,7 @@ template<class L> struct mp_pop_front_impl
 
 template<template<class...> class L, class T1, class... T> struct mp_pop_front_impl<L<T1, T...>>
 {
-    using type = L<T...>;
+	using type = L<T...>;
 };
 
 } // namespace detail
@@ -136,7 +136,7 @@ template<class L> struct mp_second_impl
 
 template<template<class...> class L, class T1, class T2, class... T> struct mp_second_impl<L<T1, T2, T...>>
 {
-    using type = T2;
+	using type = T2;
 };
 
 } // namespace detail
@@ -155,7 +155,7 @@ template<class L> struct mp_third_impl
 
 template<template<class...> class L, class T1, class T2, class T3, class... T> struct mp_third_impl<L<T1, T2, T3, T...>>
 {
-    using type = T3;
+	using type = T3;
 };
 
 } // namespace detail
@@ -173,7 +173,7 @@ template<class L, class... T> struct mp_push_front_impl
 
 template<template<class...> class L, class... U, class... T> struct mp_push_front_impl<L<U...>, T...>
 {
-    using type = L<T..., U...>;
+	using type = L<T..., U...>;
 };
 
 } // namespace detail
@@ -191,7 +191,7 @@ template<class L, class... T> struct mp_push_back_impl
 
 template<template<class...> class L, class... U, class... T> struct mp_push_back_impl<L<U...>, T...>
 {
-    using type = L<U..., T...>;
+	using type = L<U..., T...>;
 };
 
 } // namespace detail
@@ -209,7 +209,7 @@ template<class A, template<class...> class B> struct mp_rename_impl
 
 template<template<class...> class A, class... T, template<class...> class B> struct mp_rename_impl<A<T...>, B>
 {
-    using type = B<T...>;
+	using type = B<T...>;
 };
 
 } // namespace detail
@@ -232,7 +232,7 @@ template<class L, class T> struct mp_replace_front_impl
 
 template<template<class...> class L, class U1, class... U, class T> struct mp_replace_front_impl<L<U1, U...>, T>
 {
-    using type = L<T, U...>;
+	using type = L<T, U...>;
 };
 
 } // namespace detail
@@ -254,7 +254,7 @@ template<class L, class T> struct mp_replace_second_impl
 
 template<template<class...> class L, class U1, class U2, class... U, class T> struct mp_replace_second_impl<L<U1, U2, U...>, T>
 {
-    using type = L<U1, T, U...>;
+	using type = L<U1, T, U...>;
 };
 
 } // namespace detail
@@ -273,7 +273,7 @@ template<class L, class T> struct mp_replace_third_impl
 
 template<template<class...> class L, class U1, class U2, class U3, class... U, class T> struct mp_replace_third_impl<L<U1, U2, U3, U...>, T>
 {
-    using type = L<U1, U2, T, U...>;
+	using type = L<U1, U2, T, U...>;
 };
 
 } // namespace detail

@@ -9,11 +9,11 @@
 
 // Usually, never #defined (so "debug" assertions always in code).
 #ifdef BOOST_CONTRACT_DETAIL_NDEBUG
-    #define BOOST_CONTRACT_DETAIL_DEBUG(cond) /* nothing */
+#define BOOST_CONTRACT_DETAIL_DEBUG(cond) /* nothing */
 #else
-    #include <boost/assert.hpp>
-    // Extra parenthesis around BOOST_ASSERT to be safe because its is a macro.
-    #define BOOST_CONTRACT_DETAIL_DEBUG(cond) (BOOST_ASSERT(cond))
+#include <boost/assert.hpp>
+// Extra parenthesis around BOOST_ASSERT to be safe because its is a macro.
+#define BOOST_CONTRACT_DETAIL_DEBUG(cond) (BOOST_ASSERT(cond))
 #endif
 
 #endif // #include guard

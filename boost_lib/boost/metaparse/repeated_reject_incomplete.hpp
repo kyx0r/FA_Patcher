@@ -10,10 +10,10 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    using v1::repeated_reject_incomplete;
-  }
+namespace metaparse
+{
+using v1::repeated_reject_incomplete;
+}
 }
 
 #endif

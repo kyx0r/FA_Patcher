@@ -11,7 +11,14 @@
 #ifndef BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_SUM_FOR_INDEXABLE_HPP
 #define BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_SUM_FOR_INDEXABLE_HPP
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
 template <
     typename Geometry,
@@ -21,10 +28,10 @@ template <
     size_t DimensionIndex>
 struct sum_for_indexable_dimension
 {
-    BOOST_MPL_ASSERT_MSG(
-        (false),
-        NOT_IMPLEMENTED_FOR_THIS_INDEXABLE_TAG_TYPE,
-        (sum_for_indexable_dimension));
+	BOOST_MPL_ASSERT_MSG(
+	    (false),
+	    NOT_IMPLEMENTED_FOR_THIS_INDEXABLE_TAG_TYPE,
+	    (sum_for_indexable_dimension));
 };
 
 template <
@@ -35,20 +42,20 @@ template <
     size_t N>
 struct sum_for_indexable
 {
-    typedef typename sum_for_indexable_dimension<
-        Geometry, Indexable, IndexableTag, AlgoTag, N - 1
-    >::result_type result_type;
+	typedef typename sum_for_indexable_dimension<
+	Geometry, Indexable, IndexableTag, AlgoTag, N - 1
+	>::result_type result_type;
 
-    inline static result_type apply(Geometry const& g, Indexable const& i)
-    {
-        return
-            sum_for_indexable<
-                Geometry, Indexable, IndexableTag, AlgoTag, N - 1
-            >::apply(g, i) +
-            sum_for_indexable_dimension<
-                Geometry, Indexable, IndexableTag, AlgoTag, N - 1
-            >::apply(g, i);
-    }
+	inline static result_type apply(Geometry const& g, Indexable const& i)
+	{
+		return
+		    sum_for_indexable<
+		    Geometry, Indexable, IndexableTag, AlgoTag, N - 1
+		    >::apply(g, i) +
+		    sum_for_indexable_dimension<
+		    Geometry, Indexable, IndexableTag, AlgoTag, N - 1
+		    >::apply(g, i);
+	}
 };
 
 template <
@@ -58,19 +65,22 @@ template <
     typename AlgoTag>
 struct sum_for_indexable<Geometry, Indexable, IndexableTag, AlgoTag, 1>
 {
-    typedef typename sum_for_indexable_dimension<
-        Geometry, Indexable, IndexableTag, AlgoTag, 0
-    >::result_type result_type;
+	typedef typename sum_for_indexable_dimension<
+	Geometry, Indexable, IndexableTag, AlgoTag, 0
+	>::result_type result_type;
 
-    inline static result_type apply(Geometry const& g, Indexable const& i)
-    {
-        return
-            sum_for_indexable_dimension<
-                Geometry, Indexable, IndexableTag, AlgoTag, 0
-            >::apply(g, i);
-    }
+	inline static result_type apply(Geometry const& g, Indexable const& i)
+	{
+		return
+		    sum_for_indexable_dimension<
+		    Geometry, Indexable, IndexableTag, AlgoTag, 0
+		    >::apply(g, i);
+	}
 };
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_SUM_FOR_INDEXABLE_HPP

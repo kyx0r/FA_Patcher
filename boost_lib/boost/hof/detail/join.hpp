@@ -10,7 +10,12 @@
 
 #include <boost/hof/detail/holder.hpp>
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class... Ts>
 struct join_args
@@ -22,16 +27,20 @@ struct join_impl
 
 template<template <class...> class T, class... Args>
 struct join_impl<T, join_args<Args...>, typename holder<
-    T<Args...>
->::type>
-{ typedef T<Args...> type; };
+	T<Args...>
+	>::type>
+{
+	typedef T<Args...> type;
+};
 
 template<template <class...> class T, class... Args>
 struct join
-: join_impl<T, join_args<Args...>>
+	: join_impl<T, join_args<Args...>>
 {};
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define BOOST_HOF_JOIN(c, ...) typename boost::hof::detail::join<c, __VA_ARGS__>::type

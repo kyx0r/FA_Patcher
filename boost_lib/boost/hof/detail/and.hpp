@@ -12,17 +12,22 @@
 #include <boost/hof/detail/using.hpp>
 #include <boost/hof/detail/intrinsics.hpp>
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 constexpr bool and_c()
 {
-    return true;
+	return true;
 }
 
 template<class... Ts>
 constexpr bool and_c(bool b, Ts... bs)
 {
-    return b && and_c(bs...);
+	return b && and_c(bs...);
 }
 
 #ifdef _MSC_VER
@@ -33,11 +38,11 @@ struct and_;
 template<class T, class... Ts>
 struct and_<T, Ts...>
 : std::integral_constant<bool, (T::value && and_<Ts...>::value)>
-{};
+  {};
 
 template<>
 struct and_<>
-: std::true_type
+	: std::true_type
 {};
 
 #define BOOST_HOF_AND_UNPACK(Bs) (boost::hof::detail::and_c(Bs...))
@@ -50,6 +55,8 @@ BOOST_HOF_USING(and_, std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, 
 
 #endif
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif

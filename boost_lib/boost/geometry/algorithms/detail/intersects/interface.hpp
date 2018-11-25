@@ -26,18 +26,23 @@
 #include <boost/geometry/algorithms/detail/disjoint/interface.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace intersects
+namespace detail
+{
+namespace intersects
 {
 
 // Forward declaration
 template <typename Geometry>
 struct self_intersects;
 
-}} // namespace detail::intersects
+}
+} // namespace detail::intersects
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -57,7 +62,7 @@ struct self_intersects;
 template <typename Geometry>
 inline bool intersects(Geometry const& geometry)
 {
-    return detail::intersects::self_intersects<Geometry>::apply(geometry);
+	return detail::intersects::self_intersects<Geometry>::apply(geometry);
 }
 
 
@@ -80,10 +85,10 @@ inline bool intersects(Geometry1 const& geometry1,
                        Geometry2 const& geometry2,
                        Strategy const& strategy)
 {
-    concepts::check<Geometry1 const>();
-    concepts::check<Geometry2 const>();
+	concepts::check<Geometry1 const>();
+	concepts::check<Geometry2 const>();
 
-    return ! geometry::disjoint(geometry1, geometry2, strategy);
+	return ! geometry::disjoint(geometry1, geometry2, strategy);
 }
 
 
@@ -102,14 +107,15 @@ inline bool intersects(Geometry1 const& geometry1,
 template <typename Geometry1, typename Geometry2>
 inline bool intersects(Geometry1 const& geometry1, Geometry2 const& geometry2)
 {
-    concepts::check<Geometry1 const>();
-    concepts::check<Geometry2 const>();
+	concepts::check<Geometry1 const>();
+	concepts::check<Geometry2 const>();
 
-    return ! geometry::disjoint(geometry1, geometry2);
+	return ! geometry::disjoint(geometry1, geometry2);
 }
 
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_INTERSECTS_INTERFACE_HPP

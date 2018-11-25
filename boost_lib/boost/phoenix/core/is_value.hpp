@@ -15,7 +15,9 @@
 // Note to Thomas and any future maintainer: please make this as
 // lightweight as possible (as it is right now).
 
-namespace boost { namespace phoenix
+namespace boost
+{
+namespace phoenix
 {
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -25,39 +27,41 @@ namespace boost { namespace phoenix
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-    namespace expression {
-        template <typename T>
-        struct value;
-    }
+namespace expression
+{
+template <typename T>
+struct value;
+}
 
-    template <typename T, typename Enable = void>
-    struct is_value
-        : mpl::false_
-    {};
+template <typename T, typename Enable = void>
+struct is_value
+	: mpl::false_
+{};
 
-    template <typename T>
-    struct is_value<T const>
-        : is_value<T>
-    {};
+template <typename T>
+struct is_value<T const>
+	: is_value<T>
+{};
 
-    template <typename T>
-    struct is_value<T &>
-        : is_value<T>
-    {};
+template <typename T>
+struct is_value<T &>
+	: is_value<T>
+{};
 
-    // This does not seem to work.
-    // There is an alternative in value.hpp which does work.
-    template <typename T>
-    struct is_value< expression::value<T> >
-        : mpl::true_
-    {};
+// This does not seem to work.
+// There is an alternative in value.hpp which does work.
+template <typename T>
+struct is_value< expression::value<T> >
+	: mpl::true_
+{};
 
-    template <typename T>
-    bool is_val(T const & /* t */)
-    {
-      return is_value<T>::value;
-    }
+template <typename T>
+bool is_val(T const & /* t */)
+{
+	return is_value<T>::value;
+}
 
-  }}
+}
+}
 
 #endif

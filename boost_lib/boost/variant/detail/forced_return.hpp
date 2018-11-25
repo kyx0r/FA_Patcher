@@ -24,11 +24,17 @@
 # pragma warning( disable : 4702 ) // unreachable code
 #endif
 
-namespace boost { namespace detail { namespace variant {
+namespace boost
+{
+namespace detail
+{
+namespace variant
+{
 
-BOOST_NORETURN inline void forced_return_no_return() { // fixes `must return a value` warnings
-    using namespace std;
-    abort(); // some implementations have no std::abort
+BOOST_NORETURN inline void forced_return_no_return()   // fixes `must return a value` warnings
+{
+	using namespace std;
+	abort(); // some implementations have no std::abort
 }
 
 
@@ -40,21 +46,23 @@ BOOST_NORETURN inline void forced_return_no_return() { // fixes `must return a v
 //
 template <typename T>
 BOOST_NORETURN inline
-    BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(T)
+BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(T)
 forced_return()
 {
-    // logical error: should never be here! (see above)
-    BOOST_ASSERT(false);
+	// logical error: should never be here! (see above)
+	BOOST_ASSERT(false);
 
-    forced_return_no_return();
+	forced_return_no_return();
 
 #ifdef BOOST_NO_NORETURN
-    BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(T) (*dummy)() = 0;
-    return dummy();
+	BOOST_VARIANT_AUX_GENERIC_RESULT_TYPE(T) (*dummy)() = 0;
+	return dummy();
 #endif
 }
 
-}}} // namespace boost::detail::variant
+}
+}
+} // namespace boost::detail::variant
 
 
 #ifdef BOOST_MSVC

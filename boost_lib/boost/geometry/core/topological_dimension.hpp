@@ -23,7 +23,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -92,10 +94,11 @@ struct top_dim<multi_polygon_tag> : boost::mpl::int_<2> {};
 */
 template <typename Geometry>
 struct topological_dimension
-    : core_dispatch::top_dim<typename tag<Geometry>::type> {};
+	: core_dispatch::top_dim<typename tag<Geometry>::type> {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_TOPOLOGICAL_DIMENSION_HPP

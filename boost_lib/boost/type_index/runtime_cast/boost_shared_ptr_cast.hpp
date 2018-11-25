@@ -21,7 +21,10 @@
 # pragma once
 #endif
 
-namespace boost { namespace typeindex {
+namespace boost
+{
+namespace typeindex
+{
 
 /// \brief Creates a new instance of std::shared_ptr whose stored pointer is obtained from u's
 /// stored pointer using a runtime_cast.
@@ -34,13 +37,15 @@ namespace boost { namespace typeindex {
 /// that points to an address suitably offset from u.
 /// If no such conversion exists, returns boost::shared_ptr<T>();
 template<typename T, typename U>
-boost::shared_ptr<T> runtime_pointer_cast(boost::shared_ptr<U> const& u) {
-    T* value = detail::runtime_cast_impl<T>(u.get(), boost::is_base_and_derived<T, U>());
-    if(value)
-        return boost::shared_ptr<T>(u, value);
-    return boost::shared_ptr<T>();
+boost::shared_ptr<T> runtime_pointer_cast(boost::shared_ptr<U> const& u)
+{
+	T* value = detail::runtime_cast_impl<T>(u.get(), boost::is_base_and_derived<T, U>());
+	if(value)
+		return boost::shared_ptr<T>(u, value);
+	return boost::shared_ptr<T>();
 }
 
-}} // namespace boost::typeindex
+}
+} // namespace boost::typeindex
 
 #endif // BOOST_TYPE_INDEX_RUNTIME_CAST_BOOST_SHARED_PTR_CAST_HPP

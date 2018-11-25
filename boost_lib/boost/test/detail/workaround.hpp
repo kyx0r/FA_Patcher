@@ -22,19 +22,22 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace ut_detail {
+namespace boost
+{
+namespace unit_test
+{
+namespace ut_detail
+{
 
 #ifdef BOOST_NO_STD_DISTANCE
 template <class T>
 std::ptrdiff_t distance( T const& x_, T const& y_ )
 {
-    std::ptrdiff_t res = 0;
+	std::ptrdiff_t res = 0;
 
-    std::distance( x_, y_, res );
+	std::distance( x_, y_, res );
 
-    return res;
+	return res;
 }
 
 //____________________________________________________________________________//

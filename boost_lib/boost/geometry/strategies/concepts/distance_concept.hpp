@@ -36,7 +36,11 @@
 #include <boost/geometry/strategies/tags.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -50,81 +54,81 @@ struct PointDistanceStrategy
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 private :
 
-    struct checker
-    {
-        template <typename ApplyMethod>
-        static void apply(ApplyMethod)
-        {
-            // 1: inspect and define both arguments of apply
-            typedef typename parameter_type_of
-                <
-                    ApplyMethod, 0
-                >::type ptype1;
+	struct checker
+	{
+		template <typename ApplyMethod>
+		static void apply(ApplyMethod)
+		{
+			// 1: inspect and define both arguments of apply
+			typedef typename parameter_type_of
+			<
+			ApplyMethod, 0
+			>::type ptype1;
 
-            typedef typename parameter_type_of
-                <
-                    ApplyMethod, 1
-                >::type ptype2;
+			typedef typename parameter_type_of
+			<
+			ApplyMethod, 1
+			>::type ptype2;
 
-            // 2) must define meta-function "return_type"
-            typedef typename strategy::distance::services::return_type
-                <
-                    Strategy, ptype1, ptype2
-                >::type rtype;
+			// 2) must define meta-function "return_type"
+			typedef typename strategy::distance::services::return_type
+			<
+			Strategy, ptype1, ptype2
+			>::type rtype;
 
-            // 3) must define meta-function "comparable_type"
-            typedef typename strategy::distance::services::comparable_type
-                <
-                    Strategy
-                >::type ctype;
+			// 3) must define meta-function "comparable_type"
+			typedef typename strategy::distance::services::comparable_type
+			<
+			Strategy
+			>::type ctype;
 
-            // 4) must define meta-function "tag"
-            typedef typename strategy::distance::services::tag
-                <
-                    Strategy
-                >::type tag;
+			// 4) must define meta-function "tag"
+			typedef typename strategy::distance::services::tag
+			<
+			Strategy
+			>::type tag;
 
-            static const bool is_correct_strategy_tag =
-                boost::is_same<tag, strategy_tag_distance_point_point>::value
-                || boost::is_same<tag, strategy_tag_distance_point_box>::value
-                || boost::is_same<tag, strategy_tag_distance_box_box>::value;
+			static const bool is_correct_strategy_tag =
+			    boost::is_same<tag, strategy_tag_distance_point_point>::value
+			    || boost::is_same<tag, strategy_tag_distance_point_box>::value
+			    || boost::is_same<tag, strategy_tag_distance_box_box>::value;
 
-            BOOST_MPL_ASSERT_MSG
-                ((is_correct_strategy_tag),
-                 INCORRECT_STRATEGY_TAG,
-                 (types<tag>));
+			BOOST_MPL_ASSERT_MSG
+			((is_correct_strategy_tag),
+			 INCORRECT_STRATEGY_TAG,
+			 (types<tag>));
 
-            // 5) must implement apply with arguments
-            Strategy* str = 0;
-            ptype1 *p1 = 0;
-            ptype2 *p2 = 0;
-            rtype r = str->apply(*p1, *p2);
+			// 5) must implement apply with arguments
+			Strategy* str = 0;
+			ptype1 *p1 = 0;
+			ptype2 *p2 = 0;
+			rtype r = str->apply(*p1, *p2);
 
-            // 6) must define (meta)struct "get_comparable" with apply
-            ctype c = strategy::distance::services::get_comparable
-                <
-                    Strategy
-                >::apply(*str);
+			// 6) must define (meta)struct "get_comparable" with apply
+			ctype c = strategy::distance::services::get_comparable
+			          <
+			          Strategy
+			          >::apply(*str);
 
-            // 7) must define (meta)struct "result_from_distance" with apply
-            r = strategy::distance::services::result_from_distance
-                <
-                    Strategy,
-                    ptype1, ptype2
-                >::apply(*str, 1.0);
+			// 7) must define (meta)struct "result_from_distance" with apply
+			r = strategy::distance::services::result_from_distance
+			    <
+			    Strategy,
+			    ptype1, ptype2
+			    >::apply(*str, 1.0);
 
-            boost::ignore_unused<tag>();
-            boost::ignore_unused(str, c, r);
-        }
-    };
+			boost::ignore_unused<tag>();
+			boost::ignore_unused(str, c, r);
+		}
+	};
 
 
 
 public :
-    BOOST_CONCEPT_USAGE(PointDistanceStrategy)
-    {
-        checker::apply(&Strategy::template apply<Point1, Point2>);
-    }
+	BOOST_CONCEPT_USAGE(PointDistanceStrategy)
+	{
+		checker::apply(&Strategy::template apply<Point1, Point2>);
+	}
 #endif
 };
 
@@ -139,74 +143,76 @@ struct PointSegmentDistanceStrategy
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
 private :
 
-    struct checker
-    {
-        template <typename ApplyMethod>
-        static void apply(ApplyMethod)
-        {
-            // 1) inspect and define both arguments of apply
-            typedef typename parameter_type_of
-                <
-                    ApplyMethod, 0
-                >::type ptype;
+	struct checker
+	{
+		template <typename ApplyMethod>
+		static void apply(ApplyMethod)
+		{
+			// 1) inspect and define both arguments of apply
+			typedef typename parameter_type_of
+			<
+			ApplyMethod, 0
+			>::type ptype;
 
-            typedef typename parameter_type_of
-                <
-                    ApplyMethod, 1
-                >::type sptype;
+			typedef typename parameter_type_of
+			<
+			ApplyMethod, 1
+			>::type sptype;
 
-            namespace services = strategy::distance::services;
-            // 2) must define meta-function "tag"
-            typedef typename services::tag<Strategy>::type tag;
+			namespace services = strategy::distance::services;
+			// 2) must define meta-function "tag"
+			typedef typename services::tag<Strategy>::type tag;
 
-            BOOST_MPL_ASSERT_MSG
-                ((boost::is_same
-                      <
-                          tag, strategy_tag_distance_point_segment
-                      >::value),
-                 INCORRECT_STRATEGY_TAG,
-                 (types<tag>));
+			BOOST_MPL_ASSERT_MSG
+			((boost::is_same
+			  <
+			  tag, strategy_tag_distance_point_segment
+			  >::value),
+			 INCORRECT_STRATEGY_TAG,
+			 (types<tag>));
 
-            // 3) must define meta-function "return_type"
-            typedef typename services::return_type
-                <
-                    Strategy, ptype, sptype
-                >::type rtype;
+			// 3) must define meta-function "return_type"
+			typedef typename services::return_type
+			<
+			Strategy, ptype, sptype
+			>::type rtype;
 
-            // 4) must define meta-function "comparable_type"
-            typedef typename services::comparable_type<Strategy>::type ctype;
+			// 4) must define meta-function "comparable_type"
+			typedef typename services::comparable_type<Strategy>::type ctype;
 
-            // 5) must implement apply with arguments
-            Strategy *str = 0;
-            ptype *p = 0;
-            sptype *sp1 = 0;
-            sptype *sp2 = 0;
+			// 5) must implement apply with arguments
+			Strategy *str = 0;
+			ptype *p = 0;
+			sptype *sp1 = 0;
+			sptype *sp2 = 0;
 
-            rtype r = str->apply(*p, *sp1, *sp2);
+			rtype r = str->apply(*p, *sp1, *sp2);
 
-            // 6) must define (meta-)struct "get_comparable" with apply
-            ctype cstrategy = services::get_comparable<Strategy>::apply(*str);
+			// 6) must define (meta-)struct "get_comparable" with apply
+			ctype cstrategy = services::get_comparable<Strategy>::apply(*str);
 
-            // 7) must define (meta-)struct "result_from_distance" with apply
-            r = services::result_from_distance
-                <
-                    Strategy, ptype, sptype
-                >::apply(*str, rtype(1.0));
+			// 7) must define (meta-)struct "result_from_distance" with apply
+			r = services::result_from_distance
+			    <
+			    Strategy, ptype, sptype
+			    >::apply(*str, rtype(1.0));
 
-            boost::ignore_unused(str, r, cstrategy);
-        }
-    };
+			boost::ignore_unused(str, r, cstrategy);
+		}
+	};
 
 public :
-    BOOST_CONCEPT_USAGE(PointSegmentDistanceStrategy)
-    {
-        checker::apply(&Strategy::template apply<Point, PointOfSegment>);
-    }
+	BOOST_CONCEPT_USAGE(PointSegmentDistanceStrategy)
+	{
+		checker::apply(&Strategy::template apply<Point, PointOfSegment>);
+	}
 #endif
 };
 
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CONCEPTS_DISTANCE_CONCEPT_HPP

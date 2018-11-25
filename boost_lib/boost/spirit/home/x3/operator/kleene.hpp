@@ -13,43 +13,58 @@
 #include <boost/spirit/home/x3/support/traits/attribute_of.hpp>
 #include <boost/spirit/home/x3/core/detail/parse_into_container.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template <typename Subject>
-    struct kleene : unary_parser<Subject, kleene<Subject>>
-    {
-        typedef unary_parser<Subject, kleene<Subject>> base_type;
-        static bool const handles_container = true;
-
-        kleene(Subject const& subject)
-          : base_type(subject) {}
-
-        template <typename Iterator, typename Context
-          , typename RContext, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, RContext& rcontext, Attribute& attr) const
-        {
-            while (detail::parse_into_container(
-                this->subject, first, last, context, rcontext, attr))
-                ;
-            return true;
-        }
-    };
-
-    template <typename Subject>
-    inline kleene<typename extension::as_parser<Subject>::value_type>
-    operator*(Subject const& subject)
-    {
-        return { as_parser(subject) };
-    }
-}}}
-
-namespace boost { namespace spirit { namespace x3 { namespace traits
+namespace spirit
 {
-    template <typename Subject, typename Context>
-    struct attribute_of<x3::kleene<Subject>, Context>
-        : build_container<
-            typename attribute_of<Subject, Context>::type> {};
-}}}}
+namespace x3
+{
+template <typename Subject>
+struct kleene : unary_parser<Subject, kleene<Subject>>
+{
+	typedef unary_parser<Subject, kleene<Subject>> base_type;
+	static bool const handles_container = true;
+
+	kleene(Subject const& subject)
+		: base_type(subject) {}
+
+	template <typename Iterator, typename Context
+	          , typename RContext, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, RContext& rcontext, Attribute& attr) const
+	{
+		while (detail::parse_into_container(
+		            this->subject, first, last, context, rcontext, attr))
+			;
+		return true;
+	}
+};
+
+template <typename Subject>
+inline kleene<typename extension::as_parser<Subject>::value_type>
+operator*(Subject const& subject)
+{
+	return { as_parser(subject) };
+}
+}
+}
+}
+
+namespace boost
+{
+namespace spirit
+{
+namespace x3
+{
+namespace traits
+{
+template <typename Subject, typename Context>
+struct attribute_of<x3::kleene<Subject>, Context>
+	: build_container<
+	  typename attribute_of<Subject, Context>::type> {};
+}
+}
+}
+}
 
 #endif

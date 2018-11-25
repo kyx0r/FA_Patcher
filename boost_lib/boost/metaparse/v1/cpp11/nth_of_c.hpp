@@ -15,30 +15,30 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <int N, class... Ps>
-      struct nth_of_c
-      {
-        typedef nth_of_c type;
+namespace metaparse
+{
+namespace v1
+{
+template <int N, class... Ps>
+struct nth_of_c
+{
+	typedef nth_of_c type;
 
-        template <class S, class Pos>
-        struct apply :
-          std::conditional<
-            (0 <= N && N < sizeof...(Ps)),
-            impl::nth_of_c<N, S, Pos, Ps...>,
-            typename fail<error::index_out_of_range<0, sizeof...(Ps) - 1, N>>
-              ::template apply<S, Pos>
-          >::type
-        {};
-      };
+	template <class S, class Pos>
+	struct apply :
+		std::conditional<
+	(0 <= N && N < sizeof...(Ps)),
+	impl::nth_of_c<N, S, Pos, Ps...>,
+	     typename fail<error::index_out_of_range<0, sizeof...(Ps) - 1, N>>
+	     ::template apply<S, Pos>
+	>::type
+	{};
+};
 
-      template <int N>
-      struct nth_of_c<N> : fail<error::index_out_of_range<0, -1, N>> {};
-    }
-  }
+template <int N>
+struct nth_of_c<N> : fail<error::index_out_of_range<0, -1, N>> {};
+}
+}
 }
 
 #endif

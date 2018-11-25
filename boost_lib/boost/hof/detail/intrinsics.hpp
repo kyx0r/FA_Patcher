@@ -74,40 +74,46 @@
 
 #define BOOST_HOF_IS_NOTHROW_MOVE_CONSTRUCTIBLE(...) BOOST_HOF_IS_NOTHROW_CONSTRUCTIBLE(__VA_ARGS__, __VA_ARGS__ &&)
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<class T, class=void>
 struct is_default_constructible_check
-: std::false_type
+	: std::false_type
 {};
 
 template<class T>
 struct is_default_constructible_check<T, typename holder<
-    decltype(T())
+decltype(T())
 >::type>
 : std::true_type
 {};
 
 template<class T>
 struct is_default_constructible_helper
-: std::conditional<(std::is_reference<T>::value), 
-    std::false_type,
-    is_default_constructible_check<T>
->::type
-{};
+: std::conditional<(std::is_reference<T>::value),
+  std::false_type,
+  is_default_constructible_check<T>
+  >::type
+  {};
 
 template<class T, class... Xs>
 struct is_constructible
-: std::is_constructible<T, Xs...>
+	: std::is_constructible<T, Xs...>
 {};
 
 template<class T>
 struct is_constructible<T>
-: is_default_constructible_helper<T>
+	: is_default_constructible_helper<T>
 {};
 
 }
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

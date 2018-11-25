@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2014 Erik Erlandson
@@ -16,14 +16,23 @@
 #include <boost/units/base_unit.hpp>
 #include <boost/units/physical_dimensions/information.hpp>
 
-namespace boost {
-namespace units {
-namespace information {
+namespace boost
+{
+namespace units
+{
+namespace information
+{
 
 struct bit_base_unit : public base_unit<bit_base_unit, information_dimension, -700>
 {
-    static std::string name()   { return("bit"); }
-    static std::string symbol() { return("b"); }
+	static std::string name()
+	{
+		return("bit");
+	}
+	static std::string symbol()
+	{
+		return("b");
+	}
 };
 
 } // namespace information

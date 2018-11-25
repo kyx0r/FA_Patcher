@@ -11,29 +11,32 @@
 #include <boost/mpl/at.hpp>
 #include <boost/utility/declval.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct map_tag;
+namespace fusion
+{
+struct map_tag;
 
-    namespace extension
-    {
-        template <typename Tag>
-        struct value_at_impl;
+namespace extension
+{
+template <typename Tag>
+struct value_at_impl;
 
-        template <>
-        struct value_at_impl<map_tag>
-        {
-            template <typename Sequence, typename N>
-            struct apply
-            {
-                typedef mpl::int_<N::value> index;
-                typedef
-                    decltype(boost::declval<Sequence>().get_val(index()))
-                type;
-            };
-        };
-    }
-}}
+template <>
+struct value_at_impl<map_tag>
+{
+	template <typename Sequence, typename N>
+	struct apply
+	{
+		typedef mpl::int_<N::value> index;
+		typedef
+		decltype(boost::declval<Sequence>().get_val(index()))
+		type;
+	};
+};
+}
+}
+}
 
 #endif
 

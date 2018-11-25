@@ -13,34 +13,34 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S, char C>
-        struct push_front_c;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S, char C>
+struct push_front_c;
 
-        template <
-          BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C),
-          char Ch
-        >
-        struct push_front_c<
-          string<BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C)>,
-          Ch
-        > :
-          string<
-            Ch,
-            BOOST_PP_ENUM_PARAMS(
-              BOOST_PP_DEC(BOOST_METAPARSE_LIMIT_STRING_SIZE),
-              C
-            )
-          >
-        {};
-      }
-    }
-  }
+template <
+    BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, int C),
+    char Ch
+    >
+struct push_front_c<
+string<BOOST_PP_ENUM_PARAMS(BOOST_METAPARSE_LIMIT_STRING_SIZE, C)>,
+Ch
+> :
+string<
+Ch,
+BOOST_PP_ENUM_PARAMS(
+    BOOST_PP_DEC(BOOST_METAPARSE_LIMIT_STRING_SIZE),
+    C
+)
+>
+{};
+}
+}
+}
 }
 
 #endif

@@ -44,45 +44,45 @@
 
 #else
 
-        template <typename This, BOOST_PHOENIX_typename_A, typename Context>
-        struct result<This(BOOST_PHOENIX_A, Context)>
-        {
-            typedef
-                typename proto::detail::uncvref<
-                    typename proto::result_of::value<A0>::type
-                >::type
-            target_type;
-            typedef typename target_type::type  construct_type;
-            typedef typename target_type::type * type;
-        };
+template <typename This, BOOST_PHOENIX_typename_A, typename Context>
+struct result<This(BOOST_PHOENIX_A, Context)>
+{
+	typedef
+	typename proto::detail::uncvref<
+	typename proto::result_of::value<A0>::type
+	>::type
+	target_type;
+	typedef typename target_type::type  construct_type;
+	typedef typename target_type::type * type;
+};
 
-        template <BOOST_PHOENIX_typename_A, typename Context>
-        typename result<new_eval(BOOST_PHOENIX_A_const_ref, Context &)>::type
-        operator()(
-            A0 const&
-          , BOOST_PP_ENUM_SHIFTED_BINARY_PARAMS(
-                BOOST_PHOENIX_ITERATION
-              , A
-              , const& a
-            )
-          , Context const & ctx
-        ) const
-        {
+template <BOOST_PHOENIX_typename_A, typename Context>
+typename result<new_eval(BOOST_PHOENIX_A_const_ref, Context &)>::type
+operator()(
+    A0 const&
+    , BOOST_PP_ENUM_SHIFTED_BINARY_PARAMS(
+        BOOST_PHOENIX_ITERATION
+        , A
+        , const& a
+    )
+    , Context const & ctx
+) const
+{
 #define EVAL_a(_,n,__) \
             BOOST_PP_COMMA_IF(BOOST_PP_DEC(n)) boost::phoenix::eval(a ## n, ctx)
-            return
-                new typename result<
-                    new_eval(BOOST_PHOENIX_A_const_ref, Context &)
-                    >::construct_type(
-                        BOOST_PP_REPEAT_FROM_TO(
-                            1
-                          , BOOST_PHOENIX_ITERATION
-                          , EVAL_a
-                          , _
-                        )
-                );
+	return
+	    new typename result<
+	    new_eval(BOOST_PHOENIX_A_const_ref, Context &)
+	    >::construct_type(
+	        BOOST_PP_REPEAT_FROM_TO(
+	            1
+	            , BOOST_PHOENIX_ITERATION
+	            , EVAL_a
+	            , _
+	        )
+	    );
 #undef EVAL_a
-        }
+}
 
 #endif
 

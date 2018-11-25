@@ -10,14 +10,18 @@
 
 #include <cstdlib>
 
-namespace boost { namespace hof { 
+namespace boost
+{
+namespace hof
+{
 
-namespace detail {
+namespace detail
+{
 
 template<std::size_t ...>
-struct seq 
+struct seq
 {
-    typedef seq type;
+	typedef seq type;
 };
 
 template <class, class>
@@ -25,22 +29,23 @@ struct merge_seq;
 
 template <size_t... Xs, size_t... Ys>
 struct merge_seq<seq<Xs...>, seq<Ys...>>
-: seq<Xs..., (sizeof...(Xs)+Ys)...>
-{};
+                                      : seq<Xs..., (sizeof...(Xs)+Ys)...>
+                                        {};
 
 template<std::size_t N>
-struct gens 
-: merge_seq<
-    typename gens<N/2>::type,
-    typename gens<N - N/2>::type
-> 
+struct gens
+	: merge_seq<
+	  typename gens<N/2>::type,
+	  typename gens<N - N/2>::type
+	  >
 {};
 
-template<> struct gens<0> : seq<> {}; 
-template<> struct gens<1> : seq<0> {}; 
+template<> struct gens<0> : seq<> {};
+template<> struct gens<1> : seq<0> {};
 
 
 }
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
 #endif

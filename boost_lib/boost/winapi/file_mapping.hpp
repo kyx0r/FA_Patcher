@@ -33,72 +33,74 @@ extern "C" {
 
 #if BOOST_WINAPI_PARTITION_DESKTOP
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-CreateFileMappingA(
-    boost::winapi::HANDLE_ hFile,
-    ::_SECURITY_ATTRIBUTES* lpFileMappingAttributes,
-    boost::winapi::DWORD_ flProtect,
-    boost::winapi::DWORD_ dwMaximumSizeHigh,
-    boost::winapi::DWORD_ dwMaximumSizeLow,
-    boost::winapi::LPCSTR_ lpName);
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	CreateFileMappingA(
+	    boost::winapi::HANDLE_ hFile,
+	    ::_SECURITY_ATTRIBUTES* lpFileMappingAttributes,
+	    boost::winapi::DWORD_ flProtect,
+	    boost::winapi::DWORD_ dwMaximumSizeHigh,
+	    boost::winapi::DWORD_ dwMaximumSizeLow,
+	    boost::winapi::LPCSTR_ lpName);
 
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-OpenFileMappingA(
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::BOOL_ bInheritHandle,
-    boost::winapi::LPCSTR_ lpName);
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	OpenFileMappingA(
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::BOOL_ bInheritHandle,
+	    boost::winapi::LPCSTR_ lpName);
 #endif // !defined( BOOST_NO_ANSI_APIS )
 #endif // BOOST_WINAPI_PARTITION_DESKTOP
 
 #if BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-CreateFileMappingW(
-    boost::winapi::HANDLE_ hFile,
-    ::_SECURITY_ATTRIBUTES* lpFileMappingAttributes,
-    boost::winapi::DWORD_ flProtect,
-    boost::winapi::DWORD_ dwMaximumSizeHigh,
-    boost::winapi::DWORD_ dwMaximumSizeLow,
-    boost::winapi::LPCWSTR_ lpName);
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	CreateFileMappingW(
+	    boost::winapi::HANDLE_ hFile,
+	    ::_SECURITY_ATTRIBUTES* lpFileMappingAttributes,
+	    boost::winapi::DWORD_ flProtect,
+	    boost::winapi::DWORD_ dwMaximumSizeHigh,
+	    boost::winapi::DWORD_ dwMaximumSizeLow,
+	    boost::winapi::LPCWSTR_ lpName);
 
-BOOST_SYMBOL_IMPORT boost::winapi::LPVOID_ WINAPI
-MapViewOfFile(
-    boost::winapi::HANDLE_ hFileMappingObject,
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::DWORD_ dwFileOffsetHigh,
-    boost::winapi::DWORD_ dwFileOffsetLow,
-    boost::winapi::SIZE_T_ dwNumberOfBytesToMap);
+	BOOST_SYMBOL_IMPORT boost::winapi::LPVOID_ WINAPI
+	MapViewOfFile(
+	    boost::winapi::HANDLE_ hFileMappingObject,
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::DWORD_ dwFileOffsetHigh,
+	    boost::winapi::DWORD_ dwFileOffsetLow,
+	    boost::winapi::SIZE_T_ dwNumberOfBytesToMap);
 
-BOOST_SYMBOL_IMPORT boost::winapi::LPVOID_ WINAPI
-MapViewOfFileEx(
-    boost::winapi::HANDLE_ hFileMappingObject,
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::DWORD_ dwFileOffsetHigh,
-    boost::winapi::DWORD_ dwFileOffsetLow,
-    boost::winapi::SIZE_T_ dwNumberOfBytesToMap,
-    boost::winapi::LPVOID_ lpBaseAddress);
+	BOOST_SYMBOL_IMPORT boost::winapi::LPVOID_ WINAPI
+	MapViewOfFileEx(
+	    boost::winapi::HANDLE_ hFileMappingObject,
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::DWORD_ dwFileOffsetHigh,
+	    boost::winapi::DWORD_ dwFileOffsetLow,
+	    boost::winapi::SIZE_T_ dwNumberOfBytesToMap,
+	    boost::winapi::LPVOID_ lpBaseAddress);
 
-BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
-OpenFileMappingW(
-    boost::winapi::DWORD_ dwDesiredAccess,
-    boost::winapi::BOOL_ bInheritHandle,
-    boost::winapi::LPCWSTR_ lpName);
+	BOOST_SYMBOL_IMPORT boost::winapi::HANDLE_ WINAPI
+	OpenFileMappingW(
+	    boost::winapi::DWORD_ dwDesiredAccess,
+	    boost::winapi::BOOL_ bInheritHandle,
+	    boost::winapi::LPCWSTR_ lpName);
 #endif // BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
 
 #if BOOST_WINAPI_PARTITION_APP || BOOST_WINAPI_PARTITION_SYSTEM
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-FlushViewOfFile(
-    boost::winapi::LPCVOID_ lpBaseAddress,
-    boost::winapi::SIZE_T_ dwNumberOfBytesToFlush);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	FlushViewOfFile(
+	    boost::winapi::LPCVOID_ lpBaseAddress,
+	    boost::winapi::SIZE_T_ dwNumberOfBytesToFlush);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-UnmapViewOfFile(boost::winapi::LPCVOID_ lpBaseAddress);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	UnmapViewOfFile(boost::winapi::LPCVOID_ lpBaseAddress);
 #endif // BOOST_WINAPI_PARTITION_APP || BOOST_WINAPI_PARTITION_SYSTEM
 
 } // extern "C"
 #endif // !defined( BOOST_USE_WINDOWS_H )
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined( BOOST_USE_WINDOWS_H )
 
@@ -168,13 +170,13 @@ BOOST_FORCEINLINE HANDLE_ CreateFileMappingA(
     DWORD_ dwMaximumSizeLow,
     LPCSTR_ lpName)
 {
-    return ::CreateFileMappingA(
-        hFile,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
-        flProtect,
-        dwMaximumSizeHigh,
-        dwMaximumSizeLow,
-        lpName);
+	return ::CreateFileMappingA(
+	           hFile,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
+	           flProtect,
+	           dwMaximumSizeHigh,
+	           dwMaximumSizeLow,
+	           lpName);
 }
 
 BOOST_FORCEINLINE HANDLE_ create_file_mapping(
@@ -185,20 +187,20 @@ BOOST_FORCEINLINE HANDLE_ create_file_mapping(
     DWORD_ dwMaximumSizeLow,
     LPCSTR_ lpName)
 {
-    return ::CreateFileMappingA(
-        hFile,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
-        flProtect,
-        dwMaximumSizeHigh,
-        dwMaximumSizeLow,
-        lpName);
+	return ::CreateFileMappingA(
+	           hFile,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
+	           flProtect,
+	           dwMaximumSizeHigh,
+	           dwMaximumSizeLow,
+	           lpName);
 }
 
 using ::OpenFileMappingA;
 
 BOOST_FORCEINLINE HANDLE_ open_file_mapping(DWORD_ dwDesiredAccess, BOOL_ bInheritHandle, LPCSTR_ lpName)
 {
-    return ::OpenFileMappingA(dwDesiredAccess, bInheritHandle, lpName);
+	return ::OpenFileMappingA(dwDesiredAccess, bInheritHandle, lpName);
 }
 #endif
 #endif // BOOST_WINAPI_PARTITION_DESKTOP
@@ -212,13 +214,13 @@ BOOST_FORCEINLINE HANDLE_ CreateFileMappingW(
     DWORD_ dwMaximumSizeLow,
     LPCWSTR_ lpName)
 {
-    return ::CreateFileMappingW(
-        hFile,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
-        flProtect,
-        dwMaximumSizeHigh,
-        dwMaximumSizeLow,
-        lpName);
+	return ::CreateFileMappingW(
+	           hFile,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
+	           flProtect,
+	           dwMaximumSizeHigh,
+	           dwMaximumSizeLow,
+	           lpName);
 }
 
 BOOST_FORCEINLINE HANDLE_ create_file_mapping(
@@ -229,13 +231,13 @@ BOOST_FORCEINLINE HANDLE_ create_file_mapping(
     DWORD_ dwMaximumSizeLow,
     LPCWSTR_ lpName)
 {
-    return ::CreateFileMappingW(
-        hFile,
-        reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
-        flProtect,
-        dwMaximumSizeHigh,
-        dwMaximumSizeLow,
-        lpName);
+	return ::CreateFileMappingW(
+	           hFile,
+	           reinterpret_cast< ::_SECURITY_ATTRIBUTES* >(lpFileMappingAttributes),
+	           flProtect,
+	           dwMaximumSizeHigh,
+	           dwMaximumSizeLow,
+	           lpName);
 }
 
 using ::MapViewOfFile;
@@ -244,7 +246,7 @@ using ::OpenFileMappingW;
 
 BOOST_FORCEINLINE HANDLE_ open_file_mapping(DWORD_ dwDesiredAccess, BOOL_ bInheritHandle, LPCWSTR_ lpName)
 {
-    return ::OpenFileMappingW(dwDesiredAccess, bInheritHandle, lpName);
+	return ::OpenFileMappingW(dwDesiredAccess, bInheritHandle, lpName);
 }
 #endif // BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
 

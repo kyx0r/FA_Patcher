@@ -17,7 +17,8 @@
 #include <boost/type_traits/remove_cv.hpp>
 #endif
 
-namespace boost {
+namespace boost
+{
 
 #ifdef BOOST_IS_FINAL
 template <class T> struct is_final : public integral_constant<bool, BOOST_IS_FINAL(typename remove_cv<T>::type)> {};

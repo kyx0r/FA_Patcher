@@ -13,20 +13,20 @@
 
 #include <boost/function_types/components.hpp>
 
-namespace boost 
-{ 
-  namespace function_types 
-  {
-    template< typename T, typename Tag = null_tag > 
-    struct is_function_pointer
-      : function_types::represents
-        < function_types::components<T>
-        , function_types::tag<Tag ,detail::pointer_tag> 
-        >
-    { 
-      BOOST_MPL_AUX_LAMBDA_SUPPORT(2,is_function_pointer,(T,Tag))
-    };
-  }
+namespace boost
+{
+namespace function_types
+{
+template< typename T, typename Tag = null_tag >
+struct is_function_pointer
+	: function_types::represents
+	  < function_types::components<T>
+	, function_types::tag<Tag,detail::pointer_tag>
+	  >
+{
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(2,is_function_pointer,(T,Tag))
+};
+}
 }
 
 #endif

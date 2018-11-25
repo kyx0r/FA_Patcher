@@ -14,20 +14,27 @@
 
 #include <boost/numeric/odeint/util/copy.hpp>
 
-namespace boost { namespace numeric { namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 template<typename T, typename S>
 struct copy_impl< nt2::container::table<T,S>
-                , nt2::container::table<T,S>
-                >
+	, nt2::container::table<T,S>
+	>
 {
-  static void copy ( const nt2::container::table<T,S> &v1
-                   , nt2::container::table<T,S> &v2
-                   )
-  {
-    v2 = v1;
-  }
+	static void copy ( const nt2::container::table<T,S> &v1
+	                   , nt2::container::table<T,S> &v2
+	                 )
+	{
+		v2 = v1;
+	}
 };
-} } }
+}
+}
+}
 
 #endif

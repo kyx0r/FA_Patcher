@@ -29,10 +29,10 @@
 // 20.7.9, the default allocator:
 namespace boost
 {
-  namespace csbl
-  {
-    using ::std::allocator;
-  }
+namespace csbl
+{
+using ::std::allocator;
+}
 }
 // 20.7.10, raw storage iterator:
 // 20.7.11, temporary buffers:

@@ -23,21 +23,23 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 namespace detail
 {
-  char (&has_iterator_helper(...))[2];
+char (&has_iterator_helper(...))[2];
 
-  template <typename T>
-  char has_iterator_helper(T*, typename T::iterator* = 0);
+template <typename T>
+char has_iterator_helper(T*, typename T::iterator* = 0);
 
-  template <typename T>
-  struct has_iterator_typedef
-  {
-    enum { value = (sizeof((has_iterator_helper)((T*)(0))) == 1) };
-  };
+template <typename T>
+struct has_iterator_typedef
+{
+	enum { value = (sizeof((has_iterator_helper)((T*)(0))) == 1) };
+};
 } // namespace detail
 
 /// Type trait used to determine whether a type is an endpoint sequence that can
@@ -46,13 +48,13 @@ template <typename T>
 struct is_endpoint_sequence
 {
 #if defined(GENERATING_DOCUMENTATION)
-  /// The value member is true if the type may be used as an endpoint sequence.
-  static const bool value;
+	/// The value member is true if the type may be used as an endpoint sequence.
+	static const bool value;
 #else
-  enum
-  {
-    value = detail::has_iterator_typedef<T>::value
-  };
+	enum
+	{
+		value = detail::has_iterator_typedef<T>::value
+	};
 #endif
 };
 
@@ -92,7 +94,7 @@ typename Protocol::endpoint connect(
     basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
     const EndpointSequence& endpoints,
     typename enable_if<is_endpoint_sequence<
-        EndpointSequence>::value>::type* = 0);
+    EndpointSequence>::value>::type* = 0);
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
 /**
@@ -129,7 +131,7 @@ typename Protocol::endpoint connect(
     basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
     const EndpointSequence& endpoints, boost::system::error_code& ec,
     typename enable_if<is_endpoint_sequence<
-        EndpointSequence>::value>::type* = 0);
+    EndpointSequence>::value>::type* = 0);
 
 #if !defined(BOOST_ASIO_NO_DEPRECATED)
 /// (Deprecated.) Establishes a socket connection by trying each endpoint in a
@@ -158,7 +160,7 @@ typename Protocol::endpoint connect(
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM, typename Iterator>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
+                 typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
 
 /// (Deprecated.) Establishes a socket connection by trying each endpoint in a
 /// sequence.
@@ -186,8 +188,8 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM, typename Iterator>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, boost::system::error_code& ec,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
+                 Iterator begin, boost::system::error_code& ec,
+                 typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
 #endif // !defined(BOOST_ASIO_NO_DEPRECATED)
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
@@ -219,7 +221,7 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM, typename Iterator>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, Iterator end);
+                 Iterator begin, Iterator end);
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
 /**
@@ -256,7 +258,7 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM, typename Iterator>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, Iterator end, boost::system::error_code& ec);
+                 Iterator begin, Iterator end, boost::system::error_code& ec);
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
 /**
@@ -310,12 +312,12 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  * std::cout << "Connected to: " << e << std::endl; @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename EndpointSequence, typename ConnectCondition>
+          typename EndpointSequence, typename ConnectCondition>
 typename Protocol::endpoint connect(
     basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
     const EndpointSequence& endpoints, ConnectCondition connect_condition,
     typename enable_if<is_endpoint_sequence<
-        EndpointSequence>::value>::type* = 0);
+    EndpointSequence>::value>::type* = 0);
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
 /**
@@ -378,13 +380,13 @@ typename Protocol::endpoint connect(
  * } @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename EndpointSequence, typename ConnectCondition>
+          typename EndpointSequence, typename ConnectCondition>
 typename Protocol::endpoint connect(
     basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
     const EndpointSequence& endpoints, ConnectCondition connect_condition,
     boost::system::error_code& ec,
     typename enable_if<is_endpoint_sequence<
-        EndpointSequence>::value>::type* = 0);
+    EndpointSequence>::value>::type* = 0);
 
 #if !defined(BOOST_ASIO_NO_DEPRECATED)
 /// (Deprecated.) Establishes a socket connection by trying each endpoint in a
@@ -423,10 +425,10 @@ typename Protocol::endpoint connect(
  * iterator types such as @c boost::asio::ip::tcp::resolver::iterator.
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
+          typename Iterator, typename ConnectCondition>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, ConnectCondition connect_condition,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
+                 Iterator begin, ConnectCondition connect_condition,
+                 typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
 
 /// (Deprecated.) Establishes a socket connection by trying each endpoint in a
 /// sequence.
@@ -464,10 +466,10 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  * iterator types such as @c boost::asio::ip::tcp::resolver::iterator.
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
+          typename Iterator, typename ConnectCondition>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
-    ConnectCondition connect_condition, boost::system::error_code& ec,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
+                 ConnectCondition connect_condition, boost::system::error_code& ec,
+                 typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
 #endif // !defined(BOOST_ASIO_NO_DEPRECATED)
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
@@ -525,9 +527,9 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
  * std::cout << "Connected to: " << i->endpoint() << std::endl; @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
+          typename Iterator, typename ConnectCondition>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
-    Iterator end, ConnectCondition connect_condition);
+                 Iterator end, ConnectCondition connect_condition);
 
 /// Establishes a socket connection by trying each endpoint in a sequence.
 /**
@@ -593,10 +595,10 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
  * } @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename Iterator, typename ConnectCondition>
+          typename Iterator, typename ConnectCondition>
 Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, Iterator end, ConnectCondition connect_condition,
-    boost::system::error_code& ec);
+                 Iterator begin, Iterator end, ConnectCondition connect_condition,
+                 boost::system::error_code& ec);
 
 /*@}*/
 
@@ -670,14 +672,14 @@ Iterator connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  * } @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename EndpointSequence, typename RangeConnectHandler>
+          typename EndpointSequence, typename RangeConnectHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(RangeConnectHandler,
-    void (boost::system::error_code, typename Protocol::endpoint))
+                              void (boost::system::error_code, typename Protocol::endpoint))
 async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    const EndpointSequence& endpoints,
-    BOOST_ASIO_MOVE_ARG(RangeConnectHandler) handler,
-    typename enable_if<is_endpoint_sequence<
-        EndpointSequence>::value>::type* = 0);
+              const EndpointSequence& endpoints,
+              BOOST_ASIO_MOVE_ARG(RangeConnectHandler) handler,
+              typename enable_if<is_endpoint_sequence<
+              EndpointSequence>::value>::type* = 0);
 
 #if !defined(BOOST_ASIO_NO_DEPRECATED)
 /// (Deprecated.) Asynchronously establishes a socket connection by trying each
@@ -716,12 +718,12 @@ async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  * iterator types such as @c boost::asio::ip::tcp::resolver::iterator.
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename Iterator, typename IteratorConnectHandler>
+          typename Iterator, typename IteratorConnectHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (boost::system::error_code, Iterator))
+                              void (boost::system::error_code, Iterator))
 async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
+              Iterator begin, BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler,
+              typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
 #endif // !defined(BOOST_ASIO_NO_DEPRECATED)
 
 /// Asynchronously establishes a socket connection by trying each endpoint in a
@@ -774,12 +776,12 @@ async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  * } @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM,
-    typename Iterator, typename IteratorConnectHandler>
+          typename Iterator, typename IteratorConnectHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (boost::system::error_code, Iterator))
+                              void (boost::system::error_code, Iterator))
 async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, Iterator end,
-    BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler);
+              Iterator begin, Iterator end,
+              BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler);
 
 /// Asynchronously establishes a socket connection by trying each endpoint in a
 /// sequence.
@@ -877,14 +879,14 @@ async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  * } @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM, typename EndpointSequence,
-    typename ConnectCondition, typename RangeConnectHandler>
+          typename ConnectCondition, typename RangeConnectHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(RangeConnectHandler,
-    void (boost::system::error_code, typename Protocol::endpoint))
+                              void (boost::system::error_code, typename Protocol::endpoint))
 async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    const EndpointSequence& endpoints, ConnectCondition connect_condition,
-    BOOST_ASIO_MOVE_ARG(RangeConnectHandler) handler,
-    typename enable_if<is_endpoint_sequence<
-        EndpointSequence>::value>::type* = 0);
+              const EndpointSequence& endpoints, ConnectCondition connect_condition,
+              BOOST_ASIO_MOVE_ARG(RangeConnectHandler) handler,
+              typename enable_if<is_endpoint_sequence<
+              EndpointSequence>::value>::type* = 0);
 
 #if !defined(BOOST_ASIO_NO_DEPRECATED)
 /// (Deprecated.) Asynchronously establishes a socket connection by trying each
@@ -934,13 +936,13 @@ async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
  * iterator types such as @c boost::asio::ip::tcp::resolver::iterator.
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM, typename Iterator,
-    typename ConnectCondition, typename IteratorConnectHandler>
+          typename ConnectCondition, typename IteratorConnectHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (boost::system::error_code, Iterator))
+                              void (boost::system::error_code, Iterator))
 async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
-    ConnectCondition connect_condition,
-    BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler,
-    typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
+              ConnectCondition connect_condition,
+              BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler,
+              typename enable_if<!is_endpoint_sequence<Iterator>::value>::type* = 0);
 #endif // !defined(BOOST_ASIO_NO_DEPRECATED)
 
 /// Asynchronously establishes a socket connection by trying each endpoint in a
@@ -1042,12 +1044,12 @@ async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s, Iterator begin,
  * } @endcode
  */
 template <typename Protocol BOOST_ASIO_SVC_TPARAM, typename Iterator,
-    typename ConnectCondition, typename IteratorConnectHandler>
+          typename ConnectCondition, typename IteratorConnectHandler>
 BOOST_ASIO_INITFN_RESULT_TYPE(IteratorConnectHandler,
-    void (boost::system::error_code, Iterator))
+                              void (boost::system::error_code, Iterator))
 async_connect(basic_socket<Protocol BOOST_ASIO_SVC_TARG>& s,
-    Iterator begin, Iterator end, ConnectCondition connect_condition,
-    BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler);
+              Iterator begin, Iterator end, ConnectCondition connect_condition,
+              BOOST_ASIO_MOVE_ARG(IteratorConnectHandler) handler);
 
 /*@}*/
 

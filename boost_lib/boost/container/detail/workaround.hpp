@@ -21,12 +21,12 @@
 
 #if    !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)\
     && !defined(BOOST_INTERPROCESS_DISABLE_VARIADIC_TMPL)
-   #define BOOST_CONTAINER_PERFECT_FORWARDING
+#define BOOST_CONTAINER_PERFECT_FORWARDING
 #endif
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && defined(__GXX_EXPERIMENTAL_CXX0X__)\
     && (__GNUC__*10000 + __GNUC_MINOR__*100 + __GNUC_PATCHLEVEL__ < 40700)
-   #define BOOST_CONTAINER_UNIMPLEMENTED_PACK_EXPANSION_TO_FIXED_LIST
+#define BOOST_CONTAINER_UNIMPLEMENTED_PACK_EXPANSION_TO_FIXED_LIST
 #endif
 
 #if defined(BOOST_GCC_VERSION)
@@ -44,7 +44,7 @@
 #endif
 
 #if defined(BOOST_MSVC) && (_MSC_VER < 1400)
-   #define BOOST_CONTAINER_TEMPLATED_CONVERSION_OPERATOR_BROKEN
+#define BOOST_CONTAINER_TEMPLATED_CONVERSION_OPERATOR_BROKEN
 #endif
 
 #if !defined(BOOST_NO_CXX11_HDR_TUPLE) || (defined(BOOST_MSVC) && (BOOST_MSVC == 1700 || BOOST_MSVC == 1600))
@@ -81,31 +81,31 @@
 */
 #if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_CONTAINER_DYN_LINK)
 
-   /* export if this is our own source, otherwise import: */
-   #ifdef BOOST_CONTAINER_SOURCE
-   #  define BOOST_CONTAINER_DECL BOOST_SYMBOL_EXPORT
-   #else
-   #  define BOOST_CONTAINER_DECL BOOST_SYMBOL_IMPORT
-   
-   #endif  /* BOOST_CONTAINER_SOURCE */
+/* export if this is our own source, otherwise import: */
+#ifdef BOOST_CONTAINER_SOURCE
+#  define BOOST_CONTAINER_DECL BOOST_SYMBOL_EXPORT
 #else
-   #define BOOST_CONTAINER_DECL
+#  define BOOST_CONTAINER_DECL BOOST_SYMBOL_IMPORT
+
+#endif  /* BOOST_CONTAINER_SOURCE */
+#else
+#define BOOST_CONTAINER_DECL
 #endif  /* DYN_LINK */
 
 //#define BOOST_CONTAINER_DISABLE_FORCEINLINE
 
 #if defined(BOOST_CONTAINER_DISABLE_FORCEINLINE)
-   #define BOOST_CONTAINER_FORCEINLINE inline
+#define BOOST_CONTAINER_FORCEINLINE inline
 #elif defined(BOOST_CONTAINER_FORCEINLINE_IS_BOOST_FORCELINE)
-   #define BOOST_CONTAINER_FORCEINLINE BOOST_FORCEINLINE
+#define BOOST_CONTAINER_FORCEINLINE BOOST_FORCEINLINE
 #elif defined(BOOST_MSVC) && defined(_DEBUG)
-   //"__forceinline" and MSVC seems to have some bugs in debug mode
-   #define BOOST_CONTAINER_FORCEINLINE inline
+//"__forceinline" and MSVC seems to have some bugs in debug mode
+#define BOOST_CONTAINER_FORCEINLINE inline
 #elif defined(__GNUC__) && ((__GNUC__ < 4) || (__GNUC__ == 4 && (__GNUC_MINOR__ < 5)))
-   //Older GCCs have problems with forceinline
-   #define BOOST_CONTAINER_FORCEINLINE inline
+//Older GCCs have problems with forceinline
+#define BOOST_CONTAINER_FORCEINLINE inline
 #else
-   #define BOOST_CONTAINER_FORCEINLINE BOOST_FORCEINLINE
+#define BOOST_CONTAINER_FORCEINLINE BOOST_FORCEINLINE
 #endif
 
 #endif   //#ifndef BOOST_CONTAINER_DETAIL_WORKAROUND_HPP

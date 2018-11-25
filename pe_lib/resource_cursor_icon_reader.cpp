@@ -223,7 +223,7 @@ const std::string resource_cursor_icon_reader::lookup_icon_group_data_by_icon(ui
 		{
 			pe_resource_viewer::resource_language_list group_languages(res_.list_resource_languages(pe_resource_viewer::resource_icon_group, *it));
 			if(std::find(group_languages.begin(), group_languages.end(), language) != group_languages.end()
-				&& check_icon_presence(res_.get_resource_data_by_id(language, pe_resource_viewer::resource_icon_group, *it).get_data(), icon_id, icon_header_data))
+			        && check_icon_presence(res_.get_resource_data_by_id(language, pe_resource_viewer::resource_icon_group, *it).get_data(), icon_id, icon_header_data))
 				return icon_header_data;
 		}
 	}
@@ -235,7 +235,7 @@ const std::string resource_cursor_icon_reader::lookup_icon_group_data_by_icon(ui
 		{
 			pe_resource_viewer::resource_language_list group_languages(res_.list_resource_languages(pe_resource_viewer::resource_icon_group, *it));
 			if(std::find(group_languages.begin(), group_languages.end(), language) != group_languages.end()
-				&& check_icon_presence(res_.get_resource_data_by_name(language, pe_resource_viewer::resource_icon_group, *it).get_data(), icon_id, icon_header_data))
+			        && check_icon_presence(res_.get_resource_data_by_name(language, pe_resource_viewer::resource_icon_group, *it).get_data(), icon_id, icon_header_data))
 				return icon_header_data;
 		}
 	}
@@ -260,7 +260,7 @@ const std::string resource_cursor_icon_reader::get_single_cursor_by_id(uint32_t 
 	pe_resource_viewer::resource_language_list languages(res_.list_resource_languages(pe_resource_viewer::resource_cursor, id));
 	if(languages.size() <= index)
 		throw pe_exception("Resource data entry not found", pe_exception::resource_data_entry_not_found);
-	
+
 	std::string raw_cursor_data(res_.get_resource_data_by_id(pe_resource_viewer::resource_cursor, id, index).get_data());
 	//Get cursor headers
 	std::string cursor_data(lookup_cursor_group_data_by_cursor(id, languages.at(index), raw_cursor_data));
@@ -303,8 +303,8 @@ uint16_t resource_cursor_icon_reader::format_cursor_headers(std::string& cur_dat
 
 		//Now read hotspot data from cursor data directory
 		const std::string cursor = index == 0xFFFFFFFF
-			? res_.get_resource_data_by_id(language, pe_resource_viewer::resource_cursor, group->Number).get_data()
-			: res_.get_resource_data_by_id(pe_resource_viewer::resource_cursor, group->Number, index).get_data();
+		                           ? res_.get_resource_data_by_id(language, pe_resource_viewer::resource_cursor, group->Number).get_data()
+		                           : res_.get_resource_data_by_id(pe_resource_viewer::resource_cursor, group->Number, index).get_data();
 		if(cursor.length() < 2 * sizeof(uint16_t))
 			throw pe_exception("Incorrect resource cursor", pe_exception::resource_incorrect_cursor);
 
@@ -478,7 +478,7 @@ const std::string resource_cursor_icon_reader::lookup_cursor_group_data_by_curso
 		{
 			pe_resource_viewer::resource_language_list group_languages(res_.list_resource_languages(pe_resource_viewer::resource_cursor_group, *it));
 			if(std::find(group_languages.begin(), group_languages.end(), language) != group_languages.end()
-				&& check_cursor_presence(res_.get_resource_data_by_id(language, pe_resource_viewer::resource_cursor_group, *it).get_data(), cursor_id, cursor_header_data, raw_cursor_data))
+			        && check_cursor_presence(res_.get_resource_data_by_id(language, pe_resource_viewer::resource_cursor_group, *it).get_data(), cursor_id, cursor_header_data, raw_cursor_data))
 				return cursor_header_data;
 		}
 	}
@@ -490,7 +490,7 @@ const std::string resource_cursor_icon_reader::lookup_cursor_group_data_by_curso
 		{
 			pe_resource_viewer::resource_language_list group_languages(res_.list_resource_languages(pe_resource_viewer::resource_cursor_group, *it));
 			if(std::find(group_languages.begin(), group_languages.end(), language) != group_languages.end()
-				&& check_cursor_presence(res_.get_resource_data_by_name(language, pe_resource_viewer::resource_cursor_group, *it).get_data(), cursor_id, cursor_header_data, raw_cursor_data))
+			        && check_cursor_presence(res_.get_resource_data_by_name(language, pe_resource_viewer::resource_cursor_group, *it).get_data(), cursor_id, cursor_header_data, raw_cursor_data))
 				return cursor_header_data;
 		}
 	}

@@ -15,11 +15,14 @@
 
 #include <type_traits>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 /* This can be further specialized by Model when the std type trait classes
  * fail to give the right info (as it can happen with class templates whose
@@ -28,12 +31,12 @@ namespace detail{
 
 template<typename T,typename Model,typename=void>
 struct is_acceptable:std::integral_constant<
-  bool,
-  Model::template is_implementation<T>::value&&
-  std::is_move_constructible<typename std::decay<T>::type>::value&&
-  (std::is_move_assignable<typename std::decay<T>::type>::value||
-   std::is_nothrow_move_constructible<typename std::decay<T>::type>::value)
->{};
+	bool,
+	Model::template is_implementation<T>::value&&
+std::is_move_constructible<typename std::decay<T>::type>::value&&
+(std::is_move_assignable<typename std::decay<T>::type>::value||
+ std::is_nothrow_move_constructible<typename std::decay<T>::type>::value)
+> {};
 
 } /* namespace poly_collection::detail */
 

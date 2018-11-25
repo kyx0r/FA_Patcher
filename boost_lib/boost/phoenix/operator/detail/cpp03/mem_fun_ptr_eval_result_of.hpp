@@ -35,10 +35,10 @@
                 BOOST_PP_CAT(child, N);                                         \
         /**/
 
-        #define BOOST_PHOENIX_ITERATION_PARAMS                                  \
+#define BOOST_PHOENIX_ITERATION_PARAMS                                  \
             (3, (2, BOOST_PHOENIX_LIMIT,                                        \
                  <boost/phoenix/operator/detail/cpp03/mem_fun_ptr_eval_result_of.hpp>))
-        #include BOOST_PHOENIX_ITERATE()
+#include BOOST_PHOENIX_ITERATE()
 
 #undef BOOST_PHOENIX_MEM_FUN_PTR_EVAL_RESULT_OF_CHILD
 
@@ -50,25 +50,25 @@
 
 #else // BOOST_PHOENIX_ITERATE
 
-        template <typename Context, BOOST_PHOENIX_typename_A>
-        struct mem_fun_ptr_eval<Context, BOOST_PHOENIX_A>
-        {
-            BOOST_PP_REPEAT(
-                BOOST_PHOENIX_ITERATION
-              , BOOST_PHOENIX_MEM_FUN_PTR_EVAL_RESULT_OF_CHILD
-              , _
-            )
+template <typename Context, BOOST_PHOENIX_typename_A>
+struct mem_fun_ptr_eval<Context, BOOST_PHOENIX_A>
+{
+	BOOST_PP_REPEAT(
+	    BOOST_PHOENIX_ITERATION
+	    , BOOST_PHOENIX_MEM_FUN_PTR_EVAL_RESULT_OF_CHILD
+	    , _
+	)
 
-            typedef
-                typename boost::result_of<
-                    child1(
-                        BOOST_PP_ENUM_SHIFTED_PARAMS(
-                            BOOST_PHOENIX_ITERATION
-                          , child
-                        )
-                    )
-                >::type
-                type;
-        };
+	typedef
+	typename boost::result_of<
+	child1(
+	    BOOST_PP_ENUM_SHIFTED_PARAMS(
+	        BOOST_PHOENIX_ITERATION
+	        , child
+	    )
+	)
+	>::type
+	type;
+};
 
 #endif

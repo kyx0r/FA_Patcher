@@ -14,11 +14,20 @@
 #include <boost/geometry/index/rtree/node/node.hpp>
 #include <boost/geometry/index/rtree/visitors/insert.hpp>
 
-namespace boost { namespace geometry { namespace index {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
 
-namespace detail { namespace rtree {
+namespace detail
+{
+namespace rtree
+{
 
-namespace kmeans {
+namespace kmeans
+{
 
 // some details
 
@@ -60,28 +69,31 @@ template <typename Value, typename Options, typename Translator, typename Box, t
 class split<Value, Options, Translator, Box, Allocators, split_kmeans_tag>
 {
 protected:
-    typedef typename rtree::node<Value, typename Options::parameters_type, Box, Allocators, typename Options::node_tag>::type node;
-    typedef typename rtree::internal_node<Value, typename Options::parameters_type, Box, Allocators, typename Options::node_tag>::type internal_node;
-    typedef typename rtree::leaf<Value, typename Options::parameters_type, Box, Allocators, typename Options::node_tag>::type leaf;
+	typedef typename rtree::node<Value, typename Options::parameters_type, Box, Allocators, typename Options::node_tag>::type node;
+	typedef typename rtree::internal_node<Value, typename Options::parameters_type, Box, Allocators, typename Options::node_tag>::type internal_node;
+	typedef typename rtree::leaf<Value, typename Options::parameters_type, Box, Allocators, typename Options::node_tag>::type leaf;
 
-    typedef typename Options::parameters_type parameters_type;
+	typedef typename Options::parameters_type parameters_type;
 
 public:
-    template <typename Node>
-    static inline void apply(node* & root_node,
-                             size_t & leafs_level,
-                             Node & n,
-                             internal_node *parent_node,
-                             size_t current_child_index,
-                             Translator const& tr,
-                             Allocators & allocators)
-    {
+	template <typename Node>
+	static inline void apply(node* & root_node,
+	                         size_t & leafs_level,
+	                         Node & n,
+	                         internal_node *parent_node,
+	                         size_t current_child_index,
+	                         Translator const& tr,
+	                         Allocators & allocators)
+	{
 
-    }
+	}
 };
 
-}} // namespace detail::rtree
+}
+} // namespace detail::rtree
 
-}}} // namespace boost::geometry::index
+}
+}
+} // namespace boost::geometry::index
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_RTREE_KMEANS_SPLIT_HPP

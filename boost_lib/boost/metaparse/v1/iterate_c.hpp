@@ -12,14 +12,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, int N>
-      struct iterate_c : impl::iterate_impl<N, P, boost::mpl::deque<> > {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, int N>
+struct iterate_c : impl::iterate_impl<N, P, boost::mpl::deque<> > {};
+}
+}
 }
 
 #endif

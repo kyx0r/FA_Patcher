@@ -11,7 +11,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ has_member_qualifiers_hpp
 /*`[section:ref_has_member_qualifiers has_member_qualifiers]
@@ -27,19 +30,21 @@ struct has_member_qualifiers;
 //<-
 template<typename T>
 struct has_member_qualifiers : detail::traits<
-    detail::shallow_decay<T>>::has_member_qualifiers {
+	detail::shallow_decay<T>>::has_member_qualifiers
+{
 
-    using type = typename detail::traits<
-        detail::shallow_decay<T>>::has_member_qualifiers;
+	using type = typename detail::traits<
+	             detail::shallow_decay<T>>::has_member_qualifiers;
 };
 
 // older compilers don't support variable templates
 #ifdef BOOST_CLBL_TRTS_DISABLE_VARIABLE_TEMPLATES
 
 template<typename T>
-struct has_member_qualifiers_v {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "Variable templates not supported on this compiler.");
+struct has_member_qualifiers_v
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "Variable templates not supported on this compiler.");
 };
 
 #else
@@ -55,7 +60,8 @@ constexpr bool has_member_qualifiers_v = //see below
 
 #endif
 
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

@@ -15,7 +15,11 @@
 
 #include <cmath>
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 // Functions to resolve ambiguity when compiling with coordinates of different types
@@ -37,10 +41,12 @@ inline T pow(T const& a, T const& b)
 template <typename T>
 inline int int_floor(T const& f)
 {
-    using std::floor;
-    return int(floor(f));
+	using std::floor;
+	return int(floor(f));
 }
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_FUNCTION_OVERLOADS_HPP

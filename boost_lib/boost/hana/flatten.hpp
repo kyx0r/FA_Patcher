@@ -26,37 +26,43 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs>
-    constexpr auto flatten_t::operator()(Xs&& xs) const {
-        using M = typename hana::tag_of<Xs>::type;
-        using Flatten = BOOST_HANA_DISPATCH_IF(flatten_impl<M>,
-            hana::Monad<M>::value
-        );
+//! @cond
+template <typename Xs>
+constexpr auto flatten_t::operator()(Xs&& xs) const
+{
+	using M = typename hana::tag_of<Xs>::type;
+	using Flatten = BOOST_HANA_DISPATCH_IF(flatten_impl<M>,
+	                                       hana::Monad<M>::value
+	                                      );
 
 #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::Monad<M>::value,
-        "hana::flatten(xs) requires 'xs' to be a Monad");
+	static_assert(hana::Monad<M>::value,
+	              "hana::flatten(xs) requires 'xs' to be a Monad");
 #endif
 
-        return Flatten::apply(static_cast<Xs&&>(xs));
-    }
-    //! @endcond
+	return Flatten::apply(static_cast<Xs&&>(xs));
+}
+//! @endcond
 
-    template <typename M, bool condition>
-    struct flatten_impl<M, when<condition>> : default_ {
-        template <typename Xs>
-        static constexpr auto apply(Xs&& xs)
-        { return hana::chain(static_cast<Xs&&>(xs), hana::id); }
-    };
+template <typename M, bool condition>
+struct flatten_impl<M, when<condition>> : default_
+{
+	template <typename Xs>
+	static constexpr auto apply(Xs&& xs)
+	{
+		return hana::chain(static_cast<Xs&&>(xs), hana::id);
+	}
+};
 
-    template <typename S>
-    struct flatten_impl<S, when<Sequence<S>::value>> {
-        template <typename Xs>
-        static constexpr auto apply(Xs&& xs) {
-            return detail::unpack_flatten(static_cast<Xs&&>(xs), hana::make<S>);
-        }
-    };
+template <typename S>
+struct flatten_impl<S, when<Sequence<S>::value>>
+{
+	template <typename Xs>
+	static constexpr auto apply(Xs&& xs)
+	{
+		return detail::unpack_flatten(static_cast<Xs&&>(xs), hana::make<S>);
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_FLATTEN_HPP

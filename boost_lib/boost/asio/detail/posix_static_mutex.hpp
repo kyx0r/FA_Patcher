@@ -24,33 +24,36 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 struct posix_static_mutex
 {
-  typedef boost::asio::detail::scoped_lock<posix_static_mutex> scoped_lock;
+	typedef boost::asio::detail::scoped_lock<posix_static_mutex> scoped_lock;
 
-  // Initialise the mutex.
-  void init()
-  {
-    // Nothing to do.
-  }
+	// Initialise the mutex.
+	void init()
+	{
+		// Nothing to do.
+	}
 
-  // Lock the mutex.
-  void lock()
-  {
-    (void)::pthread_mutex_lock(&mutex_); // Ignore EINVAL.
-  }
+	// Lock the mutex.
+	void lock()
+	{
+		(void)::pthread_mutex_lock(&mutex_); // Ignore EINVAL.
+	}
 
-  // Unlock the mutex.
-  void unlock()
-  {
-    (void)::pthread_mutex_unlock(&mutex_); // Ignore EINVAL.
-  }
+	// Unlock the mutex.
+	void unlock()
+	{
+		(void)::pthread_mutex_unlock(&mutex_); // Ignore EINVAL.
+	}
 
-  ::pthread_mutex_t mutex_;
+	::pthread_mutex_t mutex_;
 };
 
 #define BOOST_ASIO_POSIX_STATIC_MUTEX_INIT { PTHREAD_MUTEX_INITIALIZER }

@@ -46,142 +46,155 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct rpoly {};
+namespace par4
+{
+struct rpoly {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace rpoly
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace rpoly
+{
 
-            static const double EPS = 1e-9;
+static const double EPS = 1e-9;
 
-            template <typename T>
-            struct par_rpoly
-            {
-                T   phi1;
-                T   fxa;
-                T   fxb;
-                int mode;
-            };
+template <typename T>
+struct par_rpoly
+{
+	T   phi1;
+	T   fxa;
+	T   fxb;
+	int mode;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_rpoly_spheroid : public base_t_f<base_rpoly_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_rpoly_spheroid : public base_t_f<base_rpoly_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_rpoly<CalculationType> m_proj_parm;
+	par_rpoly<CalculationType> m_proj_parm;
 
-                inline base_rpoly_spheroid(const Parameters& par)
-                    : base_t_f<base_rpoly_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_rpoly_spheroid(const Parameters& par)
+		: base_t_f<base_rpoly_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType fa;
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType fa;
 
-                    if (this->m_proj_parm.mode)
-                        fa = tan(lp_lon * this->m_proj_parm.fxb) * this->m_proj_parm.fxa;
-                    else
-                        fa = 0.5 * lp_lon;
-                    if (fabs(lp_lat) < EPS) {
-                        xy_x = fa + fa;
-                        xy_y = - this->m_par.phi0;
-                    } else {
-                        xy_y = 1. / tan(lp_lat);
-                        xy_x = sin(fa = 2. * atan(fa * sin(lp_lat))) * xy_y;
-                        xy_y = lp_lat - this->m_par.phi0 + (1. - cos(fa)) * xy_y;
-                    }
-                }
+		if (this->m_proj_parm.mode)
+			fa = tan(lp_lon * this->m_proj_parm.fxb) * this->m_proj_parm.fxa;
+		else
+			fa = 0.5 * lp_lon;
+		if (fabs(lp_lat) < EPS)
+		{
+			xy_x = fa + fa;
+			xy_y = - this->m_par.phi0;
+		}
+		else
+		{
+			xy_y = 1. / tan(lp_lat);
+			xy_x = sin(fa = 2. * atan(fa * sin(lp_lat))) * xy_y;
+			xy_y = lp_lat - this->m_par.phi0 + (1. - cos(fa)) * xy_y;
+		}
+	}
 
-                static inline std::string get_name()
-                {
-                    return "rpoly_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "rpoly_spheroid";
+	}
 
-            };
+};
 
-            // Rectangular Polyconic
-            template <typename Parameters, typename T>
-            inline void setup_rpoly(Parameters& par, par_rpoly<T>& proj_parm)
-            {
-                if ((proj_parm.mode = (proj_parm.phi1 = fabs(pj_param(par.params, "rlat_ts").f)) > EPS)) {
-                    proj_parm.fxb = 0.5 * sin(proj_parm.phi1);
-                    proj_parm.fxa = 0.5 / proj_parm.fxb;
-                }
-                par.es = 0.;
-            }
+// Rectangular Polyconic
+template <typename Parameters, typename T>
+inline void setup_rpoly(Parameters& par, par_rpoly<T>& proj_parm)
+{
+	if ((proj_parm.mode = (proj_parm.phi1 = fabs(pj_param(par.params, "rlat_ts").f)) > EPS))
+	{
+		proj_parm.fxb = 0.5 * sin(proj_parm.phi1);
+		proj_parm.fxa = 0.5 / proj_parm.fxb;
+	}
+	par.es = 0.;
+}
 
-    }} // namespace detail::rpoly
-    #endif // doxygen
+}
+} // namespace detail::rpoly
+#endif // doxygen
 
-    /*!
-        \brief Rectangular Polyconic projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Conic
-         - Spheroid
-         - no inverse
-        \par Projection parameters
-         - lat_ts: Latitude of true scale (degrees)
-        \par Example
-        \image html ex_rpoly.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct rpoly_spheroid : public detail::rpoly::base_rpoly_spheroid<CalculationType, Parameters>
-    {
-        inline rpoly_spheroid(const Parameters& par) : detail::rpoly::base_rpoly_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::rpoly::setup_rpoly(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Rectangular Polyconic projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Conic
+     - Spheroid
+     - no inverse
+    \par Projection parameters
+     - lat_ts: Latitude of true scale (degrees)
+    \par Example
+    \image html ex_rpoly.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct rpoly_spheroid : public detail::rpoly::base_rpoly_spheroid<CalculationType, Parameters>
+{
+	inline rpoly_spheroid(const Parameters& par) : detail::rpoly::base_rpoly_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::rpoly::setup_rpoly(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::rpoly, rpoly_spheroid, rpoly_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::rpoly, rpoly_spheroid, rpoly_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class rpoly_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<rpoly_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class rpoly_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<rpoly_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void rpoly_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("rpoly", new rpoly_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void rpoly_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("rpoly", new rpoly_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_RPOLY_HPP
 

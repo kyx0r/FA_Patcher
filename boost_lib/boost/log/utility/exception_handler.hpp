@@ -39,11 +39,13 @@
 #define BOOST_LOG_MAX_EXCEPTION_TYPES 10
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_exception_types, exception_types, false)
 
@@ -52,64 +54,64 @@ template< typename HandlerT >
 class eh_root
 {
 public:
-    //! The exception handler type
-    typedef HandlerT handler_type;
-    //! The handler result type
-    typedef void result_type;
+	//! The exception handler type
+	typedef HandlerT handler_type;
+	//! The handler result type
+	typedef void result_type;
 
 protected:
-    //! Exception handler
-    handler_type m_Handler;
+	//! Exception handler
+	handler_type m_Handler;
 
 public:
-    //! Initializing constructor
-    explicit eh_root(handler_type const& handler) : m_Handler(handler)
-    {
-    }
+	//! Initializing constructor
+	explicit eh_root(handler_type const& handler) : m_Handler(handler)
+	{
+	}
 
-    //! Exception launcher
-    void operator()() const
-    {
-        throw;
-    }
+	//! Exception launcher
+	void operator()() const
+	{
+		throw;
+	}
 };
 
 //! A cons-list element of the exception handler class hierarchy
 template< typename ExceptionT, typename BaseT >
 class eh_cons :
-    public BaseT
+	public BaseT
 {
-    //! Base type
-    typedef BaseT base_type;
+	//! Base type
+	typedef BaseT base_type;
 
 public:
-    //! The exception handler type
-    typedef typename base_type::handler_type handler_type;
+	//! The exception handler type
+	typedef typename base_type::handler_type handler_type;
 
 public:
-    //! Initializing constructor
-    explicit eh_cons(handler_type const& handler) : base_type(handler)
-    {
-    }
+	//! Initializing constructor
+	explicit eh_cons(handler_type const& handler) : base_type(handler)
+	{
+	}
 
-    //! Exception launcher
-    void operator()() const
-    {
-        try
-        {
-            base_type::operator()();
-        }
-        catch (ExceptionT& e)
-        {
-            this->m_Handler(e);
-        }
-    }
+	//! Exception launcher
+	void operator()() const
+	{
+		try
+		{
+			base_type::operator()();
+		}
+		catch (ExceptionT& e)
+		{
+			this->m_Handler(e);
+		}
+	}
 };
 
 template< template< typename, typename > class EHT, typename HandlerT >
 struct make_self_contained_exception_handler
 {
-    typedef EHT< typename HandlerT::exception_types, HandlerT > type;
+	typedef EHT< typename HandlerT::exception_types, HandlerT > type;
 };
 
 } // namespace aux
@@ -121,48 +123,48 @@ struct make_self_contained_exception_handler
  */
 template< typename SequenceT, typename HandlerT >
 class exception_handler :
-    public mpl::fold<
-        SequenceT,
-        aux::eh_root< HandlerT >,
-        mpl::bind< mpl::quote2< aux::eh_cons >, mpl::_2, mpl::_1 >
-    >::type
+	public mpl::fold<
+	SequenceT,
+	aux::eh_root< HandlerT >,
+	mpl::bind< mpl::quote2< aux::eh_cons >, mpl::_2, mpl::_1 >
+	>::type
 {
-    //! Base type
-    typedef typename mpl::fold<
-        SequenceT,
-        aux::eh_root< HandlerT >,
-        mpl::bind< mpl::quote2< aux::eh_cons >, mpl::_2, mpl::_1 >
-    >::type base_type;
+	//! Base type
+	typedef typename mpl::fold<
+	SequenceT,
+	aux::eh_root< HandlerT >,
+	mpl::bind< mpl::quote2< aux::eh_cons >, mpl::_2, mpl::_1 >
+	>::type base_type;
 
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    typedef typename base_type::handler_type handler_type;
+	typedef typename base_type::handler_type handler_type;
 #else
-    //! The exception handler type
-    typedef HandlerT handler_type;
-    //! The handler result type
-    typedef void result_type;
+	//! The exception handler type
+	typedef HandlerT handler_type;
+	//! The handler result type
+	typedef void result_type;
 #endif
 
 public:
-    /*!
-     * Initializing constructor. Creates an exception handler with the specified
-     * function object that will receive the exception.
-     */
-    explicit exception_handler(handler_type const& handler) : base_type(handler)
-    {
-    }
+	/*!
+	 * Initializing constructor. Creates an exception handler with the specified
+	 * function object that will receive the exception.
+	 */
+	explicit exception_handler(handler_type const& handler) : base_type(handler)
+	{
+	}
 
-    /*!
-     * Exception launcher. Rethrows the current exception in order to detect its type
-     * and pass it to the aggregated function object.
-     *
-     * \note Must be called from within a \c catch statement.
-     */
-    void operator()() const
-    {
-        base_type::operator()();
-    }
+	/*!
+	 * Exception launcher. Rethrows the current exception in order to detect its type
+	 * and pass it to the aggregated function object.
+	 *
+	 * \note Must be called from within a \c catch statement.
+	 */
+	void operator()() const
+	{
+		base_type::operator()();
+	}
 };
 
 /*!
@@ -173,48 +175,48 @@ public:
  */
 template< typename SequenceT, typename HandlerT >
 class nothrow_exception_handler :
-    public exception_handler< SequenceT, HandlerT >
+	public exception_handler< SequenceT, HandlerT >
 {
-    //! Base type
-    typedef exception_handler< SequenceT, HandlerT > base_type;
+	//! Base type
+	typedef exception_handler< SequenceT, HandlerT > base_type;
 
 public:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    typedef typename base_type::handler_type handler_type;
+	typedef typename base_type::handler_type handler_type;
 #else
-    //! The exception handler type
-    typedef HandlerT handler_type;
-    //! The handler result type
-    typedef void result_type;
+	//! The exception handler type
+	typedef HandlerT handler_type;
+	//! The handler result type
+	typedef void result_type;
 #endif
 
 public:
-    /*!
-     * Initializing constructor. Creates an exception handler with the specified
-     * function object that will receive the exception.
-     */
-    explicit nothrow_exception_handler(handler_type const& handler) : base_type(handler)
-    {
-    }
+	/*!
+	 * Initializing constructor. Creates an exception handler with the specified
+	 * function object that will receive the exception.
+	 */
+	explicit nothrow_exception_handler(handler_type const& handler) : base_type(handler)
+	{
+	}
 
-    /*!
-     * Exception launcher. Rethrows the current exception in order to detect its type
-     * and pass it to the aggregated function object. If the type of the exception
-     * could not be detected, the user-defined handler is called with no arguments.
-     *
-     * \note Must be called from within a \c catch statement.
-     */
-    void operator()() const
-    {
-        try
-        {
-            base_type::operator()();
-        }
-        catch (...)
-        {
-            this->m_Handler();
-        }
-    }
+	/*!
+	 * Exception launcher. Rethrows the current exception in order to detect its type
+	 * and pass it to the aggregated function object. If the type of the exception
+	 * could not be detected, the user-defined handler is called with no arguments.
+	 *
+	 * \note Must be called from within a \c catch statement.
+	 */
+	void operator()() const
+	{
+		try
+		{
+			base_type::operator()();
+		}
+		catch (...)
+		{
+			this->m_Handler();
+		}
+	}
 };
 
 /*!
@@ -222,29 +224,29 @@ public:
  */
 inline nop make_exception_suppressor()
 {
-    return nop();
+	return nop();
 }
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
 template< typename HandlerT >
 inline typename boost::lazy_enable_if_c<
-    aux::has_exception_types< HandlerT >::value,
+aux::has_exception_types< HandlerT >::value,
     aux::make_self_contained_exception_handler< exception_handler, HandlerT >
->::type make_exception_handler(HandlerT const& handler)
+    >::type make_exception_handler(HandlerT const& handler)
 {
-    typedef typename aux::make_self_contained_exception_handler< exception_handler, HandlerT >::type eh_t;
-    return eh_t(handler);
+	typedef typename aux::make_self_contained_exception_handler< exception_handler, HandlerT >::type eh_t;
+	return eh_t(handler);
 }
 
 template< typename HandlerT >
 inline typename boost::lazy_enable_if_c<
-    aux::has_exception_types< HandlerT >::value,
+aux::has_exception_types< HandlerT >::value,
     aux::make_self_contained_exception_handler< nothrow_exception_handler, HandlerT >
->::type make_exception_handler(HandlerT const& handler, std::nothrow_t const&)
+    >::type make_exception_handler(HandlerT const& handler, std::nothrow_t const&)
 {
-    typedef typename aux::make_self_contained_exception_handler< nothrow_exception_handler, HandlerT >::type eh_t;
-    return eh_t(handler);
+	typedef typename aux::make_self_contained_exception_handler< nothrow_exception_handler, HandlerT >::type eh_t;
+	return eh_t(handler);
 }
 
 #define BOOST_LOG_MAKE_EXCEPTION_HANDLER_INTERNAL(z, n, data)\

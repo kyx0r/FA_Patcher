@@ -22,22 +22,24 @@
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
 
-namespace boost {
-namespace container {
+namespace boost
+{
+namespace container
+{
 
 #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 enum allocation_type_v
 {
-   // constants for allocation commands
-   allocate_new_v   = 0x01,
-   expand_fwd_v     = 0x02,
-   expand_bwd_v     = 0x04,
+	// constants for allocation commands
+	allocate_new_v   = 0x01,
+	expand_fwd_v     = 0x02,
+	expand_bwd_v     = 0x04,
 //   expand_both    = expand_fwd | expand_bwd,
 //   expand_or_new  = allocate_new | expand_both,
-   shrink_in_place_v = 0x08,
-   nothrow_allocation_v = 0x10,
-   zero_memory_v = 0x20,
-   try_shrink_in_place_v = 0x40
+	shrink_in_place_v = 0x08,
+	nothrow_allocation_v = 0x10,
+	zero_memory_v = 0x20,
+	try_shrink_in_place_v = 0x40
 };
 
 typedef unsigned int allocation_type;

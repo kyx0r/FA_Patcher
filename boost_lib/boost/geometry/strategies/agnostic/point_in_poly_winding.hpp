@@ -29,10 +29,14 @@
 #include <boost/geometry/strategies/spherical/point_in_poly_winding.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace within
+namespace strategy
+{
+namespace within
 {
 
 
@@ -47,37 +51,37 @@ template
     typename PointOfSegment,
     typename CalculationType,
     typename CSTag = typename tag_cast
-                        <
-                            typename cs_tag<Point>::type,
-                            spherical_tag
-                        >::type
->
+    <
+        typename cs_tag<Point>::type,
+        spherical_tag
+        >::type
+    >
 struct winding_base_type
 {
-    BOOST_MPL_ASSERT_MSG(false,
-                         NOT_IMPLEMENTED_FOR_THIS_COORDINATE_SYSTEM,
-                         (CSTag));
+	BOOST_MPL_ASSERT_MSG(false,
+	                     NOT_IMPLEMENTED_FOR_THIS_COORDINATE_SYSTEM,
+	                     (CSTag));
 };
 
 template <typename Point, typename PointOfSegment, typename CalculationType>
 struct winding_base_type<Point, PointOfSegment, CalculationType, cartesian_tag>
 {
-    typedef within::cartesian_winding<Point, PointOfSegment, CalculationType> type;
+	typedef within::cartesian_winding<Point, PointOfSegment, CalculationType> type;
 };
 
 template <typename Point, typename PointOfSegment, typename CalculationType>
 struct winding_base_type<Point, PointOfSegment, CalculationType, spherical_tag>
 {
-    typedef within::detail::spherical_winding_base
-        <
-            Point,
-            PointOfSegment,
-            typename strategy::side::services::default_strategy
-                <
-                    typename cs_tag<Point>::type
-                >::type,
-            CalculationType
-        > type;
+	typedef within::detail::spherical_winding_base
+	<
+	Point,
+	PointOfSegment,
+	typename strategy::side::services::default_strategy
+	<
+	typename cs_tag<Point>::type
+	>::type,
+	CalculationType
+	> type;
 };
 
 
@@ -103,32 +107,34 @@ template
     typename Point,
     typename PointOfSegment = Point,
     typename CalculationType = void
->
+    >
 class winding
-    : public within::detail::winding_base_type
-        <
-            Point, PointOfSegment, CalculationType
-        >::type
+	: public within::detail::winding_base_type
+	  <
+	  Point, PointOfSegment, CalculationType
+	  >::type
 {
-    typedef typename within::detail::winding_base_type
-        <
-            Point, PointOfSegment, CalculationType
-        >::type base_t;
+	typedef typename within::detail::winding_base_type
+	<
+	Point, PointOfSegment, CalculationType
+	>::type base_t;
 
 public:
-    winding() {}
+	winding() {}
 
-    template <typename Model>
-    explicit winding(Model const& model)
-        : base_t(model)
-    {}
+	template <typename Model>
+	explicit winding(Model const& model)
+		: base_t(model)
+	{}
 };
 
 
-}} // namespace strategy::within
+}
+} // namespace strategy::within
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGY_AGNOSTIC_POINT_IN_POLY_WINDING_HPP

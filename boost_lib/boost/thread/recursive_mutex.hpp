@@ -22,43 +22,43 @@
 
 namespace boost
 {
-  namespace sync
-  {
+namespace sync
+{
 
 #ifdef BOOST_THREAD_NO_AUTO_DETECT_MUTEX_TYPES
-    template<>
-    struct is_basic_lockable<recursive_mutex>
-    {
-      BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-    template<>
-    struct is_lockable<recursive_mutex>
-    {
-      BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-    template<>
-    struct is_basic_lockable<recursive_timed_mutex>
-    {
-      BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-    template<>
-    struct is_lockable<recursive_timed_mutex>
-    {
-      BOOST_STATIC_CONSTANT(bool, value = true);
-    };
+template<>
+struct is_basic_lockable<recursive_mutex>
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
+template<>
+struct is_lockable<recursive_mutex>
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
+template<>
+struct is_basic_lockable<recursive_timed_mutex>
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
+template<>
+struct is_lockable<recursive_timed_mutex>
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 #endif
 
-    template<>
-    struct is_recursive_mutex_sur_parolle<recursive_mutex>
-    {
-      BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-    template<>
-    struct is_recursive_mutex_sur_parolle<recursive_timed_mutex>
-    {
-      BOOST_STATIC_CONSTANT(bool, value = true);
-    };
+template<>
+struct is_recursive_mutex_sur_parolle<recursive_mutex>
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
+template<>
+struct is_recursive_mutex_sur_parolle<recursive_timed_mutex>
+{
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 
-  }
+}
 }
 #endif

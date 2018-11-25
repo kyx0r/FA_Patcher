@@ -23,105 +23,108 @@
 #include <utility>
 #include <boost/fusion/container/list/detail/list_to_cons.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct nil_;
+namespace fusion
+{
+struct nil_;
 
-    template <>
-    struct list<>
-        : detail::list_to_cons<>::type
-    {
-    private:
-        typedef detail::list_to_cons<> list_to_cons;
-        typedef list_to_cons::type inherited_type;
+template <>
+struct list<>
+	: detail::list_to_cons<>::type
+{
+private:
+	typedef detail::list_to_cons<> list_to_cons;
+	typedef list_to_cons::type inherited_type;
 
-    public:
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        list()
-            : inherited_type() {}
-
-#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
-        list(Sequence const& rhs)
-            : inherited_type(rhs) {}
-
-        template <typename Sequence>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        list&
-        operator=(Sequence const& rhs)
-        {
-            inherited_type::operator=(rhs);
-            return *this;
-        }
-#else
-        template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
-        list(Sequence&& rhs)
-            : inherited_type(std::forward<Sequence>(rhs)) {}
-
-        template <typename Sequence>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        list&
-        operator=(Sequence&& rhs)
-        {
-            inherited_type::operator=(std::forward<Sequence>(rhs));
-            return *this;
-        }
-#endif
-    };
-
-    template <typename ...T>
-    struct list
-        : detail::list_to_cons<T...>::type
-    {
-    private:
-        typedef detail::list_to_cons<T...> list_to_cons;
-        typedef typename list_to_cons::type inherited_type;
-
-    public:
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        list()
-            : inherited_type() {}
+public:
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	list()
+		: inherited_type() {}
 
 #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
-        list(Sequence const& rhs)
-            : inherited_type(rhs) {}
+	template <typename Sequence>
+	BOOST_FUSION_GPU_ENABLED
+	list(Sequence const& rhs)
+		: inherited_type(rhs) {}
+
+	template <typename Sequence>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	list&
+	operator=(Sequence const& rhs)
+	{
+		inherited_type::operator=(rhs);
+		return *this;
+	}
 #else
-        template <typename Sequence>
-        BOOST_FUSION_GPU_ENABLED
-        list(Sequence&& rhs)
-            : inherited_type(std::forward<Sequence>(rhs)) {}
+	template <typename Sequence>
+	BOOST_FUSION_GPU_ENABLED
+	list(Sequence&& rhs)
+		: inherited_type(std::forward<Sequence>(rhs)) {}
+
+	template <typename Sequence>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	list&
+	operator=(Sequence&& rhs)
+	{
+		inherited_type::operator=(std::forward<Sequence>(rhs));
+		return *this;
+	}
+#endif
+};
+
+template <typename ...T>
+struct list
+	: detail::list_to_cons<T...>::type
+{
+private:
+	typedef detail::list_to_cons<T...> list_to_cons;
+	typedef typename list_to_cons::type inherited_type;
+
+public:
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	list()
+		: inherited_type() {}
+
+#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+	template <typename Sequence>
+	BOOST_FUSION_GPU_ENABLED
+	list(Sequence const& rhs)
+		: inherited_type(rhs) {}
+#else
+	template <typename Sequence>
+	BOOST_FUSION_GPU_ENABLED
+	list(Sequence&& rhs)
+		: inherited_type(std::forward<Sequence>(rhs)) {}
 #endif
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        explicit
-        list(typename detail::call_param<T>::type ...args)
-            : inherited_type(list_to_cons::call(args...)) {}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	explicit
+	list(typename detail::call_param<T>::type ...args)
+		: inherited_type(list_to_cons::call(args...)) {}
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        template <typename Sequence>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        list&
-        operator=(Sequence const& rhs)
-        {
-            inherited_type::operator=(rhs);
-            return *this;
-        }
+	template <typename Sequence>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	list&
+	operator=(Sequence const& rhs)
+	{
+		inherited_type::operator=(rhs);
+		return *this;
+	}
 #else
-        template <typename Sequence>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        list&
-        operator=(Sequence&& rhs)
-        {
-            inherited_type::operator=(std::forward<Sequence>(rhs));
-            return *this;
-        }
+	template <typename Sequence>
+	BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	list&
+	operator=(Sequence&& rhs)
+	{
+		inherited_type::operator=(std::forward<Sequence>(rhs));
+		return *this;
+	}
 #endif
-    };
-}}
+};
+}
+}
 
 #endif
 #endif

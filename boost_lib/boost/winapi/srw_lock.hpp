@@ -28,38 +28,41 @@
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-struct _RTL_SRWLOCK;
+	struct _RTL_SRWLOCK;
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-InitializeSRWLock(::_RTL_SRWLOCK* SRWLock);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	InitializeSRWLock(::_RTL_SRWLOCK* SRWLock);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-ReleaseSRWLockExclusive(::_RTL_SRWLOCK* SRWLock);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	ReleaseSRWLockExclusive(::_RTL_SRWLOCK* SRWLock);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-ReleaseSRWLockShared(::_RTL_SRWLOCK* SRWLock);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	ReleaseSRWLockShared(::_RTL_SRWLOCK* SRWLock);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-AcquireSRWLockExclusive(::_RTL_SRWLOCK* SRWLock);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	AcquireSRWLockExclusive(::_RTL_SRWLOCK* SRWLock);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-AcquireSRWLockShared(::_RTL_SRWLOCK* SRWLock);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	AcquireSRWLockShared(::_RTL_SRWLOCK* SRWLock);
 
 #if !defined( BOOST_WINAPI_NO_TRY_ACQUIRE_SRWLOCK )
-BOOST_SYMBOL_IMPORT boost::winapi::BOOLEAN_ WINAPI
-TryAcquireSRWLockExclusive(::_RTL_SRWLOCK* SRWLock);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOLEAN_ WINAPI
+	TryAcquireSRWLockExclusive(::_RTL_SRWLOCK* SRWLock);
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOLEAN_ WINAPI
-TryAcquireSRWLockShared(::_RTL_SRWLOCK* SRWLock);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOLEAN_ WINAPI
+	TryAcquireSRWLockShared(::_RTL_SRWLOCK* SRWLock);
 #endif
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
-typedef struct BOOST_MAY_ALIAS _RTL_SRWLOCK {
-    PVOID_ Ptr;
+typedef struct BOOST_MAY_ALIAS _RTL_SRWLOCK
+{
+	PVOID_ Ptr;
 } SRWLOCK_, *PSRWLOCK_;
 
 #if defined( BOOST_USE_WINDOWS_H )
@@ -70,38 +73,38 @@ typedef struct BOOST_MAY_ALIAS _RTL_SRWLOCK {
 
 BOOST_FORCEINLINE VOID_ InitializeSRWLock(PSRWLOCK_ SRWLock)
 {
-    ::InitializeSRWLock(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
+	::InitializeSRWLock(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
 }
 
 BOOST_FORCEINLINE VOID_ ReleaseSRWLockExclusive(PSRWLOCK_ SRWLock)
 {
-    ::ReleaseSRWLockExclusive(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
+	::ReleaseSRWLockExclusive(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
 }
 
 BOOST_FORCEINLINE VOID_ ReleaseSRWLockShared(PSRWLOCK_ SRWLock)
 {
-    ::ReleaseSRWLockShared(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
+	::ReleaseSRWLockShared(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
 }
 
 BOOST_FORCEINLINE VOID_ AcquireSRWLockExclusive(PSRWLOCK_ SRWLock)
 {
-    ::AcquireSRWLockExclusive(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
+	::AcquireSRWLockExclusive(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
 }
 
 BOOST_FORCEINLINE VOID_ AcquireSRWLockShared(PSRWLOCK_ SRWLock)
 {
-    ::AcquireSRWLockShared(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
+	::AcquireSRWLockShared(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
 }
 
 #if !defined( BOOST_WINAPI_NO_TRY_ACQUIRE_SRWLOCK )
 BOOST_FORCEINLINE BOOLEAN_ TryAcquireSRWLockExclusive(PSRWLOCK_ SRWLock)
 {
-    return ::TryAcquireSRWLockExclusive(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
+	return ::TryAcquireSRWLockExclusive(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
 }
 
 BOOST_FORCEINLINE BOOLEAN_ TryAcquireSRWLockShared(PSRWLOCK_ SRWLock)
 {
-    return ::TryAcquireSRWLockShared(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
+	return ::TryAcquireSRWLockShared(reinterpret_cast< ::_RTL_SRWLOCK* >(SRWLock));
 }
 #endif
 

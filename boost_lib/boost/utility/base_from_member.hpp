@@ -72,8 +72,8 @@ namespace detail
 template < typename T >
 struct remove_cv_ref
 {
-    typedef typename ::boost::remove_cv<typename
-     ::boost::remove_reference<T>::type>::type  type;
+	typedef typename ::boost::remove_cv<typename
+	::boost::remove_reference<T>::type>::type  type;
 
 };  // boost::detail::remove_cv_ref
 
@@ -85,9 +85,9 @@ struct remove_cv_ref
 
 template < typename T, typename U >
 struct is_related
-    : public ::boost::is_same<
-     typename ::boost::detail::remove_cv_ref<T>::type,
-     typename ::boost::detail::remove_cv_ref<U>::type >
+	: public ::boost::is_same<
+	  typename ::boost::detail::remove_cv_ref<T>::type,
+	  typename ::boost::detail::remove_cv_ref<U>::type >
 {};
 
 //  Enable-if-on-unidentical-unmarked-type class template  -------------------//
@@ -99,12 +99,12 @@ struct is_related
 #ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
 template<typename ...T>
 struct enable_if_unrelated
-    : public ::boost::enable_if_c<true>
+	: public ::boost::enable_if_c<true>
 {};
 
 template<typename T, typename U, typename ...U2>
 struct enable_if_unrelated<T, U, U2...>
-    : public ::boost::disable_if< ::boost::detail::is_related<T, U> >
+	: public ::boost::disable_if< ::boost::detail::is_related<T, U> >
 {};
 #endif
 
@@ -124,27 +124,27 @@ template < typename MemberType, int UniqueID = 0 >
 class base_from_member
 {
 protected:
-    MemberType  member;
+	MemberType  member;
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && \
     !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && \
     !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) && \
     !(defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 4))
-    template <typename ...T, typename EnableIf = typename
-     ::boost::detail::enable_if_unrelated<base_from_member, T...>::type>
-    explicit BOOST_CONSTEXPR base_from_member( T&& ...x )
-        BOOST_NOEXCEPT_IF( BOOST_NOEXCEPT_EXPR(::new ((void*) 0) MemberType(
-         static_cast<T&&>(x)... )) )  // no std::is_nothrow_constructible...
-        : member( static_cast<T&&>(x)... )     // ...nor std::forward needed
-        {}
+	template <typename ...T, typename EnableIf = typename
+	          ::boost::detail::enable_if_unrelated<base_from_member, T...>::type>
+	explicit BOOST_CONSTEXPR base_from_member( T&& ...x )
+	BOOST_NOEXCEPT_IF( BOOST_NOEXCEPT_EXPR(::new ((void*) 0) MemberType(
+	        static_cast<T&&>(x)... )) )  // no std::is_nothrow_constructible...
+		: member( static_cast<T&&>(x)... )     // ...nor std::forward needed
+	{}
 #else
-    base_from_member()
-        : member()
-        {}
+	base_from_member()
+		: member()
+	{}
 
-    template < typename T0 > explicit base_from_member( T0 x0 ) : member( x0 ) {}
-    BOOST_PP_REPEAT_FROM_TO( 2, BOOST_PP_INC(BOOST_BASE_FROM_MEMBER_MAX_ARITY),
-     BOOST_PRIVATE_CTR_DEF, _ )
+	template < typename T0 > explicit base_from_member( T0 x0 ) : member( x0 ) {}
+	BOOST_PP_REPEAT_FROM_TO( 2, BOOST_PP_INC(BOOST_BASE_FROM_MEMBER_MAX_ARITY),
+	                         BOOST_PRIVATE_CTR_DEF, _ )
 #endif
 
 };  // boost::base_from_member
@@ -153,12 +153,13 @@ template < typename MemberType, int UniqueID >
 class base_from_member<MemberType&, UniqueID>
 {
 protected:
-    MemberType& member;
+	MemberType& member;
 
-    explicit BOOST_CONSTEXPR base_from_member( MemberType& x )
-        BOOST_NOEXCEPT
-        : member( x )
-        {}
+	explicit BOOST_CONSTEXPR base_from_member( MemberType& x )
+	BOOST_NOEXCEPT
+:
+	member( x )
+	{}
 
 };  // boost::base_from_member
 

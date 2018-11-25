@@ -23,26 +23,34 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! Fake mutex that doesn't do anything. Note: we're not using \c null_mutex from Boost.Thread in order not to introduce false dependencies on Boost.Thread and Boost.Chrono.
 class fake_mutex
 {
 public:
-    BOOST_DEFAULTED_FUNCTION(fake_mutex(), {})
-    void lock() {}
-    bool try_lock() { return true; }
-    template< typename T >
-    bool timed_lock(T const&) { return true; }
-    void unlock() {}
+	BOOST_DEFAULTED_FUNCTION(fake_mutex(), {})
+	void lock() {}
+	bool try_lock()
+	{
+		return true;
+	}
+	template< typename T >
+	bool timed_lock(T const&)
+	{
+		return true;
+	}
+	void unlock() {}
 
-    // Copying prohibited
-    BOOST_DELETED_FUNCTION(fake_mutex(fake_mutex const&))
-    BOOST_DELETED_FUNCTION(fake_mutex& operator=(fake_mutex const&))
+	// Copying prohibited
+	BOOST_DELETED_FUNCTION(fake_mutex(fake_mutex const&))
+	BOOST_DELETED_FUNCTION(fake_mutex& operator=(fake_mutex const&))
 };
 
 } // namespace aux

@@ -32,9 +32,12 @@
 //!\file
 //!Describes the real adaptive pool shared by many Interprocess adaptive pool allocators
 
-namespace boost {
-namespace interprocess {
-namespace ipcdetail {
+namespace boost
+{
+namespace interprocess
+{
+namespace ipcdetail
+{
 
 
 
@@ -44,33 +47,35 @@ namespace ipcdetail {
 //!nodes allocated per block (NodesPerBlock) are known at compile time
 template< class SegmentManager, std::size_t NodeSize, std::size_t NodesPerBlock >
 class private_node_pool
-   //Inherit from the implementation to avoid template bloat
-   :  public boost::container::dtl::
-         private_node_pool_impl<typename SegmentManager::segment_manager_base_type>
+//Inherit from the implementation to avoid template bloat
+	:  public boost::container::dtl::
+	   private_node_pool_impl<typename SegmentManager::segment_manager_base_type>
 {
-   typedef boost::container::dtl::private_node_pool_impl
-      <typename SegmentManager::segment_manager_base_type> base_t;
-   //Non-copyable
-   private_node_pool();
-   private_node_pool(const private_node_pool &);
-   private_node_pool &operator=(const private_node_pool &);
+	typedef boost::container::dtl::private_node_pool_impl
+	<typename SegmentManager::segment_manager_base_type> base_t;
+	//Non-copyable
+	private_node_pool();
+	private_node_pool(const private_node_pool &);
+	private_node_pool &operator=(const private_node_pool &);
 
-   public:
-   typedef SegmentManager              segment_manager;
-   typedef typename base_t::size_type  size_type;
+public:
+	typedef SegmentManager              segment_manager;
+	typedef typename base_t::size_type  size_type;
 
-   static const size_type nodes_per_block = NodesPerBlock;
-   //Deprecated, use nodes_per_block
-   static const size_type nodes_per_chunk = NodesPerBlock;
+	static const size_type nodes_per_block = NodesPerBlock;
+	//Deprecated, use nodes_per_block
+	static const size_type nodes_per_chunk = NodesPerBlock;
 
-   //!Constructor from a segment manager. Never throws
-   private_node_pool(segment_manager *segment_mngr)
-      :  base_t(segment_mngr, NodeSize, NodesPerBlock)
-   {}
+	//!Constructor from a segment manager. Never throws
+	private_node_pool(segment_manager *segment_mngr)
+		:  base_t(segment_mngr, NodeSize, NodesPerBlock)
+	{}
 
-   //!Returns the segment manager. Never throws
-   segment_manager* get_segment_manager() const
-   {  return static_cast<segment_manager*>(base_t::get_segment_manager_base()); }
+	//!Returns the segment manager. Never throws
+	segment_manager* get_segment_manager() const
+	{
+		return static_cast<segment_manager*>(base_t::get_segment_manager_base());
+	}
 };
 
 
@@ -83,23 +88,23 @@ class private_node_pool
 //!responsibility of user classes. Node size (NodeSize) and the number of
 //!nodes allocated per block (NodesPerBlock) are known at compile time
 template< class SegmentManager
-        , std::size_t NodeSize
-        , std::size_t NodesPerBlock
-        >
+          , std::size_t NodeSize
+          , std::size_t NodesPerBlock
+          >
 class shared_node_pool
-   :  public ipcdetail::shared_pool_impl
-      < private_node_pool
-         <SegmentManager, NodeSize, NodesPerBlock>
-      >
+	:  public ipcdetail::shared_pool_impl
+	   < private_node_pool
+	   <SegmentManager, NodeSize, NodesPerBlock>
+	   >
 {
-   typedef ipcdetail::shared_pool_impl
-      < private_node_pool
-         <SegmentManager, NodeSize, NodesPerBlock>
-      > base_t;
-   public:
-   shared_node_pool(SegmentManager *segment_mgnr)
-      : base_t(segment_mgnr)
-   {}
+	typedef ipcdetail::shared_pool_impl
+	< private_node_pool
+	<SegmentManager, NodeSize, NodesPerBlock>
+	> base_t;
+public:
+	shared_node_pool(SegmentManager *segment_mgnr)
+		: base_t(segment_mgnr)
+	{}
 };
 
 }  //namespace ipcdetail {

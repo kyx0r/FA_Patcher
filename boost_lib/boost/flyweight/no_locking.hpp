@@ -19,14 +19,16 @@
 
 /* null locking policy */
 
-namespace boost{
+namespace boost
+{
 
-namespace flyweights{
+namespace flyweights
+{
 
 struct no_locking:locking_marker
 {
-  struct             mutex_type{};
-  typedef mutex_type lock_type;
+	struct             mutex_type {};
+	typedef mutex_type lock_type;
 };
 
 } /* namespace flyweights */

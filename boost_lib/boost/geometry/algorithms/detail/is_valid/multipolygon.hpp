@@ -46,328 +46,333 @@
 #include <boost/geometry/strategies/intersection.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace is_valid
+namespace detail
+{
+namespace is_valid
 {
 
 
 template <typename MultiPolygon, bool AllowEmptyMultiGeometries>
 class is_valid_multipolygon
-    : is_valid_polygon
-        <
-            typename boost::range_value<MultiPolygon>::type,
-            true // check only the validity of rings
-        >
+	: is_valid_polygon
+	  <
+	  typename boost::range_value<MultiPolygon>::type,
+	  true // check only the validity of rings
+	  >
 {
 private:
-    typedef is_valid_polygon
-        <
-            typename boost::range_value<MultiPolygon>::type,
-            true
-        > base;
+	typedef is_valid_polygon
+	<
+	typename boost::range_value<MultiPolygon>::type,
+	         true
+	         > base;
 
 
 
-    template
-    <
-        typename PolygonIterator,
-        typename TurnIterator,
-        typename VisitPolicy,
-        typename Strategy
-    >
-    static inline
-    bool are_polygon_interiors_disjoint(PolygonIterator polygons_first,
-                                        PolygonIterator polygons_beyond,
-                                        TurnIterator turns_first,
-                                        TurnIterator turns_beyond,
-                                        VisitPolicy& visitor,
-                                        Strategy const& strategy)
-    {
-        boost::ignore_unused(visitor);
+	template
+	<
+	    typename PolygonIterator,
+	    typename TurnIterator,
+	    typename VisitPolicy,
+	    typename Strategy
+	    >
+	static inline
+	bool are_polygon_interiors_disjoint(PolygonIterator polygons_first,
+	                                    PolygonIterator polygons_beyond,
+	                                    TurnIterator turns_first,
+	                                    TurnIterator turns_beyond,
+	                                    VisitPolicy& visitor,
+	                                    Strategy const& strategy)
+	{
+		boost::ignore_unused(visitor);
 
-        // collect all polygons that have crossing turns
-        std::set<signed_size_type> multi_indices;
-        for (TurnIterator tit = turns_first; tit != turns_beyond; ++tit)
-        {
-            if (! tit->touch_only)
-            {
-                multi_indices.insert(tit->operations[0].seg_id.multi_index);
-                multi_indices.insert(tit->operations[1].seg_id.multi_index);
-            }
-        }
+		// collect all polygons that have crossing turns
+		std::set<signed_size_type> multi_indices;
+		for (TurnIterator tit = turns_first; tit != turns_beyond; ++tit)
+		{
+			if (! tit->touch_only)
+			{
+				multi_indices.insert(tit->operations[0].seg_id.multi_index);
+				multi_indices.insert(tit->operations[1].seg_id.multi_index);
+			}
+		}
 
-        typedef geometry::model::box<typename point_type<MultiPolygon>::type> box_type;
-        typedef typename base::template partition_item<PolygonIterator, box_type> item_type;
+		typedef geometry::model::box<typename point_type<MultiPolygon>::type> box_type;
+		typedef typename base::template partition_item<PolygonIterator, box_type> item_type;
 
-        // put polygon iterators without turns in a vector
-        std::vector<item_type> polygon_iterators;
-        signed_size_type multi_index = 0;
-        for (PolygonIterator it = polygons_first; it != polygons_beyond;
-             ++it, ++multi_index)
-        {
-            if (multi_indices.find(multi_index) == multi_indices.end())
-            {
-                polygon_iterators.push_back(item_type(it));
-            }
-        }
+		// put polygon iterators without turns in a vector
+		std::vector<item_type> polygon_iterators;
+		signed_size_type multi_index = 0;
+		for (PolygonIterator it = polygons_first; it != polygons_beyond;
+		        ++it, ++multi_index)
+		{
+			if (multi_indices.find(multi_index) == multi_indices.end())
+			{
+				polygon_iterators.push_back(item_type(it));
+			}
+		}
 
-        // prepare strategies
-        typedef typename std::iterator_traits<PolygonIterator>::value_type polygon_type;
-        typedef typename Strategy::template point_in_geometry_strategy
-            <
-                polygon_type, polygon_type
-            >::type within_strategy_type;
-        within_strategy_type const within_strategy
-            = strategy.template get_point_in_geometry_strategy<polygon_type, polygon_type>();
-        typedef typename Strategy::envelope_strategy_type envelope_strategy_type;
-        envelope_strategy_type const envelope_strategy
-            = strategy.get_envelope_strategy();
+		// prepare strategies
+		typedef typename std::iterator_traits<PolygonIterator>::value_type polygon_type;
+		typedef typename Strategy::template point_in_geometry_strategy
+		<
+		    polygon_type, polygon_type
+		    >::type within_strategy_type;
+		within_strategy_type const within_strategy
+		    = strategy.template get_point_in_geometry_strategy<polygon_type, polygon_type>();
+		typedef typename Strategy::envelope_strategy_type envelope_strategy_type;
+		envelope_strategy_type const envelope_strategy
+		    = strategy.get_envelope_strategy();
 
-        // call partition to check if polygons are disjoint from each other
-        typename base::template item_visitor_type<within_strategy_type> item_visitor(within_strategy);
+		// call partition to check if polygons are disjoint from each other
+		typename base::template item_visitor_type<within_strategy_type> item_visitor(within_strategy);
 
-        geometry::partition
-            <
-                geometry::model::box<typename point_type<MultiPolygon>::type>
-            >::apply(polygon_iterators, item_visitor,
-                     typename base::template expand_box<envelope_strategy_type>(envelope_strategy),
-                     typename base::template overlaps_box<envelope_strategy_type>(envelope_strategy));
+		geometry::partition
+		<
+		geometry::model::box<typename point_type<MultiPolygon>::type>
+		>::apply(polygon_iterators, item_visitor,
+		         typename base::template expand_box<envelope_strategy_type>(envelope_strategy),
+		         typename base::template overlaps_box<envelope_strategy_type>(envelope_strategy));
 
-        if (item_visitor.items_overlap)
-        {
-            return visitor.template apply<failure_intersecting_interiors>();
-        }
-        else
-        {
-            return visitor.template apply<no_failure>();
-        }
-    }
-
-
-
-    class has_multi_index
-    {
-    public:
-        has_multi_index(signed_size_type multi_index)
-            : m_multi_index(multi_index)
-        {}
-
-        template <typename Turn>
-        inline bool operator()(Turn const& turn) const
-        {
-            return turn.operations[0].seg_id.multi_index == m_multi_index
-                && turn.operations[1].seg_id.multi_index == m_multi_index;
-        }
-
-    private:
-        signed_size_type const m_multi_index;
-    };
+		if (item_visitor.items_overlap)
+		{
+			return visitor.template apply<failure_intersecting_interiors>();
+		}
+		else
+		{
+			return visitor.template apply<no_failure>();
+		}
+	}
 
 
 
-    template <typename Predicate>
-    struct has_property_per_polygon
-    {
-        template
-        <
-            typename PolygonIterator,
-            typename TurnIterator,
-            typename VisitPolicy,
-            typename Strategy
-        >
-        static inline bool apply(PolygonIterator polygons_first,
-                                 PolygonIterator polygons_beyond,
-                                 TurnIterator turns_first,
-                                 TurnIterator turns_beyond,
-                                 VisitPolicy& visitor,
-                                 Strategy const& strategy)
-        {
-            signed_size_type multi_index = 0;
-            for (PolygonIterator it = polygons_first; it != polygons_beyond;
-                 ++it, ++multi_index)
-            {
-                has_multi_index index_predicate(multi_index);
+	class has_multi_index
+	{
+	public:
+		has_multi_index(signed_size_type multi_index)
+			: m_multi_index(multi_index)
+		{}
 
-                typedef boost::filter_iterator
-                    <
-                        has_multi_index, TurnIterator
-                    > filtered_turn_iterator;
+		template <typename Turn>
+		inline bool operator()(Turn const& turn) const
+		{
+			return turn.operations[0].seg_id.multi_index == m_multi_index
+			       && turn.operations[1].seg_id.multi_index == m_multi_index;
+		}
 
-                filtered_turn_iterator filtered_turns_first(index_predicate,
-                                                            turns_first,
-                                                            turns_beyond);
-
-                filtered_turn_iterator filtered_turns_beyond(index_predicate,
-                                                             turns_beyond,
-                                                             turns_beyond);
-
-                if (! Predicate::apply(*it,
-                                       filtered_turns_first,
-                                       filtered_turns_beyond,
-                                       visitor,
-                                       strategy))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-    };
+	private:
+		signed_size_type const m_multi_index;
+	};
 
 
 
-    template
-    <
-        typename PolygonIterator,
-        typename TurnIterator,
-        typename VisitPolicy,
-        typename Strategy
-    >
-    static inline bool have_holes_inside(PolygonIterator polygons_first,
-                                         PolygonIterator polygons_beyond,
-                                         TurnIterator turns_first,
-                                         TurnIterator turns_beyond,
-                                         VisitPolicy& visitor,
-                                         Strategy const& strategy)
-    {
-        return has_property_per_polygon
-            <
-                typename base::has_holes_inside
-            >::apply(polygons_first, polygons_beyond,
-                     turns_first, turns_beyond, visitor, strategy);
-    }
+	template <typename Predicate>
+	struct has_property_per_polygon
+	{
+		template
+		<
+		    typename PolygonIterator,
+		    typename TurnIterator,
+		    typename VisitPolicy,
+		    typename Strategy
+		    >
+		static inline bool apply(PolygonIterator polygons_first,
+		                         PolygonIterator polygons_beyond,
+		                         TurnIterator turns_first,
+		                         TurnIterator turns_beyond,
+		                         VisitPolicy& visitor,
+		                         Strategy const& strategy)
+		{
+			signed_size_type multi_index = 0;
+			for (PolygonIterator it = polygons_first; it != polygons_beyond;
+			        ++it, ++multi_index)
+			{
+				has_multi_index index_predicate(multi_index);
+
+				typedef boost::filter_iterator
+				<
+				has_multi_index, TurnIterator
+				> filtered_turn_iterator;
+
+				filtered_turn_iterator filtered_turns_first(index_predicate,
+				        turns_first,
+				        turns_beyond);
+
+				filtered_turn_iterator filtered_turns_beyond(index_predicate,
+				        turns_beyond,
+				        turns_beyond);
+
+				if (! Predicate::apply(*it,
+				                       filtered_turns_first,
+				                       filtered_turns_beyond,
+				                       visitor,
+				                       strategy))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+	};
 
 
 
-    template
-    <
-        typename PolygonIterator,
-        typename TurnIterator,
-        typename VisitPolicy,
-        typename Strategy
-    >
-    static inline bool have_connected_interior(PolygonIterator polygons_first,
-                                               PolygonIterator polygons_beyond,
-                                               TurnIterator turns_first,
-                                               TurnIterator turns_beyond,
-                                               VisitPolicy& visitor,
-                                               Strategy const& strategy)
-    {
-        return has_property_per_polygon
-            <
-                typename base::has_connected_interior
-            >::apply(polygons_first, polygons_beyond,
-                     turns_first, turns_beyond, visitor, strategy);
-    }
+	template
+	<
+	    typename PolygonIterator,
+	    typename TurnIterator,
+	    typename VisitPolicy,
+	    typename Strategy
+	    >
+	static inline bool have_holes_inside(PolygonIterator polygons_first,
+	                                     PolygonIterator polygons_beyond,
+	                                     TurnIterator turns_first,
+	                                     TurnIterator turns_beyond,
+	                                     VisitPolicy& visitor,
+	                                     Strategy const& strategy)
+	{
+		return has_property_per_polygon
+		       <
+		       typename base::has_holes_inside
+		       >::apply(polygons_first, polygons_beyond,
+		                turns_first, turns_beyond, visitor, strategy);
+	}
 
 
-    template <typename VisitPolicy, typename Strategy>
-    struct per_polygon
-    {
-        per_polygon(VisitPolicy& policy, Strategy const& strategy)
-            : m_policy(policy)
-            , m_strategy(strategy)
-        {}
 
-        template <typename Polygon>
-        inline bool apply(Polygon const& polygon) const
-        {
-            return base::apply(polygon, m_policy, m_strategy);
-        }
+	template
+	<
+	    typename PolygonIterator,
+	    typename TurnIterator,
+	    typename VisitPolicy,
+	    typename Strategy
+	    >
+	static inline bool have_connected_interior(PolygonIterator polygons_first,
+	        PolygonIterator polygons_beyond,
+	        TurnIterator turns_first,
+	        TurnIterator turns_beyond,
+	        VisitPolicy& visitor,
+	        Strategy const& strategy)
+	{
+		return has_property_per_polygon
+		       <
+		       typename base::has_connected_interior
+		       >::apply(polygons_first, polygons_beyond,
+		                turns_first, turns_beyond, visitor, strategy);
+	}
 
-        VisitPolicy& m_policy;
-        Strategy const& m_strategy;
-    };
+
+	template <typename VisitPolicy, typename Strategy>
+	struct per_polygon
+	{
+		per_polygon(VisitPolicy& policy, Strategy const& strategy)
+			: m_policy(policy)
+			, m_strategy(strategy)
+		{}
+
+		template <typename Polygon>
+		inline bool apply(Polygon const& polygon) const
+		{
+			return base::apply(polygon, m_policy, m_strategy);
+		}
+
+		VisitPolicy& m_policy;
+		Strategy const& m_strategy;
+	};
 public:
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(MultiPolygon const& multipolygon,
-                             VisitPolicy& visitor,
-                             Strategy const& strategy)
-    {
-        typedef debug_validity_phase<MultiPolygon> debug_phase;
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(MultiPolygon const& multipolygon,
+	                         VisitPolicy& visitor,
+	                         Strategy const& strategy)
+	{
+		typedef debug_validity_phase<MultiPolygon> debug_phase;
 
-        if (BOOST_GEOMETRY_CONDITION(
-                AllowEmptyMultiGeometries && boost::empty(multipolygon)))
-        {
-            return visitor.template apply<no_failure>();
-        }
+		if (BOOST_GEOMETRY_CONDITION(
+		            AllowEmptyMultiGeometries && boost::empty(multipolygon)))
+		{
+			return visitor.template apply<no_failure>();
+		}
 
-        // check validity of all polygons ring
-        debug_phase::apply(1);
+		// check validity of all polygons ring
+		debug_phase::apply(1);
 
-        if (! detail::check_iterator_range
-                  <
-                      per_polygon<VisitPolicy, Strategy>,
-                      false // do not check for empty multipolygon (done above)
-                  >::apply(boost::begin(multipolygon),
-                           boost::end(multipolygon),
-                           per_polygon<VisitPolicy, Strategy>(visitor, strategy)))
-        {
-            return false;
-        }
-
-
-        // compute turns and check if all are acceptable
-        debug_phase::apply(2);
-
-        typedef has_valid_self_turns<MultiPolygon> has_valid_turns;
-
-        std::deque<typename has_valid_turns::turn_type> turns;
-        bool has_invalid_turns =
-            ! has_valid_turns::apply(multipolygon, turns, visitor, strategy);
-        debug_print_turns(turns.begin(), turns.end());
-
-        if (has_invalid_turns)
-        {
-            return false;
-        }
+		if (! detail::check_iterator_range
+		        <
+		        per_polygon<VisitPolicy, Strategy>,
+		        false // do not check for empty multipolygon (done above)
+		        >::apply(boost::begin(multipolygon),
+		                 boost::end(multipolygon),
+		                 per_polygon<VisitPolicy, Strategy>(visitor, strategy)))
+		{
+			return false;
+		}
 
 
-        // check if each polygon's interior rings are inside the
-        // exterior and not one inside the other
-        debug_phase::apply(3);
+		// compute turns and check if all are acceptable
+		debug_phase::apply(2);
 
-        if (! have_holes_inside(boost::begin(multipolygon),
-                                boost::end(multipolygon),
-                                turns.begin(),
-                                turns.end(),
-                                visitor,
-                                strategy))
-        {
-            return false;
-        }
+		typedef has_valid_self_turns<MultiPolygon> has_valid_turns;
 
+		std::deque<typename has_valid_turns::turn_type> turns;
+		bool has_invalid_turns =
+		    ! has_valid_turns::apply(multipolygon, turns, visitor, strategy);
+		debug_print_turns(turns.begin(), turns.end());
 
-        // check that each polygon's interior is connected
-        debug_phase::apply(4);
-
-        if (! have_connected_interior(boost::begin(multipolygon),
-                                      boost::end(multipolygon),
-                                      turns.begin(),
-                                      turns.end(),
-                                      visitor,
-                                      strategy))
-        {
-            return false;
-        }
+		if (has_invalid_turns)
+		{
+			return false;
+		}
 
 
-        // check if polygon interiors are disjoint
-        debug_phase::apply(5);
-        return are_polygon_interiors_disjoint(boost::begin(multipolygon),
-                                              boost::end(multipolygon),
-                                              turns.begin(),
-                                              turns.end(),
-                                              visitor,
-                                              strategy);
-    }
+		// check if each polygon's interior rings are inside the
+		// exterior and not one inside the other
+		debug_phase::apply(3);
+
+		if (! have_holes_inside(boost::begin(multipolygon),
+		                        boost::end(multipolygon),
+		                        turns.begin(),
+		                        turns.end(),
+		                        visitor,
+		                        strategy))
+		{
+			return false;
+		}
+
+
+		// check that each polygon's interior is connected
+		debug_phase::apply(4);
+
+		if (! have_connected_interior(boost::begin(multipolygon),
+		                              boost::end(multipolygon),
+		                              turns.begin(),
+		                              turns.end(),
+		                              visitor,
+		                              strategy))
+		{
+			return false;
+		}
+
+
+		// check if polygon interiors are disjoint
+		debug_phase::apply(5);
+		return are_polygon_interiors_disjoint(boost::begin(multipolygon),
+		                                      boost::end(multipolygon),
+		                                      turns.begin(),
+		                                      turns.end(),
+		                                      visitor,
+		                                      strategy);
+	}
 };
 
-}} // namespace detail::is_valid
+}
+} // namespace detail::is_valid
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -384,12 +389,12 @@ namespace dispatch
 // Reference (for validity of MultiPolygons): OGC 06-103r4 (6.1.14)
 template <typename MultiPolygon, bool AllowEmptyMultiGeometries>
 struct is_valid
-    <
-        MultiPolygon, multi_polygon_tag, AllowEmptyMultiGeometries
-    > : detail::is_valid::is_valid_multipolygon
-        <
-            MultiPolygon, AllowEmptyMultiGeometries
-        >
+	<
+	MultiPolygon, multi_polygon_tag, AllowEmptyMultiGeometries
+	> : detail::is_valid::is_valid_multipolygon
+	<
+	MultiPolygon, AllowEmptyMultiGeometries
+	>
 {};
 
 
@@ -397,6 +402,7 @@ struct is_valid
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_MULTIPOLYGON_HPP

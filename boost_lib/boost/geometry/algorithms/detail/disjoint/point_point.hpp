@@ -47,120 +47,124 @@
 #include <boost/geometry/algorithms/dispatch/disjoint.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace disjoint
+namespace detail
+{
+namespace disjoint
 {
 
 
 template <std::size_t Dimension, std::size_t DimensionCount>
 struct point_point_generic
 {
-    template <typename Point1, typename Point2, typename Strategy>
-    static inline bool apply(Point1 const& p1, Point2 const& p2, Strategy const& )
-    {
-        return apply(p1, p2);
-    }
+	template <typename Point1, typename Point2, typename Strategy>
+	static inline bool apply(Point1 const& p1, Point2 const& p2, Strategy const& )
+	{
+		return apply(p1, p2);
+	}
 
-    template <typename Point1, typename Point2>
-    static inline bool apply(Point1 const& p1, Point2 const& p2)
-    {
-        if (! geometry::math::equals(get<Dimension>(p1), get<Dimension>(p2)))
-        {
-            return true;
-        }
-        return
-            point_point_generic<Dimension + 1, DimensionCount>::apply(p1, p2);
-    }
+	template <typename Point1, typename Point2>
+	static inline bool apply(Point1 const& p1, Point2 const& p2)
+	{
+		if (! geometry::math::equals(get<Dimension>(p1), get<Dimension>(p2)))
+		{
+			return true;
+		}
+		return
+		    point_point_generic<Dimension + 1, DimensionCount>::apply(p1, p2);
+	}
 };
 
 template <std::size_t DimensionCount>
 struct point_point_generic<DimensionCount, DimensionCount>
 {
-    template <typename Point1, typename Point2>
-    static inline bool apply(Point1 const&, Point2 const& )
-    {
-        return false;
-    }
+	template <typename Point1, typename Point2>
+	static inline bool apply(Point1 const&, Point2 const& )
+	{
+		return false;
+	}
 };
 
 
 class point_point_on_spheroid
 {
 private:
-    template <typename Point1, typename Point2, bool SameUnits>
-    struct are_same_points
-    {
-        static inline bool apply(Point1 const& point1, Point2 const& point2)
-        {
-            typedef typename helper_geometry<Point1>::type helper_point_type1;
-            typedef typename helper_geometry<Point2>::type helper_point_type2;
+	template <typename Point1, typename Point2, bool SameUnits>
+	struct are_same_points
+	{
+		static inline bool apply(Point1 const& point1, Point2 const& point2)
+		{
+			typedef typename helper_geometry<Point1>::type helper_point_type1;
+			typedef typename helper_geometry<Point2>::type helper_point_type2;
 
-            helper_point_type1 point1_normalized
-                = return_normalized<helper_point_type1>(point1);
-            helper_point_type2 point2_normalized
-                = return_normalized<helper_point_type2>(point2);
+			helper_point_type1 point1_normalized
+			    = return_normalized<helper_point_type1>(point1);
+			helper_point_type2 point2_normalized
+			    = return_normalized<helper_point_type2>(point2);
 
-            return point_point_generic
-                <
-                    0, dimension<Point1>::value
-                >::apply(point1_normalized, point2_normalized);
-        }
-    };
+			return point_point_generic
+			       <
+			       0, dimension<Point1>::value
+			       >::apply(point1_normalized, point2_normalized);
+		}
+	};
 
-    template <typename Point1, typename Point2>
-    struct are_same_points<Point1, Point2, false> // points have different units
-    {
-        static inline bool apply(Point1 const& point1, Point2 const& point2)
-        {
-            typedef typename geometry::select_most_precise
-                <
-                    typename fp_coordinate_type<Point1>::type,
-                    typename fp_coordinate_type<Point2>::type
-                >::type calculation_type;
+	template <typename Point1, typename Point2>
+	struct are_same_points<Point1, Point2, false> // points have different units
+	{
+		static inline bool apply(Point1 const& point1, Point2 const& point2)
+		{
+			typedef typename geometry::select_most_precise
+			<
+			typename fp_coordinate_type<Point1>::type,
+			         typename fp_coordinate_type<Point2>::type
+			         >::type calculation_type;
 
-            typename helper_geometry
-                <
-                    Point1, calculation_type, radian
-                >::type helper_point1, helper_point2;
+			typename helper_geometry
+			<
+			Point1, calculation_type, radian
+			>::type helper_point1, helper_point2;
 
-            Point1 point1_normalized = return_normalized<Point1>(point1);
-            Point2 point2_normalized = return_normalized<Point2>(point2);
+			Point1 point1_normalized = return_normalized<Point1>(point1);
+			Point2 point2_normalized = return_normalized<Point2>(point2);
 
-            geometry::transform(point1_normalized, helper_point1);
-            geometry::transform(point2_normalized, helper_point2);
+			geometry::transform(point1_normalized, helper_point1);
+			geometry::transform(point2_normalized, helper_point2);
 
-            return point_point_generic
-                <
-                    0, dimension<Point1>::value
-                >::apply(helper_point1, helper_point2);
-        }
-    };
+			return point_point_generic
+			       <
+			       0, dimension<Point1>::value
+			       >::apply(helper_point1, helper_point2);
+		}
+	};
 
 public:
-    template <typename Point1, typename Point2, typename Strategy>
-    static inline bool apply(Point1 const& point1, Point2 const& point2, Strategy const& )
-    {
-        return apply(point1, point2);
-    }
+	template <typename Point1, typename Point2, typename Strategy>
+	static inline bool apply(Point1 const& point1, Point2 const& point2, Strategy const& )
+	{
+		return apply(point1, point2);
+	}
 
-    template <typename Point1, typename Point2>
-    static inline bool apply(Point1 const& point1, Point2 const& point2)
-    {
-        return are_same_points
-            <
-                Point1,
-                Point2,
-                boost::is_same
-                    <
-                        typename coordinate_system<Point1>::type::units,
-                        typename coordinate_system<Point2>::type::units
-                    >::value
-            >::apply(point1, point2);
-    }
+	template <typename Point1, typename Point2>
+	static inline bool apply(Point1 const& point1, Point2 const& point2)
+	{
+		return are_same_points
+		       <
+		       Point1,
+		       Point2,
+		       boost::is_same
+		       <
+		       typename coordinate_system<Point1>::type::units,
+		       typename coordinate_system<Point2>::type::units
+		       >::value
+		       >::apply(point1, point2);
+	}
 };
 
 
@@ -170,40 +174,40 @@ template
     std::size_t Dimension, std::size_t DimensionCount,
     typename CSTag1 = typename cs_tag<Point1>::type,
     typename CSTag2 = CSTag1
->
+    >
 struct point_point
-    : point_point<Point1, Point2, Dimension, DimensionCount, cartesian_tag>
+	: point_point<Point1, Point2, Dimension, DimensionCount, cartesian_tag>
 {};
 
 template
 <
     typename Point1, typename Point2,
     std::size_t Dimension, std::size_t DimensionCount
->
+    >
 struct point_point
-    <
-        Point1, Point2, Dimension, DimensionCount, spherical_equatorial_tag
-    > : point_point_on_spheroid
+	<
+	Point1, Point2, Dimension, DimensionCount, spherical_equatorial_tag
+	> : point_point_on_spheroid
 {};
 
 template
 <
     typename Point1, typename Point2,
     std::size_t Dimension, std::size_t DimensionCount
->
+    >
 struct point_point
-    <
-        Point1, Point2, Dimension, DimensionCount, geographic_tag
-    > : point_point_on_spheroid
+	<
+	Point1, Point2, Dimension, DimensionCount, geographic_tag
+	> : point_point_on_spheroid
 {};
 
 template
 <
     typename Point1, typename Point2,
     std::size_t Dimension, std::size_t DimensionCount
->
+    >
 struct point_point<Point1, Point2, Dimension, DimensionCount, cartesian_tag>
-    : point_point_generic<Dimension, DimensionCount>
+	: point_point_generic<Dimension, DimensionCount>
 {};
 
 
@@ -214,15 +218,16 @@ struct point_point<Point1, Point2, Dimension, DimensionCount, cartesian_tag>
 template <typename Point1, typename Point2>
 inline bool disjoint_point_point(Point1 const& point1, Point2 const& point2)
 {
-    return point_point
-        <
-            Point1, Point2,
-            0, dimension<Point1>::type::value
-        >::apply(point1, point2);
+	return point_point
+	       <
+	       Point1, Point2,
+	       0, dimension<Point1>::type::value
+	       >::apply(point1, point2);
 }
 
 
-}} // namespace detail::disjoint
+}
+} // namespace detail::disjoint
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -235,13 +240,14 @@ namespace dispatch
 
 template <typename Point1, typename Point2, std::size_t DimensionCount>
 struct disjoint<Point1, Point2, DimensionCount, point_tag, point_tag, false>
-    : detail::disjoint::point_point<Point1, Point2, 0, DimensionCount>
+	: detail::disjoint::point_point<Point1, Point2, 0, DimensionCount>
 {};
 
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISJOINT_POINT_POINT_HPP

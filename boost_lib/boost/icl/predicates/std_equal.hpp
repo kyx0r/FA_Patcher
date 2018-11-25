@@ -11,23 +11,28 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #include <boost/icl/type_traits/predicate.hpp>
 #include <boost/icl/type_traits/type_to_string.hpp>
 
-namespace boost{namespace icl
+namespace boost
 {
-    template <class Type> struct std_equal : public relation<Type,Type>
-    {
-        bool operator()(const Type& lhs, const Type& rhs)const
-        {
-            return lhs == rhs;
-        }
-    };
+namespace icl
+{
+template <class Type> struct std_equal : public relation<Type,Type>
+{
+	bool operator()(const Type& lhs, const Type& rhs)const
+	{
+		return lhs == rhs;
+	}
+};
 
-    //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-    template<>         
-    inline std::string unary_template_to_string<icl::std_equal>::apply()
-    { return "=="; }
+template<>
+inline std::string unary_template_to_string<icl::std_equal>::apply()
+{
+	return "==";
+}
 
-}} // namespace icl boost
+}
+} // namespace icl boost
 
 #endif
 

@@ -12,7 +12,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/callable_traits/detail/core.hpp>
 
-namespace boost { namespace callable_traits {
+namespace boost
+{
+namespace callable_traits
+{
 
 //[ is_reference_member_hpp
 /*`[section:ref_is_reference_member is_reference_member]
@@ -29,18 +32,20 @@ struct is_reference_member;
 //<-
 template<typename T>
 struct is_reference_member : detail::traits<
-    detail::shallow_decay<T>>::is_reference_member {
+	detail::shallow_decay<T>>::is_reference_member
+{
 
-    using type = typename detail::traits<
-        detail::shallow_decay<T>>::is_reference_member;
+	using type = typename detail::traits<
+	             detail::shallow_decay<T>>::is_reference_member;
 };
 
 #ifdef BOOST_CLBL_TRTS_DISABLE_VARIABLE_TEMPLATES
 
 template<typename T>
-struct is_reference_member_v {
-    static_assert(std::is_same<T, detail::dummy>::value,
-        "Variable templates not supported on this compiler.");
+struct is_reference_member_v
+{
+	static_assert(std::is_same<T, detail::dummy>::value,
+	              "Variable templates not supported on this compiler.");
 };
 
 #else
@@ -56,7 +61,8 @@ constexpr bool is_reference_member_v = //see below
 
 #endif
 
-}} // namespace boost::callable_traits
+}
+} // namespace boost::callable_traits
 //->
 
 /*`

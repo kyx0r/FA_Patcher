@@ -18,9 +18,12 @@
 #include <boost/compute/exception.hpp>
 #include <boost/compute/command_queue.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // reads and returns a single value at index in the buffer
 template<class T>
@@ -28,22 +31,22 @@ inline T read_single_value(const buffer &buffer,
                            size_t index,
                            command_queue &queue)
 {
-    BOOST_ASSERT(index < buffer.size() / sizeof(T));
-    BOOST_ASSERT(buffer.get_context() == queue.get_context());
+	BOOST_ASSERT(index < buffer.size() / sizeof(T));
+	BOOST_ASSERT(buffer.get_context() == queue.get_context());
 
-    T value;
-    queue.enqueue_read_buffer(buffer,
-                              sizeof(T) * index,
-                              sizeof(T),
-                              &value);
-    return value;
+	T value;
+	queue.enqueue_read_buffer(buffer,
+	                          sizeof(T) * index,
+	                          sizeof(T),
+	                          &value);
+	return value;
 }
 
 // reads and returns a the first value in the buffer
 template<class T>
 inline T read_single_value(const buffer &buffer, command_queue &queue)
 {
-    return read_single_value<T>(buffer, 0, queue);
+	return read_single_value<T>(buffer, 0, queue);
 }
 
 // writes a single value at index to the buffer
@@ -53,13 +56,13 @@ inline event write_single_value(const T &value,
                                 size_t index,
                                 command_queue &queue)
 {
-    BOOST_ASSERT(index < buffer.size() / sizeof(T));
-    BOOST_ASSERT(buffer.get_context() == queue.get_context());
+	BOOST_ASSERT(index < buffer.size() / sizeof(T));
+	BOOST_ASSERT(buffer.get_context() == queue.get_context());
 
-    return queue.enqueue_write_buffer(buffer,
-                                      index * sizeof(T),
-                                      sizeof(T),
-                                      &value);
+	return queue.enqueue_write_buffer(buffer,
+	                                  index * sizeof(T),
+	                                  sizeof(T),
+	                                  &value);
 }
 
 // writes value to the first location in buffer
@@ -68,7 +71,7 @@ inline void write_single_value(const T &value,
                                const buffer &buffer,
                                command_queue &queue)
 {
-    write_single_value<T>(value, buffer, 0, queue);
+	write_single_value<T>(value, buffer, 0, queue);
 }
 
 } // end detail namespace

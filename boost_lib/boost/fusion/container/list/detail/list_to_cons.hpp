@@ -24,38 +24,47 @@
 #include <boost/fusion/container/list/cons.hpp>
 #include <boost/fusion/support/detail/access.hpp>
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
 {
-    template <typename ...T>
-    struct list_to_cons;
+namespace fusion
+{
+namespace detail
+{
+template <typename ...T>
+struct list_to_cons;
 
-    template <>
-    struct list_to_cons<>
-    {
-        typedef nil_ type;
+template <>
+struct list_to_cons<>
+{
+	typedef nil_ type;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static type call() { return type(); }
-    };
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static type call()
+	{
+		return type();
+	}
+};
 
-    template <typename Head, typename ...Tail>
-    struct list_to_cons<Head, Tail...>
-    {
-        typedef Head head_type;
-        typedef list_to_cons<Tail...> tail_list_to_cons;
-        typedef typename tail_list_to_cons::type tail_type;
+template <typename Head, typename ...Tail>
+struct list_to_cons<Head, Tail...>
+{
+	typedef Head head_type;
+	typedef list_to_cons<Tail...> tail_list_to_cons;
+	typedef typename tail_list_to_cons::type tail_type;
 
-        typedef cons<head_type, tail_type> type;
+	typedef cons<head_type, tail_type> type;
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        static type
-        call(typename detail::call_param<Head>::type _h,
-             typename detail::call_param<Tail>::type ..._t)
-        {
-            return type(_h, tail_list_to_cons::call(_t...));
-        }
-    };
-}}}
+	BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+	static type
+	call(typename detail::call_param<Head>::type _h,
+	     typename detail::call_param<Tail>::type ..._t)
+	{
+		return type(_h, tail_list_to_cons::call(_t...));
+	}
+};
+}
+}
+}
 
 #endif
 #endif

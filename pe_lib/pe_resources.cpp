@@ -205,17 +205,17 @@ void resource_directory_entry::add_resource_directory(const resource_directory& 
 //Default constructor
 resource_directory::resource_directory()
 	:characteristics_(0),
-	timestamp_(0),
-	major_version_(0), minor_version_(0),
-	number_of_named_entries_(0), number_of_id_entries_(0)
+	 timestamp_(0),
+	 major_version_(0), minor_version_(0),
+	 number_of_named_entries_(0), number_of_id_entries_(0)
 {}
 
 //Constructor from data
 resource_directory::resource_directory(const image_resource_directory& dir)
 	:characteristics_(dir.Characteristics),
-	timestamp_(dir.TimeDateStamp),
-	major_version_(dir.MajorVersion), minor_version_(dir.MinorVersion),
-	number_of_named_entries_(0), number_of_id_entries_(0) //Set to zero here, calculate on add
+	 timestamp_(dir.TimeDateStamp),
+	 major_version_(dir.MajorVersion), minor_version_(dir.MinorVersion),
+	 number_of_named_entries_(0), number_of_id_entries_(0) //Set to zero here, calculate on add
 {}
 
 //Returns characteristics of directory
@@ -324,7 +324,7 @@ void resource_directory::get_minor_version(uint16_t minor_version)
 const resource_directory process_resource_directory(const pe_base& pe, uint32_t res_rva, uint32_t offset_to_directory, std::set<uint32_t>& processed)
 {
 	resource_directory ret;
-	
+
 	//Check for resource loops
 	if(!processed.insert(offset_to_directory).second)
 		throw pe_exception("Incorrect resource directory", pe_exception::incorrect_resource_directory);
@@ -339,18 +339,18 @@ const resource_directory process_resource_directory(const pe_base& pe, uint32_t 
 
 	//Check DWORDs for possible overflows
 	if(!pe_utils::is_sum_safe(directory.NumberOfIdEntries, directory.NumberOfNamedEntries)
-		|| directory.NumberOfIdEntries + directory.NumberOfNamedEntries >= pe_utils::max_dword / sizeof(image_resource_directory_entry) + sizeof(image_resource_directory))
+	        || directory.NumberOfIdEntries + directory.NumberOfNamedEntries >= pe_utils::max_dword / sizeof(image_resource_directory_entry) + sizeof(image_resource_directory))
 		throw pe_exception("Incorrect resource directory", pe_exception::incorrect_resource_directory);
 
 	if(!pe_utils::is_sum_safe(offset_to_directory, sizeof(image_resource_directory) + (directory.NumberOfIdEntries + directory.NumberOfNamedEntries) * sizeof(image_resource_directory_entry))
-		|| !pe_utils::is_sum_safe(res_rva, offset_to_directory + sizeof(image_resource_directory) + (directory.NumberOfIdEntries + directory.NumberOfNamedEntries) * sizeof(image_resource_directory_entry)))
+	        || !pe_utils::is_sum_safe(res_rva, offset_to_directory + sizeof(image_resource_directory) + (directory.NumberOfIdEntries + directory.NumberOfNamedEntries) * sizeof(image_resource_directory_entry)))
 		throw pe_exception("Incorrect resource directory", pe_exception::incorrect_resource_directory);
 
 	for(unsigned long i = 0; i != static_cast<unsigned long>(directory.NumberOfIdEntries) + directory.NumberOfNamedEntries; ++i)
 	{
 		//Read directory entries one by one
 		image_resource_directory_entry dir_entry = pe.section_data_from_rva<image_resource_directory_entry>(
-			res_rva + sizeof(image_resource_directory) + i * sizeof(image_resource_directory_entry) + offset_to_directory, section_data_virtual, true);
+		            res_rva + sizeof(image_resource_directory) + i * sizeof(image_resource_directory_entry) + offset_to_directory, section_data_virtual, true);
 
 		//Create directory entry structure
 		resource_directory_entry entry;
@@ -366,19 +366,19 @@ const resource_directory process_resource_directory(const pe_base& pe, uint32_t 
 
 			//Check name length
 			if(pe.section_data_length_from_rva(res_rva + dir_entry.NameOffset + sizeof(uint16_t), res_rva + dir_entry.NameOffset + sizeof(uint16_t), section_data_virtual, true)
-				< directory_name_length)
+			        < directory_name_length)
 				throw pe_exception("Incorrect resource directory", pe_exception::incorrect_resource_directory);
 
 #ifdef PE_BLISS_WINDOWS
 			//Set entry UNICODE name
 			entry.set_name(std::wstring(
-				reinterpret_cast<const wchar_t*>(pe.section_data_from_rva(res_rva + dir_entry.NameOffset + sizeof(uint16_t), section_data_virtual, true)),
-				directory_name_length));
+			                   reinterpret_cast<const wchar_t*>(pe.section_data_from_rva(res_rva + dir_entry.NameOffset + sizeof(uint16_t), section_data_virtual, true)),
+			                   directory_name_length));
 #else
 			//Set entry UNICODE name
 			entry.set_name(pe_utils::from_ucs2(u16string(
-				reinterpret_cast<const unicode16_t*>(pe.section_data_from_rva(res_rva + dir_entry.NameOffset + sizeof(uint16_t), section_data_virtual, true)),
-				directory_name_length)));
+			                                       reinterpret_cast<const unicode16_t*>(pe.section_data_from_rva(res_rva + dir_entry.NameOffset + sizeof(uint16_t), section_data_virtual, true)),
+			                                       directory_name_length)));
 #endif
 		}
 		else
@@ -396,7 +396,7 @@ const resource_directory process_resource_directory(const pe_base& pe, uint32_t 
 		{
 			//If directory entry has data
 			image_resource_data_entry data_entry = pe.section_data_from_rva<image_resource_data_entry>(
-				res_rva + dir_entry.OffsetToData, section_data_virtual, true);
+			        res_rva + dir_entry.OffsetToData, section_data_virtual, true);
 
 			//Check byte count that stated by data entry
 			if(pe.section_data_length_from_rva(data_entry.OffsetToData, data_entry.OffsetToData, section_data_virtual, true) < data_entry.Size)
@@ -404,8 +404,8 @@ const resource_directory process_resource_directory(const pe_base& pe, uint32_t 
 
 			//Add data entry to directory entry
 			entry.add_data_entry(resource_data_entry(
-				std::string(pe.section_data_from_rva(data_entry.OffsetToData, section_data_virtual, true), data_entry.Size),
-				data_entry.CodePage));
+			                         std::string(pe.section_data_from_rva(data_entry.OffsetToData, section_data_virtual, true), data_entry.Size),
+			                         data_entry.CodePage));
 		}
 
 		//Save directory entry
@@ -440,8 +440,8 @@ void calculate_resource_data_space(const resource_directory& root, uint32_t need
 		if((*it).includes_data())
 		{
 			uint32_t data_size = static_cast<uint32_t>((*it).get_data_entry().get_data().length()
-				+ sizeof(image_resource_data_entry)
-				+ (pe_utils::align_up(current_data_pos, sizeof(uint32_t)) - current_data_pos) /* alignment */);
+			                     + sizeof(image_resource_data_entry)
+			                     + (pe_utils::align_up(current_data_pos, sizeof(uint32_t)) - current_data_pos) /* alignment */);
 			needed_size_for_data += data_size;
 			current_data_pos += data_size;
 		}
@@ -468,7 +468,7 @@ void rebuild_resource_directory(pe_base& pe, section& resource_section, resource
 	dir.MajorVersion = root.get_major_version();
 	dir.MinorVersion = root.get_minor_version();
 	dir.TimeDateStamp = root.get_timestamp();
-	
+
 	{
 		resource_directory::entry_list& entries = root.get_entry_list();
 		std::sort(entries.begin(), entries.end(), entry_sorter());
@@ -482,7 +482,7 @@ void rebuild_resource_directory(pe_base& pe, section& resource_section, resource
 		else
 			++dir.NumberOfIdEntries;
 	}
-	
+
 	std::string& raw_data = resource_section.get_raw_data();
 
 	//Save resource directory
@@ -527,12 +527,12 @@ void rebuild_resource_directory(pe_base& pe, section& resource_section, resource
 			data_entry.CodePage = (*it).get_data_entry().get_codepage();
 			data_entry.Size = static_cast<uint32_t>((*it).get_data_entry().get_data().length());
 			data_entry.OffsetToData = pe.rva_from_section_offset(resource_section, current_data_pos + sizeof(data_entry));
-			
+
 			entry.OffsetToData = current_data_pos - offset_from_section_start;
 
 			memcpy(&raw_data[current_data_pos], &data_entry, sizeof(data_entry));
 			current_data_pos += sizeof(data_entry);
-			
+
 			memcpy(&raw_data[current_data_pos], (*it).get_data_entry().get_data().data(), data_entry.Size);
 			current_data_pos += data_entry.Size;
 
@@ -575,11 +575,11 @@ const image_directory rebuild_resources(pe_base& pe, resource_directory& info, s
 	//Check that resources_section is attached to this PE image
 	if(!pe.section_attached(resources_section))
 		throw pe_exception("Resource section must be attached to PE file", pe_exception::section_is_not_attached);
-	
+
 	//Check resource directory correctness
 	if(info.get_entry_list().empty())
 		throw pe_exception("Empty resource directory", pe_exception::incorrect_resource_directory);
-	
+
 	uint32_t aligned_offset_from_section_start = pe_utils::align_up(offset_from_section_start, sizeof(uint32_t));
 	uint32_t needed_size_for_structures = aligned_offset_from_section_start - offset_from_section_start; //Calculate needed size for resource tables and data
 	uint32_t needed_size_for_strings = 0;
@@ -595,9 +595,9 @@ const image_directory rebuild_resources(pe_base& pe, resource_directory& info, s
 	uint32_t needed_size = needed_size_for_structures + needed_size_for_strings + needed_size_for_data;
 
 	//Check if resources_section is last one. If it's not, check if there's enough place for resource data
-	if(&resources_section != &*(pe.get_image_sections().end() - 1) && 
-		(resources_section.empty() || pe_utils::align_up(resources_section.get_size_of_raw_data(), pe.get_file_alignment())
-		< needed_size + aligned_offset_from_section_start))
+	if(&resources_section != &*(pe.get_image_sections().end() - 1) &&
+	        (resources_section.empty() || pe_utils::align_up(resources_section.get_size_of_raw_data(), pe.get_file_alignment())
+	         < needed_size + aligned_offset_from_section_start))
 		throw pe_exception("Insufficient space for resource directory", pe_exception::insufficient_space);
 
 	std::string& raw_data = resources_section.get_raw_data();
@@ -610,7 +610,7 @@ const image_directory rebuild_resources(pe_base& pe, resource_directory& info, s
 	uint32_t current_strings_pos = current_structures_pos + needed_size_for_structures;
 	uint32_t current_data_pos = current_strings_pos + needed_size_for_strings;
 	rebuild_resource_directory(pe, resources_section, info, current_structures_pos, current_data_pos, current_strings_pos, aligned_offset_from_section_start);
-	
+
 	//Adjust section raw and virtual sizes
 	pe.recalculate_section_sizes(resources_section, auto_strip_last_section);
 
@@ -636,10 +636,10 @@ const resource_directory get_resources(const pe_base& pe)
 
 	//Get resource directory RVA
 	uint32_t res_rva = pe.get_directory_rva(image_directory_entry_resource);
-	
+
 	//Store already processed directories to avoid resource loops
 	std::set<uint32_t> processed;
-	
+
 	//Process all directories (recursion)
 	ret = process_resource_directory(pe, res_rva, 0, processed);
 

@@ -22,22 +22,29 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace utils {
+namespace boost
+{
+namespace unit_test
+{
+namespace utils
+{
 
 // ************************************************************************** //
 // **************          custom manipulators helpers         ************** //
 // ************************************************************************** //
 
 template<typename Manip>
-struct custom_printer {
-    explicit custom_printer( std::ostream& ostr ) : m_ostr( &ostr ) {}
+struct custom_printer
+{
+	explicit custom_printer( std::ostream& ostr ) : m_ostr( &ostr ) {}
 
-    std::ostream& operator*() const { return *m_ostr; }
+	std::ostream& operator*() const
+	{
+		return *m_ostr;
+	}
 
 private:
-    std::ostream* const m_ostr;
+	std::ostream* const m_ostr;
 };
 
 //____________________________________________________________________________//
@@ -48,7 +55,10 @@ template<typename Uniq> struct custom_manip {};
 
 template<typename Uniq>
 inline custom_printer<custom_manip<Uniq> >
-operator<<( std::ostream& ostr, custom_manip<Uniq> const& ) { return custom_printer<custom_manip<Uniq> >( ostr ); }
+operator<<( std::ostream& ostr, custom_manip<Uniq> const& )
+{
+	return custom_printer<custom_manip<Uniq> >( ostr );
+}
 
 //____________________________________________________________________________//
 

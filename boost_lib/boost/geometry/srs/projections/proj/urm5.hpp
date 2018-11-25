@@ -47,139 +47,150 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct urm5 {};
+namespace par4
+{
+struct urm5 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace urm5
-    {
-            template <typename T>
-            struct par_urm5
-            {
-                T m, rmn, q3, n;
-            };
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace urm5
+{
+template <typename T>
+struct par_urm5
+{
+	T m, rmn, q3, n;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_urm5_spheroid : public base_t_f<base_urm5_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_urm5_spheroid : public base_t_f<base_urm5_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_urm5<CalculationType> m_proj_parm;
+	par_urm5<CalculationType> m_proj_parm;
 
-                inline base_urm5_spheroid(const Parameters& par)
-                    : base_t_f<base_urm5_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_urm5_spheroid(const Parameters& par)
+		: base_t_f<base_urm5_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType t;
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType t;
 
-                    t = lp_lat = aasin(this->m_proj_parm.n * sin(lp_lat));
-                    xy_x = this->m_proj_parm.m * lp_lon * cos(lp_lat);
-                    t *= t;
-                    xy_y = lp_lat * (1. + t * this->m_proj_parm.q3) * this->m_proj_parm.rmn;
-                }
+		t = lp_lat = aasin(this->m_proj_parm.n * sin(lp_lat));
+		xy_x = this->m_proj_parm.m * lp_lon * cos(lp_lat);
+		t *= t;
+		xy_y = lp_lat * (1. + t * this->m_proj_parm.q3) * this->m_proj_parm.rmn;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "urm5_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "urm5_spheroid";
+	}
 
-            };
+};
 
-            // Urmaev V
-            template <typename Parameters, typename T>
-            inline void setup_urm5(Parameters& par, par_urm5<T>& proj_parm)
-            {
-                T alpha, t;
+// Urmaev V
+template <typename Parameters, typename T>
+inline void setup_urm5(Parameters& par, par_urm5<T>& proj_parm)
+{
+	T alpha, t;
 
-                if (pj_param(par.params, "tn").i) {
-                    proj_parm.n = pj_param(par.params, "dn").f;
-                    if (proj_parm.n <= 0. || proj_parm.n > 1.)
-                        BOOST_THROW_EXCEPTION( projection_exception(-40) );
-                } else
-                    BOOST_THROW_EXCEPTION( projection_exception(-40) );
-                proj_parm.q3 = pj_param(par.params, "dq").f / 3.;
-                alpha = pj_param(par.params, "ralpha").f;
-                t = proj_parm.n * sin(alpha);
-                proj_parm.m = cos(alpha) / sqrt(1. - t * t);
-                proj_parm.rmn = 1. / (proj_parm.m * proj_parm.n);
-                par.es = 0.;
-            }
+	if (pj_param(par.params, "tn").i)
+	{
+		proj_parm.n = pj_param(par.params, "dn").f;
+		if (proj_parm.n <= 0. || proj_parm.n > 1.)
+			BOOST_THROW_EXCEPTION( projection_exception(-40) );
+	}
+	else
+		BOOST_THROW_EXCEPTION( projection_exception(-40) );
+	proj_parm.q3 = pj_param(par.params, "dq").f / 3.;
+	alpha = pj_param(par.params, "ralpha").f;
+	t = proj_parm.n * sin(alpha);
+	proj_parm.m = cos(alpha) / sqrt(1. - t * t);
+	proj_parm.rmn = 1. / (proj_parm.m * proj_parm.n);
+	par.es = 0.;
+}
 
-    }} // namespace detail::urm5
-    #endif // doxygen
+}
+} // namespace detail::urm5
+#endif // doxygen
 
-    /*!
-        \brief Urmaev V projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-         - no inverse
-        \par Projection parameters
-         - n (real)
-         - q (real)
-         - alpha: Alpha (degrees)
-        \par Example
-        \image html ex_urm5.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct urm5_spheroid : public detail::urm5::base_urm5_spheroid<CalculationType, Parameters>
-    {
-        inline urm5_spheroid(const Parameters& par) : detail::urm5::base_urm5_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::urm5::setup_urm5(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Urmaev V projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+     - no inverse
+    \par Projection parameters
+     - n (real)
+     - q (real)
+     - alpha: Alpha (degrees)
+    \par Example
+    \image html ex_urm5.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct urm5_spheroid : public detail::urm5::base_urm5_spheroid<CalculationType, Parameters>
+{
+	inline urm5_spheroid(const Parameters& par) : detail::urm5::base_urm5_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::urm5::setup_urm5(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::urm5, urm5_spheroid, urm5_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::urm5, urm5_spheroid, urm5_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class urm5_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<urm5_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class urm5_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<urm5_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void urm5_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("urm5", new urm5_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void urm5_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("urm5", new urm5_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_URM5_HPP
 

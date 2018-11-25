@@ -22,16 +22,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <boost/fusion/tuple/tuple.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    template <typename ...T>
-    BOOST_FUSION_GPU_ENABLED
-    inline tuple<T&...>
-    tie(T&... arg)
-    {
-        return tuple<T&...>(arg...);
-    }
-}}
+namespace fusion
+{
+template <typename ...T>
+BOOST_FUSION_GPU_ENABLED
+inline tuple<T&...>
+tie(T&... arg)
+{
+	return tuple<T&...>(arg...);
+}
+}
+}
 
 #endif
 #endif

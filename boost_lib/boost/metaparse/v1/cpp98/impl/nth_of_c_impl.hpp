@@ -14,63 +14,63 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <int N, class Seq>
-        struct nth_of_c_impl
-        {
-        private:
-          template <class NextResult>
-          struct apply_unchecked :
-            nth_of_c_impl<
-              N - 1,
-              typename boost::mpl::pop_front<Seq>::type
-            >::template apply<
-              typename get_remaining<NextResult>::type,
-              typename get_position<NextResult>::type
-            >
-          {};
-        public:
-          typedef nth_of_c_impl type;
-          
-          template <class S, class Pos>
-          struct apply :
-            boost::mpl::eval_if<
-              typename is_error<
-                typename boost::mpl::front<Seq>::type::template apply<S, Pos>
-              >::type,
-              typename boost::mpl::front<Seq>::type::template apply<S, Pos>,
-              apply_unchecked<
-                typename boost::mpl::front<Seq>::type::template apply<S, Pos>
-              >
-            >
-          {};
-        };
-        
-        template <class Seq>
-        struct nth_of_c_impl<0, Seq>
-        {
-          typedef nth_of_c_impl type;
-          
-          template <class S, class Pos>
-          struct apply :
-            boost::mpl::fold<
-              typename boost::mpl::pop_front<Seq>::type,
-              typename boost::mpl::front<Seq>::type::template apply<
-                S,
-                Pos
-              >::type,
-              skip_seq
-            >
-          {};
-        };
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <int N, class Seq>
+struct nth_of_c_impl
+{
+private:
+	template <class NextResult>
+	struct apply_unchecked :
+		nth_of_c_impl<
+		N - 1,
+		typename boost::mpl::pop_front<Seq>::type
+		>::template apply<
+		    typename get_remaining<NextResult>::type,
+		    typename get_position<NextResult>::type
+		    >
+	{};
+public:
+	typedef nth_of_c_impl type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<
+		typename boost::mpl::front<Seq>::type::template apply<S, Pos>
+	>::type,
+	typename boost::mpl::front<Seq>::type::template apply<S, Pos>,
+	         apply_unchecked<
+	         typename boost::mpl::front<Seq>::type::template apply<S, Pos>
+	>
+	>
+	{};
+};
+
+template <class Seq>
+struct nth_of_c_impl<0, Seq>
+{
+	typedef nth_of_c_impl type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::fold<
+		typename boost::mpl::pop_front<Seq>::type,
+		typename boost::mpl::front<Seq>::type::template apply<
+		    S,
+		    Pos
+		    >::type,
+	skip_seq
+	>
+	{};
+};
+}
+}
+}
 }
 
 #endif

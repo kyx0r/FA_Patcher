@@ -24,9 +24,12 @@
 #include <boost/type_erasure/detail/normalize.hpp>
 #include <boost/type_erasure/detail/rebind_placeholders.hpp>
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 #ifdef BOOST_TYPE_ERASURE_USE_MP11
 
@@ -42,36 +45,36 @@ using instantiate_concept_impl = instantiate_concept<decltype(&T::apply), &T::ap
 template<class... T>
 struct make_instantiate_concept_impl< ::boost::mp11::mp_list<T...> >
 {
-    template<template<class> class F>
-    using apply = void(F<T>...);
+	template<template<class> class F>
+	using apply = void(F<T>...);
 };
 
 template<class Map>
 struct instantiate_concept_rebind_f
 {
-    template<class T>
-    using apply =
-        typename ::boost::type_erasure::detail::rebind_placeholders<
-            T,
-            Map
-        >::type;
+	template<class T>
+	using apply =
+	    typename ::boost::type_erasure::detail::rebind_placeholders<
+	    T,
+	    Map
+	    >::type;
 };
 
 template<class Concept, class Map>
 using make_instantiate_concept =
     ::boost::type_erasure::detail::make_instantiate_concept_impl<
-        ::boost::mp11::mp_transform<
-            ::boost::type_erasure::detail::instantiate_concept_rebind_f<
-                typename ::boost::type_erasure::detail::add_deductions<
-                    ::boost::type_erasure::detail::make_mp_list<Map>,
-                    typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
-                        Concept
-                    >::type
-                >::type
-            >::template apply,
-            ::boost::type_erasure::detail::normalize_concept_t<Concept>
-        >
-    >;
+    ::boost::mp11::mp_transform<
+    ::boost::type_erasure::detail::instantiate_concept_rebind_f<
+    typename ::boost::type_erasure::detail::add_deductions<
+    ::boost::type_erasure::detail::make_mp_list<Map>,
+    typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
+    Concept
+    >::type
+    >::type
+    >::template apply,
+    ::boost::type_erasure::detail::normalize_concept_t<Concept>
+>
+>;
 
 #define BOOST_TYPE_ERASURE_INSTANTIATE(Concept, Map)                                        \
     ((void)(typename ::boost::type_erasure::detail::make_instantiate_concept<Concept, Map>  \
@@ -88,12 +91,13 @@ template<int N>
 struct make_instantiate_concept_impl;
 
 template<class Concept>
-struct make_instantiate_concept {
-    typedef typename ::boost::type_erasure::detail::normalize_concept<
-        Concept>::type normalized;
-    typedef typename ::boost::type_erasure::detail::make_instantiate_concept_impl<
-        (::boost::mpl::size<normalized>::value)
-    >::type type;
+struct make_instantiate_concept
+{
+	typedef typename ::boost::type_erasure::detail::normalize_concept<
+	Concept>::type normalized;
+	typedef typename ::boost::type_erasure::detail::make_instantiate_concept_impl<
+	(::boost::mpl::size<normalized>::value)
+	>::type type;
 };
 
 #define BOOST_TYPE_ERASURE_INSTANTIATE(Concept, Map)            \
@@ -127,35 +131,37 @@ struct make_instantiate_concept {
 #define BOOST_TYPE_ERASURE_INSTANTIATE_IMPL(z, n, data)\
     (void)&::boost::mpl::at_c<data, n>::type::apply;
 
-struct BOOST_PP_CAT(instantiate_concept, N) {
-    template<class Concept, class Map>
-    static void apply(Concept *, Map *) {
+struct BOOST_PP_CAT(instantiate_concept, N)
+{
+	template<class Concept, class Map>
+	static void apply(Concept *, Map *)
+	{
 #if N > 0
-        typedef typename ::boost::type_erasure::detail::normalize_concept<
-            Concept>::type normalized;
-        typedef typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
-            Concept
-        >::type placeholder_subs;
+		typedef typename ::boost::type_erasure::detail::normalize_concept<
+		Concept>::type normalized;
+		typedef typename ::boost::type_erasure::detail::get_placeholder_normalization_map<
+		Concept
+		>::type placeholder_subs;
 
-        typedef typename ::boost::mpl::transform<
-            normalized,
-            ::boost::type_erasure::detail::rebind_placeholders<
-                ::boost::mpl::_1,
-                typename ::boost::type_erasure::detail::add_deductions<
-                    Map,
-                    placeholder_subs
-                >::type
-            >
-        >::type concept_sequence;
+		typedef typename ::boost::mpl::transform<
+		normalized,
+		::boost::type_erasure::detail::rebind_placeholders<
+		::boost::mpl::_1,
+		typename ::boost::type_erasure::detail::add_deductions<
+		Map,
+		placeholder_subs
+		>::type
+		>
+		>::type concept_sequence;
 #endif
-        BOOST_PP_REPEAT(N, BOOST_TYPE_ERASURE_INSTANTIATE_IMPL, concept_sequence)
-    }
+		BOOST_PP_REPEAT(N, BOOST_TYPE_ERASURE_INSTANTIATE_IMPL, concept_sequence)
+	}
 };
 
 template<>
 struct make_instantiate_concept_impl<N>
 {
-    typedef ::boost::type_erasure::detail::BOOST_PP_CAT(instantiate_concept, N) type;
+	typedef ::boost::type_erasure::detail::BOOST_PP_CAT(instantiate_concept, N) type;
 };
 
 #undef BOOST_TYPE_ERASURE_INSTANTIATE_IMPL

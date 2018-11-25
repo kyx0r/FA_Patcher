@@ -13,14 +13,23 @@
 
 #include <boost/phoenix/core/argument.hpp>
 // provide some meaningful placeholders (instead of arg1...arg4)
-namespace boost { namespace msm { namespace front { namespace euml
+namespace boost
 {
-    boost::phoenix::expression::argument<1>::type const _event = {};
-    boost::phoenix::expression::argument<2>::type const _fsm = {};
-    boost::phoenix::expression::argument<3>::type const _source = {};
-    boost::phoenix::expression::argument<4>::type const _target = {};
-    // this is for state actions
-    boost::phoenix::expression::argument<3>::type const _state = {};
-}}}}
+namespace msm
+{
+namespace front
+{
+namespace euml
+{
+boost::phoenix::expression::argument<1>::type const _event = {};
+boost::phoenix::expression::argument<2>::type const _fsm = {};
+boost::phoenix::expression::argument<3>::type const _source = {};
+boost::phoenix::expression::argument<4>::type const _target = {};
+// this is for state actions
+boost::phoenix::expression::argument<3>::type const _state = {};
+}
+}
+}
+}
 
 #endif //BOOST_MSM_FRONT_EUML_PHOENIX_PLACEHOLDERS_H

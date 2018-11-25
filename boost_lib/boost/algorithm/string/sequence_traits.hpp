@@ -31,89 +31,91 @@
     header which contains specializations for all stl containers.
 */
 
-namespace boost {
-    namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 //  sequence traits  -----------------------------------------------//
 
 
-        //! Native replace trait
-        /*!
-            This trait specifies that the sequence has \c std::string like replace method
-        */
-        template< typename T >
-        class has_native_replace
-        {
+//! Native replace trait
+/*!
+    This trait specifies that the sequence has \c std::string like replace method
+*/
+template< typename T >
+class has_native_replace
+{
 
-        public:
+public:
 #    if BOOST_WORKAROUND( __IBMCPP__, <= 600 )
-            enum { value = false };
+	enum { value = false };
 #    else
-            BOOST_STATIC_CONSTANT(bool, value=false);
+	BOOST_STATIC_CONSTANT(bool, value=false);
 #    endif // BOOST_WORKAROUND( __IBMCPP__, <= 600 )
 
 
-            typedef mpl::bool_<has_native_replace<T>::value> type;
-        };
+	typedef mpl::bool_<has_native_replace<T>::value> type;
+};
 
 
-        //! Stable iterators trait
-        /*!
-            This trait specifies that the sequence has stable iterators. It means
-            that operations like insert/erase/replace do not invalidate iterators.
-        */
-        template< typename T >
-        class has_stable_iterators
-        {
-        public:
+//! Stable iterators trait
+/*!
+    This trait specifies that the sequence has stable iterators. It means
+    that operations like insert/erase/replace do not invalidate iterators.
+*/
+template< typename T >
+class has_stable_iterators
+{
+public:
 #    if BOOST_WORKAROUND( __IBMCPP__, <= 600 )
-            enum { value = false };
+	enum { value = false };
 #    else
-            BOOST_STATIC_CONSTANT(bool, value=false);
+	BOOST_STATIC_CONSTANT(bool, value=false);
 #    endif // BOOST_WORKAROUND( __IBMCPP__, <= 600 )
 
-            typedef mpl::bool_<has_stable_iterators<T>::value> type;
-        };
+	typedef mpl::bool_<has_stable_iterators<T>::value> type;
+};
 
 
-        //! Const time insert trait
-        /*!
-            This trait specifies that the sequence's insert method has
-            constant time complexity.
-        */
-        template< typename T >
-        class has_const_time_insert
-        {
-        public:
+//! Const time insert trait
+/*!
+    This trait specifies that the sequence's insert method has
+    constant time complexity.
+*/
+template< typename T >
+class has_const_time_insert
+{
+public:
 #    if BOOST_WORKAROUND( __IBMCPP__, <= 600 )
-            enum { value = false };
+	enum { value = false };
 #    else
-            BOOST_STATIC_CONSTANT(bool, value=false);
+	BOOST_STATIC_CONSTANT(bool, value=false);
 #    endif // BOOST_WORKAROUND( __IBMCPP__, <= 600 )
 
-            typedef mpl::bool_<has_const_time_insert<T>::value> type;
-        };
+	typedef mpl::bool_<has_const_time_insert<T>::value> type;
+};
 
 
-        //! Const time erase trait
-        /*!
-            This trait specifies that the sequence's erase method has
-            constant time complexity.
-        */
-        template< typename T >
-        class has_const_time_erase
-        {
-        public:
+//! Const time erase trait
+/*!
+    This trait specifies that the sequence's erase method has
+    constant time complexity.
+*/
+template< typename T >
+class has_const_time_erase
+{
+public:
 #    if BOOST_WORKAROUND( __IBMCPP__, <= 600 )
-            enum { value = false };
+	enum { value = false };
 #    else
-            BOOST_STATIC_CONSTANT(bool, value=false);
+	BOOST_STATIC_CONSTANT(bool, value=false);
 #    endif // BOOST_WORKAROUND( __IBMCPP__, <= 600 )
 
-            typedef mpl::bool_<has_const_time_erase<T>::value> type;
-        };
+	typedef mpl::bool_<has_const_time_erase<T>::value> type;
+};
 
-    } // namespace algorithm
+} // namespace algorithm
 } // namespace boost
 
 

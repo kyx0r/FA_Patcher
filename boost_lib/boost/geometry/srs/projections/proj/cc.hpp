@@ -48,124 +48,133 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct cc {};
+namespace par4
+{
+struct cc {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace cc
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace cc
+{
 
-            static const double EPS10 = 1.e-10;
-            
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_cc_spheroid : public base_t_fi<base_cc_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+static const double EPS10 = 1.e-10;
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_cc_spheroid : public base_t_fi<base_cc_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                inline base_cc_spheroid(const Parameters& par)
-                    : base_t_fi<base_cc_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+	inline base_cc_spheroid(const Parameters& par)
+		: base_t_fi<base_cc_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                    if (fabs(fabs(lp_lat) - HALFPI) <= EPS10)
-                        BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                    xy_x = lp_lon;
-                    xy_y = tan(lp_lat);
-                }
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    lp_lat = atan(xy_y);
-                    lp_lon = xy_x;
-                }
+		if (fabs(fabs(lp_lat) - HALFPI) <= EPS10)
+			BOOST_THROW_EXCEPTION( projection_exception(-20) );
+		xy_x = lp_lon;
+		xy_y = tan(lp_lat);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "cc_spheroid";
-                }
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		lp_lat = atan(xy_y);
+		lp_lon = xy_x;
+	}
 
-            };
+	static inline std::string get_name()
+	{
+		return "cc_spheroid";
+	}
 
-            // Central Cylindrical
-            template <typename Parameters>
-            inline void setup_cc(Parameters& par)
-            {
-                par.es = 0.;
-            }
+};
 
-    }} // namespace detail::cc
-    #endif // doxygen
+// Central Cylindrical
+template <typename Parameters>
+inline void setup_cc(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    /*!
-        \brief Central Cylindrical projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Cylindrical
-         - Spheroid
-        \par Example
-        \image html ex_cc.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct cc_spheroid : public detail::cc::base_cc_spheroid<CalculationType, Parameters>
-    {
-        inline cc_spheroid(const Parameters& par) : detail::cc::base_cc_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::cc::setup_cc(this->m_par);
-        }
-    };
+}
+} // namespace detail::cc
+#endif // doxygen
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+/*!
+    \brief Central Cylindrical projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Cylindrical
+     - Spheroid
+    \par Example
+    \image html ex_cc.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct cc_spheroid : public detail::cc::base_cc_spheroid<CalculationType, Parameters>
+{
+	inline cc_spheroid(const Parameters& par) : detail::cc::base_cc_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::cc::setup_cc(this->m_par);
+	}
+};
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::cc, cc_spheroid, cc_spheroid)
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class cc_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<cc_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::cc, cc_spheroid, cc_spheroid)
 
-        template <typename CalculationType, typename Parameters>
-        inline void cc_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("cc", new cc_entry<CalculationType, Parameters>);
-        }
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class cc_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<cc_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-    } // namespace detail
-    #endif // doxygen
+template <typename CalculationType, typename Parameters>
+inline void cc_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("cc", new cc_entry<CalculationType, Parameters>);
+}
+
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_CC_HPP
 

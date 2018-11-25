@@ -22,11 +22,11 @@
 #
 #//Try to avoid including <string>, as it's quite big
 #if defined(_MSC_VER) && defined(BOOST_DINKUMWARE_STDLIB)
-   #include <iosfwd>   //Dinkum libraries for MSVC define std::char_traits there
+#include <iosfwd>   //Dinkum libraries for MSVC define std::char_traits there
 #elif defined(BOOST_GNU_STDLIB)
-   #include <bits/char_traits.h>
+#include <bits/char_traits.h>
 #else
-   #include <string>  //Fallback
+#include <string>  //Fallback
 #endif
 
 #endif //BOOST_CONTAINER_DETAIL_MINIMAL_CHAR_TRAITS_HEADER_HPP

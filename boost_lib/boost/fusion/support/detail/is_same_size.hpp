@@ -13,17 +13,23 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
 
-namespace boost { namespace fusion { namespace detail
+namespace boost
 {
-    template <typename Sequence1, typename Sequence2, typename = void, typename = void>
-    struct is_same_size : mpl::false_ {};
+namespace fusion
+{
+namespace detail
+{
+template <typename Sequence1, typename Sequence2, typename = void, typename = void>
+struct is_same_size : mpl::false_ {};
 
-    template <typename Sequence1, typename Sequence2>
-    struct is_same_size<Sequence1, Sequence2,
-                        typename enable_if<traits::is_sequence<Sequence1> >::type,
-                        typename enable_if<traits::is_sequence<Sequence2> >::type>
-        : mpl::equal_to<result_of::size<Sequence1>, result_of::size<Sequence2> >
-    {};
-}}}
+template <typename Sequence1, typename Sequence2>
+struct is_same_size<Sequence1, Sequence2,
+	       typename enable_if<traits::is_sequence<Sequence1> >::type,
+	       typename enable_if<traits::is_sequence<Sequence2> >::type>
+	       : mpl::equal_to<result_of::size<Sequence1>, result_of::size<Sequence2> >
+{};
+}
+}
+}
 
 #endif

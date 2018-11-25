@@ -10,20 +10,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class Msg>
-      struct fail
-      {
-        typedef fail type;
-        
-        template <class S, class Pos>
-        struct apply : reject<Msg, Pos> {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class Msg>
+struct fail
+{
+	typedef fail type;
+
+	template <class S, class Pos>
+	struct apply : reject<Msg, Pos> {};
+};
+}
+}
 }
 
 #endif

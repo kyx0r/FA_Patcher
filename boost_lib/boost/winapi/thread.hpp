@@ -21,17 +21,19 @@
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-SleepEx(
-    boost::winapi::DWORD_ dwMilliseconds,
-    boost::winapi::BOOL_ bAlertable);
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI Sleep(boost::winapi::DWORD_ dwMilliseconds);
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI SwitchToThread(BOOST_WINAPI_DETAIL_VOID);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	SleepEx(
+	    boost::winapi::DWORD_ dwMilliseconds,
+	    boost::winapi::BOOL_ bAlertable);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI Sleep(boost::winapi::DWORD_ dwMilliseconds);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI SwitchToThread(BOOST_WINAPI_DETAIL_VOID);
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 using ::SleepEx;
 using ::Sleep;
 using ::SwitchToThread;

@@ -13,7 +13,12 @@
 #include <boost/mpi/packed_oarchive.hpp>
 #include <boost/mpi/packed_iarchive.hpp>
 
-namespace boost { namespace mpi { namespace detail {
+namespace boost
+{
+namespace mpi
+{
+namespace detail
+{
 
 /** Sends a packed archive using MPI_Send. */
 BOOST_MPI_DECL void
@@ -47,6 +52,8 @@ BOOST_MPI_DECL void
 packed_archive_recv(MPI_Comm comm, int source, int tag, packed_iarchive& ar,
                     MPI_Status& status);
 
-} } } // end namespace boost::mpi::detail
+}
+}
+} // end namespace boost::mpi::detail
 
 #endif // BOOST_MPI_DETAIL_POINT_TO_POINT_HPP

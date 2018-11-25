@@ -10,14 +10,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class C>
-      struct lit : lit_c<C::type::value> {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class C>
+struct lit : lit_c<C::type::value> {};
+}
+}
 }
 
 #endif

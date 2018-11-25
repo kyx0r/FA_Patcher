@@ -14,19 +14,23 @@
 #include <boost/spirit/home/classic/core/typeof.hpp>
 #include <boost/spirit/home/classic/attribute/closure_fwd.hpp>
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    // parametric.hpp
-    template<typename ChGenT>                        struct f_chlit;
-    template<typename ChGenAT, typename ChGenBT>     struct f_range;
-    template<typename IterGenAT, typename IterGenBT> class f_chseq;
-    template<typename IterGenAT, typename IterGenBT> class f_strlit;
+// parametric.hpp
+template<typename ChGenT>                        struct f_chlit;
+template<typename ChGenAT, typename ChGenBT>     struct f_range;
+template<typename IterGenAT, typename IterGenBT> class f_chseq;
+template<typename IterGenAT, typename IterGenBT> class f_strlit;
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-}} // namespace BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace BOOST_SPIRIT_CLASSIC_NS
 
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()

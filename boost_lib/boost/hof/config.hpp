@@ -149,7 +149,7 @@
 #define BOOST_HOF_NO_ORDERED_BRACE_INIT 1
 #else
 #define BOOST_HOF_NO_ORDERED_BRACE_INIT 0
-#endif 
+#endif
 #endif
 
 // Whether the compiler has trouble mangling some expressions used in

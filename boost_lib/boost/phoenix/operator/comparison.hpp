@@ -13,23 +13,26 @@
 #include <boost/proto/operators.hpp>
 #include <boost/proto/fusion.hpp> // Added to solve bug 6268
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    BOOST_PHOENIX_BINARY_OPERATORS(
-        (equal_to)
-        (not_equal_to)
-        (less_equal)
-        (greater_equal)
-        (less)
-        (greater)
-    )
-    using proto::exprns_::operator==;
-    using proto::exprns_::operator!=;
-    using proto::exprns_::operator<=;
-    using proto::exprns_::operator>=;
-    using proto::exprns_::operator<;
-    using proto::exprns_::operator>;
-}}
+namespace phoenix
+{
+BOOST_PHOENIX_BINARY_OPERATORS(
+    (equal_to)
+    (not_equal_to)
+    (less_equal)
+    (greater_equal)
+    (less)
+    (greater)
+)
+using proto::exprns_::operator==;
+using proto::exprns_::operator!=;
+using proto::exprns_::operator<=;
+using proto::exprns_::operator>=;
+using proto::exprns_::operator<;
+using proto::exprns_::operator>;
+}
+}
 
 #include <boost/phoenix/operator/detail/undef_operator.hpp>
 

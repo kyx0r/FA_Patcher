@@ -17,11 +17,14 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/intrinsics.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace multi_index{
+namespace multi_index
+{
 
-namespace detail{
+namespace detail
+{
 
 /* Metafunction that checks if f(arg,arg2) executes without argument type
  * conversion. By default (i.e. when it cannot be determined) it evaluates to
@@ -29,7 +32,7 @@ namespace detail{
  */
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent:mpl::true_{};
+struct is_transparent:mpl::true_ {};
 
 } /* namespace multi_index::detail */
 
@@ -53,77 +56,80 @@ struct is_transparent:mpl::true_{};
 #include <boost/utility/declval.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace multi_index{
+namespace multi_index
+{
 
-namespace detail{
+namespace detail
+{
 
-struct not_is_transparent_result_type{};
+struct not_is_transparent_result_type {};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_class_helper:F
 {
-  using F::operator();
-  template<typename T,typename Q>
-  not_is_transparent_result_type operator()(const T&,const Q&)const;
+	using F::operator();
+	template<typename T,typename Q>
+	not_is_transparent_result_type operator()(const T&,const Q&)const;
 };
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent_class:mpl::true_{};
+struct is_transparent_class:mpl::true_ {};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_class<
-  F,Arg1,Arg2,
-  typename enable_if<
-    is_same<
-      decltype(
-        declval<const is_transparent_class_helper<F,Arg1,Arg2> >()(
-          declval<const Arg1&>(),declval<const Arg2&>())
-      ),
-      not_is_transparent_result_type
-    >
-  >::type
->:mpl::false_{};
+	F,Arg1,Arg2,
+	typename enable_if<
+	is_same<
+decltype(
+    declval<const is_transparent_class_helper<F,Arg1,Arg2> >()(
+        declval<const Arg1&>(),declval<const Arg2&>())
+),
+not_is_transparent_result_type
+>
+>::type
+>:mpl::false_ {};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent<
-  F,Arg1,Arg2,
-  typename enable_if<
-    mpl::and_<
-      is_class<F>,
-      mpl::not_<is_final<F> > /* is_transparent_class_helper derives from F */
-    >
-  >::type
->:is_transparent_class<F,Arg1,Arg2>{};
+	F,Arg1,Arg2,
+	typename enable_if<
+	mpl::and_<
+	is_class<F>,
+	mpl::not_<is_final<F> > /* is_transparent_class_helper derives from F */
+	>
+	>::type
+	>:is_transparent_class<F,Arg1,Arg2> {};
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent_function:mpl::true_{};
+struct is_transparent_function:mpl::true_ {};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_function<
-  F,Arg1,Arg2,
-  typename enable_if<
-    mpl::or_<
-      mpl::not_<mpl::or_<
-        is_same<typename function_traits<F>::arg1_type,const Arg1&>,
-        is_same<typename function_traits<F>::arg1_type,Arg1>
-      > >,
-      mpl::not_<mpl::or_<
-        is_same<typename function_traits<F>::arg2_type,const Arg2&>,
-        is_same<typename function_traits<F>::arg2_type,Arg2>
-      > >
-    >
-  >::type
->:mpl::false_{};
+	F,Arg1,Arg2,
+	typename enable_if<
+	mpl::or_<
+	mpl::not_<mpl::or_<
+	is_same<typename function_traits<F>::arg1_type,const Arg1&>,
+	is_same<typename function_traits<F>::arg1_type,Arg1>
+	> >,
+	mpl::not_<mpl::or_<
+	is_same<typename function_traits<F>::arg2_type,const Arg2&>,
+	is_same<typename function_traits<F>::arg2_type,Arg2>
+	> >
+	>
+	>::type
+	>:mpl::false_ {};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent<
-  F,Arg1,Arg2,
-  typename enable_if<
-    is_function<typename remove_pointer<F>::type>
-  >::type
->:is_transparent_function<typename remove_pointer<F>::type,Arg1,Arg2>{};
+	F,Arg1,Arg2,
+	typename enable_if<
+	is_function<typename remove_pointer<F>::type>
+	>::type
+	>:is_transparent_function<typename remove_pointer<F>::type,Arg1,Arg2> {};
 
 } /* namespace multi_index::detail */
 

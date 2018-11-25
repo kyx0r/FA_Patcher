@@ -18,10 +18,14 @@
 #include <boost/geometry/strategies/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace side
+namespace strategy
+{
+namespace side
 {
 
 namespace services
@@ -36,20 +40,22 @@ namespace services
 template <typename CSTag, typename CalculationType = void>
 struct default_strategy
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_TYPE
-            , (types<CSTag>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_TYPE
+	    , (types<CSTag>)
+	);
 };
 
 
 } // namespace services
 
 
-}} // namespace strategy::side
+}
+} // namespace strategy::side
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_SIDE_HPP

@@ -48,152 +48,171 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct mbtfpp {};
+namespace par4
+{
+struct mbtfpp {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace mbtfpp
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace mbtfpp
+{
 
-            static const double CS_ = .95257934441568037152;
-            static const double FXC = .92582009977255146156;
-            static const double FYC = 3.40168025708304504493;
-            //static const double C23 = .66666666666666666666;
-            //static const double C13 = .33333333333333333333;
-            static const double ONEEPS = 1.0000001;
+static const double CS_ = .95257934441568037152;
+static const double FXC = .92582009977255146156;
+static const double FYC = 3.40168025708304504493;
+//static const double C23 = .66666666666666666666;
+//static const double C13 = .33333333333333333333;
+static const double ONEEPS = 1.0000001;
 
-            template <typename T>
-            inline T C23() { return detail::TWOTHIRD<T>(); }
-            template <typename T>
-            inline T C13() { return detail::THIRD<T>(); }
+template <typename T>
+inline T C23()
+{
+	return detail::TWOTHIRD<T>();
+}
+template <typename T>
+inline T C13()
+{
+	return detail::THIRD<T>();
+}
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_mbtfpp_spheroid : public base_t_fi<base_mbtfpp_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_mbtfpp_spheroid : public base_t_fi<base_mbtfpp_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_mbtfpp_spheroid(const Parameters& par)
-                    : base_t_fi<base_mbtfpp_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_mbtfpp_spheroid(const Parameters& par)
+		: base_t_fi<base_mbtfpp_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType C23 = mbtfpp::C23<CalculationType>();
-                    static const CalculationType C13 = mbtfpp::C13<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType C23 = mbtfpp::C23<CalculationType>();
+		static const CalculationType C13 = mbtfpp::C13<CalculationType>();
 
-                    lp_lat = asin(CS_ * sin(lp_lat));
-                    xy_x = FXC * lp_lon * (2. * cos(C23 * lp_lat) - 1.);
-                    xy_y = FYC * sin(C13 * lp_lat);
-                }
+		lp_lat = asin(CS_ * sin(lp_lat));
+		xy_x = FXC * lp_lon * (2. * cos(C23 * lp_lat) - 1.);
+		xy_y = FYC * sin(C13 * lp_lat);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
-                    static const CalculationType C23 = mbtfpp::C23<CalculationType>();
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		static const CalculationType HALFPI = detail::HALFPI<CalculationType>();
+		static const CalculationType C23 = mbtfpp::C23<CalculationType>();
 
-                    lp_lat = xy_y / FYC;
-                    if (fabs(lp_lat) >= 1.) {
-                        if (fabs(lp_lat) > ONEEPS)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        else
-                            lp_lat = (lp_lat < 0.) ? -HALFPI : HALFPI;
-                    } else
-                        lp_lat = asin(lp_lat);
-                    lp_lon = xy_x / ( FXC * (2. * cos(C23 * (lp_lat *= 3.)) - 1.) );
-                    if (fabs(lp_lat = sin(lp_lat) / CS_) >= 1.) {
-                        if (fabs(lp_lat) > ONEEPS)
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        else
-                            lp_lat = (lp_lat < 0.) ? -HALFPI : HALFPI;
-                    } else
-                        lp_lat = asin(lp_lat);
-                }
+		lp_lat = xy_y / FYC;
+		if (fabs(lp_lat) >= 1.)
+		{
+			if (fabs(lp_lat) > ONEEPS)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			else
+				lp_lat = (lp_lat < 0.) ? -HALFPI : HALFPI;
+		}
+		else
+			lp_lat = asin(lp_lat);
+		lp_lon = xy_x / ( FXC * (2. * cos(C23 * (lp_lat *= 3.)) - 1.) );
+		if (fabs(lp_lat = sin(lp_lat) / CS_) >= 1.)
+		{
+			if (fabs(lp_lat) > ONEEPS)
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			else
+				lp_lat = (lp_lat < 0.) ? -HALFPI : HALFPI;
+		}
+		else
+			lp_lat = asin(lp_lat);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "mbtfpp_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "mbtfpp_spheroid";
+	}
 
-            };
+};
 
-            // McBride-Thomas Flat-Polar Parabolic
-            template <typename Parameters>
-            inline void setup_mbtfpp(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// McBride-Thomas Flat-Polar Parabolic
+template <typename Parameters>
+inline void setup_mbtfpp(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::mbtfpp
-    #endif // doxygen
+}
+} // namespace detail::mbtfpp
+#endif // doxygen
 
-    /*!
-        \brief McBride-Thomas Flat-Polar Parabolic projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Cylindrical
-         - Spheroid
-        \par Example
-        \image html ex_mbtfpp.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct mbtfpp_spheroid : public detail::mbtfpp::base_mbtfpp_spheroid<CalculationType, Parameters>
-    {
-        inline mbtfpp_spheroid(const Parameters& par) : detail::mbtfpp::base_mbtfpp_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::mbtfpp::setup_mbtfpp(this->m_par);
-        }
-    };
+/*!
+    \brief McBride-Thomas Flat-Polar Parabolic projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Cylindrical
+     - Spheroid
+    \par Example
+    \image html ex_mbtfpp.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct mbtfpp_spheroid : public detail::mbtfpp::base_mbtfpp_spheroid<CalculationType, Parameters>
+{
+	inline mbtfpp_spheroid(const Parameters& par) : detail::mbtfpp::base_mbtfpp_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::mbtfpp::setup_mbtfpp(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mbtfpp, mbtfpp_spheroid, mbtfpp_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::mbtfpp, mbtfpp_spheroid, mbtfpp_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class mbtfpp_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<mbtfpp_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class mbtfpp_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<mbtfpp_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void mbtfpp_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("mbtfpp", new mbtfpp_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void mbtfpp_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("mbtfpp", new mbtfpp_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_MBTFPP_HPP
 

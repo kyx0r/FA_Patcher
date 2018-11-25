@@ -22,11 +22,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! The metafunction detects the matching expression kind and returns a tag that is used to specialize \c match_traits
 template< typename ExpressionT, typename = void >
@@ -41,20 +43,20 @@ struct match_traits;
 //! The regex matching functor
 struct matches_fun
 {
-    typedef bool result_type;
+	typedef bool result_type;
 
-    template< typename StringT, typename ExpressionT >
-    bool operator() (StringT const& str, ExpressionT const& expr) const
-    {
-        typedef aux::match_traits< ExpressionT > impl;
-        return impl::matches(str, expr);
-    }
-    template< typename StringT, typename ExpressionT, typename ArgT >
-    bool operator() (StringT const& str, ExpressionT const& expr, ArgT const& arg) const
-    {
-        typedef aux::match_traits< ExpressionT > impl;
-        return impl::matches(str, expr, arg);
-    }
+	template< typename StringT, typename ExpressionT >
+	bool operator() (StringT const& str, ExpressionT const& expr) const
+	{
+		typedef aux::match_traits< ExpressionT > impl;
+		return impl::matches(str, expr);
+	}
+	template< typename StringT, typename ExpressionT, typename ArgT >
+	bool operator() (StringT const& str, ExpressionT const& expr, ArgT const& arg) const
+	{
+		typedef aux::match_traits< ExpressionT > impl;
+		return impl::matches(str, expr, arg);
+	}
 };
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

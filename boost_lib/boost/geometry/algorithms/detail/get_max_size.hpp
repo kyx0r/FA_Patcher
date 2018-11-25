@@ -18,7 +18,9 @@
 #include <boost/geometry/core/access.hpp>
 #include <boost/geometry/util/math.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -28,22 +30,22 @@ namespace detail
 template <typename Box, std::size_t Dimension>
 struct get_max_size_box
 {
-    static inline typename coordinate_type<Box>::type apply(Box const& box)
-    {
-        typename coordinate_type<Box>::type s
-            = geometry::math::abs(geometry::get<1, Dimension>(box) - geometry::get<0, Dimension>(box));
+	static inline typename coordinate_type<Box>::type apply(Box const& box)
+	{
+		typename coordinate_type<Box>::type s
+		    = geometry::math::abs(geometry::get<1, Dimension>(box) - geometry::get<0, Dimension>(box));
 
-        return (std::max)(s, get_max_size_box<Box, Dimension - 1>::apply(box));
-    }
+		return (std::max)(s, get_max_size_box<Box, Dimension - 1>::apply(box));
+	}
 };
 
 template <typename Box>
 struct get_max_size_box<Box, 0>
 {
-    static inline typename coordinate_type<Box>::type apply(Box const& box)
-    {
-        return geometry::math::abs(geometry::get<1, 0>(box) - geometry::get<0, 0>(box));
-    }
+	static inline typename coordinate_type<Box>::type apply(Box const& box)
+	{
+		return geometry::math::abs(geometry::get<1, 0>(box) - geometry::get<0, 0>(box));
+	}
 };
 
 // This might be implemented later on for other geometries too.
@@ -51,14 +53,15 @@ struct get_max_size_box<Box, 0>
 template <typename Box>
 inline typename coordinate_type<Box>::type get_max_size(Box const& box)
 {
-    return get_max_size_box<Box, dimension<Box>::value - 1>::apply(box);
+	return get_max_size_box<Box, dimension<Box>::value - 1>::apply(box);
 }
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_GET_MAX_SIZE_HPP

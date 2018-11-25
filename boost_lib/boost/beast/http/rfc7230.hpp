@@ -14,9 +14,12 @@
 #include <boost/beast/http/detail/rfc7230.hpp>
 #include <boost/beast/http/detail/basic_parsed_list.hpp>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /** A list of parameters in an HTTP extension field value.
 
@@ -52,50 +55,50 @@ namespace http {
 */
 class param_list
 {
-    string_view s_;
+	string_view s_;
 
 public:
-    /** The type of each element in the list.
+	/** The type of each element in the list.
 
-        The first string in the pair is the name of the parameter,
-        and the second string in the pair is its value (which may
-        be empty).
-    */
-    using value_type =
-        std::pair<string_view, string_view>;
+	    The first string in the pair is the name of the parameter,
+	    and the second string in the pair is its value (which may
+	    be empty).
+	*/
+	using value_type =
+	    std::pair<string_view, string_view>;
 
-    /// A constant iterator to the list
+	/// A constant iterator to the list
 #if BOOST_BEAST_DOXYGEN
-    using const_iterator = implementation_defined;
+	using const_iterator = implementation_defined;
 #else
-    class const_iterator;
+	class const_iterator;
 #endif
 
-    /// Default constructor.
-    param_list() = default;
+	/// Default constructor.
+	param_list() = default;
 
-    /** Construct a list.
+	/** Construct a list.
 
-        @param s A string containing the list contents. The string
-        must remain valid for the lifetime of the container.
-    */
-    explicit
-    param_list(string_view s)
-        : s_(s)
-    {
-    }
+	    @param s A string containing the list contents. The string
+	    must remain valid for the lifetime of the container.
+	*/
+	explicit
+	param_list(string_view s)
+		: s_(s)
+	{
+	}
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator begin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator begin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator end() const;
+	/// Return a const iterator to the end of the list
+	const_iterator end() const;
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator cbegin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator cbegin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator cend() const;
+	/// Return a const iterator to the end of the list
+	const_iterator cend() const;
 };
 
 //------------------------------------------------------------------------------
@@ -140,67 +143,67 @@ public:
 */
 class ext_list
 {
-    using iter_type = string_view::const_iterator;
+	using iter_type = string_view::const_iterator;
 
-    string_view s_;
+	string_view s_;
 
 public:
-    /** The type of each element in the list.
+	/** The type of each element in the list.
 
-        The first element of the pair is the extension token, and the
-        second element of the pair is an iterable container holding the
-        extension's name/value parameters.
-    */
-    using value_type = std::pair<string_view, param_list>;
+	    The first element of the pair is the extension token, and the
+	    second element of the pair is an iterable container holding the
+	    extension's name/value parameters.
+	*/
+	using value_type = std::pair<string_view, param_list>;
 
-    /// A constant iterator to the list
+	/// A constant iterator to the list
 #if BOOST_BEAST_DOXYGEN
-    using const_iterator = implementation_defined;
+	using const_iterator = implementation_defined;
 #else
-    class const_iterator;
+	class const_iterator;
 #endif
 
-    /** Construct a list.
+	/** Construct a list.
 
-        @param s A string containing the list contents. The string
-        must remain valid for the lifetime of the container.
-    */
-    explicit
-    ext_list(string_view s)
-        : s_(s)
-    {
-    }
+	    @param s A string containing the list contents. The string
+	    must remain valid for the lifetime of the container.
+	*/
+	explicit
+	ext_list(string_view s)
+		: s_(s)
+	{
+	}
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator begin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator begin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator end() const;
+	/// Return a const iterator to the end of the list
+	const_iterator end() const;
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator cbegin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator cbegin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator cend() const;
+	/// Return a const iterator to the end of the list
+	const_iterator cend() const;
 
-    /** Find a token in the list.
+	/** Find a token in the list.
 
-        @param s The token to find. A case-insensitive comparison is used.
+	    @param s The token to find. A case-insensitive comparison is used.
 
-        @return An iterator to the matching token, or `end()` if no
-        token exists.
-    */
-    template<class T>
-    const_iterator
-    find(T const& s);
+	    @return An iterator to the matching token, or `end()` if no
+	    token exists.
+	*/
+	template<class T>
+	const_iterator
+	find(T const& s);
 
-    /** Return `true` if a token is present in the list.
+	/** Return `true` if a token is present in the list.
 
-        @param s The token to find. A case-insensitive comparison is used.
-    */
-    template<class T>
-    bool
-    exists(T const& s);
+	    @param s The token to find. A case-insensitive comparison is used.
+	*/
+	template<class T>
+	bool
+	exists(T const& s);
 };
 
 //------------------------------------------------------------------------------
@@ -233,51 +236,51 @@ public:
 */
 class token_list
 {
-    using iter_type = string_view::const_iterator;
+	using iter_type = string_view::const_iterator;
 
-    string_view s_;
+	string_view s_;
 
 public:
-    /// The type of each element in the token list.
-    using value_type = string_view;
+	/// The type of each element in the token list.
+	using value_type = string_view;
 
-    /// A constant iterator to the list
+	/// A constant iterator to the list
 #if BOOST_BEAST_DOXYGEN
-    using const_iterator = implementation_defined;
+	using const_iterator = implementation_defined;
 #else
-    class const_iterator;
+	class const_iterator;
 #endif
 
-    /** Construct a list.
+	/** Construct a list.
 
-        @param s A string containing the list contents. The string
-        must remain valid for the lifetime of the container.
-    */
-    explicit
-    token_list(string_view s)
-        : s_(s)
-    {
-    }
+	    @param s A string containing the list contents. The string
+	    must remain valid for the lifetime of the container.
+	*/
+	explicit
+	token_list(string_view s)
+		: s_(s)
+	{
+	}
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator begin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator begin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator end() const;
+	/// Return a const iterator to the end of the list
+	const_iterator end() const;
 
-    /// Return a const iterator to the beginning of the list
-    const_iterator cbegin() const;
+	/// Return a const iterator to the beginning of the list
+	const_iterator cbegin() const;
 
-    /// Return a const iterator to the end of the list
-    const_iterator cend() const;
+	/// Return a const iterator to the end of the list
+	const_iterator cend() const;
 
-    /** Return `true` if a token is present in the list.
+	/** Return `true` if a token is present in the list.
 
-        @param s The token to find. A case-insensitive comparison is used.
-    */
-    template<class T>
-    bool
-    exists(T const& s);
+	    @param s The token to find. A case-insensitive comparison is used.
+	*/
+	template<class T>
+	bool
+	exists(T const& s);
 };
 
 /** A list of tokens in a comma separated HTTP field value.
@@ -307,7 +310,7 @@ public:
 */
 using opt_token_list =
     detail::basic_parsed_list<
-        detail::opt_token_list_policy>;
+    detail::opt_token_list_policy>;
 
 /** Returns `true` if a parsed list is parsed without errors.
 
@@ -318,7 +321,7 @@ using opt_token_list =
 template<class Policy>
 bool
 validate_list(detail::basic_parsed_list<
-    Policy> const& list);
+              Policy> const& list);
 
 } // http
 } // beast

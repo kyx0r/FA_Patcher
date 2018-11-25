@@ -18,38 +18,41 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
+namespace boost
+{
+namespace coroutines
+{
 
 struct attributes
 {
-    std::size_t     size;
-    flag_unwind_t   do_unwind;
+	std::size_t     size;
+	flag_unwind_t   do_unwind;
 
-    attributes() BOOST_NOEXCEPT :
-        size( stack_allocator::traits_type::default_size() ),
-        do_unwind( stack_unwind)
-    {}
+attributes() BOOST_NOEXCEPT :
+	size( stack_allocator::traits_type::default_size() ),
+	      do_unwind( stack_unwind)
+	{}
 
-    explicit attributes( std::size_t size_) BOOST_NOEXCEPT :
-        size( size_),
-        do_unwind( stack_unwind)
-    {}
+explicit attributes( std::size_t size_) BOOST_NOEXCEPT :
+	size( size_),
+	do_unwind( stack_unwind)
+	{}
 
-    explicit attributes( flag_unwind_t do_unwind_) BOOST_NOEXCEPT :
-        size( stack_allocator::traits_type::default_size() ),
-        do_unwind( do_unwind_)
-    {}
+explicit attributes( flag_unwind_t do_unwind_) BOOST_NOEXCEPT :
+	size( stack_allocator::traits_type::default_size() ),
+	do_unwind( do_unwind_)
+	{}
 
-    explicit attributes(
-            std::size_t size_,
-            flag_unwind_t do_unwind_) BOOST_NOEXCEPT :
-        size( size_),
-        do_unwind( do_unwind_)
-    {}
+	explicit attributes(
+	    std::size_t size_,
+    flag_unwind_t do_unwind_) BOOST_NOEXCEPT :
+	size( size_),
+	do_unwind( do_unwind_)
+	{}
 };
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

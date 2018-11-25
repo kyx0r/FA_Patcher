@@ -1,4 +1,4 @@
-// Boost.Units - A C++ library for zero-overhead dimensional analysis and 
+// Boost.Units - A C++ library for zero-overhead dimensional analysis and
 // unit/quantity manipulation and conversion
 //
 // Copyright (C) 2003-2008 Matthias Christian Schabel
@@ -35,8 +35,8 @@ const type name##_instance_t<b>::instance
 BOOST_STATIC_CONSTEXPR type name
 #endif
 
-/// A convenience macro for static constants with auto 
-/// type deduction. 
+/// A convenience macro for static constants with auto
+/// type deduction.
 #if BOOST_UNITS_HAS_TYPEOF
 
 #if BOOST_UNITS_HAS_BOOST_TYPEOF

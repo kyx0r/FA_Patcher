@@ -26,19 +26,22 @@
 
 #ifdef BOOST_WINDOWS
 extern "C" {
-struct _SECURITY_ATTRIBUTES;
+	struct _SECURITY_ATTRIBUTES;
 }
 #endif // BOOST_WINDOWS
 
-namespace boost {
+namespace boost
+{
 
 #ifdef BOOST_WINDOWS
-namespace winapi {
+namespace winapi
+{
 struct BOOST_LOG_MAY_ALIAS _SECURITY_ATTRIBUTES;
 }
 #endif
 
-namespace interprocess {
+namespace interprocess
+{
 class permissions;
 } // namespace interprocess
 
@@ -57,148 +60,152 @@ class permissions
 {
 public:
 #if defined(BOOST_LOG_DOXYGEN_PASS)
-    //! The type of security permissions, specific to the operating system
-    typedef implementation_defined native_type;
+	//! The type of security permissions, specific to the operating system
+	typedef implementation_defined native_type;
 #elif defined(BOOST_WINDOWS)
-    typedef ::_SECURITY_ATTRIBUTES* native_type;
+	typedef ::_SECURITY_ATTRIBUTES* native_type;
 #else
-    // Equivalent to POSIX mode_t
-    typedef unsigned int native_type;
+	// Equivalent to POSIX mode_t
+	typedef unsigned int native_type;
 #endif
 
 #if !defined(BOOST_LOG_DOXYGEN_PASS)
 private:
-    native_type m_perms;
+	native_type m_perms;
 #endif
 
 public:
-    /*!
-     * Default constructor. The method constructs an object that represents
-     * a null \c SECURITY_ATTRIBUTES pointer on Windows platforms, and a
-     * \c mode_t value \c 0644 on POSIX platforms.
-     */
-    permissions() BOOST_NOEXCEPT
-    {
-        set_default();
-    }
+	/*!
+	 * Default constructor. The method constructs an object that represents
+	 * a null \c SECURITY_ATTRIBUTES pointer on Windows platforms, and a
+	 * \c mode_t value \c 0644 on POSIX platforms.
+	 */
+	permissions() BOOST_NOEXCEPT
+	{
+		set_default();
+	}
 
-    /*!
-     * Copy constructor.
-     */
-    permissions(permissions const& that) BOOST_NOEXCEPT : m_perms(that.m_perms)
-    {
-    }
+	/*!
+	 * Copy constructor.
+	 */
+permissions(permissions const& that) BOOST_NOEXCEPT :
+	m_perms(that.m_perms)
+	{
+	}
 
-    /*!
-     * Copy assignment.
-     */
-    permissions& operator=(permissions const& that) BOOST_NOEXCEPT
-    {
-        m_perms = that.m_perms;
-        return *this;
-    }
+	/*!
+	 * Copy assignment.
+	 */
+	permissions& operator=(permissions const& that) BOOST_NOEXCEPT
+	{
+		m_perms = that.m_perms;
+		return *this;
+	}
 
-    /*!
-     * Initializing constructor.
-     */
-    permissions(native_type perms) BOOST_NOEXCEPT : m_perms(perms)
-    {
-    }
+	/*!
+	 * Initializing constructor.
+	 */
+permissions(native_type perms) BOOST_NOEXCEPT :
+	m_perms(perms)
+	{
+	}
 
 #ifdef BOOST_WINDOWS
-    permissions(boost::winapi::_SECURITY_ATTRIBUTES* perms) BOOST_NOEXCEPT : m_perms(reinterpret_cast< native_type >(perms))
-    {
-    }
+permissions(boost::winapi::_SECURITY_ATTRIBUTES* perms) BOOST_NOEXCEPT :
+	m_perms(reinterpret_cast< native_type >(perms))
+	{
+	}
 #endif
 
-    /*!
-     * Initializing constructor.
-     */
-    BOOST_LOG_API permissions(boost::interprocess::permissions const& perms) BOOST_NOEXCEPT;
+	/*!
+	 * Initializing constructor.
+	 */
+	BOOST_LOG_API permissions(boost::interprocess::permissions const& perms) BOOST_NOEXCEPT;
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-    /*!
-     * Move constructor.
-     */
-    permissions(permissions&& that) BOOST_NOEXCEPT : m_perms(that.m_perms)
-    {
-        that.set_default();
-    }
+	/*!
+	 * Move constructor.
+	 */
+permissions(permissions&& that) BOOST_NOEXCEPT :
+	m_perms(that.m_perms)
+	{
+		that.set_default();
+	}
 
-    /*!
-     * Move assignment.
-     */
-    permissions& operator=(permissions&& that) BOOST_NOEXCEPT
-    {
-        m_perms = that.m_perms;
-        that.set_default();
-        return *this;
-    }
+	/*!
+	 * Move assignment.
+	 */
+	permissions& operator=(permissions&& that) BOOST_NOEXCEPT
+	{
+		m_perms = that.m_perms;
+		that.set_default();
+		return *this;
+	}
 #endif
 
-    /*!
-     * Sets permissions from the OS-specific permissions.
-     */
-    void set_native(native_type perms) BOOST_NOEXCEPT
-    {
-        m_perms = perms;
-    }
+	/*!
+	 * Sets permissions from the OS-specific permissions.
+	 */
+	void set_native(native_type perms) BOOST_NOEXCEPT
+	{
+		m_perms = perms;
+	}
 
-    /*!
-     * Returns the underlying OS-specific permissions.
-     */
-    native_type get_native() const BOOST_NOEXCEPT
-    {
-        return m_perms;
-    }
+	/*!
+	 * Returns the underlying OS-specific permissions.
+	 */
+	native_type get_native() const BOOST_NOEXCEPT
+	{
+		return m_perms;
+	}
 
-    /*!
-     * Sets the default permissions, which are equivalent to \c NULL \c SECURITY_ATTRIBUTES
-     * on Windows and \c 0644 on POSIX platforms.
-     */
-    void set_default() BOOST_NOEXCEPT
-    {
+	/*!
+	 * Sets the default permissions, which are equivalent to \c NULL \c SECURITY_ATTRIBUTES
+	 * on Windows and \c 0644 on POSIX platforms.
+	 */
+	void set_default() BOOST_NOEXCEPT
+	{
 #if defined(BOOST_WINDOWS)
-        m_perms = 0;
+		m_perms = 0;
 #else
-        m_perms = 0644;
+		m_perms = 0644;
 #endif
-    }
+	}
 
-    /*!
-     * Sets unrestricted permissions, which are equivalent to \c SECURITY_ATTRIBUTES with \c NULL DACL
-     * on Windows and \c 0666 on POSIX platforms.
-     */
-    void set_unrestricted()
-    {
+	/*!
+	 * Sets unrestricted permissions, which are equivalent to \c SECURITY_ATTRIBUTES with \c NULL DACL
+	 * on Windows and \c 0666 on POSIX platforms.
+	 */
+	void set_unrestricted()
+	{
 #if defined(BOOST_WINDOWS)
-        m_perms = get_unrestricted_security_attributes();
+		m_perms = get_unrestricted_security_attributes();
 #else
-        m_perms = 0666;
+		m_perms = 0666;
 #endif
-    }
+	}
 
-    /*!
-     * The method swaps the object with \a that.
-     *
-     * \param that The other object to swap with.
-     */
-    void swap(permissions& that) BOOST_NOEXCEPT
-    {
-        native_type perms = m_perms;
-        m_perms = that.m_perms;
-        that.m_perms = perms;
-    }
+	/*!
+	 * The method swaps the object with \a that.
+	 *
+	 * \param that The other object to swap with.
+	 */
+	void swap(permissions& that) BOOST_NOEXCEPT
+	{
+		native_type perms = m_perms;
+		m_perms = that.m_perms;
+		that.m_perms = perms;
+	}
 
-    //! Swaps the two \c permissions objects.
-    friend void swap(permissions& a, permissions& b) BOOST_NOEXCEPT
-    {
-        a.swap(b);
-    }
+	//! Swaps the two \c permissions objects.
+	friend void swap(permissions& a, permissions& b) BOOST_NOEXCEPT
+	{
+		a.swap(b);
+	}
 
 #if !defined(BOOST_LOG_DOXYGEN_PASS) && defined(BOOST_WINDOWS)
 private:
-    static BOOST_LOG_API native_type get_unrestricted_security_attributes();
+	static BOOST_LOG_API native_type get_unrestricted_security_attributes();
 #endif
 };
 

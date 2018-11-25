@@ -16,38 +16,40 @@
 #include <stdexcept>
 #include <typeinfo>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
 struct unregistered_type:std::logic_error
 {
-  unregistered_type(const std::type_info& info):
-    std::logic_error{"type not registered"},
-    pinfo{&info}
-  {}
+	unregistered_type(const std::type_info& info):
+		std::logic_error{"type not registered"},
+		pinfo{&info}
+	{}
 
-  const std::type_info* pinfo;
+	const std::type_info* pinfo;
 };
 
 struct not_copy_constructible:std::logic_error
 {
-  not_copy_constructible(const std::type_info& info):
-    std::logic_error{"type is not copy constructible"},
-    pinfo{&info}
-  {}
+	not_copy_constructible(const std::type_info& info):
+		std::logic_error{"type is not copy constructible"},
+		pinfo{&info}
+	{}
 
-  const std::type_info* pinfo;
+	const std::type_info* pinfo;
 };
 
 struct not_equality_comparable:std::logic_error
 {
-  not_equality_comparable(const std::type_info& info):
-    std::logic_error{"type does not support equality comparison"},
-    pinfo{&info}
-  {}
+	not_equality_comparable(const std::type_info& info):
+		std::logic_error{"type does not support equality comparison"},
+		pinfo{&info}
+	{}
 
-  const std::type_info* pinfo;
+	const std::type_info* pinfo;
 };
 
 } /* namespace poly_collection */

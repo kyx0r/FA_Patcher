@@ -37,11 +37,13 @@
 #define BOOST_LOG_COMBINE_REQUIREMENTS_LIMIT 5
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 /*!
  * The sink backend expects pre-synchronized calls, all needed synchronization is implemented
@@ -88,10 +90,10 @@ struct combine_requirements;
 
 template< BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_LOG_COMBINE_REQUIREMENTS_LIMIT, typename ReqT, mpl::na) >
 struct combine_requirements :
-    mpl::inherit_linearly<
-        mpl::vector< BOOST_PP_ENUM_PARAMS(BOOST_LOG_COMBINE_REQUIREMENTS_LIMIT, ReqT) >,
-        mpl::inherit2< mpl::_1, mpl::_2 >
-    >
+	mpl::inherit_linearly<
+mpl::vector< BOOST_PP_ENUM_PARAMS(BOOST_LOG_COMBINE_REQUIREMENTS_LIMIT, ReqT) >,
+mpl::inherit2< mpl::_1, mpl::_2 >
+>
 {
 };
 
@@ -104,7 +106,7 @@ struct combine_requirements :
  */
 template< typename TestedT, typename RequiredT >
 struct has_requirement :
-    public is_base_of< RequiredT, TestedT >
+	public is_base_of< RequiredT, TestedT >
 {
 };
 

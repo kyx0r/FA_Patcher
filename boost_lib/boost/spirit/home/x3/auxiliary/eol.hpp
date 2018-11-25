@@ -12,44 +12,53 @@
 #include <boost/spirit/home/x3/core/parser.hpp>
 #include <boost/spirit/home/x3/support/unused.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    struct eol_parser : parser<eol_parser>
-    {
-        typedef unused_type attribute_type;
-        static bool const has_attribute = false;
+namespace spirit
+{
+namespace x3
+{
+struct eol_parser : parser<eol_parser>
+{
+	typedef unused_type attribute_type;
+	static bool const has_attribute = false;
 
-        template <typename Iterator, typename Context, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-         , Context const& context, unused_type, Attribute& /*attr*/) const
-        {
-            x3::skip_over(first, last, context);
-            Iterator iter = first;
-            bool matched = false;
-            if (iter != last && *iter == '\r')  // CR
-            {
-                matched = true;
-                ++iter;
-            }
-            if (iter != last && *iter == '\n')  // LF
-            {
-                matched = true;
-                ++iter;
-            }
+	template <typename Iterator, typename Context, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, unused_type, Attribute& /*attr*/) const
+	{
+		x3::skip_over(first, last, context);
+		Iterator iter = first;
+		bool matched = false;
+		if (iter != last && *iter == '\r')  // CR
+		{
+			matched = true;
+			++iter;
+		}
+		if (iter != last && *iter == '\n')  // LF
+		{
+			matched = true;
+			++iter;
+		}
 
-            if (matched) first = iter;
-            return matched;
-        }
-    };
+		if (matched) first = iter;
+		return matched;
+	}
+};
 
-    template<>
-    struct get_info<eol_parser>
-    {
-        typedef std::string result_type;
-        result_type operator()(eol_parser const &) const { return "eol"; }
-    };
+template<>
+struct get_info<eol_parser>
+{
+	typedef std::string result_type;
+	result_type operator()(eol_parser const &) const
+	{
+		return "eol";
+	}
+};
 
-    auto const eol = eol_parser{};
-}}}
+auto const eol = eol_parser {};
+}
+}
+}
 
 #endif

@@ -15,8 +15,10 @@
 #include <boost/type_erasure/any.hpp>
 #include <boost/type_erasure/binding.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * \return The type bindings of an @ref any.
@@ -26,7 +28,7 @@ namespace type_erasure {
 template<class Concept, class T>
 const binding<Concept>& binding_of(const any<Concept, T>& arg)
 {
-    return ::boost::type_erasure::detail::access::table(arg);
+	return ::boost::type_erasure::detail::access::table(arg);
 }
 
 }

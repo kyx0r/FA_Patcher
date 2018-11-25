@@ -25,39 +25,42 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! The function returns the current process name
 BOOST_LOG_API std::string get_process_name();
 
 } // namespace aux
 
-namespace attributes {
+namespace attributes
+{
 
 /*!
  * \brief A class of an attribute that holds the current process name
  */
 class current_process_name :
-    public constant< std::string >
+	public constant< std::string >
 {
-    typedef constant< std::string > base_type;
+	typedef constant< std::string > base_type;
 
 public:
-    /*!
-     * Constructor. Initializes the attribute with the current process name.
-     */
-    current_process_name() : base_type(boost::log::aux::get_process_name()) {}
-    /*!
-     * Constructor for casting support
-     */
-    explicit current_process_name(cast_source const& source) :
-        base_type(source)
-    {
-    }
+	/*!
+	 * Constructor. Initializes the attribute with the current process name.
+	 */
+	current_process_name() : base_type(boost::log::aux::get_process_name()) {}
+	/*!
+	 * Constructor for casting support
+	 */
+	explicit current_process_name(cast_source const& source) :
+		base_type(source)
+	{
+	}
 };
 
 } // namespace attributes

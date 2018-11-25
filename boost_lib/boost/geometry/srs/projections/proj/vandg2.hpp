@@ -48,190 +48,205 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct vandg2 {};
-    struct vandg3 {};
+namespace par4
+{
+struct vandg2 {};
+struct vandg3 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace vandg2
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace vandg2
+{
 
-            static const double TOL = 1e-10;
-            //static const double TWORPI = 0.63661977236758134308;
+static const double TOL = 1e-10;
+//static const double TWORPI = 0.63661977236758134308;
 
-            struct par_vandg2
-            {
-                int    vdg3;
-            };
+struct par_vandg2
+{
+	int    vdg3;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_vandg2_spheroid : public base_t_f<base_vandg2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_vandg2_spheroid : public base_t_f<base_vandg2_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_vandg2 m_proj_parm;
+	par_vandg2 m_proj_parm;
 
-                inline base_vandg2_spheroid(const Parameters& par)
-                    : base_t_f<base_vandg2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_vandg2_spheroid(const Parameters& par)
+		: base_t_f<base_vandg2_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType ONEPI = detail::ONEPI<CalculationType>();
-                    static const CalculationType TWORPI = detail::TWO_D_PI<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType ONEPI = detail::ONEPI<CalculationType>();
+		static const CalculationType TWORPI = detail::TWO_D_PI<CalculationType>();
 
-                    CalculationType x1, at, bt, ct;
+		CalculationType x1, at, bt, ct;
 
-                    bt = fabs(TWORPI * lp_lat);
-                    if ((ct = 1. - bt * bt) < 0.)
-                        ct = 0.;
-                    else
-                        ct = sqrt(ct);
-                    if (fabs(lp_lon) < TOL) {
-                        xy_x = 0.;
-                        xy_y = ONEPI * (lp_lat < 0. ? -bt : bt) / (1. + ct);
-                    } else {
-                        at = 0.5 * fabs(ONEPI / lp_lon - lp_lon / ONEPI);
-                        if (this->m_proj_parm.vdg3) {
-                            x1 = bt / (1. + ct);
-                            xy_x = ONEPI * (sqrt(at * at + 1. - x1 * x1) - at);
-                            xy_y = ONEPI * x1;
-                        } else {
-                            x1 = (ct * sqrt(1. + at * at) - at * ct * ct) /
-                                (1. + at * at * bt * bt);
-                            xy_x = ONEPI * x1;
-                            xy_y = ONEPI * sqrt(1. - x1 * (x1 + 2. * at) + TOL);
-                        }
-                        if ( lp_lon < 0.) xy_x = -xy_x;
-                        if ( lp_lat < 0.) xy_y = -xy_y;
-                    }
-                }
+		bt = fabs(TWORPI * lp_lat);
+		if ((ct = 1. - bt * bt) < 0.)
+			ct = 0.;
+		else
+			ct = sqrt(ct);
+		if (fabs(lp_lon) < TOL)
+		{
+			xy_x = 0.;
+			xy_y = ONEPI * (lp_lat < 0. ? -bt : bt) / (1. + ct);
+		}
+		else
+		{
+			at = 0.5 * fabs(ONEPI / lp_lon - lp_lon / ONEPI);
+			if (this->m_proj_parm.vdg3)
+			{
+				x1 = bt / (1. + ct);
+				xy_x = ONEPI * (sqrt(at * at + 1. - x1 * x1) - at);
+				xy_y = ONEPI * x1;
+			}
+			else
+			{
+				x1 = (ct * sqrt(1. + at * at) - at * ct * ct) /
+				     (1. + at * at * bt * bt);
+				xy_x = ONEPI * x1;
+				xy_y = ONEPI * sqrt(1. - x1 * (x1 + 2. * at) + TOL);
+			}
+			if ( lp_lon < 0.) xy_x = -xy_x;
+			if ( lp_lat < 0.) xy_y = -xy_y;
+		}
+	}
 
-                static inline std::string get_name()
-                {
-                    return "vandg2_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "vandg2_spheroid";
+	}
 
-            };
+};
 
-            // van der Grinten II
-            template <typename Parameters>
-            inline void setup_vandg2(Parameters& /*par*/, par_vandg2& proj_parm)
-            {
-                proj_parm.vdg3 = 0;
-            }
+// van der Grinten II
+template <typename Parameters>
+inline void setup_vandg2(Parameters& /*par*/, par_vandg2& proj_parm)
+{
+	proj_parm.vdg3 = 0;
+}
 
-            // van der Grinten III
-            template <typename Parameters>
-            inline void setup_vandg3(Parameters& par, par_vandg2& proj_parm)
-            {
-                proj_parm.vdg3 = 1;
-                par.es = 0.;
-            }
+// van der Grinten III
+template <typename Parameters>
+inline void setup_vandg3(Parameters& par, par_vandg2& proj_parm)
+{
+	proj_parm.vdg3 = 1;
+	par.es = 0.;
+}
 
-    }} // namespace detail::vandg2
-    #endif // doxygen
+}
+} // namespace detail::vandg2
+#endif // doxygen
 
-    /*!
-        \brief van der Grinten II projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_vandg2.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct vandg2_spheroid : public detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>
-    {
-        inline vandg2_spheroid(const Parameters& par) : detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::vandg2::setup_vandg2(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief van der Grinten II projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_vandg2.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct vandg2_spheroid : public detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>
+{
+	inline vandg2_spheroid(const Parameters& par) : detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::vandg2::setup_vandg2(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief van der Grinten III projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_vandg3.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct vandg3_spheroid : public detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>
-    {
-        inline vandg3_spheroid(const Parameters& par) : detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::vandg2::setup_vandg3(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief van der Grinten III projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_vandg3.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct vandg3_spheroid : public detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>
+{
+	inline vandg3_spheroid(const Parameters& par) : detail::vandg2::base_vandg2_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::vandg2::setup_vandg3(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::vandg2, vandg2_spheroid, vandg2_spheroid)
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::vandg3, vandg3_spheroid, vandg3_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::vandg2, vandg2_spheroid, vandg2_spheroid)
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::vandg3, vandg3_spheroid, vandg3_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class vandg2_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<vandg2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class vandg2_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<vandg2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        class vandg3_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<vandg3_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+template <typename CalculationType, typename Parameters>
+class vandg3_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<vandg3_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void vandg2_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("vandg2", new vandg2_entry<CalculationType, Parameters>);
-            factory.add_to_factory("vandg3", new vandg3_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void vandg2_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("vandg2", new vandg2_entry<CalculationType, Parameters>);
+	factory.add_to_factory("vandg3", new vandg3_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_VANDG2_HPP
 

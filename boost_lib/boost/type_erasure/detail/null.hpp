@@ -22,17 +22,21 @@
 #include <boost/type_erasure/config.hpp>
 #include <boost/type_erasure/exception.hpp>
 
-namespace boost {
-namespace type_erasure {
-namespace detail {
+namespace boost
+{
+namespace type_erasure
+{
+namespace detail
+{
 
 template<class Sig>
 struct null_throw;
 
 template<class Concept>
-struct get_null_vtable_entry {
-    typedef ::boost::type_erasure::detail::null_throw<
-        typename ::boost::remove_pointer<typename Concept::type>::type> type;
+struct get_null_vtable_entry
+{
+	typedef ::boost::type_erasure::detail::null_throw<
+	typename ::boost::remove_pointer<typename Concept::type>::type> type;
 };
 
 #ifdef BOOST_NO_CXX11_VARIADIC_TEMPLATES
@@ -44,10 +48,12 @@ struct get_null_vtable_entry {
 #else
 
 template<class R, class... T>
-struct null_throw<R(T...)> {
-    static R value(T...) { 
-        BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
-    }
+struct null_throw<R(T...)>
+{
+	static R value(T...)
+	{
+		BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
+	}
 };
 
 #endif
@@ -63,10 +69,12 @@ struct null_throw<R(T...)> {
 #define N BOOST_PP_ITERATION()
 
 template<class R BOOST_PP_ENUM_TRAILING_PARAMS(N, class T)>
-struct null_throw<R(BOOST_PP_ENUM_PARAMS(N, T))> {
-    static R value(BOOST_PP_ENUM_PARAMS(N, T)) { 
-        BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
-    }
+struct null_throw<R(BOOST_PP_ENUM_PARAMS(N, T))>
+{
+	static R value(BOOST_PP_ENUM_PARAMS(N, T))
+	{
+		BOOST_THROW_EXCEPTION(::boost::type_erasure::bad_function_call());
+	}
 };
 
 #undef N

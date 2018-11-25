@@ -9,7 +9,7 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // unique_ptr.hpp:
 
-// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
+// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com .
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -19,8 +19,10 @@
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/nvp.hpp>
 
-namespace boost {
-namespace serialization {
+namespace boost
+{
+namespace serialization
+{
 
 /////////////////////////////////////////////////////////////
 // implement serialization for unique_ptr< T >
@@ -31,11 +33,12 @@ inline void save(
     Archive & ar,
     const std::unique_ptr< T > &t,
     const unsigned int /*file_version*/
-){
-    // only the raw pointer has to be saved
-    // the ref count is rebuilt automatically on load
-    const T * const tx = t.get();
-    ar << BOOST_SERIALIZATION_NVP(tx);
+)
+{
+	// only the raw pointer has to be saved
+	// the ref count is rebuilt automatically on load
+	const T * const tx = t.get();
+	ar << BOOST_SERIALIZATION_NVP(tx);
 }
 
 template<class Archive, class T>
@@ -43,11 +46,12 @@ inline void load(
     Archive & ar,
     std::unique_ptr< T > &t,
     const unsigned int /*file_version*/
-){
-    T *tx;
-    ar >> BOOST_SERIALIZATION_NVP(tx);
-    // note that the reset automagically maintains the reference count
-    t.reset(tx);
+)
+{
+	T *tx;
+	ar >> BOOST_SERIALIZATION_NVP(tx);
+	// note that the reset automagically maintains the reference count
+	t.reset(tx);
 }
 
 // split non-intrusive serialization function member into separate
@@ -57,8 +61,9 @@ inline void serialize(
     Archive & ar,
     std::unique_ptr< T > &t,
     const unsigned int file_version
-){
-    boost::serialization::split_free(ar, t, file_version);
+)
+{
+	boost::serialization::split_free(ar, t, file_version);
 }
 
 } // namespace serialization

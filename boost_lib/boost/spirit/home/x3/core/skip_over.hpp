@@ -16,85 +16,91 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/declval.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // Move the /first/ iterator to the first non-matching position
-    // given a skip-parser. The function is a no-op if unused_type or
-    // unused_skipper is passed as the skip-parser.
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename Skipper>
-    struct unused_skipper : unused_type
-    {
-        unused_skipper(Skipper const& skipper)
-          : skipper(skipper) {}
-        Skipper const& skipper;
-    };
+namespace spirit
+{
+namespace x3
+{
+///////////////////////////////////////////////////////////////////////////
+// Move the /first/ iterator to the first non-matching position
+// given a skip-parser. The function is a no-op if unused_type or
+// unused_skipper is passed as the skip-parser.
+///////////////////////////////////////////////////////////////////////////
+template <typename Skipper>
+struct unused_skipper : unused_type
+{
+	unused_skipper(Skipper const& skipper)
+		: skipper(skipper) {}
+	Skipper const& skipper;
+};
 
-    namespace detail
-    {
-        template <typename Skipper>
-        struct is_unused_skipper
-          : mpl::false_ {};
+namespace detail
+{
+template <typename Skipper>
+struct is_unused_skipper
+	: mpl::false_ {};
 
-        template <typename Skipper>
-        struct is_unused_skipper<unused_skipper<Skipper>>
-          : mpl::true_ {};
+template <typename Skipper>
+struct is_unused_skipper<unused_skipper<Skipper>>
+	        : mpl::true_ {};
 
-        template <> 
-        struct is_unused_skipper<unused_type>
-          : mpl::true_ {};
+template <>
+struct is_unused_skipper<unused_type>
+	: mpl::true_ {};
 
-        template <typename Skipper>
-        inline Skipper const&
-        get_unused_skipper(Skipper const& skipper)
-        {
-            return skipper;
-        }
-        template <typename Skipper>
-        inline Skipper const&
-        get_unused_skipper(unused_skipper<Skipper> const& unused_skipper)
-        {
-            return unused_skipper.skipper;
-        }
+template <typename Skipper>
+inline Skipper const&
+get_unused_skipper(Skipper const& skipper)
+{
+	return skipper;
+}
+template <typename Skipper>
+inline Skipper const&
+get_unused_skipper(unused_skipper<Skipper> const& unused_skipper)
+{
+	return unused_skipper.skipper;
+}
 
-        template <typename Iterator, typename Skipper>
-        inline void skip_over(
-            Iterator& first, Iterator const& last, Skipper const& skipper)
-        {
-            while (first != last && skipper.parse(first, last, unused, unused, unused))
-                /***/;
-        }
+template <typename Iterator, typename Skipper>
+inline void skip_over(
+    Iterator& first, Iterator const& last, Skipper const& skipper)
+{
+	while (first != last && skipper.parse(first, last, unused, unused, unused))
+		/***/;
+}
 
-        template <typename Iterator>
-        inline void skip_over(Iterator&, Iterator const&, unused_type)
-        {
-        }
+template <typename Iterator>
+inline void skip_over(Iterator&, Iterator const&, unused_type)
+{
+}
 
-        template <typename Iterator, typename Skipper>
-        inline void skip_over(
-            Iterator&, Iterator const&, unused_skipper<Skipper> const&)
-        {
-        }
-    }
+template <typename Iterator, typename Skipper>
+inline void skip_over(
+    Iterator&, Iterator const&, unused_skipper<Skipper> const&)
+{
+}
+}
 
-    // this tag is used to find the skipper from the context
-    struct skipper_tag;
-    
-    template <typename Context>
-    struct has_skipper
-      : mpl::not_<detail::is_unused_skipper<
-            typename remove_cv<typename remove_reference<
-                decltype(x3::get<skipper_tag>(boost::declval<Context>()))
-            >::type>::type
-        >> {};
+// this tag is used to find the skipper from the context
+struct skipper_tag;
 
-    template <typename Iterator, typename Context>
-    inline void skip_over(
-        Iterator& first, Iterator const& last, Context const& context)
-    {
-        detail::skip_over(first, last, x3::get<skipper_tag>(context));
-    }
-}}}
+template <typename Context>
+struct has_skipper
+	: mpl::not_<detail::is_unused_skipper<
+	  typename remove_cv<typename remove_reference<
+  decltype(x3::get<skipper_tag>(boost::declval<Context>()))
+  >::type>::type
+  >> {};
+
+template <typename Iterator, typename Context>
+inline void skip_over(
+    Iterator& first, Iterator const& last, Context const& context)
+{
+	detail::skip_over(first, last, x3::get<skipper_tag>(context));
+}
+}
+}
+}
 
 #endif

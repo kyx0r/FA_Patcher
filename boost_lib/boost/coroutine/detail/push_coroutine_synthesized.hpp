@@ -17,59 +17,64 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
-namespace detail {
+namespace boost
+{
+namespace coroutines
+{
+namespace detail
+{
 
 template< typename R >
 class push_coroutine_synthesized : public push_coroutine_impl< R >
 {
 private:
-    typedef push_coroutine_impl< R >                                    impl_t;
+	typedef push_coroutine_impl< R >                                    impl_t;
 
 public:
-    push_coroutine_synthesized( coroutine_context * caller,
-                                coroutine_context * callee,
-                                bool unwind) :
-        impl_t( caller, callee, unwind)
-    {}
+	push_coroutine_synthesized( coroutine_context * caller,
+	                            coroutine_context * callee,
+	                            bool unwind) :
+		impl_t( caller, callee, unwind)
+	{}
 
-    void destroy() {}
+	void destroy() {}
 };
 
 template< typename R >
 class push_coroutine_synthesized< R & > : public push_coroutine_impl< R & >
 {
 private:
-    typedef push_coroutine_impl< R & >                                    impl_t;
+	typedef push_coroutine_impl< R & >                                    impl_t;
 
 public:
-    push_coroutine_synthesized( coroutine_context * caller,
-                                coroutine_context * callee,
-                                bool unwind) :
-        impl_t( caller, callee, unwind)
-    {}
+	push_coroutine_synthesized( coroutine_context * caller,
+	                            coroutine_context * callee,
+	                            bool unwind) :
+		impl_t( caller, callee, unwind)
+	{}
 
-    void destroy() {}
+	void destroy() {}
 };
 
 template<>
 class push_coroutine_synthesized< void > : public push_coroutine_impl< void >
 {
 private:
-    typedef push_coroutine_impl< void >                                    impl_t;
+	typedef push_coroutine_impl< void >                                    impl_t;
 
 public:
-    push_coroutine_synthesized( coroutine_context * caller,
-                                coroutine_context * callee,
-                                bool unwind) :
-        impl_t( caller, callee, unwind)
-    {}
+	push_coroutine_synthesized( coroutine_context * caller,
+	                            coroutine_context * callee,
+	                            bool unwind) :
+		impl_t( caller, callee, unwind)
+	{}
 
-    inline void destroy() {}
+	inline void destroy() {}
 };
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

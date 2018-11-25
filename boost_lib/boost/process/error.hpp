@@ -53,48 +53,61 @@ namespace boost {
  *     For error there are two aliases: error_ref and error_code
  */
 
-namespace boost { namespace process {
+namespace boost
+{
+namespace process
+{
 
-namespace detail {
+namespace detail
+{
 
 struct throw_on_error_ : ::boost::process::detail::api::handler_base_ext
 {
-    constexpr throw_on_error_() {};
+	constexpr throw_on_error_() {};
 
-    template <class Executor>
-    void on_error(Executor&, const std::error_code & ec) const
-    {
-        throw process_error(ec, "process creation failed");
-    }
+	template <class Executor>
+	void on_error(Executor&, const std::error_code & ec) const
+	{
+		throw process_error(ec, "process creation failed");
+	}
 
-    const throw_on_error_ &operator()() const {return *this;}
+	const throw_on_error_ &operator()() const
+	{
+		return *this;
+	}
 };
 
 struct ignore_error_ : ::boost::process::detail::api::handler_base_ext
 {
-    constexpr ignore_error_() {};
+	constexpr ignore_error_() {};
 };
 
 struct set_on_error : ::boost::process::detail::api::handler_base_ext
 {
-    set_on_error(const set_on_error&) = default;
-    explicit set_on_error(std::error_code &ec) : ec_(ec) {}
+	set_on_error(const set_on_error&) = default;
+	explicit set_on_error(std::error_code &ec) : ec_(ec) {}
 
-    template <class Executor>
-    void on_error(Executor&, const std::error_code & ec) const
-    {
-        ec_ = ec;
-    }
+	template <class Executor>
+	void on_error(Executor&, const std::error_code & ec) const
+	{
+		ec_ = ec;
+	}
 
 private:
-    std::error_code &ec_;
+	std::error_code &ec_;
 };
 
 struct error_
 {
-    constexpr error_() {}
-    set_on_error operator()(std::error_code &ec) const {return set_on_error(ec);}
-    set_on_error operator= (std::error_code &ec) const {return set_on_error(ec);}
+	constexpr error_() {}
+	set_on_error operator()(std::error_code &ec) const
+	{
+		return set_on_error(ec);
+	}
+	set_on_error operator= (std::error_code &ec) const
+	{
+		return set_on_error(ec);
+	}
 
 };
 
@@ -111,64 +124,70 @@ template<> struct is_error_handler<ignore_error_>   : std::true_type {};
 template<typename Iterator, typename End>
 struct has_error_handler_impl
 {
-    typedef typename boost::fusion::result_of::deref<Iterator>::type ref_type;
-    typedef typename std::remove_reference<ref_type>::type res_type_;
-    typedef typename std::remove_cv<res_type_>::type res_type;
-    typedef typename is_error_handler<res_type>::type cond;
+	typedef typename boost::fusion::result_of::deref<Iterator>::type ref_type;
+	typedef typename std::remove_reference<ref_type>::type res_type_;
+	typedef typename std::remove_cv<res_type_>::type res_type;
+	typedef typename is_error_handler<res_type>::type cond;
 
-    typedef typename boost::fusion::result_of::next<Iterator>::type next_itr;
-    typedef typename has_error_handler_impl<next_itr, End>::type next;
+	typedef typename boost::fusion::result_of::next<Iterator>::type next_itr;
+	typedef typename has_error_handler_impl<next_itr, End>::type next;
 
-    typedef typename boost::mpl::or_<cond, next>::type type;
+	typedef typename boost::mpl::or_<cond, next>::type type;
 };
 
 template<typename Iterator>
 struct has_error_handler_impl<Iterator, Iterator>
 {
-    typedef boost::mpl::false_ type;
+	typedef boost::mpl::false_ type;
 };
 
 
 template<typename Sequence>
 struct has_error_handler
 {
-    typedef typename boost::fusion::result_of::as_vector<Sequence>::type vector_type;
+	typedef typename boost::fusion::result_of::as_vector<Sequence>::type vector_type;
 
-    typedef typename has_error_handler_impl<
-            typename boost::fusion::result_of::begin<vector_type>::type,
-            typename boost::fusion::result_of::end<  vector_type>::type
-            >::type type;
+	typedef typename has_error_handler_impl<
+	typename boost::fusion::result_of::begin<vector_type>::type,
+	         typename boost::fusion::result_of::end<  vector_type>::type
+	         >::type type;
 };
 
 template<typename Sequence>
 struct has_ignore_error
 {
-    typedef typename boost::fusion::result_of::as_set<Sequence>::type set_type;
-    typedef typename boost::fusion::result_of::has_key<set_type, ignore_error_>::type  type1;
-    typedef typename boost::fusion::result_of::has_key<set_type, ignore_error_&>::type type2;
-    typedef typename boost::fusion::result_of::has_key<set_type, const ignore_error_&>::type type3;
-    typedef typename boost::mpl::or_<type1,type2, type3>::type type;
+	typedef typename boost::fusion::result_of::as_set<Sequence>::type set_type;
+	typedef typename boost::fusion::result_of::has_key<set_type, ignore_error_>::type  type1;
+	typedef typename boost::fusion::result_of::has_key<set_type, ignore_error_&>::type type2;
+	typedef typename boost::fusion::result_of::has_key<set_type, const ignore_error_&>::type type3;
+	typedef typename boost::mpl::or_<type1,type2, type3>::type type;
 };
 
 struct error_builder
 {
-    std::error_code *err;
-    typedef set_on_error result_type;
-    set_on_error get_initializer() {return set_on_error(*err);};
-    void operator()(std::error_code & ec) {err = &ec;};
+	std::error_code *err;
+	typedef set_on_error result_type;
+	set_on_error get_initializer()
+	{
+		return set_on_error(*err);
+	};
+	void operator()(std::error_code & ec)
+	{
+		err = &ec;
+	};
 };
 
 template<>
 struct initializer_tag<std::error_code>
 {
-    typedef error_tag type;
+	typedef error_tag type;
 };
 
 
 template<>
 struct initializer_builder<error_tag>
 {
-    typedef error_builder type;
+	typedef error_builder type;
 };
 
 }
@@ -206,6 +225,7 @@ constexpr boost::process::detail::error_ error_ref;
 constexpr boost::process::detail::error_ error_code;
 
 
-}}
+}
+}
 
 #endif

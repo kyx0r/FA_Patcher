@@ -17,22 +17,22 @@
 
 namespace boost
 {
-    /// \brief template function remove_copy_if
-    ///
-    /// range-based version of the remove_copy_if std algorithm
-    ///
-    /// \pre SinglePassRange is a model of the SinglePassRangeConcept
-    /// \pre OutputIterator is a model of the OutputIteratorConcept
-    /// \pre Predicate is a model of the PredicateConcept
-    /// \pre InputIterator's value type is convertible to Predicate's argument type
-    /// \pre out_it is not an iterator in the range rng
-    template< class SinglePassRange, class OutputIterator, class Predicate >
-    inline OutputIterator
-    remove_copy_if(const SinglePassRange& rng, OutputIterator out_it, Predicate pred)
-    {
-        BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
-        return std::remove_copy_if(boost::begin(rng), boost::end(rng), out_it, pred);
-    }
+/// \brief template function remove_copy_if
+///
+/// range-based version of the remove_copy_if std algorithm
+///
+/// \pre SinglePassRange is a model of the SinglePassRangeConcept
+/// \pre OutputIterator is a model of the OutputIteratorConcept
+/// \pre Predicate is a model of the PredicateConcept
+/// \pre InputIterator's value type is convertible to Predicate's argument type
+/// \pre out_it is not an iterator in the range rng
+template< class SinglePassRange, class OutputIterator, class Predicate >
+inline OutputIterator
+remove_copy_if(const SinglePassRange& rng, OutputIterator out_it, Predicate pred)
+{
+	BOOST_RANGE_CONCEPT_ASSERT(( SinglePassRangeConcept<const SinglePassRange> ));
+	return std::remove_copy_if(boost::begin(rng), boost::end(rng), out_it, pred);
+}
 }
 
 #endif // include guard

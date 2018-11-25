@@ -19,9 +19,12 @@
 #include <cstdint>
 #include <utility>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /// A message body represented by a file on the filesystem.
 using file_body = basic_file_body<file>;

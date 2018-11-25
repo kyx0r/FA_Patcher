@@ -10,8 +10,10 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <memory>
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 using std::align;
 

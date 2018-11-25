@@ -23,9 +23,12 @@
 #include <boost/compute/functional/operator.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Iterator, class Compare>
 inline void dispatch_gpu_stable_sort(Iterator first,
@@ -33,17 +36,20 @@ inline void dispatch_gpu_stable_sort(Iterator first,
                                      Compare compare,
                                      command_queue &queue)
 {
-    size_t count = detail::iterator_range_size(first, last);
+	size_t count = detail::iterator_range_size(first, last);
 
-    if(count < 32){
-        detail::serial_insertion_sort(
-            first, last, compare, queue
-        );
-    } else {
-        detail::merge_sort_on_gpu(
-            first, last, compare, true /* stable */, queue
-        );
-    }
+	if(count < 32)
+	{
+		detail::serial_insertion_sort(
+		    first, last, compare, queue
+		);
+	}
+	else
+	{
+		detail::merge_sort_on_gpu(
+		    first, last, compare, true /* stable */, queue
+		);
+	}
 }
 
 template<class T>
@@ -53,7 +59,7 @@ dispatch_gpu_stable_sort(buffer_iterator<T> first,
                          less<T>,
                          command_queue &queue)
 {
-    ::boost::compute::detail::radix_sort(first, last, queue);
+	::boost::compute::detail::radix_sort(first, last, queue);
 }
 
 template<class T>
@@ -63,8 +69,8 @@ dispatch_gpu_stable_sort(buffer_iterator<T> first,
                          greater<T>,
                          command_queue &queue)
 {
-    // radix sorts in descending order
-    ::boost::compute::detail::radix_sort(first, last, false, queue);
+	// radix sorts in descending order
+	::boost::compute::detail::radix_sort(first, last, false, queue);
 }
 
 } // end detail namespace
@@ -81,13 +87,14 @@ inline void stable_sort(Iterator first,
                         Compare compare,
                         command_queue &queue = system::default_queue())
 {
-    if(queue.get_device().type() & device::gpu) {
-        ::boost::compute::detail::dispatch_gpu_stable_sort(
-            first, last, compare, queue
-        );
-        return;
-    }
-    ::boost::compute::detail::merge_sort_on_cpu(first, last, compare, queue);
+	if(queue.get_device().type() & device::gpu)
+	{
+		::boost::compute::detail::dispatch_gpu_stable_sort(
+		    first, last, compare, queue
+		);
+		return;
+	}
+	::boost::compute::detail::merge_sort_on_cpu(first, last, compare, queue);
 }
 
 /// \overload
@@ -96,11 +103,11 @@ inline void stable_sort(Iterator first,
                         Iterator last,
                         command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-    ::boost::compute::less<value_type> less;
+	::boost::compute::less<value_type> less;
 
-    ::boost::compute::stable_sort(first, last, less, queue);
+	::boost::compute::stable_sort(first, last, less, queue);
 }
 
 } // end compute namespace

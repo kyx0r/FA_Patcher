@@ -50,11 +50,13 @@
 
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! This tag type is used if an expression is recognized as a Boost.Spirit.Classic expression
 struct boost_spirit_classic_expression_tag;
@@ -64,41 +66,47 @@ template< typename T >
 struct is_spirit_classic_parser
 {
 private:
-    typedef char yes_type;
-    struct no_type { char dummy[2]; };
+	typedef char yes_type;
+	struct no_type
+	{
+		char dummy[2];
+	};
 
-    template< typename U >
-    static yes_type check_spirit_classic_parser(spirit::classic::parser< U > const&);
-    static no_type check_spirit_classic_parser(...);
-    static T& get_T();
+	template< typename U >
+	static yes_type check_spirit_classic_parser(spirit::classic::parser< U > const&);
+	static no_type check_spirit_classic_parser(...);
+	static T& get_T();
 
 public:
-    enum { value = sizeof(check_spirit_classic_parser(get_T())) == sizeof(yes_type) };
-    typedef mpl::bool_< value > type;
+	enum { value = sizeof(check_spirit_classic_parser(get_T())) == sizeof(yes_type) };
+	typedef mpl::bool_< value > type;
 };
 
 //! The metafunction detects the matching expression kind and returns a tag that is used to specialize \c match_traits
 template< typename ExpressionT >
 struct matching_expression_kind< ExpressionT, typename boost::enable_if_c< is_spirit_classic_parser< ExpressionT >::value >::type >
 {
-    typedef boost_spirit_classic_expression_tag type;
+	typedef boost_spirit_classic_expression_tag type;
 };
 
 //! The matching function implementation
 template< typename ExpressionT >
 struct match_traits< ExpressionT, boost_spirit_classic_expression_tag >
 {
-    typedef ExpressionT compiled_type;
-    static compiled_type compile(ExpressionT const& expr) { return expr; }
+	typedef ExpressionT compiled_type;
+	static compiled_type compile(ExpressionT const& expr)
+	{
+		return expr;
+	}
 
-    template< typename StringT >
-    static bool matches(StringT const& str, ExpressionT const& expr)
-    {
-        typedef typename StringT::const_iterator const_iterator;
-        spirit::classic::parse_info< const_iterator > info =
-            spirit::classic::parse(str.begin(), str.end(), expr);
-        return info.full;
-    }
+	template< typename StringT >
+	static bool matches(StringT const& str, ExpressionT const& expr)
+	{
+		typedef typename StringT::const_iterator const_iterator;
+		spirit::classic::parse_info< const_iterator > info =
+		    spirit::classic::parse(str.begin(), str.end(), expr);
+		return info.full;
+	}
 };
 
 } // namespace aux

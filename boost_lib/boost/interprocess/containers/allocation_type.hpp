@@ -22,8 +22,10 @@
 #include <boost/interprocess/detail/config_begin.hpp>
 #include <boost/container/detail/allocation_type.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
 typedef int allocation_type;

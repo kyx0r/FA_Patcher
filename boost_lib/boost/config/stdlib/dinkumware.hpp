@@ -20,8 +20,8 @@
 
 
 #if defined(_CPPLIB_VER) && (_CPPLIB_VER >= 306)
-   // full dinkumware 3.06 and above
-   // fully conforming provided the compiler supports it:
+// full dinkumware 3.06 and above
+// fully conforming provided the compiler supports it:
 #  if !(defined(_GLOBAL_USING) && (_GLOBAL_USING+0 > 0)) && !defined(__BORLANDC__) && !defined(_STD) && !(defined(__ICC) && (__ICC >= 700))   // can be defined in yvals.h
 #     define BOOST_NO_STDC_NAMESPACE
 #  endif
@@ -30,12 +30,12 @@
 #  endif
 #  define BOOST_HAS_PARTIAL_STD_ALLOCATOR
 #  if defined(BOOST_MSVC) && (BOOST_MSVC < 1300)
-      // if this lib version is set up for vc6 then there is no std::use_facet:
+// if this lib version is set up for vc6 then there is no std::use_facet:
 #     define BOOST_NO_STD_USE_FACET
 #     define BOOST_HAS_TWO_ARG_USE_FACET
-      // C lib functions aren't in namespace std either:
+// C lib functions aren't in namespace std either:
 #     define BOOST_NO_STDC_NAMESPACE
-      // and nor is <exception>
+// and nor is <exception>
 #     define BOOST_NO_EXCEPTION_STD_NAMESPACE
 #  endif
 // There's no numeric_limits<long long> support unless _LONGLONG is defined:
@@ -54,9 +54,9 @@
 #  define BOOST_NO_STD_OUTPUT_ITERATOR_ASSIGN
 #  define BOOST_HAS_MACRO_USE_FACET
 #  ifndef _CPPLIB_VER
-      // Updated Dinkum library defines this, and provides
-      // its own min and max definitions, as does MTA version.
-#     ifndef __MTA__ 
+// Updated Dinkum library defines this, and provides
+// its own min and max definitions, as does MTA version.
+#     ifndef __MTA__
 #        define BOOST_NO_STD_MIN_MAX
 #     endif
 #     define BOOST_NO_MS_INT64_NUMERIC_LIMITS
@@ -64,7 +64,7 @@
 #endif
 
 //
-// std extension namespace is stdext for vc7.1 and later, 
+// std extension namespace is stdext for vc7.1 and later,
 // the same applies to other compilers that sit on top
 // of vc7.1 (Intel and Comeau):
 //
@@ -74,9 +74,9 @@
 
 
 #if (defined(_MSC_VER) && (_MSC_VER <= 1300) && !defined(__BORLANDC__)) || !defined(_CPPLIB_VER) || (_CPPLIB_VER < 306)
-   // if we're using a dinkum lib that's
-   // been configured for VC6/7 then there is
-   // no iterator traits (true even for icl)
+// if we're using a dinkum lib that's
+// been configured for VC6/7 then there is
+// no iterator traits (true even for icl)
 #  define BOOST_NO_STD_ITERATOR_TRAITS
 #endif
 
@@ -87,10 +87,10 @@
 #endif
 
 // Fix for VC++ 8.0 on up ( I do not have a previous version to test )
-// or clang-cl. If exceptions are off you must manually include the 
-// <exception> header before including the <typeinfo> header. Admittedly 
-// trying to use Boost libraries or the standard C++ libraries without 
-// exception support is not suggested but currently clang-cl ( v 3.4 ) 
+// or clang-cl. If exceptions are off you must manually include the
+// <exception> header before including the <typeinfo> header. Admittedly
+// trying to use Boost libraries or the standard C++ libraries without
+// exception support is not suggested but currently clang-cl ( v 3.4 )
 // does not support exceptions and must be compiled with exceptions off.
 #if !_HAS_EXCEPTIONS && ((defined(BOOST_MSVC) && BOOST_MSVC >= 1400) || (defined(__clang__) && defined(_MSC_VER)))
 #include <exception>
@@ -99,7 +99,7 @@
 #if ( (!_HAS_EXCEPTIONS && !defined(__ghs__)) || (!_HAS_NAMESPACE && defined(__ghs__)) ) && !defined(__TI_COMPILER_VERSION__) && !defined(__VISUALDSPVERSION__) \
 	&& !defined(__VXWORKS__)
 #  define BOOST_NO_STD_TYPEINFO
-#endif  
+#endif
 
 //  C++0x headers implemented in 520 (as shipped by Microsoft)
 //
@@ -196,7 +196,7 @@
 #  define BOOST_NO_CXX11_ADDRESSOF
 #endif
 
-// Bug specific to VC14, 
+// Bug specific to VC14,
 // See https://connect.microsoft.com/VisualStudio/feedback/details/1348277/link-error-when-using-std-codecvt-utf8-utf16-char16-t
 // and discussion here: http://blogs.msdn.com/b/vcblog/archive/2014/11/12/visual-studio-2015-preview-now-available.aspx?PageIndex=2
 #if defined(_CPPLIB_VER) && (_CPPLIB_VER == 650)

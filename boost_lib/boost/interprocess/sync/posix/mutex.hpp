@@ -52,86 +52,91 @@
 #endif
 #include <boost/assert.hpp>
 
-namespace boost {
-namespace interprocess {
-namespace ipcdetail {
+namespace boost
+{
+namespace interprocess
+{
+namespace ipcdetail
+{
 
 class posix_condition;
 
 class posix_mutex
 {
-   posix_mutex(const posix_mutex &);
-   posix_mutex &operator=(const posix_mutex &);
-   public:
+	posix_mutex(const posix_mutex &);
+	posix_mutex &operator=(const posix_mutex &);
+public:
 
-   posix_mutex();
-   ~posix_mutex();
+	posix_mutex();
+	~posix_mutex();
 
-   void lock();
-   bool try_lock();
-   bool timed_lock(const boost::posix_time::ptime &abs_time);
-   void unlock();
+	void lock();
+	bool try_lock();
+	bool timed_lock(const boost::posix_time::ptime &abs_time);
+	void unlock();
 
-   friend class posix_condition;
+	friend class posix_condition;
 
-   private:
-   pthread_mutex_t   m_mut;
+private:
+	pthread_mutex_t   m_mut;
 };
 
 inline posix_mutex::posix_mutex()
 {
-   mutexattr_wrapper mut_attr;
-   mutex_initializer mut(m_mut, mut_attr);
-   mut.release();
+	mutexattr_wrapper mut_attr;
+	mutex_initializer mut(m_mut, mut_attr);
+	mut.release();
 }
 
 inline posix_mutex::~posix_mutex()
 {
-   int res = pthread_mutex_destroy(&m_mut);
-   BOOST_ASSERT(res  == 0);(void)res;
+	int res = pthread_mutex_destroy(&m_mut);
+	BOOST_ASSERT(res  == 0);
+	(void)res;
 }
 
 inline void posix_mutex::lock()
 {
-   if (pthread_mutex_lock(&m_mut) != 0)
-      throw lock_exception();
+	if (pthread_mutex_lock(&m_mut) != 0)
+		throw lock_exception();
 }
 
 inline bool posix_mutex::try_lock()
 {
-   int res = pthread_mutex_trylock(&m_mut);
-   if (!(res == 0 || res == EBUSY))
-      throw lock_exception();
-   return res == 0;
+	int res = pthread_mutex_trylock(&m_mut);
+	if (!(res == 0 || res == EBUSY))
+		throw lock_exception();
+	return res == 0;
 }
 
 inline bool posix_mutex::timed_lock(const boost::posix_time::ptime &abs_time)
 {
-   #ifdef BOOST_INTERPROCESS_POSIX_TIMEOUTS
-   //Posix does not support infinity absolute time so handle it here
-   if(abs_time == boost::posix_time::pos_infin){
-      this->lock();
-      return true;
-   }
-   timespec ts = ptime_to_timespec(abs_time);
-   int res = pthread_mutex_timedlock(&m_mut, &ts);
-   if (res != 0 && res != ETIMEDOUT)
-      throw lock_exception();
-   return res == 0;
+#ifdef BOOST_INTERPROCESS_POSIX_TIMEOUTS
+	//Posix does not support infinity absolute time so handle it here
+	if(abs_time == boost::posix_time::pos_infin)
+	{
+		this->lock();
+		return true;
+	}
+	timespec ts = ptime_to_timespec(abs_time);
+	int res = pthread_mutex_timedlock(&m_mut, &ts);
+	if (res != 0 && res != ETIMEDOUT)
+		throw lock_exception();
+	return res == 0;
 
-   #else //BOOST_INTERPROCESS_POSIX_TIMEOUTS
+#else //BOOST_INTERPROCESS_POSIX_TIMEOUTS
 
-   return ipcdetail::try_based_timed_lock(*this, abs_time);
+	return ipcdetail::try_based_timed_lock(*this, abs_time);
 
-   #endif   //BOOST_INTERPROCESS_POSIX_TIMEOUTS
+#endif   //BOOST_INTERPROCESS_POSIX_TIMEOUTS
 }
 
 inline void posix_mutex::unlock()
 {
-   int res = 0;
-   res = pthread_mutex_unlock(&m_mut);
-   (void)res;
-   BOOST_ASSERT(res == 0);
+	int res = 0;
+	res = pthread_mutex_unlock(&m_mut);
+	(void)res;
+	BOOST_ASSERT(res == 0);
 }
 
 }  //namespace ipcdetail {

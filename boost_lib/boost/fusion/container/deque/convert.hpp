@@ -24,38 +24,41 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <boost/fusion/container/deque/detail/build_deque.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace result_of
-    {
-        template <typename Sequence>
-        struct as_deque :
-            detail::build_deque<
-                typename result_of::begin<Sequence>::type
-              , typename result_of::end<Sequence>::type
-            >
-        {
-        };
-    }
+namespace fusion
+{
+namespace result_of
+{
+template <typename Sequence>
+struct as_deque :
+	detail::build_deque<
+	typename result_of::begin<Sequence>::type
+	, typename result_of::end<Sequence>::type
+	>
+{
+};
+}
 
-    template <typename Sequence>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline typename result_of::as_deque<Sequence>::type
-    as_deque(Sequence& seq)
-    {
-        typedef result_of::as_deque<Sequence> gen;
-        return gen::call(fusion::begin(seq), fusion::end(seq));
-    }
+template <typename Sequence>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline typename result_of::as_deque<Sequence>::type
+as_deque(Sequence& seq)
+{
+	typedef result_of::as_deque<Sequence> gen;
+	return gen::call(fusion::begin(seq), fusion::end(seq));
+}
 
-    template <typename Sequence>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline typename result_of::as_deque<Sequence const>::type
-    as_deque(Sequence const& seq)
-    {
-        typedef result_of::as_deque<Sequence const> gen;
-        return gen::call(fusion::begin(seq), fusion::end(seq));
-    }
-}}
+template <typename Sequence>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline typename result_of::as_deque<Sequence const>::type
+as_deque(Sequence const& seq)
+{
+	typedef result_of::as_deque<Sequence const> gen;
+	return gen::call(fusion::begin(seq), fusion::end(seq));
+}
+}
+}
 
 #endif
 #endif

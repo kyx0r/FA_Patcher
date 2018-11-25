@@ -40,91 +40,92 @@ template<class T> class scoped_array // noncopyable
 {
 private:
 
-    T * px;
+	T * px;
 
-    scoped_array(scoped_array const &);
-    scoped_array & operator=(scoped_array const &);
+	scoped_array(scoped_array const &);
+	scoped_array & operator=(scoped_array const &);
 
-    typedef scoped_array<T> this_type;
+	typedef scoped_array<T> this_type;
 
-    void operator==( scoped_array const& ) const;
-    void operator!=( scoped_array const& ) const;
+	void operator==( scoped_array const& ) const;
+	void operator!=( scoped_array const& ) const;
 
 public:
 
-    typedef T element_type;
+	typedef T element_type;
 
-    explicit scoped_array( T * p = 0 ) BOOST_SP_NOEXCEPT : px( p )
-    {
+explicit scoped_array( T * p = 0 ) BOOST_SP_NOEXCEPT :
+	px( p )
+	{
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_array_constructor_hook( px );
+		boost::sp_array_constructor_hook( px );
 #endif
-    }
+	}
 
-    ~scoped_array() BOOST_SP_NOEXCEPT
-    {
+	~scoped_array() BOOST_SP_NOEXCEPT
+	{
 #if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_array_destructor_hook( px );
+		boost::sp_array_destructor_hook( px );
 #endif
-        boost::checked_array_delete( px );
-    }
+		boost::checked_array_delete( px );
+	}
 
-    void reset(T * p = 0) BOOST_SP_NOEXCEPT_WITH_ASSERT
-    {
-        BOOST_ASSERT( p == 0 || p != px ); // catch self-reset errors
-        this_type(p).swap(*this);
-    }
+	void reset(T * p = 0) BOOST_SP_NOEXCEPT_WITH_ASSERT
+	{
+		BOOST_ASSERT( p == 0 || p != px ); // catch self-reset errors
+		this_type(p).swap(*this);
+	}
 
-    T & operator[](std::ptrdiff_t i) const BOOST_SP_NOEXCEPT_WITH_ASSERT
-    {
-        BOOST_ASSERT( px != 0 );
-        BOOST_ASSERT( i >= 0 );
-        return px[i];
-    }
+	T & operator[](std::ptrdiff_t i) const BOOST_SP_NOEXCEPT_WITH_ASSERT
+	{
+		BOOST_ASSERT( px != 0 );
+		BOOST_ASSERT( i >= 0 );
+		return px[i];
+	}
 
-    T * get() const BOOST_SP_NOEXCEPT
-    {
-        return px;
-    }
+	T * get() const BOOST_SP_NOEXCEPT
+	{
+		return px;
+	}
 
 // implicit conversion to "bool"
 #include <boost/smart_ptr/detail/operator_bool.hpp>
 
-    void swap(scoped_array & b) BOOST_SP_NOEXCEPT
-    {
-        T * tmp = b.px;
-        b.px = px;
-        px = tmp;
-    }
+	void swap(scoped_array & b) BOOST_SP_NOEXCEPT
+	{
+		T * tmp = b.px;
+		b.px = px;
+		px = tmp;
+	}
 };
 
 #if !defined( BOOST_NO_CXX11_NULLPTR )
 
 template<class T> inline bool operator==( scoped_array<T> const & p, boost::detail::sp_nullptr_t ) BOOST_SP_NOEXCEPT
 {
-    return p.get() == 0;
+	return p.get() == 0;
 }
 
 template<class T> inline bool operator==( boost::detail::sp_nullptr_t, scoped_array<T> const & p ) BOOST_SP_NOEXCEPT
 {
-    return p.get() == 0;
+	return p.get() == 0;
 }
 
 template<class T> inline bool operator!=( scoped_array<T> const & p, boost::detail::sp_nullptr_t ) BOOST_SP_NOEXCEPT
 {
-    return p.get() != 0;
+	return p.get() != 0;
 }
 
 template<class T> inline bool operator!=( boost::detail::sp_nullptr_t, scoped_array<T> const & p ) BOOST_SP_NOEXCEPT
 {
-    return p.get() != 0;
+	return p.get() != 0;
 }
 
 #endif
 
 template<class T> inline void swap(scoped_array<T> & a, scoped_array<T> & b) BOOST_SP_NOEXCEPT
 {
-    a.swap(b);
+	a.swap(b);
 }
 
 } // namespace boost

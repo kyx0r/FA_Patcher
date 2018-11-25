@@ -14,25 +14,25 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S>
-        struct pop_back;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S>
+struct pop_back;
 
-        template <char C>
-        struct pop_back<string<C>> : boost::mpl::clear<string<C>> {};
+template <char C>
+struct pop_back<string<C>> : boost::mpl::clear<string<C>> {};
 
-        template <char C, char... Cs>
-        struct pop_back<string<C, Cs...>> :
-          push_front_c<typename pop_back<string<Cs...>>::type, C>
-        {};
-      }
-    }
-  }
+template <char C, char... Cs>
+struct pop_back<string<C, Cs...>> :
+	                               push_front_c<typename pop_back<string<Cs...>>::type, C>
+{};
+}
+}
+}
 }
 
 #endif

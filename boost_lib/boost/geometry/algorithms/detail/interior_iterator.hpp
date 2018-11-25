@@ -14,7 +14,9 @@
 
 #include <boost/geometry/core/interior_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -29,43 +31,44 @@ namespace detail
 template <typename Geometry>
 struct interior_iterator
 {
-    typedef typename boost::range_iterator
-        <
-            typename geometry::interior_type<Geometry>::type        
-        >::type type;
+	typedef typename boost::range_iterator
+	<
+	typename geometry::interior_type<Geometry>::type
+	>::type type;
 };
 
 template <typename BaseT, typename T>
 struct copy_const
 {
-    typedef T type;
+	typedef T type;
 };
 
 template <typename BaseT, typename T>
 struct copy_const<BaseT const, T>
 {
-    typedef T const type;
+	typedef T const type;
 };
 
 template <typename Geometry>
 struct interior_ring_iterator
 {
-    typedef typename boost::range_iterator
-        <
-            typename copy_const
-                <
-                    typename geometry::interior_type<Geometry>::type,
-                    typename boost::range_value
-                        <
-                            typename geometry::interior_type<Geometry>::type
-                        >::type
-                >::type
-        >::type type;
+	typedef typename boost::range_iterator
+	<
+	typename copy_const
+	<
+	typename geometry::interior_type<Geometry>::type,
+	         typename boost::range_value
+	         <
+	         typename geometry::interior_type<Geometry>::type
+	         >::type
+	         >::type
+	         >::type type;
 };
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_INTERIOR_ITERATOR_HPP

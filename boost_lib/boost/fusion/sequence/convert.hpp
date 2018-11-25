@@ -17,45 +17,48 @@
 #define BOOST_FUSION_WA_GCC34(type1, type2) type1, type2
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    namespace extension
-    {
-        template <typename Tag>
-        struct convert_impl;
-    }
+namespace fusion
+{
+namespace extension
+{
+template <typename Tag>
+struct convert_impl;
+}
 
-    namespace result_of
-    {
-        template <typename Tag, typename Sequence>
-        struct convert
-        {
-            typedef typename
-                extension::convert_impl<Tag>::template apply<Sequence>
-            gen;
+namespace result_of
+{
+template <typename Tag, typename Sequence>
+struct convert
+{
+	typedef typename
+	extension::convert_impl<Tag>::template apply<Sequence>
+	gen;
 
-            typedef typename gen::type type;
-        };
-    }
+	typedef typename gen::type type;
+};
+}
 
-    template <typename Tag, typename Sequence>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline typename BOOST_FUSION_WA_GCC34(result_of::convert<Tag, Sequence>)::type
-    convert(Sequence& seq)
-    {
-        typedef typename result_of::convert<Tag, Sequence>::gen gen;
-        return gen::call(seq);
-    }
+template <typename Tag, typename Sequence>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline typename BOOST_FUSION_WA_GCC34(result_of::convert<Tag, Sequence>)::type
+convert(Sequence& seq)
+{
+	typedef typename result_of::convert<Tag, Sequence>::gen gen;
+	return gen::call(seq);
+}
 
-    template <typename Tag, typename Sequence>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline typename result_of::convert<Tag, Sequence const>::type
-    convert(Sequence const& seq)
-    {
-        typedef typename result_of::convert<Tag, Sequence const>::gen gen;
-        return gen::call(seq);
-    }
-}}
+template <typename Tag, typename Sequence>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline typename result_of::convert<Tag, Sequence const>::type
+convert(Sequence const& seq)
+{
+	typedef typename result_of::convert<Tag, Sequence const>::gen gen;
+	return gen::call(seq);
+}
+}
+}
 
 #undef BOOST_FUSION_WA_GCC34
 #endif

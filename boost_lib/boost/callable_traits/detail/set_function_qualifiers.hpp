@@ -69,52 +69,61 @@ struct set_varargs_function_qualifiers_t <                         \
 }                                                                  \
 /**/
 
-namespace boost { namespace callable_traits { namespace detail {
+namespace boost
+{
+namespace callable_traits
+{
+namespace detail
+{
 
-        template<qualifier_flags Applied, bool IsTransactionSafe,
-            bool IsNoexcept, typename Return, typename... Args>
-        struct set_function_qualifiers_t {
-            using type = Return(Args...);
-        };
+template<qualifier_flags Applied, bool IsTransactionSafe,
+         bool IsNoexcept, typename Return, typename... Args>
+struct set_function_qualifiers_t
+{
+	using type = Return(Args...);
+};
 
-        template<qualifier_flags Applied, bool IsTransactionSafe,
-            bool IsNoexcept, typename Return, typename... Args>
-        struct set_varargs_function_qualifiers_t {
-            using type = Return(Args..., ...);
-        };
+template<qualifier_flags Applied, bool IsTransactionSafe,
+         bool IsNoexcept, typename Return, typename... Args>
+struct set_varargs_function_qualifiers_t
+{
+	using type = Return(Args..., ...);
+};
 
 #ifndef BOOST_CLBL_TRTS_DISABLE_ABOMINABLE_FUNCTIONS
 
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(volatile);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const volatile);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(volatile);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const volatile);
 
 #ifndef BOOST_CLBL_TRTS_DISABLE_REFERENCE_QUALIFIERS
 
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(&);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(&&);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const &);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const &&);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(volatile &);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(volatile &&);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const volatile &);
-        BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const volatile &&);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(&);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(&&);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const &);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const &&);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(volatile &);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(volatile &&);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const volatile &);
+BOOST_CLBL_TRTS_SET_FUNCTION_QUALIFIERS(const volatile &&);
 
 #endif // #ifndef BOOST_CLBL_TRTS_DISABLE_REFERENCE_QUALIFIERS
 #endif // #ifndef BOOST_CLBL_TRTS_DISABLE_ABOMINABLE_FUNCTIONS
 
-        template<qualifier_flags Flags, bool IsTransactionSafe, bool IsNoexcept,
-            typename... Ts>
-        using set_function_qualifiers =
-            typename set_function_qualifiers_t<Flags, IsTransactionSafe, IsNoexcept,
-                Ts...>::type;
+template<qualifier_flags Flags, bool IsTransactionSafe, bool IsNoexcept,
+         typename... Ts>
+using set_function_qualifiers =
+    typename set_function_qualifiers_t<Flags, IsTransactionSafe, IsNoexcept,
+    Ts...>::type;
 
-        template<qualifier_flags Flags, bool IsTransactionSafe, bool IsNoexcept,
-            typename... Ts>
-        using set_varargs_function_qualifiers =
-            typename set_varargs_function_qualifiers_t<Flags, IsTransactionSafe,
-                IsNoexcept, Ts...>::type;
+template<qualifier_flags Flags, bool IsTransactionSafe, bool IsNoexcept,
+         typename... Ts>
+using set_varargs_function_qualifiers =
+    typename set_varargs_function_qualifiers_t<Flags, IsTransactionSafe,
+    IsNoexcept, Ts...>::type;
 
-}}} // namespace boost::callable_traits::detail
+}
+}
+} // namespace boost::callable_traits::detail
 
 #endif //BOOST_CLBL_TRTS_DETAIL_SET_FUNCTION_QUALIFIERS_HPP

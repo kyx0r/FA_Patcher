@@ -32,109 +32,109 @@ namespace detail
 
 inline void atomic_increment( int32_t* pw )
 {
-    // ++*pw;
+	// ++*pw;
 
-    fetch_and_add( pw, 1 );
+	fetch_and_add( pw, 1 );
 }
 
 inline int32_t atomic_decrement( int32_t * pw )
 {
-    // return --*pw;
+	// return --*pw;
 
-    int32_t originalValue;
+	int32_t originalValue;
 
-    __lwsync();
-    originalValue = fetch_and_add( pw, -1 );
-    __isync();
+	__lwsync();
+	originalValue = fetch_and_add( pw, -1 );
+	__isync();
 
-    return (originalValue - 1);
+	return (originalValue - 1);
 }
 
 inline int32_t atomic_conditional_increment( int32_t * pw )
 {
-    // if( *pw != 0 ) ++*pw;
-    // return *pw;
+	// if( *pw != 0 ) ++*pw;
+	// return *pw;
 
-    int32_t tmp = fetch_and_add( pw, 0 );
-    for( ;; )
-    {
-        if( tmp == 0 ) return 0;
-        if( compare_and_swap( pw, &tmp, tmp + 1 ) ) return (tmp + 1);
-    }
+	int32_t tmp = fetch_and_add( pw, 0 );
+	for( ;; )
+	{
+		if( tmp == 0 ) return 0;
+		if( compare_and_swap( pw, &tmp, tmp + 1 ) ) return (tmp + 1);
+	}
 }
 
 class sp_counted_base
 {
 private:
 
-    sp_counted_base( sp_counted_base const & );
-    sp_counted_base & operator= ( sp_counted_base const & );
+	sp_counted_base( sp_counted_base const & );
+	sp_counted_base & operator= ( sp_counted_base const & );
 
-    int32_t use_count_;        // #shared
-    int32_t weak_count_;       // #weak + (#shared != 0)
+	int32_t use_count_;        // #shared
+	int32_t weak_count_;       // #weak + (#shared != 0)
 
 public:
 
-    sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
-    {
-    }
+	sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
+	{
+	}
 
-    virtual ~sp_counted_base() // nothrow
-    {
-    }
+	virtual ~sp_counted_base() // nothrow
+	{
+	}
 
-    // dispose() is called when use_count_ drops to zero, to release
-    // the resources managed by *this.
+	// dispose() is called when use_count_ drops to zero, to release
+	// the resources managed by *this.
 
-    virtual void dispose() = 0; // nothrow
+	virtual void dispose() = 0; // nothrow
 
-    // destroy() is called when weak_count_ drops to zero.
+	// destroy() is called when weak_count_ drops to zero.
 
-    virtual void destroy() // nothrow
-    {
-        delete this;
-    }
+	virtual void destroy() // nothrow
+	{
+		delete this;
+	}
 
-    virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_untyped_deleter() = 0;
+	virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_untyped_deleter() = 0;
 
-    void add_ref_copy()
-    {
-        atomic_increment( &use_count_ );
-    }
+	void add_ref_copy()
+	{
+		atomic_increment( &use_count_ );
+	}
 
-    bool add_ref_lock() // true on success
-    {
-        return atomic_conditional_increment( &use_count_ ) != 0;
-    }
+	bool add_ref_lock() // true on success
+	{
+		return atomic_conditional_increment( &use_count_ ) != 0;
+	}
 
-    void release() // nothrow
-    {
-        if( atomic_decrement( &use_count_ ) == 0 )
-        {
-            dispose();
-            weak_release();
-        }
-    }
+	void release() // nothrow
+	{
+		if( atomic_decrement( &use_count_ ) == 0 )
+		{
+			dispose();
+			weak_release();
+		}
+	}
 
-    void weak_add_ref() // nothrow
-    {
-        atomic_increment( &weak_count_ );
-    }
+	void weak_add_ref() // nothrow
+	{
+		atomic_increment( &weak_count_ );
+	}
 
-    void weak_release() // nothrow
-    {
-        if( atomic_decrement( &weak_count_ ) == 0 )
-        {
-            destroy();
-        }
-    }
+	void weak_release() // nothrow
+	{
+		if( atomic_decrement( &weak_count_ ) == 0 )
+		{
+			destroy();
+		}
+	}
 
-    long use_count() const // nothrow
-    {
-        return fetch_and_add( const_cast<int32_t*>(&use_count_), 0 );
-    }
+	long use_count() const // nothrow
+	{
+		return fetch_and_add( const_cast<int32_t*>(&use_count_), 0 );
+	}
 };
 
 } // namespace detail

@@ -13,11 +13,12 @@ or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <boost/type_traits/detail/detector.hpp>
 #include <boost/type_traits/nonesuch.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template<template<class...> class Op, class... Args>
 using detected_t = typename
-    detail::detector<nonesuch, void, Op, Args...>::type;
+                   detail::detector<nonesuch, void, Op, Args...>::type;
 
 } /* boost */
 

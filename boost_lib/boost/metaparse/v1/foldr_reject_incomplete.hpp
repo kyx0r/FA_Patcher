@@ -13,20 +13,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class State, class BackwardOp>
-      struct foldr_reject_incomplete :
-        foldr_start_with_parser<
-          P,
-          first_of<return_<State>, fail_at_first_char_expected<P> >,
-          BackwardOp
-        >
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class State, class BackwardOp>
+struct foldr_reject_incomplete :
+	foldr_start_with_parser<
+	P,
+	first_of<return_<State>, fail_at_first_char_expected<P> >,
+	BackwardOp
+	>
+{};
+}
+}
 }
 
 #endif

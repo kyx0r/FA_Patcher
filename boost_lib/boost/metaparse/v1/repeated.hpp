@@ -13,14 +13,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P>
-      struct repeated : foldl<P, boost::mpl::vector<>, impl::back_inserter> {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P>
+struct repeated : foldl<P, boost::mpl::vector<>, impl::back_inserter> {};
+}
+}
 }
 
 #endif

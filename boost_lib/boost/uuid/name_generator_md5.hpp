@@ -12,8 +12,10 @@
 #include <boost/uuid/basic_name_generator.hpp>
 #include <boost/uuid/detail/md5.hpp>
 
-namespace boost {
-namespace uuids {
+namespace boost
+{
+namespace uuids
+{
 
 //! \brief MD5 hashing is defined in RFC 4122 however it is not commonly
 //!        used; the definition is provided for backwards compatibility.

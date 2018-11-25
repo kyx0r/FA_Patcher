@@ -20,27 +20,30 @@
 
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
+namespace fusion
+{
+struct void_;
 
-    namespace result_of
-    {
-        template <typename ...T>
-        struct deque_tie
-        {
-            typedef deque<T&...> type;
-        };
-    }
+namespace result_of
+{
+template <typename ...T>
+struct deque_tie
+{
+	typedef deque<T&...> type;
+};
+}
 
-    template <typename ...T>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline deque<T&...>
-    deque_tie(T&... arg)
-    {
-        return deque<T&...>(arg...);
-    }
- }}
+template <typename ...T>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline deque<T&...>
+deque_tie(T&... arg)
+{
+	return deque<T&...>(arg...);
+}
+}
+}
 
 #endif
 #endif

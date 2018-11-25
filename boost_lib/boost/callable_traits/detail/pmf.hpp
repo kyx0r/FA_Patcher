@@ -15,29 +15,34 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/callable_traits/detail/default_callable_traits.hpp>
 #include <boost/callable_traits/detail/utility.hpp>
 
-namespace boost { namespace callable_traits { namespace detail {
+namespace boost
+{
+namespace callable_traits
+{
+namespace detail
+{
 
 template<qualifier_flags Applied, bool IsTransactionSafe, bool IsNoExcept,
-    typename CallingConvention, typename T, typename Return,
-    typename... Args>
+         typename CallingConvention, typename T, typename Return,
+         typename... Args>
 struct set_member_function_qualifiers_t;
 
 template<qualifier_flags Applied, bool IsTransactionSafe, bool IsNoexcept,
-    typename CallingConvention, typename T, typename Return,
-    typename... Args>
+         typename CallingConvention, typename T, typename Return,
+         typename... Args>
 struct set_varargs_member_function_qualifiers_t;
 
 template<qualifier_flags Flags, bool IsTransactionSafe, bool IsNoexcept,
-    typename... Ts>
+         typename... Ts>
 using set_member_function_qualifiers =
     typename set_member_function_qualifiers_t<Flags, IsTransactionSafe,
-        IsNoexcept, Ts...>::type;
+    IsNoexcept, Ts...>::type;
 
 template<qualifier_flags Flags, bool IsTransactionSafe, bool IsNoexcept,
-    typename... Ts>
+         typename... Ts>
 using set_varargs_member_function_qualifiers =
     typename set_varargs_member_function_qualifiers_t<Flags,
-        IsTransactionSafe, IsNoexcept, Ts...>::type;
+    IsTransactionSafe, IsNoexcept, Ts...>::type;
 
 template<typename T>
 struct pmf : default_callable_traits<T> {};
@@ -92,6 +97,8 @@ struct pmf : default_callable_traits<T> {};
 #undef BOOST_CLBL_TRTS_VARARGS_CC
 #endif // #ifdef BOOST_CLBL_TRTS_ENABLE_FASTCALL
 
-}}} // namespace boost::callable_traits::detail
+}
+}
+} // namespace boost::callable_traits::detail
 
 #endif // #ifndef BOOST_CLBL_TRTS_DETAIL_PMF_HPP

@@ -12,10 +12,10 @@
 
 namespace boost
 {
-    template<typename T>
-    struct is_future_type : false_type
-    {
-    };
+template<typename T>
+struct is_future_type : false_type
+{
+};
 }
 
 #endif // header

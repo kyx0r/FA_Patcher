@@ -18,8 +18,10 @@
 #include <boost/compute/algorithm/merge.hpp>
 #include <boost/compute/container/vector.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Merges the sorted values in the range [\p first, \p middle) with
 /// the sorted values in the range [\p middle, \p last) in-place.
@@ -31,29 +33,29 @@ inline void inplace_merge(Iterator first,
                           Iterator last,
                           command_queue &queue = system::default_queue())
 {
-    BOOST_ASSERT(first < middle && middle < last);
+	BOOST_ASSERT(first < middle && middle < last);
 
-    typedef typename std::iterator_traits<Iterator>::value_type T;
+	typedef typename std::iterator_traits<Iterator>::value_type T;
 
-    const context &context = queue.get_context();
+	const context &context = queue.get_context();
 
-    ptrdiff_t left_size = std::distance(first, middle);
-    ptrdiff_t right_size = std::distance(middle, last);
+	ptrdiff_t left_size = std::distance(first, middle);
+	ptrdiff_t right_size = std::distance(middle, last);
 
-    vector<T> left(left_size, context);
-    vector<T> right(right_size, context);
+	vector<T> left(left_size, context);
+	vector<T> right(right_size, context);
 
-    copy(first, middle, left.begin(), queue);
-    copy(middle, last, right.begin(), queue);
+	copy(first, middle, left.begin(), queue);
+	copy(middle, last, right.begin(), queue);
 
-    ::boost::compute::merge(
-        left.begin(),
-        left.end(),
-        right.begin(),
-        right.end(),
-        first,
-        queue
-    );
+	::boost::compute::merge(
+	    left.begin(),
+	    left.end(),
+	    right.begin(),
+	    right.end(),
+	    first,
+	    queue
+	);
 }
 
 } // end compute namespace

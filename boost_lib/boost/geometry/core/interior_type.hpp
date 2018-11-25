@@ -25,7 +25,9 @@
 #include <boost/geometry/core/tag.hpp>
 #include <boost/geometry/core/tags.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -45,21 +47,21 @@ namespace traits
 template <typename Geometry>
 struct interior_const_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 template <typename Geometry>
 struct interior_mutable_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 
@@ -76,25 +78,25 @@ namespace core_dispatch
 template <typename GeometryTag, typename Geometry>
 struct interior_return_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 
 template <typename Polygon>
 struct interior_return_type<polygon_tag, Polygon>
 {
-    typedef typename boost::remove_const<Polygon>::type nc_polygon_type;
+	typedef typename boost::remove_const<Polygon>::type nc_polygon_type;
 
-    typedef typename boost::mpl::if_
-        <
-            boost::is_const<Polygon>,
-            typename traits::interior_const_type<nc_polygon_type>::type,
-            typename traits::interior_mutable_type<nc_polygon_type>::type
-        >::type type;
+	typedef typename boost::mpl::if_
+	<
+	boost::is_const<Polygon>,
+	      typename traits::interior_const_type<nc_polygon_type>::type,
+	      typename traits::interior_mutable_type<nc_polygon_type>::type
+	      >::type type;
 };
 
 
@@ -103,21 +105,21 @@ struct interior_return_type<polygon_tag, Polygon>
 template <typename GeometryTag, typename Geometry>
 struct interior_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
-            , (types<Geometry>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_GEOMETRY_TYPE
+	    , (types<Geometry>)
+	);
 };
 
 
 template <typename Polygon>
 struct interior_type<polygon_tag, Polygon>
 {
-    typedef typename boost::remove_reference
-        <
-            typename interior_return_type<polygon_tag, Polygon>::type
-        >::type type;
+	typedef typename boost::remove_reference
+	<
+	typename interior_return_type<polygon_tag, Polygon>::type
+	>::type type;
 };
 
 
@@ -140,25 +142,26 @@ struct interior_type<polygon_tag, Polygon>
 template <typename Geometry>
 struct interior_type
 {
-    typedef typename core_dispatch::interior_type
-        <
-            typename tag<Geometry>::type,
-            Geometry
-        >::type type;
+	typedef typename core_dispatch::interior_type
+	<
+	typename tag<Geometry>::type,
+	         Geometry
+	         >::type type;
 };
 
 template <typename Geometry>
 struct interior_return_type
 {
-    typedef typename core_dispatch::interior_return_type
-        <
-            typename tag<Geometry>::type,
-            Geometry
-        >::type type;
+	typedef typename core_dispatch::interior_return_type
+	<
+	typename tag<Geometry>::type,
+	         Geometry
+	         >::type type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_CORE_INTERIOR_TYPE_HPP

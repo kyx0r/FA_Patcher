@@ -29,111 +29,116 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename Protocol>
 class resolver_service :
-  public service_base<resolver_service<Protocol> >,
-  public resolver_service_base
+	public service_base<resolver_service<Protocol> >,
+	public resolver_service_base
 {
 public:
-  // The implementation type of the resolver. A cancellation token is used to
-  // indicate to the background thread that the operation has been cancelled.
-  typedef socket_ops::shared_cancel_token_type implementation_type;
+	// The implementation type of the resolver. A cancellation token is used to
+	// indicate to the background thread that the operation has been cancelled.
+	typedef socket_ops::shared_cancel_token_type implementation_type;
 
-  // The endpoint type.
-  typedef typename Protocol::endpoint endpoint_type;
+	// The endpoint type.
+	typedef typename Protocol::endpoint endpoint_type;
 
-  // The query type.
-  typedef boost::asio::ip::basic_resolver_query<Protocol> query_type;
+	// The query type.
+	typedef boost::asio::ip::basic_resolver_query<Protocol> query_type;
 
-  // The results type.
-  typedef boost::asio::ip::basic_resolver_results<Protocol> results_type;
+	// The results type.
+	typedef boost::asio::ip::basic_resolver_results<Protocol> results_type;
 
-  // Constructor.
-  resolver_service(boost::asio::io_context& io_context)
-    : service_base<resolver_service<Protocol> >(io_context),
-      resolver_service_base(io_context)
-  {
-  }
+	// Constructor.
+	resolver_service(boost::asio::io_context& io_context)
+		: service_base<resolver_service<Protocol> >(io_context),
+		  resolver_service_base(io_context)
+	{
+	}
 
-  // Destroy all user-defined handler objects owned by the service.
-  void shutdown()
-  {
-    this->base_shutdown();
-  }
+	// Destroy all user-defined handler objects owned by the service.
+	void shutdown()
+	{
+		this->base_shutdown();
+	}
 
-  // Perform any fork-related housekeeping.
-  void notify_fork(boost::asio::io_context::fork_event fork_ev)
-  {
-    this->base_notify_fork(fork_ev);
-  }
+	// Perform any fork-related housekeeping.
+	void notify_fork(boost::asio::io_context::fork_event fork_ev)
+	{
+		this->base_notify_fork(fork_ev);
+	}
 
-  // Resolve a query to a list of entries.
-  results_type resolve(implementation_type&, const query_type& query,
-      boost::system::error_code& ec)
-  {
-    boost::asio::detail::addrinfo_type* address_info = 0;
+	// Resolve a query to a list of entries.
+	results_type resolve(implementation_type&, const query_type& query,
+	                     boost::system::error_code& ec)
+	{
+		boost::asio::detail::addrinfo_type* address_info = 0;
 
-    socket_ops::getaddrinfo(query.host_name().c_str(),
-        query.service_name().c_str(), query.hints(), &address_info, ec);
-    auto_addrinfo auto_address_info(address_info);
+		socket_ops::getaddrinfo(query.host_name().c_str(),
+		                        query.service_name().c_str(), query.hints(), &address_info, ec);
+		auto_addrinfo auto_address_info(address_info);
 
-    return ec ? results_type() : results_type::create(
-        address_info, query.host_name(), query.service_name());
-  }
+		return ec ? results_type() : results_type::create(
+		           address_info, query.host_name(), query.service_name());
+	}
 
-  // Asynchronously resolve a query to a list of entries.
-  template <typename Handler>
-  void async_resolve(implementation_type& impl,
-      const query_type& query, Handler& handler)
-  {
-    // Allocate and construct an operation to wrap the handler.
-    typedef resolve_query_op<Protocol, Handler> op;
-    typename op::ptr p = { boost::asio::detail::addressof(handler),
-      op::ptr::allocate(handler), 0 };
-    p.p = new (p.v) op(impl, query, io_context_impl_, handler);
+	// Asynchronously resolve a query to a list of entries.
+	template <typename Handler>
+	void async_resolve(implementation_type& impl,
+	                   const query_type& query, Handler& handler)
+	{
+		// Allocate and construct an operation to wrap the handler.
+		typedef resolve_query_op<Protocol, Handler> op;
+		typename op::ptr p = { boost::asio::detail::addressof(handler),
+		                       op::ptr::allocate(handler), 0
+		                     };
+		p.p = new (p.v) op(impl, query, io_context_impl_, handler);
 
-    BOOST_ASIO_HANDLER_CREATION((io_context_impl_.context(),
-          *p.p, "resolver", &impl, 0, "async_resolve"));
+		BOOST_ASIO_HANDLER_CREATION((io_context_impl_.context(),
+		                             *p.p, "resolver", &impl, 0, "async_resolve"));
 
-    start_resolve_op(p.p);
-    p.v = p.p = 0;
-  }
+		start_resolve_op(p.p);
+		p.v = p.p = 0;
+	}
 
-  // Resolve an endpoint to a list of entries.
-  results_type resolve(implementation_type&,
-      const endpoint_type& endpoint, boost::system::error_code& ec)
-  {
-    char host_name[NI_MAXHOST];
-    char service_name[NI_MAXSERV];
-    socket_ops::sync_getnameinfo(endpoint.data(), endpoint.size(),
-        host_name, NI_MAXHOST, service_name, NI_MAXSERV,
-        endpoint.protocol().type(), ec);
+	// Resolve an endpoint to a list of entries.
+	results_type resolve(implementation_type&,
+	                     const endpoint_type& endpoint, boost::system::error_code& ec)
+	{
+		char host_name[NI_MAXHOST];
+		char service_name[NI_MAXSERV];
+		socket_ops::sync_getnameinfo(endpoint.data(), endpoint.size(),
+		                             host_name, NI_MAXHOST, service_name, NI_MAXSERV,
+		                             endpoint.protocol().type(), ec);
 
-    return ec ? results_type() : results_type::create(
-        endpoint, host_name, service_name);
-  }
+		return ec ? results_type() : results_type::create(
+		           endpoint, host_name, service_name);
+	}
 
-  // Asynchronously resolve an endpoint to a list of entries.
-  template <typename Handler>
-  void async_resolve(implementation_type& impl,
-      const endpoint_type& endpoint, Handler& handler)
-  {
-    // Allocate and construct an operation to wrap the handler.
-    typedef resolve_endpoint_op<Protocol, Handler> op;
-    typename op::ptr p = { boost::asio::detail::addressof(handler),
-      op::ptr::allocate(handler), 0 };
-    p.p = new (p.v) op(impl, endpoint, io_context_impl_, handler);
+	// Asynchronously resolve an endpoint to a list of entries.
+	template <typename Handler>
+	void async_resolve(implementation_type& impl,
+	                   const endpoint_type& endpoint, Handler& handler)
+	{
+		// Allocate and construct an operation to wrap the handler.
+		typedef resolve_endpoint_op<Protocol, Handler> op;
+		typename op::ptr p = { boost::asio::detail::addressof(handler),
+		                       op::ptr::allocate(handler), 0
+		                     };
+		p.p = new (p.v) op(impl, endpoint, io_context_impl_, handler);
 
-    BOOST_ASIO_HANDLER_CREATION((io_context_impl_.context(),
-          *p.p, "resolver", &impl, 0, "async_resolve"));
+		BOOST_ASIO_HANDLER_CREATION((io_context_impl_.context(),
+		                             *p.p, "resolver", &impl, 0, "async_resolve"));
 
-    start_resolve_op(p.p);
-    p.v = p.p = 0;
-  }
+		start_resolve_op(p.p);
+		p.v = p.p = 0;
+	}
 };
 
 } // namespace detail

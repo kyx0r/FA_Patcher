@@ -27,7 +27,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -35,7 +36,8 @@ BOOST_LOG_OPEN_NAMESPACE
 
 class attribute_value;
 
-namespace aux {
+namespace aux
+{
 
 //! Reference proxy object to implement \c operator[]
 class attribute_set_reference_proxy;
@@ -58,117 +60,124 @@ class attribute_set_reference_proxy;
  */
 class attribute
 {
-    BOOST_COPYABLE_AND_MOVABLE(attribute)
+	BOOST_COPYABLE_AND_MOVABLE(attribute)
 
 public:
-    /*!
-     * \brief A base class for an attribute value factory
-     *
-     * All attributes must derive their implementation from this class.
-     */
-    struct BOOST_LOG_NO_VTABLE BOOST_SYMBOL_VISIBLE impl :
-        public boost::intrusive_ref_counter< impl >
-    {
-        /*!
-         * \brief Virtual destructor
-         */
-        virtual ~impl() {}
+	/*!
+	 * \brief A base class for an attribute value factory
+	 *
+	 * All attributes must derive their implementation from this class.
+	 */
+	struct BOOST_LOG_NO_VTABLE BOOST_SYMBOL_VISIBLE impl :
+		public boost::intrusive_ref_counter< impl >
+	{
+		/*!
+		 * \brief Virtual destructor
+		 */
+		virtual ~impl() {}
 
-        /*!
-         * \return The actual attribute value. It shall not return empty values (exceptions
-         *         shall be used to indicate errors).
-         */
-        virtual attribute_value get_value() = 0;
+		/*!
+		 * \return The actual attribute value. It shall not return empty values (exceptions
+		 *         shall be used to indicate errors).
+		 */
+		virtual attribute_value get_value() = 0;
 
-        BOOST_LOG_API static void* operator new (std::size_t size);
-        BOOST_LOG_API static void operator delete (void* p, std::size_t size) BOOST_NOEXCEPT;
-    };
+		BOOST_LOG_API static void* operator new (std::size_t size);
+		BOOST_LOG_API static void operator delete (void* p, std::size_t size) BOOST_NOEXCEPT;
+	};
 
 private:
-    //! Pointer to the attribute factory implementation
-    intrusive_ptr< impl > m_pImpl;
+	//! Pointer to the attribute factory implementation
+	intrusive_ptr< impl > m_pImpl;
 
 public:
-    /*!
-     * Default constructor. Creates an empty attribute value factory, which is not usable until
-     * \c set_impl is called.
-     */
-    BOOST_DEFAULTED_FUNCTION(attribute(), {})
+	/*!
+	 * Default constructor. Creates an empty attribute value factory, which is not usable until
+	 * \c set_impl is called.
+	 */
+	BOOST_DEFAULTED_FUNCTION(attribute(), {})
 
-    /*!
-     * Copy constructor
-     */
-    attribute(attribute const& that) BOOST_NOEXCEPT : m_pImpl(that.m_pImpl) {}
+	/*!
+	 * Copy constructor
+	 */
+attribute(attribute const& that) BOOST_NOEXCEPT :
+	m_pImpl(that.m_pImpl) {}
 
-    /*!
-     * Move constructor
-     */
-    attribute(BOOST_RV_REF(attribute) that) BOOST_NOEXCEPT { m_pImpl.swap(that.m_pImpl); }
+	/*!
+	 * Move constructor
+	 */
+	attribute(BOOST_RV_REF(attribute) that) BOOST_NOEXCEPT { m_pImpl.swap(that.m_pImpl); }
 
-    /*!
-     * Initializing constructor
-     *
-     * \param p Pointer to the implementation. Must not be \c NULL.
-     */
-    explicit attribute(intrusive_ptr< impl > p) BOOST_NOEXCEPT { m_pImpl.swap(p); }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \param p Pointer to the implementation. Must not be \c NULL.
+	 */
+	explicit attribute(intrusive_ptr< impl > p) BOOST_NOEXCEPT { m_pImpl.swap(p); }
 
-    /*!
-     * Copy assignment
-     */
-    attribute& operator= (BOOST_COPY_ASSIGN_REF(attribute) that) BOOST_NOEXCEPT
-    {
-        m_pImpl = that.m_pImpl;
-        return *this;
-    }
+	/*!
+	 * Copy assignment
+	 */
+	attribute& operator= (BOOST_COPY_ASSIGN_REF(attribute) that) BOOST_NOEXCEPT
+	{
+		m_pImpl = that.m_pImpl;
+		return *this;
+	}
 
-    /*!
-     * Move assignment
-     */
-    attribute& operator= (BOOST_RV_REF(attribute) that) BOOST_NOEXCEPT
-    {
-        m_pImpl.swap(that.m_pImpl);
-        return *this;
-    }
+	/*!
+	 * Move assignment
+	 */
+	attribute& operator= (BOOST_RV_REF(attribute) that) BOOST_NOEXCEPT
+	{
+		m_pImpl.swap(that.m_pImpl);
+		return *this;
+	}
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    attribute& operator= (aux::attribute_set_reference_proxy const& that) BOOST_NOEXCEPT;
+	attribute& operator= (aux::attribute_set_reference_proxy const& that) BOOST_NOEXCEPT;
 #endif
 
-    /*!
-     * Verifies that the factory is not in empty state
-     */
-    BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
+	/*!
+	 * Verifies that the factory is not in empty state
+	 */
+	BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
 
-    /*!
-     * Verifies that the factory is in empty state
-     */
-    bool operator! () const BOOST_NOEXCEPT { return !m_pImpl; }
+	/*!
+	 * Verifies that the factory is in empty state
+	 */
+	bool operator! () const BOOST_NOEXCEPT
+	{
+		return !m_pImpl;
+	}
 
-    /*!
-     * \return The actual attribute value. It shall not return empty values (exceptions
-     *         shall be used to indicate errors).
-     */
-    attribute_value get_value() const;
+	/*!
+	 * \return The actual attribute value. It shall not return empty values (exceptions
+	 *         shall be used to indicate errors).
+	 */
+	attribute_value get_value() const;
 
-    /*!
-     * The method swaps two factories (i.e. their implementations).
-     */
-    void swap(attribute& that) BOOST_NOEXCEPT { m_pImpl.swap(that.m_pImpl); }
+	/*!
+	 * The method swaps two factories (i.e. their implementations).
+	 */
+	void swap(attribute& that) BOOST_NOEXCEPT { m_pImpl.swap(that.m_pImpl); }
 
 protected:
-    /*!
-     * \returns The pointer to the implementation
-     */
-    impl* get_impl() const BOOST_NOEXCEPT { return m_pImpl.get(); }
-    /*!
-     * Sets the pointer to the factory implementation.
-     *
-     * \param p Pointer to the implementation. Must not be \c NULL.
-     */
-    void set_impl(intrusive_ptr< impl > p) BOOST_NOEXCEPT { m_pImpl.swap(p); }
+	/*!
+	 * \returns The pointer to the implementation
+	 */
+	impl* get_impl() const BOOST_NOEXCEPT
+	{
+		return m_pImpl.get();
+	}
+	/*!
+	 * Sets the pointer to the factory implementation.
+	 *
+	 * \param p Pointer to the implementation. Must not be \c NULL.
+	 */
+	void set_impl(intrusive_ptr< impl > p) BOOST_NOEXCEPT { m_pImpl.swap(p); }
 
-    template< typename T >
-    friend T attribute_cast(attribute const&);
+	template< typename T >
+	friend T attribute_cast(attribute const&);
 };
 
 /*!
@@ -176,7 +185,7 @@ protected:
  */
 inline void swap(attribute& left, attribute& right) BOOST_NOEXCEPT
 {
-    left.swap(right);
+	left.swap(right);
 }
 
 BOOST_LOG_CLOSE_NAMESPACE // namespace log

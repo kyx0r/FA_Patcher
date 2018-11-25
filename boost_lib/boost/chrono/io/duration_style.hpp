@@ -14,21 +14,21 @@
 
 namespace boost
 {
-  namespace chrono
-  {
-    /**
-     * Scoped enumeration emulation stating whether the duration I/O style is long or short.
-     * prefix means duration::rep with whatever stream/locale settings are set for it followed by a long name representing the unit
-     * symbol means duration::rep with whatever stream/locale settings are set for it followed by a SI unit abbreviation
-     */
-    BOOST_SCOPED_ENUM_DECLARE_BEGIN(duration_style)
-          {
-            prefix, symbol
-          }
-    BOOST_SCOPED_ENUM_DECLARE_END(duration_style)
+namespace chrono
+{
+/**
+ * Scoped enumeration emulation stating whether the duration I/O style is long or short.
+ * prefix means duration::rep with whatever stream/locale settings are set for it followed by a long name representing the unit
+ * symbol means duration::rep with whatever stream/locale settings are set for it followed by a SI unit abbreviation
+ */
+BOOST_SCOPED_ENUM_DECLARE_BEGIN(duration_style)
+{
+	prefix, symbol
+}
+BOOST_SCOPED_ENUM_DECLARE_END(duration_style)
 
 
-  } // chrono
+} // chrono
 
 }
 

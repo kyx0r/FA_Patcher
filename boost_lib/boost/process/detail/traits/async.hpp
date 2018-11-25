@@ -10,24 +10,38 @@
 #include <boost/process/detail/config.hpp>
 #include <boost/process/detail/traits/decl.hpp>
 
-namespace boost { namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 class io_context;
-}}
+}
+}
 
-namespace boost { namespace process { namespace detail {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
 
 struct async_tag {};
 
 template<>
 struct initializer_builder<async_tag>;
 
-template<> struct initializer_tag<::boost::asio::io_context> { typedef async_tag type;};
+template<> struct initializer_tag<::boost::asio::io_context>
+{
+	typedef async_tag type;
+};
 
 
 
 
-}}}
+}
+}
+}
 
 
 

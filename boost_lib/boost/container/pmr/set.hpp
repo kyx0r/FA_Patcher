@@ -12,26 +12,29 @@
 #define BOOST_CONTAINER_PMR_SET_HPP
 
 #if defined (_MSC_VER)
-#  pragma once 
+#  pragma once
 #endif
 
 #include <boost/container/set.hpp>
 #include <boost/container/pmr/polymorphic_allocator.hpp>
 
-namespace boost {
-namespace container {
-namespace pmr {
+namespace boost
+{
+namespace container
+{
+namespace pmr
+{
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
 template <class Key
-         ,class Compare = std::less<Key>
-         ,class Options = void >
+          ,class Compare = std::less<Key>
+          ,class Options = void >
 using set = boost::container::set<Key, Compare, polymorphic_allocator<Key>, Options>;
 
 template <class Key
-         ,class Compare = std::less<Key>
-         ,class Options = void >
+          ,class Compare = std::less<Key>
+          ,class Options = void >
 using multiset = boost::container::multiset<Key, Compare, polymorphic_allocator<Key>, Options>;
 
 #endif
@@ -39,21 +42,21 @@ using multiset = boost::container::multiset<Key, Compare, polymorphic_allocator<
 //! A portable metafunction to obtain a set
 //! that uses a polymorphic allocator
 template <class Key
-         ,class Compare = std::less<Key>
-         ,class Options = void >
+          ,class Compare = std::less<Key>
+          ,class Options = void >
 struct set_of
 {
-   typedef boost::container::set<Key, Compare, polymorphic_allocator<Key>, Options> type;
+	typedef boost::container::set<Key, Compare, polymorphic_allocator<Key>, Options> type;
 };
 
 //! A portable metafunction to obtain a multiset
 //! that uses a polymorphic allocator
 template <class Key
-         ,class Compare = std::less<Key>
-         ,class Options = void >
+          ,class Compare = std::less<Key>
+          ,class Options = void >
 struct multiset_of
 {
-   typedef boost::container::multiset<Key, Compare, polymorphic_allocator<Key>, Options> type;
+	typedef boost::container::multiset<Key, Compare, polymorphic_allocator<Key>, Options> type;
 };
 
 }  //namespace pmr {

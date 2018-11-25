@@ -17,47 +17,58 @@
 #include <type_traits>
 
 /* technique explained at
- * http://bannalia.blogspot.com/2016/09/compile-time-checking-existence-of.html 
+ * http://bannalia.blogspot.com/2016/09/compile-time-checking-existence-of.html
  */
 
-namespace boost{
-namespace poly_collection{
-namespace detail{
-namespace is_final_fallback{
+namespace boost
+{
+namespace poly_collection
+{
+namespace detail
+{
+namespace is_final_fallback
+{
 
 template<typename T> using is_final=boost::is_final<T>;
 
-struct hook{};
+struct hook {};
 
-}}}}
+}
+}
+}
+}
 
-namespace std{
+namespace std
+{
 
 template<>
 struct is_void< ::boost::poly_collection::detail::is_final_fallback::hook>:
-  std::false_type
-{      
-  template<typename T>
-  static constexpr bool is_final_f()
-  {
-    using namespace ::boost::poly_collection::detail::is_final_fallback;
-    return is_final<T>::value;
-  }
+	std::false_type
+{
+	template<typename T>
+	static constexpr bool is_final_f()
+	{
+		using namespace ::boost::poly_collection::detail::is_final_fallback;
+		return is_final<T>::value;
+	}
 };
 
 } /* namespace std */
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 template<typename T>
 struct is_final:std::integral_constant<
-  bool,
-  std::is_void<is_final_fallback::hook>::template is_final_f<T>()
->{};
+	bool,
+	std::is_void<is_final_fallback::hook>::template is_final_f<T>()
+> {};
 
 } /* namespace poly_collection::detail */
 

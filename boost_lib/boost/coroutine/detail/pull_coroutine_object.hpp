@@ -32,272 +32,295 @@
 # pragma warning(disable:4355)
 #endif
 
-namespace boost {
-namespace coroutines {
-namespace detail {
+namespace boost
+{
+namespace coroutines
+{
+namespace detail
+{
 
 struct pull_coroutine_context
 {
-    coroutine_context   caller;
-    coroutine_context   callee;
+	coroutine_context   caller;
+	coroutine_context   callee;
 
-    template< typename Coro >
-    pull_coroutine_context( preallocated const& palloc, Coro *) :
-        caller(),
-        callee( trampoline_pull< Coro >, palloc)
-    {}
+	template< typename Coro >
+	pull_coroutine_context( preallocated const& palloc, Coro *) :
+		caller(),
+		callee( trampoline_pull< Coro >, palloc)
+	{}
 };
 
 template< typename PushCoro, typename R, typename Fn, typename StackAllocator >
 class pull_coroutine_object : private pull_coroutine_context,
-                              public pull_coroutine_impl< R >
+	public pull_coroutine_impl< R >
 {
 private:
-    typedef pull_coroutine_context                                      ctx_t;
-    typedef pull_coroutine_impl< R >                                    base_t;
-    typedef pull_coroutine_object< PushCoro, R, Fn, StackAllocator >    obj_t;
+	typedef pull_coroutine_context                                      ctx_t;
+	typedef pull_coroutine_impl< R >                                    base_t;
+	typedef pull_coroutine_object< PushCoro, R, Fn, StackAllocator >    obj_t;
 
-    Fn                  fn_;
-    stack_context       stack_ctx_;
-    StackAllocator      stack_alloc_;
+	Fn                  fn_;
+	stack_context       stack_ctx_;
+	StackAllocator      stack_alloc_;
 
-    static void deallocate_( obj_t * obj)
-    {
-        stack_context stack_ctx( obj->stack_ctx_);
-        StackAllocator stack_alloc( obj->stack_alloc_);
-        obj->unwind_stack();
-        obj->~obj_t();
-        stack_alloc.deallocate( stack_ctx);
-    }
+	static void deallocate_( obj_t * obj)
+	{
+		stack_context stack_ctx( obj->stack_ctx_);
+		StackAllocator stack_alloc( obj->stack_alloc_);
+		obj->unwind_stack();
+		obj->~obj_t();
+		stack_alloc.deallocate( stack_ctx);
+	}
 
 public:
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-    pull_coroutine_object( Fn fn, attributes const& attrs,
-                           preallocated const& palloc,
-                           StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
-        ctx_t( palloc, this),
-        base_t( & this->caller,
-                & this->callee,
-                stack_unwind == attrs.do_unwind),
-        fn_( fn),
-        stack_ctx_( palloc.sctx),
-        stack_alloc_( stack_alloc)
-    {}
+	pull_coroutine_object( Fn fn, attributes const& attrs,
+	                       preallocated const& palloc,
+                       StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
+	ctx_t( palloc, this),
+	       base_t( & this->caller,
+	               & this->callee,
+	               stack_unwind == attrs.do_unwind),
+	       fn_( fn),
+	       stack_ctx_( palloc.sctx),
+	       stack_alloc_( stack_alloc)
+	{}
 #endif
 
-    pull_coroutine_object( BOOST_RV_REF( Fn) fn, attributes const& attrs,
-                           preallocated const& palloc,
-                           StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
-        ctx_t( palloc, this),
-        base_t( & this->caller,
-                & this->callee,
-                stack_unwind == attrs.do_unwind),
+	pull_coroutine_object( BOOST_RV_REF( Fn) fn, attributes const& attrs,
+	                       preallocated const& palloc,
+                       StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
+	ctx_t( palloc, this),
+	base_t( & this->caller,
+	        & this->callee,
+	        stack_unwind == attrs.do_unwind),
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-        fn_( fn),
+	fn_( fn),
 #else
-        fn_( boost::forward< Fn >( fn) ),
+	fn_( boost::forward< Fn >( fn) ),
 #endif
-        stack_ctx_( palloc.sctx),
-        stack_alloc_( stack_alloc)
-    {}
+	stack_ctx_( palloc.sctx),
+	stack_alloc_( stack_alloc)
+	{}
 
-    void run()
-    {
-        BOOST_ASSERT( ! base_t::unwind_requested() );
+	void run()
+	{
+		BOOST_ASSERT( ! base_t::unwind_requested() );
 
-        base_t::flags_ |= flag_started;
-        base_t::flags_ |= flag_running;
+		base_t::flags_ |= flag_started;
+		base_t::flags_ |= flag_running;
 
-        // create push_coroutine
-        typename PushCoro::synth_type b( & this->callee, & this->caller, false);
-        PushCoro push_coro( synthesized_t::syntesized, b);
-        try
-        { fn_( push_coro); }
-        catch ( forced_unwind const&)
-        {}
-        catch (...)
-        { base_t::except_ = current_exception(); }
+		// create push_coroutine
+		typename PushCoro::synth_type b( & this->callee, & this->caller, false);
+		PushCoro push_coro( synthesized_t::syntesized, b);
+		try
+		{
+			fn_( push_coro);
+		}
+		catch ( forced_unwind const&)
+		{}
+		catch (...)
+		{
+			base_t::except_ = current_exception();
+		}
 
-        base_t::flags_ |= flag_complete;
-        base_t::flags_ &= ~flag_running;
-        typename base_t::param_type to;
-        this->callee.jump(
-            this->caller,
-            & to);
-        BOOST_ASSERT_MSG( false, "pull_coroutine is complete");
-    }
+		base_t::flags_ |= flag_complete;
+		base_t::flags_ &= ~flag_running;
+		typename base_t::param_type to;
+		this->callee.jump(
+		    this->caller,
+		    & to);
+		BOOST_ASSERT_MSG( false, "pull_coroutine is complete");
+	}
 
-    void destroy()
-    { deallocate_( this); }
+	void destroy()
+	{
+		deallocate_( this);
+	}
 };
 
 template< typename PushCoro, typename R, typename Fn, typename StackAllocator >
 class pull_coroutine_object< PushCoro, R &, Fn, StackAllocator > : private pull_coroutine_context,
-                                                                   public pull_coroutine_impl< R & >
+	public pull_coroutine_impl< R & >
 {
 private:
-    typedef pull_coroutine_context                                      ctx_t;
-    typedef pull_coroutine_impl< R & >                                  base_t;
-    typedef pull_coroutine_object< PushCoro, R &, Fn, StackAllocator >  obj_t;
+	typedef pull_coroutine_context                                      ctx_t;
+	typedef pull_coroutine_impl< R & >                                  base_t;
+	typedef pull_coroutine_object< PushCoro, R &, Fn, StackAllocator >  obj_t;
 
-    Fn                  fn_;
-    stack_context       stack_ctx_;
-    StackAllocator      stack_alloc_;
+	Fn                  fn_;
+	stack_context       stack_ctx_;
+	StackAllocator      stack_alloc_;
 
-    static void deallocate_( obj_t * obj)
-    {
-        stack_context stack_ctx( obj->stack_ctx_);
-        StackAllocator stack_alloc( obj->stack_alloc_);
-        obj->unwind_stack();
-        obj->~obj_t();
-        stack_alloc.deallocate( stack_ctx);
-    }
+	static void deallocate_( obj_t * obj)
+	{
+		stack_context stack_ctx( obj->stack_ctx_);
+		StackAllocator stack_alloc( obj->stack_alloc_);
+		obj->unwind_stack();
+		obj->~obj_t();
+		stack_alloc.deallocate( stack_ctx);
+	}
 
 public:
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-    pull_coroutine_object( Fn fn, attributes const& attrs,
-                           preallocated const& palloc,
-                           StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
-        ctx_t( palloc, this),
-        base_t( & this->caller,
-                & this->callee,
-                stack_unwind == attrs.do_unwind),
-        fn_( fn),
-        stack_ctx_( palloc.sctx),
-        stack_alloc_( stack_alloc)
-    {}
+	pull_coroutine_object( Fn fn, attributes const& attrs,
+	                       preallocated const& palloc,
+                       StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
+	ctx_t( palloc, this),
+	       base_t( & this->caller,
+	               & this->callee,
+	               stack_unwind == attrs.do_unwind),
+	       fn_( fn),
+	       stack_ctx_( palloc.sctx),
+	       stack_alloc_( stack_alloc)
+	{}
 #endif
 
-    pull_coroutine_object( BOOST_RV_REF( Fn) fn, attributes const& attrs,
-                           preallocated const& palloc,
-                           StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
-        ctx_t( palloc, this),
-        base_t( & this->caller,
-                & this->callee,
-                stack_unwind == attrs.do_unwind),
+	pull_coroutine_object( BOOST_RV_REF( Fn) fn, attributes const& attrs,
+	                       preallocated const& palloc,
+                       StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
+	ctx_t( palloc, this),
+	base_t( & this->caller,
+	        & this->callee,
+	        stack_unwind == attrs.do_unwind),
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-        fn_( fn),
+	fn_( fn),
 #else
-        fn_( boost::forward< Fn >( fn) ),
+	fn_( boost::forward< Fn >( fn) ),
 #endif
-        stack_ctx_( palloc.sctx),
-        stack_alloc_( stack_alloc)
-    {}
+	stack_ctx_( palloc.sctx),
+	stack_alloc_( stack_alloc)
+	{}
 
-    void run()
-    {
-        BOOST_ASSERT( ! base_t::unwind_requested() );
+	void run()
+	{
+		BOOST_ASSERT( ! base_t::unwind_requested() );
 
-        base_t::flags_ |= flag_started;
-        base_t::flags_ |= flag_running;
+		base_t::flags_ |= flag_started;
+		base_t::flags_ |= flag_running;
 
-        // create push_coroutine
-        typename PushCoro::synth_type b( & this->callee, & this->caller, false);
-        PushCoro push_coro( synthesized_t::syntesized, b);
-        try
-        { fn_( push_coro); }
-        catch ( forced_unwind const&)
-        {}
-        catch (...)
-        { base_t::except_ = current_exception(); }
+		// create push_coroutine
+		typename PushCoro::synth_type b( & this->callee, & this->caller, false);
+		PushCoro push_coro( synthesized_t::syntesized, b);
+		try
+		{
+			fn_( push_coro);
+		}
+		catch ( forced_unwind const&)
+		{}
+		catch (...)
+		{
+			base_t::except_ = current_exception();
+		}
 
-        base_t::flags_ |= flag_complete;
-        base_t::flags_ &= ~flag_running;
-        typename base_t::param_type to;
-        this->callee.jump(
-            this->caller,
-            & to);
-        BOOST_ASSERT_MSG( false, "pull_coroutine is complete");
-    }
+		base_t::flags_ |= flag_complete;
+		base_t::flags_ &= ~flag_running;
+		typename base_t::param_type to;
+		this->callee.jump(
+		    this->caller,
+		    & to);
+		BOOST_ASSERT_MSG( false, "pull_coroutine is complete");
+	}
 
-    void destroy()
-    { deallocate_( this); }
+	void destroy()
+	{
+		deallocate_( this);
+	}
 };
 
 template< typename PushCoro, typename Fn, typename StackAllocator >
 class pull_coroutine_object< PushCoro, void, Fn, StackAllocator > : private pull_coroutine_context,
-                                                                    public pull_coroutine_impl< void >
+	public pull_coroutine_impl< void >
 {
 private:
-    typedef pull_coroutine_context                                      ctx_t;
-    typedef pull_coroutine_impl< void >                                 base_t;
-    typedef pull_coroutine_object< PushCoro, void, Fn, StackAllocator > obj_t;
+	typedef pull_coroutine_context                                      ctx_t;
+	typedef pull_coroutine_impl< void >                                 base_t;
+	typedef pull_coroutine_object< PushCoro, void, Fn, StackAllocator > obj_t;
 
-    Fn                  fn_;
-    stack_context       stack_ctx_;
-    StackAllocator      stack_alloc_;
+	Fn                  fn_;
+	stack_context       stack_ctx_;
+	StackAllocator      stack_alloc_;
 
-    static void deallocate_( obj_t * obj)
-    {
-        stack_context stack_ctx( obj->stack_ctx_);
-        StackAllocator stack_alloc( obj->stack_alloc_);
-        obj->unwind_stack();
-        obj->~obj_t();
-        stack_alloc.deallocate( stack_ctx);
-    }
+	static void deallocate_( obj_t * obj)
+	{
+		stack_context stack_ctx( obj->stack_ctx_);
+		StackAllocator stack_alloc( obj->stack_alloc_);
+		obj->unwind_stack();
+		obj->~obj_t();
+		stack_alloc.deallocate( stack_ctx);
+	}
 
 public:
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-    pull_coroutine_object( Fn fn, attributes const& attrs,
-                           preallocated const& palloc,
-                           StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
-        ctx_t( palloc, this),
-        base_t( & this->caller,
-                & this->callee,
-                stack_unwind == attrs.do_unwind),
-        fn_( fn),
-        stack_ctx_( palloc.sctx),
-        stack_alloc_( stack_alloc)
-    {}
+	pull_coroutine_object( Fn fn, attributes const& attrs,
+	                       preallocated const& palloc,
+                       StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
+	ctx_t( palloc, this),
+	       base_t( & this->caller,
+	               & this->callee,
+	               stack_unwind == attrs.do_unwind),
+	       fn_( fn),
+	       stack_ctx_( palloc.sctx),
+	       stack_alloc_( stack_alloc)
+	{}
 #endif
 
-    pull_coroutine_object( BOOST_RV_REF( Fn) fn, attributes const& attrs,
-                           preallocated const& palloc,
-                           StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
-        ctx_t( palloc, this),
-        base_t( & this->caller,
-                & this->callee,
-                stack_unwind == attrs.do_unwind),
+	pull_coroutine_object( BOOST_RV_REF( Fn) fn, attributes const& attrs,
+	                       preallocated const& palloc,
+                       StackAllocator const& stack_alloc) BOOST_NOEXCEPT :
+	ctx_t( palloc, this),
+	base_t( & this->caller,
+	        & this->callee,
+	        stack_unwind == attrs.do_unwind),
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-        fn_( fn),
+	fn_( fn),
 #else
-        fn_( boost::forward< Fn >( fn) ),
+	fn_( boost::forward< Fn >( fn) ),
 #endif
-        stack_ctx_( palloc.sctx),
-        stack_alloc_( stack_alloc)
-    {}
+	stack_ctx_( palloc.sctx),
+	stack_alloc_( stack_alloc)
+	{}
 
-    void run()
-    {
-        BOOST_ASSERT( ! base_t::unwind_requested() );
+	void run()
+	{
+		BOOST_ASSERT( ! base_t::unwind_requested() );
 
-        base_t::flags_ |= flag_started;
-        base_t::flags_ |= flag_running;
+		base_t::flags_ |= flag_started;
+		base_t::flags_ |= flag_running;
 
-        // create push_coroutine
-        typename PushCoro::synth_type b( & this->callee, & this->caller, false);
-        PushCoro push_coro( synthesized_t::syntesized, b);
-        try
-        { fn_( push_coro); }
-        catch ( forced_unwind const&)
-        {}
-        catch (...)
-        { base_t::except_ = current_exception(); }
+		// create push_coroutine
+		typename PushCoro::synth_type b( & this->callee, & this->caller, false);
+		PushCoro push_coro( synthesized_t::syntesized, b);
+		try
+		{
+			fn_( push_coro);
+		}
+		catch ( forced_unwind const&)
+		{}
+		catch (...)
+		{
+			base_t::except_ = current_exception();
+		}
 
-        base_t::flags_ |= flag_complete;
-        base_t::flags_ &= ~flag_running;
-        typename base_t::param_type to;
-        this->callee.jump(
-            this->caller,
-            & to);
-        BOOST_ASSERT_MSG( false, "pull_coroutine is complete");
-    }
+		base_t::flags_ |= flag_complete;
+		base_t::flags_ &= ~flag_running;
+		typename base_t::param_type to;
+		this->callee.jump(
+		    this->caller,
+		    & to);
+		BOOST_ASSERT_MSG( false, "pull_coroutine is complete");
+	}
 
-    void destroy()
-    { deallocate_( this); }
+	void destroy()
+	{
+		deallocate_( this);
+	}
 };
 
-}}}
+}
+}
+}
 
 #if defined(BOOST_MSVC)
 # pragma warning(pop)

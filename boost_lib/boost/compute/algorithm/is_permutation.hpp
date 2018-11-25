@@ -20,8 +20,10 @@
 #include <boost/compute/algorithm/equal.hpp>
 #include <boost/compute/algorithm/sort.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 ///
 /// \brief Permutation checking algorithm
@@ -44,22 +46,22 @@ inline bool is_permutation(InputIterator1 first1,
                            InputIterator2 last2,
                            command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<InputIterator1>::value_type value_type1;
-    typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
+	typedef typename std::iterator_traits<InputIterator1>::value_type value_type1;
+	typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
 
-    size_t count1 = detail::iterator_range_size(first1, last1);
-    size_t count2 = detail::iterator_range_size(first2, last2);
+	size_t count1 = detail::iterator_range_size(first1, last1);
+	size_t count2 = detail::iterator_range_size(first2, last2);
 
-    if(count1 != count2) return false;
+	if(count1 != count2) return false;
 
-    vector<value_type1> temp1(first1, last1, queue);
-    vector<value_type2> temp2(first2, last2, queue);
+	vector<value_type1> temp1(first1, last1, queue);
+	vector<value_type2> temp2(first2, last2, queue);
 
-    sort(temp1.begin(), temp1.end(), queue);
-    sort(temp2.begin(), temp2.end(), queue);
+	sort(temp1.begin(), temp1.end(), queue);
+	sort(temp2.begin(), temp2.end(), queue);
 
-    return equal(temp1.begin(), temp1.end(),
-                 temp2.begin(), queue);
+	return equal(temp1.begin(), temp1.end(),
+	             temp2.begin(), queue);
 }
 
 } // end compute namespace

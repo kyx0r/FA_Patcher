@@ -19,11 +19,14 @@
 #include <boost/process/detail/windows/asio_fwd.hpp>
 #endif
 
-namespace boost {
+namespace boost
+{
 
-namespace process {
+namespace process
+{
 
-namespace detail {
+namespace detail
+{
 
 #if defined(BOOST_POSIX_API)
 using ::boost::process::detail::posix::is_async_handler;
@@ -39,21 +42,21 @@ struct has_io_context;
 template<typename T, typename ...Args>
 struct has_io_context<T, Args...>
 {
-    typedef typename has_io_context<Args...>::type next;
-    typedef typename std::is_same<
-                typename std::remove_reference<T>::type,
-                boost::asio::io_context>::type is_ios;
-    typedef typename std::conditional<is_ios::value,
-            std::true_type,
-            next>::type type;
+	typedef typename has_io_context<Args...>::type next;
+	typedef typename std::is_same<
+	typename std::remove_reference<T>::type,
+	         boost::asio::io_context>::type is_ios;
+	typedef typename std::conditional<is_ios::value,
+	        std::true_type,
+	        next>::type type;
 };
 
 template<typename T>
 struct has_io_context<T>
 {
-    typedef typename std::is_same<
-            typename std::remove_reference<T>::type,
-            boost::asio::io_context>::type type;
+	typedef typename std::is_same<
+	typename std::remove_reference<T>::type,
+	         boost::asio::io_context>::type type;
 };
 
 template<typename ...Args>
@@ -65,17 +68,17 @@ struct has_async_handler;
 template<typename T, typename ...Args>
 struct has_async_handler<T, Args...>
 {
-    typedef typename has_async_handler<Args...>::type next;
-    typedef typename is_async_handler<T>::type is_ios;
-    typedef typename std::conditional<is_ios::value,
-            std::true_type,
-            next>::type type;
+	typedef typename has_async_handler<Args...>::type next;
+	typedef typename is_async_handler<T>::type is_ios;
+	typedef typename std::conditional<is_ios::value,
+	        std::true_type,
+	        next>::type type;
 };
 
 template<typename T>
 struct has_async_handler<T>
 {
-    typedef typename is_async_handler<T>::type type;
+	typedef typename is_async_handler<T>::type type;
 };
 
 template<typename ...Args>
@@ -84,29 +87,29 @@ struct needs_io_context;
 template<typename T, typename ...Args>
 struct needs_io_context<T, Args...>
 {
-    typedef typename needs_io_context<Args...>::type next;
-    typedef typename does_require_io_context<T>::type is_ios;
-    typedef typename std::conditional<is_ios::value,
-            std::true_type,
-            next>::type type;
+	typedef typename needs_io_context<Args...>::type next;
+	typedef typename does_require_io_context<T>::type is_ios;
+	typedef typename std::conditional<is_ios::value,
+	        std::true_type,
+	        next>::type type;
 };
 
 template<typename T>
 struct needs_io_context<T>
 {
-    typedef typename does_require_io_context<T>::type type;
+	typedef typename does_require_io_context<T>::type type;
 };
 
 template<typename ...Args>
 boost::asio::io_context &get_io_context_var(boost::asio::io_context & f, Args&...)
 {
-    return f;
+	return f;
 }
 
 template<typename First, typename ...Args>
 boost::asio::io_context &get_io_context_var(First&, Args&...args)
 {
-    return get_io_context_var(args...);
+	return get_io_context_var(args...);
 }
 
 }

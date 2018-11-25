@@ -20,38 +20,38 @@ namespace boost
 namespace executors
 {
 
-  template <typename Executor>
-  class scheduling_adaptor : public detail::scheduled_executor_base<>
-  {
-  private:
-    Executor& _exec;
-    thread _scheduler;
-  public:
+template <typename Executor>
+class scheduling_adaptor : public detail::scheduled_executor_base<>
+{
+private:
+	Executor& _exec;
+	thread _scheduler;
+public:
 
-    scheduling_adaptor(Executor& ex)
-      : super(),
-        _exec(ex),
-        _scheduler(&super::loop, this) {}
+	scheduling_adaptor(Executor& ex)
+		: super(),
+		  _exec(ex),
+		  _scheduler(&super::loop, this) {}
 
-    ~scheduling_adaptor()
-    {
-      this->close();
-      _scheduler.interrupt();
-      _scheduler.join();
-    }
+	~scheduling_adaptor()
+	{
+		this->close();
+		_scheduler.interrupt();
+		_scheduler.join();
+	}
 
-    Executor& underlying_executor()
-    {
-        return _exec;
-    }
+	Executor& underlying_executor()
+	{
+		return _exec;
+	}
 
-  private:
-    typedef detail::scheduled_executor_base<> super;
-  }; //end class
+private:
+	typedef detail::scheduled_executor_base<> super;
+}; //end class
 
 } //end executors
 
-  using executors::scheduling_adaptor;
+using executors::scheduling_adaptor;
 
 } //end boost
 

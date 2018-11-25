@@ -17,53 +17,58 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace context {
+namespace boost
+{
+namespace context
+{
 
 #if ! defined(BOOST_CONTEXT_NO_CXX11)
-struct stack_context {
+struct stack_context
+{
 # if defined(BOOST_USE_SEGMENTED_STACKS)
-    typedef void *  segments_context[BOOST_CONTEXT_SEGMENTS];
+	typedef void *  segments_context[BOOST_CONTEXT_SEGMENTS];
 # endif
 
-    std::size_t             size{ 0 };
-    void                *   sp{ nullptr };
+	std::size_t             size{ 0 };
+	void                *   sp{ nullptr };
 # if defined(BOOST_USE_SEGMENTED_STACKS)
-    segments_context        segments_ctx{};
+	segments_context        segments_ctx {};
 # endif
 # if defined(BOOST_USE_VALGRIND)
-    unsigned                valgrind_stack_id{ 0 };
+	unsigned                valgrind_stack_id { 0 };
 # endif
 };
 #else
-struct stack_context {
+struct stack_context
+{
 # if defined(BOOST_USE_SEGMENTED_STACKS)
-    typedef void *  segments_context[BOOST_CONTEXT_SEGMENTS];
+	typedef void *  segments_context[BOOST_CONTEXT_SEGMENTS];
 # endif
 
-    std::size_t             size;
-    void                *   sp;
+	std::size_t             size;
+	void                *   sp;
 # if defined(BOOST_USE_SEGMENTED_STACKS)
-    segments_context        segments_ctx;
+	segments_context        segments_ctx;
 # endif
 # if defined(BOOST_USE_VALGRIND)
-    unsigned                valgrind_stack_id;
+	unsigned                valgrind_stack_id;
 # endif
 
-    stack_context() :
-        size( 0),
-        sp( 0)
+	stack_context() :
+		size( 0),
+		sp( 0)
 # if defined(BOOST_USE_SEGMENTED_STACKS)
-        , segments_ctx()
+		, segments_ctx()
 # endif
 # if defined(BOOST_USE_VALGRIND)
-        , valgrind_stack_id( 0)
+		, valgrind_stack_id( 0)
 # endif
-        {}
+	{}
 };
 #endif
 
-}}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

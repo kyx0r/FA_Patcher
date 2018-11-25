@@ -22,79 +22,88 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename T>
 class recycling_allocator
 {
 public:
-  typedef T value_type;
+	typedef T value_type;
 
-  template <typename U>
-  struct rebind
-  {
-    typedef recycling_allocator<U> other;
-  };
+	template <typename U>
+	struct rebind
+	{
+		typedef recycling_allocator<U> other;
+	};
 
-  recycling_allocator()
-  {
-  }
+	recycling_allocator()
+	{
+	}
 
-  template <typename U>
-  recycling_allocator(const recycling_allocator<U>&)
-  {
-  }
+	template <typename U>
+	recycling_allocator(const recycling_allocator<U>&)
+	{
+	}
 
-  T* allocate(std::size_t n)
-  {
-    typedef thread_context::thread_call_stack call_stack;
-    void* p = thread_info_base::allocate(call_stack::top(), sizeof(T) * n);
-    return static_cast<T*>(p);
-  }
+	T* allocate(std::size_t n)
+	{
+		typedef thread_context::thread_call_stack call_stack;
+		void* p = thread_info_base::allocate(call_stack::top(), sizeof(T) * n);
+		return static_cast<T*>(p);
+	}
 
-  void deallocate(T* p, std::size_t n)
-  {
-    typedef thread_context::thread_call_stack call_stack;
-    thread_info_base::deallocate(call_stack::top(), p, sizeof(T) * n);
-  }
+	void deallocate(T* p, std::size_t n)
+	{
+		typedef thread_context::thread_call_stack call_stack;
+		thread_info_base::deallocate(call_stack::top(), p, sizeof(T) * n);
+	}
 };
 
 template <>
 class recycling_allocator<void>
 {
 public:
-  typedef void value_type;
+	typedef void value_type;
 
-  template <typename U>
-  struct rebind
-  {
-    typedef recycling_allocator<U> other;
-  };
+	template <typename U>
+	struct rebind
+	{
+		typedef recycling_allocator<U> other;
+	};
 
-  recycling_allocator()
-  {
-  }
+	recycling_allocator()
+	{
+	}
 
-  template <typename U>
-  recycling_allocator(const recycling_allocator<U>&)
-  {
-  }
+	template <typename U>
+	recycling_allocator(const recycling_allocator<U>&)
+	{
+	}
 };
 
 template <typename Allocator>
 struct get_recycling_allocator
 {
-  typedef Allocator type;
-  static type get(const Allocator& a) { return a; }
+	typedef Allocator type;
+	static type get(const Allocator& a)
+	{
+		return a;
+	}
 };
 
 template <typename T>
 struct get_recycling_allocator<std::allocator<T> >
 {
-  typedef recycling_allocator<T> type;
-  static type get(const std::allocator<T>&) { return type(); }
+	typedef recycling_allocator<T> type;
+	static type get(const std::allocator<T>&)
+	{
+		return type();
+	}
 };
 
 } // namespace detail

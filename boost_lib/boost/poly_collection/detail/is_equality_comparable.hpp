@@ -16,17 +16,20 @@
 #include <boost/type_traits/has_equal_to.hpp>
 #include <type_traits>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 template<typename T>
 using is_equality_comparable=std::integral_constant<
-  bool,
-  has_equal_to<T,T,bool>::value
->;
+                             bool,
+                             has_equal_to<T,T,bool>::value
+                             >;
 
 } /* namespace poly_collection::detail */
 

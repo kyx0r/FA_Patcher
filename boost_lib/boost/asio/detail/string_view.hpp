@@ -27,8 +27,10 @@
 # error BOOST_ASIO_HAS_STRING_VIEW is set but no string_view is available
 #endif // defined(BOOST_ASIO_HAS_STD_EXPERIMENTAL_STRING_VIEW)
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 #if defined(BOOST_ASIO_HAS_STD_STRING_VIEW)
 using std::basic_string_view;

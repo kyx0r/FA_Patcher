@@ -48,164 +48,186 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct hatano {};
+namespace par4
+{
+struct hatano {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace hatano
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace hatano
+{
 
-            static const int NITER = 20;
-            static const double EPS = 1e-7;
-            static const double ONETOL = 1.000001;
-            static const double CN_ = 2.67595;
-            static const double CS_ = 2.43763;
-            static const double RCN = 0.37369906014686373063;
-            static const double RCS = 0.41023453108141924738;
-            static const double FYCN = 1.75859;
-            static const double FYCS = 1.93052;
-            static const double RYCN = 0.56863737426006061674;
-            static const double RYCS = 0.51799515156538134803;
-            static const double FXC = 0.85;
-            static const double RXC = 1.17647058823529411764;
+static const int NITER = 20;
+static const double EPS = 1e-7;
+static const double ONETOL = 1.000001;
+static const double CN_ = 2.67595;
+static const double CS_ = 2.43763;
+static const double RCN = 0.37369906014686373063;
+static const double RCS = 0.41023453108141924738;
+static const double FYCN = 1.75859;
+static const double FYCS = 1.93052;
+static const double RYCN = 0.56863737426006061674;
+static const double RYCS = 0.51799515156538134803;
+static const double FXC = 0.85;
+static const double RXC = 1.17647058823529411764;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_hatano_spheroid : public base_t_fi<base_hatano_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_hatano_spheroid : public base_t_fi<base_hatano_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_hatano_spheroid(const Parameters& par)
-                    : base_t_fi<base_hatano_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_hatano_spheroid(const Parameters& par)
+		: base_t_fi<base_hatano_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType th1, c;
-                    int i;
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType th1, c;
+		int i;
 
-                    c = sin(lp_lat) * (lp_lat < 0. ? CS_ : CN_);
-                    for (i = NITER; i; --i) {
-                        lp_lat -= th1 = (lp_lat + sin(lp_lat) - c) / (1. + cos(lp_lat));
-                        if (fabs(th1) < EPS) break;
-                    }
-                    xy_x = FXC * lp_lon * cos(lp_lat *= .5);
-                    xy_y = sin(lp_lat) * (lp_lat < 0. ? FYCS : FYCN);
-                }
+		c = sin(lp_lat) * (lp_lat < 0. ? CS_ : CN_);
+		for (i = NITER; i; --i)
+		{
+			lp_lat -= th1 = (lp_lat + sin(lp_lat) - c) / (1. + cos(lp_lat));
+			if (fabs(th1) < EPS) break;
+		}
+		xy_x = FXC * lp_lon * cos(lp_lat *= .5);
+		xy_y = sin(lp_lat) * (lp_lat < 0. ? FYCS : FYCN);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType th;
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType th;
 
-                    th = xy_y * ( xy_y < 0. ? RYCS : RYCN);
-                    if (fabs(th) > 1.) {
-                        if (fabs(th) > ONETOL) {
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        } else {
-                            th = th > 0. ? geometry::math::half_pi<double>() : - geometry::math::half_pi<double>();
-                        }
-                    } else {
-                        th = asin(th);
-                    }
+		th = xy_y * ( xy_y < 0. ? RYCS : RYCN);
+		if (fabs(th) > 1.)
+		{
+			if (fabs(th) > ONETOL)
+			{
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			}
+			else
+			{
+				th = th > 0. ? geometry::math::half_pi<double>() : - geometry::math::half_pi<double>();
+			}
+		}
+		else
+		{
+			th = asin(th);
+		}
 
-                    lp_lon = RXC * xy_x / cos(th);
-                    th += th;
-                    lp_lat = (th + sin(th)) * (xy_y < 0. ? RCS : RCN);
-                    if (fabs(lp_lat) > 1.) {
-                        if (fabs(lp_lat) > ONETOL) {
-                            BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                        } else {
-                            lp_lat = lp_lat > 0. ? geometry::math::half_pi<double>() : - geometry::math::half_pi<double>();
-                        }
-                    } else {
-                        lp_lat = asin(lp_lat);
-                    }
-                }
+		lp_lon = RXC * xy_x / cos(th);
+		th += th;
+		lp_lat = (th + sin(th)) * (xy_y < 0. ? RCS : RCN);
+		if (fabs(lp_lat) > 1.)
+		{
+			if (fabs(lp_lat) > ONETOL)
+			{
+				BOOST_THROW_EXCEPTION( projection_exception(-20) );
+			}
+			else
+			{
+				lp_lat = lp_lat > 0. ? geometry::math::half_pi<double>() : - geometry::math::half_pi<double>();
+			}
+		}
+		else
+		{
+			lp_lat = asin(lp_lat);
+		}
+	}
 
-                static inline std::string get_name()
-                {
-                    return "hatano_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "hatano_spheroid";
+	}
 
-            };
+};
 
-            // Hatano Asymmetrical Equal Area
-            template <typename Parameters>
-            inline void setup_hatano(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Hatano Asymmetrical Equal Area
+template <typename Parameters>
+inline void setup_hatano(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::hatano
-    #endif // doxygen
+}
+} // namespace detail::hatano
+#endif // doxygen
 
-    /*!
-        \brief Hatano Asymmetrical Equal Area projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_hatano.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct hatano_spheroid : public detail::hatano::base_hatano_spheroid<CalculationType, Parameters>
-    {
-        inline hatano_spheroid(const Parameters& par) : detail::hatano::base_hatano_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::hatano::setup_hatano(this->m_par);
-        }
-    };
+/*!
+    \brief Hatano Asymmetrical Equal Area projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_hatano.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct hatano_spheroid : public detail::hatano::base_hatano_spheroid<CalculationType, Parameters>
+{
+	inline hatano_spheroid(const Parameters& par) : detail::hatano::base_hatano_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::hatano::setup_hatano(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::hatano, hatano_spheroid, hatano_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::hatano, hatano_spheroid, hatano_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class hatano_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<hatano_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class hatano_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<hatano_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void hatano_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("hatano", new hatano_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void hatano_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("hatano", new hatano_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_HATANO_HPP
 

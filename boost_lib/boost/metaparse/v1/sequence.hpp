@@ -19,23 +19,23 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-          BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-          class P,
-          boost::mpl::na
-        )
-      >
-      struct sequence;
+namespace metaparse
+{
+namespace v1
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+        class P,
+        boost::mpl::na
+    )
+    >
+struct sequence;
 
-      #ifdef BOOST_METAPARSE_SEQUENCE_N
-      #  error BOOST_METAPARSE_SEQUENCE_N already defined
-      #endif
-      #define BOOST_METAPARSE_SEQUENCE_N(z, n, unused) \
+#ifdef BOOST_METAPARSE_SEQUENCE_N
+#  error BOOST_METAPARSE_SEQUENCE_N already defined
+#endif
+#define BOOST_METAPARSE_SEQUENCE_N(z, n, unused) \
         template <BOOST_PP_ENUM_PARAMS(n, class P)> \
         struct sequence< \
           BOOST_PP_ENUM_PARAMS(n, P) \
@@ -47,17 +47,17 @@ namespace boost
           ) \
         > : impl::BOOST_PP_CAT(sequence, n)<BOOST_PP_ENUM_PARAMS(n, P)> \
         {};
-      
-      BOOST_PP_REPEAT_FROM_TO(
-        1,
-        BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
-        BOOST_METAPARSE_SEQUENCE_N,
-        ~
-      )
-      
-      #undef BOOST_METAPARSE_SEQUENCE_N
-    }
-  }
+
+BOOST_PP_REPEAT_FROM_TO(
+    1,
+    BOOST_METAPARSE_LIMIT_SEQUENCE_SIZE,
+    BOOST_METAPARSE_SEQUENCE_N,
+    ~
+)
+
+#undef BOOST_METAPARSE_SEQUENCE_N
+}
+}
 }
 
 #endif

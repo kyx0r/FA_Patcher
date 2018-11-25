@@ -31,35 +31,38 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename T>
 class tss_ptr
 #if !defined(BOOST_ASIO_HAS_THREADS)
-  : public null_tss_ptr<T>
+	: public null_tss_ptr<T>
 #elif defined(BOOST_ASIO_HAS_THREAD_KEYWORD_EXTENSION)
-  : public keyword_tss_ptr<T>
+	: public keyword_tss_ptr<T>
 #elif defined(BOOST_ASIO_WINDOWS)
-  : public win_tss_ptr<T>
+	: public win_tss_ptr<T>
 #elif defined(BOOST_ASIO_HAS_PTHREADS)
-  : public posix_tss_ptr<T>
+	: public posix_tss_ptr<T>
 #endif
 {
 public:
-  void operator=(T* value)
-  {
+	void operator=(T* value)
+	{
 #if !defined(BOOST_ASIO_HAS_THREADS)
-    null_tss_ptr<T>::operator=(value);
+		null_tss_ptr<T>::operator=(value);
 #elif defined(BOOST_ASIO_HAS_THREAD_KEYWORD_EXTENSION)
-    keyword_tss_ptr<T>::operator=(value);
+		keyword_tss_ptr<T>::operator=(value);
 #elif defined(BOOST_ASIO_WINDOWS)
-    win_tss_ptr<T>::operator=(value);
+		win_tss_ptr<T>::operator=(value);
 #elif defined(BOOST_ASIO_HAS_PTHREADS)
-    posix_tss_ptr<T>::operator=(value);
+		posix_tss_ptr<T>::operator=(value);
 #endif
-  }
+	}
 };
 
 } // namespace detail

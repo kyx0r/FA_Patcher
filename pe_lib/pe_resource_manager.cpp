@@ -180,7 +180,7 @@ void pe_resource_manager::add_resource(const std::string& data, const std::wstri
 {
 	resource_directory_entry new_type_entry;
 	new_type_entry.set_name(root_name);
-	
+
 	add_resource(data, new_type_entry, resource_directory::entry_finder(root_name), new_entry, finder, language, codepage, timestamp);
 }
 

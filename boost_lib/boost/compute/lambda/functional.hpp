@@ -27,9 +27,12 @@
 #include <boost/compute/type_traits/vector_size.hpp>
 #include <boost/compute/type_traits/make_vector_type.hpp>
 
-namespace boost {
-namespace compute {
-namespace lambda {
+namespace boost
+{
+namespace compute
+{
+namespace lambda
+{
 
 namespace mpl = boost::mpl;
 namespace proto = boost::proto;

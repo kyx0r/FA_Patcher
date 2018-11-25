@@ -14,8 +14,10 @@
 #include <boost/compute/function.hpp>
 #include <boost/compute/type_traits/type_name.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Returns the number of non-zero bits in \p x.
 ///
@@ -24,29 +26,29 @@ template<class T>
 class popcount : public function<T(T)>
 {
 public:
-    popcount()
-        : function<T(T)>("boost_popcount")
-    {
-        std::stringstream s;
-        s << "inline " << type_name<T>() << " boost_popcount"
-          << "(const " << type_name<T>() << " x)\n"
-          << "{\n"
-          // use built-in popcount if opencl 1.2 is supported
-          << "#if __OPENCL_VERSION__ >= 120\n"
-          << "    return popcount(x);\n"
-          // fallback to generic popcount() implementation
-          << "#else\n"
-          << "    " << type_name<T>() << " count = 0;\n"
-          << "    for(" << type_name<T>() << " i = 0; i < sizeof(i) * CHAR_BIT; i++){\n"
-          << "        if(x & (" << type_name<T>() << ") 1 << i){\n"
-          << "            count++;\n"
-          << "        }\n"
-          << "    }\n"
-          << "    return count;\n"
-          << "#endif\n"
-          << "}\n";
-        this->set_source(s.str());
-    }
+	popcount()
+		: function<T(T)>("boost_popcount")
+	{
+		std::stringstream s;
+		s << "inline " << type_name<T>() << " boost_popcount"
+		  << "(const " << type_name<T>() << " x)\n"
+		  << "{\n"
+		  // use built-in popcount if opencl 1.2 is supported
+		  << "#if __OPENCL_VERSION__ >= 120\n"
+		  << "    return popcount(x);\n"
+		  // fallback to generic popcount() implementation
+		  << "#else\n"
+		  << "    " << type_name<T>() << " count = 0;\n"
+		  << "    for(" << type_name<T>() << " i = 0; i < sizeof(i) * CHAR_BIT; i++){\n"
+		  << "        if(x & (" << type_name<T>() << ") 1 << i){\n"
+		  << "            count++;\n"
+		  << "        }\n"
+		  << "    }\n"
+		  << "    return count;\n"
+		  << "#endif\n"
+		  << "}\n";
+		this->set_source(s.str());
+	}
 };
 
 } // end compute namespace

@@ -23,60 +23,62 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 inline system_context& system_executor::context() const BOOST_ASIO_NOEXCEPT
 {
-  return detail::global<system_context>();
+	return detail::global<system_context>();
 }
 
 template <typename Function, typename Allocator>
 void system_executor::dispatch(
     BOOST_ASIO_MOVE_ARG(Function) f, const Allocator&) const
 {
-  typename decay<Function>::type tmp(BOOST_ASIO_MOVE_CAST(Function)(f));
-  boost_asio_handler_invoke_helpers::invoke(tmp, tmp);
+	typename decay<Function>::type tmp(BOOST_ASIO_MOVE_CAST(Function)(f));
+	boost_asio_handler_invoke_helpers::invoke(tmp, tmp);
 }
 
 template <typename Function, typename Allocator>
 void system_executor::post(
     BOOST_ASIO_MOVE_ARG(Function) f, const Allocator& a) const
 {
-  typedef typename decay<Function>::type function_type;
+	typedef typename decay<Function>::type function_type;
 
-  system_context& ctx = detail::global<system_context>();
+	system_context& ctx = detail::global<system_context>();
 
-  // Allocate and construct an operation to wrap the function.
-  typedef detail::executor_op<function_type, Allocator> op;
-  typename op::ptr p = { detail::addressof(a), op::ptr::allocate(a), 0 };
-  p.p = new (p.v) op(BOOST_ASIO_MOVE_CAST(Function)(f), a);
+	// Allocate and construct an operation to wrap the function.
+	typedef detail::executor_op<function_type, Allocator> op;
+	typename op::ptr p = { detail::addressof(a), op::ptr::allocate(a), 0 };
+	p.p = new (p.v) op(BOOST_ASIO_MOVE_CAST(Function)(f), a);
 
-  BOOST_ASIO_HANDLER_CREATION((ctx, *p.p,
-        "system_executor", &this->context(), 0, "post"));
+	BOOST_ASIO_HANDLER_CREATION((ctx, *p.p,
+	                             "system_executor", &this->context(), 0, "post"));
 
-  ctx.scheduler_.post_immediate_completion(p.p, false);
-  p.v = p.p = 0;
+	ctx.scheduler_.post_immediate_completion(p.p, false);
+	p.v = p.p = 0;
 }
 
 template <typename Function, typename Allocator>
 void system_executor::defer(
     BOOST_ASIO_MOVE_ARG(Function) f, const Allocator& a) const
 {
-  typedef typename decay<Function>::type function_type;
+	typedef typename decay<Function>::type function_type;
 
-  system_context& ctx = detail::global<system_context>();
+	system_context& ctx = detail::global<system_context>();
 
-  // Allocate and construct an operation to wrap the function.
-  typedef detail::executor_op<function_type, Allocator> op;
-  typename op::ptr p = { detail::addressof(a), op::ptr::allocate(a), 0 };
-  p.p = new (p.v) op(BOOST_ASIO_MOVE_CAST(Function)(f), a);
+	// Allocate and construct an operation to wrap the function.
+	typedef detail::executor_op<function_type, Allocator> op;
+	typename op::ptr p = { detail::addressof(a), op::ptr::allocate(a), 0 };
+	p.p = new (p.v) op(BOOST_ASIO_MOVE_CAST(Function)(f), a);
 
-  BOOST_ASIO_HANDLER_CREATION((ctx, *p.p,
-        "system_executor", &this->context(), 0, "defer"));
+	BOOST_ASIO_HANDLER_CREATION((ctx, *p.p,
+	                             "system_executor", &this->context(), 0, "defer"));
 
-  ctx.scheduler_.post_immediate_completion(p.p, true);
-  p.v = p.p = 0;
+	ctx.scheduler_.post_immediate_completion(p.p, true);
+	p.v = p.p = 0;
 }
 
 } // namespace asio

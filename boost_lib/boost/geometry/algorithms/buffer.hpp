@@ -39,48 +39,53 @@
 
 #include <boost/geometry/algorithms/detail/buffer/buffer_inserter.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace buffer
+namespace detail
+{
+namespace buffer
 {
 
 template <typename BoxIn, typename BoxOut, typename T, std::size_t C, std::size_t D, std::size_t N>
 struct box_loop
 {
-    typedef typename coordinate_type<BoxOut>::type coordinate_type;
+	typedef typename coordinate_type<BoxOut>::type coordinate_type;
 
-    static inline void apply(BoxIn const& box_in, T const& distance, BoxOut& box_out)
-    {
-        coordinate_type d = distance;
-        set<C, D>(box_out, get<C, D>(box_in) + d);
-        box_loop<BoxIn, BoxOut, T, C, D + 1, N>::apply(box_in, distance, box_out);
-    }
+	static inline void apply(BoxIn const& box_in, T const& distance, BoxOut& box_out)
+	{
+		coordinate_type d = distance;
+		set<C, D>(box_out, get<C, D>(box_in) + d);
+		box_loop<BoxIn, BoxOut, T, C, D + 1, N>::apply(box_in, distance, box_out);
+	}
 };
 
 template <typename BoxIn, typename BoxOut, typename T, std::size_t C, std::size_t N>
 struct box_loop<BoxIn, BoxOut, T, C, N, N>
 {
-    static inline void apply(BoxIn const&, T const&, BoxOut&) {}
+	static inline void apply(BoxIn const&, T const&, BoxOut&) {}
 };
 
 // Extends a box with the same amount in all directions
 template<typename BoxIn, typename BoxOut, typename T>
 inline void buffer_box(BoxIn const& box_in, T const& distance, BoxOut& box_out)
 {
-    assert_dimension_equal<BoxIn, BoxOut>();
+	assert_dimension_equal<BoxIn, BoxOut>();
 
-    static const std::size_t N = dimension<BoxIn>::value;
+	static const std::size_t N = dimension<BoxIn>::value;
 
-    box_loop<BoxIn, BoxOut, T, min_corner, 0, N>::apply(box_in, -distance, box_out);
-    box_loop<BoxIn, BoxOut, T, max_corner, 0, N>::apply(box_in, distance, box_out);
+	box_loop<BoxIn, BoxOut, T, min_corner, 0, N>::apply(box_in, -distance, box_out);
+	box_loop<BoxIn, BoxOut, T, max_corner, 0, N>::apply(box_in, distance, box_out);
 }
 
 
 
-}} // namespace detail::buffer
+}
+} // namespace detail::buffer
 #endif // DOXYGEN_NO_DETAIL
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -93,7 +98,7 @@ template
     typename Output,
     typename TagIn = typename tag<Input>::type,
     typename TagOut = typename tag<Output>::type
->
+    >
 struct buffer: not_implemented<TagIn, TagOut>
 {};
 
@@ -101,68 +106,69 @@ struct buffer: not_implemented<TagIn, TagOut>
 template <typename BoxIn, typename BoxOut>
 struct buffer<BoxIn, BoxOut, box_tag, box_tag>
 {
-    template <typename Distance>
-    static inline void apply(BoxIn const& box_in, Distance const& distance,
-                Distance const& , BoxOut& box_out)
-    {
-        detail::buffer::buffer_box(box_in, distance, box_out);
-    }
+	template <typename Distance>
+	static inline void apply(BoxIn const& box_in, Distance const& distance,
+	                         Distance const&, BoxOut& box_out)
+	{
+		detail::buffer::buffer_box(box_in, distance, box_out);
+	}
 };
 
 } // namespace dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 
-namespace resolve_variant {
+namespace resolve_variant
+{
 
 template <typename Geometry>
 struct buffer
 {
-    template <typename Distance, typename GeometryOut>
-    static inline void apply(Geometry const& geometry,
-                             Distance const& distance,
-                             Distance const& chord_length,
-                             GeometryOut& out)
-    {
-        dispatch::buffer<Geometry, GeometryOut>::apply(geometry, distance, chord_length, out);
-    }
+	template <typename Distance, typename GeometryOut>
+	static inline void apply(Geometry const& geometry,
+	                         Distance const& distance,
+	                         Distance const& chord_length,
+	                         GeometryOut& out)
+	{
+		dispatch::buffer<Geometry, GeometryOut>::apply(geometry, distance, chord_length, out);
+	}
 };
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct buffer<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    template <typename Distance, typename GeometryOut>
-    struct visitor: boost::static_visitor<void>
-    {
-        Distance const& m_distance;
-        Distance const& m_chord_length;
-        GeometryOut& m_out;
+	template <typename Distance, typename GeometryOut>
+	struct visitor: boost::static_visitor<void>
+	{
+		Distance const& m_distance;
+		Distance const& m_chord_length;
+		GeometryOut& m_out;
 
-        visitor(Distance const& distance,
-                Distance const& chord_length,
-                GeometryOut& out)
-        : m_distance(distance),
-          m_chord_length(chord_length),
-          m_out(out)
-        {}
+		visitor(Distance const& distance,
+		        Distance const& chord_length,
+		        GeometryOut& out)
+			: m_distance(distance),
+			  m_chord_length(chord_length),
+			  m_out(out)
+		{}
 
-        template <typename Geometry>
-        void operator()(Geometry const& geometry) const
-        {
-            buffer<Geometry>::apply(geometry, m_distance, m_chord_length, m_out);
-        }
-    };
+		template <typename Geometry>
+		void operator()(Geometry const& geometry) const
+		{
+			buffer<Geometry>::apply(geometry, m_distance, m_chord_length, m_out);
+		}
+	};
 
-    template <typename Distance, typename GeometryOut>
-    static inline void apply(
-        boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
-        Distance const& distance,
-        Distance const& chord_length,
-        GeometryOut& out
-    )
-    {
-        boost::apply_visitor(visitor<Distance, GeometryOut>(distance, chord_length, out), geometry);
-    }
+	template <typename Distance, typename GeometryOut>
+	static inline void apply(
+	    boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry,
+	    Distance const& distance,
+	    Distance const& chord_length,
+	    GeometryOut& out
+	)
+	{
+		boost::apply_visitor(visitor<Distance, GeometryOut>(distance, chord_length, out), geometry);
+	}
 };
 
 } // namespace resolve_variant
@@ -184,12 +190,12 @@ struct buffer<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
  */
 template <typename Input, typename Output, typename Distance>
 inline void buffer(Input const& geometry_in, Output& geometry_out,
-            Distance const& distance, Distance const& chord_length = -1)
+                   Distance const& distance, Distance const& chord_length = -1)
 {
-    concepts::check<Input const>();
-    concepts::check<Output>();
+	concepts::check<Input const>();
+	concepts::check<Output>();
 
-    resolve_variant::buffer<Input>::apply(geometry_in, distance, chord_length, geometry_out);
+	resolve_variant::buffer<Input>::apply(geometry_in, distance, chord_length, geometry_out);
 }
 
 /*!
@@ -208,14 +214,14 @@ inline void buffer(Input const& geometry_in, Output& geometry_out,
 template <typename Output, typename Input, typename Distance>
 Output return_buffer(Input const& geometry, Distance const& distance, Distance const& chord_length = -1)
 {
-    concepts::check<Input const>();
-    concepts::check<Output>();
+	concepts::check<Input const>();
+	concepts::check<Output>();
 
-    Output geometry_out;
+	Output geometry_out;
 
-    resolve_variant::buffer<Input>::apply(geometry, distance, chord_length, geometry_out);
+	resolve_variant::buffer<Input>::apply(geometry, distance, chord_length, geometry_out);
 
-    return geometry_out;
+	return geometry_out;
 }
 
 /*!
@@ -250,53 +256,54 @@ template
     typename JoinStrategy,
     typename EndStrategy,
     typename PointStrategy
->
+    >
 inline void buffer(GeometryIn const& geometry_in,
-                MultiPolygon& geometry_out,
-                DistanceStrategy const& distance_strategy,
-                SideStrategy const& side_strategy,
-                JoinStrategy const& join_strategy,
-                EndStrategy const& end_strategy,
-                PointStrategy const& point_strategy)
+                   MultiPolygon& geometry_out,
+                   DistanceStrategy const& distance_strategy,
+                   SideStrategy const& side_strategy,
+                   JoinStrategy const& join_strategy,
+                   EndStrategy const& end_strategy,
+                   PointStrategy const& point_strategy)
 {
-    typedef typename boost::range_value<MultiPolygon>::type polygon_type;
-    concepts::check<GeometryIn const>();
-    concepts::check<polygon_type>();
+	typedef typename boost::range_value<MultiPolygon>::type polygon_type;
+	concepts::check<GeometryIn const>();
+	concepts::check<polygon_type>();
 
-    typedef typename point_type<GeometryIn>::type point_type;
-    typedef typename rescale_policy_type<point_type>::type rescale_policy_type;
+	typedef typename point_type<GeometryIn>::type point_type;
+	typedef typename rescale_policy_type<point_type>::type rescale_policy_type;
 
-    geometry_out.clear();
+	geometry_out.clear();
 
-    if (geometry::is_empty(geometry_in))
-    {
-        // Then output geometry is kept empty as well
-        return;
-    }
+	if (geometry::is_empty(geometry_in))
+	{
+		// Then output geometry is kept empty as well
+		return;
+	}
 
-    model::box<point_type> box;
-    geometry::envelope(geometry_in, box);
-    geometry::buffer(box, box, distance_strategy.max_distance(join_strategy, end_strategy));
+	model::box<point_type> box;
+	geometry::envelope(geometry_in, box);
+	geometry::buffer(box, box, distance_strategy.max_distance(join_strategy, end_strategy));
 
-    typename strategy::intersection::services::default_strategy
-        <
-            typename cs_tag<GeometryIn>::type
-        >::type intersection_strategy;
+	typename strategy::intersection::services::default_strategy
+	<
+	typename cs_tag<GeometryIn>::type
+	>::type intersection_strategy;
 
-    rescale_policy_type rescale_policy
-            = boost::geometry::get_rescale_policy<rescale_policy_type>(box);
+	rescale_policy_type rescale_policy
+	    = boost::geometry::get_rescale_policy<rescale_policy_type>(box);
 
-    detail::buffer::buffer_inserter<polygon_type>(geometry_in, range::back_inserter(geometry_out),
-                distance_strategy,
-                side_strategy,
-                join_strategy,
-                end_strategy,
-                point_strategy,
-                intersection_strategy,
-                rescale_policy);
+	detail::buffer::buffer_inserter<polygon_type>(geometry_in, range::back_inserter(geometry_out),
+	        distance_strategy,
+	        side_strategy,
+	        join_strategy,
+	        end_strategy,
+	        point_strategy,
+	        intersection_strategy,
+	        rescale_policy);
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_BUFFER_HPP

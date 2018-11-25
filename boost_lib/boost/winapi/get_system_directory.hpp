@@ -19,21 +19,23 @@
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
 #if !defined( BOOST_NO_ANSI_APIS )
-BOOST_SYMBOL_IMPORT boost::winapi::UINT_ WINAPI
-GetSystemDirectoryA(
-    boost::winapi::LPSTR_  lpBuffer,
-    boost::winapi::UINT_   uSize);
+	BOOST_SYMBOL_IMPORT boost::winapi::UINT_ WINAPI
+	GetSystemDirectoryA(
+	    boost::winapi::LPSTR_  lpBuffer,
+	    boost::winapi::UINT_   uSize);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::UINT_ WINAPI
-GetSystemDirectoryW(
-    boost::winapi::LPWSTR_ lpBuffer,
-    boost::winapi::UINT_   uSize);
+	BOOST_SYMBOL_IMPORT boost::winapi::UINT_ WINAPI
+	GetSystemDirectoryW(
+	    boost::winapi::LPWSTR_ lpBuffer,
+	    boost::winapi::UINT_   uSize);
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if !defined( BOOST_NO_ANSI_APIS )
 using ::GetSystemDirectoryA;
@@ -43,13 +45,13 @@ using ::GetSystemDirectoryW;
 #if !defined( BOOST_NO_ANSI_APIS )
 BOOST_FORCEINLINE UINT_ get_system_directory(LPSTR_ lpBuffer,  UINT_ uSize)
 {
-    return ::GetSystemDirectoryA(lpBuffer, uSize);
+	return ::GetSystemDirectoryA(lpBuffer, uSize);
 }
 #endif
 
 BOOST_FORCEINLINE UINT_ get_system_directory(LPWSTR_ lpBuffer,  UINT_ uSize)
 {
-    return ::GetSystemDirectoryW(lpBuffer, uSize);
+	return ::GetSystemDirectoryW(lpBuffer, uSize);
 }
 
 }

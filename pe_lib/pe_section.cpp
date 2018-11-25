@@ -283,7 +283,7 @@ section_by_raw_offset::section_by_raw_offset(uint32_t offset)
 bool section_by_raw_offset::operator()(const section& s) const
 {
 	return (s.get_pointer_to_raw_data() <= offset_)
-		&& (s.get_pointer_to_raw_data() + s.get_size_of_raw_data() > offset_);
+	       && (s.get_pointer_to_raw_data() + s.get_size_of_raw_data() > offset_);
 }
 
 section_ptr_finder::section_ptr_finder(const section& s)

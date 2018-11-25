@@ -19,7 +19,9 @@
 #include <boost/geometry/policies/robustness/segment_ratio.hpp>
 #include <boost/geometry/policies/robustness/segment_ratio_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -29,14 +31,14 @@ namespace detail
 // Probably this will be moved out of namespace detail
 struct no_rescale_policy
 {
-    static bool const enabled = false;
+	static bool const enabled = false;
 
-    // We don't rescale but return the reference of the input
-    template <std::size_t Dimension, typename Value>
-    inline Value const& apply(Value const& value) const
-    {
-        return value;
-    }
+	// We don't rescale but return the reference of the input
+	template <std::size_t Dimension, typename Value>
+	inline Value const& apply(Value const& value) const
+	{
+		return value;
+	}
 };
 
 } // namespace detail
@@ -47,20 +49,21 @@ struct no_rescale_policy
 template <typename Point>
 struct robust_point_type<Point, detail::no_rescale_policy>
 {
-    // The point itself
-    typedef Point type;
+	// The point itself
+	typedef Point type;
 };
 
 template <typename Point>
 struct segment_ratio_type<Point, detail::no_rescale_policy>
 {
-    // Define a segment_ratio defined on coordinate type, e.g.
-    // int/int or float/float
-    typedef typename geometry::coordinate_type<Point>::type coordinate_type;
-    typedef segment_ratio<coordinate_type> type;
+	// Define a segment_ratio defined on coordinate type, e.g.
+	// int/int or float/float
+	typedef typename geometry::coordinate_type<Point>::type coordinate_type;
+	typedef segment_ratio<coordinate_type> type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_POLICIES_ROBUSTNESS_NO_RESCALE_POLICY_HPP

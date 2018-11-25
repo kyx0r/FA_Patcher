@@ -32,14 +32,17 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
-   
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
+
 /*
  * by default any type is not resizable
  */
-template< typename Container , typename Enabler = void >
+template< typename Container, typename Enabler = void >
 struct is_resizeable_sfinae : boost::false_type {};
 
 template< typename Container >
@@ -51,7 +54,7 @@ struct is_resizeable : is_resizeable_sfinae< Container > {};
  * specialization for std::vector
  */
 template< class V, class A >
-struct is_resizeable< std::vector< V , A  > > : boost::true_type {};
+struct is_resizeable< std::vector< V, A  > > : boost::true_type {};
 
 
 /*
@@ -59,14 +62,14 @@ struct is_resizeable< std::vector< V , A  > > : boost::true_type {};
  */
 template< typename FusionSequence >
 struct is_resizeable_sfinae<
-    FusionSequence ,
-    typename boost::enable_if< typename boost::fusion::traits::is_sequence< FusionSequence >::type >::type >
+	FusionSequence,
+	typename boost::enable_if< typename boost::fusion::traits::is_sequence< FusionSequence >::type >::type >
 {
-    typedef typename boost::mpl::find_if< FusionSequence , is_resizeable< boost::mpl::_1 > >::type iter;
-    typedef typename boost::mpl::end< FusionSequence >::type last;
+	typedef typename boost::mpl::find_if< FusionSequence, is_resizeable< boost::mpl::_1 > >::type iter;
+	typedef typename boost::mpl::end< FusionSequence >::type last;
 
-    typedef typename boost::mpl::if_< boost::is_same< iter , last > , boost::false_type , boost::true_type >::type type;
-    const static bool value = type::value;
+	typedef typename boost::mpl::if_< boost::is_same< iter, last >, boost::false_type, boost::true_type >::type type;
+	const static bool value = type::value;
 };
 
 

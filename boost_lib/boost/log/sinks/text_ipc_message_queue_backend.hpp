@@ -36,11 +36,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 #ifndef BOOST_LOG_DOXYGEN_PASS
 
@@ -69,92 +71,98 @@ namespace sinks {
  */
 template< typename QueueT >
 class text_ipc_message_queue_backend :
-    public basic_formatted_sink_backend< char, concurrent_feeding >
+	public basic_formatted_sink_backend< char, concurrent_feeding >
 {
-    //! Base type
-    typedef basic_formatted_sink_backend< char, concurrent_feeding > base_type;
+	//! Base type
+	typedef basic_formatted_sink_backend< char, concurrent_feeding > base_type;
 
 public:
-    //! Character type
-    typedef base_type::char_type char_type;
-    //! String type to be used as a message text holder
-    typedef base_type::string_type string_type;
-    //! Interprocess message queue type
-    typedef QueueT queue_type;
+	//! Character type
+	typedef base_type::char_type char_type;
+	//! String type to be used as a message text holder
+	typedef base_type::string_type string_type;
+	//! Interprocess message queue type
+	typedef QueueT queue_type;
 
 private:
-    //! Interprocess queue
-    queue_type m_queue;
+	//! Interprocess queue
+	queue_type m_queue;
 
 public:
-    /*!
-     * Default constructor. The method constructs the backend using the default-constructed
-     * interprocess message queue. The queue may need additional setup in order to be able
-     * to send messages.
-     */
-    text_ipc_message_queue_backend() BOOST_NOEXCEPT
-    {
-    }
+	/*!
+	 * Default constructor. The method constructs the backend using the default-constructed
+	 * interprocess message queue. The queue may need additional setup in order to be able
+	 * to send messages.
+	 */
+	text_ipc_message_queue_backend() BOOST_NOEXCEPT
+	{
+	}
 
-    /*!
-     * Initializing constructor. The method constructs the backend using the provided
-     * interprocess message queue. The constructor moves from the provided queue.
-     */
-    explicit text_ipc_message_queue_backend(BOOST_RV_REF(queue_type) queue) BOOST_NOEXCEPT :
-        m_queue(static_cast< BOOST_RV_REF(queue_type) >(queue))
-    {
-    }
+	/*!
+	 * Initializing constructor. The method constructs the backend using the provided
+	 * interprocess message queue. The constructor moves from the provided queue.
+	 */
+explicit text_ipc_message_queue_backend(BOOST_RV_REF(queue_type) queue) BOOST_NOEXCEPT :
+	m_queue(static_cast< BOOST_RV_REF(queue_type) >(queue))
+	{
+	}
 
-    /*!
-     * Constructor that passes arbitrary named parameters to the interprocess queue constructor.
-     * Refer to the queue documentation for the list of supported parameters.
-     */
+	/*!
+	 * Constructor that passes arbitrary named parameters to the interprocess queue constructor.
+	 * Refer to the queue documentation for the list of supported parameters.
+	 */
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_GEN(BOOST_LOG_IPC_BACKEND_CTOR_FORWARD_INTERNAL, ~)
+	BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_GEN(BOOST_LOG_IPC_BACKEND_CTOR_FORWARD_INTERNAL, ~)
 #else
-    template< typename... Args >
-    explicit text_ipc_message_queue_backend(Args&&... args);
+	template< typename... Args >
+	explicit text_ipc_message_queue_backend(Args&&... args);
 #endif
 
-    /*!
-     * The method returns a reference to the managed \c queue_type object.
-     *
-     * \return A reference to the managed \c queue_type object.
-     */
-    queue_type& message_queue() BOOST_NOEXCEPT { return m_queue; }
+	/*!
+	 * The method returns a reference to the managed \c queue_type object.
+	 *
+	 * \return A reference to the managed \c queue_type object.
+	 */
+	queue_type& message_queue() BOOST_NOEXCEPT { return m_queue; }
 
-    /*!
-     * The method returns a constant reference to the managed \c queue_type object.
-     *
-     * \return A constant reference to the managed \c queue_type object.
-     */
-    queue_type const& message_queue() const BOOST_NOEXCEPT { return m_queue; }
+	/*!
+	 * The method returns a constant reference to the managed \c queue_type object.
+	 *
+	 * \return A constant reference to the managed \c queue_type object.
+	 */
+	queue_type const& message_queue() const BOOST_NOEXCEPT
+	{
+		return m_queue;
+	}
 
-    /*!
-     * Tests whether the object is associated with any message queue. Only when the backend has
-     * an associated message queue, will any message be sent.
-     *
-     * \return \c true if the object is associated with a message queue, and \c false otherwise.
-     */
-    bool is_open() const BOOST_NOEXCEPT { return m_queue.is_open(); }
+	/*!
+	 * Tests whether the object is associated with any message queue. Only when the backend has
+	 * an associated message queue, will any message be sent.
+	 *
+	 * \return \c true if the object is associated with a message queue, and \c false otherwise.
+	 */
+	bool is_open() const BOOST_NOEXCEPT
+	{
+		return m_queue.is_open();
+	}
 
-    /*!
-     * The method writes the message to the backend. Concurrent calls to this method
-     * are allowed. Therefore, the backend may be used with unlocked frontend. <tt>stop_local()</tt>
-     * can be used to have a blocked <tt>consume()</tt> call return and prevent future
-     * calls to <tt>consume()</tt> from blocking.
-     */
-    void consume(record_view const&, string_type const& formatted_message)
-    {
-        if (m_queue.is_open())
-        {
-            typedef typename queue_type::size_type size_type;
-            const string_type::size_type size = formatted_message.size();
-            if (BOOST_UNLIKELY(size > static_cast< string_type::size_type >((std::numeric_limits< size_type >::max)())))
-                BOOST_LOG_THROW_DESCR(limitation_error, "Message too long to send to an interprocess queue");
-            m_queue.send(formatted_message.data(), static_cast< size_type >(size));
-        }
-    }
+	/*!
+	 * The method writes the message to the backend. Concurrent calls to this method
+	 * are allowed. Therefore, the backend may be used with unlocked frontend. <tt>stop_local()</tt>
+	 * can be used to have a blocked <tt>consume()</tt> call return and prevent future
+	 * calls to <tt>consume()</tt> from blocking.
+	 */
+	void consume(record_view const&, string_type const& formatted_message)
+	{
+		if (m_queue.is_open())
+		{
+			typedef typename queue_type::size_type size_type;
+			const string_type::size_type size = formatted_message.size();
+			if (BOOST_UNLIKELY(size > static_cast< string_type::size_type >((std::numeric_limits< size_type >::max)())))
+				BOOST_LOG_THROW_DESCR(limitation_error, "Message too long to send to an interprocess queue");
+			m_queue.send(formatted_message.data(), static_cast< size_type >(size));
+		}
+	}
 };
 
 #undef BOOST_LOG_IPC_BACKEND_CTOR_FORWARD_INTERNAL_1

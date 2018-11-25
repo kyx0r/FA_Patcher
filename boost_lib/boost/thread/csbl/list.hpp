@@ -22,14 +22,14 @@
 
 namespace boost
 {
-  namespace csbl
-  {
+namespace csbl
+{
 #if defined BOOST_THREAD_USES_BOOST_LIST
-    using ::boost::container::list;
+using ::boost::container::list;
 #else
-    using ::std::list;
+using ::std::list;
 #endif
 
-  }
+}
 }
 #endif // header

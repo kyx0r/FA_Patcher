@@ -11,7 +11,8 @@
 
 #include <boost/type_traits/remove_reference.hpp>
 
-namespace boost {
+namespace boost
+{
 
 #if defined(__BORLANDC__) && (__BORLANDC__ < 0x5A0)
 //
@@ -22,27 +23,27 @@ namespace boost {
 template <typename T>
 struct add_pointer
 {
-    typedef T* type;
+	typedef T* type;
 };
 template <typename T>
 struct add_pointer<T&>
 {
-    typedef T* type;
+	typedef T* type;
 };
 template <typename T>
 struct add_pointer<T&const>
 {
-    typedef T* type;
+	typedef T* type;
 };
 template <typename T>
 struct add_pointer<T&volatile>
 {
-    typedef T* type;
+	typedef T* type;
 };
 template <typename T>
 struct add_pointer<T&const volatile>
 {
-    typedef T* type;
+	typedef T* type;
 };
 
 #else
@@ -50,15 +51,15 @@ struct add_pointer<T&const volatile>
 template <typename T>
 struct add_pointer
 {
-    typedef typename remove_reference<T>::type no_ref_type;
-    typedef no_ref_type* type;
+	typedef typename remove_reference<T>::type no_ref_type;
+	typedef no_ref_type* type;
 };
 
 #endif
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
-   template <class T> using add_pointer_t = typename add_pointer<T>::type;
+template <class T> using add_pointer_t = typename add_pointer<T>::type;
 
 #endif
 

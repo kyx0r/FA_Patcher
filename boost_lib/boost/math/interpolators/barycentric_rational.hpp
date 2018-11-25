@@ -28,43 +28,47 @@
 #include <memory>
 #include <boost/math/interpolators/detail/barycentric_rational_detail.hpp>
 
-namespace boost{ namespace math{
+namespace boost
+{
+namespace math
+{
 
 template<class Real>
 class barycentric_rational
 {
 public:
-    barycentric_rational(const Real* const x, const Real* const y, size_t n, size_t approximation_order = 3);
+	barycentric_rational(const Real* const x, const Real* const y, size_t n, size_t approximation_order = 3);
 
-    template <class InputIterator1, class InputIterator2>
-    barycentric_rational(InputIterator1 start_x, InputIterator1 end_x, InputIterator2 start_y, size_t approximation_order = 3, typename boost::disable_if_c<boost::is_integral<InputIterator2>::value>::type* = 0);
+	template <class InputIterator1, class InputIterator2>
+	barycentric_rational(InputIterator1 start_x, InputIterator1 end_x, InputIterator2 start_y, size_t approximation_order = 3, typename boost::disable_if_c<boost::is_integral<InputIterator2>::value>::type* = 0);
 
-    Real operator()(Real x) const;
+	Real operator()(Real x) const;
 
 private:
-    std::shared_ptr<detail::barycentric_rational_imp<Real>> m_imp;
+	std::shared_ptr<detail::barycentric_rational_imp<Real>> m_imp;
 };
 
 template <class Real>
 barycentric_rational<Real>::barycentric_rational(const Real* const x, const Real* const y, size_t n, size_t approximation_order):
- m_imp(std::make_shared<detail::barycentric_rational_imp<Real>>(x, x + n, y, approximation_order))
+	m_imp(std::make_shared<detail::barycentric_rational_imp<Real>>(x, x + n, y, approximation_order))
 {
-    return;
+	return;
 }
 
 template <class Real>
 template <class InputIterator1, class InputIterator2>
 barycentric_rational<Real>::barycentric_rational(InputIterator1 start_x, InputIterator1 end_x, InputIterator2 start_y, size_t approximation_order, typename boost::disable_if_c<boost::is_integral<InputIterator2>::value>::type*)
- : m_imp(std::make_shared<detail::barycentric_rational_imp<Real>>(start_x, end_x, start_y, approximation_order))
+	: m_imp(std::make_shared<detail::barycentric_rational_imp<Real>>(start_x, end_x, start_y, approximation_order))
 {
 }
 
 template<class Real>
 Real barycentric_rational<Real>::operator()(Real x) const
 {
-    return m_imp->operator()(x);
+	return m_imp->operator()(x);
 }
 
 
-}}
+}
+}
 #endif

@@ -13,22 +13,31 @@
 #include <boost/contract/old.hpp>
 #include <boost/contract/detail/declspec.hpp>
 
-namespace boost { namespace contract {
+namespace boost
+{
+namespace contract
+{
 
 BOOST_CONTRACT_DETAIL_DECLINLINE
-old_value null_old() { return old_value(); }
-
-BOOST_CONTRACT_DETAIL_DECLINLINE
-old_pointer make_old(old_value const& old) {
-    return old_pointer(0, old);
+old_value null_old()
+{
+	return old_value();
 }
 
 BOOST_CONTRACT_DETAIL_DECLINLINE
-old_pointer make_old(virtual_* v, old_value const& old) {
-    return old_pointer(v, old);
+old_pointer make_old(old_value const& old)
+{
+	return old_pointer(0, old);
 }
 
-} } // namespacd
+BOOST_CONTRACT_DETAIL_DECLINLINE
+old_pointer make_old(virtual_* v, old_value const& old)
+{
+	return old_pointer(v, old);
+}
+
+}
+} // namespacd
 
 #endif // #include guard
 

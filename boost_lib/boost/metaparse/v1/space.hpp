@@ -14,15 +14,15 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      typedef
-        accept_when<one_char, util::is_whitespace<>, error::whitespace_expected>
-        space;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+typedef
+accept_when<one_char, util::is_whitespace<>, error::whitespace_expected>
+space;
+}
+}
 }
 
 #endif

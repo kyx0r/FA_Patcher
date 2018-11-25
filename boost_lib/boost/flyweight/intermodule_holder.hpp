@@ -23,28 +23,30 @@
  * modules of a program.
  */
 
-namespace boost{
+namespace boost
+{
 
-namespace flyweights{
+namespace flyweights
+{
 
 template<typename C>
 struct intermodule_holder_class:
-  interprocess::ipcdetail::intermodule_singleton<C,true>,
-  holder_marker
+	interprocess::ipcdetail::intermodule_singleton<C,true>,
+	holder_marker
 {
-  typedef intermodule_holder_class type;
-  BOOST_MPL_AUX_LAMBDA_SUPPORT(1,intermodule_holder_class,(C))
+	typedef intermodule_holder_class type;
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(1,intermodule_holder_class,(C))
 };
 
 /* intermodule_holder_class specifier */
 
 struct intermodule_holder:holder_marker
 {
-  template<typename C>
-  struct apply
-  {
-    typedef intermodule_holder_class<C> type;
-  };
+	template<typename C>
+	struct apply
+	{
+		typedef intermodule_holder_class<C> type;
+	};
 };
 
 } /* namespace flyweights */

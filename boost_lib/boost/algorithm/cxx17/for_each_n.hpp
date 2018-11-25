@@ -14,7 +14,10 @@
 
 #include <utility>      // for std::pair
 
-namespace boost { namespace algorithm {
+namespace boost
+{
+namespace algorithm
+{
 
 /// \fn for_each_n(InputIterator first, Size n, Function f);
 /// \return first + n
@@ -26,12 +29,13 @@ namespace boost { namespace algorithm {
 template<class InputIterator, class Size, class Function>
 InputIterator for_each_n(InputIterator first, Size n, Function f)
 {
-    for ( ; n > 0; --n, ++first )
-        f(*first);
+	for ( ; n > 0; --n, ++first )
+		f(*first);
 
-    return first;
+	return first;
 }
 
-}} // namespace boost and algorithm
+}
+} // namespace boost and algorithm
 
 #endif // BOOST_ALGORITHM_FOR_EACH_N_HPP

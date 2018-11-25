@@ -27,59 +27,98 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
-namespace detail {
+namespace detail
+{
 
 template<class P, class P2, class Any>
 struct make_ref_placeholder;
 
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2, const Any&> { typedef const P& type; };
+struct make_ref_placeholder<P, P2, const Any&>
+{
+	typedef const P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2, Any&> { typedef P& type; };
+struct make_ref_placeholder<P, P2, Any&>
+{
+	typedef P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2&, const Any&> { typedef P& type; };
+struct make_ref_placeholder<P, P2&, const Any&>
+{
+	typedef P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2&, Any&> { typedef P& type; };
+struct make_ref_placeholder<P, P2&, Any&>
+{
+	typedef P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, const P2&, const Any&> { typedef const P& type; };
+struct make_ref_placeholder<P, const P2&, const Any&>
+{
+	typedef const P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, const P2&, Any&> { typedef const P& type; };
+struct make_ref_placeholder<P, const P2&, Any&>
+{
+	typedef const P& type;
+};
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template<class P, class P2, class Any>
-struct make_ref_placeholder { typedef P&& type; };
+struct make_ref_placeholder
+{
+	typedef P&& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2&, Any> { typedef P& type; };
+struct make_ref_placeholder<P, P2&, Any>
+{
+	typedef P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, const P2&, Any> { typedef const P& type; };
+struct make_ref_placeholder<P, const P2&, Any>
+{
+	typedef const P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2&&, Any> { typedef P&& type; };
+struct make_ref_placeholder<P, P2&&, Any>
+{
+	typedef P&& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2&&, const Any&> { typedef const P& type; };
+struct make_ref_placeholder<P, P2&&, const Any&>
+{
+	typedef const P& type;
+};
 template<class P, class P2, class Any>
-struct make_ref_placeholder<P, P2&&, Any&> { typedef P& type; };
+struct make_ref_placeholder<P, P2&&, Any&>
+{
+	typedef P& type;
+};
 #endif
 
 template<class R, class Tag>
 struct make_result_placeholder_map
 {
-    typedef ::boost::mpl::map<
-        ::boost::mpl::pair<
-            typename ::boost::remove_const<
-                typename ::boost::remove_reference<
-                    typename ::boost::type_erasure::placeholder_of<R>::type
-                >::type
-            >::type,
-            typename ::boost::remove_const<
-                typename ::boost::remove_reference<
-                    Tag
-                >::type
-            >::type
-        >
-    > type;
+	typedef ::boost::mpl::map<
+	::boost::mpl::pair<
+	typename ::boost::remove_const<
+	typename ::boost::remove_reference<
+	typename ::boost::type_erasure::placeholder_of<R>::type
+	>::type
+	>::type,
+	typename ::boost::remove_const<
+	typename ::boost::remove_reference<
+	Tag
+	>::type
+	>::type
+	>
+	> type;
 };
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
@@ -90,54 +129,54 @@ template<class R, class Any, class Map>
 R dynamic_any_cast_impl(Any& arg, const static_binding<Map>& map)
 #endif
 {
-    typedef typename ::boost::remove_const<typename ::boost::remove_reference<Any>::type>::type src_type;
-    typedef typename ::boost::type_erasure::detail::normalize_concept<
-        typename ::boost::type_erasure::concept_of<src_type>::type
-    >::type normalized;
-    typedef typename ::boost::mpl::fold<
-        normalized,
+	typedef typename ::boost::remove_const<typename ::boost::remove_reference<Any>::type>::type src_type;
+	typedef typename ::boost::type_erasure::detail::normalize_concept<
+	typename ::boost::type_erasure::concept_of<src_type>::type
+	>::type normalized;
+	typedef typename ::boost::mpl::fold<
+	normalized,
 #ifndef BOOST_TYPE_ERASURE_USE_MP11
-        ::boost::mpl::set0<>,
+	::boost::mpl::set0<>,
 #else
-        ::boost::mp11::mp_list<>,
+	::boost::mp11::mp_list<>,
 #endif
-        ::boost::type_erasure::detail::get_placeholders<
-            ::boost::mpl::_2,
-            ::boost::mpl::_1
-        >
-    >::type placeholders;
+	::boost::type_erasure::detail::get_placeholders<
+	::boost::mpl::_2,
+	::boost::mpl::_1
+	>
+	>::type placeholders;
 #ifndef BOOST_TYPE_ERASURE_USE_MP11
-    typedef ::boost::type_erasure::detail::substitution_map< ::boost::mpl::map0<> > identity_map;
+	typedef ::boost::type_erasure::detail::substitution_map< ::boost::mpl::map0<> > identity_map;
 #else
-    typedef ::boost::type_erasure::detail::make_identity_placeholder_map<normalized> identity_map;
+	typedef ::boost::type_erasure::detail::make_identity_placeholder_map<normalized> identity_map;
 #endif
-    ::boost::type_erasure::dynamic_binding<placeholders> my_binding(
-        ::boost::type_erasure::binding_of(arg),
-        ::boost::type_erasure::make_binding<identity_map>());
-    typedef typename ::boost::remove_const<
-        typename ::boost::remove_reference<
-            typename ::boost::type_erasure::placeholder_of<R>::type
-        >::type
-    >::type result_placeholder;
-    ::boost::type_erasure::binding< typename ::boost::type_erasure::concept_of<R>::type> new_binding(
-        my_binding,
-        map);
-    typedef ::boost::type_erasure::any<
-        typename ::boost::type_erasure::concept_of<R>::type,
-        typename ::boost::type_erasure::detail::make_ref_placeholder<
-            result_placeholder,
-            typename ::boost::type_erasure::placeholder_of<src_type>::type,
+	::boost::type_erasure::dynamic_binding<placeholders> my_binding(
+	    ::boost::type_erasure::binding_of(arg),
+	    ::boost::type_erasure::make_binding<identity_map>());
+	typedef typename ::boost::remove_const<
+	typename ::boost::remove_reference<
+	typename ::boost::type_erasure::placeholder_of<R>::type
+	>::type
+	>::type result_placeholder;
+	::boost::type_erasure::binding< typename ::boost::type_erasure::concept_of<R>::type> new_binding(
+	    my_binding,
+	    map);
+	typedef ::boost::type_erasure::any<
+	typename ::boost::type_erasure::concept_of<R>::type,
+	         typename ::boost::type_erasure::detail::make_ref_placeholder<
+	         result_placeholder,
+	         typename ::boost::type_erasure::placeholder_of<src_type>::type,
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-            Any
+	         Any
 #else
-            Any&
+	         Any&
 #endif
-        >::type
-    > result_ref_type;
+	         >::type
+	         > result_ref_type;
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    return result_ref_type(std::forward<Any>(arg), new_binding);
+	return result_ref_type(std::forward<Any>(arg), new_binding);
 #else
-    return result_ref_type(arg, new_binding);
+	return result_ref_type(arg, new_binding);
 #endif
 }
 
@@ -155,7 +194,7 @@ R dynamic_any_cast_impl(Any& arg, const static_binding<Map>& map)
  *      be the corresponding placeholder in Any.
  * \pre The concept of Any must include @ref typeid_, for every
  *      @ref placeholder which is used by R.
- * 
+ *
  * The single argument form can only be used when @c R uses
  * a single non-deduced placeholder.
  *
@@ -194,43 +233,43 @@ R dynamic_any_cast(Any&& arg, const static_binding<Map>&);
 template<class R, class Concept, class Tag>
 R dynamic_any_cast(const any<Concept, Tag>& arg)
 {
-    return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg,
-        ::boost::type_erasure::make_binding<typename ::boost::type_erasure::detail::make_result_placeholder_map<R, Tag>::type>());
+	return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg,
+	        ::boost::type_erasure::make_binding<typename ::boost::type_erasure::detail::make_result_placeholder_map<R, Tag>::type>());
 }
 
 template<class R, class Concept, class Tag>
 R dynamic_any_cast(any<Concept, Tag>& arg)
 {
-    return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg,
-        ::boost::type_erasure::make_binding<typename ::boost::type_erasure::detail::make_result_placeholder_map<R, Tag>::type>());
+	return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg,
+	        ::boost::type_erasure::make_binding<typename ::boost::type_erasure::detail::make_result_placeholder_map<R, Tag>::type>());
 }
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template<class R, class Concept, class Tag>
 R dynamic_any_cast(any<Concept, Tag>&& arg)
 {
-    return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(::std::move(arg),
-        ::boost::type_erasure::make_binding<typename ::boost::type_erasure::detail::make_result_placeholder_map<R, Tag>::type>());
+	return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(::std::move(arg),
+	        ::boost::type_erasure::make_binding<typename ::boost::type_erasure::detail::make_result_placeholder_map<R, Tag>::type>());
 }
 #endif
 
 template<class R, class Concept, class Tag, class Map>
 R dynamic_any_cast(const any<Concept, Tag>& arg, const static_binding<Map>& map)
 {
-    return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg, map);
+	return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg, map);
 }
 
 template<class R, class Concept, class Tag, class Map>
 R dynamic_any_cast(any<Concept, Tag>& arg, const static_binding<Map>& map)
 {
-    return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg, map);
+	return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(arg, map);
 }
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template<class R, class Concept, class Tag, class Map>
 R dynamic_any_cast(any<Concept, Tag>&& arg, const static_binding<Map>& map)
 {
-    return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(::std::move(arg), map);
+	return ::boost::type_erasure::detail::dynamic_any_cast_impl<R>(::std::move(arg), map);
 }
 #endif
 

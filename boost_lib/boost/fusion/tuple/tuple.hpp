@@ -31,96 +31,99 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <utility>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    template <typename ...T>
-    struct tuple
-        : vector_detail::vector_data<
-              typename detail::make_index_sequence<sizeof...(T)>::type
-            , T...
+namespace fusion
+{
+template <typename ...T>
+struct tuple
+	: vector_detail::vector_data<
+  typename detail::make_index_sequence<sizeof...(T)>::type
+  , T...
+  >
+  {
+      typedef vector_detail::vector_data<
+      typename detail::make_index_sequence<sizeof...(T)>::type
+      , T...
+      > base;
+
+      BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+      BOOST_DEFAULTED_FUNCTION(tuple(), {})
+
+      template <
+          typename ...U
+          , typename = typename boost::enable_if_c<
+              sizeof...(U) >= sizeof...(T)
+              >::type
           >
-    {
-        typedef vector_detail::vector_data<
-            typename detail::make_index_sequence<sizeof...(T)>::type
-          , T...
-        > base;
+      BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+      tuple(tuple<U...> const& other)
+: base(vector_detail::each_elem(), other) {}
 
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        BOOST_DEFAULTED_FUNCTION(tuple(), {})
+template <
+    typename ...U
+    , typename = typename boost::enable_if_c<
+        sizeof...(U) >= sizeof...(T)
+        >::type
+    >
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+tuple(tuple<U...>&& other)
+: base(vector_detail::each_elem(), std::move(other)) {}
 
-        template <
-            typename ...U
-          , typename = typename boost::enable_if_c<
-                sizeof...(U) >= sizeof...(T)
-            >::type
-        >
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        tuple(tuple<U...> const& other)
-            : base(vector_detail::each_elem(), other) {}
-
-        template <
-            typename ...U
-          , typename = typename boost::enable_if_c<
-                sizeof...(U) >= sizeof...(T)
-            >::type
-        >
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        tuple(tuple<U...>&& other)
-            : base(vector_detail::each_elem(), std::move(other)) {}
-
-        template <
-            typename ...U
-          , typename = typename boost::enable_if_c<(
+template <
+    typename ...U
+    , typename = typename boost::enable_if_c<(
                 fusion::detail::and_<is_convertible<U, T>...>::value &&
                 sizeof...(U) >= 1
-            )>::type
-        >
-        /*BOOST_CONSTEXPR*/ BOOST_FUSION_GPU_ENABLED
-        explicit
-        tuple(U&&... args)
-            : base(vector_detail::each_elem(), std::forward<U>(args)...) {}
+                                                   )>::type
+    >
+/*BOOST_CONSTEXPR*/ BOOST_FUSION_GPU_ENABLED
+explicit
+tuple(U&&... args)
+: base(vector_detail::each_elem(), std::forward<U>(args)...) {}
 
-        template<typename U1, typename U2>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        tuple(std::pair<U1, U2> const& other)
-            : base(vector_detail::each_elem(), other.first, other.second) {}
+template<typename U1, typename U2>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+tuple(std::pair<U1, U2> const& other)
+: base(vector_detail::each_elem(), other.first, other.second) {}
 
-        template<typename U1, typename U2>
-        BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        tuple(std::pair<U1, U2>&& other)
-            : base(vector_detail::each_elem(), std::move(other.first), std::move(other.second)) {}
+template<typename U1, typename U2>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+tuple(std::pair<U1, U2>&& other)
+: base(vector_detail::each_elem(), std::move(other.first), std::move(other.second)) {}
 
-        template<typename U>
-        BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-        tuple& operator=(U&& rhs)
-        {
-            base::assign_sequence(std::forward<U>(rhs));
-            return *this;
-        }
-    };
+template<typename U>
+BOOST_CXX14_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+tuple& operator=(U&& rhs)
+{
+	base::assign_sequence(std::forward<U>(rhs));
+	return *this;
+}
+        };
 
-    template <typename Tuple>
-    struct tuple_size : result_of::size<Tuple> {};
+template <typename Tuple>
+struct tuple_size : result_of::size<Tuple> {};
 
-    template <int N, typename Tuple>
-    struct tuple_element : result_of::value_at_c<Tuple, N> {};
+template <int N, typename Tuple>
+struct tuple_element : result_of::value_at_c<Tuple, N> {};
 
-    template <int N, typename Tuple>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline typename result_of::at_c<Tuple, N>::type
-    get(Tuple& tup)
-    {
-        return at_c<N>(tup);
-    }
+template <int N, typename Tuple>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline typename result_of::at_c<Tuple, N>::type
+get(Tuple& tup)
+{
+	return at_c<N>(tup);
+}
 
-    template <int N, typename Tuple>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline typename result_of::at_c<Tuple const, N>::type
-    get(Tuple const& tup)
-    {
-        return at_c<N>(tup);
-    }
-}}
+template <int N, typename Tuple>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline typename result_of::at_c<Tuple const, N>::type
+get(Tuple const& tup)
+{
+	return at_c<N>(tup);
+}
+}
+}
 
 #endif
 #endif

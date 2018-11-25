@@ -32,41 +32,41 @@ class typeinfo
 {
 private:
 
-    typeinfo( typeinfo const& );
-    typeinfo& operator=( typeinfo const& );
+	typeinfo( typeinfo const& );
+	typeinfo& operator=( typeinfo const& );
 
-    char const * name_;
+	char const * name_;
 
 public:
 
-    explicit typeinfo( char const * name ): name_( name )
-    {
-    }
+	explicit typeinfo( char const * name ): name_( name )
+	{
+	}
 
-    bool operator==( typeinfo const& rhs ) const
-    {
-        return this == &rhs;
-    }
+	bool operator==( typeinfo const& rhs ) const
+	{
+		return this == &rhs;
+	}
 
-    bool operator!=( typeinfo const& rhs ) const
-    {
-        return this != &rhs;
-    }
+	bool operator!=( typeinfo const& rhs ) const
+	{
+		return this != &rhs;
+	}
 
-    bool before( typeinfo const& rhs ) const
-    {
-        return std::less< typeinfo const* >()( this, &rhs );
-    }
+	bool before( typeinfo const& rhs ) const
+	{
+		return std::less< typeinfo const* >()( this, &rhs );
+	}
 
-    char const* name() const
-    {
-        return name_;
-    }
+	char const* name() const
+	{
+		return name_;
+	}
 };
 
 inline char const * demangled_name( core::typeinfo const & ti )
 {
-    return ti.name();
+	return ti.name();
 }
 
 } // namespace core
@@ -76,17 +76,17 @@ namespace detail
 
 template<class T> struct core_typeid_
 {
-    static boost::core::typeinfo ti_;
+	static boost::core::typeinfo ti_;
 
-    static char const * name()
-    {
-        return BOOST_CURRENT_FUNCTION;
-    }
+	static char const * name()
+	{
+		return BOOST_CURRENT_FUNCTION;
+	}
 };
 
 #if defined(__SUNPRO_CC)
-// see #4199, the Sun Studio compiler gets confused about static initialization 
-// constructor arguments. But an assignment works just fine. 
+// see #4199, the Sun Studio compiler gets confused about static initialization
+// constructor arguments. But an assignment works just fine.
 template<class T> boost::core::typeinfo core_typeid_< T >::ti_ = core_typeid_< T >::name();
 #else
 template<class T> boost::core::typeinfo core_typeid_< T >::ti_(core_typeid_< T >::name());
@@ -137,7 +137,7 @@ typedef std::type_info typeinfo;
 
 inline std::string demangled_name( core::typeinfo const & ti )
 {
-    return core::demangle( ti.name() );
+	return core::demangle( ti.name() );
 }
 
 } // namespace core

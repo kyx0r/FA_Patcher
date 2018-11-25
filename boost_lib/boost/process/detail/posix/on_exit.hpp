@@ -12,24 +12,34 @@
 #include <system_error>
 #include <functional>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 struct on_exit_ : boost::process::detail::posix::async_handler
 {
-    std::function<void(int, const std::error_code&)> handler;
-    on_exit_(const std::function<void(int, const std::error_code&)> & handler) : handler(handler)
-    {
+	std::function<void(int, const std::error_code&)> handler;
+	on_exit_(const std::function<void(int, const std::error_code&)> & handler) : handler(handler)
+	{
 
-    }
+	}
 
-    template<typename Executor>
-    std::function<void(int, const std::error_code&)> on_exit_handler(Executor&) 
-    {
-        return handler;
+	template<typename Executor>
+	std::function<void(int, const std::error_code&)> on_exit_handler(Executor&)
+	{
+		return handler;
 
-    };
+	};
 };
 
 
-}}}}
+}
+}
+}
+}
 #endif /* BOOST_PROCESS_POSIX_ON_EXIT_HPP_ */

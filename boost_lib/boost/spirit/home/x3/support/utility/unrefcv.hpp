@@ -11,14 +11,20 @@
 #include <boost/type_traits/remove_reference.hpp>
 
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    template <typename T>
-    struct unrefcv : remove_cv<typename remove_reference<T>::type> {};
+namespace spirit
+{
+namespace x3
+{
+template <typename T>
+struct unrefcv : remove_cv<typename remove_reference<T>::type> {};
 
-    template <typename T>
-    using unrefcv_t = typename unrefcv<T>::type;
-}}}
+template <typename T>
+using unrefcv_t = typename unrefcv<T>::type;
+}
+}
+}
 
 
 #endif

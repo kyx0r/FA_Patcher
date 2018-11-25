@@ -28,16 +28,20 @@
 #include <exception>
 #endif
 
-namespace boost{
-namespace interprocess{
+namespace boost
+{
+namespace interprocess
+{
 
 class bad_weak_ptr
-   :  public std::exception
+	:  public std::exception
 {
-   public:
+public:
 
-   virtual char const * what() const throw()
-   {  return "boost::interprocess::bad_weak_ptr"; }
+	virtual char const * what() const throw()
+	{
+		return "boost::interprocess::bad_weak_ptr";
+	}
 };
 
 } // namespace interprocess

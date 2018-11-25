@@ -10,25 +10,25 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        template <char C>
-        struct literal_expected
-        {
-          typedef literal_expected type;
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+template <char C>
+struct literal_expected
+{
+	typedef literal_expected type;
 
-          static std::string get_value()
-          {
-            return std::string("Expected: ") + C;
-          }
-        };
-      }
-    }
-  }
+	static std::string get_value()
+	{
+		return std::string("Expected: ") + C;
+	}
+};
+}
+}
+}
 }
 
 #endif

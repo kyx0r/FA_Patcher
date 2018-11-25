@@ -27,9 +27,12 @@
 #include <boost/compute/iterator/buffer_iterator.hpp>
 #include <boost/compute/type_traits/is_device_iterator.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class T>
 inline void dispatch_gpu_sort(buffer_iterator<T> first,
@@ -37,21 +40,24 @@ inline void dispatch_gpu_sort(buffer_iterator<T> first,
                               less<T>,
                               command_queue &queue,
                               typename boost::enable_if_c<
-                                  is_radix_sortable<T>::value
+                              is_radix_sortable<T>::value
                               >::type* = 0)
 {
-    size_t count = detail::iterator_range_size(first, last);
+	size_t count = detail::iterator_range_size(first, last);
 
-    if(count < 2){
-        // nothing to do
-        return;
-    }
-    else if(count <= 32){
-        ::boost::compute::detail::serial_insertion_sort(first, last, queue);
-    }
-    else {
-        ::boost::compute::detail::radix_sort(first, last, queue);
-    }
+	if(count < 2)
+	{
+		// nothing to do
+		return;
+	}
+	else if(count <= 32)
+	{
+		::boost::compute::detail::serial_insertion_sort(first, last, queue);
+	}
+	else
+	{
+		::boost::compute::detail::radix_sort(first, last, queue);
+	}
 }
 
 template<class T>
@@ -60,24 +66,27 @@ inline void dispatch_gpu_sort(buffer_iterator<T> first,
                               greater<T> compare,
                               command_queue &queue,
                               typename boost::enable_if_c<
-                                  is_radix_sortable<T>::value
+                              is_radix_sortable<T>::value
                               >::type* = 0)
 {
-    size_t count = detail::iterator_range_size(first, last);
+	size_t count = detail::iterator_range_size(first, last);
 
-    if(count < 2){
-        // nothing to do
-        return;
-    }
-    else if(count <= 32){
-        ::boost::compute::detail::serial_insertion_sort(
-            first, last, compare, queue
-        );
-    }
-    else {
-        // radix sorts in descending order
-        ::boost::compute::detail::radix_sort(first, last, false, queue);
-    }
+	if(count < 2)
+	{
+		// nothing to do
+		return;
+	}
+	else if(count <= 32)
+	{
+		::boost::compute::detail::serial_insertion_sort(
+		    first, last, compare, queue
+		);
+	}
+	else
+	{
+		// radix sorts in descending order
+		::boost::compute::detail::radix_sort(first, last, false, queue);
+	}
 }
 
 template<class Iterator, class Compare>
@@ -86,22 +95,25 @@ inline void dispatch_gpu_sort(Iterator first,
                               Compare compare,
                               command_queue &queue)
 {
-    size_t count = detail::iterator_range_size(first, last);
+	size_t count = detail::iterator_range_size(first, last);
 
-    if(count < 2){
-        // nothing to do
-        return;
-    }
-    else if(count <= 32){
-        ::boost::compute::detail::serial_insertion_sort(
-            first, last, compare, queue
-        );
-    }
-    else {
-        ::boost::compute::detail::merge_sort_on_gpu(
-            first, last, compare, queue
-        );
-    }
+	if(count < 2)
+	{
+		// nothing to do
+		return;
+	}
+	else if(count <= 32)
+	{
+		::boost::compute::detail::serial_insertion_sort(
+		    first, last, compare, queue
+		);
+	}
+	else
+	{
+		::boost::compute::detail::merge_sort_on_gpu(
+		    first, last, compare, queue
+		);
+	}
 }
 
 // sort() for device iterators
@@ -111,14 +123,15 @@ inline void dispatch_sort(Iterator first,
                           Compare compare,
                           command_queue &queue,
                           typename boost::enable_if<
-                              is_device_iterator<Iterator>
+                          is_device_iterator<Iterator>
                           >::type* = 0)
 {
-    if(queue.get_device().type() & device::gpu) {
-        dispatch_gpu_sort(first, last, compare, queue);
-        return;
-    }
-    ::boost::compute::detail::merge_sort_on_cpu(first, last, compare, queue);
+	if(queue.get_device().type() & device::gpu)
+	{
+		dispatch_gpu_sort(first, last, compare, queue);
+		return;
+	}
+	::boost::compute::detail::merge_sort_on_cpu(first, last, compare, queue);
 }
 
 // sort() for host iterators
@@ -128,23 +141,23 @@ inline void dispatch_sort(Iterator first,
                           Compare compare,
                           command_queue &queue,
                           typename boost::disable_if<
-                              is_device_iterator<Iterator>
+                          is_device_iterator<Iterator>
                           >::type* = 0)
 {
-    typedef typename std::iterator_traits<Iterator>::value_type T;
+	typedef typename std::iterator_traits<Iterator>::value_type T;
 
-    size_t size = static_cast<size_t>(std::distance(first, last));
+	size_t size = static_cast<size_t>(std::distance(first, last));
 
-    // create mapped buffer
-    mapped_view<T> view(
-        boost::addressof(*first), size, queue.get_context()
-    );
+	// create mapped buffer
+	mapped_view<T> view(
+	    boost::addressof(*first), size, queue.get_context()
+	);
 
-    // sort mapped buffer
-    dispatch_sort(view.begin(), view.end(), compare, queue);
+	// sort mapped buffer
+	dispatch_sort(view.begin(), view.end(), compare, queue);
 
-    // return results to host
-    view.map(queue);
+	// return results to host
+	view.map(queue);
 }
 
 } // end detail namespace
@@ -185,7 +198,7 @@ inline void sort(Iterator first,
                  Compare compare,
                  command_queue &queue = system::default_queue())
 {
-    ::boost::compute::detail::dispatch_sort(first, last, compare, queue);
+	::boost::compute::detail::dispatch_sort(first, last, compare, queue);
 }
 
 /// \overload
@@ -194,11 +207,11 @@ inline void sort(Iterator first,
                  Iterator last,
                  command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-    ::boost::compute::sort(
-        first, last, ::boost::compute::less<value_type>(), queue
-    );
+	::boost::compute::sort(
+	    first, last, ::boost::compute::less<value_type>(), queue
+	);
 }
 
 } // end compute namespace

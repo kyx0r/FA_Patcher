@@ -9,10 +9,14 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
-namespace boost { namespace type_of {
-    template<typename T>
-        using remove_cv_ref_t = typename remove_cv<typename remove_reference<T>::type>::type;
-}}
+namespace boost
+{
+namespace type_of
+{
+template<typename T>
+using remove_cv_ref_t = typename remove_cv<typename remove_reference<T>::type>::type;
+}
+}
 
 #define BOOST_TYPEOF(expr) boost::type_of::remove_cv_ref_t<decltype(expr)>
 #define BOOST_TYPEOF_TPL BOOST_TYPEOF

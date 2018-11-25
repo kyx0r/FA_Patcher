@@ -29,14 +29,14 @@
 #pragma wave option(preserve: 1)
 #endif
 
-                #define BOOST_PHOENIX_FUNCTION_EQUAL_R(Z, N, DATA)              \
+#define BOOST_PHOENIX_FUNCTION_EQUAL_R(Z, N, DATA)              \
                     && function_equal_()(                                       \
                             proto::child_c< N >(e1)                             \
                           , proto::child_c< N >(e2)                             \
                         )                                                       \
                 /**/
 
-                #define BOOST_PHOENIX_FUNCTION_EQUAL(Z, N, DATA)                \
+#define BOOST_PHOENIX_FUNCTION_EQUAL(Z, N, DATA)                \
                     template <typename Expr1>                                   \
                     result_type                                                 \
                     evaluate(                                                   \
@@ -59,14 +59,14 @@
                     }                                                           \
                 /**/
 
-                BOOST_PP_REPEAT_FROM_TO(
-                    1
-                  , BOOST_PP_INC(BOOST_PROTO_MAX_ARITY)
-                  , BOOST_PHOENIX_FUNCTION_EQUAL
-                  , _
-                )
-                #undef BOOST_PHOENIX_FUNCTION_EQUAL_R
-                #undef BOOST_PHOENIX_FUNCTION_EQUAL
+BOOST_PP_REPEAT_FROM_TO(
+    1
+    , BOOST_PP_INC(BOOST_PROTO_MAX_ARITY)
+    , BOOST_PHOENIX_FUNCTION_EQUAL
+    , _
+)
+#undef BOOST_PHOENIX_FUNCTION_EQUAL_R
+#undef BOOST_PHOENIX_FUNCTION_EQUAL
 
 #if defined(__WAVE__) && defined(BOOST_PHOENIX_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)

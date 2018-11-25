@@ -15,10 +15,14 @@
 #include <boost/geometry/strategies/spherical/point_in_poly_winding.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace within
+namespace strategy
+{
+namespace within
 {
 
 
@@ -43,38 +47,40 @@ template
     typename FormulaPolicy = strategy::andoyer,
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class geographic_winding
-    : public within::detail::spherical_winding_base
-        <
-            Point,
-            PointOfSegment,
-            side::geographic<FormulaPolicy, Spheroid, CalculationType>,
-            CalculationType
-        >
+	: public within::detail::spherical_winding_base
+	  <
+	  Point,
+	  PointOfSegment,
+	  side::geographic<FormulaPolicy, Spheroid, CalculationType>,
+	  CalculationType
+	  >
 {
-    typedef within::detail::spherical_winding_base
-        <
-            Point,
-            PointOfSegment,
-            side::geographic<FormulaPolicy, Spheroid, CalculationType>,
-            CalculationType
-        > base_t;
+	typedef within::detail::spherical_winding_base
+	<
+	Point,
+	PointOfSegment,
+	side::geographic<FormulaPolicy, Spheroid, CalculationType>,
+	CalculationType
+	> base_t;
 
 public:
-    geographic_winding()
-    {}
+	geographic_winding()
+	{}
 
-    explicit geographic_winding(Spheroid const& model)
-        : base_t(model)
-    {}
+	explicit geographic_winding(Spheroid const& model)
+		: base_t(model)
+	{}
 };
 
 
-}} // namespace strategy::within
+}
+} // namespace strategy::within
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGY_GEOGRAPHIC_POINT_IN_POLY_WINDING_HPP

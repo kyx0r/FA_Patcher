@@ -26,11 +26,14 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
+namespace boost
+{
+namespace unit_test
+{
 
 /// Namespace for results reporter interfaces
-namespace results_reporter {
+namespace results_reporter
+{
 
 // ************************************************************************** //
 /// @brief Results report formatter interface
@@ -40,18 +43,19 @@ namespace results_reporter {
 /// This is usually done during test module initialization
 // ************************************************************************** //
 
-class BOOST_TEST_DECL format {
+class BOOST_TEST_DECL format
+{
 public:
-    // Destructor
-    virtual ~format() {}
+	// Destructor
+	virtual ~format() {}
 
-    virtual void    results_report_start( std::ostream& ostr ) = 0;
-    virtual void    results_report_finish( std::ostream& ostr ) = 0;
+	virtual void    results_report_start( std::ostream& ostr ) = 0;
+	virtual void    results_report_finish( std::ostream& ostr ) = 0;
 
-    virtual void    test_unit_report_start( test_unit const&, std::ostream& ostr ) = 0;
-    virtual void    test_unit_report_finish( test_unit const&, std::ostream& ostr ) = 0;
+	virtual void    test_unit_report_start( test_unit const&, std::ostream& ostr ) = 0;
+	virtual void    test_unit_report_finish( test_unit const&, std::ostream& ostr ) = 0;
 
-    virtual void    do_confirmation_report( test_unit const&, std::ostream& ostr ) = 0;
+	virtual void    do_confirmation_report( test_unit const&, std::ostream& ostr ) = 0;
 };
 
 // ************************************************************************** //
@@ -106,11 +110,17 @@ BOOST_TEST_DECL std::ostream& get_stream();
 
 BOOST_TEST_DECL void    make_report( report_level l = INV_REPORT_LEVEL, test_unit_id = INV_TEST_UNIT_ID );
 inline void             confirmation_report( test_unit_id id = INV_TEST_UNIT_ID )
-{ make_report( CONFIRMATION_REPORT, id ); }
+{
+	make_report( CONFIRMATION_REPORT, id );
+}
 inline void             short_report( test_unit_id id = INV_TEST_UNIT_ID )
-{ make_report( SHORT_REPORT, id ); }
+{
+	make_report( SHORT_REPORT, id );
+}
 inline void             detailed_report( test_unit_id id = INV_TEST_UNIT_ID )
-{ make_report( DETAILED_REPORT, id ); }
+{
+	make_report( DETAILED_REPORT, id );
+}
 
 } // namespace results_reporter
 } // namespace unit_test

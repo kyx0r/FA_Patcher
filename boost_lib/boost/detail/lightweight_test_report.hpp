@@ -28,29 +28,29 @@ int test_main(int argc, char* argv[]);
 
 int cpp_main(int argc, char* argv[])
 {
-  std::cout << BOOST_COMPILER
+	std::cout << BOOST_COMPILER
 #ifdef __GNUC__
-            << ", __GXX_EXPERIMENTAL_CXX0X__ "
+	          << ", __GXX_EXPERIMENTAL_CXX0X__ "
 # ifdef __GXX_EXPERIMENTAL_CXX0X__
-              "defined"
+	          "defined"
 # else
-              "not defined"
+	          "not defined"
 # endif
 #endif
-            << "\n"
-            << BOOST_STDLIB << "\n"
-            << BOOST_PLATFORM << "\n"
-            << "Boost version " << BOOST_VERSION / 100000 << '.'
-            << BOOST_VERSION / 100 % 1000 << '.' << BOOST_VERSION % 100 << "\n";
+	          << "\n"
+	          << BOOST_STDLIB << "\n"
+	          << BOOST_PLATFORM << "\n"
+	          << "Boost version " << BOOST_VERSION / 100000 << '.'
+	          << BOOST_VERSION / 100 % 1000 << '.' << BOOST_VERSION % 100 << "\n";
 
-  std::cout << "Command line: ";
-  for (int a = 0; a < argc; ++a)
-  {
-    std::cout << argv[a];
-    if (a != argc - 1)
-      std::cout << ' ';
-  }
-  std::cout << std::endl;
+	std::cout << "Command line: ";
+	for (int a = 0; a < argc; ++a)
+	{
+		std::cout << argv[a];
+		if (a != argc - 1)
+			std::cout << ' ';
+	}
+	std::cout << std::endl;
 
-  return test_main(argc, argv);
+	return test_main(argc, argv);
 }

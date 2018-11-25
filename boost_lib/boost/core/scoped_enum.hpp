@@ -21,73 +21,73 @@ namespace boost
 
 #ifdef BOOST_NO_CXX11_SCOPED_ENUMS
 
-  /**
-   * Meta-function to get the native enum type associated to an enum class or its emulation.
-   */
-  template <typename EnumType>
-  struct native_type
-  {
-    /**
-     * The member typedef type names the native enum type associated to the scoped enum,
-     * which is it self if the compiler supports scoped enums or EnumType::enum_type if it is an emulated scoped enum.
-     */
-    typedef typename EnumType::enum_type type;
-  };
+/**
+ * Meta-function to get the native enum type associated to an enum class or its emulation.
+ */
+template <typename EnumType>
+struct native_type
+{
+	/**
+	 * The member typedef type names the native enum type associated to the scoped enum,
+	 * which is it self if the compiler supports scoped enums or EnumType::enum_type if it is an emulated scoped enum.
+	 */
+	typedef typename EnumType::enum_type type;
+};
 
-  /**
-   * Casts a scoped enum to its underlying type.
-   *
-   * This function is useful when working with scoped enum classes, which doens't implicitly convert to the underlying type.
-   * @param v A scoped enum.
-   * @returns The underlying type.
-   * @throws No-throws.
-   */
-  template <typename UnderlyingType, typename EnumType>
-  inline
-  BOOST_CONSTEXPR UnderlyingType underlying_cast(EnumType v) BOOST_NOEXCEPT
-  {
-    return v.get_underlying_value_();
-  }
+/**
+ * Casts a scoped enum to its underlying type.
+ *
+ * This function is useful when working with scoped enum classes, which doens't implicitly convert to the underlying type.
+ * @param v A scoped enum.
+ * @returns The underlying type.
+ * @throws No-throws.
+ */
+template <typename UnderlyingType, typename EnumType>
+inline
+BOOST_CONSTEXPR UnderlyingType underlying_cast(EnumType v) BOOST_NOEXCEPT
+{
+	return v.get_underlying_value_();
+}
 
-  /**
-   * Casts a scoped enum to its native enum type.
-   *
-   * This function is useful to make programs portable when the scoped enum emulation can not be use where native enums can.
-   *
-   * EnumType the scoped enum type
-   *
-   * @param v A scoped enum.
-   * @returns The native enum value.
-   * @throws No-throws.
-   */
-  template <typename EnumType>
-  inline
-  BOOST_CONSTEXPR typename EnumType::enum_type native_value(EnumType e) BOOST_NOEXCEPT
-  {
-    return e.get_native_value_();
-  }
+/**
+ * Casts a scoped enum to its native enum type.
+ *
+ * This function is useful to make programs portable when the scoped enum emulation can not be use where native enums can.
+ *
+ * EnumType the scoped enum type
+ *
+ * @param v A scoped enum.
+ * @returns The native enum value.
+ * @throws No-throws.
+ */
+template <typename EnumType>
+inline
+BOOST_CONSTEXPR typename EnumType::enum_type native_value(EnumType e) BOOST_NOEXCEPT
+{
+	return e.get_native_value_();
+}
 
 #else  // BOOST_NO_CXX11_SCOPED_ENUMS
 
-  template <typename EnumType>
-  struct native_type
-  {
-    typedef EnumType type;
-  };
+template <typename EnumType>
+struct native_type
+{
+	typedef EnumType type;
+};
 
-  template <typename UnderlyingType, typename EnumType>
-  inline
-  BOOST_CONSTEXPR UnderlyingType underlying_cast(EnumType v) BOOST_NOEXCEPT
-  {
-    return static_cast<UnderlyingType>(v);
-  }
+template <typename UnderlyingType, typename EnumType>
+inline
+BOOST_CONSTEXPR UnderlyingType underlying_cast(EnumType v) BOOST_NOEXCEPT
+{
+	return static_cast<UnderlyingType>(v);
+}
 
-  template <typename EnumType>
-  inline
-  BOOST_CONSTEXPR EnumType native_value(EnumType e) BOOST_NOEXCEPT
-  {
-    return e;
-  }
+template <typename EnumType>
+inline
+BOOST_CONSTEXPR EnumType native_value(EnumType e) BOOST_NOEXCEPT
+{
+	return e;
+}
 
 #endif // BOOST_NO_CXX11_SCOPED_ENUMS
 }

@@ -29,36 +29,38 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
-namespace phoenix {
+namespace phoenix
+{
 
 template< typename T >
 struct is_custom_terminal< T, typename T::_is_boost_log_terminal > :
-    public mpl::true_
+	public mpl::true_
 {
 };
 
 template< typename T >
 struct custom_terminal< T, typename T::_is_boost_log_terminal >
 {
-    typedef custom_terminal< T, typename T::_is_boost_log_terminal > this_type;
+	typedef custom_terminal< T, typename T::_is_boost_log_terminal > this_type;
 
-    template< typename >
-    struct result;
+	template< typename >
+	struct result;
 
-    template< typename ThisT, typename TermT, typename ContextT >
-    struct result< ThisT(TermT, ContextT) >
-    {
-        typedef typename remove_cv< typename remove_reference< TermT >::type >::type term;
-        typedef typename boost::result_of< const term(ContextT) >::type type;
-    };
+	template< typename ThisT, typename TermT, typename ContextT >
+	struct result< ThisT(TermT, ContextT) >
+	{
+		typedef typename remove_cv< typename remove_reference< TermT >::type >::type term;
+		typedef typename boost::result_of< const term(ContextT) >::type type;
+	};
 
-    template< typename ContextT >
-    typename result< const this_type(T const&, ContextT&) >::type operator() (T const& term, ContextT& ctx) const
-    {
-        return term(ctx);
-    }
+	template< typename ContextT >
+	typename result< const this_type(T const&, ContextT&) >::type operator() (T const& term, ContextT& ctx) const
+	{
+		return term(ctx);
+	}
 };
 
 } // namespace phoenix

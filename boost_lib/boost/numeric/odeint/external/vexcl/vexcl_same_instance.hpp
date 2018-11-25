@@ -23,30 +23,33 @@
 
 #include <boost/numeric/odeint/util/same_instance.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 template <typename T>
-struct same_instance_impl< vex::vector<T> , vex::vector<T> >
+struct same_instance_impl< vex::vector<T>, vex::vector<T> >
 {
-    static bool same_instance( const vex::vector<T> &x1 , const vex::vector<T> &x2 )
-    {
-        return
-            static_cast<const vex::vector<T>*>(&x1) ==
-            static_cast<const vex::vector<T>*>(&x2);
-    }
+	static bool same_instance( const vex::vector<T> &x1, const vex::vector<T> &x2 )
+	{
+		return
+		    static_cast<const vex::vector<T>*>(&x1) ==
+		    static_cast<const vex::vector<T>*>(&x2);
+	}
 };
 
 template <typename T, size_t N>
-struct same_instance_impl< vex::multivector<T, N> , vex::multivector<T, N> >
+struct same_instance_impl< vex::multivector<T, N>, vex::multivector<T, N> >
 {
-    static bool same_instance( const vex::multivector<T, N> &x1 , const vex::multivector<T, N> &x2 )
-    {
-        return
-            static_cast<const vex::multivector<T, N>*>(&x1) ==
-            static_cast<const vex::multivector<T, N>*>(&x2);
-    }
+	static bool same_instance( const vex::multivector<T, N> &x1, const vex::multivector<T, N> &x2 )
+	{
+		return
+		    static_cast<const vex::multivector<T, N>*>(&x1) ==
+		    static_cast<const vex::multivector<T, N>*>(&x2);
+	}
 };
 
 } // namespace odeint

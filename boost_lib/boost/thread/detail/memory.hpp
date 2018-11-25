@@ -21,28 +21,29 @@
 
 namespace boost
 {
-  namespace thread_detail
-  {
-    template <class _Alloc>
-    class allocator_destructor
-    {
-      typedef csbl::allocator_traits<_Alloc> alloc_traits;
-    public:
-      typedef typename alloc_traits::pointer pointer;
-      typedef typename alloc_traits::size_type size_type;
-    private:
-      _Alloc alloc_;
-      size_type s_;
-    public:
-      allocator_destructor(_Alloc& a, size_type s)BOOST_NOEXCEPT
-      : alloc_(a), s_(s)
-      {}
-      void operator()(pointer p)BOOST_NOEXCEPT
-      {
-        alloc_traits::destroy(alloc_, p);
-        alloc_traits::deallocate(alloc_, p, s_);
-      }
-    };
-  } //namespace thread_detail
+namespace thread_detail
+{
+template <class _Alloc>
+class allocator_destructor
+{
+	typedef csbl::allocator_traits<_Alloc> alloc_traits;
+public:
+	typedef typename alloc_traits::pointer pointer;
+	typedef typename alloc_traits::size_type size_type;
+private:
+	_Alloc alloc_;
+	size_type s_;
+public:
+	allocator_destructor(_Alloc& a, size_type s)BOOST_NOEXCEPT
+:
+	alloc_(a), s_(s)
+	{}
+	void operator()(pointer p)BOOST_NOEXCEPT
+	{
+		alloc_traits::destroy(alloc_, p);
+		alloc_traits::deallocate(alloc_, p, s_);
+	}
+};
+} //namespace thread_detail
 }
 #endif //  BOOST_THREAD_DETAIL_MEMORY_HPP

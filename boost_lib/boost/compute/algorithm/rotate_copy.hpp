@@ -14,8 +14,10 @@
 #include <boost/compute/system.hpp>
 #include <boost/compute/algorithm/copy.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Performs left rotation such that element at n_first comes to the
 /// beginning and the output is stored in range starting at result.
@@ -30,11 +32,11 @@ inline void rotate_copy(InputIterator first,
                         OutputIterator result,
                         command_queue &queue = system::default_queue())
 {
-    size_t count = detail::iterator_range_size(first, n_first);
-    size_t count2 = detail::iterator_range_size(n_first, last);
+	size_t count = detail::iterator_range_size(first, n_first);
+	size_t count2 = detail::iterator_range_size(n_first, last);
 
-    ::boost::compute::copy(first+count, last, result, queue);
-    ::boost::compute::copy(first, first+count, result+count2, queue);
+	::boost::compute::copy(first+count, last, result, queue);
+	::boost::compute::copy(first, first+count, result+count2, queue);
 }
 
 } //end compute namespace

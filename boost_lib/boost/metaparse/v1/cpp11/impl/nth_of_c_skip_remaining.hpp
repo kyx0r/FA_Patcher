@@ -15,45 +15,45 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class FinalResult, class S, class Pos, class... Ps>
-        struct nth_of_c_skip_remaining;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class FinalResult, class S, class Pos, class... Ps>
+struct nth_of_c_skip_remaining;
 
-        template <class FinalResult, class S, class Pos>
-        struct nth_of_c_skip_remaining<FinalResult, S, Pos> :
-          return_<FinalResult>::template apply<S, Pos>
-        {};
+template <class FinalResult, class S, class Pos>
+struct nth_of_c_skip_remaining<FinalResult, S, Pos> :
+	return_<FinalResult>::template apply<S, Pos>
+{};
 
-        template <class FinalResult, class S, class Pos, class P, class... Ps>
-        struct nth_of_c_skip_remaining<FinalResult, S, Pos, P, Ps...>
-        {
-        private:
-          template <class NextResult>
-          struct apply_unchecked :
-            nth_of_c_skip_remaining<
-              FinalResult,
-              typename get_remaining<NextResult>::type,
-              typename get_position<NextResult>::type,
-              Ps...
-            >
-          {};
-        public:
-          typedef
-            typename std::conditional<
-              is_error<typename P::template apply<S, Pos>>::type::value,
-              typename P::template apply<S, Pos>,
-              apply_unchecked<typename P::template apply<S, Pos>>
-            >::type::type
-            type;
-        };
-      }
-    }
-  }
+template <class FinalResult, class S, class Pos, class P, class... Ps>
+struct nth_of_c_skip_remaining<FinalResult, S, Pos, P, Ps...>
+{
+private:
+	template <class NextResult>
+	struct apply_unchecked :
+		nth_of_c_skip_remaining<
+		FinalResult,
+		typename get_remaining<NextResult>::type,
+		typename get_position<NextResult>::type,
+		Ps...
+		>
+	{};
+public:
+	typedef
+	typename std::conditional<
+	is_error<typename P::template apply<S, Pos>>::type::value,
+	         typename P::template apply<S, Pos>,
+	                  apply_unchecked<typename P::template apply<S, Pos>>
+	>::type::type
+	type;
+};
+}
+}
+}
 }
 
 #endif

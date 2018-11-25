@@ -13,9 +13,13 @@
 #endif
 #include <boost/type_traits/is_convertible.hpp>
 
-namespace boost{ namespace math{ 
+namespace boost
+{
+namespace math
+{
 
-namespace tools{
+namespace tools
+{
 
 template <class T>
 struct numeric_traits : public std::numeric_limits< T > {};
@@ -26,10 +30,10 @@ typedef __float128 largest_float;
 template <>
 struct numeric_traits<__float128>
 {
-   static const int digits = 113;
-   static const int digits10 = 33;
-   static const int max_exponent = 16384;
-   static const bool is_specialized = true;
+	static const int digits = 113;
+	static const int digits10 = 33;
+	static const int max_exponent = 16384;
+	static const bool is_specialized = true;
 };
 #else
 typedef long double largest_float;
@@ -39,24 +43,24 @@ typedef long double largest_float;
 template <class T>
 inline BOOST_CONSTEXPR_OR_CONST T make_big_value(largest_float v, const char*, mpl::true_ const&, mpl::false_ const&) BOOST_MATH_NOEXCEPT(T)
 {
-   return static_cast<T>(v);
+	return static_cast<T>(v);
 }
 template <class T>
 inline BOOST_CONSTEXPR_OR_CONST T make_big_value(largest_float v, const char*, mpl::true_ const&, mpl::true_ const&) BOOST_MATH_NOEXCEPT(T)
 {
-   return static_cast<T>(v);
+	return static_cast<T>(v);
 }
 #ifndef BOOST_MATH_NO_LEXICAL_CAST
 template <class T>
 inline T make_big_value(largest_float, const char* s, mpl::false_ const&, mpl::false_ const&)
 {
-   return boost::lexical_cast<T>(s);
+	return boost::lexical_cast<T>(s);
 }
 #endif
 template <class T>
 inline BOOST_MATH_CONSTEXPR T make_big_value(largest_float, const char* s, mpl::false_ const&, mpl::true_ const&) BOOST_MATH_NOEXCEPT(T)
 {
-   return T(s);
+	return T(s);
 }
 
 //
@@ -80,7 +84,9 @@ inline BOOST_MATH_CONSTEXPR T make_big_value(largest_float, const char* s, mpl::
    mpl::bool_<is_floating_point<T>::value || (boost::math::tools::numeric_traits<T>::is_specialized && boost::math::tools::numeric_traits<T>::max_exponent <= boost::math::tools::numeric_traits<boost::math::tools::largest_float>::max_exponent && boost::math::tools::numeric_traits<T>::digits <= boost::math::tools::numeric_traits<boost::math::tools::largest_float>::digits)>(), \
    boost::is_constructible<const char*, T>())
 
-}}} // namespaces
+}
+}
+} // namespaces
 
 #endif
 

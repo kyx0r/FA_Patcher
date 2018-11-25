@@ -13,9 +13,17 @@
 
 #include <boost/geometry/index/parameters.hpp>
 
-namespace boost { namespace geometry { namespace index {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
 
-namespace detail { namespace rtree {
+namespace detail
+{
+namespace rtree
+{
 
 // InsertTag
 struct insert_default_tag {};
@@ -43,57 +51,57 @@ struct node_variant_static_tag {};
 template <typename Parameters, typename InsertTag, typename ChooseNextNodeTag, typename SplitTag, typename RedistributeTag, typename NodeTag>
 struct options
 {
-    typedef Parameters parameters_type;
-    typedef InsertTag insert_tag;
-    typedef ChooseNextNodeTag choose_next_node_tag;
-    typedef SplitTag split_tag;
-    typedef RedistributeTag redistribute_tag;
-    typedef NodeTag node_tag;
+	typedef Parameters parameters_type;
+	typedef InsertTag insert_tag;
+	typedef ChooseNextNodeTag choose_next_node_tag;
+	typedef SplitTag split_tag;
+	typedef RedistributeTag redistribute_tag;
+	typedef NodeTag node_tag;
 };
 
 template <typename Parameters>
 struct options_type
 {
-    // TODO: awulkiew - use static assert
+	// TODO: awulkiew - use static assert
 };
 
 template <size_t MaxElements, size_t MinElements>
 struct options_type< index::linear<MaxElements, MinElements> >
 {
-    typedef options<
-        index::linear<MaxElements, MinElements>,
-        insert_default_tag,
-        choose_by_content_diff_tag,
-        split_default_tag,
-        linear_tag,
-        node_variant_static_tag
-    > type;
+	typedef options<
+	index::linear<MaxElements, MinElements>,
+	      insert_default_tag,
+	      choose_by_content_diff_tag,
+	      split_default_tag,
+	      linear_tag,
+	      node_variant_static_tag
+	      > type;
 };
 
 template <size_t MaxElements, size_t MinElements>
 struct options_type< index::quadratic<MaxElements, MinElements> >
 {
-    typedef options<
-        index::quadratic<MaxElements, MinElements>,
-        insert_default_tag,
-        choose_by_content_diff_tag,
-        split_default_tag,
-        quadratic_tag,
-        node_variant_static_tag
-    > type;
+	typedef options<
+	index::quadratic<MaxElements, MinElements>,
+	      insert_default_tag,
+	      choose_by_content_diff_tag,
+	      split_default_tag,
+	      quadratic_tag,
+	      node_variant_static_tag
+	      > type;
 };
 
 template <size_t MaxElements, size_t MinElements, size_t OverlapCostThreshold, size_t ReinsertedElements>
 struct options_type< index::rstar<MaxElements, MinElements, OverlapCostThreshold, ReinsertedElements> >
 {
-    typedef options<
-        index::rstar<MaxElements, MinElements, OverlapCostThreshold, ReinsertedElements>,
-        insert_reinsert_tag,
-        choose_by_overlap_diff_tag,
-        split_default_tag,
-        rstar_tag,
-        node_variant_static_tag
-    > type;
+	typedef options<
+	index::rstar<MaxElements, MinElements, OverlapCostThreshold, ReinsertedElements>,
+	      insert_reinsert_tag,
+	      choose_by_overlap_diff_tag,
+	      split_default_tag,
+	      rstar_tag,
+	      node_variant_static_tag
+	      > type;
 };
 
 //template <size_t MaxElements, size_t MinElements>
@@ -112,44 +120,47 @@ struct options_type< index::rstar<MaxElements, MinElements, OverlapCostThreshold
 template <>
 struct options_type< index::dynamic_linear >
 {
-    typedef options<
-        index::dynamic_linear,
-        insert_default_tag,
-        choose_by_content_diff_tag,
-        split_default_tag,
-        linear_tag,
-        node_variant_dynamic_tag
-    > type;
+	typedef options<
+	index::dynamic_linear,
+	      insert_default_tag,
+	      choose_by_content_diff_tag,
+	      split_default_tag,
+	      linear_tag,
+	      node_variant_dynamic_tag
+	      > type;
 };
 
 template <>
 struct options_type< index::dynamic_quadratic >
 {
-    typedef options<
-        index::dynamic_quadratic,
-        insert_default_tag,
-        choose_by_content_diff_tag,
-        split_default_tag,
-        quadratic_tag,
-        node_variant_dynamic_tag
-    > type;
+	typedef options<
+	index::dynamic_quadratic,
+	      insert_default_tag,
+	      choose_by_content_diff_tag,
+	      split_default_tag,
+	      quadratic_tag,
+	      node_variant_dynamic_tag
+	      > type;
 };
 
 template <>
 struct options_type< index::dynamic_rstar >
 {
-    typedef options<
-        index::dynamic_rstar,
-        insert_reinsert_tag,
-        choose_by_overlap_diff_tag,
-        split_default_tag,
-        rstar_tag,
-        node_variant_dynamic_tag
-    > type;
+	typedef options<
+	index::dynamic_rstar,
+	      insert_reinsert_tag,
+	      choose_by_overlap_diff_tag,
+	      split_default_tag,
+	      rstar_tag,
+	      node_variant_dynamic_tag
+	      > type;
 };
 
-}} // namespace detail::rtree
+}
+} // namespace detail::rtree
 
-}}} // namespace boost::geometry::index
+}
+}
+} // namespace boost::geometry::index
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_RTREE_OPTIONS_HPP

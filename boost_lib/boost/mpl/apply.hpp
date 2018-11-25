@@ -8,8 +8,8 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
@@ -54,7 +54,10 @@
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
-namespace boost { namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 // local macros, #undef-ined at the end of the header
 #   define AUX778076_APPLY_PARAMS(param) \
@@ -62,7 +65,8 @@ namespace boost { namespace mpl {
           BOOST_MPL_LIMIT_METAFUNCTION_ARITY \
         , param \
         ) \
-    /**/
+
+/**/
 
 #   define AUX778076_APPLY_DEF_PARAMS(param, value) \
     BOOST_MPL_PP_DEFAULT_PARAMS( \
@@ -70,25 +74,30 @@ namespace boost { namespace mpl {
         , param \
         , value \
         ) \
-    /**/
+
+/**/
 
 #   define AUX778076_APPLY_N_PARAMS(n, param) \
     BOOST_MPL_PP_PARAMS(n, param) \
-    /**/
+
+/**/
 
 #   define AUX778076_APPLY_N_COMMA_PARAMS(n, param) \
     BOOST_PP_COMMA_IF(n) \
     BOOST_MPL_PP_PARAMS(n, param) \
-    /**/
+
+/**/
 
 #   define AUX778076_APPLY_N_PARTIAL_SPEC_PARAMS(n, param, def) \
     BOOST_PP_COMMA_IF(n) \
     BOOST_MPL_PP_PARTIAL_SPEC_PARAMS(n, param, def) \
-    /**/
-    
+
+/**/
+
 #   define AUX778076_APPLY_N_SPEC_PARAMS(n, param) \
     BOOST_MPL_PP_ENUM(BOOST_PP_INC(n), param) \
-    /**/
+
+/**/
 
 
 #define BOOST_PP_ITERATION_PARAMS_1 \
@@ -99,7 +108,8 @@ namespace boost { namespace mpl {
 // real C++ version is already taken care of
 #   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
-namespace aux {
+namespace aux
+{
 // apply_count_args
 #define AUX778076_COUNT_ARGS_PREFIX apply
 #define AUX778076_COUNT_ARGS_DEFAULT na
@@ -109,12 +119,12 @@ namespace aux {
 
 
 template<
-      typename F, AUX778076_APPLY_DEF_PARAMS(typename T, na)
+    typename F, AUX778076_APPLY_DEF_PARAMS(typename T, na)
     >
 struct apply
-    : aux::apply_chooser< 
-          aux::apply_count_args< AUX778076_APPLY_PARAMS(T) >::value
-        >::template result_< F, AUX778076_APPLY_PARAMS(T) >::type
+	: aux::apply_chooser<
+  aux::apply_count_args< AUX778076_APPLY_PARAMS(T) >::value
+  >::template result_< F, AUX778076_APPLY_PARAMS(T) >::type
 {
 };
 
@@ -128,7 +138,8 @@ struct apply
 #   undef AUX778076_APPLY_DEF_PARAMS
 #   undef AUX778076_APPLY_PARAMS
 
-}}
+}
+}
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_APPLY_HPP_INCLUDED
@@ -143,27 +154,27 @@ struct apply
 #   define i_ BOOST_PP_FRAME_ITERATION(1)
 
 template<
-      typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
+    typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
     >
 struct BOOST_PP_CAT(apply,i_)
 #if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-    : BOOST_PP_CAT(apply_wrap,i_)< 
-          typename lambda<F>::type
-        AUX778076_APPLY_N_COMMA_PARAMS(i_, T)
-        >
+	: BOOST_PP_CAT(apply_wrap,i_)<
+	  typename lambda<F>::type
+	  AUX778076_APPLY_N_COMMA_PARAMS(i_, T)
+	  >
 {
 #else
 {
-    typedef typename BOOST_PP_CAT(apply_wrap,i_)< 
-          typename lambda<F>::type
-        AUX778076_APPLY_N_COMMA_PARAMS(i_, T)
-        >::type type;
+	typedef typename BOOST_PP_CAT(apply_wrap,i_)<
+	typename lambda<F>::type
+	AUX778076_APPLY_N_COMMA_PARAMS(i_, T)
+	>::type type;
 #endif
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          BOOST_PP_INC(i_)
-        , BOOST_PP_CAT(apply,i_)
-        , (F AUX778076_APPLY_N_COMMA_PARAMS(i_,T))
-        )
+	BOOST_MPL_AUX_LAMBDA_SUPPORT(
+	    BOOST_PP_INC(i_)
+	    , BOOST_PP_CAT(apply,i_)
+	    , (F AUX778076_APPLY_N_COMMA_PARAMS(i_,T))
+	)
 };
 
 
@@ -172,7 +183,7 @@ struct BOOST_PP_CAT(apply,i_)
 template<>
 struct BOOST_PP_CAT(apply,i_)<AUX778076_APPLY_N_SPEC_PARAMS(i_, int)>
 {
-    typedef int type;
+	typedef int type;
 };
 #endif
 
@@ -182,18 +193,18 @@ struct BOOST_PP_CAT(apply,i_)<AUX778076_APPLY_N_SPEC_PARAMS(i_, int)>
 #if i_ == BOOST_MPL_LIMIT_METAFUNCTION_ARITY
 /// primary template (not a specialization!)
 template<
-      typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
+    typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
     >
 struct apply
-    : BOOST_PP_CAT(apply,i_)< F AUX778076_APPLY_N_COMMA_PARAMS(i_, T) >
-{
-};
+: BOOST_PP_CAT(apply,i_)< F AUX778076_APPLY_N_COMMA_PARAMS(i_, T) >
+  {
+  };
 #else
 template<
-      typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
+    typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
     >
 struct apply< F AUX778076_APPLY_N_PARTIAL_SPEC_PARAMS(i_, T, na) >
-    : BOOST_PP_CAT(apply,i_)< F AUX778076_APPLY_N_COMMA_PARAMS(i_, T) >
+: BOOST_PP_CAT(apply,i_)< F AUX778076_APPLY_N_COMMA_PARAMS(i_, T) >
 {
 };
 #endif
@@ -201,20 +212,21 @@ struct apply< F AUX778076_APPLY_N_PARTIAL_SPEC_PARAMS(i_, T, na) >
 #   else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 #if !defined(BOOST_MPL_CFG_NO_APPLY_TEMPLATE)
-namespace aux {
+namespace aux
+{
 
 template<>
 struct apply_chooser<i_>
 {
-    template<
-          typename F, AUX778076_APPLY_PARAMS(typename T)
-        >
-    struct result_
-    {
-        typedef BOOST_PP_CAT(apply,i_)<
-              F AUX778076_APPLY_N_COMMA_PARAMS(i_, T)
-            > type;
-    };
+	template<
+	    typename F, AUX778076_APPLY_PARAMS(typename T)
+	    >
+	struct result_
+	{
+		typedef BOOST_PP_CAT(apply,i_)<
+		F AUX778076_APPLY_N_COMMA_PARAMS(i_, T)
+		> type;
+	};
 };
 
 } // namespace aux

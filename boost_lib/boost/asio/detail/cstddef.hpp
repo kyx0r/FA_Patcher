@@ -18,8 +18,10 @@
 #include <boost/asio/detail/config.hpp>
 #include <cstddef>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 #if defined(BOOST_ASIO_HAS_NULLPTR)
 using std::nullptr_t;

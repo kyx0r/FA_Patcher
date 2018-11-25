@@ -15,19 +15,20 @@ Distributed under the Boost Software License, Version 1.0.
 #include <type_traits>
 
 
-BOOST_HANA_NAMESPACE_BEGIN namespace detail {
-    //! @ingroup group-detail
-    //! Equivalent to a type-dependent `std::false_type`.
-    //!
-    //! This is useful for making a static assertion that would otherwise
-    //! always fire up dependent on some template parameters.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/detail/wrong.cpp
-    template <typename ...>
-    struct wrong : std::false_type { };
+BOOST_HANA_NAMESPACE_BEGIN namespace detail
+{
+//! @ingroup group-detail
+//! Equivalent to a type-dependent `std::false_type`.
+//!
+//! This is useful for making a static assertion that would otherwise
+//! always fire up dependent on some template parameters.
+//!
+//!
+//! Example
+//! -------
+//! @include example/detail/wrong.cpp
+template <typename ...>
+struct wrong : std::false_type { };
 } BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_WRONG_HPP

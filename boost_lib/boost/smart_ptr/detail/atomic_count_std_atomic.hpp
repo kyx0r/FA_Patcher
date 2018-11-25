@@ -26,31 +26,31 @@ class atomic_count
 {
 public:
 
-    explicit atomic_count( long v ): value_( v )
-    {
-    }
+	explicit atomic_count( long v ): value_( v )
+	{
+	}
 
-    long operator++()
-    {
-        return value_.fetch_add( 1, std::memory_order_acq_rel ) + 1;
-    }
+	long operator++()
+	{
+		return value_.fetch_add( 1, std::memory_order_acq_rel ) + 1;
+	}
 
-    long operator--()
-    {
-        return value_.fetch_sub( 1, std::memory_order_acq_rel ) - 1;
-    }
+	long operator--()
+	{
+		return value_.fetch_sub( 1, std::memory_order_acq_rel ) - 1;
+	}
 
-    operator long() const
-    {
-        return value_.load( std::memory_order_acquire );
-    }
+	operator long() const
+	{
+		return value_.load( std::memory_order_acquire );
+	}
 
 private:
 
-    atomic_count(atomic_count const &);
-    atomic_count & operator=(atomic_count const &);
+	atomic_count(atomic_count const &);
+	atomic_count & operator=(atomic_count const &);
 
-    std::atomic_int_least32_t value_;
+	std::atomic_int_least32_t value_;
 };
 
 } // namespace detail

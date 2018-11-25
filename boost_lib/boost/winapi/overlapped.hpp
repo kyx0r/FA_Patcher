@@ -16,29 +16,34 @@
 
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
-struct _OVERLAPPED;
+	struct _OVERLAPPED;
 }
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4201) // nonstandard extension used : nameless struct/union
 #endif
 
-typedef struct BOOST_MAY_ALIAS _OVERLAPPED {
-    ULONG_PTR_ Internal;
-    ULONG_PTR_ InternalHigh;
-    union {
-        struct {
-            DWORD_ Offset;
-            DWORD_ OffsetHigh;
-        };
-        PVOID_  Pointer;
-    };
-    HANDLE_    hEvent;
+typedef struct BOOST_MAY_ALIAS _OVERLAPPED
+{
+	ULONG_PTR_ Internal;
+	ULONG_PTR_ InternalHigh;
+	union
+	{
+		struct
+		{
+			DWORD_ Offset;
+			DWORD_ OffsetHigh;
+		};
+		PVOID_  Pointer;
+	};
+	HANDLE_    hEvent;
 } OVERLAPPED_, *LPOVERLAPPED_;
 
 #ifdef BOOST_MSVC

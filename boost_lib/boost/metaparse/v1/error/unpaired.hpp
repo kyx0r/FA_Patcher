@@ -14,36 +14,36 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        template <int Line, int Col, class Msg = boost::mpl::na>
-        struct unpaired
-        {
-          typedef unpaired type;
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+template <int Line, int Col, class Msg = boost::mpl::na>
+struct unpaired
+{
+	typedef unpaired type;
 
-          static std::string get_value()
-          {
-            std::ostringstream s;
-            s << Msg::get_value() << " (see " << Line << ":" << Col << ")";
-            return s.str();
-          }
-        };
+	static std::string get_value()
+	{
+		std::ostringstream s;
+		s << Msg::get_value() << " (see " << Line << ":" << Col << ")";
+		return s.str();
+	}
+};
 
-        template <int Line, int Col>
-        struct unpaired<Line, Col, boost::mpl::na>
-        {
-          typedef unpaired type;
+template <int Line, int Col>
+struct unpaired<Line, Col, boost::mpl::na>
+{
+	typedef unpaired type;
 
-          template <class Msg = boost::mpl::na>
-          struct apply : unpaired<Line, Col, Msg> {};
-        };
-      }
-    }
-  }
+	template <class Msg = boost::mpl::na>
+	struct apply : unpaired<Line, Col, Msg> {};
+};
+}
+}
+}
 }
 
 #endif

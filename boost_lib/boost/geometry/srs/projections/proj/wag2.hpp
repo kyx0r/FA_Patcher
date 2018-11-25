@@ -47,126 +47,135 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct wag2 {};
+namespace par4
+{
+struct wag2 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace wag2
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace wag2
+{
 
-            static const double C_x = 0.92483;
-            static const double C_y = 1.38725;
-            static const double C_p1 = 0.88022;
-            static const double C_p2 = 0.88550;
+static const double C_x = 0.92483;
+static const double C_y = 1.38725;
+static const double C_p1 = 0.88022;
+static const double C_p2 = 0.88550;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_wag2_spheroid : public base_t_fi<base_wag2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_wag2_spheroid : public base_t_fi<base_wag2_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_wag2_spheroid(const Parameters& par)
-                    : base_t_fi<base_wag2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_wag2_spheroid(const Parameters& par)
+		: base_t_fi<base_wag2_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    lp_lat = aasin(C_p1 * sin(C_p2 * lp_lat));
-                    xy_x = C_x * lp_lon * cos(lp_lat);
-                    xy_y = C_y * lp_lat;
-                }
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		lp_lat = aasin(C_p1 * sin(C_p2 * lp_lat));
+		xy_x = C_x * lp_lon * cos(lp_lat);
+		xy_y = C_y * lp_lat;
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    lp_lat = xy_y / C_y;
-                    lp_lon = xy_x / (C_x * cos(lp_lat));
-                    lp_lat = aasin(sin(lp_lat) / C_p1) / C_p2;
-                }
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		lp_lat = xy_y / C_y;
+		lp_lon = xy_x / (C_x * cos(lp_lat));
+		lp_lat = aasin(sin(lp_lat) / C_p1) / C_p2;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "wag2_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "wag2_spheroid";
+	}
 
-            };
+};
 
-            // Wagner II
-            template <typename Parameters>
-            inline void setup_wag2(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Wagner II
+template <typename Parameters>
+inline void setup_wag2(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::wag2
-    #endif // doxygen
+}
+} // namespace detail::wag2
+#endif // doxygen
 
-    /*!
-        \brief Wagner II projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_wag2.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct wag2_spheroid : public detail::wag2::base_wag2_spheroid<CalculationType, Parameters>
-    {
-        inline wag2_spheroid(const Parameters& par) : detail::wag2::base_wag2_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::wag2::setup_wag2(this->m_par);
-        }
-    };
+/*!
+    \brief Wagner II projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_wag2.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct wag2_spheroid : public detail::wag2::base_wag2_spheroid<CalculationType, Parameters>
+{
+	inline wag2_spheroid(const Parameters& par) : detail::wag2::base_wag2_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::wag2::setup_wag2(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wag2, wag2_spheroid, wag2_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wag2, wag2_spheroid, wag2_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class wag2_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<wag2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class wag2_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<wag2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void wag2_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("wag2", new wag2_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void wag2_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("wag2", new wag2_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_WAG2_HPP
 

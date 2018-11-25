@@ -16,7 +16,9 @@
 
 #include <boost/geometry/algorithms/detail/azimuth.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -29,12 +31,13 @@ namespace detail
 template <typename ReturnType, typename Point1, typename Point2>
 inline ReturnType course(Point1 const& p1, Point2 const& p2)
 {
-    return azimuth<ReturnType>(p1, p2);
+	return azimuth<ReturnType>(p1, p2);
 }
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_COURSE_HPP

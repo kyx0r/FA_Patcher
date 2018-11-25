@@ -14,10 +14,14 @@
 #include <boost/mpl/assert.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace densify
+namespace strategy
+{
+namespace densify
 {
 
 namespace services
@@ -26,17 +30,19 @@ namespace services
 template <typename CSTag>
 struct default_strategy
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_CS
-            , (types<CSTag>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_CS
+	    , (types<CSTag>)
+	);
 };
 
 } // namespace services
 
-}} // namespace strategy::densify
+}
+} // namespace strategy::densify
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_DENSIFY_HPP

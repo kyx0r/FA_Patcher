@@ -15,56 +15,59 @@
 
 BOOST_PHOENIX_DEFINE_EXPRESSION(
     (boost)(phoenix)(while_)
-  , (meta_grammar) // Cond
+    , (meta_grammar) // Cond
     (meta_grammar) // Do
 )
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    struct while_eval
-    {
-        typedef void result_type;
+namespace phoenix
+{
+struct while_eval
+{
+	typedef void result_type;
 
-        template <typename Cond, typename Do, typename Context>
-        result_type
-        operator()(Cond const& cond, Do const& do_it, Context const & ctx) const
-        {
-            while(boost::phoenix::eval(cond, ctx))
-            {
-                boost::phoenix::eval(do_it, ctx);
-            }
-        }
-    };
-    
-    template <typename Dummy>
-    struct default_actions::when<rule::while_, Dummy>
-        : call<while_eval, Dummy>
-    {};
+	template <typename Cond, typename Do, typename Context>
+	result_type
+	operator()(Cond const& cond, Do const& do_it, Context const & ctx) const
+	{
+		while(boost::phoenix::eval(cond, ctx))
+		{
+			boost::phoenix::eval(do_it, ctx);
+		}
+	}
+};
 
-    template <typename Cond>
-    struct while_gen
-    {
-        while_gen(Cond const& cond_) : cond(cond_) {}
+template <typename Dummy>
+struct default_actions::when<rule::while_, Dummy>
+	: call<while_eval, Dummy>
+{};
 
-        template <typename Do>
-        typename expression::while_<Cond, Do>::type const
-        operator[](Do const& do_it) const
-        {
-            return expression::while_<Cond, Do>::make(cond, do_it);
-        }
+template <typename Cond>
+struct while_gen
+{
+	while_gen(Cond const& cond_) : cond(cond_) {}
 
-        Cond const& cond;
-    };
+	template <typename Do>
+	typename expression::while_<Cond, Do>::type const
+	operator[](Do const& do_it) const
+	{
+		return expression::while_<Cond, Do>::make(cond, do_it);
+	}
 
-    template <typename Cond>
-    inline
-    while_gen<Cond> const
-    while_(Cond const& cond)
-    {
-        return while_gen<Cond>(cond);
-    }
+	Cond const& cond;
+};
+
+template <typename Cond>
+inline
+while_gen<Cond> const
+while_(Cond const& cond)
+{
+	return while_gen<Cond>(cond);
+}
 
 
-}}
+}
+}
 
 #endif

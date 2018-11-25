@@ -13,18 +13,18 @@
 
 namespace boost
 {
-  namespace chrono
-  {
-    /**
-     * Scoped enumeration emulation stating whether the time_point for system_clock I/O is UTC or local.
-     */
-    BOOST_SCOPED_ENUM_DECLARE_BEGIN(timezone)
-          {
-            utc, local
-          }
-    BOOST_SCOPED_ENUM_DECLARE_END(timezone)
+namespace chrono
+{
+/**
+ * Scoped enumeration emulation stating whether the time_point for system_clock I/O is UTC or local.
+ */
+BOOST_SCOPED_ENUM_DECLARE_BEGIN(timezone)
+{
+	utc, local
+}
+BOOST_SCOPED_ENUM_DECLARE_END(timezone)
 
-  } // chrono
+} // chrono
 } // boost
 
 #endif  // header

@@ -33,7 +33,7 @@
 #pragma wave option(preserve: 1)
 #endif
 
-        #define BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF_R(Z, N, DATA)                 \
+#define BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF_R(Z, N, DATA)                 \
             typedef                                                             \
                 typename fusion::result_of::deref<                              \
                     typename fusion::result_of::advance_c<                      \
@@ -54,7 +54,7 @@
                 BOOST_PP_CAT(case_label, N);                                    \
     /**/
 
-    #define BOOST_PHOENIX_SWITCH_EVAL_R(Z, N, DATA)                             \
+#define BOOST_PHOENIX_SWITCH_EVAL_R(Z, N, DATA)                             \
         case BOOST_PP_CAT(case_label, N)::value :                               \
             boost::phoenix::eval(                                               \
                 proto::child_c<1>(                                              \
@@ -72,8 +72,8 @@
         <boost/phoenix/statement/detail/switch.hpp>))
 #include BOOST_PHOENIX_ITERATE()
 
-        #undef BOOST_PHOENIX_SWITCH_EVAL_R
-        #undef BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF
+#undef BOOST_PHOENIX_SWITCH_EVAL_R
+#undef BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF
 
 #if defined(__WAVE__) && defined(BOOST_PHOENIX_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)
@@ -82,83 +82,83 @@
 #endif
 
 #else
-            template <typename Context, typename Cond, typename Cases>
-            result_type
-            evaluate(
-                Context const & ctx
-              , Cond const & cond
-              , Cases const & cases
-              , mpl::int_<BOOST_PHOENIX_ITERATION>
-              , mpl::false_
-            ) const
-            {
-                typedef 
-                    typename proto::result_of::flatten<Cases const&>::type
-                    flat_view_type;
+template <typename Context, typename Cond, typename Cases>
+result_type
+evaluate(
+    Context const & ctx
+    , Cond const & cond
+    , Cases const & cases
+    , mpl::int_<BOOST_PHOENIX_ITERATION>
+    , mpl::false_
+) const
+{
+	typedef
+	typename proto::result_of::flatten<Cases const&>::type
+	flat_view_type;
 
-                typedef
-                    typename fusion::result_of::begin<flat_view_type>::type
-                    flat_view_begin;
+	typedef
+	typename fusion::result_of::begin<flat_view_type>::type
+	flat_view_begin;
 
-                flat_view_type flat_view(proto::flatten(cases));
+	flat_view_type flat_view(proto::flatten(cases));
 
-                BOOST_PP_REPEAT(
-                    BOOST_PHOENIX_ITERATION
-                  , BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF_R
-                  , BOOST_PHOENIX_ITERATION
-                )
+	BOOST_PP_REPEAT(
+	    BOOST_PHOENIX_ITERATION
+	    , BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF_R
+	    , BOOST_PHOENIX_ITERATION
+	)
 
-                switch(boost::phoenix::eval(cond, ctx))
-                {
-                    BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, BOOST_PHOENIX_SWITCH_EVAL_R, _)
-                }
-            }
+	switch(boost::phoenix::eval(cond, ctx))
+	{
+		BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, BOOST_PHOENIX_SWITCH_EVAL_R, _)
+	}
+}
 
-            template <typename Context, typename Cond, typename Cases>
-            result_type
-            evaluate(
-                Context const & ctx
-              , Cond const & cond
-              , Cases const & cases
-              , mpl::int_<BOOST_PHOENIX_ITERATION>
-              , mpl::true_
-            ) const
-            {
-                typedef 
-                    typename proto::result_of::flatten<Cases const&>::type
-                    flat_view_type;
+template <typename Context, typename Cond, typename Cases>
+result_type
+evaluate(
+    Context const & ctx
+    , Cond const & cond
+    , Cases const & cases
+    , mpl::int_<BOOST_PHOENIX_ITERATION>
+    , mpl::true_
+) const
+{
+	typedef
+	typename proto::result_of::flatten<Cases const&>::type
+	flat_view_type;
 
-                typedef
-                    typename fusion::result_of::begin<flat_view_type>::type
-                    flat_view_begin;
+	typedef
+	typename fusion::result_of::begin<flat_view_type>::type
+	flat_view_begin;
 
-                flat_view_type flat_view(proto::flatten(cases));
+	flat_view_type flat_view(proto::flatten(cases));
 
-                BOOST_PP_REPEAT(
-                    BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
-                  , BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF_R
-                  , BOOST_PHOENIX_ITERATION
-                )
+	BOOST_PP_REPEAT(
+	    BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
+	    , BOOST_PHOENIX_SWITCH_EVAL_TYPEDEF_R
+	    , BOOST_PHOENIX_ITERATION
+	)
 
-                switch(boost::phoenix::eval(cond, ctx))
-                {
-                    BOOST_PP_REPEAT(
-                        BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
-                      , BOOST_PHOENIX_SWITCH_EVAL_R, _
-                    )
-                    default:
-                        boost::phoenix::eval(
-                            proto::child_c<0>(
-                                fusion::deref(
-                                    fusion::advance_c<
-                                        BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
-                                    >(fusion::begin(flat_view))
-                                )
-                            )
-                            , ctx
-                        );
-                }
-            }
+	switch(boost::phoenix::eval(cond, ctx))
+	{
+		BOOST_PP_REPEAT(
+		    BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
+		    , BOOST_PHOENIX_SWITCH_EVAL_R, _
+		)
+	default:
+		boost::phoenix::eval(
+		    proto::child_c<0>(
+		        fusion::deref(
+		            fusion::advance_c<
+		            BOOST_PP_DEC(BOOST_PHOENIX_ITERATION)
+		            >(fusion::begin(flat_view))
+		        )
+		    )
+		    , ctx
+		);
+	}
+}
 
 #endif
 

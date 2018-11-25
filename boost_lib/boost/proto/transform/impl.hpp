@@ -22,64 +22,66 @@
 # pragma warning(disable : 4714) // function 'xxx' marked as __forceinline not inlined
 #endif
 
-namespace boost { namespace proto
+namespace boost
 {
-    namespace envns_
-    {
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        struct key_not_found
-        {};
+namespace proto
+{
+namespace envns_
+{
+////////////////////////////////////////////////////////////////////////////////////////////
+struct key_not_found
+{};
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // empty_env
-        struct empty_env
-        {
-            typedef void proto_environment_;
+////////////////////////////////////////////////////////////////////////////////////////////
+// empty_env
+struct empty_env
+{
+	typedef void proto_environment_;
 
-            template<typename OtherTag, typename OtherValue = key_not_found>
-            struct lookup
-            {
-                typedef OtherValue type;
-                typedef
-                    typename add_reference<typename add_const<OtherValue>::type>::type
-                const_reference;
-            };
+	template<typename OtherTag, typename OtherValue = key_not_found>
+	struct lookup
+	{
+		typedef OtherValue type;
+		typedef
+		typename add_reference<typename add_const<OtherValue>::type>::type
+		const_reference;
+	};
 
-            key_not_found operator[](detail::any) const
-            {
-                return key_not_found();
-            }
+	key_not_found operator[](detail::any) const
+	{
+		return key_not_found();
+	}
 
-            template<typename T>
-            T const &at(detail::any, T const &t) const
-            {
-                return t;
-            }
-        };
-    }
+	template<typename T>
+	T const &at(detail::any, T const &t) const
+	{
+		return t;
+	}
+};
+}
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    // is_env
-    template<typename T, typename Void>
-    struct is_env
-      : mpl::false_
-    {};
+////////////////////////////////////////////////////////////////////////////////////////////
+// is_env
+template<typename T, typename Void>
+struct is_env
+	: mpl::false_
+{};
 
-    template<typename T>
-    struct is_env<T, typename T::proto_environment_>
-      : mpl::true_
-    {};
+template<typename T>
+struct is_env<T, typename T::proto_environment_>
+	: mpl::true_
+{};
 
-    template<typename T>
-    struct is_env<T &, void>
-      : is_env<T>
-    {};
+template<typename T>
+struct is_env<T &, void>
+	: is_env<T>
+{};
 
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
 
-    /// INTERNAL ONLY
-    ///
-    #define BOOST_PROTO_TRANSFORM_(PrimitiveTransform, X)                                                       \
+/// INTERNAL ONLY
+///
+#define BOOST_PROTO_TRANSFORM_(PrimitiveTransform, X)                                                       \
     BOOST_PROTO_CALLABLE()                                                                                      \
     typedef X proto_is_transform_;                                                                              \
     typedef PrimitiveTransform transform_type;                                                                  \
@@ -181,9 +183,9 @@ namespace boost { namespace proto
 
 #else
 
-    /// INTERNAL ONLY
-    ///
-    #define BOOST_PROTO_TRANSFORM_(PrimitiveTransform, X)                                                       \
+/// INTERNAL ONLY
+///
+#define BOOST_PROTO_TRANSFORM_(PrimitiveTransform, X)                                                       \
     BOOST_PROTO_CALLABLE()                                                                                      \
     typedef X proto_is_transform_;                                                                              \
     typedef PrimitiveTransform transform_type;                                                                  \
@@ -224,126 +226,127 @@ namespace boost { namespace proto
 
 #endif
 
-    #define BOOST_PROTO_TRANSFORM(PrimitiveTransform)                                                           \
+#define BOOST_PROTO_TRANSFORM(PrimitiveTransform)                                                           \
         BOOST_PROTO_TRANSFORM_(PrimitiveTransform, void)                                                        \
         /**/
 
-    namespace detail
-    {
-        template<typename Sig>
-        struct apply_transform;
+namespace detail
+{
+template<typename Sig>
+struct apply_transform;
 
-        template<typename PrimitiveTransform, typename Expr>
-        struct apply_transform<PrimitiveTransform(Expr)>
-          : PrimitiveTransform::template impl<Expr, empty_state, empty_env>
-        {};
+template<typename PrimitiveTransform, typename Expr>
+struct apply_transform<PrimitiveTransform(Expr)>
+: PrimitiveTransform::template impl<Expr, empty_state, empty_env>
+{};
 
-        template<typename PrimitiveTransform, typename Expr, typename State>
-        struct apply_transform<PrimitiveTransform(Expr, State)>
-          : PrimitiveTransform::template impl<Expr, State, empty_env>
-        {};
+template<typename PrimitiveTransform, typename Expr, typename State>
+struct apply_transform<PrimitiveTransform(Expr, State)>
+: PrimitiveTransform::template impl<Expr, State, empty_env>
+{};
 
-        template<typename PrimitiveTransform, typename Expr, typename State, typename Data>
-        struct apply_transform<PrimitiveTransform(Expr, State, Data)>
-          : PrimitiveTransform::template impl<Expr, State, Data>
-        {};
-    }
+template<typename PrimitiveTransform, typename Expr, typename State, typename Data>
+struct apply_transform<PrimitiveTransform(Expr, State, Data)>
+: PrimitiveTransform::template impl<Expr, State, Data>
+{};
+}
 
-    template<typename PrimitiveTransform, typename X>
-    struct transform
-    {
-        BOOST_PROTO_TRANSFORM_(PrimitiveTransform, X)
-    };
+template<typename PrimitiveTransform, typename X>
+struct transform
+{
+	BOOST_PROTO_TRANSFORM_(PrimitiveTransform, X)
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl
-    {
-        typedef Expr const expr;
-        typedef Expr const &expr_param;
-        typedef State const state;
-        typedef State const &state_param;
-        typedef Data const data;
-        typedef Data const &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl
+{
+	typedef Expr const expr;
+	typedef Expr const &expr_param;
+	typedef State const state;
+	typedef State const &state_param;
+	typedef Data const data;
+	typedef Data const &data_param;
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl<Expr &, State, Data>
-    {
-        typedef Expr expr;
-        typedef Expr &expr_param;
-        typedef State const state;
-        typedef State const &state_param;
-        typedef Data const data;
-        typedef Data const &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl<Expr &, State, Data>
+{
+	typedef Expr expr;
+	typedef Expr &expr_param;
+	typedef State const state;
+	typedef State const &state_param;
+	typedef Data const data;
+	typedef Data const &data_param;
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl<Expr, State &, Data>
-    {
-        typedef Expr const expr;
-        typedef Expr const &expr_param;
-        typedef State state;
-        typedef State &state_param;
-        typedef Data const data;
-        typedef Data const &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl<Expr, State &, Data>
+{
+	typedef Expr const expr;
+	typedef Expr const &expr_param;
+	typedef State state;
+	typedef State &state_param;
+	typedef Data const data;
+	typedef Data const &data_param;
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl<Expr, State, Data &>
-    {
-        typedef Expr const expr;
-        typedef Expr const &expr_param;
-        typedef State const state;
-        typedef State const &state_param;
-        typedef Data data;
-        typedef Data &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl<Expr, State, Data &>
+{
+	typedef Expr const expr;
+	typedef Expr const &expr_param;
+	typedef State const state;
+	typedef State const &state_param;
+	typedef Data data;
+	typedef Data &data_param;
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl<Expr &, State &, Data>
-    {
-        typedef Expr expr;
-        typedef Expr &expr_param;
-        typedef State state;
-        typedef State &state_param;
-        typedef Data const data;
-        typedef Data const &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl<Expr &, State &, Data>
+{
+	typedef Expr expr;
+	typedef Expr &expr_param;
+	typedef State state;
+	typedef State &state_param;
+	typedef Data const data;
+	typedef Data const &data_param;
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl<Expr &, State, Data &>
-    {
-        typedef Expr expr;
-        typedef Expr &expr_param;
-        typedef State const state;
-        typedef State const &state_param;
-        typedef Data data;
-        typedef Data &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl<Expr &, State, Data &>
+{
+	typedef Expr expr;
+	typedef Expr &expr_param;
+	typedef State const state;
+	typedef State const &state_param;
+	typedef Data data;
+	typedef Data &data_param;
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl<Expr, State &, Data &>
-    {
-        typedef Expr const expr;
-        typedef Expr const &expr_param;
-        typedef State state;
-        typedef State &state_param;
-        typedef Data data;
-        typedef Data &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl<Expr, State &, Data &>
+{
+	typedef Expr const expr;
+	typedef Expr const &expr_param;
+	typedef State state;
+	typedef State &state_param;
+	typedef Data data;
+	typedef Data &data_param;
+};
 
-    template<typename Expr, typename State, typename Data>
-    struct transform_impl<Expr &, State &, Data &>
-    {
-        typedef Expr expr;
-        typedef Expr &expr_param;
-        typedef State state;
-        typedef State &state_param;
-        typedef Data data;
-        typedef Data &data_param;
-    };
+template<typename Expr, typename State, typename Data>
+struct transform_impl<Expr &, State &, Data &>
+{
+	typedef Expr expr;
+	typedef Expr &expr_param;
+	typedef State state;
+	typedef State &state_param;
+	typedef Data data;
+	typedef Data &data_param;
+};
 
-}} // namespace boost::proto
+}
+} // namespace boost::proto
 
 #if defined(_MSC_VER)
 # pragma warning(pop)

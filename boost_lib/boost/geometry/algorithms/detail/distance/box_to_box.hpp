@@ -21,7 +21,9 @@
 #include <boost/geometry/algorithms/dispatch/distance.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -31,22 +33,22 @@ namespace dispatch
 
 template <typename Box1, typename Box2, typename Strategy>
 struct distance
-    <
-        Box1, Box2, Strategy, box_tag, box_tag,
-        strategy_tag_distance_box_box, false
-    >
+	<
+	Box1, Box2, Strategy, box_tag, box_tag,
+	strategy_tag_distance_box_box, false
+	>
 {
-    static inline typename strategy::distance::services::return_type
-        <
-            Strategy,
-            typename point_type<Box1>::type,
-            typename point_type<Box2>::type
-        >::type
-    apply(Box1 const& box1, Box2 const& box2, Strategy const& strategy)
-    {
-        boost::ignore_unused(strategy);
-        return strategy.apply(box1, box2);
-    }
+	static inline typename strategy::distance::services::return_type
+	<
+	Strategy,
+	typename point_type<Box1>::type,
+	typename point_type<Box2>::type
+	>::type
+	apply(Box1 const& box1, Box2 const& box2, Strategy const& strategy)
+	{
+		boost::ignore_unused(strategy);
+		return strategy.apply(box1, box2);
+	}
 };
 
 
@@ -54,7 +56,8 @@ struct distance
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISTANCE_BOX_TO_BOX_HPP

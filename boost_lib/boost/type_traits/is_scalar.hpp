@@ -15,11 +15,12 @@
 #include <boost/type_traits/is_member_pointer.hpp>
 #include <boost/config.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template <typename T>
 struct is_scalar
-   : public integral_constant<bool, ::boost::is_arithmetic<T>::value || ::boost::is_enum<T>::value || ::boost::is_pointer<T>::value || ::boost::is_member_pointer<T>::value>
+	: public integral_constant<bool, ::boost::is_arithmetic<T>::value || ::boost::is_enum<T>::value || ::boost::is_pointer<T>::value || ::boost::is_member_pointer<T>::value>
 {};
 
 } // namespace boost

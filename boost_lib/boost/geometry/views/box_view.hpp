@@ -22,7 +22,9 @@
 #include <boost/geometry/algorithms/assign.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -44,40 +46,40 @@ namespace boost { namespace geometry
 */
 template <typename Box, bool Clockwise = true>
 struct box_view
-    : public detail::points_view
-        <
-            typename geometry::point_type<Box>::type,
-            5
-        >
+	: public detail::points_view
+	  <
+	  typename geometry::point_type<Box>::type,
+	  5
+	  >
 {
-    typedef typename geometry::point_type<Box>::type point_type;
+	typedef typename geometry::point_type<Box>::type point_type;
 
-    /// Constructor accepting the box to adapt
-    explicit box_view(Box const& box)
-        : detail::points_view<point_type, 5>(copy_policy(box))
-    {}
+	/// Constructor accepting the box to adapt
+	explicit box_view(Box const& box)
+		: detail::points_view<point_type, 5>(copy_policy(box))
+	{}
 
 private :
 
-    class copy_policy
-    {
-    public :
-        inline copy_policy(Box const& box)
-            : m_box(box)
-        {}
+	class copy_policy
+	{
+	public :
+		inline copy_policy(Box const& box)
+			: m_box(box)
+		{}
 
-        inline void apply(point_type* points) const
-        {
-            // assign_box_corners_oriented requires a range
-            // an alternative for this workaround would be to pass a range here,
-            // e.g. use boost::array in points_view instead of c-array
-            std::pair<point_type*, point_type*> rng = std::make_pair(points, points + 5);
-            detail::assign_box_corners_oriented<!Clockwise>(m_box, rng);
-            points[4] = points[0];
-        }
-    private :
-        Box const& m_box;
-    };
+		inline void apply(point_type* points) const
+		{
+			// assign_box_corners_oriented requires a range
+			// an alternative for this workaround would be to pass a range here,
+			// e.g. use boost::array in points_view instead of c-array
+			std::pair<point_type*, point_type*> rng = std::make_pair(points, points + 5);
+			detail::assign_box_corners_oriented<!Clockwise>(m_box, rng);
+			points[4] = points[0];
+		}
+	private :
+		Box const& m_box;
+	};
 
 };
 
@@ -91,20 +93,20 @@ namespace traits
 template<typename Box, bool Clockwise>
 struct tag<box_view<Box, Clockwise> >
 {
-    typedef ring_tag type;
+	typedef ring_tag type;
 };
 
 template<typename Box>
 struct point_order<box_view<Box, false> >
 {
-    static order_selector const value = counterclockwise;
+	static order_selector const value = counterclockwise;
 };
 
 
 template<typename Box>
 struct point_order<box_view<Box, true> >
 {
-    static order_selector const value = clockwise;
+	static order_selector const value = clockwise;
 };
 
 }
@@ -112,7 +114,8 @@ struct point_order<box_view<Box, true> >
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_BOX_VIEW_HPP

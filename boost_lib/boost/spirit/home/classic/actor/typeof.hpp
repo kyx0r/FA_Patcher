@@ -11,39 +11,43 @@
 #include <boost/spirit/home/classic/namespace.hpp>
 #include <boost/typeof/typeof.hpp>
 
-namespace boost { namespace spirit {
+namespace boost
+{
+namespace spirit
+{
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_BEGIN
 
-    template<typename T, typename ActionT> class ref_actor;
+template<typename T, typename ActionT> class ref_actor;
 
-    template<typename T, typename ActionT> class ref_value_actor;
+template<typename T, typename ActionT> class ref_value_actor;
 
-    template<typename T, typename ValueT, typename ActionT> 
+template<typename T, typename ValueT, typename ActionT>
 
-    class ref_const_ref_actor;
-    template<typename T, typename ValueT, typename ActionT> 
+class ref_const_ref_actor;
+template<typename T, typename ValueT, typename ActionT>
 
-    class ref_const_ref_value_actor;
-    template<typename T, typename Value1T, typename Value2T, typename ActionT> 
+class ref_const_ref_value_actor;
+template<typename T, typename Value1T, typename Value2T, typename ActionT>
 
-    class ref_const_ref_const_ref_actor;
+class ref_const_ref_const_ref_actor;
 
-    struct assign_action; 
-    struct clear_action;
-    struct increment_action;
-    struct decrement_action;
-    struct push_back_action;
-    struct push_front_action;
-    struct insert_key_action;
-    struct insert_at_action;
-    struct assign_key_action;
-    
-    template<typename T> class swap_actor;
+struct assign_action;
+struct clear_action;
+struct increment_action;
+struct decrement_action;
+struct push_back_action;
+struct push_front_action;
+struct insert_key_action;
+struct insert_at_action;
+struct assign_key_action;
+
+template<typename T> class swap_actor;
 
 BOOST_SPIRIT_CLASSIC_NAMESPACE_END
 
-}} // namespace BOOST_SPIRIT_CLASSIC_NS
+}
+} // namespace BOOST_SPIRIT_CLASSIC_NS
 
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()

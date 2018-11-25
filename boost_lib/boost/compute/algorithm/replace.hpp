@@ -16,52 +16,56 @@
 #include <boost/compute/detail/meta_kernel.hpp>
 #include <boost/compute/detail/iterator_range_size.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Iterator, class T>
 class replace_kernel : public meta_kernel
 {
 public:
-    replace_kernel()
-        : meta_kernel("replace")
-    {
-        m_count = 0;
-    }
+	replace_kernel()
+		: meta_kernel("replace")
+	{
+		m_count = 0;
+	}
 
-    void set_range(Iterator first, Iterator last)
-    {
-        m_count = detail::iterator_range_size(first, last);
+	void set_range(Iterator first, Iterator last)
+	{
+		m_count = detail::iterator_range_size(first, last);
 
-        *this <<
-            "const uint i = get_global_id(0);\n" <<
-            "if(" << first[var<cl_uint>("i")] << " == " << var<T>("old_value") << ")\n" <<
-            "    " << first[var<cl_uint>("i")] << '=' << var<T>("new_value") << ";\n";
-    }
+		*this <<
+		      "const uint i = get_global_id(0);\n" <<
+		      "if(" << first[var<cl_uint>("i")] << " == " << var<T>("old_value") << ")\n" <<
+		      "    " << first[var<cl_uint>("i")] << '=' << var<T>("new_value") << ";\n";
+	}
 
-    void set_old_value(const T &old_value)
-    {
-        add_set_arg<T>("old_value", old_value);
-    }
+	void set_old_value(const T &old_value)
+	{
+		add_set_arg<T>("old_value", old_value);
+	}
 
-    void set_new_value(const T &new_value)
-    {
-        add_set_arg<T>("new_value", new_value);
-    }
+	void set_new_value(const T &new_value)
+	{
+		add_set_arg<T>("new_value", new_value);
+	}
 
-    void exec(command_queue &queue)
-    {
-        if(m_count == 0){
-            // nothing to do
-            return;
-        }
+	void exec(command_queue &queue)
+	{
+		if(m_count == 0)
+		{
+			// nothing to do
+			return;
+		}
 
-        exec_1d(queue, 0, m_count);
-    }
+		exec_1d(queue, 0, m_count);
+	}
 
 private:
-    size_t m_count;
+	size_t m_count;
 };
 
 } // end detail namespace
@@ -77,13 +81,13 @@ inline void replace(Iterator first,
                     const T &new_value,
                     command_queue &queue = system::default_queue())
 {
-    detail::replace_kernel<Iterator, T> kernel;
+	detail::replace_kernel<Iterator, T> kernel;
 
-    kernel.set_range(first, last);
-    kernel.set_old_value(old_value);
-    kernel.set_new_value(new_value);
+	kernel.set_range(first, last);
+	kernel.set_old_value(old_value);
+	kernel.set_new_value(new_value);
 
-    kernel.exec(queue);
+	kernel.exec(queue);
 }
 
 } // end compute namespace

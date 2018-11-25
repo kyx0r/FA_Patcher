@@ -14,20 +14,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S>
-        struct size;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S>
+struct size;
 
-        template <char... Cs>
-        struct size<string<Cs...>> : boost::mpl::int_<sizeof...(Cs)> {};
-      }
-    }
-  }
+template <char... Cs>
+struct size<string<Cs...>> : boost::mpl::int_<sizeof...(Cs)> {};
+}
+}
+}
 }
 
 #endif

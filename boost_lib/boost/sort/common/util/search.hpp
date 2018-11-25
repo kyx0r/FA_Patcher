@@ -24,11 +24,11 @@ namespace util
 template<class T>
 struct filter_pass
 {
-    typedef T key;
-    const key & operator()(const T & val) const
-    {
-        return val;
-    };
+	typedef T key;
+	const key & operator()(const T & val) const
+	{
+		return val;
+	};
 };
 
 //
@@ -67,18 +67,18 @@ template <class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
           class Compare = std::less<typename Filter::key> >
 inline Iter_t internal_find_first(Iter_t first, Iter_t last,
                                   const typename Filter::key &val,
-                                  const Compare & comp = Compare(), 
+                                  const Compare & comp = Compare(),
                                   Filter flt = Filter())
 {
-    Iter_t LI = first, LS = last - 1, it_out = first;
-    while (LI != LS)
-    {
-        it_out = LI + ((LS - LI) >> 1);
-        if (comp(flt(*it_out), val))
-            LI = it_out + 1;
-        else LS = it_out;
-    };
-    return LS;
+	Iter_t LI = first, LS = last - 1, it_out = first;
+	while (LI != LS)
+	{
+		it_out = LI + ((LS - LI) >> 1);
+		if (comp(flt(*it_out), val))
+			LI = it_out + 1;
+		else LS = it_out;
+	};
+	return LS;
 };
 //
 //-----------------------------------------------------------------------------
@@ -98,20 +98,20 @@ inline Iter_t internal_find_first(Iter_t first, Iter_t last,
 
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
-                class Compare = std::less<typename Filter::key> >
+         class Compare = std::less<typename Filter::key> >
 inline Iter_t internal_find_last(Iter_t first, Iter_t last,
                                  const typename Filter::key &val,
                                  const Compare & comp = Compare(), Filter flt =
-                                                 Filter())
+                                     Filter())
 {
-    Iter_t LI = first, LS = last - 1, it_out = first;
-    while (LI != LS)
-    {
-        it_out = LI + ((LS - LI + 1) >> 1);
-        if (comp(val, flt(*it_out))) LS = it_out - 1;
-        else                         LI = it_out;
-    };
-    return LS;
+	Iter_t LI = first, LS = last - 1, it_out = first;
+	while (LI != LS)
+	{
+		it_out = LI + ((LS - LI + 1) >> 1);
+		if (comp(val, flt(*it_out))) LS = it_out - 1;
+		else                         LI = it_out;
+	};
+	return LS;
 };
 
 //
@@ -137,16 +137,16 @@ inline Iter_t internal_find_last(Iter_t first, Iter_t last,
 /// @return iterator to the element found, and if not last
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
-                class Compare = std::less<typename Filter::key> >
+         class Compare = std::less<typename Filter::key> >
 inline Iter_t find_first(Iter_t first, Iter_t last,
-                         const typename Filter::key &val, 
+                         const typename Filter::key &val,
                          const Compare & comp = Compare(),
                          Filter flt = Filter())
 {
-    assert((last - first) >= 0);
-    if (first == last) return last;
-    Iter_t LS = internal_find_first(first, last, val, comp, flt);
-    return (comp(flt(*LS), val) or comp(val, flt(*LS))) ? last : LS;
+	assert((last - first) >= 0);
+	if (first == last) return last;
+	Iter_t LS = internal_find_first(first, last, val, comp, flt);
+	return (comp(flt(*LS), val) or comp(val, flt(*LS))) ? last : LS;
 };
 //
 //-----------------------------------------------------------------------------
@@ -164,14 +164,14 @@ inline Iter_t find_first(Iter_t first, Iter_t last,
 template <class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
           class Compare = std::less<typename Filter::key> >
 inline Iter_t find_last(Iter_t first, Iter_t last,
-                        const typename Filter::key &val, 
+                        const typename Filter::key &val,
                         const Compare & comp = Compare(),
                         Filter flt = Filter())
 {
-    assert((last - first) >= 0);
-    if (last == first) return last;
-    Iter_t LS = internal_find_last(first, last, val, comp, flt);
-    return (comp(flt(*LS), val) or comp(val, flt(*LS))) ? last : LS;
+	assert((last - first) >= 0);
+	if (last == first) return last;
+	Iter_t LS = internal_find_last(first, last, val, comp, flt);
+	return (comp(flt(*LS), val) or comp(val, flt(*LS))) ? last : LS;
 };
 
 //----------------------------------------------------------------------------
@@ -184,16 +184,16 @@ inline Iter_t find_last(Iter_t first, Iter_t last,
 /// @return iterator to the element found
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
-                class Compare = std::less<typename Filter::key> >
+         class Compare = std::less<typename Filter::key> >
 inline Iter_t lower_bound(Iter_t first, Iter_t last,
                           const typename Filter::key &val,
-                          const Compare & comp = Compare(), 
+                          const Compare & comp = Compare(),
                           Filter flt = Filter())
 {
-    assert((last - first) >= 0);
-    if (last == first) return last;
-    Iter_t itaux = internal_find_first(first, last, val, comp, flt);
-    return (itaux == (last - 1) and comp(flt(*itaux), val)) ? last : itaux;
+	assert((last - first) >= 0);
+	if (last == first) return last;
+	Iter_t itaux = internal_find_first(first, last, val, comp, flt);
+	return (itaux == (last - 1) and comp(flt(*itaux), val)) ? last : itaux;
 };
 //----------------------------------------------------------------------------
 //  function :upper_bound
@@ -208,16 +208,16 @@ inline Iter_t lower_bound(Iter_t first, Iter_t last,
 /// @remarks
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
-                class Compare = std::less<typename Filter::key> >
+         class Compare = std::less<typename Filter::key> >
 inline Iter_t upper_bound(Iter_t first, Iter_t last,
                           const typename Filter::key &val,
-                          const Compare & comp = Compare(), 
+                          const Compare & comp = Compare(),
                           Filter flt = Filter())
 {
-    assert((last - first) >= 0);
-    if (last == first) return last;
-    Iter_t itaux = internal_find_last(first, last, val, comp, flt);
-    return (itaux == first and comp(val, flt(*itaux))) ? itaux : itaux + 1;
+	assert((last - first) >= 0);
+	if (last == first) return last;
+	Iter_t itaux = internal_find_last(first, last, val, comp, flt);
+	return (itaux == first and comp(val, flt(*itaux))) ? itaux : itaux + 1;
 }
 ;
 //----------------------------------------------------------------------------
@@ -234,12 +234,12 @@ inline Iter_t upper_bound(Iter_t first, Iter_t last,
 template<class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
          class Compare = std::less<typename Filter::key> >
 inline std::pair<Iter_t, Iter_t> equal_range(Iter_t first, Iter_t last,
-                                             const typename Filter::key &val,
-                                             const Compare & comp = Compare(),
-                                             Filter flt = Filter())
+        const typename Filter::key &val,
+        const Compare & comp = Compare(),
+        Filter flt = Filter())
 {
-    return std::make_pair(lower_bound(first, last, val, comp, flt),
-                    upper_bound(first, last, val, comp, flt));
+	return std::make_pair(lower_bound(first, last, val, comp, flt),
+	                      upper_bound(first, last, val, comp, flt));
 };
 //
 //-----------------------------------------------------------------------------
@@ -254,13 +254,13 @@ inline std::pair<Iter_t, Iter_t> equal_range(Iter_t first, Iter_t last,
 /// @return iterator to the element found, and if not last
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
-                class Compare = std::less<typename Filter::key> >
+         class Compare = std::less<typename Filter::key> >
 inline Iter_t insert_first(Iter_t first, Iter_t last,
                            const typename Filter::key &val,
                            const Compare & comp = Compare(), Filter flt =
-                                           Filter())
+                               Filter())
 {
-    return lower_bound(first, last, val, comp, flt);
+	return lower_bound(first, last, val, comp, flt);
 };
 //
 //-----------------------------------------------------------------------------
@@ -276,13 +276,13 @@ inline Iter_t insert_first(Iter_t first, Iter_t last,
 
 //-----------------------------------------------------------------------------
 template<class Iter_t, class Filter = filter_pass<value_iter<Iter_t> >,
-                class Compare = std::less<typename Filter::key> >
+         class Compare = std::less<typename Filter::key> >
 inline Iter_t insert_last(Iter_t first, Iter_t last,
                           const typename Filter::key &val,
                           const Compare & comp = Compare(), Filter flt =
-                                          Filter())
+                              Filter())
 {
-    return upper_bound(first, last, val, comp, flt);
+	return upper_bound(first, last, val, comp, flt);
 };
 
 /*

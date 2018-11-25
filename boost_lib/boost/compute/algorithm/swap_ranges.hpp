@@ -16,8 +16,10 @@
 #include <boost/compute/algorithm/copy.hpp>
 #include <boost/compute/container/vector.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Swaps the elements in the range [\p first1, \p last1) with the
 /// elements in the range beginning at \p first2.
@@ -29,15 +31,15 @@ inline Iterator2 swap_ranges(Iterator1 first1,
                              Iterator2 first2,
                              command_queue &queue = system::default_queue())
 {
-    typedef typename std::iterator_traits<Iterator1>::value_type value_type;
+	typedef typename std::iterator_traits<Iterator1>::value_type value_type;
 
-    Iterator2 last2 = first2 + std::distance(first1, last1);
+	Iterator2 last2 = first2 + std::distance(first1, last1);
 
-    ::boost::compute::vector<value_type> tmp(first1, last1, queue);
-    ::boost::compute::copy(first2, last2, first1, queue);
-    ::boost::compute::copy(tmp.begin(), tmp.end(), first2, queue);
+	::boost::compute::vector<value_type> tmp(first1, last1, queue);
+	::boost::compute::copy(first2, last2, first1, queue);
+	::boost::compute::copy(tmp.begin(), tmp.end(), first2, queue);
 
-    return last2;
+	return last2;
 }
 
 } // end compute namespace

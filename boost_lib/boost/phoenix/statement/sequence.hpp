@@ -15,31 +15,34 @@
 #include <boost/phoenix/core/meta_grammar.hpp>
 #include <boost/proto/operators.hpp> // Included to solve #5715
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    namespace expression
-    {
-        template <typename A0, typename A1>
-        struct sequence
-            : expr<proto::tag::comma, A0, A1>
-        {};
-    }
+namespace phoenix
+{
+namespace expression
+{
+template <typename A0, typename A1>
+struct sequence
+	: expr<proto::tag::comma, A0, A1>
+{};
+}
 
-    namespace rule
-    {
-        struct sequence
-            : expression::sequence<
-                meta_grammar
-              , meta_grammar
-            >
-        {};
-    }
+namespace rule
+{
+struct sequence
+	: expression::sequence<
+	  meta_grammar
+	, meta_grammar
+	  >
+{};
+}
 
-    template <typename Dummy>
-    struct meta_grammar::case_<proto::tag::comma, Dummy>
-        : enable_rule<rule::sequence, Dummy>
-    {};
+template <typename Dummy>
+struct meta_grammar::case_<proto::tag::comma, Dummy>
+	: enable_rule<rule::sequence, Dummy>
+{};
 
-}}
+}
+}
 
 #endif

@@ -30,11 +30,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * An attribute value presence checker.
@@ -43,38 +45,38 @@ template< typename T >
 class has_attribute
 {
 public:
-    //! Function result_type
-    typedef bool result_type;
-    //! Expected attribute value type
-    typedef T value_type;
+	//! Function result_type
+	typedef bool result_type;
+	//! Expected attribute value type
+	typedef T value_type;
 
 private:
-    //! Attribute value name
-    const attribute_name m_name;
-    //! Visitor invoker
-    value_visitor_invoker< value_type > m_visitor_invoker;
+	//! Attribute value name
+	const attribute_name m_name;
+	//! Visitor invoker
+	value_visitor_invoker< value_type > m_visitor_invoker;
 
 public:
-    /*!
-     * Initializing constructor
-     *
-     * \param name Attribute name
-     */
-    explicit has_attribute(attribute_name const& name) : m_name(name)
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \param name Attribute name
+	 */
+	explicit has_attribute(attribute_name const& name) : m_name(name)
+	{
+	}
 
-    /*!
-     * Checking operator
-     *
-     * \param arg A set of attribute values or a log record
-     * \return \c true if the log record contains the sought attribute value, \c false otherwise
-     */
-    template< typename ArgT >
-    result_type operator() (ArgT const& arg) const
-    {
-        return m_visitor_invoker(m_name, arg, nop()).code() == visitation_result::ok;
-    }
+	/*!
+	 * Checking operator
+	 *
+	 * \param arg A set of attribute values or a log record
+	 * \return \c true if the log record contains the sought attribute value, \c false otherwise
+	 */
+	template< typename ArgT >
+	result_type operator() (ArgT const& arg) const
+	{
+		return m_visitor_invoker(m_name, arg, nop()).code() == visitation_result::ok;
+	}
 };
 
 /*!
@@ -84,46 +86,46 @@ template< >
 class has_attribute< void >
 {
 public:
-    //! Function result_type
-    typedef bool result_type;
-    //! Expected attribute value type
-    typedef void value_type;
+	//! Function result_type
+	typedef bool result_type;
+	//! Expected attribute value type
+	typedef void value_type;
 
 private:
-    //! Attribute name
-    const attribute_name m_name;
+	//! Attribute name
+	const attribute_name m_name;
 
 public:
-    /*!
-     * Initializing constructor
-     *
-     * \param name Attribute name
-     */
-    explicit has_attribute(attribute_name const& name) : m_name(name)
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \param name Attribute name
+	 */
+	explicit has_attribute(attribute_name const& name) : m_name(name)
+	{
+	}
 
-    /*!
-     * Checking operator
-     *
-     * \param attrs A set of attribute values
-     * \return \c true if the log record contains the sought attribute value, \c false otherwise
-     */
-    result_type operator() (attribute_value_set const& attrs) const
-    {
-        return attrs.find(m_name) != attrs.end();
-    }
+	/*!
+	 * Checking operator
+	 *
+	 * \param attrs A set of attribute values
+	 * \return \c true if the log record contains the sought attribute value, \c false otherwise
+	 */
+	result_type operator() (attribute_value_set const& attrs) const
+	{
+		return attrs.find(m_name) != attrs.end();
+	}
 
-    /*!
-     * Checking operator
-     *
-     * \param rec A log record
-     * \return \c true if the log record contains the sought attribute value, \c false otherwise
-     */
-    result_type operator() (boost::log::record_view const& rec) const
-    {
-        return operator()(rec.attribute_values());
-    }
+	/*!
+	 * Checking operator
+	 *
+	 * \param rec A log record
+	 * \return \c true if the log record contains the sought attribute value, \c false otherwise
+	 */
+	result_type operator() (boost::log::record_view const& rec) const
+	{
+		return operator()(rec.attribute_values());
+	}
 };
 
 /*!
@@ -133,9 +135,9 @@ public:
 template< typename AttributeValueT >
 BOOST_FORCEINLINE phoenix::actor< aux::unary_function_terminal< has_attribute< AttributeValueT > > > has_attr(attribute_name const& name)
 {
-    typedef aux::unary_function_terminal< has_attribute< AttributeValueT > > terminal_type;
-    phoenix::actor< terminal_type > act = {{ terminal_type(name) }};
-    return act;
+	typedef aux::unary_function_terminal< has_attribute< AttributeValueT > > terminal_type;
+	phoenix::actor< terminal_type > act = {{ terminal_type(name) }};
+	return act;
 }
 
 /*!
@@ -144,9 +146,9 @@ BOOST_FORCEINLINE phoenix::actor< aux::unary_function_terminal< has_attribute< A
  */
 BOOST_FORCEINLINE phoenix::actor< aux::unary_function_terminal< has_attribute< void > > > has_attr(attribute_name const& name)
 {
-    typedef aux::unary_function_terminal< has_attribute< void > > terminal_type;
-    phoenix::actor< terminal_type > act = {{ terminal_type(name) }};
-    return act;
+	typedef aux::unary_function_terminal< has_attribute< void > > terminal_type;
+	phoenix::actor< terminal_type > act = {{ terminal_type(name) }};
+	return act;
 }
 
 /*!
@@ -156,9 +158,9 @@ BOOST_FORCEINLINE phoenix::actor< aux::unary_function_terminal< has_attribute< v
 template< typename DescriptorT, template< typename > class ActorT >
 BOOST_FORCEINLINE ActorT< aux::unary_function_terminal< has_attribute< typename DescriptorT::value_type > > > has_attr(attribute_keyword< DescriptorT, ActorT > const&)
 {
-    typedef aux::unary_function_terminal< has_attribute< typename DescriptorT::value_type > > terminal_type;
-    ActorT< terminal_type > act = {{ terminal_type(DescriptorT::get_name()) }};
-    return act;
+	typedef aux::unary_function_terminal< has_attribute< typename DescriptorT::value_type > > terminal_type;
+	ActorT< terminal_type > act = {{ terminal_type(DescriptorT::get_name()) }};
+	return act;
 }
 
 } // namespace expressions

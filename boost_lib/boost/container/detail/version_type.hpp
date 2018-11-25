@@ -30,70 +30,77 @@
 #include <boost/container/detail/mpl.hpp>
 #include <boost/container/detail/type_traits.hpp>
 
-namespace boost{
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template <class T, unsigned V>
 struct version_type
-    : public dtl::integral_constant<unsigned, V>
+	: public dtl::integral_constant<unsigned, V>
 {
-    typedef T type;
+	typedef T type;
 
-    version_type(const version_type<T, 0>&);
+	version_type(const version_type<T, 0>&);
 };
 
-namespace impl{
+namespace impl
+{
 
 template <class T,
           bool = dtl::is_convertible<version_type<T, 0>, typename T::version>::value>
 struct extract_version
 {
-   static const unsigned value = 1;
+	static const unsigned value = 1;
 };
 
 template <class T>
 struct extract_version<T, true>
 {
-   static const unsigned value = T::version::value;
+	static const unsigned value = T::version::value;
 };
 
 template <class T>
 struct has_version
 {
-   private:
-   struct two {char _[2];};
-   template <class U> static two test(...);
-   template <class U> static char test(const typename U::version*);
-   public:
-   static const bool value = sizeof(test<T>(0)) == 1;
-   void dummy(){}
+private:
+	struct two
+	{
+		char _[2];
+	};
+	template <class U> static two test(...);
+	template <class U> static char test(const typename U::version*);
+public:
+	static const bool value = sizeof(test<T>(0)) == 1;
+	void dummy() {}
 };
 
 template <class T, bool = has_version<T>::value>
 struct version
 {
-   static const unsigned value = 1;
+	static const unsigned value = 1;
 };
 
 template <class T>
 struct version<T, true>
 {
-   static const unsigned value = extract_version<T>::value;
+	static const unsigned value = extract_version<T>::value;
 };
 
 }  //namespace impl
 
 template <class T>
 struct version
-   : public dtl::integral_constant<unsigned, impl::version<T>::value>
+	: public dtl::integral_constant<unsigned, impl::version<T>::value>
 {};
 
 template<class T, unsigned N>
 struct is_version
 {
-   static const bool value =
-      is_same< typename version<T>::type, integral_constant<unsigned, N> >::value;
+	static const bool value =
+	    is_same< typename version<T>::type, integral_constant<unsigned, N> >::value;
 };
 
 }  //namespace dtl {

@@ -21,9 +21,12 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 template< typename Base, std::size_t Size, bool Signed, bool = Base::is_always_lock_free >
 struct extra_operations;

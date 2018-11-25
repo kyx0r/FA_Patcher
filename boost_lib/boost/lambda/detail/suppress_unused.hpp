@@ -13,9 +13,12 @@
 #ifndef BOOST_LAMBDA_SUPPRESS_UNUSED_HPP
 #define BOOST_LAMBDA_SUPPRESS_UNUSED_HPP
 
-namespace boost { 
-namespace lambda {
-namespace detail {
+namespace boost
+{
+namespace lambda
+{
+namespace detail
+{
 
 template<class T>
 inline void suppress_unused_variable_warnings(const T&) {}

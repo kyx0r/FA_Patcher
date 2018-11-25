@@ -19,21 +19,23 @@
 extern "C" {
 
 #if (BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_NT4)
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-IsDebuggerPresent(BOOST_WINAPI_DETAIL_VOID);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	IsDebuggerPresent(BOOST_WINAPI_DETAIL_VOID);
 #endif
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-OutputDebugStringA(boost::winapi::LPCSTR_);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	OutputDebugStringA(boost::winapi::LPCSTR_);
 
-BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
-OutputDebugStringW(boost::winapi::LPCWSTR_);
+	BOOST_SYMBOL_IMPORT boost::winapi::VOID_ WINAPI
+	OutputDebugStringW(boost::winapi::LPCWSTR_);
 
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if (BOOST_USE_WINAPI_VERSION >= BOOST_WINAPI_VERSION_NT4)
 using ::IsDebuggerPresent;
@@ -44,12 +46,12 @@ using ::OutputDebugStringW;
 
 BOOST_FORCEINLINE void output_debug_string(char const* s)
 {
-    ::OutputDebugStringA(s);
+	::OutputDebugStringA(s);
 }
 
 BOOST_FORCEINLINE void output_debug_string(wchar_t const* s)
 {
-    ::OutputDebugStringW(s);
+	::OutputDebugStringW(s);
 }
 
 }

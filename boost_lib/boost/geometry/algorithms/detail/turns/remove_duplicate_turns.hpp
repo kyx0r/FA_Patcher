@@ -14,16 +14,20 @@
 #include <algorithm>
 #include <boost/geometry/algorithms/equals.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace detail { namespace turns
+namespace detail
+{
+namespace turns
 {
 
 template <typename Turns, bool Enable>
 struct remove_duplicate_turns
 {
-    static inline void apply(Turns&) {}
+	static inline void apply(Turns&) {}
 };
 
 
@@ -32,31 +36,33 @@ template <typename Turns>
 class remove_duplicate_turns<Turns, true>
 {
 private:
-    struct TurnEqualsTo
-    {
-        template <typename Turn>
-        bool operator()(Turn const& t1, Turn const& t2) const
-        {
-            return geometry::equals(t1.point, t2.point)
-                && t1.operations[0].seg_id == t2.operations[0].seg_id
-                && t1.operations[1].seg_id == t2.operations[1].seg_id;
-        }
-    };
+	struct TurnEqualsTo
+	{
+		template <typename Turn>
+		bool operator()(Turn const& t1, Turn const& t2) const
+		{
+			return geometry::equals(t1.point, t2.point)
+			       && t1.operations[0].seg_id == t2.operations[0].seg_id
+			       && t1.operations[1].seg_id == t2.operations[1].seg_id;
+		}
+	};
 
 public:
-    static inline void apply(Turns& turns)
-    {
-        turns.erase( std::unique(turns.begin(), turns.end(),
-                                 TurnEqualsTo()),
-                     turns.end()
-                     );
-    }
+	static inline void apply(Turns& turns)
+	{
+		turns.erase( std::unique(turns.begin(), turns.end(),
+		                         TurnEqualsTo()),
+		             turns.end()
+		           );
+	}
 };
 
 
 
-}} // namespace detail::turns
+}
+} // namespace detail::turns
 
-}} // namespect boost::geometry
+}
+} // namespect boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_TURNS_REMOVE_DUPLICATE_TURNS_HPP

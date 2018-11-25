@@ -26,14 +26,17 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 template< std::size_t FromSize, typename To >
 BOOST_FORCEINLINE void clear_padding(To& to, atomics::detail::true_type) BOOST_NOEXCEPT
 {
-    BOOST_ATOMIC_DETAIL_MEMSET(reinterpret_cast< unsigned char* >(atomics::detail::addressof(to)) + FromSize, 0, sizeof(To) - FromSize);
+	BOOST_ATOMIC_DETAIL_MEMSET(reinterpret_cast< unsigned char* >(atomics::detail::addressof(to)) + FromSize, 0, sizeof(To) - FromSize);
 }
 
 template< std::size_t FromSize, typename To >
@@ -44,21 +47,21 @@ BOOST_FORCEINLINE void clear_padding(To&, atomics::detail::false_type) BOOST_NOE
 template< typename To, std::size_t FromSize, typename From >
 BOOST_FORCEINLINE To bitwise_cast(From const& from) BOOST_NOEXCEPT
 {
-    To to;
-    BOOST_ATOMIC_DETAIL_MEMCPY
-    (
-        atomics::detail::addressof(to),
-        atomics::detail::addressof(from),
-        (FromSize < sizeof(To) ? FromSize : sizeof(To))
-    );
-    atomics::detail::clear_padding< FromSize >(to, atomics::detail::integral_constant< bool, FromSize < sizeof(To) >());
-    return to;
+	To to;
+	BOOST_ATOMIC_DETAIL_MEMCPY
+	(
+	    atomics::detail::addressof(to),
+	    atomics::detail::addressof(from),
+	    (FromSize < sizeof(To) ? FromSize : sizeof(To))
+	);
+	atomics::detail::clear_padding< FromSize >(to, atomics::detail::integral_constant< bool, FromSize < sizeof(To) >());
+	return to;
 }
 
 template< typename To, typename From >
 BOOST_FORCEINLINE To bitwise_cast(From const& from) BOOST_NOEXCEPT
 {
-    return atomics::detail::bitwise_cast< To, sizeof(From) >(from);
+	return atomics::detail::bitwise_cast< To, sizeof(From) >(from);
 }
 
 } // namespace detail

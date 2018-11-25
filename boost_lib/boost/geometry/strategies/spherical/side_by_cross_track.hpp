@@ -29,11 +29,15 @@
 //#include <boost/geometry/strategies/concepts/side_concept.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace side
+namespace strategy
+{
+namespace side
 {
 
 /*!
@@ -47,43 +51,45 @@ class side_by_cross_track
 {
 
 public :
-    template <typename P1, typename P2, typename P>
-    static inline int apply(P1 const& p1, P2 const& p2, P const& p)
-    {
-        typedef typename promote_floating_point
-            <
-                typename select_calculation_type_alt
-                    <
-                        CalculationType,
-                        P1, P2, P
-                    >::type
-            >::type calc_t;
+	template <typename P1, typename P2, typename P>
+	static inline int apply(P1 const& p1, P2 const& p2, P const& p)
+	{
+		typedef typename promote_floating_point
+		<
+		typename select_calculation_type_alt
+		<
+		CalculationType,
+		P1, P2, P
+		>::type
+		>::type calc_t;
 
-        calc_t d1 = 0.001; // m_strategy.apply(sp1, p);
+		calc_t d1 = 0.001; // m_strategy.apply(sp1, p);
 
-        calc_t lon1 = geometry::get_as_radian<0>(p1);
-        calc_t lat1 = geometry::get_as_radian<1>(p1);
-        calc_t lon2 = geometry::get_as_radian<0>(p2);
-        calc_t lat2 = geometry::get_as_radian<1>(p2);
-        calc_t lon = geometry::get_as_radian<0>(p);
-        calc_t lat = geometry::get_as_radian<1>(p);
+		calc_t lon1 = geometry::get_as_radian<0>(p1);
+		calc_t lat1 = geometry::get_as_radian<1>(p1);
+		calc_t lon2 = geometry::get_as_radian<0>(p2);
+		calc_t lat2 = geometry::get_as_radian<1>(p2);
+		calc_t lon = geometry::get_as_radian<0>(p);
+		calc_t lat = geometry::get_as_radian<1>(p);
 
-        calc_t crs_AD = geometry::formula::spherical_azimuth<calc_t, false>
-                             (lon1, lat1, lon, lat).azimuth;
+		calc_t crs_AD = geometry::formula::spherical_azimuth<calc_t, false>
+		                (lon1, lat1, lon, lat).azimuth;
 
-        calc_t crs_AB = geometry::formula::spherical_azimuth<calc_t, false>
-                             (lon1, lat1, lon2, lat2).azimuth;
+		calc_t crs_AB = geometry::formula::spherical_azimuth<calc_t, false>
+		                (lon1, lat1, lon2, lat2).azimuth;
 
-        calc_t XTD = asin(sin(d1) * sin(crs_AD - crs_AB));
+		calc_t XTD = asin(sin(d1) * sin(crs_AD - crs_AB));
 
-        return math::equals(XTD, 0) ? 0 : XTD < 0 ? 1 : -1;
-    }
+		return math::equals(XTD, 0) ? 0 : XTD < 0 ? 1 : -1;
+	}
 };
 
-}} // namespace strategy::side
+}
+} // namespace strategy::side
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_SPHERICAL_SIDE_BY_CROSS_TRACK_HPP

@@ -16,49 +16,49 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    template<typename CharT = char, typename Traits = std::char_traits<CharT> >
-    class base_formatter
-    {
-      base_formatter& operator=(base_formatter const& rhs) ;
+template<typename CharT = char, typename Traits = std::char_traits<CharT> >
+class base_formatter
+{
+	base_formatter& operator=(base_formatter const& rhs) ;
 
-    public:
-      typedef std::basic_ostream<CharT, Traits> ostream_type;
+public:
+	typedef std::basic_ostream<CharT, Traits> ostream_type;
 
-      base_formatter() :
-        precision_(3), os_(std::cout), duration_style_(duration_style::symbol)
-      {
-      }
-      base_formatter(ostream_type& os) :
-        precision_(3), os_(os), duration_style_(duration_style::symbol)
-      {
-      }
+	base_formatter() :
+		precision_(3), os_(std::cout), duration_style_(duration_style::symbol)
+	{
+	}
+	base_formatter(ostream_type& os) :
+		precision_(3), os_(os), duration_style_(duration_style::symbol)
+	{
+	}
 
-      void set_precision(std::size_t precision)
-      {
-        precision_ = precision;
-        if (precision_ > 9)
-          precision_ = 9; // sanity check
-      }
-      void set_os(ostream_type& os)
-      {
-        os_ = os;
-      }
-      void set_duration_style(duration_style style)
-      {
-        duration_style_ = style;
-      }
+	void set_precision(std::size_t precision)
+	{
+		precision_ = precision;
+		if (precision_ > 9)
+			precision_ = 9; // sanity check
+	}
+	void set_os(ostream_type& os)
+	{
+		os_ = os;
+	}
+	void set_duration_style(duration_style style)
+	{
+		duration_style_ = style;
+	}
 
-    protected:
-      std::size_t precision_;
-      ostream_type & os_;
-      duration_style duration_style_;
+protected:
+	std::size_t precision_;
+	ostream_type & os_;
+	duration_style duration_style_;
 
-    };
+};
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 

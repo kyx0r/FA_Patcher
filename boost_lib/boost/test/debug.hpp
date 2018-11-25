@@ -28,9 +28,11 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
+namespace boost
+{
 /// Contains debugger and debug C Runtime interfaces
-namespace debug {
+namespace debug
+{
 
 /// @defgroup DebuggerInterface Debugger and debug C Runtime portable interfaces
 /// @{
@@ -63,12 +65,13 @@ void BOOST_TEST_DECL debugger_break();
 /// Collection of data, which is used by debugger starter routine
 // ************************************************************************** //
 
-struct dbg_startup_info {
-    long                    pid;                ///< pid of a program to attach to
-    bool                    break_or_continue;  ///< what to do after debugger is attached
-    unit_test::const_string binary_path;        ///< path to executable for current process
-    unit_test::const_string display;            ///< if debugger has a GUI, which display to use (on UNIX)
-    unit_test::const_string init_done_lock;     ///< path to a uniquely named lock file, which is used to pause current application while debugger is being initialized
+struct dbg_startup_info
+{
+	long                    pid;                ///< pid of a program to attach to
+	bool                    break_or_continue;  ///< what to do after debugger is attached
+	unit_test::const_string binary_path;        ///< path to executable for current process
+	unit_test::const_string display;            ///< if debugger has a GUI, which display to use (on UNIX)
+	unit_test::const_string init_done_lock;     ///< path to a uniquely named lock file, which is used to pause current application while debugger is being initialized
 };
 
 /// Signature of debugger starter routine. Takes an instance of dbg_startup_into as only argument

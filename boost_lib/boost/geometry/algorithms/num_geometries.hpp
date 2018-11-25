@@ -39,7 +39,9 @@
 #include <boost/geometry/algorithms/detail/counting.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -52,29 +54,29 @@ template
 <
     typename Geometry,
     typename Tag = typename tag_cast
-                            <
-                                typename tag<Geometry>::type,
-                                single_tag,
-                                multi_tag
-                            >::type
->
+    <
+        typename tag<Geometry>::type,
+        single_tag,
+        multi_tag
+        >::type
+    >
 struct num_geometries: not_implemented<Tag>
 {};
 
 
 template <typename Geometry>
 struct num_geometries<Geometry, single_tag>
-    : detail::counting::other_count<1>
+	: detail::counting::other_count<1>
 {};
 
 
 template <typename MultiGeometry>
 struct num_geometries<MultiGeometry, multi_tag>
 {
-    static inline std::size_t apply(MultiGeometry const& multi_geometry)
-    {
-        return boost::size(multi_geometry);
-    }
+	static inline std::size_t apply(MultiGeometry const& multi_geometry)
+	{
+		return boost::size(multi_geometry);
+	}
 };
 
 
@@ -88,31 +90,31 @@ namespace resolve_variant
 template <typename Geometry>
 struct num_geometries
 {
-    static inline std::size_t apply(Geometry const& geometry)
-    {
-        concepts::check<Geometry const>();
+	static inline std::size_t apply(Geometry const& geometry)
+	{
+		concepts::check<Geometry const>();
 
-        return dispatch::num_geometries<Geometry>::apply(geometry);
-    }
+		return dispatch::num_geometries<Geometry>::apply(geometry);
+	}
 };
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct num_geometries<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    struct visitor: boost::static_visitor<std::size_t>
-    {
-        template <typename Geometry>
-        inline std::size_t operator()(Geometry const& geometry) const
-        {
-            return num_geometries<Geometry>::apply(geometry);
-        }
-    };
+	struct visitor: boost::static_visitor<std::size_t>
+	{
+		template <typename Geometry>
+		inline std::size_t operator()(Geometry const& geometry) const
+		{
+			return num_geometries<Geometry>::apply(geometry);
+		}
+	};
 
-    static inline std::size_t
-    apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry)
-    {
-        return boost::apply_visitor(visitor(), geometry);
-    }
+	static inline std::size_t
+	apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry)
+	{
+		return boost::apply_visitor(visitor(), geometry);
+	}
 };
 
 } // namespace resolve_variant
@@ -131,11 +133,12 @@ struct num_geometries<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 template <typename Geometry>
 inline std::size_t num_geometries(Geometry const& geometry)
 {
-    return resolve_variant::num_geometries<Geometry>::apply(geometry);
+	return resolve_variant::num_geometries<Geometry>::apply(geometry);
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_NUM_GEOMETRIES_HPP

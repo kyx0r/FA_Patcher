@@ -16,10 +16,14 @@
 #include <boost/geometry/strategies/buffer.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace buffer
+namespace strategy
+{
+namespace buffer
 {
 
 /*!
@@ -43,67 +47,69 @@ namespace strategy { namespace buffer
  */
 class point_square
 {
-    template
-    <
-        typename Point,
-        typename DistanceType,
-        typename OutputRange
-    >
-    inline void add_point(Point const& point,
-                DistanceType const& distance,
-                DistanceType const& x,
-                DistanceType const& y,
-                OutputRange& output_range) const
-    {
-        typename boost::range_value<OutputRange>::type p;
-        set<0>(p, get<0>(point) + x * distance);
-        set<1>(p, get<1>(point) + y * distance);
-        output_range.push_back(p);
-    }
+	template
+	<
+	    typename Point,
+	    typename DistanceType,
+	    typename OutputRange
+	    >
+	inline void add_point(Point const& point,
+	                      DistanceType const& distance,
+	                      DistanceType const& x,
+	                      DistanceType const& y,
+	                      OutputRange& output_range) const
+	{
+		typename boost::range_value<OutputRange>::type p;
+		set<0>(p, get<0>(point) + x * distance);
+		set<1>(p, get<1>(point) + y * distance);
+		output_range.push_back(p);
+	}
 
-    template
-    <
-        typename Point,
-        typename DistanceType,
-        typename OutputRange
-    >
-    inline void add_points(Point const& point,
-                DistanceType const& distance,
-                OutputRange& output_range) const
-    {
-        add_point(point, distance, -1.0, -1.0, output_range);
-        add_point(point, distance, -1.0, +1.0, output_range);
-        add_point(point, distance, +1.0, +1.0, output_range);
-        add_point(point, distance, +1.0, -1.0, output_range);
+	template
+	<
+	    typename Point,
+	    typename DistanceType,
+	    typename OutputRange
+	    >
+	inline void add_points(Point const& point,
+	                       DistanceType const& distance,
+	                       OutputRange& output_range) const
+	{
+		add_point(point, distance, -1.0, -1.0, output_range);
+		add_point(point, distance, -1.0, +1.0, output_range);
+		add_point(point, distance, +1.0, +1.0, output_range);
+		add_point(point, distance, +1.0, -1.0, output_range);
 
-        // Close it:
-        output_range.push_back(output_range.front());
-    }
+		// Close it:
+		output_range.push_back(output_range.front());
+	}
 
 public :
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-    //! Fills output_range with a square around point using distance_strategy
-    template
-    <
-        typename Point,
-        typename DistanceStrategy,
-        typename OutputRange
-    >
-    inline void apply(Point const& point,
-                DistanceStrategy const& distance_strategy,
-                OutputRange& output_range) const
-    {
-        add_points(point, distance_strategy.apply(point, point,
-                        strategy::buffer::buffer_side_left), output_range);
-    }
+	//! Fills output_range with a square around point using distance_strategy
+	template
+	<
+	    typename Point,
+	    typename DistanceStrategy,
+	    typename OutputRange
+	    >
+	inline void apply(Point const& point,
+	                  DistanceStrategy const& distance_strategy,
+	                  OutputRange& output_range) const
+	{
+		add_points(point, distance_strategy.apply(point, point,
+		           strategy::buffer::buffer_side_left), output_range);
+	}
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
 };
 
 
-}} // namespace strategy::buffer
+}
+} // namespace strategy::buffer
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_BUFFER_POINT_SQUARE_HPP

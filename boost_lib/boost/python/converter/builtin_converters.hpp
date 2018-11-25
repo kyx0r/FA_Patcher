@@ -19,15 +19,18 @@
 // lookups using explicit specializations of arg_to_python and
 // result_to_python.
 
-namespace boost { namespace python {
+namespace boost
+{
+namespace python
+{
 
 namespace converter
 {
-  template <class T> struct arg_to_python;
-  BOOST_PYTHON_DECL PyObject* do_return_to_python(char);
-  BOOST_PYTHON_DECL PyObject* do_return_to_python(char const*);
-  BOOST_PYTHON_DECL PyObject* do_return_to_python(PyObject*);
-  BOOST_PYTHON_DECL PyObject* do_arg_to_python(PyObject*);
+template <class T> struct arg_to_python;
+BOOST_PYTHON_DECL PyObject* do_return_to_python(char);
+BOOST_PYTHON_DECL PyObject* do_return_to_python(char const*);
+BOOST_PYTHON_DECL PyObject* do_return_to_python(PyObject*);
+BOOST_PYTHON_DECL PyObject* do_arg_to_python(PyObject*);
 }
 
 // Provide specializations of to_python_value
@@ -35,15 +38,15 @@ template <class T> struct to_python_value;
 
 namespace detail
 {
-  // Since there's no registry lookup, always report the existence of
-  // a converter.
-  struct builtin_to_python
-  {
-      // This information helps make_getter() decide whether to try to
-      // return an internal reference or not. I don't like it much,
-      // but it will have to serve for now.
-      BOOST_STATIC_CONSTANT(bool, uses_registry = false);
-  };
+// Since there's no registry lookup, always report the existence of
+// a converter.
+struct builtin_to_python
+{
+	// This information helps make_getter() decide whether to try to
+	// return an internal reference or not. I don't like it much,
+	// but it will have to serve for now.
+	BOOST_STATIC_CONSTANT(bool, uses_registry = false);
+};
 }
 
 // Use expr to create the PyObject corresponding to x
@@ -82,7 +85,7 @@ namespace detail
           arg_to_python(T const& x)                     \
             : python::handle<>(expr) {}                 \
       };                                                \
-    } 
+    }
 
 // Specialize argument and return value converters for T using expr
 # define BOOST_PYTHON_TO_PYTHON_BY_VALUE(T, expr, pytype)  \
@@ -114,7 +117,7 @@ BOOST_PYTHON_TO_PYTHON_BY_VALUE(bool, ::PyBool_FromLong(x), &PyBool_Type)
 #else
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(bool, ::PyInt_FromLong(x), &PyInt_Type)
 #endif
-  
+
 // note: handles signed char and unsigned char, but not char (see below)
 BOOST_PYTHON_TO_INT(char)
 
@@ -132,24 +135,24 @@ BOOST_PYTHON_TO_PYTHON_BY_VALUE(
     signed BOOST_PYTHON_LONG_LONG,
     (   x < static_cast<signed BOOST_PYTHON_LONG_LONG>(
             (std::numeric_limits<long>::min)())
-     || x > static_cast<signed BOOST_PYTHON_LONG_LONG>(
+        || x > static_cast<signed BOOST_PYTHON_LONG_LONG>(
             (std::numeric_limits<long>::max)()))
     ? ::PyLong_FromLongLong(x)
     : ::PyInt_FromLong(static_cast<long>(x)), &PyInt_Type)
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(
     unsigned BOOST_PYTHON_LONG_LONG,
     x > static_cast<unsigned BOOST_PYTHON_LONG_LONG>(
-      (std::numeric_limits<long>::max)())
+        (std::numeric_limits<long>::max)())
     ? ::PyLong_FromUnsignedLongLong(x)
     : ::PyInt_FromLong(static_cast<long>(x)), &PyInt_Type)
 //
 # elif defined(HAVE_LONG_LONG) // using Python's macro instead of Boost's
-                               // - we don't seem to get the config right
-                               // all the time.
+// - we don't seem to get the config right
+// all the time.
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(signed BOOST_PYTHON_LONG_LONG, ::PyLong_FromLongLong(x), &PyLong_Type)
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(unsigned BOOST_PYTHON_LONG_LONG, ::PyLong_FromUnsignedLongLong(x), &PyLong_Type)
 # endif
-    
+
 # undef BOOST_TO_PYTHON_INT
 
 #if PY_VERSION_HEX >= 0x03000000
@@ -164,7 +167,7 @@ BOOST_PYTHON_TO_PYTHON_BY_VALUE(std::string, ::PyString_FromStringAndSize(x.data
 
 #if defined(Py_USING_UNICODE) && !defined(BOOST_NO_STD_WSTRING)
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(std::wstring, ::PyUnicode_FromWideChar(x.data(),implicit_cast<ssize_t>(x.size())), &PyUnicode_Type)
-# endif 
+# endif
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(float, ::PyFloat_FromDouble(x), &PyFloat_Type)
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(double, ::PyFloat_FromDouble(x), &PyFloat_Type)
 BOOST_PYTHON_TO_PYTHON_BY_VALUE(long double, ::PyFloat_FromDouble(x), &PyFloat_Type)
@@ -177,14 +180,15 @@ BOOST_PYTHON_TO_PYTHON_BY_VALUE(std::complex<long double>, ::PyComplex_FromDoubl
 # undef BOOST_PYTHON_ARG_TO_PYTHON_BY_VALUE
 # undef BOOST_PYTHON_TO_PYTHON_BY_VALUE
 # undef BOOST_PYTHON_TO_INT
-    
-namespace converter
-{ 
 
-  void initialize_builtin_converters();
+namespace converter
+{
+
+void initialize_builtin_converters();
 
 }
 
-}} // namespace boost::python::converter
+}
+} // namespace boost::python::converter
 
 #endif // BUILTIN_CONVERTERS_DWA2002124_HPP

@@ -31,114 +31,116 @@ class local_counted_base
 {
 private:
 
-    local_counted_base & operator= ( local_counted_base const & );
+	local_counted_base & operator= ( local_counted_base const & );
 
 private:
 
-    // not 'int' or 'unsigned' to avoid aliasing and enable optimizations
-    enum count_type { min_ = 0, initial_ = 1, max_ = 2147483647 };
+	// not 'int' or 'unsigned' to avoid aliasing and enable optimizations
+	enum count_type { min_ = 0, initial_ = 1, max_ = 2147483647 };
 
-    count_type local_use_count_;
+	count_type local_use_count_;
 
 public:
 
-    BOOST_CONSTEXPR local_counted_base() BOOST_SP_NOEXCEPT: local_use_count_( initial_ )
-    {
-    }
+BOOST_CONSTEXPR local_counted_base() BOOST_SP_NOEXCEPT:
+	local_use_count_( initial_ )
+	{
+	}
 
-    BOOST_CONSTEXPR local_counted_base( local_counted_base const & ) BOOST_SP_NOEXCEPT: local_use_count_( initial_ )
-    {
-    }
+BOOST_CONSTEXPR local_counted_base( local_counted_base const & ) BOOST_SP_NOEXCEPT:
+	local_use_count_( initial_ )
+	{
+	}
 
-    virtual ~local_counted_base() /*BOOST_SP_NOEXCEPT*/
-    {
-    }
+	virtual ~local_counted_base() /*BOOST_SP_NOEXCEPT*/
+	{
+	}
 
-    virtual void local_cb_destroy() BOOST_SP_NOEXCEPT = 0;
+	virtual void local_cb_destroy() BOOST_SP_NOEXCEPT = 0;
 
-    virtual boost::detail::shared_count local_cb_get_shared_count() const BOOST_SP_NOEXCEPT = 0;
+	virtual boost::detail::shared_count local_cb_get_shared_count() const BOOST_SP_NOEXCEPT = 0;
 
-    void add_ref() BOOST_SP_NOEXCEPT
-    {
+	void add_ref() BOOST_SP_NOEXCEPT
+	{
 #if !defined(__NVCC__)
 #if defined( __has_builtin )
 # if __has_builtin( __builtin_assume )
 
-        __builtin_assume( local_use_count_ >= 1 );
+		__builtin_assume( local_use_count_ >= 1 );
 
 # endif
 #endif
 #endif
 
-        local_use_count_ = static_cast<count_type>( local_use_count_ + 1 );
-    }
+		local_use_count_ = static_cast<count_type>( local_use_count_ + 1 );
+	}
 
-    void release() BOOST_SP_NOEXCEPT
-    {
-        local_use_count_ = static_cast<count_type>( local_use_count_ - 1 );
+	void release() BOOST_SP_NOEXCEPT
+	{
+		local_use_count_ = static_cast<count_type>( local_use_count_ - 1 );
 
-        if( local_use_count_ == 0 )
-        {
-            local_cb_destroy();
-        }
-    }
+		if( local_use_count_ == 0 )
+		{
+			local_cb_destroy();
+		}
+	}
 
-    long local_use_count() const BOOST_SP_NOEXCEPT
-    {
-        return local_use_count_;
-    }
+	long local_use_count() const BOOST_SP_NOEXCEPT
+	{
+		return local_use_count_;
+	}
 };
 
 class local_counted_impl: public local_counted_base
 {
 private:
 
-    local_counted_impl( local_counted_impl const & );
+	local_counted_impl( local_counted_impl const & );
 
 private:
 
-    shared_count pn_;
+	shared_count pn_;
 
 public:
 
-    explicit local_counted_impl( shared_count const& pn ): pn_( pn )
-    {
-    }
+	explicit local_counted_impl( shared_count const& pn ): pn_( pn )
+	{
+	}
 
 #if !defined( BOOST_NO_CXX11_RVALUE_REFERENCES )
 
-    explicit local_counted_impl( shared_count && pn ): pn_( std::move(pn) )
-    {
-    }
+	explicit local_counted_impl( shared_count && pn ): pn_( std::move(pn) )
+	{
+	}
 
 #endif
 
-    virtual void local_cb_destroy() BOOST_SP_NOEXCEPT
-    {
-        delete this;
-    }
+	virtual void local_cb_destroy() BOOST_SP_NOEXCEPT
+	{
+		delete this;
+	}
 
-    virtual boost::detail::shared_count local_cb_get_shared_count() const BOOST_SP_NOEXCEPT
-    {
-        return pn_;
-    }
+	virtual boost::detail::shared_count local_cb_get_shared_count() const BOOST_SP_NOEXCEPT
+	{
+		return pn_;
+	}
 };
 
 class local_counted_impl_em: public local_counted_base
 {
 public:
 
-    shared_count pn_;
+	shared_count pn_;
 
-    virtual void local_cb_destroy() BOOST_SP_NOEXCEPT
-    {
-        shared_count().swap( pn_ );
-    }
+	virtual void local_cb_destroy() BOOST_SP_NOEXCEPT
+	{
+		shared_count().swap( pn_ );
+	}
 
-    virtual boost::detail::shared_count local_cb_get_shared_count() const BOOST_SP_NOEXCEPT
-    {
-        return pn_;
-    }
+	virtual boost::detail::shared_count local_cb_get_shared_count() const BOOST_SP_NOEXCEPT
+	{
+		return pn_;
+	}
 };
 
 } // namespace detail

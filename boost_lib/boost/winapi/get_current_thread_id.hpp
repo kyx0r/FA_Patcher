@@ -18,12 +18,14 @@
 // Windows CE define GetCurrentThreadId as an inline function in kfuncs.h
 #if !defined( BOOST_USE_WINDOWS_H ) && !defined( UNDER_CE )
 extern "C" {
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI GetCurrentThreadId(BOOST_WINAPI_DETAIL_VOID);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI GetCurrentThreadId(BOOST_WINAPI_DETAIL_VOID);
 }
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 using ::GetCurrentThreadId;
 }
 }

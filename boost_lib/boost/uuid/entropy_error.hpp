@@ -15,8 +15,10 @@
 #include <stdexcept>
 #include <string>
 
-namespace boost {
-namespace uuids {
+namespace boost
+{
+namespace uuids
+{
 
 //! \brief Given boost::system::system_error is in a module that
 //!        is not header-only, we define our own exception type
@@ -24,19 +26,19 @@ namespace uuids {
 class entropy_error : public std::runtime_error
 {
 public:
-    entropy_error(boost::intmax_t errCode, const std::string& message)
-        : std::runtime_error(message)
-        , m_errcode(errCode)
-    {
-    }
+	entropy_error(boost::intmax_t errCode, const std::string& message)
+		: std::runtime_error(message)
+		, m_errcode(errCode)
+	{
+	}
 
-    virtual boost::intmax_t errcode() const
-    {
-        return m_errcode;
-    }
+	virtual boost::intmax_t errcode() const
+	{
+		return m_errcode;
+	}
 
 private:
-    boost::intmax_t m_errcode;
+	boost::intmax_t m_errcode;
 };
 
 } // uuids

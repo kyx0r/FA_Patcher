@@ -19,10 +19,14 @@
 #include <boost/geometry/strategies/geographic/parameters.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace distance
+namespace strategy
+{
+namespace distance
 {
 
 /*!
@@ -43,26 +47,26 @@ template
 <
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
->
+    >
 class vincenty
-    : public strategy::distance::geographic
-        <
-            strategy::vincenty, Spheroid, CalculationType
-        >
+	: public strategy::distance::geographic
+	  <
+	  strategy::vincenty, Spheroid, CalculationType
+	  >
 {
-    typedef strategy::distance::geographic
-        <
-            strategy::vincenty, Spheroid, CalculationType
-        > base_type;
+	typedef strategy::distance::geographic
+	<
+	strategy::vincenty, Spheroid, CalculationType
+	> base_type;
 
 public:
-    inline vincenty()
-        : base_type()
-    {}
+	inline vincenty()
+		: base_type()
+	{}
 
-    explicit inline vincenty(Spheroid const& spheroid)
-        : base_type(spheroid)
-    {}
+	explicit inline vincenty(Spheroid const& spheroid)
+		: base_type(spheroid)
+	{}
 };
 
 #ifndef DOXYGEN_NO_STRATEGY_SPECIALIZATIONS
@@ -72,41 +76,41 @@ namespace services
 template <typename Spheroid, typename CalculationType>
 struct tag<vincenty<Spheroid, CalculationType> >
 {
-    typedef strategy_tag_distance_point_point type;
+	typedef strategy_tag_distance_point_point type;
 };
 
 
 template <typename Spheroid, typename CalculationType, typename P1, typename P2>
 struct return_type<vincenty<Spheroid, CalculationType>, P1, P2>
-    : vincenty<Spheroid, CalculationType>::template calculation_type<P1, P2>
+	: vincenty<Spheroid, CalculationType>::template calculation_type<P1, P2>
 {};
 
 
 template <typename Spheroid, typename CalculationType>
 struct comparable_type<vincenty<Spheroid, CalculationType> >
 {
-    typedef vincenty<Spheroid, CalculationType> type;
+	typedef vincenty<Spheroid, CalculationType> type;
 };
 
 
 template <typename Spheroid, typename CalculationType>
 struct get_comparable<vincenty<Spheroid, CalculationType> >
 {
-    static inline vincenty<Spheroid, CalculationType> apply(vincenty<Spheroid, CalculationType> const& input)
-    {
-        return input;
-    }
+	static inline vincenty<Spheroid, CalculationType> apply(vincenty<Spheroid, CalculationType> const& input)
+	{
+		return input;
+	}
 };
 
 template <typename Spheroid, typename CalculationType, typename P1, typename P2>
 struct result_from_distance<vincenty<Spheroid, CalculationType>, P1, P2 >
 {
-    template <typename T>
-    static inline typename return_type<vincenty<Spheroid, CalculationType>, P1, P2>::type
-        apply(vincenty<Spheroid, CalculationType> const& , T const& value)
-    {
-        return value;
-    }
+	template <typename T>
+	static inline typename return_type<vincenty<Spheroid, CalculationType>, P1, P2>::type
+	apply(vincenty<Spheroid, CalculationType> const&, T const& value)
+	{
+		return value;
+	}
 };
 
 
@@ -118,10 +122,12 @@ struct result_from_distance<vincenty<Spheroid, CalculationType>, P1, P2 >
 
 
 
-}} // namespace strategy::distance
+}
+} // namespace strategy::distance
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_GEOGRAPHIC_VINCENTY_HPP

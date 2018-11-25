@@ -35,16 +35,20 @@
 //!\file
 //!Describes process-shared variables interprocess_condition_any class
 
-namespace boost {
+namespace boost
+{
 
 #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
 
 namespace posix_time
-{  class ptime;   }
+{
+class ptime;
+}
 
 #endif   //#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
 
-namespace interprocess {
+namespace interprocess
+{
 
 //!This class is a condition variable that can be placed in shared memory or
 //!memory mapped files.
@@ -59,74 +63,92 @@ namespace interprocess {
 //!functions.
 class interprocess_condition_any
 {
-   #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
-   //Non-copyable
-   interprocess_condition_any(const interprocess_condition_any &);
-   interprocess_condition_any &operator=(const interprocess_condition_any &);
+#if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
+	//Non-copyable
+	interprocess_condition_any(const interprocess_condition_any &);
+	interprocess_condition_any &operator=(const interprocess_condition_any &);
 
-   class members
-   {
-      public:
-      typedef interprocess_condition   condvar_type;
-      typedef interprocess_mutex       mutex_type;
+	class members
+	{
+	public:
+		typedef interprocess_condition   condvar_type;
+		typedef interprocess_mutex       mutex_type;
 
-      condvar_type &get_condvar() {  return m_cond;  }
-      mutex_type   &get_mutex()   {  return m_mut; }
+		condvar_type &get_condvar()
+		{
+			return m_cond;
+		}
+		mutex_type   &get_mutex()
+		{
+			return m_mut;
+		}
 
-      private:
-      condvar_type   m_cond;
-      mutex_type     m_mut;
-   };
+	private:
+		condvar_type   m_cond;
+		mutex_type     m_mut;
+	};
 
-   ipcdetail::condition_any_wrapper<members>   m_cond;
+	ipcdetail::condition_any_wrapper<members>   m_cond;
 
-   #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
-   public:
-   //!Constructs a interprocess_condition_any. On error throws interprocess_exception.
-   interprocess_condition_any(){}
+#endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
+public:
+	//!Constructs a interprocess_condition_any. On error throws interprocess_exception.
+	interprocess_condition_any() {}
 
-   //!Destroys *this
-   //!liberating system resources.
-   ~interprocess_condition_any(){}
+	//!Destroys *this
+	//!liberating system resources.
+	~interprocess_condition_any() {}
 
-   //!If there is a thread waiting on *this, change that
-   //!thread's state to ready. Otherwise there is no effect.
-   void notify_one()
-   {  m_cond.notify_one();  }
+	//!If there is a thread waiting on *this, change that
+	//!thread's state to ready. Otherwise there is no effect.
+	void notify_one()
+	{
+		m_cond.notify_one();
+	}
 
-   //!Change the state of all threads waiting on *this to ready.
-   //!If there are no waiting threads, notify_all() has no effect.
-   void notify_all()
-   {  m_cond.notify_all();  }
+	//!Change the state of all threads waiting on *this to ready.
+	//!If there are no waiting threads, notify_all() has no effect.
+	void notify_all()
+	{
+		m_cond.notify_all();
+	}
 
-   //!Releases the lock on the interprocess_mutex object associated with lock, blocks
-   //!the current thread of execution until readied by a call to
-   //!this->notify_one() or this->notify_all(), and then reacquires the lock.
-   template <typename L>
-   void wait(L& lock)
-   {  m_cond.wait(lock);  }
+	//!Releases the lock on the interprocess_mutex object associated with lock, blocks
+	//!the current thread of execution until readied by a call to
+	//!this->notify_one() or this->notify_all(), and then reacquires the lock.
+	template <typename L>
+	void wait(L& lock)
+	{
+		m_cond.wait(lock);
+	}
 
-   //!The same as:
-   //!while (!pred()) wait(lock)
-   template <typename L, typename Pr>
-   void wait(L& lock, Pr pred)
-   {  m_cond.wait(lock, pred);  }
+	//!The same as:
+	//!while (!pred()) wait(lock)
+	template <typename L, typename Pr>
+	void wait(L& lock, Pr pred)
+	{
+		m_cond.wait(lock, pred);
+	}
 
-   //!Releases the lock on the interprocess_mutex object associated with lock, blocks
-   //!the current thread of execution until readied by a call to
-   //!this->notify_one() or this->notify_all(), or until time abs_time is reached,
-   //!and then reacquires the lock.
-   //!Returns: false if time abs_time is reached, otherwise true.
-   template <typename L>
-   bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time)
-   {  return m_cond.timed_wait(lock, abs_time);  }
+	//!Releases the lock on the interprocess_mutex object associated with lock, blocks
+	//!the current thread of execution until readied by a call to
+	//!this->notify_one() or this->notify_all(), or until time abs_time is reached,
+	//!and then reacquires the lock.
+	//!Returns: false if time abs_time is reached, otherwise true.
+	template <typename L>
+	bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time)
+	{
+		return m_cond.timed_wait(lock, abs_time);
+	}
 
-   //!The same as:   while (!pred()) {
-   //!                  if (!timed_wait(lock, abs_time)) return pred();
-   //!               } return true;
-   template <typename L, typename Pr>
-   bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time, Pr pred)
-   {  return m_cond.timed_wait(lock, abs_time, pred);  }
+	//!The same as:   while (!pred()) {
+	//!                  if (!timed_wait(lock, abs_time)) return pred();
+	//!               } return true;
+	template <typename L, typename Pr>
+	bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time, Pr pred)
+	{
+		return m_cond.timed_wait(lock, abs_time, pred);
+	}
 };
 
 }  //namespace interprocess

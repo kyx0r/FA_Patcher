@@ -14,7 +14,7 @@
 
 namespace boost
 {
-    typedef condition_variable_any condition;
+typedef condition_variable_any condition;
 }
 
 #endif

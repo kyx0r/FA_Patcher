@@ -28,11 +28,11 @@ namespace detail
 
 #if !defined( BOOST_NO_CXX11_DECLTYPE ) && ( ( defined( __clang__ ) && !defined( _LIBCPP_VERSION ) ) || defined( __INTEL_COMPILER ) )
 
-    typedef decltype(nullptr) sp_nullptr_t;
+typedef decltype(nullptr) sp_nullptr_t;
 
 #else
 
-    typedef std::nullptr_t sp_nullptr_t;
+typedef std::nullptr_t sp_nullptr_t;
 
 #endif
 

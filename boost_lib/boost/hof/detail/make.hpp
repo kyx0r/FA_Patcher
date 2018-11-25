@@ -12,20 +12,27 @@
 #include <boost/hof/detail/join.hpp>
 #include <boost/hof/detail/delegate.hpp>
 
-namespace boost { namespace hof { namespace detail {
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
 
 template<template<class...> class Adaptor>
 struct make
 {
-    constexpr make() noexcept
-    {}
-    template<class... Fs, class Result=BOOST_HOF_JOIN(Adaptor, Fs...)>
-    constexpr Result operator()(Fs... fs) const BOOST_HOF_NOEXCEPT_CONSTRUCTIBLE(Result, Fs&&...)
-    {
-        return Result(static_cast<Fs&&>(fs)...);
-    }
+	constexpr make() noexcept
+	{}
+	template<class... Fs, class Result=BOOST_HOF_JOIN(Adaptor, Fs...)>
+	constexpr Result operator()(Fs... fs) const BOOST_HOF_NOEXCEPT_CONSTRUCTIBLE(Result, Fs&&...)
+	{
+		return Result(static_cast<Fs&&>(fs)...);
+	}
 };
 
-}}} // namespace boost::hof
+}
+}
+} // namespace boost::hof
 
 #endif

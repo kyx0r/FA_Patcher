@@ -12,21 +12,24 @@
 #define BOOST_CONTAINER_PMR_STRING_HPP
 
 #if defined (_MSC_VER)
-#  pragma once 
+#  pragma once
 #endif
 
 #include <boost/container/string.hpp>
 #include <boost/container/pmr/polymorphic_allocator.hpp>
 
-namespace boost {
-namespace container {
-namespace pmr {
+namespace boost
+{
+namespace container
+{
+namespace pmr
+{
 
 #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
 
 template <class CharT, class Traits = std::char_traits<CharT>  >
 using basic_string =
-   boost::container::basic_string<CharT, Traits, polymorphic_allocator<CharT> >;
+    boost::container::basic_string<CharT, Traits, polymorphic_allocator<CharT> >;
 
 #endif
 
@@ -35,8 +38,8 @@ using basic_string =
 template <class CharT, class Traits = std::char_traits<CharT> >
 struct basic_string_of
 {
-   typedef boost::container::basic_string
-      <CharT, Traits, polymorphic_allocator<CharT> > type;
+	typedef boost::container::basic_string
+	<CharT, Traits, polymorphic_allocator<CharT> > type;
 };
 
 typedef basic_string_of<char>::type    string;

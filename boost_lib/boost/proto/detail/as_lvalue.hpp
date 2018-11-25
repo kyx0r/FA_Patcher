@@ -16,25 +16,28 @@
 # pragma warning(disable : 4714) // function 'xxx' marked as __forceinline not inlined
 #endif
 
-namespace boost { namespace proto
+namespace boost
 {
-    namespace detail
-    {
-        template<typename T>
-        BOOST_FORCEINLINE
-        T &as_lvalue(T &t)
-        {
-            return t;
-        }
+namespace proto
+{
+namespace detail
+{
+template<typename T>
+BOOST_FORCEINLINE
+T &as_lvalue(T &t)
+{
+	return t;
+}
 
-        template<typename T>
-        BOOST_FORCEINLINE
-        T const &as_lvalue(T const &t)
-        {
-            return t;
-        }
-    }
-}}
+template<typename T>
+BOOST_FORCEINLINE
+T const &as_lvalue(T const &t)
+{
+	return t;
+}
+}
+}
+}
 
 #if defined(_MSC_VER)
 # pragma warning(pop)

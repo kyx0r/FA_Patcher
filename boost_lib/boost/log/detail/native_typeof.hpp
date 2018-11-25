@@ -24,11 +24,13 @@
 
 #if !defined(BOOST_NO_CXX11_DECLTYPE)
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 template< typename T >
 T get_root_type(T const&);

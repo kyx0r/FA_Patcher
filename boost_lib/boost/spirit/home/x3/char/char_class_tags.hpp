@@ -8,22 +8,28 @@
 #define BOOST_SPIRIT_X3_CHAR_CLASS_TAGS_APRIL_16_2006_1051AM
 
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    ///////////////////////////////////////////////////////////////////////////
-    struct char_tag {};
-    struct alnum_tag {};
-    struct alpha_tag {};
-    struct blank_tag {};
-    struct cntrl_tag {};
-    struct digit_tag {};
-    struct graph_tag {};
-    struct print_tag {};
-    struct punct_tag {};
-    struct space_tag {};
-    struct xdigit_tag {};
-    struct lower_tag {};
-    struct upper_tag {};
-}}}
+namespace spirit
+{
+namespace x3
+{
+///////////////////////////////////////////////////////////////////////////
+struct char_tag {};
+struct alnum_tag {};
+struct alpha_tag {};
+struct blank_tag {};
+struct cntrl_tag {};
+struct digit_tag {};
+struct graph_tag {};
+struct print_tag {};
+struct punct_tag {};
+struct space_tag {};
+struct xdigit_tag {};
+struct lower_tag {};
+struct upper_tag {};
+}
+}
+}
 
 #endif

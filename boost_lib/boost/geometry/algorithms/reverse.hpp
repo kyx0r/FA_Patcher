@@ -31,45 +31,50 @@
 #include <boost/geometry/geometries/concepts/check.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace reverse
+namespace detail
+{
+namespace reverse
 {
 
 
 struct range_reverse
 {
-    template <typename Range>
-    static inline void apply(Range& range)
-    {
-        std::reverse(boost::begin(range), boost::end(range));
-    }
+	template <typename Range>
+	static inline void apply(Range& range)
+	{
+		std::reverse(boost::begin(range), boost::end(range));
+	}
 };
 
 
 struct polygon_reverse: private range_reverse
 {
-    template <typename Polygon>
-    static inline void apply(Polygon& polygon)
-    {
-        range_reverse::apply(exterior_ring(polygon));
+	template <typename Polygon>
+	static inline void apply(Polygon& polygon)
+	{
+		range_reverse::apply(exterior_ring(polygon));
 
-        typename interior_return_type<Polygon>::type
-            rings = interior_rings(polygon);
+		typename interior_return_type<Polygon>::type
+		rings = interior_rings(polygon);
 
-        for (typename detail::interior_iterator<Polygon>::type
-                it = boost::begin(rings); it != boost::end(rings); ++it)
-        {
-            range_reverse::apply(*it);
-        }
-    }
+		for (typename detail::interior_iterator<Polygon>::type
+		        it = boost::begin(rings); it != boost::end(rings); ++it)
+		{
+			range_reverse::apply(*it);
+		}
+	}
 };
 
 
-}} // namespace detail::reverse
+}
+} // namespace detail::reverse
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -81,46 +86,46 @@ namespace dispatch
 template <typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct reverse
 {
-    static inline void apply(Geometry&)
-    {}
+	static inline void apply(Geometry&)
+	{}
 };
 
 
 template <typename Ring>
 struct reverse<Ring, ring_tag>
-    : detail::reverse::range_reverse
+	: detail::reverse::range_reverse
 {};
 
 
 template <typename LineString>
 struct reverse<LineString, linestring_tag>
-    : detail::reverse::range_reverse
+	: detail::reverse::range_reverse
 {};
 
 
 template <typename Polygon>
 struct reverse<Polygon, polygon_tag>
-    : detail::reverse::polygon_reverse
+	: detail::reverse::polygon_reverse
 {};
 
 
 template <typename Geometry>
 struct reverse<Geometry, multi_linestring_tag>
-    : detail::multi_modify
-        <
-            Geometry,
-            detail::reverse::range_reverse
-        >
+	: detail::multi_modify
+	  <
+	  Geometry,
+	  detail::reverse::range_reverse
+	  >
 {};
 
 
 template <typename Geometry>
 struct reverse<Geometry, multi_polygon_tag>
-    : detail::multi_modify
-        <
-            Geometry,
-            detail::reverse::polygon_reverse
-        >
+	: detail::multi_modify
+	  <
+	  Geometry,
+	  detail::reverse::polygon_reverse
+	  >
 {};
 
 
@@ -135,29 +140,29 @@ namespace resolve_variant
 template <typename Geometry>
 struct reverse
 {
-    static void apply(Geometry& geometry)
-    {
-        concepts::check<Geometry>();
-        dispatch::reverse<Geometry>::apply(geometry);
-    }
+	static void apply(Geometry& geometry)
+	{
+		concepts::check<Geometry>();
+		dispatch::reverse<Geometry>::apply(geometry);
+	}
 };
 
 template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct reverse<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    struct visitor: boost::static_visitor<void>
-    {
-        template <typename Geometry>
-        void operator()(Geometry& geometry) const
-        {
-            reverse<Geometry>::apply(geometry);
-        }
-    };
+	struct visitor: boost::static_visitor<void>
+	{
+		template <typename Geometry>
+		void operator()(Geometry& geometry) const
+		{
+			reverse<Geometry>::apply(geometry);
+		}
+	};
 
-    static inline void apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry)
-    {
-        boost::apply_visitor(visitor(), geometry);
-    }
+	static inline void apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry)
+	{
+		boost::apply_visitor(visitor(), geometry);
+	}
 };
 
 } // namespace resolve_variant
@@ -177,10 +182,11 @@ struct reverse<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 template <typename Geometry>
 inline void reverse(Geometry& geometry)
 {
-    resolve_variant::reverse<Geometry>::apply(geometry);
+	resolve_variant::reverse<Geometry>::apply(geometry);
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_REVERSE_HPP

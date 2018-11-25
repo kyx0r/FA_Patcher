@@ -26,16 +26,20 @@
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace detail { namespace helper_geometries
+namespace detail
+{
+namespace helper_geometries
 {
 
 template <typename Geometry, typename CS_Tag = typename cs_tag<Geometry>::type>
 struct default_units
 {
-    typedef typename coordinate_system<Geometry>::type::units type;
+	typedef typename coordinate_system<Geometry>::type::units type;
 };
 
 // The Cartesian coordinate system does not define the type units.
@@ -49,40 +53,40 @@ struct default_units
 template <typename Geometry>
 struct default_units<Geometry, cartesian_tag>
 {
-    typedef radian type;
+	typedef radian type;
 };
 
 
 template <typename Units, typename CS_Tag>
 struct cs_tag_to_coordinate_system
 {
-    BOOST_MPL_ASSERT_MSG((false),
-                         NOT_IMPLEMENTED_FOR_THIS_COORDINATE_SYSTEM,
-                         (types<CS_Tag>));
+	BOOST_MPL_ASSERT_MSG((false),
+	                     NOT_IMPLEMENTED_FOR_THIS_COORDINATE_SYSTEM,
+	                     (types<CS_Tag>));
 };
 
 template <typename Units>
 struct cs_tag_to_coordinate_system<Units, cartesian_tag>
 {
-    typedef cs::cartesian type;
+	typedef cs::cartesian type;
 };
 
 template <typename Units>
 struct cs_tag_to_coordinate_system<Units, spherical_equatorial_tag>
 {
-    typedef cs::spherical_equatorial<Units> type;
+	typedef cs::spherical_equatorial<Units> type;
 };
 
 template <typename Units>
 struct cs_tag_to_coordinate_system<Units, spherical_polar_tag>
 {
-    typedef cs::spherical<Units> type;
+	typedef cs::spherical<Units> type;
 };
 
 template <typename Units>
 struct cs_tag_to_coordinate_system<Units, geographic_tag>
 {
-    typedef cs::geographic<Units> type;
+	typedef cs::geographic<Units> type;
 };
 
 
@@ -92,19 +96,20 @@ template
     typename NewCoordinateType,
     typename NewUnits,
     typename CS_Tag = typename cs_tag<Point>::type
->
+    >
 struct helper_point
 {
-    typedef model::point
-        <
-            NewCoordinateType,
-            dimension<Point>::value,
-            typename cs_tag_to_coordinate_system<NewUnits, CS_Tag>::type
-        > type;
+	typedef model::point
+	<
+	NewCoordinateType,
+	dimension<Point>::value,
+	typename cs_tag_to_coordinate_system<NewUnits, CS_Tag>::type
+	> type;
 };
 
 
-}} // detail::helper_geometries
+}
+} // detail::helper_geometries
 
 
 namespace detail_dispatch
@@ -124,23 +129,23 @@ struct helper_geometry : not_implemented<Geometry>
 template <typename Point, typename NewCoordinateType, typename NewUnits>
 struct helper_geometry<Point, NewCoordinateType, NewUnits, point_tag>
 {
-    typedef typename detail::helper_geometries::helper_point
-        <
-            Point, NewCoordinateType, NewUnits
-        >::type type;
+	typedef typename detail::helper_geometries::helper_point
+	<
+	Point, NewCoordinateType, NewUnits
+	>::type type;
 };
 
 
 template <typename Box, typename NewCoordinateType, typename NewUnits>
 struct helper_geometry<Box, NewCoordinateType, NewUnits, box_tag>
 {
-    typedef model::box
-        <
-            typename helper_geometry
-                <
-                    typename point_type<Box>::type, NewCoordinateType, NewUnits
-                >::type
-        > type;
+	typedef model::box
+	<
+	typename helper_geometry
+	<
+	typename point_type<Box>::type, NewCoordinateType, NewUnits
+	>::type
+	> type;
 };
 
 
@@ -155,19 +160,20 @@ template
     typename Geometry,
     typename NewCoordinateType = typename coordinate_type<Geometry>::type,
     typename NewUnits = typename detail::helper_geometries::default_units
-        <
-            Geometry
+    <
+        Geometry
         >::type
->
+    >
 struct helper_geometry
 {
-    typedef typename detail_dispatch::helper_geometry
-        <
-            Geometry, NewCoordinateType, NewUnits
-        >::type type;
+	typedef typename detail_dispatch::helper_geometry
+	<
+	Geometry, NewCoordinateType, NewUnits
+	>::type type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_HELPER_GEOMETRY_HPP

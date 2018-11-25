@@ -16,9 +16,11 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/workaround.hpp>
 
-namespace boost{
+namespace boost
+{
 
-namespace multi_index{
+namespace multi_index
+{
 
 /* dummy type and variable for use in ordered_index::range() */
 
@@ -26,17 +28,21 @@ namespace multi_index{
  * http://lists.boost.org/Archives/boost/2006/07/108355.php
  */
 
-namespace detail{class unbounded_helper;}
+namespace detail
+{
+class unbounded_helper;
+}
 
 detail::unbounded_helper unbounded(detail::unbounded_helper);
 
-namespace detail{
+namespace detail
+{
 
 class unbounded_helper
 {
-  unbounded_helper(){}
-  unbounded_helper(const unbounded_helper&){}
-  friend unbounded_helper multi_index::unbounded(unbounded_helper);
+	unbounded_helper() {}
+	unbounded_helper(const unbounded_helper&) {}
+	friend unbounded_helper multi_index::unbounded(unbounded_helper);
 };
 
 typedef unbounded_helper (*unbounded_type)(unbounded_helper);
@@ -45,17 +51,18 @@ typedef unbounded_helper (*unbounded_type)(unbounded_helper);
 
 inline detail::unbounded_helper unbounded(detail::unbounded_helper)
 {
-  return detail::unbounded_helper();
+	return detail::unbounded_helper();
 }
 
 /* tags used in the implementation of range */
 
-namespace detail{
+namespace detail
+{
 
-struct none_unbounded_tag{};
-struct lower_unbounded_tag{};
-struct upper_unbounded_tag{};
-struct both_unbounded_tag{};
+struct none_unbounded_tag {};
+struct lower_unbounded_tag {};
+struct upper_unbounded_tag {};
+struct both_unbounded_tag {};
 
 } /* namespace multi_index::detail */
 

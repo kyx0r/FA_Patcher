@@ -19,8 +19,10 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 /** @defgroup asio_handler_invoke boost::asio::asio_handler_invoke
  *
@@ -66,15 +68,15 @@ namespace asio {
 template <typename Function>
 inline void asio_handler_invoke(Function& function, ...)
 {
-  function();
+	function();
 }
 
 /// Default handler invocation hook used for const function objects.
 template <typename Function>
 inline void asio_handler_invoke(const Function& function, ...)
 {
-  Function tmp(function);
-  tmp();
+	Function tmp(function);
+	tmp();
 }
 
 /*@}*/

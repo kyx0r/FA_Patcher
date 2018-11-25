@@ -21,14 +21,17 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 template< typename T >
 struct is_iec559
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = !!std::numeric_limits< T >::is_iec559;
+	static BOOST_CONSTEXPR_OR_CONST bool value = !!std::numeric_limits< T >::is_iec559;
 };
 
 #if defined(BOOST_HAS_FLOAT128)
@@ -36,7 +39,7 @@ struct is_iec559
 template< >
 struct is_iec559< boost::float128_type >
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 #endif // defined(BOOST_HAS_FLOAT128)
 

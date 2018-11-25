@@ -22,7 +22,9 @@
 #include <boost/range.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -34,28 +36,28 @@ namespace detail
 template <typename MultiGeometry, typename Policy>
 struct multi_modify
 {
-    static inline void apply(MultiGeometry& multi)
-    {
-        typedef typename boost::range_iterator<MultiGeometry>::type iterator_type;
-        for (iterator_type it = boost::begin(multi);
-            it != boost::end(multi);
-            ++it)
-        {
-            Policy::apply(*it);
-        }
-    }
+	static inline void apply(MultiGeometry& multi)
+	{
+		typedef typename boost::range_iterator<MultiGeometry>::type iterator_type;
+		for (iterator_type it = boost::begin(multi);
+		        it != boost::end(multi);
+		        ++it)
+		{
+			Policy::apply(*it);
+		}
+	}
 
-    template <typename Strategy>
-    static inline void apply(MultiGeometry& multi, Strategy const& strategy)
-    {
-        typedef typename boost::range_iterator<MultiGeometry>::type iterator_type;
-        for (iterator_type it = boost::begin(multi);
-            it != boost::end(multi);
-            ++it)
-        {
-            Policy::apply(*it, strategy);
-        }
-    }
+	template <typename Strategy>
+	static inline void apply(MultiGeometry& multi, Strategy const& strategy)
+	{
+		typedef typename boost::range_iterator<MultiGeometry>::type iterator_type;
+		for (iterator_type it = boost::begin(multi);
+		        it != boost::end(multi);
+		        ++it)
+		{
+			Policy::apply(*it, strategy);
+		}
+	}
 };
 
 
@@ -63,7 +65,8 @@ struct multi_modify
 #endif
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_MULTI_MODIFY_HPP

@@ -22,26 +22,28 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
+namespace boost
+{
+namespace asio
+{
 
 template <typename CompletionToken>
 BOOST_ASIO_INITFN_RESULT_TYPE(CompletionToken, void()) post(
     BOOST_ASIO_MOVE_ARG(CompletionToken) token)
 {
-  typedef BOOST_ASIO_HANDLER_TYPE(CompletionToken, void()) handler;
+	typedef BOOST_ASIO_HANDLER_TYPE(CompletionToken, void()) handler;
 
-  async_completion<CompletionToken, void()> init(token);
+	async_completion<CompletionToken, void()> init(token);
 
-  typename associated_executor<handler>::type ex(
-      (get_associated_executor)(init.completion_handler));
+	typename associated_executor<handler>::type ex(
+	    (get_associated_executor)(init.completion_handler));
 
-  typename associated_allocator<handler>::type alloc(
-      (get_associated_allocator)(init.completion_handler));
+	typename associated_allocator<handler>::type alloc(
+	    (get_associated_allocator)(init.completion_handler));
 
-  ex.post(BOOST_ASIO_MOVE_CAST(handler)(init.completion_handler), alloc);
+	ex.post(BOOST_ASIO_MOVE_CAST(handler)(init.completion_handler), alloc);
 
-  return init.result.get();
+	return init.result.get();
 }
 
 template <typename Executor, typename CompletionToken>
@@ -49,26 +51,26 @@ BOOST_ASIO_INITFN_RESULT_TYPE(CompletionToken, void()) post(
     const Executor& ex, BOOST_ASIO_MOVE_ARG(CompletionToken) token,
     typename enable_if<is_executor<Executor>::value>::type*)
 {
-  typedef BOOST_ASIO_HANDLER_TYPE(CompletionToken, void()) handler;
+	typedef BOOST_ASIO_HANDLER_TYPE(CompletionToken, void()) handler;
 
-  async_completion<CompletionToken, void()> init(token);
+	async_completion<CompletionToken, void()> init(token);
 
-  typename associated_allocator<handler>::type alloc(
-      (get_associated_allocator)(init.completion_handler));
+	typename associated_allocator<handler>::type alloc(
+	    (get_associated_allocator)(init.completion_handler));
 
-  ex.post(detail::work_dispatcher<handler>(init.completion_handler), alloc);
+	ex.post(detail::work_dispatcher<handler>(init.completion_handler), alloc);
 
-  return init.result.get();
+	return init.result.get();
 }
 
 template <typename ExecutionContext, typename CompletionToken>
 inline BOOST_ASIO_INITFN_RESULT_TYPE(CompletionToken, void()) post(
     ExecutionContext& ctx, BOOST_ASIO_MOVE_ARG(CompletionToken) token,
     typename enable_if<is_convertible<
-      ExecutionContext&, execution_context&>::value>::type*)
+    ExecutionContext&, execution_context&>::value>::type*)
 {
-  return (post)(ctx.get_executor(),
-      BOOST_ASIO_MOVE_CAST(CompletionToken)(token));
+	return (post)(ctx.get_executor(),
+	              BOOST_ASIO_MOVE_CAST(CompletionToken)(token));
 }
 
 } // namespace asio

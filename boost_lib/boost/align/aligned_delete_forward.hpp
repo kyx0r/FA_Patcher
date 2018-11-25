@@ -8,8 +8,10 @@ Distributed under the Boost Software License, Version 1.0.
 #ifndef BOOST_ALIGN_ALIGNED_DELETE_FORWARD_HPP
 #define BOOST_ALIGN_ALIGNED_DELETE_FORWARD_HPP
 
-namespace boost {
-namespace alignment {
+namespace boost
+{
+namespace alignment
+{
 
 struct aligned_delete;
 

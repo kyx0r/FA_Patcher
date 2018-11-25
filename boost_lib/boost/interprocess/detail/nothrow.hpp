@@ -18,25 +18,33 @@
 #  pragma once
 #endif
 
-namespace std {   //no namespace versioning in clang+libc++
+namespace std     //no namespace versioning in clang+libc++
+{
 
 struct nothrow_t;
 
 }  //namespace std {
 
-namespace boost{ namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 template <int Dummy = 0>
 struct nothrow
 {
-   static const std::nothrow_t &get()   {  return *pnothrow;  }
-   static std::nothrow_t *pnothrow;
+	static const std::nothrow_t &get()
+	{
+		return *pnothrow;
+	}
+	static std::nothrow_t *pnothrow;
 };
 
 template <int Dummy>
 std::nothrow_t *nothrow<Dummy>::pnothrow =
-   reinterpret_cast<std::nothrow_t *>(0x1234);  //Avoid sanitizer warnings on references to null
+    reinterpret_cast<std::nothrow_t *>(0x1234);  //Avoid sanitizer warnings on references to null
 
-}}  //namespace boost{ namespace interprocess {
+}
+}  //namespace boost{ namespace interprocess {
 
 #endif //#ifndef BOOST_INTERPROCESS_DETAIL_NOTHROW_HPP

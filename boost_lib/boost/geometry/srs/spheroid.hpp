@@ -29,9 +29,11 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
 {
-    
+namespace geometry
+{
+
 namespace srs
 {
 
@@ -46,34 +48,34 @@ template <typename RadiusType>
 class spheroid
 {
 public:
-    spheroid(RadiusType const& a, RadiusType const& b)
-        : m_a(a)
-        , m_b(b)
-    {}
+	spheroid(RadiusType const& a, RadiusType const& b)
+		: m_a(a)
+		, m_b(b)
+	{}
 
-    spheroid()
-        : m_a(RadiusType(6378137.0))
-        , m_b(RadiusType(6356752.3142451793))
-    {}
+	spheroid()
+		: m_a(RadiusType(6378137.0))
+		, m_b(RadiusType(6356752.3142451793))
+	{}
 
-    template <std::size_t I>
-    RadiusType get_radius() const
-    {
-        BOOST_STATIC_ASSERT(I < 3);
+	template <std::size_t I>
+	RadiusType get_radius() const
+	{
+		BOOST_STATIC_ASSERT(I < 3);
 
-        return I < 2 ? m_a : m_b;
-    }
+		return I < 2 ? m_a : m_b;
+	}
 
-    template <std::size_t I>
-    void set_radius(RadiusType const& radius)
-    {
-        BOOST_STATIC_ASSERT(I < 3);
+	template <std::size_t I>
+	void set_radius(RadiusType const& radius)
+	{
+		BOOST_STATIC_ASSERT(I < 3);
 
-        (I < 2 ? m_a : m_b) = radius;
-    }
+		(I < 2 ? m_a : m_b) = radius;
+	}
 
 private:
-    RadiusType m_a, m_b; // equatorial radius, polar radius
+	RadiusType m_a, m_b; // equatorial radius, polar radius
 };
 
 } // namespace srs
@@ -86,36 +88,37 @@ namespace traits
 template <typename RadiusType>
 struct tag< srs::spheroid<RadiusType> >
 {
-    typedef srs_spheroid_tag type;
+	typedef srs_spheroid_tag type;
 };
 
 template <typename RadiusType>
 struct radius_type< srs::spheroid<RadiusType> >
 {
-    typedef RadiusType type;
+	typedef RadiusType type;
 };
 
 template <typename RadiusType, std::size_t Dimension>
 struct radius_access<srs::spheroid<RadiusType>, Dimension>
 {
-    typedef srs::spheroid<RadiusType> spheroid_type;
+	typedef srs::spheroid<RadiusType> spheroid_type;
 
-    static inline RadiusType get(spheroid_type const& s)
-    {
-        return s.template get_radius<Dimension>();
-    }
+	static inline RadiusType get(spheroid_type const& s)
+	{
+		return s.template get_radius<Dimension>();
+	}
 
-    static inline void set(spheroid_type& s, RadiusType const& value)
-    {
-        s.template set_radius<Dimension>(value);
-    }
+	static inline void set(spheroid_type& s, RadiusType const& value)
+	{
+		s.template set_radius<Dimension>(value);
+	}
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_SRS_SPHEROID_HPP

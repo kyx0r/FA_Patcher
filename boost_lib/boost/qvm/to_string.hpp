@@ -9,23 +9,23 @@
 #include <boost/exception/to_string.hpp>
 
 namespace
-boost
-    {
-    namespace
-    qvm
-        {
-        namespace
-        qvm_to_string_detail
-            {
-            template <class T>
-            std::string
-            to_string( T const & x )
-                {
-                using boost::to_string;
-                return to_string(x);
-                }
-            }
-        }
-    }
+	boost
+{
+namespace
+	qvm
+{
+namespace
+	qvm_to_string_detail
+{
+template <class T>
+std::string
+to_string( T const & x )
+{
+	using boost::to_string;
+	return to_string(x);
+}
+}
+}
+}
 
 #endif

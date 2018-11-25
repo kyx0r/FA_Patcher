@@ -7,37 +7,49 @@
 
 #include <boost/convert/detail/has_member.hpp>
 
-namespace boost { namespace cnv { namespace detail
+namespace boost
 {
-    typedef ::boost::type_traits::yes_type yes_type;
-    typedef ::boost::type_traits:: no_type  no_type;
+namespace cnv
+{
+namespace detail
+{
+typedef ::boost::type_traits::yes_type yes_type;
+typedef ::boost::type_traits:: no_type  no_type;
 
-    struct not_found {};
-    struct void_return_substitute {};
+struct not_found {};
+struct void_return_substitute {};
 
-    // The overloaded comma operator only kicks in for U != void essentially short-circuiting
-    // itself ineffective. Otherwise, when U=void, the standard op,() kicks in and returns
-    // 'void_return_substitute'.
-    template<typename U> U const& operator, (U const&, void_return_substitute);
-    template<typename U> U&       operator, (U&,       void_return_substitute);
+// The overloaded comma operator only kicks in for U != void essentially short-circuiting
+// itself ineffective. Otherwise, when U=void, the standard op,() kicks in and returns
+// 'void_return_substitute'.
+template<typename U> U const& operator, (U const&, void_return_substitute);
+template<typename U> U&       operator, (U&,       void_return_substitute);
 
-    template <typename src, typename dst> struct match_const { typedef dst type; };
-    template <typename src, typename dst> struct match_const<src const, dst> { typedef dst const type; };
+template <typename src, typename dst> struct match_const
+{
+	typedef dst type;
+};
+template <typename src, typename dst> struct match_const<src const, dst>
+{
+	typedef dst const type;
+};
 
-    template<typename T, typename return_type>
-    struct redirect
-    {
-        static no_type  test (...);
-        static yes_type test (return_type);
-    };
+template<typename T, typename return_type>
+struct redirect
+{
+	static no_type  test (...);
+	static yes_type test (return_type);
+};
 
-    template<typename T>
-    struct redirect<T, void>
-    {
-        static yes_type test (...);
-        static no_type  test (not_found);
-    };
-}}}
+template<typename T>
+struct redirect<T, void>
+{
+	static yes_type test (...);
+	static no_type  test (not_found);
+};
+}
+}
+}
 
 // No-args case needs to be implemented differently and has not been implemented yet.
 //        template <typename R>

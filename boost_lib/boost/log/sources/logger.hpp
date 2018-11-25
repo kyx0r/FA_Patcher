@@ -28,11 +28,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sources {
+namespace sources
+{
 
 #ifdef BOOST_LOG_USE_CHAR
 
@@ -42,9 +44,9 @@ namespace sources {
  * See \c basic_logger class template for a more detailed description.
  */
 class logger :
-    public basic_composite_logger< char, logger, single_thread_model, features< > >
+	public basic_composite_logger< char, logger, single_thread_model, features< > >
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS(logger)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS(logger)
 };
 
 #if !defined(BOOST_LOG_NO_THREADS)
@@ -55,9 +57,9 @@ class logger :
  * See \c basic_logger class template for a more detailed description.
  */
 class logger_mt :
-    public basic_composite_logger< char, logger_mt, multi_thread_model< boost::log::aux::light_rw_mutex >, features< > >
+	public basic_composite_logger< char, logger_mt, multi_thread_model< boost::log::aux::light_rw_mutex >, features< > >
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS(logger_mt)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS(logger_mt)
 };
 
 #endif // !defined(BOOST_LOG_NO_THREADS)
@@ -71,9 +73,9 @@ class logger_mt :
  * See \c basic_logger class template for a more detailed description.
  */
 class wlogger :
-    public basic_composite_logger< wchar_t, wlogger, single_thread_model, features< > >
+	public basic_composite_logger< wchar_t, wlogger, single_thread_model, features< > >
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS(wlogger)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS(wlogger)
 };
 
 #if !defined(BOOST_LOG_NO_THREADS)
@@ -84,9 +86,9 @@ class wlogger :
  * See \c basic_logger class template for a more detailed description.
  */
 class wlogger_mt :
-    public basic_composite_logger< wchar_t, wlogger_mt, multi_thread_model< boost::log::aux::light_rw_mutex >, features< > >
+	public basic_composite_logger< wchar_t, wlogger_mt, multi_thread_model< boost::log::aux::light_rw_mutex >, features< > >
 {
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS(wlogger_mt)
+	BOOST_LOG_FORWARD_LOGGER_MEMBERS(wlogger_mt)
 };
 
 #endif // !defined(BOOST_LOG_NO_THREADS)

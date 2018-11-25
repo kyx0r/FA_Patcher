@@ -60,59 +60,59 @@
 #endif
 
 #if defined(BOOST_MSVC)
-    // For some reason MSVC 9.0 fails to link the library if static integral constants are defined in cpp
+// For some reason MSVC 9.0 fails to link the library if static integral constants are defined in cpp
 #   define BOOST_LOG_BROKEN_STATIC_CONSTANTS_LINKAGE
 #   if _MSC_VER <= 1310
-        // MSVC 7.1 sometimes fails to match out-of-class template function definitions with
-        // their declarations if the return type or arguments of the functions involve typename keyword
-        // and depend on the template parameters.
+// MSVC 7.1 sometimes fails to match out-of-class template function definitions with
+// their declarations if the return type or arguments of the functions involve typename keyword
+// and depend on the template parameters.
 #       define BOOST_LOG_BROKEN_TEMPLATE_DEFINITION_MATCHING
 #   endif
 #   if _MSC_VER <= 1400
-        // Older MSVC versions reject friend declarations for class template specializations
+// Older MSVC versions reject friend declarations for class template specializations
 #       define BOOST_LOG_BROKEN_FRIEND_TEMPLATE_SPECIALIZATIONS
 #   endif
 #   if _MSC_VER <= 1600
-        // MSVC up to 10.0 attempts to invoke copy constructor when initializing a const reference from rvalue returned from a function.
-        // This fails when the returned value cannot be copied (only moved):
-        //
-        // class base {};
-        // class derived : public base { BOOST_MOVABLE_BUT_NOT_COPYABLE(derived) };
-        // derived foo();
-        // base const& var = foo(); // attempts to call copy constructor of derived
+// MSVC up to 10.0 attempts to invoke copy constructor when initializing a const reference from rvalue returned from a function.
+// This fails when the returned value cannot be copied (only moved):
+//
+// class base {};
+// class derived : public base { BOOST_MOVABLE_BUT_NOT_COPYABLE(derived) };
+// derived foo();
+// base const& var = foo(); // attempts to call copy constructor of derived
 #       define BOOST_LOG_BROKEN_REFERENCE_FROM_RVALUE_INIT
 #   endif
 #   if !defined(_STLPORT_VERSION)
-        // MSVC 9.0 mandates packaging of STL classes, which apparently affects alignment and
-        // makes alignment_of< T >::value no longer be a power of 2 for types that derive from STL classes.
-        // This breaks type_with_alignment and everything that relies on it.
-        // This doesn't happen with non-native STLs, such as STLPort. Strangely, this doesn't show with
-        // STL classes themselves or most of the user-defined derived classes.
-        // Not sure if that happens with other MSVC versions.
-        // See: http://svn.boost.org/trac/boost/ticket/1946
+// MSVC 9.0 mandates packaging of STL classes, which apparently affects alignment and
+// makes alignment_of< T >::value no longer be a power of 2 for types that derive from STL classes.
+// This breaks type_with_alignment and everything that relies on it.
+// This doesn't happen with non-native STLs, such as STLPort. Strangely, this doesn't show with
+// STL classes themselves or most of the user-defined derived classes.
+// Not sure if that happens with other MSVC versions.
+// See: http://svn.boost.org/trac/boost/ticket/1946
 #       define BOOST_LOG_BROKEN_STL_ALIGNMENT
 #   endif
 #endif
 
 #if defined(BOOST_INTEL) || defined(__SUNPRO_CC)
-    // Intel compiler and Sun Studio 12.3 have problems with friend declarations for nested class templates
+// Intel compiler and Sun Studio 12.3 have problems with friend declarations for nested class templates
 #   define BOOST_LOG_NO_MEMBER_TEMPLATE_FRIENDS
 #endif
 
 #if defined(BOOST_MSVC) && BOOST_MSVC <= 1600
-    // MSVC cannot interpret constant expressions in certain contexts, such as non-type template parameters
+// MSVC cannot interpret constant expressions in certain contexts, such as non-type template parameters
 #   define BOOST_LOG_BROKEN_CONSTANT_EXPRESSIONS
 #endif
 
 #if defined(BOOST_NO_CXX11_HDR_CODECVT)
-    // The compiler does not support std::codecvt<char16_t> and std::codecvt<char32_t> specializations.
-    // The BOOST_NO_CXX11_HDR_CODECVT means there's no usable <codecvt>, which is slightly different from this macro.
-    // But in order for <codecvt> to be implemented the std::codecvt specializations have to be implemented as well.
+// The compiler does not support std::codecvt<char16_t> and std::codecvt<char32_t> specializations.
+// The BOOST_NO_CXX11_HDR_CODECVT means there's no usable <codecvt>, which is slightly different from this macro.
+// But in order for <codecvt> to be implemented the std::codecvt specializations have to be implemented as well.
 #   define BOOST_LOG_NO_CXX11_CODECVT_FACETS
 #endif
 
 #if defined(__CYGWIN__)
-    // Boost.ASIO is broken on Cygwin
+// Boost.ASIO is broken on Cygwin
 #   define BOOST_LOG_NO_ASIO
 #endif
 
@@ -123,7 +123,7 @@
 #endif
 
 #if defined(__GNUC__) && (__GNUC__ == 4 && __GNUC_MINOR__ <= 2)
-    // GCC 4.1 and 4.2 have buggy anonymous namespaces support, which interferes with symbol linkage
+// GCC 4.1 and 4.2 have buggy anonymous namespaces support, which interferes with symbol linkage
 #   define BOOST_LOG_ANONYMOUS_NAMESPACE namespace anonymous {} using namespace anonymous; namespace anonymous
 #else
 #   define BOOST_LOG_ANONYMOUS_NAMESPACE namespace
@@ -193,14 +193,14 @@
 
 // Some compilers support a special attribute that shows that a function won't return
 #if defined(__GNUC__) || (defined(__SUNPRO_CC) && __SUNPRO_CC >= 0x590)
-    // GCC and Sun Studio 12 support attribute syntax
+// GCC and Sun Studio 12 support attribute syntax
 #   define BOOST_LOG_NORETURN __attribute__((noreturn))
 #elif defined (_MSC_VER)
-    // Microsoft-compatible compilers go here
+// Microsoft-compatible compilers go here
 #   define BOOST_LOG_NORETURN __declspec(noreturn)
 #else
-    // The rest compilers might emit bogus warnings about missing return statements
-    // in functions with non-void return types when throw_exception is used.
+// The rest compilers might emit bogus warnings about missing return statements
+// in functions with non-void return types when throw_exception is used.
 #   define BOOST_LOG_NORETURN
 #endif
 
@@ -230,9 +230,9 @@
 #          endif
 #          include <boost/config/auto_link.hpp>
 #       endif
-        // In static-library builds compilers ignore auto-link comments from Boost.Log binary to
-        // other Boost libraries. We explicitly add comments here for other libraries.
-        // In dynamic-library builds this is not needed.
+// In static-library builds compilers ignore auto-link comments from Boost.Log binary to
+// other Boost libraries. We explicitly add comments here for other libraries.
+// In dynamic-library builds this is not needed.
 #       if !defined(BOOST_LOG_DLL)
 #           include <boost/system/config.hpp>
 #           include <boost/filesystem/config.hpp>
@@ -243,7 +243,7 @@
 #               endif
 #               include <boost/config/auto_link.hpp>
 #           endif
-            // Boost.Thread's config is included below, if needed
+// Boost.Thread's config is included below, if needed
 #       endif
 #   endif  // auto-linking disabled
 
@@ -266,15 +266,15 @@
 #endif
 
 #if !defined(BOOST_LOG_DOXYGEN_PASS)
-    // Check if multithreading is supported
+// Check if multithreading is supported
 #   if !defined(BOOST_LOG_NO_THREADS) && !defined(BOOST_HAS_THREADS)
 #       define BOOST_LOG_NO_THREADS
 #   endif // !defined(BOOST_LOG_NO_THREADS) && !defined(BOOST_HAS_THREADS)
 #endif // !defined(BOOST_LOG_DOXYGEN_PASS)
 
 #if !defined(BOOST_LOG_NO_THREADS)
-    // We need this header to (i) enable auto-linking with Boost.Thread and
-    // (ii) to bring in configuration macros of Boost.Thread.
+// We need this header to (i) enable auto-linking with Boost.Thread and
+// (ii) to bring in configuration macros of Boost.Thread.
 #   include <boost/thread/detail/config.hpp>
 #endif // !defined(BOOST_LOG_NO_THREADS)
 
@@ -300,7 +300,8 @@
 #define BOOST_LOG_CPU_CACHE_LINE_SIZE 64
 #endif
 
-namespace boost {
+namespace boost
+{
 
 // Setup namespace name
 #if !defined(BOOST_LOG_DOXYGEN_PASS)
@@ -339,7 +340,8 @@ namespace boost {
 #   endif // defined(BOOST_LOG_DLL)
 
 
-namespace log {
+namespace log
+{
 
 #   if !defined(BOOST_NO_CXX11_INLINE_NAMESPACES)
 
@@ -362,9 +364,9 @@ namespace BOOST_LOG_VERSION_NAMESPACE {}
 
 using namespace BOOST_LOG_VERSION_NAMESPACE
 #       if defined(__GNUC__) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)) && !defined(__clang__)
-__attribute__((__strong__))
+	__attribute__((__strong__))
 #       endif
-;
+	;
 
 #       define BOOST_LOG_OPEN_NAMESPACE namespace log { namespace BOOST_LOG_VERSION_NAMESPACE {
 #       define BOOST_LOG_CLOSE_NAMESPACE }}

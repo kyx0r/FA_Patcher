@@ -48,125 +48,126 @@
 #include <boost/lexical_cast/bad_lexical_cast.hpp>
 #include <boost/lexical_cast/detail/widest_char.hpp>
 
-namespace boost {
-    namespace detail
-    {
+namespace boost
+{
+namespace detail
+{
 
-        // selectors for choosing stream character type
-        template<typename Type>
-        struct stream_char
-        {
-            typedef char type;
-        };
+// selectors for choosing stream character type
+template<typename Type>
+struct stream_char
+{
+	typedef char type;
+};
 
 #ifndef BOOST_LCAST_NO_WCHAR_T
 #ifndef BOOST_NO_INTRINSIC_WCHAR_T
-        template<>
-        struct stream_char<wchar_t>
-        {
-            typedef wchar_t type;
-        };
+template<>
+struct stream_char<wchar_t>
+{
+	typedef wchar_t type;
+};
 #endif
 
-        template<>
-        struct stream_char<wchar_t *>
-        {
-            typedef wchar_t type;
-        };
+template<>
+struct stream_char<wchar_t *>
+{
+	typedef wchar_t type;
+};
 
-        template<>
-        struct stream_char<const wchar_t *>
-        {
-            typedef wchar_t type;
-        };
+template<>
+struct stream_char<const wchar_t *>
+{
+	typedef wchar_t type;
+};
 
-        template<>
-        struct stream_char<std::wstring>
-        {
-            typedef wchar_t type;
-        };
+template<>
+struct stream_char<std::wstring>
+{
+	typedef wchar_t type;
+};
 #endif
 
-        // stream wrapper for handling lexical conversions
-        template<typename Target, typename Source, typename Traits>
-        class lexical_stream
-        {
-        private:
-            typedef typename widest_char<
-                typename stream_char<Target>::type,
-                typename stream_char<Source>::type>::type char_type;
+// stream wrapper for handling lexical conversions
+template<typename Target, typename Source, typename Traits>
+class lexical_stream
+{
+private:
+	typedef typename widest_char<
+	typename stream_char<Target>::type,
+	         typename stream_char<Source>::type>::type char_type;
 
-            typedef Traits traits_type;
+	typedef Traits traits_type;
 
-        public:
-            lexical_stream(char_type* = 0, char_type* = 0)
-            {
-                stream.unsetf(std::ios::skipws);
-                lcast_set_precision(stream, static_cast<Source*>(0), static_cast<Target*>(0) );
-            }
-            ~lexical_stream()
-            {
-                #if defined(BOOST_NO_STRINGSTREAM)
-                stream.freeze(false);
-                #endif
-            }
-            bool operator<<(const Source &input)
-            {
-                return !(stream << input).fail();
-            }
-            template<typename InputStreamable>
-            bool operator>>(InputStreamable &output)
-            {
-                return !is_pointer<InputStreamable>::value &&
-                       stream >> output &&
-                       stream.get() == traits_type::eof();
-            }
+public:
+	lexical_stream(char_type* = 0, char_type* = 0)
+	{
+		stream.unsetf(std::ios::skipws);
+		lcast_set_precision(stream, static_cast<Source*>(0), static_cast<Target*>(0) );
+	}
+	~lexical_stream()
+	{
+#if defined(BOOST_NO_STRINGSTREAM)
+		stream.freeze(false);
+#endif
+	}
+	bool operator<<(const Source &input)
+	{
+		return !(stream << input).fail();
+	}
+	template<typename InputStreamable>
+	bool operator>>(InputStreamable &output)
+	{
+		return !is_pointer<InputStreamable>::value &&
+		       stream >> output &&
+		       stream.get() == traits_type::eof();
+	}
 
-            bool operator>>(std::string &output)
-            {
-                #if defined(BOOST_NO_STRINGSTREAM)
-                stream << '\0';
-                #endif
-                stream.str().swap(output);
-                return true;
-            }
-            #ifndef BOOST_LCAST_NO_WCHAR_T
-            bool operator>>(std::wstring &output)
-            {
-                stream.str().swap(output);
-                return true;
-            }
-            #endif
+	bool operator>>(std::string &output)
+	{
+#if defined(BOOST_NO_STRINGSTREAM)
+		stream << '\0';
+#endif
+		stream.str().swap(output);
+		return true;
+	}
+#ifndef BOOST_LCAST_NO_WCHAR_T
+	bool operator>>(std::wstring &output)
+	{
+		stream.str().swap(output);
+		return true;
+	}
+#endif
 
-        private:
-            #if defined(BOOST_NO_STRINGSTREAM)
-            std::strstream stream;
-            #elif defined(BOOST_NO_STD_LOCALE)
-            std::stringstream stream;
-            #else
-            std::basic_stringstream<char_type,traits_type> stream;
-            #endif
-        };
-    }
+private:
+#if defined(BOOST_NO_STRINGSTREAM)
+	std::strstream stream;
+#elif defined(BOOST_NO_STD_LOCALE)
+	std::stringstream stream;
+#else
+	std::basic_stringstream<char_type,traits_type> stream;
+#endif
+};
+}
 
-    // call-by-value fallback version (deprecated)
+// call-by-value fallback version (deprecated)
 
-    template<typename Target, typename Source>
-    Target lexical_cast(Source arg)
-    {
-        typedef typename detail::widest_char< 
-            BOOST_DEDUCED_TYPENAME detail::stream_char<Target>::type 
-          , BOOST_DEDUCED_TYPENAME detail::stream_char<Source>::type 
-        >::type char_type; 
+template<typename Target, typename Source>
+Target lexical_cast(Source arg)
+{
+	typedef typename detail::widest_char<
+	BOOST_DEDUCED_TYPENAME detail::stream_char<Target>::type
+	, BOOST_DEDUCED_TYPENAME detail::stream_char<Source>::type
+	>::type char_type;
 
-        typedef std::char_traits<char_type> traits;
-        detail::lexical_stream<Target, Source, traits> interpreter;
-        Target result;
+	typedef std::char_traits<char_type> traits;
+	detail::lexical_stream<Target, Source, traits> interpreter;
+	Target result;
 
-        if(!(interpreter << arg && interpreter >> result))
-            boost::conversion::detail::throw_bad_cast<Source, Target>();
-        return result;
-    }
+	if(!(interpreter << arg && interpreter >> result))
+		boost::conversion::detail::throw_bad_cast<Source, Target>();
+	return result;
+}
 
 } // namespace boost
 

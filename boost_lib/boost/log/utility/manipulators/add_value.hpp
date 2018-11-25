@@ -41,7 +41,8 @@
 #pragma warning(disable: 4172)
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -50,55 +51,61 @@ template< typename RefT >
 class add_value_manip
 {
 public:
-    //! Stored reference type
-    typedef RefT reference_type;
-    //! Attribute value type
-    typedef typename remove_cv< typename remove_reference< reference_type >::type >::type value_type;
+	//! Stored reference type
+	typedef RefT reference_type;
+	//! Attribute value type
+	typedef typename remove_cv< typename remove_reference< reference_type >::type >::type value_type;
 
 private:
-    //  The stored reference type is an lvalue reference since apparently different compilers (GCC and MSVC) have different quirks when rvalue references are stored as members.
-    //  Additionally, MSVC (at least 11.0) has a bug which causes a dangling reference to be stored in the manipulator, if a scalar rvalue is passed to the add_value generator.
-    //  To work around this problem we save the value inside the manipulator in this case.
-    typedef typename remove_reference< reference_type >::type& lvalue_reference_type;
+	//  The stored reference type is an lvalue reference since apparently different compilers (GCC and MSVC) have different quirks when rvalue references are stored as members.
+	//  Additionally, MSVC (at least 11.0) has a bug which causes a dangling reference to be stored in the manipulator, if a scalar rvalue is passed to the add_value generator.
+	//  To work around this problem we save the value inside the manipulator in this case.
+	typedef typename remove_reference< reference_type >::type& lvalue_reference_type;
 
-    typedef typename mpl::if_<
-        is_scalar< value_type >,
-        value_type,
-        lvalue_reference_type
-    >::type stored_type;
+	typedef typename mpl::if_<
+	is_scalar< value_type >,
+	           value_type,
+	           lvalue_reference_type
+	           >::type stored_type;
 
-    typedef typename mpl::if_<
-        is_scalar< value_type >,
-        value_type,
-        reference_type
-    >::type get_value_result_type;
+	typedef typename mpl::if_<
+	is_scalar< value_type >,
+	           value_type,
+	           reference_type
+	           >::type get_value_result_type;
 
 private:
-    //! Attribute value
-    stored_type m_value;
-    //! Attribute name
-    attribute_name m_name;
+	//! Attribute value
+	stored_type m_value;
+	//! Attribute name
+	attribute_name m_name;
 
 public:
-    //! Initializing constructor
-    add_value_manip(attribute_name const& name, reference_type value) : m_value(static_cast< lvalue_reference_type >(value)), m_name(name)
-    {
-    }
+	//! Initializing constructor
+	add_value_manip(attribute_name const& name, reference_type value) : m_value(static_cast< lvalue_reference_type >(value)), m_name(name)
+	{
+	}
 
-    //! Returns attribute name
-    attribute_name get_name() const { return m_name; }
-    //! Returns attribute value
-    get_value_result_type get_value() const { return static_cast< get_value_result_type >(m_value); }
+	//! Returns attribute name
+	attribute_name get_name() const
+	{
+		return m_name;
+	}
+	//! Returns attribute value
+	get_value_result_type get_value() const
+	{
+		return static_cast< get_value_result_type >(m_value);
+	}
 };
 
 //! The operator attaches an attribute value to the log record
 template< typename CharT, typename RefT >
 inline basic_record_ostream< CharT >& operator<< (basic_record_ostream< CharT >& strm, add_value_manip< RefT > const& manip)
 {
-    typedef typename aux::make_embedded_string_type< typename add_value_manip< RefT >::value_type >::type value_type;
-    attribute_value value(new attributes::attribute_value_impl< value_type >(manip.get_value()));
-    strm.get_record().attribute_values().insert(manip.get_name(), value);
-    return strm;
+	typedef typename aux::make_embedded_string_type< typename add_value_manip< RefT >::value_type >::type value_type;
+	attribute_value value(new attributes::attribute_value_impl< value_type >(manip.get_value()));
+	strm.get_record().attribute_values().insert(manip.get_name(), value);
+	return strm;
 }
 
 //! The function creates a manipulator that attaches an attribute value to a log record
@@ -107,7 +114,7 @@ inline basic_record_ostream< CharT >& operator<< (basic_record_ostream< CharT >&
 template< typename T >
 inline add_value_manip< T&& > add_value(attribute_name const& name, T&& value)
 {
-    return add_value_manip< T&& >(name, static_cast< T&& >(value));
+	return add_value_manip< T&& >(name, static_cast< T&& >(value));
 }
 
 //! \overload
@@ -115,8 +122,8 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline add_value_manip< typename DescriptorT::value_type&& >
 add_value(expressions::attribute_keyword< DescriptorT, ActorT > const&, typename DescriptorT::value_type&& value)
 {
-    typedef typename DescriptorT::value_type value_type;
-    return add_value_manip< value_type&& >(DescriptorT::get_name(), static_cast< value_type&& >(value));
+	typedef typename DescriptorT::value_type value_type;
+	return add_value_manip< value_type&& >(DescriptorT::get_name(), static_cast< value_type&& >(value));
 }
 
 //! \overload
@@ -124,7 +131,7 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline add_value_manip< typename DescriptorT::value_type& >
 add_value(expressions::attribute_keyword< DescriptorT, ActorT > const&, typename DescriptorT::value_type& value)
 {
-    return add_value_manip< typename DescriptorT::value_type& >(DescriptorT::get_name(), value);
+	return add_value_manip< typename DescriptorT::value_type& >(DescriptorT::get_name(), value);
 }
 
 //! \overload
@@ -132,7 +139,7 @@ template< typename DescriptorT, template< typename > class ActorT >
 inline add_value_manip< typename DescriptorT::value_type const& >
 add_value(expressions::attribute_keyword< DescriptorT, ActorT > const&, typename DescriptorT::value_type const& value)
 {
-    return add_value_manip< typename DescriptorT::value_type const& >(DescriptorT::get_name(), value);
+	return add_value_manip< typename DescriptorT::value_type const& >(DescriptorT::get_name(), value);
 }
 
 #else // !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
@@ -140,14 +147,14 @@ add_value(expressions::attribute_keyword< DescriptorT, ActorT > const&, typename
 template< typename T >
 inline add_value_manip< T const& > add_value(attribute_name const& name, T const& value)
 {
-    return add_value_manip< T const& >(name, value);
+	return add_value_manip< T const& >(name, value);
 }
 
 template< typename DescriptorT, template< typename > class ActorT >
 inline add_value_manip< typename DescriptorT::value_type const& >
 add_value(expressions::attribute_keyword< DescriptorT, ActorT > const&, typename DescriptorT::value_type const& value)
 {
-    return add_value_manip< typename DescriptorT::value_type const& >(DescriptorT::get_name(), value);
+	return add_value_manip< typename DescriptorT::value_type const& >(DescriptorT::get_name(), value);
 }
 
 #endif // !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)

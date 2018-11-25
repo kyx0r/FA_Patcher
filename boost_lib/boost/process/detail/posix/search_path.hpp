@@ -18,23 +18,33 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-namespace boost { namespace process { namespace detail { namespace posix {
+namespace boost
+{
+namespace process
+{
+namespace detail
+{
+namespace posix
+{
 
 inline boost::filesystem::path search_path(
-        const boost::filesystem::path &filename,
-        const std::vector<boost::filesystem::path> &path)
+    const boost::filesystem::path &filename,
+    const std::vector<boost::filesystem::path> &path)
 {
-    for (const boost::filesystem::path & pp : path)
-    {
-        auto p = pp / filename;
-        boost::system::error_code ec;
-        bool file = boost::filesystem::is_regular_file(p, ec);
-        if (!ec && file && ::access(p.c_str(), X_OK) == 0)
-            return p;
-    }
-    return "";
+	for (const boost::filesystem::path & pp : path)
+	{
+		auto p = pp / filename;
+		boost::system::error_code ec;
+		bool file = boost::filesystem::is_regular_file(p, ec);
+		if (!ec && file && ::access(p.c_str(), X_OK) == 0)
+			return p;
+	}
+	return "";
 }
 
-}}}}
+}
+}
+}
+}
 
 #endif

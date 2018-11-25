@@ -10,17 +10,17 @@
 
 /// placeholders
 /// ============
-/// 
+///
 /// Description
 /// -----------
-/// 
+///
 /// The placeholders provide `std::bind` compatible placeholders that
 /// additionally provide basic C++ operators that creates bind expressions.
 /// Each bind expression supports `constexpr` function evaluation.
-/// 
+///
 /// Synopsis
 /// --------
-/// 
+///
 ///     namespace placeholders {
 ///         placeholder<1> _1 = {};
 ///         placeholder<2> _2 = {};
@@ -32,58 +32,58 @@
 ///         placeholder<8> _8 = {};
 ///         placeholder<9> _9 = {};
 ///     }
-/// 
+///
 /// Operators
 /// ---------
-/// 
+///
 /// * Binary operators: +,-,*,/,%,>>,<<,>,<,<=,>=,==,!=,&,^,|,&&,||
 /// * Assign operators: +=,-=,*=,/=,%=,>>=,<<=,&=,|=,^=
 /// * Unary operators: !,~,+,-,*,++,--
-/// 
-/// 
+///
+///
 /// Example
 /// -------
-/// 
+///
 ///     #include <boost/hof.hpp>
 ///     #include <cassert>
 ///     using namespace boost::hof;
-/// 
+///
 ///     int main() {
 ///         auto sum = _1 + _2;
 ///         assert(3 == sum(1, 2));
 ///     }
-/// 
-/// 
+///
+///
 /// unamed placeholder
 /// ==================
-/// 
+///
 /// Description
 /// -----------
-/// 
+///
 /// The unamed placeholder can be used to build simple functions from C++
-/// operators. 
-/// 
+/// operators.
+///
 /// Note: The function produced by the unamed placeholder is not a bind expression.
-/// 
+///
 /// Synopsis
 /// --------
-/// 
+///
 ///     namespace placeholders {
 ///         /* unspecified */ _ = {};
 ///     }
-/// 
+///
 /// Example
 /// -------
-/// 
+///
 ///     #include <boost/hof.hpp>
 ///     #include <cassert>
 ///     using namespace boost::hof;
-/// 
+///
 ///     int main() {
 ///         auto sum = _ + _;
 ///         assert(3 == sum(1, 2));
 ///     }
-/// 
+///
 
 #include <boost/hof/returns.hpp>
 #include <boost/hof/lazy.hpp>
@@ -93,21 +93,32 @@
 #include <boost/hof/detail/pp.hpp>
 #endif
 
-namespace boost { namespace hof { namespace detail {
-    template<int N>
-    struct simple_placeholder
-    {};
-}}} // namespace boost::hof
+namespace boost
+{
+namespace hof
+{
+namespace detail
+{
+template<int N>
+struct simple_placeholder
+{};
+}
+}
+} // namespace boost::hof
 
-namespace std {
-    template<int N>
-    struct is_placeholder<boost::hof::detail::simple_placeholder<N>>
-    : std::integral_constant<int, N>
-    {};
+namespace std
+{
+template<int N>
+struct is_placeholder<boost::hof::detail::simple_placeholder<N>>
+	        : std::integral_constant<int, N>
+{};
 }
 
 
-namespace boost { namespace hof {
+namespace boost
+{
+namespace hof
+{
 
 #define BOOST_HOF_FOREACH_BINARY_OP(m) \
     m(+, add) \
@@ -159,13 +170,14 @@ namespace boost { namespace hof {
     m(*, dereference)
 #endif
 
-namespace operators {
+namespace operators
+{
 
 struct call
 {
-    template<class F, class... Ts>
-    constexpr auto operator()(F&& f, Ts&&... xs) const BOOST_HOF_RETURNS
-    (f(BOOST_HOF_FORWARD(Ts)(xs)...));
+	template<class F, class... Ts>
+	constexpr auto operator()(F&& f, Ts&&... xs) const BOOST_HOF_RETURNS
+	(f(BOOST_HOF_FORWARD(Ts)(xs)...));
 };
 
 // MSVC 2017 ICEs on && and || in conxtexpr, so we fallback on bitwise operators
@@ -175,20 +187,24 @@ struct call
 
 struct and_
 {
-    template<class T, class U>
-    constexpr auto operator()(T&& x, U&& y) const 
-    noexcept(noexcept(BOOST_HOF_FORWARD(T)(x) && BOOST_HOF_FORWARD(U)(y)))
-    -> decltype(BOOST_HOF_FORWARD(T)(x) && BOOST_HOF_FORWARD(U)(y)) 
-    { return BOOST_HOF_FORWARD(T)(x) & BOOST_HOF_FORWARD(U)(y); }
+	template<class T, class U>
+	constexpr auto operator()(T&& x, U&& y) const
+	noexcept(noexcept(BOOST_HOF_FORWARD(T)(x) && BOOST_HOF_FORWARD(U)(y)))
+	-> decltype(BOOST_HOF_FORWARD(T)(x) && BOOST_HOF_FORWARD(U)(y))
+	{
+		return BOOST_HOF_FORWARD(T)(x) & BOOST_HOF_FORWARD(U)(y);
+	}
 };
 
 struct or_
 {
-    template<class T, class U>
-    constexpr auto operator()(T&& x, U&& y) const 
-    noexcept(noexcept(BOOST_HOF_FORWARD(T)(x) || BOOST_HOF_FORWARD(U)(y)))
-    -> decltype(BOOST_HOF_FORWARD(T)(x) || BOOST_HOF_FORWARD(U)(y)) 
-    { return BOOST_HOF_FORWARD(T)(x) | BOOST_HOF_FORWARD(U)(y); }
+	template<class T, class U>
+	constexpr auto operator()(T&& x, U&& y) const
+	noexcept(noexcept(BOOST_HOF_FORWARD(T)(x) || BOOST_HOF_FORWARD(U)(y)))
+	-> decltype(BOOST_HOF_FORWARD(T)(x) || BOOST_HOF_FORWARD(U)(y))
+	{
+		return BOOST_HOF_FORWARD(T)(x) | BOOST_HOF_FORWARD(U)(y);
+	}
 };
 
 #define BOOST_HOF_BINARY_OP_IMPL(op, name) \
@@ -239,16 +255,20 @@ template<int N>
 struct placeholder
 {
 #if BOOST_HOF_HAS_MANGLE_OVERLOAD
-    template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const BOOST_HOF_RETURNS 
-    ( boost::hof::lazy(operators::call())(detail::simple_placeholder<N>(), BOOST_HOF_FORWARD(Ts)(xs)...) );
+	template<class... Ts>
+	constexpr auto operator()(Ts&&... xs) const BOOST_HOF_RETURNS
+	( boost::hof::lazy(operators::call())(detail::simple_placeholder<N>(), BOOST_HOF_FORWARD(Ts)(xs)...) );
 #else
-    template<class... Ts>
-    struct result_call
-    { typedef decltype(boost::hof::lazy(operators::call())(detail::simple_placeholder<N>(), std::declval<Ts>()...)) type; };
-    template<class... Ts>
-    constexpr typename result_call<Ts...>::type operator()(Ts&&... xs) const 
-    { return boost::hof::lazy(operators::call())(detail::simple_placeholder<N>(), BOOST_HOF_FORWARD(Ts)(xs)...); };
+	template<class... Ts>
+	struct result_call
+	{
+		typedef decltype(boost::hof::lazy(operators::call())(detail::simple_placeholder<N>(), std::declval<Ts>()...)) type;
+	};
+	template<class... Ts>
+	constexpr typename result_call<Ts...>::type operator()(Ts&&... xs) const
+	{
+		return boost::hof::lazy(operators::call())(detail::simple_placeholder<N>(), BOOST_HOF_FORWARD(Ts)(xs)...);
+	};
 
 #endif
 
@@ -256,14 +276,14 @@ struct placeholder
     constexpr auto operator op () const BOOST_HOF_RETURNS \
     ( boost::hof::lazy(operators::name())(detail::simple_placeholder<N>()) );
 
-BOOST_HOF_FOREACH_UNARY_OP(BOOST_HOF_PLACEHOLDER_UNARY_OP)
+	BOOST_HOF_FOREACH_UNARY_OP(BOOST_HOF_PLACEHOLDER_UNARY_OP)
 
 #define BOOST_HOF_PLACEHOLDER_ASSIGN_OP(op, name) \
     template<class T> \
     constexpr auto operator op (T&& x) const BOOST_HOF_RETURNS \
     ( boost::hof::lazy(operators::name())(detail::simple_placeholder<N>(), BOOST_HOF_FORWARD(T)(x)) );
 
-BOOST_HOF_FOREACH_ASSIGN_OP(BOOST_HOF_PLACEHOLDER_ASSIGN_OP)
+	BOOST_HOF_FOREACH_ASSIGN_OP(BOOST_HOF_PLACEHOLDER_ASSIGN_OP)
 
 };
 
@@ -300,7 +320,8 @@ BOOST_HOF_FOREACH_ASSIGN_OP(BOOST_HOF_PLACEHOLDER_ASSIGN_OP)
 
 BOOST_HOF_FOREACH_BINARY_OP(BOOST_HOF_PLACEHOLDER_BINARY_OP)
 
-namespace placeholders {
+namespace placeholders
+{
 BOOST_HOF_DECLARE_STATIC_VAR(_1, placeholder<1>);
 BOOST_HOF_DECLARE_STATIC_VAR(_2, placeholder<2>);
 BOOST_HOF_DECLARE_STATIC_VAR(_3, placeholder<3>);
@@ -322,107 +343,108 @@ using placeholders::_7;
 using placeholders::_8;
 using placeholders::_9;
 
-namespace detail {
+namespace detail
+{
 
 
 
 struct unamed_placeholder
 {
-template<class T, class Invoker>
-struct partial_ap
-{
-    T val;
+	template<class T, class Invoker>
+	struct partial_ap
+	{
+		T val;
 
-    BOOST_HOF_INHERIT_DEFAULT_EMPTY(partial_ap, T)
+		BOOST_HOF_INHERIT_DEFAULT_EMPTY(partial_ap, T)
 
-    template<class X, class... Xs, BOOST_HOF_ENABLE_IF_CONSTRUCTIBLE(T, X&&, Xs&&...)>
-    constexpr partial_ap(X&& x, Xs&&... xs) : val(BOOST_HOF_FORWARD(X)(x), BOOST_HOF_FORWARD(Xs)(xs)...)
-    {}
+		template<class X, class... Xs, BOOST_HOF_ENABLE_IF_CONSTRUCTIBLE(T, X&&, Xs&&...)>
+		constexpr partial_ap(X&& x, Xs&&... xs) : val(BOOST_HOF_FORWARD(X)(x), BOOST_HOF_FORWARD(Xs)(xs)...)
+		{}
 
-    BOOST_HOF_RETURNS_CLASS(partial_ap);
+		BOOST_HOF_RETURNS_CLASS(partial_ap);
 
-    struct partial_ap_failure
-    {
-        template<class Failure>
-        struct apply
-        {
-            template<class... Xs>
-            struct of;
+		struct partial_ap_failure
+		{
+			template<class Failure>
+			struct apply
+			{
+				template<class... Xs>
+				struct of;
 
-            template<class X>
-            struct of<X>
-            : Failure::template of<typename std::add_const<T>::type, X>
-            {};
-        };
-    };
+				template<class X>
+				struct of<X>
+					: Failure::template of<typename std::add_const<T>::type, X>
+				{};
+			};
+		};
 
-    struct failure
-    : failure_map<partial_ap_failure, Invoker>
-    {};
+		struct failure
+			: failure_map<partial_ap_failure, Invoker>
+		{};
 
-    template<class X>
-    constexpr BOOST_HOF_SFINAE_RESULT(const Invoker&, id_<T>, id_<X>) 
-    operator()(X&& x) const BOOST_HOF_SFINAE_RETURNS
-    (
-        Invoker()(BOOST_HOF_CONST_THIS->val, BOOST_HOF_FORWARD(X)(x))
-    );
-};
+		template<class X>
+		constexpr BOOST_HOF_SFINAE_RESULT(const Invoker&, id_<T>, id_<X>)
+		operator()(X&& x) const BOOST_HOF_SFINAE_RETURNS
+		(
+		    Invoker()(BOOST_HOF_CONST_THIS->val, BOOST_HOF_FORWARD(X)(x))
+		);
+	};
 
-template<class Invoker, class T>
-static constexpr partial_ap<T, Invoker> make_partial_ap(T&& x)
-{
-    return {BOOST_HOF_FORWARD(T)(x)};
-}
+	template<class Invoker, class T>
+	static constexpr partial_ap<T, Invoker> make_partial_ap(T&& x)
+	{
+		return {BOOST_HOF_FORWARD(T)(x)};
+	}
 
-template<class Op>
-struct left
-{
-    struct failure
-    : failure_for<Op>
-    {};
-    template<class T, class X>
-    constexpr BOOST_HOF_SFINAE_RESULT(const Op&, id_<T>, id_<X>) 
-    operator()(T&& val, X&& x) const BOOST_HOF_SFINAE_RETURNS
-    (Op()(BOOST_HOF_FORWARD(T)(val), BOOST_HOF_FORWARD(X)(x)));
-};
+	template<class Op>
+	struct left
+	{
+		struct failure
+			: failure_for<Op>
+		{};
+		template<class T, class X>
+		constexpr BOOST_HOF_SFINAE_RESULT(const Op&, id_<T>, id_<X>)
+		operator()(T&& val, X&& x) const BOOST_HOF_SFINAE_RETURNS
+		(Op()(BOOST_HOF_FORWARD(T)(val), BOOST_HOF_FORWARD(X)(x)));
+	};
 
-template<class Op>
-struct right
-{
-    struct right_failure
-    {
-        template<class Failure>
-        struct apply
-        {
-            template<class T, class U, class... Ts>
-            struct of
-            : Failure::template of<U, T, Ts...>
-            {};
-        };
-    };
+	template<class Op>
+	struct right
+	{
+		struct right_failure
+		{
+			template<class Failure>
+			struct apply
+			{
+				template<class T, class U, class... Ts>
+				struct of
+					: Failure::template of<U, T, Ts...>
+				{};
+			};
+		};
 
-    struct failure
-    : failure_map<right_failure, Op>
-    {};
+		struct failure
+			: failure_map<right_failure, Op>
+		{};
 
-    template<class T, class X>
-    constexpr BOOST_HOF_SFINAE_RESULT(const Op&, id_<X>, id_<T>) 
-    operator()(T&& val, X&& x) const BOOST_HOF_SFINAE_RETURNS
-    (Op()(BOOST_HOF_FORWARD(X)(x), BOOST_HOF_FORWARD(T)(val)));
-};
+		template<class T, class X>
+		constexpr BOOST_HOF_SFINAE_RESULT(const Op&, id_<X>, id_<T>)
+		operator()(T&& val, X&& x) const BOOST_HOF_SFINAE_RETURNS
+		(Op()(BOOST_HOF_FORWARD(X)(x), BOOST_HOF_FORWARD(T)(val)));
+	};
 
 #define BOOST_HOF_UNAMED_PLACEHOLDER_UNARY_OP(op, name) \
     constexpr auto operator op () const BOOST_HOF_RETURNS \
     ( operators::name() );
 
-BOOST_HOF_FOREACH_UNARY_OP(BOOST_HOF_UNAMED_PLACEHOLDER_UNARY_OP)
+	BOOST_HOF_FOREACH_UNARY_OP(BOOST_HOF_UNAMED_PLACEHOLDER_UNARY_OP)
 
 #define BOOST_HOF_UNAMED_PLACEHOLDER_ASSIGN_OP(op, name) \
     template<class T> \
     constexpr auto operator op (const T& x) const BOOST_HOF_RETURNS \
     ( partial_ap<T, left<operators::name>>(x) );
 
-BOOST_HOF_FOREACH_ASSIGN_OP(BOOST_HOF_UNAMED_PLACEHOLDER_ASSIGN_OP)
+	BOOST_HOF_FOREACH_ASSIGN_OP(BOOST_HOF_UNAMED_PLACEHOLDER_ASSIGN_OP)
 };
 #define BOOST_HOF_UNAMED_PLACEHOLDER_BINARY_OP(op, name) \
     template<class T> \
@@ -437,30 +459,34 @@ BOOST_HOF_FOREACH_ASSIGN_OP(BOOST_HOF_UNAMED_PLACEHOLDER_ASSIGN_OP)
 BOOST_HOF_FOREACH_BINARY_OP(BOOST_HOF_UNAMED_PLACEHOLDER_BINARY_OP)
 }
 
-namespace placeholders {
+namespace placeholders
+{
 BOOST_HOF_DECLARE_STATIC_VAR(_, detail::unamed_placeholder);
 }
 
 using placeholders::_;
 
-}} // namespace boost::hof
+}
+} // namespace boost::hof
 
-namespace std {
-    template<int N>
-    struct is_placeholder<boost::hof::placeholder<N>>
-    : std::integral_constant<int, N>
-    {};
+namespace std
+{
+template<int N>
+struct is_placeholder<boost::hof::placeholder<N>>
+	        : std::integral_constant<int, N>
+{};
 }
 
-namespace boost {
+namespace boost
+{
 
-    template<class T> 
-    struct is_placeholder;
+template<class T>
+struct is_placeholder;
 
-    template<int N>
-    struct is_placeholder<boost::hof::placeholder<N>>
-    : std::integral_constant<int, N>
-    {};
+template<int N>
+struct is_placeholder<boost::hof::placeholder<N>>
+	        : std::integral_constant<int, N>
+{};
 
 
 }

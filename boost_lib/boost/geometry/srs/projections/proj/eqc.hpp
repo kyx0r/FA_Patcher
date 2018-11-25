@@ -46,130 +46,139 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct eqc {};
+namespace par4
+{
+struct eqc {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace eqc
-    {
-            template <typename T>
-            struct par_eqc
-            {
-                T rc;
-            };
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace eqc
+{
+template <typename T>
+struct par_eqc
+{
+	T rc;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_eqc_spheroid : public base_t_fi<base_eqc_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_eqc_spheroid : public base_t_fi<base_eqc_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_eqc<CalculationType> m_proj_parm;
+	par_eqc<CalculationType> m_proj_parm;
 
-                inline base_eqc_spheroid(const Parameters& par)
-                    : base_t_fi<base_eqc_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_eqc_spheroid(const Parameters& par)
+		: base_t_fi<base_eqc_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    xy_x = this->m_proj_parm.rc * lp_lon;
-                    xy_y = lp_lat - this->m_par.phi0;
-                }
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		xy_x = this->m_proj_parm.rc * lp_lon;
+		xy_y = lp_lat - this->m_par.phi0;
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    lp_lon = xy_x / this->m_proj_parm.rc;
-                    lp_lat = xy_y + this->m_par.phi0;
-                }
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		lp_lon = xy_x / this->m_proj_parm.rc;
+		lp_lat = xy_y + this->m_par.phi0;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "eqc_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "eqc_spheroid";
+	}
 
-            };
+};
 
-            // Equidistant Cylindrical (Plate Caree)
-            template <typename Parameters, typename T>
-            inline void setup_eqc(Parameters& par, par_eqc<T>& proj_parm)
-            {
-                if ((proj_parm.rc = cos(pj_param(par.params, "rlat_ts").f)) <= 0.)
-                    BOOST_THROW_EXCEPTION( projection_exception(-24) );
-                par.es = 0.;
-            }
+// Equidistant Cylindrical (Plate Caree)
+template <typename Parameters, typename T>
+inline void setup_eqc(Parameters& par, par_eqc<T>& proj_parm)
+{
+	if ((proj_parm.rc = cos(pj_param(par.params, "rlat_ts").f)) <= 0.)
+		BOOST_THROW_EXCEPTION( projection_exception(-24) );
+	par.es = 0.;
+}
 
-    }} // namespace detail::eqc
-    #endif // doxygen
+}
+} // namespace detail::eqc
+#endif // doxygen
 
-    /*!
-        \brief Equidistant Cylindrical (Plate Caree) projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Cylindrical
-         - Spheroid
-        \par Projection parameters
-         - lat_ts: Latitude of true scale (degrees)
-         - lat_0: Latitude of origin
-        \par Example
-        \image html ex_eqc.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct eqc_spheroid : public detail::eqc::base_eqc_spheroid<CalculationType, Parameters>
-    {
-        inline eqc_spheroid(const Parameters& par) : detail::eqc::base_eqc_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::eqc::setup_eqc(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Equidistant Cylindrical (Plate Caree) projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Cylindrical
+     - Spheroid
+    \par Projection parameters
+     - lat_ts: Latitude of true scale (degrees)
+     - lat_0: Latitude of origin
+    \par Example
+    \image html ex_eqc.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct eqc_spheroid : public detail::eqc::base_eqc_spheroid<CalculationType, Parameters>
+{
+	inline eqc_spheroid(const Parameters& par) : detail::eqc::base_eqc_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::eqc::setup_eqc(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eqc, eqc_spheroid, eqc_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::eqc, eqc_spheroid, eqc_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class eqc_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<eqc_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class eqc_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<eqc_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void eqc_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("eqc", new eqc_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void eqc_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("eqc", new eqc_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_EQC_HPP
 

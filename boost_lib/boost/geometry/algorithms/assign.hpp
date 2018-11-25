@@ -44,7 +44,9 @@
 
 #include <boost/geometry/util/for_each_coordinate.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -69,10 +71,10 @@ namespace boost { namespace geometry
 template <typename Geometry, typename Range>
 inline void assign_points(Geometry& geometry, Range const& range)
 {
-    concepts::check<Geometry>();
+	concepts::check<Geometry>();
 
-    clear(geometry);
-    geometry::append(geometry, range, -1, 0);
+	clear(geometry);
+	geometry::append(geometry, range, -1, 0);
 }
 
 
@@ -96,13 +98,13 @@ collect the minimum bounding box of a geometry.
 template <typename Geometry>
 inline void assign_inverse(Geometry& geometry)
 {
-    concepts::check<Geometry>();
+	concepts::check<Geometry>();
 
-    dispatch::assign_inverse
-        <
-            typename tag<Geometry>::type,
-            Geometry
-        >::apply(geometry);
+	dispatch::assign_inverse
+	<
+	typename tag<Geometry>::type,
+	         Geometry
+	         >::apply(geometry);
 }
 
 /*!
@@ -116,13 +118,13 @@ inline void assign_inverse(Geometry& geometry)
 template <typename Geometry>
 inline void assign_zero(Geometry& geometry)
 {
-    concepts::check<Geometry>();
+	concepts::check<Geometry>();
 
-    dispatch::assign_zero
-        <
-            typename tag<Geometry>::type,
-            Geometry
-        >::apply(geometry);
+	dispatch::assign_zero
+	<
+	typename tag<Geometry>::type,
+	         Geometry
+	         >::apply(geometry);
 }
 
 /*!
@@ -146,14 +148,14 @@ inline void assign_zero(Geometry& geometry)
 template <typename Geometry, typename Type>
 inline void assign_values(Geometry& geometry, Type const& c1, Type const& c2)
 {
-    concepts::check<Geometry>();
+	concepts::check<Geometry>();
 
-    dispatch::assign
-        <
-            typename tag<Geometry>::type,
-            Geometry,
-            geometry::dimension<Geometry>::type::value
-        >::apply(geometry, c1, c2);
+	dispatch::assign
+	<
+	typename tag<Geometry>::type,
+	         Geometry,
+	         geometry::dimension<Geometry>::type::value
+	         >::apply(geometry, c1, c2);
 }
 
 /*!
@@ -177,16 +179,16 @@ inline void assign_values(Geometry& geometry, Type const& c1, Type const& c2)
  */
 template <typename Geometry, typename Type>
 inline void assign_values(Geometry& geometry,
-            Type const& c1, Type const& c2, Type const& c3)
+                          Type const& c1, Type const& c2, Type const& c3)
 {
-    concepts::check<Geometry>();
+	concepts::check<Geometry>();
 
-    dispatch::assign
-        <
-            typename tag<Geometry>::type,
-            Geometry,
-            geometry::dimension<Geometry>::type::value
-        >::apply(geometry, c1, c2, c3);
+	dispatch::assign
+	<
+	typename tag<Geometry>::type,
+	         Geometry,
+	         geometry::dimension<Geometry>::type::value
+	         >::apply(geometry, c1, c2, c3);
 }
 
 /*!
@@ -204,16 +206,16 @@ inline void assign_values(Geometry& geometry,
  */
 template <typename Geometry, typename Type>
 inline void assign_values(Geometry& geometry,
-                Type const& c1, Type const& c2, Type const& c3, Type const& c4)
+                          Type const& c1, Type const& c2, Type const& c3, Type const& c4)
 {
-    concepts::check<Geometry>();
+	concepts::check<Geometry>();
 
-    dispatch::assign
-        <
-            typename tag<Geometry>::type,
-            Geometry,
-            geometry::dimension<Geometry>::type::value
-        >::apply(geometry, c1, c2, c3, c4);
+	dispatch::assign
+	<
+	typename tag<Geometry>::type,
+	         Geometry,
+	         geometry::dimension<Geometry>::type::value
+	         >::apply(geometry, c1, c2, c3, c4);
 }
 
 
@@ -224,128 +226,128 @@ namespace resolve_variant
 template <typename Geometry1, typename Geometry2>
 struct assign
 {
-    static inline void
-    apply(Geometry1& geometry1, const Geometry2& geometry2)
-    {
-        concepts::check<Geometry1>();
-        concepts::check<Geometry2 const>();
-        concepts::check_concepts_and_equal_dimensions<Geometry1, Geometry2 const>();
-            
-        static bool const same_point_order
-            = point_order<Geometry1>::value == point_order<Geometry2>::value;
-        BOOST_MPL_ASSERT_MSG
-        (
-            (same_point_order),
-            ASSIGN_IS_NOT_SUPPORTED_FOR_DIFFERENT_POINT_ORDER,
-            (types<Geometry1, Geometry2>)
-        );
-        static bool const same_closure
-            = closure<Geometry1>::value == closure<Geometry2>::value;
-        BOOST_MPL_ASSERT_MSG
-        (
-            (same_closure),
-            ASSIGN_IS_NOT_SUPPORTED_FOR_DIFFERENT_CLOSURE,
-            (types<Geometry1, Geometry2>)
-        );
-            
-        dispatch::convert<Geometry2, Geometry1>::apply(geometry2, geometry1);
-    }
+	static inline void
+	apply(Geometry1& geometry1, const Geometry2& geometry2)
+	{
+		concepts::check<Geometry1>();
+		concepts::check<Geometry2 const>();
+		concepts::check_concepts_and_equal_dimensions<Geometry1, Geometry2 const>();
+
+		static bool const same_point_order
+		    = point_order<Geometry1>::value == point_order<Geometry2>::value;
+		BOOST_MPL_ASSERT_MSG
+		(
+		    (same_point_order),
+		    ASSIGN_IS_NOT_SUPPORTED_FOR_DIFFERENT_POINT_ORDER,
+		    (types<Geometry1, Geometry2>)
+		);
+		static bool const same_closure
+		    = closure<Geometry1>::value == closure<Geometry2>::value;
+		BOOST_MPL_ASSERT_MSG
+		(
+		    (same_closure),
+		    ASSIGN_IS_NOT_SUPPORTED_FOR_DIFFERENT_CLOSURE,
+		    (types<Geometry1, Geometry2>)
+		);
+
+		dispatch::convert<Geometry2, Geometry1>::apply(geometry2, geometry1);
+	}
 };
-    
-    
+
+
 template <BOOST_VARIANT_ENUM_PARAMS(typename T), typename Geometry2>
 struct assign<variant<BOOST_VARIANT_ENUM_PARAMS(T)>, Geometry2>
 {
-    struct visitor: static_visitor<void>
-    {
-        Geometry2 const& m_geometry2;
-            
-        visitor(Geometry2 const& geometry2)
-        : m_geometry2(geometry2)
-        {}
-            
-        template <typename Geometry1>
-        result_type operator()(Geometry1& geometry1) const
-        {
-            return assign
-            <
-                Geometry1,
-                Geometry2
-            >::apply
-            (geometry1, m_geometry2);
-        }
-    };
-        
-    static inline void
-    apply(variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry1,
-          Geometry2 const& geometry2)
-    {
-        return boost::apply_visitor(visitor(geometry2), geometry1);
-    }
+	struct visitor: static_visitor<void>
+	{
+		Geometry2 const& m_geometry2;
+
+		visitor(Geometry2 const& geometry2)
+			: m_geometry2(geometry2)
+		{}
+
+		template <typename Geometry1>
+		result_type operator()(Geometry1& geometry1) const
+		{
+			return assign
+			       <
+			       Geometry1,
+			       Geometry2
+			       >::apply
+			       (geometry1, m_geometry2);
+		}
+	};
+
+	static inline void
+	apply(variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry1,
+	      Geometry2 const& geometry2)
+	{
+		return boost::apply_visitor(visitor(geometry2), geometry1);
+	}
 };
-    
-    
+
+
 template <typename Geometry1, BOOST_VARIANT_ENUM_PARAMS(typename T)>
 struct assign<Geometry1, variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
 {
-    struct visitor: static_visitor<void>
-    {
-        Geometry1& m_geometry1;
-            
-        visitor(Geometry1 const& geometry1)
-        : m_geometry1(geometry1)
-        {}
-            
-        template <typename Geometry2>
-        result_type operator()(Geometry2 const& geometry2) const
-        {
-            return assign
-            <
-                Geometry1,
-                Geometry2
-            >::apply
-            (m_geometry1, geometry2);
-        }
-    };
-        
-    static inline void
-    apply(Geometry1& geometry1,
-          variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry2)
-    {
-        return boost::apply_visitor(visitor(geometry1), geometry2);
-    }
+	struct visitor: static_visitor<void>
+	{
+		Geometry1& m_geometry1;
+
+		visitor(Geometry1 const& geometry1)
+			: m_geometry1(geometry1)
+		{}
+
+		template <typename Geometry2>
+		result_type operator()(Geometry2 const& geometry2) const
+		{
+			return assign
+			       <
+			       Geometry1,
+			       Geometry2
+			       >::apply
+			       (m_geometry1, geometry2);
+		}
+	};
+
+	static inline void
+	apply(Geometry1& geometry1,
+	      variant<BOOST_VARIANT_ENUM_PARAMS(T)> const& geometry2)
+	{
+		return boost::apply_visitor(visitor(geometry1), geometry2);
+	}
 };
-    
-    
+
+
 template <BOOST_VARIANT_ENUM_PARAMS(typename T1), BOOST_VARIANT_ENUM_PARAMS(typename T2)>
 struct assign<variant<BOOST_VARIANT_ENUM_PARAMS(T1)>, variant<BOOST_VARIANT_ENUM_PARAMS(T2)> >
 {
-    struct visitor: static_visitor<void>
-    {
-        template <typename Geometry1, typename Geometry2>
-        result_type operator()(
-                                Geometry1& geometry1,
-                                Geometry2 const& geometry2) const
-        {
-            return assign
-            <
-                Geometry1,
-                Geometry2
-            >::apply
-            (geometry1, geometry2);
-        }
-    };
-        
-    static inline void
-    apply(variant<BOOST_VARIANT_ENUM_PARAMS(T1)>& geometry1,
-          variant<BOOST_VARIANT_ENUM_PARAMS(T2)> const& geometry2)
-    {
-        return boost::apply_visitor(visitor(), geometry1, geometry2);
-    }
+	struct visitor: static_visitor<void>
+	{
+		template <typename Geometry1, typename Geometry2>
+		result_type operator()(
+		    Geometry1& geometry1,
+		    Geometry2 const& geometry2) const
+		{
+			return assign
+			       <
+			       Geometry1,
+			       Geometry2
+			       >::apply
+			       (geometry1, geometry2);
+		}
+	};
+
+	static inline void
+	apply(variant<BOOST_VARIANT_ENUM_PARAMS(T1)>& geometry1,
+	      variant<BOOST_VARIANT_ENUM_PARAMS(T2)> const& geometry2)
+	{
+		return boost::apply_visitor(visitor(), geometry1, geometry2);
+	}
 };
-    
+
 } // namespace resolve_variant
-    
+
 
 /*!
 \brief Assigns one geometry to another geometry
@@ -368,11 +370,12 @@ geometry, e.g. a RING. This only works if it is possible and applicable.
 template <typename Geometry1, typename Geometry2>
 inline void assign(Geometry1& geometry1, Geometry2 const& geometry2)
 {
-    resolve_variant::assign<Geometry1, Geometry2>::apply(geometry1, geometry2);
+	resolve_variant::assign<Geometry1, Geometry2>::apply(geometry1, geometry2);
 }
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 

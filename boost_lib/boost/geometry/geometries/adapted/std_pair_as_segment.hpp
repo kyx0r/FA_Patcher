@@ -33,7 +33,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -45,46 +47,46 @@ namespace traits
 template <typename Point>
 struct tag<std::pair<Point, Point> >
 {
-    typedef segment_tag type;
+	typedef segment_tag type;
 };
 
 template <typename Point>
 struct point_type<std::pair<Point, Point> >
 {
-    typedef Point type;
+	typedef Point type;
 };
 
 template <typename Point, std::size_t Dimension>
 struct indexed_access<std::pair<Point, Point>, 0, Dimension>
 {
-    typedef typename geometry::coordinate_type<Point>::type coordinate_type;
+	typedef typename geometry::coordinate_type<Point>::type coordinate_type;
 
-    static inline coordinate_type get(std::pair<Point, Point> const& s)
-    {
-        return geometry::get<Dimension>(s.first);
-    }
+	static inline coordinate_type get(std::pair<Point, Point> const& s)
+	{
+		return geometry::get<Dimension>(s.first);
+	}
 
-    static inline void set(std::pair<Point, Point>& s, coordinate_type const& value)
-    {
-        geometry::set<Dimension>(s.first, value);
-    }
+	static inline void set(std::pair<Point, Point>& s, coordinate_type const& value)
+	{
+		geometry::set<Dimension>(s.first, value);
+	}
 };
 
 
 template <typename Point, std::size_t Dimension>
 struct indexed_access<std::pair<Point, Point>, 1, Dimension>
 {
-    typedef typename geometry::coordinate_type<Point>::type coordinate_type;
+	typedef typename geometry::coordinate_type<Point>::type coordinate_type;
 
-    static inline coordinate_type get(std::pair<Point, Point> const& s)
-    {
-        return geometry::get<Dimension>(s.second);
-    }
+	static inline coordinate_type get(std::pair<Point, Point> const& s)
+	{
+		return geometry::get<Dimension>(s.second);
+	}
 
-    static inline void set(std::pair<Point, Point>& s, coordinate_type const& value)
-    {
-        geometry::set<Dimension>(s.second, value);
-    }
+	static inline void set(std::pair<Point, Point>& s, coordinate_type const& value)
+	{
+		geometry::set<Dimension>(s.second, value);
+	}
 };
 
 
@@ -92,7 +94,8 @@ struct indexed_access<std::pair<Point, Point>, 1, Dimension>
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_ADAPTED_STD_PAIR_AS_SEGMENT_HPP

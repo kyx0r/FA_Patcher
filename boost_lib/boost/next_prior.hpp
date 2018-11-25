@@ -25,7 +25,8 @@
 #include <boost/iterator/advance.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 
-namespace boost {
+namespace boost
+{
 
 //  Helper functions for classes like bidirectional iterators not supporting
 //  operator+ and operator-
@@ -37,7 +38,8 @@ namespace boost {
 
 //  Contributed by Dave Abrahams
 
-namespace next_prior_detail {
+namespace next_prior_detail
+{
 
 // The trait attempts to detect if the T type is an iterator. Class-type iterators are assumed
 // to have the nested type iterator_category. Strictly speaking, this is not required to be the
@@ -48,34 +50,34 @@ namespace next_prior_detail {
 template< typename T, typename Void = void >
 struct is_iterator_class
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = false;
+	static BOOST_CONSTEXPR_OR_CONST bool value = false;
 };
 
 template< typename T >
 struct is_iterator_class<
-    T,
-    typename enable_if_has_type<
+	T,
+	typename enable_if_has_type<
 #if !defined(BOOST_NO_CXX17_ITERATOR_TRAITS)
-        typename std::iterator_traits< T >::iterator_category
+	typename std::iterator_traits< T >::iterator_category
 #else
-        typename T::iterator_category
+	typename T::iterator_category
 #endif
-    >::type
->
+	>::type
+	>
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 
 template< typename T >
 struct is_iterator :
-    public is_iterator_class< T >
+	public is_iterator_class< T >
 {
 };
 
 template< typename T >
 struct is_iterator< T* >
 {
-    static BOOST_CONSTEXPR_OR_CONST bool value = true;
+	static BOOST_CONSTEXPR_OR_CONST bool value = true;
 };
 
 
@@ -85,42 +87,42 @@ struct next_plus_impl;
 template< typename T, typename Distance >
 struct next_plus_impl< T, Distance, true >
 {
-    static T call(T x, Distance n)
-    {
-        return x + n;
-    }
+	static T call(T x, Distance n)
+	{
+		return x + n;
+	}
 };
 
 template< typename T, typename Distance, bool HasPlusAssign = has_plus_assign< T, Distance >::value >
 struct next_plus_assign_impl :
-    public next_plus_impl< T, Distance >
+	public next_plus_impl< T, Distance >
 {
 };
 
 template< typename T, typename Distance >
 struct next_plus_assign_impl< T, Distance, true >
 {
-    static T call(T x, Distance n)
-    {
-        x += n;
-        return x;
-    }
+	static T call(T x, Distance n)
+	{
+		x += n;
+		return x;
+	}
 };
 
 template< typename T, typename Distance, bool IsIterator = is_iterator< T >::value >
 struct next_advance_impl :
-    public next_plus_assign_impl< T, Distance >
+	public next_plus_assign_impl< T, Distance >
 {
 };
 
 template< typename T, typename Distance >
 struct next_advance_impl< T, Distance, true >
 {
-    static T call(T x, Distance n)
-    {
-        boost::iterators::advance(x, n);
-        return x;
-    }
+	static T call(T x, Distance n)
+	{
+		boost::iterators::advance(x, n);
+		return x;
+	}
 };
 
 
@@ -130,64 +132,70 @@ struct prior_minus_impl;
 template< typename T, typename Distance >
 struct prior_minus_impl< T, Distance, true >
 {
-    static T call(T x, Distance n)
-    {
-        return x - n;
-    }
+	static T call(T x, Distance n)
+	{
+		return x - n;
+	}
 };
 
 template< typename T, typename Distance, bool HasMinusAssign = has_minus_assign< T, Distance >::value >
 struct prior_minus_assign_impl :
-    public prior_minus_impl< T, Distance >
+	public prior_minus_impl< T, Distance >
 {
 };
 
 template< typename T, typename Distance >
 struct prior_minus_assign_impl< T, Distance, true >
 {
-    static T call(T x, Distance n)
-    {
-        x -= n;
-        return x;
-    }
+	static T call(T x, Distance n)
+	{
+		x -= n;
+		return x;
+	}
 };
 
 template< typename T, typename Distance, bool IsIterator = is_iterator< T >::value >
 struct prior_advance_impl :
-    public prior_minus_assign_impl< T, Distance >
+	public prior_minus_assign_impl< T, Distance >
 {
 };
 
 template< typename T, typename Distance >
 struct prior_advance_impl< T, Distance, true >
 {
-    static T call(T x, Distance n)
-    {
-        // Avoid negating n to sidestep possible integer overflow
-        boost::iterators::reverse_iterator< T > rx(x);
-        boost::iterators::advance(rx, n);
-        return rx.base();
-    }
+	static T call(T x, Distance n)
+	{
+		// Avoid negating n to sidestep possible integer overflow
+		boost::iterators::reverse_iterator< T > rx(x);
+		boost::iterators::advance(rx, n);
+		return rx.base();
+	}
 };
 
 } // namespace next_prior_detail
 
 template <class T>
-inline T next(T x) { return ++x; }
+inline T next(T x)
+{
+	return ++x;
+}
 
 template <class T, class Distance>
 inline T next(T x, Distance n)
 {
-    return next_prior_detail::next_advance_impl< T, Distance >::call(x, n);
+	return next_prior_detail::next_advance_impl< T, Distance >::call(x, n);
 }
 
 template <class T>
-inline T prior(T x) { return --x; }
+inline T prior(T x)
+{
+	return --x;
+}
 
 template <class T, class Distance>
 inline T prior(T x, Distance n)
 {
-    return next_prior_detail::prior_advance_impl< T, Distance >::call(x, n);
+	return next_prior_detail::prior_advance_impl< T, Distance >::call(x, n);
 }
 
 } // namespace boost

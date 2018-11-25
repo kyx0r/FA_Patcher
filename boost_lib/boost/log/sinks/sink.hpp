@@ -27,81 +27,86 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 //! A base class for a logging sink frontend
 class BOOST_LOG_NO_VTABLE sink
 {
 public:
-    //! An exception handler type
-    typedef boost::log::aux::light_function< void () > exception_handler_type;
+	//! An exception handler type
+	typedef boost::log::aux::light_function< void () > exception_handler_type;
 
 private:
-    //! The flag indicates that the sink passes log records across thread boundaries
-    const bool m_cross_thread;
+	//! The flag indicates that the sink passes log records across thread boundaries
+	const bool m_cross_thread;
 
 public:
-    /*!
-     * Default constructor
-     */
-    explicit sink(bool cross_thread) : m_cross_thread(cross_thread)
-    {
-    }
+	/*!
+	 * Default constructor
+	 */
+	explicit sink(bool cross_thread) : m_cross_thread(cross_thread)
+	{
+	}
 
-    /*!
-     * Virtual destructor
-     */
-    virtual ~sink() {}
+	/*!
+	 * Virtual destructor
+	 */
+	virtual ~sink() {}
 
-    /*!
-     * The method returns \c true if no filter is set or the attribute values pass the filter
-     *
-     * \param attributes A set of attribute values of a logging record
-     */
-    virtual bool will_consume(attribute_value_set const& attributes) = 0;
+	/*!
+	 * The method returns \c true if no filter is set or the attribute values pass the filter
+	 *
+	 * \param attributes A set of attribute values of a logging record
+	 */
+	virtual bool will_consume(attribute_value_set const& attributes) = 0;
 
-    /*!
-     * The method puts logging record to the sink
-     *
-     * \param rec Logging record to consume
-     */
-    virtual void consume(record_view const& rec) = 0;
+	/*!
+	 * The method puts logging record to the sink
+	 *
+	 * \param rec Logging record to consume
+	 */
+	virtual void consume(record_view const& rec) = 0;
 
-    /*!
-     * The method attempts to put logging record to the sink. The method may be used by the
-     * core in order to determine the most efficient order of sinks to feed records to in
-     * case of heavy contention. Sink implementations may implement try/backoff logic in
-     * order to improve overall logging throughput.
-     *
-     * \param rec Logging record to consume
-     * \return \c true, if the record was consumed, \c false, if not.
-     */
-    virtual bool try_consume(record_view const& rec)
-    {
-        consume(rec);
-        return true;
-    }
+	/*!
+	 * The method attempts to put logging record to the sink. The method may be used by the
+	 * core in order to determine the most efficient order of sinks to feed records to in
+	 * case of heavy contention. Sink implementations may implement try/backoff logic in
+	 * order to improve overall logging throughput.
+	 *
+	 * \param rec Logging record to consume
+	 * \return \c true, if the record was consumed, \c false, if not.
+	 */
+	virtual bool try_consume(record_view const& rec)
+	{
+		consume(rec);
+		return true;
+	}
 
-    /*!
-     * The method performs flushing of any internal buffers that may hold log records. The method
-     * may take considerable time to complete and may block both the calling thread and threads
-     * attempting to put new records into the sink while this call is in progress.
-     */
-    virtual void flush() = 0;
+	/*!
+	 * The method performs flushing of any internal buffers that may hold log records. The method
+	 * may take considerable time to complete and may block both the calling thread and threads
+	 * attempting to put new records into the sink while this call is in progress.
+	 */
+	virtual void flush() = 0;
 
-    /*!
-     * The method indicates that the sink passes log records between different threads. This information is
-     * needed by the logging core to detach log records from all thread-specific resources before passing it
-     * to the sink.
-     */
-    bool is_cross_thread() const BOOST_NOEXCEPT { return m_cross_thread; }
+	/*!
+	 * The method indicates that the sink passes log records between different threads. This information is
+	 * needed by the logging core to detach log records from all thread-specific resources before passing it
+	 * to the sink.
+	 */
+	bool is_cross_thread() const BOOST_NOEXCEPT
+	{
+		return m_cross_thread;
+	}
 
-    BOOST_DELETED_FUNCTION(sink(sink const&))
-    BOOST_DELETED_FUNCTION(sink& operator= (sink const&))
+	BOOST_DELETED_FUNCTION(sink(sink const&))
+	BOOST_DELETED_FUNCTION(sink& operator= (sink const&))
 };
 
 } // namespace sinks

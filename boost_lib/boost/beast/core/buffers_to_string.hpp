@@ -15,8 +15,10 @@
 #include <boost/asio/buffer.hpp>
 #include <string>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** Return a string representing the contents of a buffer sequence.
 
@@ -44,13 +46,13 @@ template<class ConstBufferSequence>
 std::string
 buffers_to_string(ConstBufferSequence const& buffers)
 {
-    std::string result;
-    result.reserve(boost::asio::buffer_size(buffers));
-    for(boost::asio::const_buffer buffer :
-            detail::buffers_range(buffers))
-        result.append(reinterpret_cast<
-            char const*>(buffer.data()), buffer.size());
-    return result;
+	std::string result;
+	result.reserve(boost::asio::buffer_size(buffers));
+	for(boost::asio::const_buffer buffer :
+	        detail::buffers_range(buffers))
+		result.append(reinterpret_cast<
+		              char const*>(buffer.data()), buffer.size());
+	return result;
 }
 
 } // beast

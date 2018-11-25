@@ -15,7 +15,11 @@
 #include <string>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 
@@ -23,34 +27,36 @@ namespace boost { namespace geometry { namespace projections
 namespace detail
 {
 
-    struct code_element
-    {
-        int code;
-        std::string proj4_str;
-    };
+struct code_element
+{
+	int code;
+	std::string proj4_str;
+};
 
-    struct code_element_less
-    {
-        inline bool operator()(code_element const& l, code_element const& r) const
-        {
-            return l.code < r.code;
-        }
-    };
+struct code_element_less
+{
+	inline bool operator()(code_element const& l, code_element const& r) const
+	{
+		return l.code < r.code;
+	}
+};
 
-    template<typename RandIt>
-    inline RandIt binary_find_code_element(RandIt first, RandIt last, int code)
-    {
-        code_element_less comp;
-        code_element value;
-        value.code = code;
-        first = std::lower_bound(first, last, value, code_element_less());
-        return first != last && !comp(value, *first) ? first : last;
-    }
+template<typename RandIt>
+inline RandIt binary_find_code_element(RandIt first, RandIt last, int code)
+{
+	code_element_less comp;
+	code_element value;
+	value.code = code;
+	first = std::lower_bound(first, last, value, code_element_less());
+	return first != last && !comp(value, *first) ? first : last;
+}
 
 }
 #endif // DOXYGEN_NO_DETAIL
 
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif

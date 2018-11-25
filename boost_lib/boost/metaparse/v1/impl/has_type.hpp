@@ -10,16 +10,16 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
+}
+}
+}
 }
 
 #endif

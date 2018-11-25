@@ -15,22 +15,22 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 template<typename IterTuple>
 class combined_range
-        : public iterator_range<zip_iterator<IterTuple> >
+	: public iterator_range<zip_iterator<IterTuple> >
 {
-    typedef iterator_range<zip_iterator<IterTuple> > base;
+	typedef iterator_range<zip_iterator<IterTuple> > base;
 public:
-    combined_range(IterTuple first, IterTuple last)
-        : base(first, last)
-    {
-    }
+	combined_range(IterTuple first, IterTuple last)
+		: base(first, last)
+	{
+	}
 };
 
-    } // namespace range
+} // namespace range
 } // namespace boost
 
 #if defined(BOOST_NO_CXX11_AUTO_DECLARATIONS) || \

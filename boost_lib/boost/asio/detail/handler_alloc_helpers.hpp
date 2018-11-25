@@ -27,16 +27,17 @@
 // Calls to asio_handler_allocate and asio_handler_deallocate must be made from
 // a namespace that does not contain any overloads of these functions. The
 // boost_asio_handler_alloc_helpers namespace is defined here for that purpose.
-namespace boost_asio_handler_alloc_helpers {
+namespace boost_asio_handler_alloc_helpers
+{
 
 template <typename Handler>
 inline void* allocate(std::size_t s, Handler& h)
 {
 #if !defined(BOOST_ASIO_HAS_HANDLER_HOOKS)
-  return ::operator new(s);
+	return ::operator new(s);
 #else
-  using boost::asio::asio_handler_allocate;
-  return asio_handler_allocate(s, boost::asio::detail::addressof(h));
+	using boost::asio::asio_handler_allocate;
+	return asio_handler_allocate(s, boost::asio::detail::addressof(h));
 #endif
 }
 
@@ -44,104 +45,107 @@ template <typename Handler>
 inline void deallocate(void* p, std::size_t s, Handler& h)
 {
 #if !defined(BOOST_ASIO_HAS_HANDLER_HOOKS)
-  ::operator delete(p);
+	::operator delete(p);
 #else
-  using boost::asio::asio_handler_deallocate;
-  asio_handler_deallocate(p, s, boost::asio::detail::addressof(h));
+	using boost::asio::asio_handler_deallocate;
+	asio_handler_deallocate(p, s, boost::asio::detail::addressof(h));
 #endif
 }
 
 } // namespace boost_asio_handler_alloc_helpers
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename Handler, typename T>
 class hook_allocator
 {
 public:
-  typedef T value_type;
+	typedef T value_type;
 
-  template <typename U>
-  struct rebind
-  {
-    typedef hook_allocator<Handler, U> other;
-  };
+	template <typename U>
+	struct rebind
+	{
+		typedef hook_allocator<Handler, U> other;
+	};
 
-  explicit hook_allocator(Handler& h)
-    : handler_(h)
-  {
-  }
+	explicit hook_allocator(Handler& h)
+		: handler_(h)
+	{
+	}
 
-  template <typename U>
-  hook_allocator(const hook_allocator<Handler, U>& a)
-    : handler_(a.handler_)
-  {
-  }
+	template <typename U>
+	hook_allocator(const hook_allocator<Handler, U>& a)
+		: handler_(a.handler_)
+	{
+	}
 
-  T* allocate(std::size_t n)
-  {
-    return static_cast<T*>(
-        boost_asio_handler_alloc_helpers::allocate(sizeof(T) * n, handler_));
-  }
+	T* allocate(std::size_t n)
+	{
+		return static_cast<T*>(
+		           boost_asio_handler_alloc_helpers::allocate(sizeof(T) * n, handler_));
+	}
 
-  void deallocate(T* p, std::size_t n)
-  {
-    boost_asio_handler_alloc_helpers::deallocate(p, sizeof(T) * n, handler_);
-  }
+	void deallocate(T* p, std::size_t n)
+	{
+		boost_asio_handler_alloc_helpers::deallocate(p, sizeof(T) * n, handler_);
+	}
 
 //private:
-  Handler& handler_;
+	Handler& handler_;
 };
 
 template <typename Handler>
 class hook_allocator<Handler, void>
 {
 public:
-  typedef void value_type;
+	typedef void value_type;
 
-  template <typename U>
-  struct rebind
-  {
-    typedef hook_allocator<Handler, U> other;
-  };
+	template <typename U>
+	struct rebind
+	{
+		typedef hook_allocator<Handler, U> other;
+	};
 
-  explicit hook_allocator(Handler& h)
-    : handler_(h)
-  {
-  }
+	explicit hook_allocator(Handler& h)
+		: handler_(h)
+	{
+	}
 
-  template <typename U>
-  hook_allocator(const hook_allocator<Handler, U>& a)
-    : handler_(a.handler_)
-  {
-  }
+	template <typename U>
+	hook_allocator(const hook_allocator<Handler, U>& a)
+		: handler_(a.handler_)
+	{
+	}
 
 //private:
-  Handler& handler_;
+	Handler& handler_;
 };
 
 template <typename Handler, typename Allocator>
 struct get_hook_allocator
 {
-  typedef Allocator type;
+	typedef Allocator type;
 
-  static type get(Handler&, const Allocator& a)
-  {
-    return a;
-  }
+	static type get(Handler&, const Allocator& a)
+	{
+		return a;
+	}
 };
 
 template <typename Handler, typename T>
 struct get_hook_allocator<Handler, std::allocator<T> >
 {
-  typedef hook_allocator<Handler, T> type;
+	typedef hook_allocator<Handler, T> type;
 
-  static type get(Handler& handler, const std::allocator<T>&)
-  {
-    return type(handler);
-  }
+	static type get(Handler& handler, const std::allocator<T>&)
+	{
+		return type(handler);
+	}
 };
 
 } // namespace detail

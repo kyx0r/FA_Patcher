@@ -15,8 +15,10 @@
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/algorithm/generate.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Stores the result of \p generator for each element in the range
 /// [\p first, \p first + \p count).
@@ -28,7 +30,7 @@ inline void generate_n(OutputIterator first,
                        Generator generator,
                        command_queue &queue = system::default_queue())
 {
-    ::boost::compute::generate(first, first + count, generator, queue);
+	::boost::compute::generate(first, first + count, generator, queue);
 }
 
 } // end compute namespace

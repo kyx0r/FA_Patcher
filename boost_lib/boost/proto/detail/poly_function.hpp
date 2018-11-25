@@ -31,200 +31,206 @@
 # pragma warning(disable: 4181) // const applied to reference type
 #endif
 
-namespace boost { namespace proto { namespace detail
+namespace boost
+{
+namespace proto
+{
+namespace detail
 {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T>
-    struct normalize_arg
-    {
-        typedef typename mpl::if_c<is_noncopyable<T>::value, T &, T>::type type;
-        typedef T &reference;
-    };
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename T>
+struct normalize_arg
+{
+	typedef typename mpl::if_c<is_noncopyable<T>::value, T &, T>::type type;
+	typedef T &reference;
+};
 
-    template<typename T>
-    struct normalize_arg<T const>
-    {
-        typedef typename mpl::if_c<is_noncopyable<T>::value, T const &, T>::type type;
-        typedef T const &reference;
-    };
+template<typename T>
+struct normalize_arg<T const>
+{
+	typedef typename mpl::if_c<is_noncopyable<T>::value, T const &, T>::type type;
+	typedef T const &reference;
+};
 
-    template<typename T>
-    struct normalize_arg<T &>
-    {
-        typedef typename mpl::if_c<is_noncopyable<T>::value, T &, T>::type type;
-        typedef T &reference;
-    };
+template<typename T>
+struct normalize_arg<T &>
+{
+	typedef typename mpl::if_c<is_noncopyable<T>::value, T &, T>::type type;
+	typedef T &reference;
+};
 
-    template<typename T>
-    struct normalize_arg<T const &>
-    {
-        typedef typename mpl::if_c<is_noncopyable<T>::value, T const &, T>::type type;
-        typedef T const &reference;
-    };
+template<typename T>
+struct normalize_arg<T const &>
+{
+	typedef typename mpl::if_c<is_noncopyable<T>::value, T const &, T>::type type;
+	typedef T const &reference;
+};
 
-    template<typename T>
-    struct normalize_arg<boost::reference_wrapper<T> >
-    {
-        typedef T &type;
-        typedef T &reference;
-    };
+template<typename T>
+struct normalize_arg<boost::reference_wrapper<T> >
+{
+	typedef T &type;
+	typedef T &reference;
+};
 
-    template<typename T>
-    struct normalize_arg<boost::reference_wrapper<T> const>
-    {
-        typedef T &type;
-        typedef T &reference;
-    };
+template<typename T>
+struct normalize_arg<boost::reference_wrapper<T> const>
+{
+	typedef T &type;
+	typedef T &reference;
+};
 
-    template<typename T>
-    struct normalize_arg<boost::reference_wrapper<T> &>
-    {
-        typedef T &type;
-        typedef T &reference;
-    };
+template<typename T>
+struct normalize_arg<boost::reference_wrapper<T> &>
+{
+	typedef T &type;
+	typedef T &reference;
+};
 
-    template<typename T>
-    struct normalize_arg<boost::reference_wrapper<T> const &>
-    {
-        typedef T &type;
-        typedef T &reference;
-    };
+template<typename T>
+struct normalize_arg<boost::reference_wrapper<T> const &>
+{
+	typedef T &type;
+	typedef T &reference;
+};
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T>
-    struct arg
-    {
-        typedef T const &type;
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename T>
+struct arg
+{
+	typedef T const &type;
 
-        arg(type t)
-          : value(t)
-        {}
+	arg(type t)
+		: value(t)
+	{}
 
-        operator type() const
-        {
-            return this->value;
-        }
+	operator type() const
+	{
+		return this->value;
+	}
 
-        type operator()() const
-        {
-            return this->value;
-        }
+	type operator()() const
+	{
+		return this->value;
+	}
 
-    private:
-        arg &operator =(arg const &);
-        type value;
-    };
+private:
+	arg &operator =(arg const &);
+	type value;
+};
 
-    template<typename T>
-    struct arg<T &>
-    {
-        typedef T &type;
+template<typename T>
+struct arg<T &>
+{
+	typedef T &type;
 
-        arg(type t)
-          : value(t)
-        {}
+	arg(type t)
+		: value(t)
+	{}
 
-        operator type() const
-        {
-            return this->value;
-        }
+	operator type() const
+	{
+		return this->value;
+	}
 
-        type operator()() const
-        {
-            return this->value;
-        }
+	type operator()() const
+	{
+		return this->value;
+	}
 
-    private:
-        arg &operator =(arg const &);
-        type value;
-    };
+private:
+	arg &operator =(arg const &);
+	type value;
+};
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T, typename Void = void>
-    struct is_poly_function
-      : mpl::false_
-    {};
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename T, typename Void = void>
+struct is_poly_function
+	: mpl::false_
+{};
 
-    template<typename T>
-    struct is_poly_function<T, typename T::is_poly_function_base_>
-      : mpl::true_
-    {};
+template<typename T>
+struct is_poly_function<T, typename T::is_poly_function_base_>
+	: mpl::true_
+{};
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    #define BOOST_PROTO_POLY_FUNCTION()                                                             \
+////////////////////////////////////////////////////////////////////////////////////////////////
+#define BOOST_PROTO_POLY_FUNCTION()                                                             \
         typedef void is_poly_function_base_;                                                        \
         /**/
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    struct poly_function_base
-    {
-        /// INTERNAL ONLY
-        BOOST_PROTO_POLY_FUNCTION()
-    };
+////////////////////////////////////////////////////////////////////////////////////////////////
+struct poly_function_base
+{
+	/// INTERNAL ONLY
+	BOOST_PROTO_POLY_FUNCTION()
+};
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename Derived, typename NullaryResult = void>
-    struct poly_function
-      : poly_function_base
-    {
-        template<typename Sig>
-        struct result;
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename Derived, typename NullaryResult = void>
+struct poly_function
+	: poly_function_base
+{
+	template<typename Sig>
+	struct result;
 
-        template<typename This>
-        struct result<This()>
-          : Derived::template impl<>
-        {
-            typedef typename result::result_type type;
-        };
+	template<typename This>
+	struct result<This()>
+: Derived::template impl<>
+	{
+		typedef typename result::result_type type;
+	};
 
-        NullaryResult operator()() const
-        {
-            result<Derived const()> impl;
-            return impl();
-        }
+	NullaryResult operator()() const
+	{
+		result<Derived const()> impl;
+		return impl();
+	}
 
-        #include <boost/proto/detail/poly_function_funop.hpp>
-    };
+#include <boost/proto/detail/poly_function_funop.hpp>
+};
 
-    template<typename T>
-    struct wrap_t;
+template<typename T>
+struct wrap_t;
 
-    typedef char poly_function_t;
-    typedef char (&mono_function_t)[2];
-    typedef char (&unknown_function_t)[3];
+typedef char poly_function_t;
+typedef char (&mono_function_t)[2];
+typedef char (&unknown_function_t)[3];
 
-    template<typename T> poly_function_t test_poly_function(T *, wrap_t<typename T::is_poly_function_base_> * = 0);
-    template<typename T> mono_function_t test_poly_function(T *, wrap_t<typename T::result_type> * = 0);
-    template<typename T> unknown_function_t test_poly_function(T *, ...);
+template<typename T> poly_function_t test_poly_function(T *, wrap_t<typename T::is_poly_function_base_> * = 0);
+template<typename T> mono_function_t test_poly_function(T *, wrap_t<typename T::result_type> * = 0);
+template<typename T> unknown_function_t test_poly_function(T *, ...);
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename Fun, typename Sig, typename Switch = mpl::size_t<sizeof(test_poly_function<Fun>(0,0))> >
-    struct poly_function_traits
-    {
-        typedef typename Fun::template result<Sig>::type result_type;
-        typedef Fun function_type;
-    };
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename Fun, typename Sig, typename Switch = mpl::size_t<sizeof(test_poly_function<Fun>(0,0))> >
+struct poly_function_traits
+{
+	typedef typename Fun::template result<Sig>::type result_type;
+	typedef Fun function_type;
+};
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename Fun, typename Sig>
-    struct poly_function_traits<Fun, Sig, mpl::size_t<sizeof(mono_function_t)> >
-    {
-        typedef typename Fun::result_type result_type;
-        typedef Fun function_type;
-    };
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename Fun, typename Sig>
+struct poly_function_traits<Fun, Sig, mpl::size_t<sizeof(mono_function_t)> >
+{
+	typedef typename Fun::result_type result_type;
+	typedef Fun function_type;
+};
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename PolyFunSig, bool IsPolyFunction>
-    struct as_mono_function_impl;
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename PolyFunSig, bool IsPolyFunction>
+struct as_mono_function_impl;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename PolyFunSig>
-    struct as_mono_function;
+////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename PolyFunSig>
+struct as_mono_function;
 
-    #include <boost/proto/detail/poly_function_traits.hpp>
+#include <boost/proto/detail/poly_function_traits.hpp>
 
-}}} // namespace boost::proto::detail
+}
+}
+} // namespace boost::proto::detail
 
 #ifdef _MSC_VER
 # pragma warning(pop)

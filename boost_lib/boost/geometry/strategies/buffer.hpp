@@ -9,10 +9,14 @@
 #ifndef BOOST_GEOMETRY_STRATEGIES_CARTESIAN_BUFFER_HPP
 #define BOOST_GEOMETRY_STRATEGIES_CARTESIAN_BUFFER_HPP
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace strategy { namespace buffer
+namespace strategy
+{
+namespace buffer
 {
 
 /*
@@ -61,13 +65,13 @@ enum buffer_side_selector { buffer_side_left, buffer_side_right };
 */
 enum piece_type
 {
-    buffered_segment,
-    buffered_join,
-    buffered_round_end,
-    buffered_flat_end,
-    buffered_point,
-    buffered_concave,   // always on the inside
-    piece_type_unknown
+	buffered_segment,
+	buffered_join,
+	buffered_round_end,
+	buffered_flat_end,
+	buffered_point,
+	buffered_concave,   // always on the inside
+	piece_type_unknown
 };
 
 
@@ -77,10 +81,10 @@ enum piece_type
 */
 enum join_selector
 {
-    join_convex,
-    join_concave,
-    join_continue, // collinear, next segment touches previous segment
-    join_spike     // collinear, with overlap, next segment goes back
+	join_convex,
+	join_concave,
+	join_continue, // collinear, next segment touches previous segment
+	join_spike     // collinear, with overlap, next segment goes back
 };
 
 /*!
@@ -89,15 +93,17 @@ enum join_selector
 */
 enum result_code
 {
-    result_normal,
-    result_error_numerical,
-    result_no_output
+	result_normal,
+	result_error_numerical,
+	result_no_output
 };
 
 
-}} // namespace strategy::buffer
+}
+} // namespace strategy::buffer
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_CARTESIAN_BUFFER_HPP

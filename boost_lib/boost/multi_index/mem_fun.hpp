@@ -22,11 +22,13 @@
 #include <boost/type_traits/is_convertible.hpp>
 #endif
 
-namespace boost{
+namespace boost
+{
 
 template<class T> class reference_wrapper; /* fwd decl. */
 
-namespace multi_index{
+namespace multi_index
+{
 
 /* mem_fun implements a read-only key extractor based on a given non-const
  * member function of a class.
@@ -42,66 +44,66 @@ namespace multi_index{
 template<class Class,typename Type,Type (Class::*PtrToMemberFunction)()const>
 struct const_mem_fun
 {
-  typedef typename remove_reference<Type>::type result_type;
+	typedef typename remove_reference<Type>::type result_type;
 
-  template<typename ChainedPtr>
+	template<typename ChainedPtr>
 
 #if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type>::type
+	typename disable_if<
+	is_convertible<const ChainedPtr&,const Class&>,Type>::type
 #else
-  Type
+	Type
 #endif
 
-  operator()(const ChainedPtr& x)const
-  {
-    return operator()(*x);
-  }
+	operator()(const ChainedPtr& x)const
+	{
+		return operator()(*x);
+	}
 
-  Type operator()(const Class& x)const
-  {
-    return (x.*PtrToMemberFunction)();
-  }
+	Type operator()(const Class& x)const
+	{
+		return (x.*PtrToMemberFunction)();
+	}
 
-  Type operator()(const reference_wrapper<const Class>& x)const
-  { 
-    return operator()(x.get());
-  }
+	Type operator()(const reference_wrapper<const Class>& x)const
+	{
+		return operator()(x.get());
+	}
 
-  Type operator()(const reference_wrapper<Class>& x)const
-  { 
-    return operator()(x.get());
-  }
+	Type operator()(const reference_wrapper<Class>& x)const
+	{
+		return operator()(x.get());
+	}
 };
 
 template<class Class,typename Type,Type (Class::*PtrToMemberFunction)()>
 struct mem_fun
 {
-  typedef typename remove_reference<Type>::type result_type;
+	typedef typename remove_reference<Type>::type result_type;
 
-  template<typename ChainedPtr>
+	template<typename ChainedPtr>
 
 #if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<ChainedPtr&,Class&>,Type>::type
+	typename disable_if<
+	is_convertible<ChainedPtr&,Class&>,Type>::type
 #else
-  Type
+	Type
 #endif
 
-  operator()(const ChainedPtr& x)const
-  {
-    return operator()(*x);
-  }
+	operator()(const ChainedPtr& x)const
+	{
+		return operator()(*x);
+	}
 
-  Type operator()(Class& x)const
-  {
-    return (x.*PtrToMemberFunction)();
-  }
+	Type operator()(Class& x)const
+	{
+		return (x.*PtrToMemberFunction)();
+	}
 
-  Type operator()(const reference_wrapper<Class>& x)const
-  { 
-    return operator()(x.get());
-  }
+	Type operator()(const reference_wrapper<Class>& x)const
+	{
+		return operator()(x.get());
+	}
 };
 
 /* MSVC++ 6.0 has problems with const member functions as non-type template
@@ -109,7 +111,7 @@ struct mem_fun
  * workarounds this deficiency by accepting an extra type parameter that
  * specifies the signature of the member function. The workaround was found at:
  *   Daniel, C.:"Re: weird typedef problem in VC",
- *   news:microsoft.public.vc.language, 21st nov 2002, 
+ *   news:microsoft.public.vc.language, 21st nov 2002,
  *   http://groups.google.com/groups?
  *     hl=en&lr=&ie=UTF-8&selm=ukwvg3O0BHA.1512%40tkmsftngp05
  *
@@ -118,72 +120,72 @@ struct mem_fun
  */
 
 template<
-  class Class,typename Type,
-  typename PtrToMemberFunctionType,PtrToMemberFunctionType PtrToMemberFunction>
+    class Class,typename Type,
+    typename PtrToMemberFunctionType,PtrToMemberFunctionType PtrToMemberFunction>
 struct const_mem_fun_explicit
 {
-  typedef typename remove_reference<Type>::type result_type;
+	typedef typename remove_reference<Type>::type result_type;
 
-  template<typename ChainedPtr>
+	template<typename ChainedPtr>
 
 #if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type>::type
+	typename disable_if<
+	is_convertible<const ChainedPtr&,const Class&>,Type>::type
 #else
-  Type
+	Type
 #endif
 
-  operator()(const ChainedPtr& x)const
-  {
-    return operator()(*x);
-  }
+	operator()(const ChainedPtr& x)const
+	{
+		return operator()(*x);
+	}
 
-  Type operator()(const Class& x)const
-  {
-    return (x.*PtrToMemberFunction)();
-  }
+	Type operator()(const Class& x)const
+	{
+		return (x.*PtrToMemberFunction)();
+	}
 
-  Type operator()(const reference_wrapper<const Class>& x)const
-  { 
-    return operator()(x.get());
-  }
+	Type operator()(const reference_wrapper<const Class>& x)const
+	{
+		return operator()(x.get());
+	}
 
-  Type operator()(const reference_wrapper<Class>& x)const
-  { 
-    return operator()(x.get());
-  }
+	Type operator()(const reference_wrapper<Class>& x)const
+	{
+		return operator()(x.get());
+	}
 };
 
 template<
-  class Class,typename Type,
-  typename PtrToMemberFunctionType,PtrToMemberFunctionType PtrToMemberFunction>
+    class Class,typename Type,
+    typename PtrToMemberFunctionType,PtrToMemberFunctionType PtrToMemberFunction>
 struct mem_fun_explicit
 {
-  typedef typename remove_reference<Type>::type result_type;
+	typedef typename remove_reference<Type>::type result_type;
 
-  template<typename ChainedPtr>
+	template<typename ChainedPtr>
 
 #if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<ChainedPtr&,Class&>,Type>::type
+	typename disable_if<
+	is_convertible<ChainedPtr&,Class&>,Type>::type
 #else
-  Type
+	Type
 #endif
 
-  operator()(const ChainedPtr& x)const
-  {
-    return operator()(*x);
-  }
+	operator()(const ChainedPtr& x)const
+	{
+		return operator()(*x);
+	}
 
-  Type operator()(Class& x)const
-  {
-    return (x.*PtrToMemberFunction)();
-  }
+	Type operator()(Class& x)const
+	{
+		return (x.*PtrToMemberFunction)();
+	}
 
-  Type operator()(const reference_wrapper<Class>& x)const
-  { 
-    return operator()(x.get());
-  }
+	Type operator()(const reference_wrapper<Class>& x)const
+	{
+		return operator()(x.get());
+	}
 };
 
 /* BOOST_MULTI_INDEX_CONST_MEM_FUN and BOOST_MULTI_INDEX_MEM_FUN used to

@@ -13,8 +13,10 @@
 
 #include <boost/compute/functional/detail/macros.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 BOOST_COMPUTE_DECLARE_BUILTIN_FUNCTION(clamp, T (T, T, T), class T)
 BOOST_COMPUTE_DECLARE_BUILTIN_FUNCTION(degrees, T (T), class T)

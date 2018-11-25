@@ -28,24 +28,24 @@ void rebuild_pe(pe_base& pe, image_dos_header& dos_header, bool strip_dos_header
 	{
 		//Set start of PE headers
 		dos_header.e_lfanew = sizeof(image_dos_header)
-			+ pe_utils::align_up(static_cast<uint32_t>(pe.get_stub_overlay().size()), sizeof(uint32_t));
+		                      + pe_utils::align_up(static_cast<uint32_t>(pe.get_stub_overlay().size()), sizeof(uint32_t));
 	}
 
 	section_list& sections = pe.get_image_sections();
 
 	//Calculate pointer to section data
 	size_t ptr_to_section_data = (strip_dos_header ? 8 * sizeof(uint16_t) : sizeof(image_dos_header)) + pe.get_sizeof_nt_header()
-		+ pe_utils::align_up(pe.get_stub_overlay().size(), sizeof(uint32_t))
-		- sizeof(image_data_directory) * (image_numberof_directory_entries - pe.get_number_of_rvas_and_sizes())
-		+ sections.size() * sizeof(image_section_header);
+	                             + pe_utils::align_up(pe.get_stub_overlay().size(), sizeof(uint32_t))
+	                             - sizeof(image_data_directory) * (image_numberof_directory_entries - pe.get_number_of_rvas_and_sizes())
+	                             + sections.size() * sizeof(image_section_header);
 
 	if(save_bound_import && pe.has_bound_import())
 	{
 		//It will be aligned to DWORD, because we're aligning to DWORD everything above it
 		pe.set_directory_rva(image_directory_entry_bound_import, static_cast<uint32_t>(ptr_to_section_data));
-		ptr_to_section_data += pe.get_directory_size(image_directory_entry_bound_import);	
+		ptr_to_section_data += pe.get_directory_size(image_directory_entry_bound_import);
 	}
-	
+
 	ptr_to_section_data = pe_utils::align_up(ptr_to_section_data, pe.get_file_alignment());
 
 	//Set size of headers and size of optional header
@@ -66,7 +66,7 @@ void rebuild_pe(pe_base& pe, image_dos_header& dos_header, bool strip_dos_header
 	pe.update_image_size();
 
 	pe.set_size_of_optional_header(static_cast<uint16_t>(pe.get_sizeof_opt_headers()
-		- sizeof(image_data_directory) * (image_numberof_directory_entries - pe.get_number_of_rvas_and_sizes())));
+	                               - sizeof(image_data_directory) * (image_numberof_directory_entries - pe.get_number_of_rvas_and_sizes())));
 
 	//Recalculate pointer to raw data according to section list
 	for(section_list::iterator it = sections.begin(); it != sections.end(); ++it)
@@ -89,14 +89,14 @@ void rebuild_pe(pe_base& pe, std::ostream& out, bool strip_dos_header, bool chan
 	if(save_bound_import && pe.has_bound_import())
 	{
 		if(pe.section_data_length_from_rva(pe.get_directory_rva(image_directory_entry_bound_import), pe.get_directory_rva(image_directory_entry_bound_import), section_data_raw, true)
-			< pe.get_directory_size(image_directory_entry_bound_import))
+		        < pe.get_directory_size(image_directory_entry_bound_import))
 			throw pe_exception("Incorrect bound import directory", pe_exception::incorrect_bound_import_directory);
 	}
 
 	//Change ostream state
 	out.exceptions(std::ios::goodbit);
 	out.clear();
-	
+
 	uint32_t original_bound_import_rva = pe.has_bound_import() ? pe.get_directory_rva(image_directory_entry_bound_import) : 0;
 	if(original_bound_import_rva && original_bound_import_rva > pe.get_size_of_headers())
 	{
@@ -131,10 +131,10 @@ void rebuild_pe(pe_base& pe, std::ostream& out, bool strip_dos_header, bool chan
 			}
 		}
 	}
-	
+
 	//Write NT headers
 	out.write(static_cast<const pe_base&>(pe).get_nt_headers_ptr(), pe.get_sizeof_nt_header()
-		- sizeof(image_data_directory) * (image_numberof_directory_entries - pe.get_number_of_rvas_and_sizes()));
+	          - sizeof(image_data_directory) * (image_numberof_directory_entries - pe.get_number_of_rvas_and_sizes()));
 
 	//Write section headers
 	const section_list& sections = pe.get_image_sections();
@@ -156,7 +156,7 @@ void rebuild_pe(pe_base& pe, std::ostream& out, bool strip_dos_header, bool chan
 	if(save_bound_import && pe.has_bound_import())
 	{
 		out.write(pe.section_data_from_rva(original_bound_import_rva, section_data_raw, true),
-			pe.get_directory_size(image_directory_entry_bound_import));
+		          pe.get_directory_size(image_directory_entry_bound_import));
 	}
 
 	//Write section data finally

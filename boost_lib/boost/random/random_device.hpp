@@ -24,8 +24,10 @@
 #include <boost/random/detail/auto_link.hpp>
 #include <boost/system/config.hpp> // force autolink to find Boost.System
 
-namespace boost {
-namespace random {
+namespace boost
+{
+namespace random
+{
 
 /**
  * Class \random_device models a \nondeterministic_random_number_generator.
@@ -39,7 +41,7 @@ namespace random {
  *  J. Schiller, Network Working Group, RFC 1750, December 1994
  *  @endblockquote
  *
- * for further discussions. 
+ * for further discussions.
  *
  * @xmlnote
  * Some operating systems abstract the computer hardware enough
@@ -89,49 +91,56 @@ namespace random {
 class random_device : private noncopyable
 {
 public:
-    typedef unsigned int result_type;
-    BOOST_STATIC_CONSTANT(bool, has_fixed_range = false);
+	typedef unsigned int result_type;
+	BOOST_STATIC_CONSTANT(bool, has_fixed_range = false);
 
-    /** Returns the smallest value that the \random_device can produce. */
-    static result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () { return 0; }
-    /** Returns the largest value that the \random_device can produce. */
-    static result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () { return ~0u; }
+	/** Returns the smallest value that the \random_device can produce. */
+	static result_type min BOOST_PREVENT_MACRO_SUBSTITUTION ()
+	{
+		return 0;
+	}
+	/** Returns the largest value that the \random_device can produce. */
+	static result_type max BOOST_PREVENT_MACRO_SUBSTITUTION ()
+	{
+		return ~0u;
+	}
 
-    /** Constructs a @c random_device, optionally using the default device. */
-    BOOST_RANDOM_DECL random_device();
-    /** 
-     * Constructs a @c random_device, optionally using the given token as an
-     * access specification (for example, a URL) to some implementation-defined
-     * service for monitoring a stochastic process. 
-     */
-    BOOST_RANDOM_DECL explicit random_device(const std::string& token);
+	/** Constructs a @c random_device, optionally using the default device. */
+	BOOST_RANDOM_DECL random_device();
+	/**
+	 * Constructs a @c random_device, optionally using the given token as an
+	 * access specification (for example, a URL) to some implementation-defined
+	 * service for monitoring a stochastic process.
+	 */
+	BOOST_RANDOM_DECL explicit random_device(const std::string& token);
 
-    BOOST_RANDOM_DECL ~random_device();
+	BOOST_RANDOM_DECL ~random_device();
 
-    /**
-     * Returns: An entropy estimate for the random numbers returned by
-     * operator(), in the range min() to log2( max()+1). A deterministic
-     * random number generator (e.g. a pseudo-random number engine)
-     * has entropy 0.
-     *
-     * Throws: Nothing.
-     */
-    BOOST_RANDOM_DECL double entropy() const;
-    /** Returns a random value in the range [min, max]. */
-    BOOST_RANDOM_DECL unsigned int operator()();
+	/**
+	 * Returns: An entropy estimate for the random numbers returned by
+	 * operator(), in the range min() to log2( max()+1). A deterministic
+	 * random number generator (e.g. a pseudo-random number engine)
+	 * has entropy 0.
+	 *
+	 * Throws: Nothing.
+	 */
+	BOOST_RANDOM_DECL double entropy() const;
+	/** Returns a random value in the range [min, max]. */
+	BOOST_RANDOM_DECL unsigned int operator()();
 
-    /** Fills a range with random 32-bit values. */
-    template<class Iter>
-    void generate(Iter begin, Iter end)
-    {
-        for(; begin != end; ++begin) {
-            *begin = (*this)();
-        }
-    }
+	/** Fills a range with random 32-bit values. */
+	template<class Iter>
+	void generate(Iter begin, Iter end)
+	{
+		for(; begin != end; ++begin)
+		{
+			*begin = (*this)();
+		}
+	}
 
 private:
-    class impl;
-    impl * pimpl;
+	class impl;
+	impl * pimpl;
 };
 
 } // namespace random

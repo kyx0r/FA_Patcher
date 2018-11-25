@@ -25,18 +25,18 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <char... Cs>
-      struct string
-      {
-        typedef string type;
-        typedef string_tag tag;
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <char... Cs>
+struct string
+{
+	typedef string type;
+	typedef string_tag tag;
+};
+}
+}
 }
 
 /*
@@ -45,165 +45,165 @@ namespace boost
 
 namespace boost
 {
-  namespace mpl
-  {
-    // push_back
-    template <class S>
-    struct push_back_impl;
+namespace mpl
+{
+// push_back
+template <class S>
+struct push_back_impl;
 
-    template <>
-    struct push_back_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef push_back_impl type;
+template <>
+struct push_back_impl<boost::metaparse::v1::string_tag>
+{
+	typedef push_back_impl type;
 
-      template <class S, class C>
-      struct apply :
-        boost::metaparse::v1::impl::push_back_c<
-          typename S::type,
-          C::type::value
-        >
-      {};
-    };
+	template <class S, class C>
+	struct apply :
+		boost::metaparse::v1::impl::push_back_c<
+		typename S::type,
+		C::type::value
+		>
+	{};
+};
 
-    // pop_back
-    template <class S>
-    struct pop_back_impl;
+// pop_back
+template <class S>
+struct pop_back_impl;
 
-    template <>
-    struct pop_back_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef pop_back_impl type;
+template <>
+struct pop_back_impl<boost::metaparse::v1::string_tag>
+{
+	typedef pop_back_impl type;
 
-      template <class S>
-      struct apply : boost::metaparse::v1::impl::pop_back<S> {};
-    };
+	template <class S>
+	struct apply : boost::metaparse::v1::impl::pop_back<S> {};
+};
 
-    // push_front
-    template <class S>
-    struct push_front_impl;
+// push_front
+template <class S>
+struct push_front_impl;
 
-    template <>
-    struct push_front_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef push_front_impl type;
+template <>
+struct push_front_impl<boost::metaparse::v1::string_tag>
+{
+	typedef push_front_impl type;
 
-      template <class S, class C>
-      struct apply :
-        boost::metaparse::v1::impl::push_front_c<
-          typename S::type,
-          C::type::value
-        >
-      {};
-    };
+	template <class S, class C>
+	struct apply :
+		boost::metaparse::v1::impl::push_front_c<
+		typename S::type,
+		C::type::value
+		>
+	{};
+};
 
-    // pop_front
-    template <class S>
-    struct pop_front_impl;
+// pop_front
+template <class S>
+struct pop_front_impl;
 
-    template <>
-    struct pop_front_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef pop_front_impl type;
+template <>
+struct pop_front_impl<boost::metaparse::v1::string_tag>
+{
+	typedef pop_front_impl type;
 
-      template <class S>
-      struct apply : boost::metaparse::v1::impl::pop_front<S> {};
-    };
+	template <class S>
+	struct apply : boost::metaparse::v1::impl::pop_front<S> {};
+};
 
-    // clear
-    template <class S>
-    struct clear_impl;
+// clear
+template <class S>
+struct clear_impl;
 
-    template <>
-    struct clear_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef clear_impl type;
+template <>
+struct clear_impl<boost::metaparse::v1::string_tag>
+{
+	typedef clear_impl type;
 
-      template <class S>
-      struct apply : boost::metaparse::v1::string<> {};
-    };
+	template <class S>
+	struct apply : boost::metaparse::v1::string<> {};
+};
 
-    // begin
-    template <class S>
-    struct begin_impl;
+// begin
+template <class S>
+struct begin_impl;
 
-    template <>
-    struct begin_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef begin_impl type;
+template <>
+struct begin_impl<boost::metaparse::v1::string_tag>
+{
+	typedef begin_impl type;
 
-      template <class S>
-      struct apply :
-        boost::metaparse::v1::impl::string_iterator<typename S::type, 0>
-      {};
-    };
+	template <class S>
+	struct apply :
+		boost::metaparse::v1::impl::string_iterator<typename S::type, 0>
+	{};
+};
 
-    // end
-    template <class S>
-    struct end_impl;
+// end
+template <class S>
+struct end_impl;
 
-    template <>
-    struct end_impl<boost::metaparse::v1::string_tag>
-    {
-      typedef end_impl type;
+template <>
+struct end_impl<boost::metaparse::v1::string_tag>
+{
+	typedef end_impl type;
 
-      template <class S>
-      struct apply :
-        boost::metaparse::v1::impl::string_iterator<
-          typename S::type,
-          boost::metaparse::v1::impl::size<typename S::type>::type::value
-        >
-      {};
-    };
+	template <class S>
+	struct apply :
+		boost::metaparse::v1::impl::string_iterator<
+		typename S::type,
+		boost::metaparse::v1::impl::size<typename S::type>::type::value
+		>
+	{};
+};
 
-    // equal_to
-    template <class A, class B>
-    struct equal_to_impl;
+// equal_to
+template <class A, class B>
+struct equal_to_impl;
 
-    template <>
-    struct equal_to_impl<
-      boost::metaparse::v1::string_tag,
-      boost::metaparse::v1::string_tag
-    >
-    {
-      typedef equal_to_impl type;
+template <>
+struct equal_to_impl<
+	boost::metaparse::v1::string_tag,
+	boost::metaparse::v1::string_tag
+	>
+{
+	typedef equal_to_impl type;
 
-      template <class A, class B>
-      struct apply : std::is_same<typename A::type, typename B::type> {};
-    };
+	template <class A, class B>
+	struct apply : std::is_same<typename A::type, typename B::type> {};
+};
 
-    template <class T>
-    struct equal_to_impl<boost::metaparse::v1::string_tag, T>
-    {
-      typedef equal_to_impl type;
-      
-      template <class, class>
-      struct apply : false_ {};
-    };
-    
-    template <class T>
-    struct equal_to_impl<T, boost::metaparse::v1::string_tag> :
-      equal_to_impl<boost::metaparse::v1::string_tag, T>
-    {};
+template <class T>
+struct equal_to_impl<boost::metaparse::v1::string_tag, T>
+{
+	typedef equal_to_impl type;
 
-    // c_str
-    template <class S>
-    struct c_str;
+	template <class, class>
+	struct apply : false_ {};
+};
 
-    template <char... Cs>
-    struct c_str<boost::metaparse::v1::string<Cs...>>
-    {
-      typedef c_str type;
-      static constexpr char value[sizeof...(Cs) + 1] = {Cs..., 0};
-    };
+template <class T>
+struct equal_to_impl<T, boost::metaparse::v1::string_tag> :
+	equal_to_impl<boost::metaparse::v1::string_tag, T>
+{};
 
-    template <>
-    struct c_str<boost::metaparse::v1::string<>> :
-      boost::metaparse::v1::impl::empty_string<>
-    {};
+// c_str
+template <class S>
+struct c_str;
 
-    template <char... Cs>
-    constexpr char c_str<boost::metaparse::v1::string<Cs...>>::value[];
-  }
+template <char... Cs>
+struct c_str<boost::metaparse::v1::string<Cs...>>
+{
+	typedef c_str type;
+	static constexpr char value[sizeof...(Cs) + 1] = {Cs..., 0};
+};
+
+template <>
+struct c_str<boost::metaparse::v1::string<>> :
+	        boost::metaparse::v1::impl::empty_string<>
+{};
+
+template <char... Cs>
+constexpr char c_str<boost::metaparse::v1::string<Cs...>>::value[];
+}
 }
 
 #include <boost/metaparse/v1/cpp11/impl/remove_trailing_no_chars.hpp>

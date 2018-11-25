@@ -54,7 +54,7 @@ the next step will be:
 #include <boost/mpl/aux_/na.hpp>
 
 #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
-    #include <boost/serialization/nvp.hpp>
+#include <boost/serialization/nvp.hpp>
 #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 
 // Boost.Bimap
@@ -70,13 +70,15 @@ the next step will be:
 
 /// \brief The namespace where all the boost libraries lives.
 
-namespace boost {
+namespace boost
+{
 
 /// \brief Boost.Bimap library namespace
 /**
 All the entities in the library are defined in this namespace.
                                                                     **/
-namespace bimaps {
+namespace bimaps
+{
 
 /// \brief The bimap class is the entry point to the library.
 /**
@@ -129,272 +131,273 @@ template
     class AP1 = ::boost::mpl::na,
     class AP2 = ::boost::mpl::na,
     class AP3 = ::boost::mpl::na
->
-class bimap
-:
-    // Bimap Core, use mpl magic to find the desired bimap type
-
-    public ::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>,
-
-    // You can use bimap as a collection of relations
-
-    public ::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
-                ::relation_set,
-
-    // Include extra typedefs (i.e. left_local_iterator for unordered_map)
-
-    public ::boost::bimaps::detail:: left_map_view_extra_typedefs<
-        BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::left_map_view_type<
-            ::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
-        >::type
-    >,
-    public ::boost::bimaps::detail::right_map_view_extra_typedefs< 
-        BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::right_map_view_type<
-            ::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
-        >::type
     >
+class bimap
+	:
+// Bimap Core, use mpl magic to find the desired bimap type
+
+	public ::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>,
+
+// You can use bimap as a collection of relations
+
+	public ::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
+	::relation_set,
+
+// Include extra typedefs (i.e. left_local_iterator for unordered_map)
+
+	public ::boost::bimaps::detail:: left_map_view_extra_typedefs<
+	BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::left_map_view_type<
+	::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
+	>::type
+	>,
+	public ::boost::bimaps::detail::right_map_view_extra_typedefs<
+	BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::right_map_view_type<
+	::boost::bimaps::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
+	>::type
+	>
 {
-    typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::
-        bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3> base_;
+	typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::
+	bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3> base_;
 
-    BOOST_DEDUCED_TYPENAME base_::core_type core;
+	BOOST_DEDUCED_TYPENAME base_::core_type core;
 
-    public:
+public:
 
-    // metadata --------------------------------------------------------
+	// metadata --------------------------------------------------------
 
-    /*
-    // The rest is computed in the core, because it is quite difficult to
-    // expose a nice interface with so many metaprogramming stuff.
-    
-    // Map by {side} metadata
+	/*
+	// The rest is computed in the core, because it is quite difficult to
+	// expose a nice interface with so many metaprogramming stuff.
 
-    typedef -unspecified- {side}_tag;
-    typedef -unspecified- {side}_data_type;
-    typedef -unspecified- {side}_value_type;
-    typedef -unspecified- {side}_key_type;
-    
-    // There are other typedefs for definitions of different map views
-    
-    ------------------------------------------------------------------*/
+	// Map by {side} metadata
 
-    typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::
-          left_map_view_type<base_>::type  left_map;
-    typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::
-         right_map_view_type<base_>::type right_map;
-	
-    typedef BOOST_DEDUCED_TYPENAME
-         left_map::iterator        left_iterator;
-    typedef BOOST_DEDUCED_TYPENAME
-         left_map::const_iterator  left_const_iterator;
+	typedef -unspecified- {side}_tag;
+	typedef -unspecified- {side}_data_type;
+	typedef -unspecified- {side}_value_type;
+	typedef -unspecified- {side}_key_type;
 
-    typedef BOOST_DEDUCED_TYPENAME
-         right_map::iterator       right_iterator;
-    typedef BOOST_DEDUCED_TYPENAME
-         right_map::const_iterator right_const_iterator;
+	// There are other typedefs for definitions of different map views
 
-    typedef BOOST_DEDUCED_TYPENAME
-         left_map::reference       left_reference;
-    typedef BOOST_DEDUCED_TYPENAME
-         left_map::const_reference left_const_reference;
+	------------------------------------------------------------------*/
 
-    typedef BOOST_DEDUCED_TYPENAME
-        right_map::reference       right_reference;
-    typedef BOOST_DEDUCED_TYPENAME
-        right_map::const_reference right_const_reference;
+	typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::
+	left_map_view_type<base_>::type  left_map;
+	typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::detail::
+	right_map_view_type<base_>::type right_map;
 
-    typedef BOOST_DEDUCED_TYPENAME base_::relation::info_type info_type;
+	typedef BOOST_DEDUCED_TYPENAME
+	left_map::iterator        left_iterator;
+	typedef BOOST_DEDUCED_TYPENAME
+	left_map::const_iterator  left_const_iterator;
 
-    typedef BOOST_DEDUCED_TYPENAME base_::core_type::allocator_type allocator_type; 
-    
-    /// Left map view
-    left_map  left;
+	typedef BOOST_DEDUCED_TYPENAME
+	right_map::iterator       right_iterator;
+	typedef BOOST_DEDUCED_TYPENAME
+	right_map::const_iterator right_const_iterator;
 
-    /// Right map view
-    right_map right;
+	typedef BOOST_DEDUCED_TYPENAME
+	left_map::reference       left_reference;
+	typedef BOOST_DEDUCED_TYPENAME
+	left_map::const_reference left_const_reference;
 
-    typedef BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag 
-                                          logic_relation_set_tag;
-    typedef BOOST_DEDUCED_TYPENAME base_::logic_left_tag logic_left_tag;
-    typedef BOOST_DEDUCED_TYPENAME base_::logic_right_tag logic_right_tag;
-    typedef BOOST_DEDUCED_TYPENAME base_::core_type::ctor_args_list 
-                                                     ctor_args_list;
+	typedef BOOST_DEDUCED_TYPENAME
+	right_map::reference       right_reference;
+	typedef BOOST_DEDUCED_TYPENAME
+	right_map::const_reference right_const_reference;
 
-   bimap(const allocator_type& al = allocator_type()) :
+	typedef BOOST_DEDUCED_TYPENAME base_::relation::info_type info_type;
 
-       base_::relation_set(
-           ::boost::multi_index::get<
-               logic_relation_set_tag
-           >(core)
-       ),
+	typedef BOOST_DEDUCED_TYPENAME base_::core_type::allocator_type allocator_type;
 
-       core(al),
+	/// Left map view
+	left_map  left;
 
-       left (
-           ::boost::multi_index::get<
-               logic_left_tag
-           >(core)
-       ),
-       right (
-           ::boost::multi_index::get<
-               logic_right_tag
-           >(core)
-       )
+	/// Right map view
+	right_map right;
 
-   {}
+	typedef BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag
+	logic_relation_set_tag;
+	typedef BOOST_DEDUCED_TYPENAME base_::logic_left_tag logic_left_tag;
+	typedef BOOST_DEDUCED_TYPENAME base_::logic_right_tag logic_right_tag;
+	typedef BOOST_DEDUCED_TYPENAME base_::core_type::ctor_args_list
+	ctor_args_list;
 
-   template< class InputIterator >
-   bimap(InputIterator first,InputIterator last,
-         const allocator_type& al = allocator_type()) :
+	bimap(const allocator_type& al = allocator_type()) :
 
-       base_::relation_set(
-           ::boost::multi_index::get<
-               BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(core)
-       ),
+		base_::relation_set(
+		    ::boost::multi_index::get<
+		    logic_relation_set_tag
+		    >(core)
+		),
 
-       core(first,last,ctor_args_list(),al),
+		core(al),
 
-       left (
-           ::boost::multi_index::get<
-               BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(core)
-       ),
-       right (
-           ::boost::multi_index::get<
-               BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(core)
-       )
+		left (
+		    ::boost::multi_index::get<
+		    logic_left_tag
+		    >(core)
+		),
+		right (
+		    ::boost::multi_index::get<
+		    logic_right_tag
+		    >(core)
+		)
 
-   {}
+	{}
 
-   bimap(const bimap& x) :
+	template< class InputIterator >
+	bimap(InputIterator first,InputIterator last,
+	      const allocator_type& al = allocator_type()) :
 
-       base_::relation_set(
-           ::boost::multi_index::get<
-               BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(core)
-       ),
+		base_::relation_set(
+		    ::boost::multi_index::get<
+		    BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(core)
+		),
 
-       core(x.core),
+		core(first,last,ctor_args_list(),al),
 
-       left (
-           ::boost::multi_index::get<
-               BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(core)
-       ),
-       right (
-           ::boost::multi_index::get<
-               BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(core)
-       )
+		left (
+		    ::boost::multi_index::get<
+		    BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(core)
+		),
+		right (
+		    ::boost::multi_index::get<
+		    BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(core)
+		)
 
-   {}
+	{}
 
-    bimap& operator=(const bimap& x)
-    {
-        core = x.core;
-        return *this;
-    }
+	bimap(const bimap& x) :
 
-    // Projection of iterators
+		base_::relation_set(
+		    ::boost::multi_index::get<
+		    BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(core)
+		),
 
-    template< class IteratorType >
-    left_iterator project_left(IteratorType iter)
-    {
-        return core.template project<
-            BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(iter.base());
-    }
+		core(x.core),
 
-    template< class IteratorType >
-    left_const_iterator project_left(IteratorType iter) const
-    {
-        return core.template project<
-            BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(iter.base());
-    }
+		left (
+		    ::boost::multi_index::get<
+		    BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(core)
+		),
+		right (
+		    ::boost::multi_index::get<
+		    BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(core)
+		)
 
-    template< class IteratorType >
-    right_iterator project_right(IteratorType iter)
-    {
-        return core.template project<
-            BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(iter.base());
-    }
+	{}
 
-    template< class IteratorType >
-    right_const_iterator project_right(IteratorType iter) const
-    {
-        return core.template project<
-            BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(iter.base());
-    }
+	bimap& operator=(const bimap& x)
+	{
+		core = x.core;
+		return *this;
+	}
 
-    template< class IteratorType >
-    BOOST_DEDUCED_TYPENAME base_::relation_set::iterator
-        project_up(IteratorType iter)
-    {
-        return core.template project<
-            BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(iter.base());
-    }
+	// Projection of iterators
 
-    template< class IteratorType >
-    BOOST_DEDUCED_TYPENAME base_::relation_set::const_iterator
-        project_up(IteratorType iter) const
-    {
-        return core.template project<
-            BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(iter.base());
-    }
+	template< class IteratorType >
+	left_iterator project_left(IteratorType iter)
+	{
+		return core.template project<
+		       BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(iter.base());
+	}
 
-    // Support for tags
+	template< class IteratorType >
+	left_const_iterator project_left(IteratorType iter) const
+	{
+		return core.template project<
+		       BOOST_DEDUCED_TYPENAME base_::logic_left_tag>(iter.base());
+	}
 
-    template< class Tag, class IteratorType >
-    BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
-    iterator_type_by<Tag,bimap>::type
-        project(IteratorType iter)
-    {
-        return core.template project<Tag>(iter.base());
-    }
+	template< class IteratorType >
+	right_iterator project_right(IteratorType iter)
+	{
+		return core.template project<
+		       BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(iter.base());
+	}
 
-    template< class Tag, class IteratorType >
-    BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
-    const_iterator_type_by<Tag,bimap>::type
-        project(IteratorType iter) const
-    {
-        return core.template project<Tag>(iter.base());
-    }
+	template< class IteratorType >
+	right_const_iterator project_right(IteratorType iter) const
+	{
+		return core.template project<
+		       BOOST_DEDUCED_TYPENAME base_::logic_right_tag>(iter.base());
+	}
 
-    template< class Tag >
-    struct map_by :
-        public ::boost::bimaps::support::map_type_by<Tag,bimap>::type
-    {
-        typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
-            map_type_by<Tag,bimap>::type type;
+	template< class IteratorType >
+	BOOST_DEDUCED_TYPENAME base_::relation_set::iterator
+	project_up(IteratorType iter)
+	{
+		return core.template project<
+		       BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(iter.base());
+	}
 
-        private: map_by() {}
-    };
+	template< class IteratorType >
+	BOOST_DEDUCED_TYPENAME base_::relation_set::const_iterator
+	project_up(IteratorType iter) const
+	{
+		return core.template project<
+		       BOOST_DEDUCED_TYPENAME base_::logic_relation_set_tag>(iter.base());
+	}
 
-    template< class Tag >
-    BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
-    map_type_by<Tag,bimap>::type &by()
-    {
-        return ::boost::bimaps::support::map_by<Tag>(*this);
-    }
+	// Support for tags
 
-    template< class Tag >
-    const BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
-    map_type_by<Tag,bimap>::type &by() const
-    {
-        return ::boost::bimaps::support::map_by<Tag>(*this);
-    }
+	template< class Tag, class IteratorType >
+	BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
+	iterator_type_by<Tag,bimap>::type
+	project(IteratorType iter)
+	{
+		return core.template project<Tag>(iter.base());
+	}
+
+	template< class Tag, class IteratorType >
+	BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
+	const_iterator_type_by<Tag,bimap>::type
+	project(IteratorType iter) const
+	{
+		return core.template project<Tag>(iter.base());
+	}
+
+	template< class Tag >
+	struct map_by :
+		public ::boost::bimaps::support::map_type_by<Tag,bimap>::type
+	{
+		typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
+		map_type_by<Tag,bimap>::type type;
+
+	private:
+		map_by() {}
+	};
+
+	template< class Tag >
+	BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
+	map_type_by<Tag,bimap>::type &by()
+	{
+		return ::boost::bimaps::support::map_by<Tag>(*this);
+	}
+
+	template< class Tag >
+	const BOOST_DEDUCED_TYPENAME ::boost::bimaps::support::
+	map_type_by<Tag,bimap>::type &by() const
+	{
+		return ::boost::bimaps::support::map_by<Tag>(*this);
+	}
 
 
-    #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
+#ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
 
-    // Serialization support
+	// Serialization support
 
-    private:
+private:
 
-    friend class boost::serialization::access;
+	friend class boost::serialization::access;
 
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int)
-    {
-        ar & serialization::make_nvp("mi_core",core);
-    }
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int)
+	{
+		ar & serialization::make_nvp("mi_core",core);
+	}
 
-    #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
+#endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 };
 
 } // namespace bimaps
@@ -422,8 +425,10 @@ class bimap
 #include <boost/multi_index/detail/unbounded.hpp>
 
 // Bring the most used namespaces directly to the user main namespace
-namespace boost {
-namespace bimaps {
+namespace boost
+{
+namespace bimaps
+{
 
 using ::boost::bimaps::tags::tagged;
 

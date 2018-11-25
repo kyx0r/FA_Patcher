@@ -14,36 +14,36 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P>
-      struct look_ahead
-      {
-      private:
-        template <class S, class Pos>
-        struct no_error :
-          accept<
-            typename get_result<typename P::template apply<S, Pos> >::type,
-            S,
-            Pos
-          >
-        {};
-      public:
-        typedef look_ahead type;
-        
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::eval_if<
-            typename is_error<typename P::template apply<S, Pos> >::type,
-            typename P::template apply<S, Pos>,
-            no_error<S, Pos>
-          >
-        {};
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P>
+struct look_ahead
+{
+private:
+	template <class S, class Pos>
+	struct no_error :
+		accept<
+		typename get_result<typename P::template apply<S, Pos> >::type,
+	S,
+	Pos
+	>
+	{};
+public:
+	typedef look_ahead type;
+
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<typename P::template apply<S, Pos> >::type,
+	typename P::template apply<S, Pos>,
+	         no_error<S, Pos>
+	         >
+	         {};
+};
+}
+}
 }
 
 #endif

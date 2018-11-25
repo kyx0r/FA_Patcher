@@ -25,7 +25,9 @@
 #include <boost/mpl/placeholders.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace util
@@ -45,48 +47,49 @@ namespace util
             pair<boost::mpl::int_<1>, boost::mpl::int_<1> >,
             pair<boost::mpl::int_<1>, boost::mpl::int_<0> >,
             pair<boost::mpl::int_<0>, boost::mpl::int_<1> >,
-            pair<boost::mpl::int_<0>, boost::mpl::int_<0> >        
+            pair<boost::mpl::int_<0>, boost::mpl::int_<0> >
         > result_types;
-        
+
         BOOST_MPL_ASSERT(( boost::mpl::equal<combinations, result_types> ));
     \endcode
 */
 template <typename Sequence1, typename Sequence2, typename Pred>
 struct combine_if
 {
-    struct combine
-    {
-        template <typename Result, typename T>
-        struct apply
-        {
-            typedef typename boost::mpl::fold<Sequence2, Result,
-                boost::mpl::if_
-                <
-                    boost::mpl::bind
-                        <
-                            typename boost::mpl::lambda<Pred>::type,
-                            T,
-                            boost::mpl::_2
-                        >,
-                    boost::mpl::insert
-                        <
-                            boost::mpl::_1, boost::mpl::pair<T, boost::mpl::_2>
-                        >,
-                    boost::mpl::_1
-                >
-            >::type type;
-        };
-    };
+	struct combine
+	{
+		template <typename Result, typename T>
+		struct apply
+		{
+			typedef typename boost::mpl::fold<Sequence2, Result,
+			        boost::mpl::if_
+			        <
+			        boost::mpl::bind
+			        <
+			        typename boost::mpl::lambda<Pred>::type,
+			        T,
+			        boost::mpl::_2
+			        >,
+			        boost::mpl::insert
+			        <
+			        boost::mpl::_1, boost::mpl::pair<T, boost::mpl::_2>
+			        >,
+			        boost::mpl::_1
+			        >
+			        >::type type;
+		};
+	};
 
-    typedef typename boost::mpl::fold
-        <
-            Sequence1, boost::mpl::set0<>, combine
-        >::type type;
+	typedef typename boost::mpl::fold
+	<
+	Sequence1, boost::mpl::set0<>, combine
+	>::type type;
 };
 
 
 } // namespace util
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_UTIL_COMBINE_IF_HPP

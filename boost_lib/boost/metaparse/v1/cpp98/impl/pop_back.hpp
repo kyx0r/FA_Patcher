@@ -13,26 +13,26 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <class S>
-        struct pop_back;
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <class S>
+struct pop_back;
 
-        template <class S>
-        struct pop_back :
-          update_c<
-            typename S::type,
-            size<typename S::type>::type::value - 1,
-            BOOST_NO_CHAR
-          >
-        {};
-      }
-    }
-  }
+template <class S>
+struct pop_back :
+	update_c<
+	typename S::type,
+	size<typename S::type>::type::value - 1,
+	BOOST_NO_CHAR
+	>
+{};
+}
+}
+}
 }
 
 #endif

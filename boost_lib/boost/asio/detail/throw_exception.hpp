@@ -21,9 +21,12 @@
 # include <boost/throw_exception.hpp>
 #endif // defined(BOOST_ASIO_BOOST_THROW_EXCEPTION)
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 #if defined(BOOST_ASIO_HAS_BOOST_THROW_EXCEPTION)
 using boost::throw_exception;
@@ -40,7 +43,7 @@ void throw_exception(const Exception& e);
 template <typename Exception>
 void throw_exception(const Exception& e)
 {
-  throw e;
+	throw e;
 }
 # endif // !defined(BOOST_ASIO_NO_EXCEPTIONS)
 

@@ -21,31 +21,34 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename ...Ys>
-    constexpr auto zip_shortest_t::operator()(Xs&& xs, Ys&& ...ys) const {
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(detail::fast_and<
-            hana::Sequence<Xs>::value, hana::Sequence<Ys>::value...
-        >::value,
-        "hana::zip_shortest(xs, ys...) requires 'xs' and 'ys...' to be Sequences");
-    #endif
+//! @cond
+template <typename Xs, typename ...Ys>
+constexpr auto zip_shortest_t::operator()(Xs&& xs, Ys&& ...ys) const
+{
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(detail::fast_and<
+	              hana::Sequence<Xs>::value, hana::Sequence<Ys>::value...
+	              >::value,
+	              "hana::zip_shortest(xs, ys...) requires 'xs' and 'ys...' to be Sequences");
+#endif
 
-        return zip_shortest_impl<typename hana::tag_of<Xs>::type>::apply(
-            static_cast<Xs&&>(xs),
-            static_cast<Ys&&>(ys)...
-        );
-    }
-    //! @endcond
+	return zip_shortest_impl<typename hana::tag_of<Xs>::type>::apply(
+	           static_cast<Xs&&>(xs),
+	           static_cast<Ys&&>(ys)...
+	       );
+}
+//! @endcond
 
-    template <typename S, bool condition>
-    struct zip_shortest_impl<S, when<condition>> : default_ {
-        template <typename ...Xs>
-        static constexpr decltype(auto) apply(Xs&& ...xs) {
-            return hana::zip_shortest_with(hana::make_tuple,
-                                           static_cast<Xs&&>(xs)...);
-        }
-    };
+template <typename S, bool condition>
+struct zip_shortest_impl<S, when<condition>> : default_
+{
+	template <typename ...Xs>
+	static constexpr decltype(auto) apply(Xs&& ...xs)
+	{
+		return hana::zip_shortest_with(hana::make_tuple,
+		                               static_cast<Xs&&>(xs)...);
+	}
+};
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_ZIP_SHORTEST_HPP

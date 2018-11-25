@@ -34,56 +34,62 @@
 #include <boost/geometry/strategies/relate.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace intersects
+namespace detail
+{
+namespace intersects
 {
 
 template <typename Geometry>
 struct self_intersects
 {
-    static bool apply(Geometry const& geometry)
-    {
-        concepts::check<Geometry const>();
+	static bool apply(Geometry const& geometry)
+	{
+		concepts::check<Geometry const>();
 
-        typedef typename geometry::point_type<Geometry>::type point_type;
-        typedef typename strategy::relate::services::default_strategy
-                <
-                    Geometry, Geometry
-                >::type strategy_type;
-        typedef detail::no_rescale_policy rescale_policy_type;
+		typedef typename geometry::point_type<Geometry>::type point_type;
+		typedef typename strategy::relate::services::default_strategy
+		<
+		Geometry, Geometry
+		>::type strategy_type;
+		typedef detail::no_rescale_policy rescale_policy_type;
 
-        typedef detail::overlay::turn_info
-            <
-                point_type,
-                typename segment_ratio_type<point_type, rescale_policy_type>::type
-            > turn_info;
+		typedef detail::overlay::turn_info
+		<
+		point_type,
+		typename segment_ratio_type<point_type, rescale_policy_type>::type
+		> turn_info;
 
-        std::deque<turn_info> turns;
+		std::deque<turn_info> turns;
 
-        typedef detail::overlay::get_turn_info
-            <
-                detail::overlay::assign_null_policy
-            > turn_policy;
+		typedef detail::overlay::get_turn_info
+		<
+		detail::overlay::assign_null_policy
+		> turn_policy;
 
-        strategy_type strategy;
-        rescale_policy_type robust_policy;
+		strategy_type strategy;
+		rescale_policy_type robust_policy;
 
-        detail::disjoint::disjoint_interrupt_policy policy;
-    // TODO: skip_adjacent should be set to false
-        detail::self_get_turn_points::get_turns
-            <
-                false, turn_policy
-            >::apply(geometry, strategy, robust_policy, turns, policy, 0, true);
-        return policy.has_intersections;
-    }
+		detail::disjoint::disjoint_interrupt_policy policy;
+		// TODO: skip_adjacent should be set to false
+		detail::self_get_turn_points::get_turns
+		<
+		false, turn_policy
+		>::apply(geometry, strategy, robust_policy, turns, policy, 0, true);
+		return policy.has_intersections;
+	}
 };
 
-}} // namespace detail::intersects
+}
+} // namespace detail::intersects
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_INTERSECTS_IMPLEMENTATION_HPP

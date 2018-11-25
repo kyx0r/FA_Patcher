@@ -28,28 +28,33 @@
 #include <boost/geometry/algorithms/dispatch/disjoint.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace disjoint
+namespace detail
+{
+namespace disjoint
 {
 
 
 struct reverse_covered_by
 {
-    template <typename Geometry1, typename Geometry2, typename Strategy>
-    static inline bool apply(Geometry1 const& geometry1,
-                             Geometry2 const& geometry2,
-                             Strategy const& strategy)
-    {
-        return ! geometry::covered_by(geometry1, geometry2, strategy);
-    }
+	template <typename Geometry1, typename Geometry2, typename Strategy>
+	static inline bool apply(Geometry1 const& geometry1,
+	                         Geometry2 const& geometry2,
+	                         Strategy const& strategy)
+	{
+		return ! geometry::covered_by(geometry1, geometry2, strategy);
+	}
 };
 
 
-}} // namespace detail::disjoint
+}
+} // namespace detail::disjoint
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -62,19 +67,19 @@ namespace dispatch
 
 template<typename Point, typename Linear, std::size_t DimensionCount>
 struct disjoint<Point, Linear, DimensionCount, point_tag, linear_tag, false>
-    : detail::disjoint::reverse_covered_by
+	: detail::disjoint::reverse_covered_by
 {};
 
 
 template <typename Point, typename Areal, std::size_t DimensionCount>
 struct disjoint<Point, Areal, DimensionCount, point_tag, areal_tag, false>
-    : detail::disjoint::reverse_covered_by
+	: detail::disjoint::reverse_covered_by
 {};
 
 
 template<typename Point, typename Segment, std::size_t DimensionCount>
 struct disjoint<Point, Segment, DimensionCount, point_tag, segment_tag, false>
-    : detail::disjoint::reverse_covered_by
+	: detail::disjoint::reverse_covered_by
 {};
 
 
@@ -82,7 +87,8 @@ struct disjoint<Point, Segment, DimensionCount, point_tag, segment_tag, false>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 

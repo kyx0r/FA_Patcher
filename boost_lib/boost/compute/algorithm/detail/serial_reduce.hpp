@@ -16,9 +16,12 @@
 #include <boost/compute/detail/iterator_range_size.hpp>
 #include <boost/compute/type_traits/result_of.hpp>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 // Space complexity: O(1)
 template<class InputIterator, class OutputIterator, class BinaryFunction>
@@ -28,32 +31,33 @@ inline void serial_reduce(InputIterator first,
                           BinaryFunction function,
                           command_queue &queue)
 {
-    typedef typename
-        std::iterator_traits<InputIterator>::value_type T;
-    typedef typename
-        ::boost::compute::result_of<BinaryFunction(T, T)>::type result_type;
+	typedef typename
+	std::iterator_traits<InputIterator>::value_type T;
+	typedef typename
+	::boost::compute::result_of<BinaryFunction(T, T)>::type result_type;
 
-    const context &context = queue.get_context();
-    size_t count = detail::iterator_range_size(first, last);
-    if(count == 0){
-        return;
-    }
+	const context &context = queue.get_context();
+	size_t count = detail::iterator_range_size(first, last);
+	if(count == 0)
+	{
+		return;
+	}
 
-    meta_kernel k("serial_reduce");
-    size_t count_arg = k.add_arg<cl_uint>("count");
+	meta_kernel k("serial_reduce");
+	size_t count_arg = k.add_arg<cl_uint>("count");
 
-    k <<
-        k.decl<result_type>("result") << " = " << first[0] << ";\n" <<
-        "for(uint i = 1; i < count; i++)\n" <<
-        "    result = " << function(k.var<T>("result"),
-                                    first[k.var<uint_>("i")]) << ";\n" <<
-        result[0] << " = result;\n";
+	k <<
+	  k.decl<result_type>("result") << " = " << first[0] << ";\n" <<
+	  "for(uint i = 1; i < count; i++)\n" <<
+	  "    result = " << function(k.var<T>("result"),
+	                              first[k.var<uint_>("i")]) << ";\n" <<
+	  result[0] << " = result;\n";
 
-    kernel kernel = k.compile(context);
+	kernel kernel = k.compile(context);
 
-    kernel.set_arg(count_arg, static_cast<uint_>(count));
+	kernel.set_arg(count_arg, static_cast<uint_>(count));
 
-    queue.enqueue_task(kernel);
+	queue.enqueue_task(kernel);
 }
 
 } // end detail namespace

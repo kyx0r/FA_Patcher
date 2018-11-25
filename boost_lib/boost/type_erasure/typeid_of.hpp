@@ -17,8 +17,10 @@
 #include <boost/type_erasure/any.hpp>
 #include <boost/type_erasure/binding.hpp>
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * The first form returns the type currently stored in an @ref any.
@@ -32,26 +34,26 @@ namespace type_erasure {
 template<class Concept, class T>
 const std::type_info& typeid_of(const any<Concept, T>& arg)
 {
-    return ::boost::type_erasure::detail::access::table(arg).template find<
-        ::boost::type_erasure::typeid_<
-            typename ::boost::remove_cv<
-                typename ::boost::remove_reference<T>::type
-            >::type
-        >
-    >()();
+	return ::boost::type_erasure::detail::access::table(arg).template find<
+	       ::boost::type_erasure::typeid_<
+	       typename ::boost::remove_cv<
+	       typename ::boost::remove_reference<T>::type
+	       >::type
+	       >
+	       >()();
 }
 
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 template<class Concept, class T>
 const std::type_info& typeid_of(const param<Concept, T>& arg)
 {
-    return ::boost::type_erasure::detail::access::table(arg).template find<
-        ::boost::type_erasure::typeid_<
-            typename ::boost::remove_cv<
-                typename ::boost::remove_reference<T>::type
-            >::type
-        >
-    >()();
+	return ::boost::type_erasure::detail::access::table(arg).template find<
+	       ::boost::type_erasure::typeid_<
+	       typename ::boost::remove_cv<
+	       typename ::boost::remove_reference<T>::type
+	       >::type
+	       >
+	       >()();
 }
 #endif
 
@@ -61,7 +63,7 @@ const std::type_info& typeid_of(const param<Concept, T>& arg)
 template<class T, class Concept>
 const std::type_info& typeid_of(const binding<Concept>& binding_arg)
 {
-    return binding_arg.template find< ::boost::type_erasure::typeid_<T> >()();
+	return binding_arg.template find< ::boost::type_erasure::typeid_<T> >()();
 }
 
 }

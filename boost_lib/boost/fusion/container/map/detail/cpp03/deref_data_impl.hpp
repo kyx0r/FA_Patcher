@@ -15,35 +15,41 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace boost { namespace fusion { namespace extension
+namespace boost
 {
-    template <typename>
-    struct deref_data_impl;
+namespace fusion
+{
+namespace extension
+{
+template <typename>
+struct deref_data_impl;
 
-    template <>
-    struct deref_data_impl<map_iterator_tag>
-    {
-        template <typename It>
-        struct apply
-        {
-            typedef typename result_of::value_of<It>::type::second_type data;
+template <>
+struct deref_data_impl<map_iterator_tag>
+{
+	template <typename It>
+	struct apply
+	{
+		typedef typename result_of::value_of<It>::type::second_type data;
 
-            typedef typename
-                mpl::if_<
-                    is_const<typename It::seq_type>
-                  , typename detail::cref_result<data>::type
-                  , typename detail::ref_result<data>::type
-                >::type
-            type;
+		typedef typename
+		mpl::if_<
+		is_const<typename It::seq_type>
+		, typename detail::cref_result<data>::type
+		, typename detail::ref_result<data>::type
+		>::type
+		type;
 
-            BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-            static type
-            call(It const& it)
-            {
-                return fusion::deref(it).second;
-            }
-        };
-    };
-}}}
+		BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+		static type
+		call(It const& it)
+		{
+			return fusion::deref(it).second;
+		}
+	};
+};
+}
+}
+}
 
 #endif

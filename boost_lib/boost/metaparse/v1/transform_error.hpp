@@ -12,28 +12,28 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class P, class F>
-      struct transform_error
-      {
-        template <class S, class Pos>
-        struct apply :
-          boost::mpl::eval_if<
-            typename is_error<typename P::template apply<S, Pos> >::type,
-            typename F::template apply<
-              typename P::template apply<S, Pos>::type
-            >,
-            typename P::template apply<S, Pos>
-          >
-        {};
-        
-        typedef transform_error type;
-      };
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class P, class F>
+struct transform_error
+{
+	template <class S, class Pos>
+	struct apply :
+		boost::mpl::eval_if<
+		typename is_error<typename P::template apply<S, Pos> >::type,
+	typename F::template apply<
+	    typename P::template apply<S, Pos>::type
+	    >,
+	    typename P::template apply<S, Pos>
+	>
+	{};
+
+	typedef transform_error type;
+};
+}
+}
 }
 
 #endif

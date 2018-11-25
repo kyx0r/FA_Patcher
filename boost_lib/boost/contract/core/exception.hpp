@@ -27,13 +27,17 @@ Handle contract assertion failures.
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
 // Needed for `std::` prefix to show (but removed via `EXCLUDE_SYMBOLS=std`).
-namespace std {
-    class exception {};
-    class bad_cast {};
+namespace std
+{
+class exception {};
+class bad_cast {};
 }
 #endif
 
-namespace boost { namespace contract {
+namespace boost
+{
+namespace contract
+{
 
 /**
 Public base class for all exceptions directly thrown by this library.
@@ -46,20 +50,21 @@ from this class will do that (inheriting from @c std::exception,
         @RefClass{boost::contract::bad_virtual_result_cast},
         etc.
 */
-class BOOST_CONTRACT_DETAIL_DECLSPEC exception {
+class BOOST_CONTRACT_DETAIL_DECLSPEC exception
+{
 public:
-    /**
-    Destruct this object.
+	/**
+	Destruct this object.
 
-    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
-    */
-    virtual ~exception() /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+	@b Throws: This is declared @c noexcept (or @c throw() before C++11).
+	*/
+	virtual ~exception() /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 };
 
 #ifdef BOOST_MSVC
-    #pragma warning(push)
-    #pragma warning(disable: 4275) // Bases w/o DLL spec (bad_cast, etc).
-    #pragma warning(disable: 4251) // Members w/o DLL spec (string for what_).
+#pragma warning(push)
+#pragma warning(disable: 4275) // Bases w/o DLL spec (bad_cast, etc).
+#pragma warning(disable: 4251) // Members w/o DLL spec (string for what_).
 #endif
 
 /**
@@ -76,37 +81,38 @@ This allows this library to give more descriptive error messages in such cases.
         Public Function Overrides}
 */
 class BOOST_CONTRACT_DETAIL_DECLSPEC bad_virtual_result_cast : // Copy (as str).
-        public std::bad_cast, public boost::contract::exception {
+	public std::bad_cast, public boost::contract::exception
+{
 public:
-    /**
-    Construct this object with the name of the from- and to- result types.
+	/**
+	Construct this object with the name of the from- and to- result types.
 
-    @param from_type_name Name of the from-type (source of the cast).
-    @param to_type_name Name of the to-type (destination of the cast).
-    */
-    explicit bad_virtual_result_cast(char const* from_type_name,
-            char const* to_type_name);
+	@param from_type_name Name of the from-type (source of the cast).
+	@param to_type_name Name of the to-type (destination of the cast).
+	*/
+	explicit bad_virtual_result_cast(char const* from_type_name,
+	                                 char const* to_type_name);
 
-    /**
-    Destruct this object.
+	/**
+	Destruct this object.
 
-    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
-    */
-    virtual ~bad_virtual_result_cast()
-            /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+	@b Throws: This is declared @c noexcept (or @c throw() before C++11).
+	*/
+	virtual ~bad_virtual_result_cast()
+	/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
-    /**
-    Description for this error (containing both from- and to- type names).
+	/**
+	Description for this error (containing both from- and to- type names).
 
-    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
-    */
-    virtual char const* what() const
-            /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+	@b Throws: This is declared @c noexcept (or @c throw() before C++11).
+	*/
+	virtual char const* what() const
+	/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
-/** @cond */
+	/** @cond */
 private:
-    std::string what_;
-/** @endcond */
+	std::string what_;
+	/** @endcond */
 };
 
 /**
@@ -131,90 +137,91 @@ they can be customized to take any other action).
         @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
 */
 class BOOST_CONTRACT_DETAIL_DECLSPEC assertion_failure : // Copy (as str, etc.).
-        public std::exception, public boost::contract::exception {
+	public std::exception, public boost::contract::exception
+{
 public:
-    /**
-    Construct this object with file name, line number, and source code text of
-    an assertion condition (all optional).
+	/**
+	Construct this object with file name, line number, and source code text of
+	an assertion condition (all optional).
 
-    This constructor can also be used to specify no information (default
-    constructor), or to specify only file name and line number but not source
-    code text (because of the parameter default values).
-    
-    @param file Name of the file containing the assertion (usually set using
-                <c>__FILE__</c>).
-    @param line Number of the line containing the assertion (usually set using
-                <c>__LINE__</c>).
-    @param code Text listing the source code of the assertion condition.
-    */
-    explicit assertion_failure(char const* file = "", unsigned long line = 0,
-            char const* code = "");
+	This constructor can also be used to specify no information (default
+	constructor), or to specify only file name and line number but not source
+	code text (because of the parameter default values).
 
-    /**
-    Construct this object only with the source code text of the assertion
-    condition.
-    @param code Text listing the source code of the assertion condition.
-    */
-    explicit assertion_failure(char const* code);
-    
-    /**
-    Destruct this object.
+	@param file Name of the file containing the assertion (usually set using
+	            <c>__FILE__</c>).
+	@param line Number of the line containing the assertion (usually set using
+	            <c>__LINE__</c>).
+	@param code Text listing the source code of the assertion condition.
+	*/
+	explicit assertion_failure(char const* file = "", unsigned long line = 0,
+	                           char const* code = "");
 
-    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
-    */
-    virtual ~assertion_failure()
-            /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+	/**
+	Construct this object only with the source code text of the assertion
+	condition.
+	@param code Text listing the source code of the assertion condition.
+	*/
+	explicit assertion_failure(char const* code);
 
-    /**
-    String describing the failed assertion.
-    
-    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
-    
-    @return A string formatted similarly to the following:
-      <c>assertion "`code()`" failed: file "`file()`", line \`line()\`</c>.
-            File, line, and code will be omitted from this string if they were
-            not specified when constructing this object.
-    */
-    virtual char const* what() const
-            /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+	/**
+	Destruct this object.
 
-    /**
-    Name of the file containing the assertion.
+	@b Throws: This is declared @c noexcept (or @c throw() before C++11).
+	*/
+	virtual ~assertion_failure()
+	/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
-    @return File name as specified at construction (or @c "" if no file was
-            specified).
-    */
-    char const* file() const;
-    
-    /**
-    Number of the line containing the assertion.
+	/**
+	String describing the failed assertion.
 
-    @return Line number as specified at construction (or @c 0 if no line number
-            was specified).
-    */
-    unsigned long line() const;
-    
-    /**
-    Text listing the source code of the assertion condition.
+	@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
-    @return Assertion condition source code as specified at construction (or
-            @c "" if no source code text was specified).
-    */
-    char const* code() const;
+	@return A string formatted similarly to the following:
+	  <c>assertion "`code()`" failed: file "`file()`", line \`line()\`</c>.
+	        File, line, and code will be omitted from this string if they were
+	        not specified when constructing this object.
+	*/
+	virtual char const* what() const
+	/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
-/** @cond */
+	/**
+	Name of the file containing the assertion.
+
+	@return File name as specified at construction (or @c "" if no file was
+	        specified).
+	*/
+	char const* file() const;
+
+	/**
+	Number of the line containing the assertion.
+
+	@return Line number as specified at construction (or @c 0 if no line number
+	        was specified).
+	*/
+	unsigned long line() const;
+
+	/**
+	Text listing the source code of the assertion condition.
+
+	@return Assertion condition source code as specified at construction (or
+	        @c "" if no source code text was specified).
+	*/
+	char const* code() const;
+
+	/** @cond */
 private:
-    void init();
+	void init();
 
-    char const* file_;
-    unsigned long line_;
-    char const* code_;
-    std::string what_;
-/** @endcond */
+	char const* file_;
+	unsigned long line_;
+	char const* code_;
+	std::string what_;
+	/** @endcond */
 };
 
 #ifdef BOOST_MSVC
-    #pragma warning(pop)
+#pragma warning(pop)
 #endif
 
 /**
@@ -228,17 +235,18 @@ instead of terminating the program.
 
 @see @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure}
 */
-enum from {
-    /** Assertion failed when checking contracts for constructors. */
-    from_constructor,
-    
-    /** Assertion failed when checking contracts for destructors . */
-    from_destructor,
-    
-    /**
-    Assertion failed when checking contracts for functions (members or not).
-    */
-    from_function
+enum from
+{
+	/** Assertion failed when checking contracts for constructors. */
+	from_constructor,
+
+	/** Assertion failed when checking contracts for destructors . */
+	from_destructor,
+
+	/**
+	Assertion failed when checking contracts for functions (members or not).
+	*/
+	from_function
 };
 
 /**
@@ -267,162 +275,167 @@ implementation checks.
 typedef boost::function<void ()> failure_handler;
 
 /** @cond */
-namespace exception_ {
-    // Check failure.
+namespace exception_
+{
+// Check failure.
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    failure_handler const& set_check_failure_unlocked(failure_handler const& f)
-            BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    failure_handler const& set_check_failure_locked(failure_handler const& f)
-            BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+failure_handler const& set_check_failure_unlocked(failure_handler const& f)
+BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+failure_handler const& set_check_failure_locked(failure_handler const& f)
+BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    failure_handler get_check_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    failure_handler get_check_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+failure_handler get_check_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+failure_handler get_check_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void check_failure_unlocked() /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void check_failure_locked() /* can throw */;
-    
-    // Precondition failure.
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void check_failure_unlocked() /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void check_failure_locked() /* can throw */;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_pre_failure_unlocked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_pre_failure_locked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+// Precondition failure.
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_pre_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_pre_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_pre_failure_unlocked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_pre_failure_locked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void pre_failure_unlocked(from where) /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void pre_failure_locked(from where) /* can throw */;
-    
-    // Postcondition failure.
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_pre_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_pre_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_post_failure_unlocked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_post_failure_locked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void pre_failure_unlocked(from where) /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void pre_failure_locked(from where) /* can throw */;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_post_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_post_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+// Postcondition failure.
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void post_failure_unlocked(from where) /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void post_failure_locked(from where) /* can throw */;
-    
-    // Except failure.
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_post_failure_unlocked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_post_failure_locked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_except_failure_unlocked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_except_failure_locked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_post_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_post_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_except_failure_unlocked()
-            BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_except_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void post_failure_unlocked(from where) /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void post_failure_locked(from where) /* can throw */;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void except_failure_unlocked(from where) /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void except_failure_locked(from where) /* can throw */;
-    
-    // Old-copy failure.
+// Except failure.
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_old_failure_unlocked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_old_failure_locked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_except_failure_unlocked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_except_failure_locked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_old_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_old_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_except_failure_unlocked()
+BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_except_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void old_failure_unlocked(from where) /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void old_failure_locked(from where) /* can throw */;
-    
-    // Entry invariant failure.
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void except_failure_unlocked(from where) /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void except_failure_locked(from where) /* can throw */;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_entry_inv_failure_unlocked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_entry_inv_failure_locked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+// Old-copy failure.
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_entry_inv_failure_unlocked()
-            BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_entry_inv_failure_locked()
-            BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_old_failure_unlocked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_old_failure_locked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void entry_inv_failure_unlocked(from where) /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void entry_inv_failure_locked(from where) /* can throw */;
-    
-    // Exit invariant failure.
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_old_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_old_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const& set_exit_inv_failure_unlocked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler const&set_exit_inv_failure_locked(
-            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void old_failure_unlocked(from where) /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void old_failure_locked(from where) /* can throw */;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_exit_inv_failure_unlocked()
-            BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    from_failure_handler get_exit_inv_failure_locked()
-            BOOST_NOEXCEPT_OR_NOTHROW;
+// Entry invariant failure.
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void exit_inv_failure_unlocked(from where) /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC
-    void exit_inv_failure_locked(from where) /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_entry_inv_failure_unlocked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_entry_inv_failure_locked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_entry_inv_failure_unlocked()
+BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_entry_inv_failure_locked()
+BOOST_NOEXCEPT_OR_NOTHROW;
+
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void entry_inv_failure_unlocked(from where) /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void entry_inv_failure_locked(from where) /* can throw */;
+
+// Exit invariant failure.
+
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_exit_inv_failure_unlocked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const&set_exit_inv_failure_locked(
+    from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
+
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_exit_inv_failure_unlocked()
+BOOST_NOEXCEPT_OR_NOTHROW;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler get_exit_inv_failure_locked()
+BOOST_NOEXCEPT_OR_NOTHROW;
+
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void exit_inv_failure_unlocked(from where) /* can throw */;
+BOOST_CONTRACT_DETAIL_DECLSPEC
+void exit_inv_failure_locked(from where) /* can throw */;
 }
 /** @endcond */
 
-} } // namespace
+}
+} // namespace
 
 /** @cond */
 #ifdef BOOST_CONTRACT_HEADER_ONLY
-    // NOTE: This header must be included in the middle of this file (because
-    // its impl depends on both from and assert_failure types). This is not
-    // ideal, but it is better than splitting this file into multiple
-    // independent ones because all content in this file is logically related
-    // from the user prospective.
-    #include <boost/contract/detail/inlined/core/exception.hpp>
+// NOTE: This header must be included in the middle of this file (because
+// its impl depends on both from and assert_failure types). This is not
+// ideal, but it is better than splitting this file into multiple
+// independent ones because all content in this file is logically related
+// from the user prospective.
+#include <boost/contract/detail/inlined/core/exception.hpp>
 #endif
 /** @endcond */
 
-namespace boost { namespace contract {
-    
+namespace boost
+{
+namespace contract
+{
+
 // Following must be inline for static linkage (no DYN_LINK and no HEADER_ONLY).
 
 /**
@@ -441,12 +454,13 @@ Set a new failure handler and returns it.
         @RefSect{advanced.implementation_checks, Implementation Checks}
 */
 inline failure_handler const& set_check_failure(failure_handler const& f)
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::set_check_failure_locked(f);
-    #else
-        return exception_::set_check_failure_unlocked(f);
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::set_check_failure_locked(f);
+#else
+	return exception_::set_check_failure_unlocked(f);
+#endif
 }
 
 /**
@@ -462,12 +476,13 @@ This is often called only internally by this library.
         @RefSect{advanced.implementation_checks, Implementation Checks}
 */
 inline failure_handler get_check_failure()
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::get_check_failure_locked();
-    #else
-        return exception_::get_check_failure_unlocked();
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::get_check_failure_locked();
+#else
+	return exception_::get_check_failure_unlocked();
+#endif
 }
 
 /**
@@ -482,12 +497,13 @@ This is often called only internally by this library.
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.implementation_checks, Implementation Checks}
 */
-inline void check_failure() /* can throw */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        exception_::check_failure_locked();
-    #else
-        exception_::check_failure_unlocked();
-    #endif
+inline void check_failure() /* can throw */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	exception_::check_failure_locked();
+#else
+	exception_::check_failure_unlocked();
+#endif
 }
 
 /**
@@ -506,12 +522,13 @@ Set a new failure handler and returns it.
         @RefSect{tutorial.preconditions, Preconditions}
 */
 inline from_failure_handler const& set_precondition_failure(from_failure_handler
-        const& f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::set_pre_failure_locked(f);
-    #else
-        return exception_::set_pre_failure_unlocked(f);
-    #endif
+        const& f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::set_pre_failure_locked(f);
+#else
+	return exception_::set_pre_failure_unlocked(f);
+#endif
 }
 
 /**
@@ -527,12 +544,13 @@ This is often called only internally by this library.
         @RefSect{tutorial.preconditions, Preconditions}
 */
 inline from_failure_handler get_precondition_failure()
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::get_pre_failure_locked();
-    #else
-        return exception_::get_pre_failure_unlocked();
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::get_pre_failure_locked();
+#else
+	return exception_::get_pre_failure_unlocked();
+#endif
 }
 
 /**
@@ -551,12 +569,13 @@ This is often called only internally by this library.
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.preconditions, Preconditions}
 */
-inline void precondition_failure(from where) /* can throw */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        exception_::pre_failure_locked(where);
-    #else
-        exception_::pre_failure_unlocked(where);
-    #endif
+inline void precondition_failure(from where) /* can throw */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	exception_::pre_failure_locked(where);
+#else
+	exception_::pre_failure_unlocked(where);
+#endif
 }
 
 /**
@@ -576,12 +595,13 @@ Set a new failure handler and returns it.
 */
 inline from_failure_handler const& set_postcondition_failure(
     from_failure_handler const& f
-) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::set_post_failure_locked(f);
-    #else
-        return exception_::set_post_failure_unlocked(f);
-    #endif
+) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::set_post_failure_locked(f);
+#else
+	return exception_::set_post_failure_unlocked(f);
+#endif
 }
 
 /**
@@ -597,12 +617,13 @@ This is often called only internally by this library.
         @RefSect{tutorial.postconditions, Postconditions}
 */
 inline from_failure_handler get_postcondition_failure()
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::get_post_failure_locked();
-    #else
-        return exception_::get_post_failure_unlocked();
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::get_post_failure_locked();
+#else
+	return exception_::get_post_failure_unlocked();
+#endif
 }
 
 /**
@@ -621,12 +642,13 @@ This is often called only internally by this library.
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.postconditions, Postconditions}
 */
-inline void postcondition_failure(from where) /* can throw */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        exception_::post_failure_locked(where);
-    #else
-        exception_::post_failure_unlocked(where);
-    #endif
+inline void postcondition_failure(from where) /* can throw */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	exception_::post_failure_locked(where);
+#else
+	exception_::post_failure_unlocked(where);
+#endif
 }
 
 /**
@@ -645,12 +667,13 @@ Set a new failure handler and returns it.
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 */
 inline from_failure_handler const& set_except_failure(from_failure_handler
-        const& f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::set_except_failure_locked(f);
-    #else
-        return exception_::set_except_failure_unlocked(f);
-    #endif
+        const& f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::set_except_failure_locked(f);
+#else
+	return exception_::set_except_failure_unlocked(f);
+#endif
 }
 
 /**
@@ -666,12 +689,13 @@ This is often called only internally by this library.
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 */
 inline from_failure_handler get_except_failure()
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::get_except_failure_locked();
-    #else
-        return exception_::get_except_failure_unlocked();
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::get_except_failure_locked();
+#else
+	return exception_::get_except_failure_unlocked();
+#endif
 }
 
 /**
@@ -694,12 +718,13 @@ This is often called only internally by this library.
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 */
-inline void except_failure(from where) /* can throw */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        exception_::except_failure_locked(where);
-    #else
-        exception_::except_failure_unlocked(where);
-    #endif
+inline void except_failure(from where) /* can throw */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	exception_::except_failure_locked(where);
+#else
+	exception_::except_failure_unlocked(where);
+#endif
 }
 
 /**
@@ -718,12 +743,13 @@ Set a new failure handler and returns it.
         @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}
 */
 inline from_failure_handler const& set_old_failure(from_failure_handler const&
-        f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::set_old_failure_locked(f);
-    #else
-        return exception_::set_old_failure_unlocked(f);
-    #endif
+        f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::set_old_failure_locked(f);
+#else
+	return exception_::set_old_failure_unlocked(f);
+#endif
 }
 
 /**
@@ -739,12 +765,13 @@ This is often called only internally by this library.
         @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}
 */
 inline from_failure_handler get_old_failure()
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::get_old_failure_locked();
-    #else
-        return exception_::get_old_failure_unlocked();
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::get_old_failure_locked();
+#else
+	return exception_::get_old_failure_unlocked();
+#endif
 }
 
 /**
@@ -763,12 +790,13 @@ This is often called only internally by this library.
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}
 */
-inline void old_failure(from where) /* can throw */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        exception_::old_failure_locked(where);
-    #else
-        exception_::old_failure_unlocked(where);
-    #endif
+inline void old_failure(from where) /* can throw */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	exception_::old_failure_locked(where);
+#else
+	exception_::old_failure_unlocked(where);
+#endif
 }
 
 /**
@@ -790,12 +818,13 @@ Set a new failure handler and returns it.
 */
 inline from_failure_handler const& set_entry_invariant_failure(
     from_failure_handler const& f
-)/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::set_entry_inv_failure_locked(f);
-    #else
-        return exception_::set_entry_inv_failure_unlocked(f);
-    #endif
+)/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::set_entry_inv_failure_locked(f);
+#else
+	return exception_::set_entry_inv_failure_unlocked(f);
+#endif
 }
 
 /**
@@ -813,12 +842,13 @@ This is often called only internally by this library.
         Volatile Public Functions}
 */
 inline from_failure_handler get_entry_invariant_failure()
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::get_entry_inv_failure_locked();
-    #else
-        return exception_::get_entry_inv_failure_unlocked();
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::get_entry_inv_failure_locked();
+#else
+	return exception_::get_entry_inv_failure_unlocked();
+#endif
 }
 
 /**
@@ -839,12 +869,13 @@ This is often called only internally by this library.
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
 */
-inline void entry_invariant_failure(from where) /* can throw */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::entry_inv_failure_locked(where);
-    #else
-        return exception_::entry_inv_failure_unlocked(where);
-    #endif
+inline void entry_invariant_failure(from where) /* can throw */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::entry_inv_failure_locked(where);
+#else
+	return exception_::entry_inv_failure_unlocked(where);
+#endif
 }
 
 /**
@@ -866,12 +897,13 @@ Set a new failure handler and returns it.
 */
 inline from_failure_handler const& set_exit_invariant_failure(
     from_failure_handler const& f
-) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::set_exit_inv_failure_locked(f);
-    #else
-        return exception_::set_exit_inv_failure_unlocked(f);
-    #endif
+) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::set_exit_inv_failure_locked(f);
+#else
+	return exception_::set_exit_inv_failure_unlocked(f);
+#endif
 }
 
 /**
@@ -889,12 +921,13 @@ This is often called only internally by this library.
         Volatile Public Functions}
 */
 inline from_failure_handler get_exit_invariant_failure()
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        return exception_::get_exit_inv_failure_locked();
-    #else
-        return exception_::get_exit_inv_failure_unlocked();
-    #endif
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	return exception_::get_exit_inv_failure_locked();
+#else
+	return exception_::get_exit_inv_failure_unlocked();
+#endif
 }
 
 /**
@@ -915,12 +948,13 @@ This is often called only internally by this library.
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
 */
-inline void exit_invariant_failure(from where) /* can throw */ {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        exception_::exit_inv_failure_locked(where);
-    #else
-        exception_::exit_inv_failure_unlocked(where);
-    #endif
+inline void exit_invariant_failure(from where) /* can throw */
+{
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
+	exception_::exit_inv_failure_locked(where);
+#else
+	exception_::exit_inv_failure_unlocked(where);
+#endif
 }
 
 /**
@@ -945,9 +979,10 @@ parameter @p f.
 */
 /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 from_failure_handler const& set_invariant_failure(from_failure_handler const& f)
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+/** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
-} } // namespace
+}
+} // namespace
 
 #endif // #include guard
 

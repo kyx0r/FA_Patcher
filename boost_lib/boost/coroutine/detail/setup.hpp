@@ -22,51 +22,56 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace boost {
-namespace coroutines {
-namespace detail {
+namespace boost
+{
+namespace coroutines
+{
+namespace detail
+{
 
 template< typename Fn >
 struct setup
 {
-    struct dummy {};
+	struct dummy {};
 
-    Fn                      fn;
-    coroutine_context   *   caller;
-    coroutine_context   *   callee;
-    attributes              attr;
+	Fn                      fn;
+	coroutine_context   *   caller;
+	coroutine_context   *   callee;
+	attributes              attr;
 
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-    setup( Fn fn_,
-           coroutine_context * caller_,
-           coroutine_context * callee_,
-           attributes const& attr_) :
-        fn( boost::forward< Fn >( fn_) ),
-        caller( caller_),
-        callee( callee_),
-        attr( attr_)
-    {}
+	setup( Fn fn_,
+	       coroutine_context * caller_,
+	       coroutine_context * callee_,
+	       attributes const& attr_) :
+		fn( boost::forward< Fn >( fn_) ),
+		caller( caller_),
+		callee( callee_),
+		attr( attr_)
+	{}
 #endif
-    setup( BOOST_RV_REF( Fn) fn_,
-           coroutine_context * caller_,
-           coroutine_context * callee_,
-           attributes const& attr_,
-           typename disable_if<
-               is_same< typename decay< Fn >::type, setup >,
-               dummy*
-           >::type = 0) :
+	setup( BOOST_RV_REF( Fn) fn_,
+	       coroutine_context * caller_,
+	       coroutine_context * callee_,
+	       attributes const& attr_,
+	       typename disable_if<
+	       is_same< typename decay< Fn >::type, setup >,
+	       dummy*
+	       >::type = 0) :
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-        fn( fn_),
+		fn( fn_),
 #else
-        fn( boost::forward< Fn >( fn_) ),
+		fn( boost::forward< Fn >( fn_) ),
 #endif
-        caller( caller_),
-        callee( callee_),
-        attr( attr_)
-    {}
+		caller( caller_),
+		callee( callee_),
+		attr( attr_)
+	{}
 };
 
-}}}
+}
+}
+}
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

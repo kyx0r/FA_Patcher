@@ -18,8 +18,10 @@
 #include <boost/compute/algorithm/sort.hpp>
 #include <boost/compute/functional/bind.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Rearranges the elements in the range [\p first, \p last) such that
 /// the \p nth element would be in that position in a sorted sequence.
@@ -32,39 +34,39 @@ inline void nth_element(Iterator first,
                         Compare compare,
                         command_queue &queue = system::default_queue())
 {
-    if(nth == last) return;
+	if(nth == last) return;
 
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-    while(1)
-    {
-        value_type value = nth.read(queue);
+	while(1)
+	{
+		value_type value = nth.read(queue);
 
-        using boost::compute::placeholders::_1;
-        Iterator new_nth = partition(
-            first, last, ::boost::compute::bind(compare, _1, value), queue
-        );
+		using boost::compute::placeholders::_1;
+		Iterator new_nth = partition(
+		                       first, last, ::boost::compute::bind(compare, _1, value), queue
+		                   );
 
-        Iterator old_nth = find(new_nth, last, value, queue);
+		Iterator old_nth = find(new_nth, last, value, queue);
 
-        value_type new_value = new_nth.read(queue);
+		value_type new_value = new_nth.read(queue);
 
-        fill_n(new_nth, 1, value, queue);
-        fill_n(old_nth, 1, new_value, queue);
+		fill_n(new_nth, 1, value, queue);
+		fill_n(old_nth, 1, new_value, queue);
 
-        new_value = nth.read(queue);
+		new_value = nth.read(queue);
 
-        if(value == new_value) break;
+		if(value == new_value) break;
 
-        if(std::distance(first, nth) < std::distance(first, new_nth))
-        {
-            last = new_nth;
-        }
-        else
-        {
-            first = new_nth;
-        }
-    }
+		if(std::distance(first, nth) < std::distance(first, new_nth))
+		{
+			last = new_nth;
+		}
+		else
+		{
+			first = new_nth;
+		}
+	}
 }
 
 /// \overload
@@ -74,13 +76,13 @@ inline void nth_element(Iterator first,
                         Iterator last,
                         command_queue &queue = system::default_queue())
 {
-    if(nth == last) return;
+	if(nth == last) return;
 
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-    less<value_type> less_than;
+	less<value_type> less_than;
 
-    return nth_element(first, nth, last, less_than, queue);
+	return nth_element(first, nth, last, less_than, queue);
 }
 
 } // end compute namespace

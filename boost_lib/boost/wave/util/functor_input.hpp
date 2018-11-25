@@ -21,9 +21,12 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace boost {
-namespace wave {
-namespace util {
+namespace boost
+{
+namespace wave
+{
+namespace util
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -42,104 +45,108 @@ namespace util {
 //      call operator new() twice but only once.
 //
 ///////////////////////////////////////////////////////////////////////////////
-struct functor_input {
+struct functor_input
+{
 
-    template <typename FunctorT>
-    class inner {
-    private:
-        typedef typename FunctorT::result_type result_type;
+	template <typename FunctorT>
+	class inner
+	{
+	private:
+		typedef typename FunctorT::result_type result_type;
 
-    public:
-        typedef result_type value_type;
+	public:
+		typedef result_type value_type;
 
-    private:
-        struct Data {
-            Data(FunctorT const &ftor_)
-            :   ftor(ftor_), was_initialized(false)
-            {}
+	private:
+		struct Data
+		{
+			Data(FunctorT const &ftor_)
+				:   ftor(ftor_), was_initialized(false)
+			{}
 
-            FunctorT ftor;
-            value_type curtok;
-            bool was_initialized;
-        };
+			FunctorT ftor;
+			value_type curtok;
+			bool was_initialized;
+		};
 
-       // Needed by compilers not implementing the resolution to DR45. For
-       // reference, see
-       // http://www.open-std.org/JTC1/SC22/WG21/docs/cwg_defects.html#45.
+		// Needed by compilers not implementing the resolution to DR45. For
+		// reference, see
+		// http://www.open-std.org/JTC1/SC22/WG21/docs/cwg_defects.html#45.
 
-       friend struct Data;
+		friend struct Data;
 
-    public:
-        typedef std::ptrdiff_t difference_type;
-        typedef result_type *pointer;
-        typedef result_type &reference;
+	public:
+		typedef std::ptrdiff_t difference_type;
+		typedef result_type *pointer;
+		typedef result_type &reference;
 
-    protected:
-        inner()
-        :   data(0)
-        {}
+	protected:
+		inner()
+			:   data(0)
+		{}
 
-        inner(FunctorT const &x)
-        :   data(new Data(x))
-        {}
+		inner(FunctorT const &x)
+			:   data(new Data(x))
+		{}
 
-        inner(inner const &x)
-        :   data(x.data)
-        {}
+		inner(inner const &x)
+			:   data(x.data)
+		{}
 
-        void destroy()
-        {
-            delete data;
-            data = 0;
-        }
+		void destroy()
+		{
+			delete data;
+			data = 0;
+		}
 
-        bool same_input(inner const &x) const
-        {
-            return data == x.data;
-        }
+		bool same_input(inner const &x) const
+		{
+			return data == x.data;
+		}
 
-        void swap(inner &x)
-        {
-            boost::spirit::classic::impl::mp_swap(data, x.data);
-        }
+		void swap(inner &x)
+		{
+			boost::spirit::classic::impl::mp_swap(data, x.data);
+		}
 
-        void ensure_initialized() const
-        {
-            if (data && !data->was_initialized) {
-                data->curtok = (data->ftor)();    // get the first token
-                data->was_initialized = true;
-            }
-        }
+		void ensure_initialized() const
+		{
+			if (data && !data->was_initialized)
+			{
+				data->curtok = (data->ftor)();    // get the first token
+				data->was_initialized = true;
+			}
+		}
 
-    public:
-        reference get_input() const
-        {
-            ensure_initialized();
-            return data->curtok;
-        }
+	public:
+		reference get_input() const
+		{
+			ensure_initialized();
+			return data->curtok;
+		}
 
-        void advance_input()
-        {
-            BOOST_ASSERT(0 != data);
-            data->curtok = (data->ftor)();
-            data->was_initialized = true;
-        }
+		void advance_input()
+		{
+			BOOST_ASSERT(0 != data);
+			data->curtok = (data->ftor)();
+			data->was_initialized = true;
+		}
 
-        bool input_at_eof() const
-        {
-            ensure_initialized();
-            return !data || data->curtok == data->ftor.eof;
-        }
+		bool input_at_eof() const
+		{
+			ensure_initialized();
+			return !data || data->curtok == data->ftor.eof;
+		}
 
-        FunctorT& get_functor() const
-        {
-            BOOST_ASSERT(0 != data);
-            return data->ftor;
-        }
+		FunctorT& get_functor() const
+		{
+			BOOST_ASSERT(0 != data);
+			return data->ftor;
+		}
 
-    private:
-        mutable Data *data;
-    };
+	private:
+		mutable Data *data;
+	};
 };
 
 ///////////////////////////////////////////////////////////////////////////////

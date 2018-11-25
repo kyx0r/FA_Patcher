@@ -31,13 +31,14 @@ http://www.boost.org/LICENSE_1_0.txt)
 #define BOOST_CORE_NO_CONSTEXPR_ADDRESSOF
 #endif
 
-namespace boost {
+namespace boost
+{
 
 template<class T>
 BOOST_CONSTEXPR inline T*
 addressof(T& o) BOOST_NOEXCEPT
 {
-    return __builtin_addressof(o);
+	return __builtin_addressof(o);
 }
 
 } /* boost */
@@ -45,31 +46,39 @@ addressof(T& o) BOOST_NOEXCEPT
 #include <boost/config/workaround.hpp>
 #include <cstddef>
 
-namespace boost {
-namespace detail {
+namespace boost
+{
+namespace detail
+{
 
 template<class T>
-class addrof_ref {
+class addrof_ref
+{
 public:
-    BOOST_FORCEINLINE addrof_ref(T& o) BOOST_NOEXCEPT
-        : o_(o) { }
-    BOOST_FORCEINLINE operator T&() const BOOST_NOEXCEPT {
-        return o_;
-    }
+	BOOST_FORCEINLINE addrof_ref(T& o) BOOST_NOEXCEPT
+:
+	o_(o) { }
+	BOOST_FORCEINLINE operator T&() const BOOST_NOEXCEPT
+	{
+		return o_;
+	}
 private:
-    addrof_ref& operator=(const addrof_ref&);
-    T& o_;
+	addrof_ref& operator=(const addrof_ref&);
+	T& o_;
 };
 
 template<class T>
-struct addrof {
-    static BOOST_FORCEINLINE T* get(T& o, long) BOOST_NOEXCEPT {
-        return reinterpret_cast<T*>(&
-            const_cast<char&>(reinterpret_cast<const volatile char&>(o)));
-    }
-    static BOOST_FORCEINLINE T* get(T* p, int) BOOST_NOEXCEPT {
-        return p;
-    }
+struct addrof
+{
+	static BOOST_FORCEINLINE T* get(T& o, long) BOOST_NOEXCEPT
+	{
+		return reinterpret_cast<T*>(&
+		                            const_cast<char&>(reinterpret_cast<const volatile char&>(o)));
+	}
+	static BOOST_FORCEINLINE T* get(T* p, int) BOOST_NOEXCEPT
+	{
+		return p;
+	}
 };
 
 #if !defined(BOOST_NO_CXX11_NULLPTR)
@@ -82,35 +91,43 @@ typedef std::nullptr_t addrof_null_t;
 #endif
 
 template<>
-struct addrof<addrof_null_t> {
-    typedef addrof_null_t type;
-    static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT {
-        return &o;
-    }
+struct addrof<addrof_null_t>
+{
+	typedef addrof_null_t type;
+	static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT
+	{
+		return &o;
+	}
 };
 
 template<>
-struct addrof<const addrof_null_t> {
-    typedef const addrof_null_t type;
-    static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT {
-        return &o;
-    }
+struct addrof<const addrof_null_t>
+{
+	typedef const addrof_null_t type;
+	static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT
+	{
+		return &o;
+	}
 };
 
 template<>
-struct addrof<volatile addrof_null_t> {
-    typedef volatile addrof_null_t type;
-    static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT {
-        return &o;
-    }
+struct addrof<volatile addrof_null_t>
+{
+	typedef volatile addrof_null_t type;
+	static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT
+	{
+		return &o;
+	}
 };
 
 template<>
-struct addrof<const volatile addrof_null_t> {
-    typedef const volatile addrof_null_t type;
-    static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT {
-        return &o;
-    }
+struct addrof<const volatile addrof_null_t>
+{
+	typedef const volatile addrof_null_t type;
+	static BOOST_FORCEINLINE type* get(type& o, int) BOOST_NOEXCEPT
+	{
+		return &o;
+	}
 };
 #endif
 
@@ -127,18 +144,20 @@ addressof(T& o) BOOST_NOEXCEPT
 {
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) || \
     BOOST_WORKAROUND(__SUNPRO_CC, <= 0x5120)
-    return boost::detail::addrof<T>::get(o, 0);
+	return boost::detail::addrof<T>::get(o, 0);
 #else
-    return boost::detail::addrof<T>::get(boost::detail::addrof_ref<T>(o), 0);
+	return boost::detail::addrof<T>::get(boost::detail::addrof_ref<T>(o), 0);
 #endif
 }
 
 #if BOOST_WORKAROUND(__SUNPRO_CC, BOOST_TESTED_AT(0x590))
-namespace detail {
+namespace detail
+{
 
 template<class T>
-struct addrof_result {
-    typedef T* type;
+struct addrof_result
+{
+	typedef T* type;
 };
 
 } /* detail */
@@ -147,7 +166,7 @@ template<class T, std::size_t N>
 BOOST_FORCEINLINE typename boost::detail::addrof_result<T[N]>::type
 addressof(T (&o)[N]) BOOST_NOEXCEPT
 {
-    return &o;
+	return &o;
 }
 #endif
 
@@ -156,36 +175,40 @@ template<class T, std::size_t N>
 BOOST_FORCEINLINE
 T (*addressof(T (&o)[N]) BOOST_NOEXCEPT)[N]
 {
-   return reinterpret_cast<T(*)[N]>(&o);
+	return reinterpret_cast<T(*)[N]>(&o);
 }
 
 template<class T, std::size_t N>
 BOOST_FORCEINLINE
 const T (*addressof(const T (&o)[N]) BOOST_NOEXCEPT)[N]
 {
-   return reinterpret_cast<const T(*)[N]>(&o);
+	return reinterpret_cast<const T(*)[N]>(&o);
 }
 #endif
 #else
-namespace detail {
+namespace detail
+{
 
 template<class T>
 T addrof_declval() BOOST_NOEXCEPT;
 
 template<class>
-struct addrof_void {
-    typedef void type;
+struct addrof_void
+{
+	typedef void type;
 };
 
 template<class T, class E = void>
-struct addrof_member_operator {
-    static constexpr bool value = false;
+struct addrof_member_operator
+{
+	static constexpr bool value = false;
 };
 
 template<class T>
 struct addrof_member_operator<T, typename
-    addrof_void<decltype(addrof_declval<T&>().operator&())>::type> {
-    static constexpr bool value = true;
+addrof_void<decltype(addrof_declval<T&>().operator&())>::type>
+{
+	static constexpr bool value = true;
 };
 
 #if BOOST_WORKAROUND(BOOST_INTEL, < 1600)
@@ -196,40 +219,46 @@ operator&(addrof_addressable&) BOOST_NOEXCEPT;
 #endif
 
 template<class T, class E = void>
-struct addrof_non_member_operator {
-    static constexpr bool value = false;
+struct addrof_non_member_operator
+{
+	static constexpr bool value = false;
 };
 
 template<class T>
 struct addrof_non_member_operator<T, typename
-    addrof_void<decltype(operator&(addrof_declval<T&>()))>::type> {
-    static constexpr bool value = true;
+addrof_void<decltype(operator&(addrof_declval<T&>()))>::type>
+{
+	static constexpr bool value = true;
 };
 
 template<class T, class E = void>
-struct addrof_expression {
-    static constexpr bool value = false;
+struct addrof_expression
+{
+	static constexpr bool value = false;
 };
 
 template<class T>
 struct addrof_expression<T,
-    typename addrof_void<decltype(&addrof_declval<T&>())>::type> {
-    static constexpr bool value = true;
-};
+       typename addrof_void<decltype(&addrof_declval<T&>())>::type>
+       {
+           static constexpr bool value = true;
+       };
 
 template<class T>
-struct addrof_is_constexpr {
-    static constexpr bool value = addrof_expression<T>::value &&
-        !addrof_member_operator<T>::value &&
-        !addrof_non_member_operator<T>::value;
+struct addrof_is_constexpr
+{
+	static constexpr bool value = addrof_expression<T>::value &&
+	                              !addrof_member_operator<T>::value &&
+	                              !addrof_non_member_operator<T>::value;
 };
 
 template<bool E, class T>
 struct addrof_if { };
 
 template<class T>
-struct addrof_if<true, T> {
-    typedef T* type;
+struct addrof_if<true, T>
+{
+	typedef T* type;
 };
 
 template<class T>
@@ -237,7 +266,7 @@ BOOST_FORCEINLINE
 typename addrof_if<!addrof_is_constexpr<T>::value, T>::type
 addressof(T& o) BOOST_NOEXCEPT
 {
-    return addrof<T>::get(addrof_ref<T>(o), 0);
+	return addrof<T>::get(addrof_ref<T>(o), 0);
 }
 
 template<class T>
@@ -245,7 +274,7 @@ constexpr BOOST_FORCEINLINE
 typename addrof_if<addrof_is_constexpr<T>::value, T>::type
 addressof(T& o) BOOST_NOEXCEPT
 {
-    return &o;
+	return &o;
 }
 
 } /* detail */
@@ -254,7 +283,7 @@ template<class T>
 constexpr BOOST_FORCEINLINE T*
 addressof(T& o) BOOST_NOEXCEPT
 {
-    return boost::detail::addressof(o);
+	return boost::detail::addressof(o);
 }
 #endif
 
@@ -263,7 +292,8 @@ addressof(T& o) BOOST_NOEXCEPT
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && \
     !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS)
-namespace boost {
+namespace boost
+{
 
 template<class T>
 const T* addressof(const T&&) = delete;

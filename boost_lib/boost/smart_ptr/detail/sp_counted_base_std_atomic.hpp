@@ -27,108 +27,108 @@ namespace detail
 
 inline void atomic_increment( std::atomic_int_least32_t * pw )
 {
-    pw->fetch_add( 1, std::memory_order_relaxed );
+	pw->fetch_add( 1, std::memory_order_relaxed );
 }
 
 inline std::int_least32_t atomic_decrement( std::atomic_int_least32_t * pw )
 {
-    return pw->fetch_sub( 1, std::memory_order_acq_rel );
+	return pw->fetch_sub( 1, std::memory_order_acq_rel );
 }
 
 inline std::int_least32_t atomic_conditional_increment( std::atomic_int_least32_t * pw )
 {
-    // long r = *pw;
-    // if( r != 0 ) ++*pw;
-    // return r;
+	// long r = *pw;
+	// if( r != 0 ) ++*pw;
+	// return r;
 
-    std::int_least32_t r = pw->load( std::memory_order_relaxed );
+	std::int_least32_t r = pw->load( std::memory_order_relaxed );
 
-    for( ;; )
-    {
-        if( r == 0 )
-        {
-            return r;
-        }
+	for( ;; )
+	{
+		if( r == 0 )
+		{
+			return r;
+		}
 
-        if( pw->compare_exchange_weak( r, r + 1, std::memory_order_relaxed, std::memory_order_relaxed ) )
-        {
-            return r;
-        }
-    }    
+		if( pw->compare_exchange_weak( r, r + 1, std::memory_order_relaxed, std::memory_order_relaxed ) )
+		{
+			return r;
+		}
+	}
 }
 
 class sp_counted_base
 {
 private:
 
-    sp_counted_base( sp_counted_base const & );
-    sp_counted_base & operator= ( sp_counted_base const & );
+	sp_counted_base( sp_counted_base const & );
+	sp_counted_base & operator= ( sp_counted_base const & );
 
-    std::atomic_int_least32_t use_count_;   // #shared
-    std::atomic_int_least32_t weak_count_;  // #weak + (#shared != 0)
+	std::atomic_int_least32_t use_count_;   // #shared
+	std::atomic_int_least32_t weak_count_;  // #weak + (#shared != 0)
 
 public:
 
-    sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
-    {
-    }
+	sp_counted_base(): use_count_( 1 ), weak_count_( 1 )
+	{
+	}
 
-    virtual ~sp_counted_base() // nothrow
-    {
-    }
+	virtual ~sp_counted_base() // nothrow
+	{
+	}
 
-    // dispose() is called when use_count_ drops to zero, to release
-    // the resources managed by *this.
+	// dispose() is called when use_count_ drops to zero, to release
+	// the resources managed by *this.
 
-    virtual void dispose() = 0; // nothrow
+	virtual void dispose() = 0; // nothrow
 
-    // destroy() is called when weak_count_ drops to zero.
+	// destroy() is called when weak_count_ drops to zero.
 
-    virtual void destroy() // nothrow
-    {
-        delete this;
-    }
+	virtual void destroy() // nothrow
+	{
+		delete this;
+	}
 
-    virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
-    virtual void * get_untyped_deleter() = 0;
+	virtual void * get_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_local_deleter( sp_typeinfo const & ti ) = 0;
+	virtual void * get_untyped_deleter() = 0;
 
-    void add_ref_copy()
-    {
-        atomic_increment( &use_count_ );
-    }
+	void add_ref_copy()
+	{
+		atomic_increment( &use_count_ );
+	}
 
-    bool add_ref_lock() // true on success
-    {
-        return atomic_conditional_increment( &use_count_ ) != 0;
-    }
+	bool add_ref_lock() // true on success
+	{
+		return atomic_conditional_increment( &use_count_ ) != 0;
+	}
 
-    void release() // nothrow
-    {
-        if( atomic_decrement( &use_count_ ) == 1 )
-        {
-            dispose();
-            weak_release();
-        }
-    }
+	void release() // nothrow
+	{
+		if( atomic_decrement( &use_count_ ) == 1 )
+		{
+			dispose();
+			weak_release();
+		}
+	}
 
-    void weak_add_ref() // nothrow
-    {
-        atomic_increment( &weak_count_ );
-    }
+	void weak_add_ref() // nothrow
+	{
+		atomic_increment( &weak_count_ );
+	}
 
-    void weak_release() // nothrow
-    {
-        if( atomic_decrement( &weak_count_ ) == 1 )
-        {
-            destroy();
-        }
-    }
+	void weak_release() // nothrow
+	{
+		if( atomic_decrement( &weak_count_ ) == 1 )
+		{
+			destroy();
+		}
+	}
 
-    long use_count() const // nothrow
-    {
-        return use_count_.load( std::memory_order_acquire );
-    }
+	long use_count() const // nothrow
+	{
+		return use_count_.load( std::memory_order_acquire );
+	}
 };
 
 } // namespace detail

@@ -22,36 +22,39 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! @cond
-    template <typename Xs, typename N>
-    constexpr decltype(auto) at_t::operator()(Xs&& xs, N const& n) const {
-        using It = typename hana::tag_of<Xs>::type;
-        using At = BOOST_HANA_DISPATCH_IF(at_impl<It>,
-            hana::Iterable<It>::value
-        );
+//! @cond
+template <typename Xs, typename N>
+constexpr decltype(auto) at_t::operator()(Xs&& xs, N const& n) const
+{
+	using It = typename hana::tag_of<Xs>::type;
+	using At = BOOST_HANA_DISPATCH_IF(at_impl<It>,
+	                                  hana::Iterable<It>::value
+	                                 );
 
-    #ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
-        static_assert(hana::Iterable<It>::value,
-        "hana::at(xs, n) requires 'xs' to be an Iterable");
+#ifndef BOOST_HANA_CONFIG_DISABLE_CONCEPT_CHECKS
+	static_assert(hana::Iterable<It>::value,
+	              "hana::at(xs, n) requires 'xs' to be an Iterable");
 
-        static_assert(hana::IntegralConstant<N>::value,
-        "hana::at(xs, n) requires 'n' to be an IntegralConstant");
-    #endif
+	static_assert(hana::IntegralConstant<N>::value,
+	              "hana::at(xs, n) requires 'n' to be an IntegralConstant");
+#endif
 
-        return At::apply(static_cast<Xs&&>(xs), n);
-    }
-    //! @endcond
+	return At::apply(static_cast<Xs&&>(xs), n);
+}
+//! @endcond
 
-    template <typename It, bool condition>
-    struct at_impl<It, when<condition>> : default_ {
-        template <typename ...Args>
-        static constexpr auto apply(Args&& ...) = delete;
-    };
+template <typename It, bool condition>
+struct at_impl<It, when<condition>> : default_
+{
+	template <typename ...Args>
+	static constexpr auto apply(Args&& ...) = delete;
+};
 
-    template <std::size_t n, typename Xs>
-    constexpr decltype(auto) at_c(Xs&& xs) {
-        return hana::at(static_cast<Xs&&>(xs), hana::size_t<n>{});
-    }
+template <std::size_t n, typename Xs>
+constexpr decltype(auto) at_c(Xs&& xs)
+{
+	return hana::at(static_cast<Xs&&>(xs), hana::size_t<n> {});
+}
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_AT_HPP

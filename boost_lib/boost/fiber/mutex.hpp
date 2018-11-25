@@ -24,40 +24,45 @@
 # pragma warning(disable:4251)
 #endif
 
-namespace boost {
-namespace fibers {
+namespace boost
+{
+namespace fibers
+{
 
 class condition_variable;
 
-class BOOST_FIBERS_DECL mutex {
+class BOOST_FIBERS_DECL mutex
+{
 private:
-    friend class condition_variable;
+	friend class condition_variable;
 
-    typedef context::wait_queue_t   wait_queue_type;
+	typedef context::wait_queue_t   wait_queue_type;
 
-    detail::spinlock            wait_queue_splk_{};
-    wait_queue_type             wait_queue_{};
-    context                 *   owner_{ nullptr };
+	detail::spinlock            wait_queue_splk_{};
+	wait_queue_type             wait_queue_{};
+	context                 *   owner_{ nullptr };
 
 public:
-    mutex() = default;
+	mutex() = default;
 
-    ~mutex() {
-        BOOST_ASSERT( nullptr == owner_);
-        BOOST_ASSERT( wait_queue_.empty() );
-    }
+	~mutex()
+	{
+		BOOST_ASSERT( nullptr == owner_);
+		BOOST_ASSERT( wait_queue_.empty() );
+	}
 
-    mutex( mutex const&) = delete;
-    mutex & operator=( mutex const&) = delete;
+	mutex( mutex const&) = delete;
+	mutex & operator=( mutex const&) = delete;
 
-    void lock();
+	void lock();
 
-    bool try_lock();
+	bool try_lock();
 
-    void unlock();
+	void unlock();
 };
 
-}}
+}
+}
 
 #ifdef _MSC_VER
 # pragma warning(pop)

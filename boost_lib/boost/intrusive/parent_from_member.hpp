@@ -22,8 +22,10 @@
 #  pragma once
 #endif
 
-namespace boost {
-namespace intrusive {
+namespace boost
+{
+namespace intrusive
+{
 
 //! Given a pointer to a member and its corresponding pointer to data member,
 //! this function returns the pointer of the parent containing that member.
@@ -31,7 +33,9 @@ namespace intrusive {
 //! virtual inheritance.
 template<class Parent, class Member>
 BOOST_INTRUSIVE_FORCEINLINE Parent *get_parent_from_member(Member *member, const Member Parent::* ptr_to_member)
-{  return ::boost::intrusive::detail::parent_from_member(member, ptr_to_member);  }
+{
+	return ::boost::intrusive::detail::parent_from_member(member, ptr_to_member);
+}
 
 //! Given a const pointer to a member and its corresponding const pointer to data member,
 //! this function returns the const pointer of the parent containing that member.
@@ -39,7 +43,9 @@ BOOST_INTRUSIVE_FORCEINLINE Parent *get_parent_from_member(Member *member, const
 //! virtual inheritance.
 template<class Parent, class Member>
 BOOST_INTRUSIVE_FORCEINLINE const Parent *get_parent_from_member(const Member *member, const Member Parent::* ptr_to_member)
-{  return ::boost::intrusive::detail::parent_from_member(member, ptr_to_member);  }
+{
+	return ::boost::intrusive::detail::parent_from_member(member, ptr_to_member);
+}
 
 }  //namespace intrusive {
 }  //namespace boost {

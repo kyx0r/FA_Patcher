@@ -16,37 +16,39 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Returns a `Logical` representing whether `x` is greater than `y`.
-    //! @ingroup group-Orderable
-    //!
-    //!
-    //! Signature
-    //! ---------
-    //! Given a Logical `Bool` and two Orderables `A` and `B` with a common
-    //! embedding, the signature is
-    //! @f$ \mathrm{greater} : A \times B \to Bool @f$.
-    //!
-    //! @param x, y
-    //! Two objects to compare.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/greater.cpp
+//! Returns a `Logical` representing whether `x` is greater than `y`.
+//! @ingroup group-Orderable
+//!
+//!
+//! Signature
+//! ---------
+//! Given a Logical `Bool` and two Orderables `A` and `B` with a common
+//! embedding, the signature is
+//! @f$ \mathrm{greater} : A \times B \to Bool @f$.
+//!
+//! @param x, y
+//! Two objects to compare.
+//!
+//!
+//! Example
+//! -------
+//! @include example/greater.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto greater = [](auto&& x, auto&& y) -> decltype(auto) {
-        return tag-dispatched;
-    };
+constexpr auto greater = [](auto&& x, auto&& y) -> decltype(auto)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename T, typename U, typename = void>
-    struct greater_impl : greater_impl<T, U, when<true>> { };
+template <typename T, typename U, typename = void>
+struct greater_impl : greater_impl<T, U, when<true>> { };
 
-    struct greater_t : detail::nested_than<greater_t> {
-        template <typename X, typename Y>
-        constexpr decltype(auto) operator()(X&& x, Y&& y) const;
-    };
+struct greater_t : detail::nested_than<greater_t>
+{
+	template <typename X, typename Y>
+	constexpr decltype(auto) operator()(X&& x, Y&& y) const;
+};
 
-    constexpr greater_t greater{};
+constexpr greater_t greater{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

@@ -17,17 +17,17 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace impl
-      {
-        template <int N, class P, class Accum>
-        struct iterate_impl;
-      }
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+namespace impl
+{
+template <int N, class P, class Accum>
+struct iterate_impl;
+}
+}
+}
 }
 
 #endif

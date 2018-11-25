@@ -11,76 +11,82 @@
 #include <boost/spirit/home/x3/core/parser.hpp>
 #include <boost/spirit/home/x3/support/unused.hpp>
 
-namespace boost { namespace spirit { namespace x3
+namespace boost
 {
-    struct rule_context_tag;
+namespace spirit
+{
+namespace x3
+{
+struct rule_context_tag;
 
-    struct semantic_predicate : parser<semantic_predicate>
-    {
-        typedef unused_type attribute_type;
-        static bool const has_attribute = false;
+struct semantic_predicate : parser<semantic_predicate>
+{
+	typedef unused_type attribute_type;
+	static bool const has_attribute = false;
 
-        semantic_predicate(bool predicate)
-          : predicate(predicate) {}
+	semantic_predicate(bool predicate)
+		: predicate(predicate) {}
 
-        template <typename Iterator, typename Context, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, unused_type, Attribute&) const
-        {
-            x3::skip_over(first, last, context);
-            return predicate;
-        }
+	template <typename Iterator, typename Context, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, unused_type, Attribute&) const
+	{
+		x3::skip_over(first, last, context);
+		return predicate;
+	}
 
-        bool predicate;
-    };
+	bool predicate;
+};
 
-    template <typename F>
-    struct lazy_semantic_predicate : parser<lazy_semantic_predicate<F>>
-    {
-        typedef unused_type attribute_type;
-        static bool const has_attribute = false;
+template <typename F>
+struct lazy_semantic_predicate : parser<lazy_semantic_predicate<F>>
+{
+	typedef unused_type attribute_type;
+	static bool const has_attribute = false;
 
-        lazy_semantic_predicate(F f)
-          : f(f) {}
+	lazy_semantic_predicate(F f)
+		: f(f) {}
 
-        template <typename Iterator, typename Context, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, unused_type, Attribute& /* attr */) const
-        {
-            x3::skip_over(first, last, context);
-            return f(x3::get<rule_context_tag>(context));
-        }
+	template <typename Iterator, typename Context, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, unused_type, Attribute& /* attr */) const
+	{
+		x3::skip_over(first, last, context);
+		return f(x3::get<rule_context_tag>(context));
+	}
 
-        F f;
-    };
+	F f;
+};
 
-    struct eps_parser : parser<eps_parser>
-    {
-        typedef unused_type attribute_type;
-        static bool const has_attribute = false;
+struct eps_parser : parser<eps_parser>
+{
+	typedef unused_type attribute_type;
+	static bool const has_attribute = false;
 
-        template <typename Iterator, typename Context
-          , typename RuleContext, typename Attribute>
-        bool parse(Iterator& first, Iterator const& last
-          , Context const& context, RuleContext&, Attribute&) const
-        {
-            x3::skip_over(first, last, context);
-            return true;
-        }
+	template <typename Iterator, typename Context
+	          , typename RuleContext, typename Attribute>
+	bool parse(Iterator& first, Iterator const& last
+	           , Context const& context, RuleContext&, Attribute&) const
+	{
+		x3::skip_over(first, last, context);
+		return true;
+	}
 
-        inline semantic_predicate operator()(bool predicate) const
-        {
-            return { predicate };
-        }
+	inline semantic_predicate operator()(bool predicate) const
+	{
+		return { predicate };
+	}
 
-        template <typename F>
-        lazy_semantic_predicate<F> operator()(F f) const
-        {
-            return { f };
-        }
-    };
+	template <typename F>
+	lazy_semantic_predicate<F> operator()(F f) const
+	{
+		return { f };
+	}
+};
 
-    auto const eps = eps_parser{};
-}}}
+auto const eps = eps_parser {};
+}
+}
+}
 
 #endif

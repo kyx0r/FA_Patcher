@@ -24,12 +24,16 @@
 #include <boost/type_traits/is_fundamental.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
 
-namespace detail { namespace select_most_precise
+namespace detail
+{
+namespace select_most_precise
 {
 
 
@@ -39,19 +43,19 @@ namespace detail { namespace select_most_precise
 template <bool Fundamental1, bool Fundamental2, typename T1, typename T2>
 struct select_non_fundamental
 {
-    typedef T1 type;
+	typedef T1 type;
 };
 
 template <typename T1, typename T2>
 struct select_non_fundamental<true, false, T1, T2>
 {
-    typedef T2 type;
+	typedef T2 type;
 };
 
 template <typename T1, typename T2>
 struct select_non_fundamental<false, true, T1, T2>
 {
-    typedef T1 type;
+	typedef T1 type;
 };
 
 
@@ -60,13 +64,13 @@ struct select_non_fundamental<false, true, T1, T2>
 template <bool SecondLarger, typename T1, typename T2>
 struct select_largest
 {
-    typedef T1 type;
+	typedef T1 type;
 };
 
 template <typename T1, typename T2>
 struct select_largest<true, T1, T2>
 {
-    typedef T2 type;
+	typedef T2 type;
 };
 
 
@@ -76,7 +80,7 @@ struct select_largest<true, T1, T2>
 template <bool FP1, bool FP2, typename T1, typename T2>
 struct select_floating_point
 {
-    typedef char type;
+	typedef char type;
 };
 
 
@@ -84,18 +88,19 @@ struct select_floating_point
 template <typename T1, typename T2>
 struct select_floating_point<true, false, T1, T2>
 {
-    typedef T1 type;
+	typedef T1 type;
 };
 
 
 template <typename T1, typename T2>
 struct select_floating_point<false, true, T1, T2>
 {
-    typedef T2 type;
+	typedef T2 type;
 };
 
 
-}} // namespace detail::select_most_precise
+}
+} // namespace detail::select_most_precise
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -122,61 +127,62 @@ struct select_floating_point<false, true, T1, T2>
 template <typename T1, typename T2 = void, typename T3 = void>
 struct select_most_precise
 {
-    typedef typename select_most_precise
-        <
-            typename select_most_precise<T1, T2>::type,
-            T3
-        >::type type;
+	typedef typename select_most_precise
+	<
+	typename select_most_precise<T1, T2>::type,
+	         T3
+	         >::type type;
 };
 
 template <typename T1, typename T2>
 struct select_most_precise<T1, T2, void>
 {
-    static const bool second_larger = sizeof(T2) > sizeof(T1);
-    static const bool one_not_fundamental = !
-        (boost::is_fundamental<T1>::type::value
-          && boost::is_fundamental<T2>::type::value);
+	static const bool second_larger = sizeof(T2) > sizeof(T1);
+	static const bool one_not_fundamental = !
+	                                        (boost::is_fundamental<T1>::type::value
+	                                                && boost::is_fundamental<T2>::type::value);
 
-    static const bool both_same =
-        boost::is_floating_point<T1>::type::value
-        == boost::is_floating_point<T2>::type::value;
+	static const bool both_same =
+	    boost::is_floating_point<T1>::type::value
+	    == boost::is_floating_point<T2>::type::value;
 
-    typedef typename boost::mpl::if_c
-        <
-            one_not_fundamental,
-            typename detail::select_most_precise::select_non_fundamental
-            <
-                boost::is_fundamental<T1>::type::value,
-                boost::is_fundamental<T2>::type::value,
-                T1,
-                T2
-            >::type,
-            typename boost::mpl::if_c
-            <
-                both_same,
-                typename detail::select_most_precise::select_largest
-                <
-                    second_larger,
-                    T1,
-                    T2
-                >::type,
-                typename detail::select_most_precise::select_floating_point
-                <
-                    boost::is_floating_point<T1>::type::value,
-                    boost::is_floating_point<T2>::type::value,
-                    T1,
-                    T2
-                >::type
-            >::type
-        >::type type;
+	typedef typename boost::mpl::if_c
+	<
+	one_not_fundamental,
+	typename detail::select_most_precise::select_non_fundamental
+	<
+	boost::is_fundamental<T1>::type::value,
+	boost::is_fundamental<T2>::type::value,
+	T1,
+	T2
+	>::type,
+	typename boost::mpl::if_c
+	<
+	both_same,
+	typename detail::select_most_precise::select_largest
+	<
+	second_larger,
+	T1,
+	T2
+	>::type,
+	typename detail::select_most_precise::select_floating_point
+	<
+	boost::is_floating_point<T1>::type::value,
+	boost::is_floating_point<T2>::type::value,
+	T1,
+	T2
+	>::type
+	>::type
+	>::type type;
 };
 
 template <typename T1>
 struct select_most_precise<T1, void, void>
 {
-    typedef T1 type;
+	typedef T1 type;
 };
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_UTIL_SELECT_MOST_PRECISE_HPP

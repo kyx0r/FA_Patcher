@@ -37,86 +37,89 @@
 #include <boost/log/keywords/ip_version.hpp>
 #include <boost/log/detail/header.hpp>
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace sinks {
+namespace sinks
+{
 
 //! Supported IP protocol versions
 enum ip_versions
 {
-    v4,
-    v6
+	v4,
+	v6
 };
 
-namespace syslog {
+namespace syslog
+{
 
-    //! The enumeration defined the possible implementation types for the syslog backend
-    enum impl_types
-    {
+//! The enumeration defined the possible implementation types for the syslog backend
+enum impl_types
+{
 #ifdef BOOST_LOG_USE_NATIVE_SYSLOG
-        native = 0                  //!< Use native syslog API
+	native = 0                  //!< Use native syslog API
 #ifndef BOOST_LOG_NO_ASIO
-        ,
+	,
 #endif
 #endif
 #ifndef BOOST_LOG_NO_ASIO
-        udp_socket_based = 1        //!< Use UDP sockets, according to RFC3164
+	udp_socket_based = 1        //!< Use UDP sockets, according to RFC3164
 #endif
-    };
+};
 
-    /*!
-     * \brief Straightforward severity level mapping
-     *
-     * This type of mapping assumes that attribute with a particular name always
-     * provides values that map directly onto the Syslog levels. The mapping
-     * simply returns the extracted attribute value converted to the Syslog severity level.
-     */
-    template< typename AttributeValueT = int >
-    class direct_severity_mapping :
-        public basic_direct_mapping< level, AttributeValueT >
-    {
-        //! Base type
-        typedef basic_direct_mapping< level, AttributeValueT > base_type;
+/*!
+ * \brief Straightforward severity level mapping
+ *
+ * This type of mapping assumes that attribute with a particular name always
+ * provides values that map directly onto the Syslog levels. The mapping
+ * simply returns the extracted attribute value converted to the Syslog severity level.
+ */
+template< typename AttributeValueT = int >
+class direct_severity_mapping :
+	public basic_direct_mapping< level, AttributeValueT >
+{
+	//! Base type
+	typedef basic_direct_mapping< level, AttributeValueT > base_type;
 
-    public:
-        /*!
-         * Constructor
-         *
-         * \param name Attribute name
-         */
-        explicit direct_severity_mapping(attribute_name const& name) :
-            base_type(name, info)
-        {
-        }
-    };
+public:
+	/*!
+	 * Constructor
+	 *
+	 * \param name Attribute name
+	 */
+	explicit direct_severity_mapping(attribute_name const& name) :
+		base_type(name, info)
+	{
+	}
+};
 
-    /*!
-     * \brief Customizable severity level mapping
-     *
-     * The class allows to setup a custom mapping between an attribute and Syslog severity levels.
-     * The mapping should be initialized similarly to the standard \c map container, by using
-     * indexing operator and assignment.
-     */
-    template< typename AttributeValueT = int >
-    class custom_severity_mapping :
-        public basic_custom_mapping< level, AttributeValueT >
-    {
-        //! Base type
-        typedef basic_custom_mapping< level, AttributeValueT > base_type;
+/*!
+ * \brief Customizable severity level mapping
+ *
+ * The class allows to setup a custom mapping between an attribute and Syslog severity levels.
+ * The mapping should be initialized similarly to the standard \c map container, by using
+ * indexing operator and assignment.
+ */
+template< typename AttributeValueT = int >
+class custom_severity_mapping :
+	public basic_custom_mapping< level, AttributeValueT >
+{
+	//! Base type
+	typedef basic_custom_mapping< level, AttributeValueT > base_type;
 
-    public:
-        /*!
-         * Constructor
-         *
-         * \param name Attribute name
-         */
-        explicit custom_severity_mapping(attribute_name const& name) :
-            base_type(name, info)
-        {
-        }
-    };
+public:
+	/*!
+	 * Constructor
+	 *
+	 * \param name Attribute name
+	 */
+	explicit custom_severity_mapping(attribute_name const& name) :
+		base_type(name, info)
+	{
+	}
+};
 
 } // namespace syslog
 
@@ -148,130 +151,130 @@ namespace syslog {
  * on platforms with no native support for POSIX syslog API will have no effect.
  */
 class syslog_backend :
-    public basic_formatted_sink_backend< char >
+	public basic_formatted_sink_backend< char >
 {
-    //! Base type
-    typedef basic_formatted_sink_backend< char > base_type;
-    //! Implementation type
-    struct implementation;
+	//! Base type
+	typedef basic_formatted_sink_backend< char > base_type;
+	//! Implementation type
+	struct implementation;
 
 public:
-    //! Character type
-    typedef base_type::char_type char_type;
-    //! String type that is used to pass message test
-    typedef base_type::string_type string_type;
+	//! Character type
+	typedef base_type::char_type char_type;
+	//! String type that is used to pass message test
+	typedef base_type::string_type string_type;
 
-    //! Syslog severity level mapper type
-    typedef boost::log::aux::light_function< syslog::level (record_view const&) > severity_mapper_type;
+	//! Syslog severity level mapper type
+	typedef boost::log::aux::light_function< syslog::level (record_view const&) > severity_mapper_type;
 
 private:
-    //! Pointer to the implementation
-    implementation* m_pImpl;
+	//! Pointer to the implementation
+	implementation* m_pImpl;
 
 public:
-    /*!
-     * Constructor. Creates a UDP socket-based backend with <tt>syslog::user</tt> facility code.
-     * IPv4 protocol will be used.
-     */
-    BOOST_LOG_API syslog_backend();
-    /*!
-     * Constructor. Creates a sink backend with the specified named parameters.
-     * The following named parameters are supported:
-     *
-     * \li \c facility - Specifies the facility code. If not specified, <tt>syslog::user</tt> will be used.
-     * \li \c use_impl - Specifies the backend implementation. Can be one of:
-     *                   \li \c native - Use the native syslog API, if available. If no native API
-     *                                   is available, it is equivalent to \c udp_socket_based.
-     *                   \li \c udp_socket_based - Use the UDP socket-based implementation, conforming to
-     *                                             RFC3164 protocol specification. This is the default.
-     * \li \c ip_version - Specifies IP protocol version to use, in case if socket-based implementation
-     *                     is used. Can be either \c v4 (the default one) or \c v6.
-     * \li \c ident - Process identification string. This parameter is only supported by native syslog implementation.
-     */
+	/*!
+	 * Constructor. Creates a UDP socket-based backend with <tt>syslog::user</tt> facility code.
+	 * IPv4 protocol will be used.
+	 */
+	BOOST_LOG_API syslog_backend();
+	/*!
+	 * Constructor. Creates a sink backend with the specified named parameters.
+	 * The following named parameters are supported:
+	 *
+	 * \li \c facility - Specifies the facility code. If not specified, <tt>syslog::user</tt> will be used.
+	 * \li \c use_impl - Specifies the backend implementation. Can be one of:
+	 *                   \li \c native - Use the native syslog API, if available. If no native API
+	 *                                   is available, it is equivalent to \c udp_socket_based.
+	 *                   \li \c udp_socket_based - Use the UDP socket-based implementation, conforming to
+	 *                                             RFC3164 protocol specification. This is the default.
+	 * \li \c ip_version - Specifies IP protocol version to use, in case if socket-based implementation
+	 *                     is used. Can be either \c v4 (the default one) or \c v6.
+	 * \li \c ident - Process identification string. This parameter is only supported by native syslog implementation.
+	 */
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_CALL(syslog_backend, construct)
+	BOOST_LOG_PARAMETRIZED_CONSTRUCTORS_CALL(syslog_backend, construct)
 #else
-    template< typename... ArgsT >
-    explicit syslog_backend(ArgsT... const& args);
+	template< typename... ArgsT >
+	explicit syslog_backend(ArgsT... const& args);
 #endif
 
-    /*!
-     * Destructor
-     */
-    BOOST_LOG_API ~syslog_backend();
+	/*!
+	 * Destructor
+	 */
+	BOOST_LOG_API ~syslog_backend();
 
-    /*!
-     * The method installs the function object that maps application severity levels to syslog levels
-     */
-    BOOST_LOG_API void set_severity_mapper(severity_mapper_type const& mapper);
+	/*!
+	 * The method installs the function object that maps application severity levels to syslog levels
+	 */
+	BOOST_LOG_API void set_severity_mapper(severity_mapper_type const& mapper);
 
 #if !defined(BOOST_LOG_NO_ASIO)
 
-    /*!
-     * The method sets the local host name which log records will be sent from. The host name
-     * is resolved to obtain the final IP address.
-     *
-     * \note Does not have effect if the backend was constructed to use native syslog API
-     *
-     * \param addr The local address
-     * \param port The local port number
-     */
-    BOOST_LOG_API void set_local_address(std::string const& addr, unsigned short port = 514);
-    /*!
-     * The method sets the local address which log records will be sent from.
-     *
-     * \note Does not have effect if the backend was constructed to use native syslog API
-     *
-     * \param addr The local address
-     * \param port The local port number
-     */
-    BOOST_LOG_API void set_local_address(boost::asio::ip::address const& addr, unsigned short port = 514);
+	/*!
+	 * The method sets the local host name which log records will be sent from. The host name
+	 * is resolved to obtain the final IP address.
+	 *
+	 * \note Does not have effect if the backend was constructed to use native syslog API
+	 *
+	 * \param addr The local address
+	 * \param port The local port number
+	 */
+	BOOST_LOG_API void set_local_address(std::string const& addr, unsigned short port = 514);
+	/*!
+	 * The method sets the local address which log records will be sent from.
+	 *
+	 * \note Does not have effect if the backend was constructed to use native syslog API
+	 *
+	 * \param addr The local address
+	 * \param port The local port number
+	 */
+	BOOST_LOG_API void set_local_address(boost::asio::ip::address const& addr, unsigned short port = 514);
 
-    /*!
-     * The method sets the remote host name where log records will be sent to. The host name
-     * is resolved to obtain the final IP address.
-     *
-     * \note Does not have effect if the backend was constructed to use native syslog API
-     *
-     * \param addr The remote host address
-     * \param port The port number on the remote host
-     */
-    BOOST_LOG_API void set_target_address(std::string const& addr, unsigned short port = 514);
-    /*!
-     * The method sets the address of the remote host where log records will be sent to.
-     *
-     * \note Does not have effect if the backend was constructed to use native syslog API
-     *
-     * \param addr The remote host address
-     * \param port The port number on the remote host
-     */
-    BOOST_LOG_API void set_target_address(boost::asio::ip::address const& addr, unsigned short port = 514);
+	/*!
+	 * The method sets the remote host name where log records will be sent to. The host name
+	 * is resolved to obtain the final IP address.
+	 *
+	 * \note Does not have effect if the backend was constructed to use native syslog API
+	 *
+	 * \param addr The remote host address
+	 * \param port The port number on the remote host
+	 */
+	BOOST_LOG_API void set_target_address(std::string const& addr, unsigned short port = 514);
+	/*!
+	 * The method sets the address of the remote host where log records will be sent to.
+	 *
+	 * \note Does not have effect if the backend was constructed to use native syslog API
+	 *
+	 * \param addr The remote host address
+	 * \param port The port number on the remote host
+	 */
+	BOOST_LOG_API void set_target_address(boost::asio::ip::address const& addr, unsigned short port = 514);
 
 #endif // !defined(BOOST_LOG_NO_ASIO)
 
-    /*!
-     * The method passes the formatted message to the syslog API or sends to a syslog server
-     */
-    BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
+	/*!
+	 * The method passes the formatted message to the syslog API or sends to a syslog server
+	 */
+	BOOST_LOG_API void consume(record_view const& rec, string_type const& formatted_message);
 
 private:
 #ifndef BOOST_LOG_DOXYGEN_PASS
-    //! The method creates the backend implementation
-    template< typename ArgsT >
-    void construct(ArgsT const& args)
-    {
-        construct(
-            args[keywords::facility | syslog::user],
+	//! The method creates the backend implementation
+	template< typename ArgsT >
+	void construct(ArgsT const& args)
+	{
+		construct(
+		    args[keywords::facility | syslog::user],
 #if !defined(BOOST_LOG_NO_ASIO)
-            args[keywords::use_impl | syslog::udp_socket_based],
+		    args[keywords::use_impl | syslog::udp_socket_based],
 #else
-            args[keywords::use_impl | syslog::native],
+		    args[keywords::use_impl | syslog::native],
 #endif
-            args[keywords::ip_version | v4],
-            args[keywords::ident | std::string()]);
-    }
-    BOOST_LOG_API void construct(
-        syslog::facility facility, syslog::impl_types use_impl, ip_versions ip_version, std::string const& ident);
+		    args[keywords::ip_version | v4],
+		    args[keywords::ident | std::string()]);
+	}
+	BOOST_LOG_API void construct(
+	    syslog::facility facility, syslog::impl_types use_impl, ip_versions ip_version, std::string const& ident);
 #endif // BOOST_LOG_DOXYGEN_PASS
 };
 

@@ -17,78 +17,81 @@
 #include <boost/proto/tags.hpp>
 #include <boost/proto/operators.hpp>
 
-namespace boost { namespace phoenix
+namespace boost
 {
-    namespace detail
-    {
-        typedef std::ios_base&  (*iomanip_type)(std::ios_base&);
-        typedef std::istream&   (*imanip_type)(std::istream&);
-        typedef std::ostream&   (*omanip_type)(std::ostream&);
-    }
+namespace phoenix
+{
+namespace detail
+{
+typedef std::ios_base&  (*iomanip_type)(std::ios_base&);
+typedef std::istream&   (*imanip_type)(std::istream&);
+typedef std::ostream&   (*omanip_type)(std::ostream&);
+}
 
-    /////////////////////////////////////////////////////////////////////////////
-    //
-    //  overloads for I/O manipulators.
-    //
-    /////////////////////////////////////////////////////////////////////////////
-    template <typename Expr>
-    inline
-    typename proto::result_of::make_expr<
-          proto::tag::shift_left
-        , phoenix_domain
-        , actor<Expr>
-        , detail::iomanip_type
-        >::type const
-    operator<<(actor<Expr> const& a0, detail::iomanip_type a1)
-    {
-        return proto::make_expr<
-            proto::tag::shift_left, phoenix_domain>(a0, a1);
-    }
+/////////////////////////////////////////////////////////////////////////////
+//
+//  overloads for I/O manipulators.
+//
+/////////////////////////////////////////////////////////////////////////////
+template <typename Expr>
+inline
+typename proto::result_of::make_expr<
+proto::tag::shift_left
+, phoenix_domain
+, actor<Expr>
+, detail::iomanip_type
+>::type const
+operator<<(actor<Expr> const& a0, detail::iomanip_type a1)
+{
+	return proto::make_expr<
+	       proto::tag::shift_left, phoenix_domain>(a0, a1);
+}
 
-    template <typename Expr>
-    inline
-    typename proto::result_of::make_expr<
-          proto::tag::shift_left
-        , phoenix_domain
-        , actor<Expr>
-        , detail::omanip_type
-        >::type const
-    operator<<(actor<Expr> const& a0, detail::omanip_type a1)
-    {
-        return proto::make_expr<
-            proto::tag::shift_left, phoenix_domain>(a0, a1);
-    }
+template <typename Expr>
+inline
+typename proto::result_of::make_expr<
+proto::tag::shift_left
+, phoenix_domain
+, actor<Expr>
+, detail::omanip_type
+>::type const
+operator<<(actor<Expr> const& a0, detail::omanip_type a1)
+{
+	return proto::make_expr<
+	       proto::tag::shift_left, phoenix_domain>(a0, a1);
+}
 
-    template <typename Expr>
-    inline
-    typename proto::result_of::make_expr<
-          proto::tag::shift_right
-        , phoenix_domain
-        , actor<Expr>
-        , detail::iomanip_type
-        >::type const
-    operator>>(actor<Expr> const& a0, detail::iomanip_type a1)
-    {
-        return proto::make_expr<
-            proto::tag::shift_right, phoenix_domain>(a0, a1);
-    }
+template <typename Expr>
+inline
+typename proto::result_of::make_expr<
+proto::tag::shift_right
+, phoenix_domain
+, actor<Expr>
+, detail::iomanip_type
+>::type const
+operator>>(actor<Expr> const& a0, detail::iomanip_type a1)
+{
+	return proto::make_expr<
+	       proto::tag::shift_right, phoenix_domain>(a0, a1);
+}
 
-    template <typename Expr>
-    inline
-    typename proto::result_of::make_expr<
-          proto::tag::shift_right
-        , phoenix_domain
-        , actor<Expr>
-        , detail::imanip_type
-        >::type const
-    operator>>(actor<Expr> const& a0, detail::imanip_type a1)
-    {
-        return proto::make_expr<
-            proto::tag::shift_right, phoenix_domain>(a0, a1);
-    }
-    
-    using proto::exprns_::operator<<;
-    using proto::exprns_::operator>>;
-}}
+template <typename Expr>
+inline
+typename proto::result_of::make_expr<
+proto::tag::shift_right
+, phoenix_domain
+, actor<Expr>
+, detail::imanip_type
+>::type const
+operator>>(actor<Expr> const& a0, detail::imanip_type a1)
+{
+	return proto::make_expr<
+	       proto::tag::shift_right, phoenix_domain>(a0, a1);
+}
+
+using proto::exprns_::operator<<;
+using proto::exprns_::operator>>;
+}
+}
 
 #endif

@@ -49,207 +49,217 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct putp6 {};
-    struct putp6p {};
+namespace par4
+{
+struct putp6 {};
+struct putp6p {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace putp6
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace putp6
+{
 
-            static const double EPS = 1e-10;
-            static const int NITER = 10;
-            static const double CON_POLE = 1.732050807568877;
+static const double EPS = 1e-10;
+static const int NITER = 10;
+static const double CON_POLE = 1.732050807568877;
 
-            template <typename T>
-            struct par_putp6
-            {
-                T C_x, C_y, A, B, D;
-            };
+template <typename T>
+struct par_putp6
+{
+	T C_x, C_y, A, B, D;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_putp6_spheroid : public base_t_fi<base_putp6_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_putp6_spheroid : public base_t_fi<base_putp6_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_putp6<CalculationType> m_proj_parm;
+	par_putp6<CalculationType> m_proj_parm;
 
-                inline base_putp6_spheroid(const Parameters& par)
-                    : base_t_fi<base_putp6_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_putp6_spheroid(const Parameters& par)
+		: base_t_fi<base_putp6_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType p, r, V;
-                    int i;
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType p, r, V;
+		int i;
 
-                    p = this->m_proj_parm.B * sin(lp_lat);
-                    lp_lat *=  1.10265779;
-                    for (i = NITER; i ; --i) {
-                        r = sqrt(1. + lp_lat * lp_lat);
-                        lp_lat -= V = ( (this->m_proj_parm.A - r) * lp_lat - log(lp_lat + r) - p ) /
-                            (this->m_proj_parm.A - 2. * r);
-                        if (fabs(V) < EPS)
-                            break;
-                    }
-                    if (!i)
-                        lp_lat = p < 0. ? -CON_POLE : CON_POLE;
-                    xy_x = this->m_proj_parm.C_x * lp_lon * (this->m_proj_parm.D - sqrt(1. + lp_lat * lp_lat));
-                    xy_y = this->m_proj_parm.C_y * lp_lat;
-                }
+		p = this->m_proj_parm.B * sin(lp_lat);
+		lp_lat *=  1.10265779;
+		for (i = NITER; i ; --i)
+		{
+			r = sqrt(1. + lp_lat * lp_lat);
+			lp_lat -= V = ( (this->m_proj_parm.A - r) * lp_lat - log(lp_lat + r) - p ) /
+			              (this->m_proj_parm.A - 2. * r);
+			if (fabs(V) < EPS)
+				break;
+		}
+		if (!i)
+			lp_lat = p < 0. ? -CON_POLE : CON_POLE;
+		xy_x = this->m_proj_parm.C_x * lp_lon * (this->m_proj_parm.D - sqrt(1. + lp_lat * lp_lat));
+		xy_y = this->m_proj_parm.C_y * lp_lat;
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType r;
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType r;
 
-                    lp_lat = xy_y / this->m_proj_parm.C_y;
-                    r = sqrt(1. + lp_lat * lp_lat);
-                    lp_lon = xy_x / (this->m_proj_parm.C_x * (this->m_proj_parm.D - r));
-                    lp_lat = aasin(( (this->m_proj_parm.A - r) * lp_lat - log(lp_lat + r) ) / this->m_proj_parm.B);
-                }
+		lp_lat = xy_y / this->m_proj_parm.C_y;
+		r = sqrt(1. + lp_lat * lp_lat);
+		lp_lon = xy_x / (this->m_proj_parm.C_x * (this->m_proj_parm.D - r));
+		lp_lat = aasin(( (this->m_proj_parm.A - r) * lp_lat - log(lp_lat + r) ) / this->m_proj_parm.B);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "putp6_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "putp6_spheroid";
+	}
 
-            };
+};
 
-            template <typename Parameters, typename T>
-            inline void setup(Parameters& par, par_putp6<T>& proj_parm) 
-            {
-                boost::ignore_unused(proj_parm);
-                par.es = 0.;
-            }
+template <typename Parameters, typename T>
+inline void setup(Parameters& par, par_putp6<T>& proj_parm)
+{
+	boost::ignore_unused(proj_parm);
+	par.es = 0.;
+}
 
 
-            // Putnins P6
-            template <typename Parameters, typename T>
-            inline void setup_putp6(Parameters& par, par_putp6<T>& proj_parm)
-            {
-                proj_parm.C_x = 1.01346;
-                proj_parm.C_y = 0.91910;
-                proj_parm.A   = 4.;
-                proj_parm.B   = 2.1471437182129378784;
-                proj_parm.D   = 2.;
-                setup(par, proj_parm);
-            }
+// Putnins P6
+template <typename Parameters, typename T>
+inline void setup_putp6(Parameters& par, par_putp6<T>& proj_parm)
+{
+	proj_parm.C_x = 1.01346;
+	proj_parm.C_y = 0.91910;
+	proj_parm.A   = 4.;
+	proj_parm.B   = 2.1471437182129378784;
+	proj_parm.D   = 2.;
+	setup(par, proj_parm);
+}
 
-            // Putnins P6'
-            template <typename Parameters, typename T>
-            inline void setup_putp6p(Parameters& par, par_putp6<T>& proj_parm)
-            {
-                proj_parm.C_x = 0.44329;
-                proj_parm.C_y = 0.80404;
-                proj_parm.A   = 6.;
-                proj_parm.B   = 5.61125;
-                proj_parm.D   = 3.;
-                setup(par, proj_parm);
-            }
+// Putnins P6'
+template <typename Parameters, typename T>
+inline void setup_putp6p(Parameters& par, par_putp6<T>& proj_parm)
+{
+	proj_parm.C_x = 0.44329;
+	proj_parm.C_y = 0.80404;
+	proj_parm.A   = 6.;
+	proj_parm.B   = 5.61125;
+	proj_parm.D   = 3.;
+	setup(par, proj_parm);
+}
 
-    }} // namespace detail::putp6
-    #endif // doxygen
+}
+} // namespace detail::putp6
+#endif // doxygen
 
-    /*!
-        \brief Putnins P6 projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_putp6.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct putp6_spheroid : public detail::putp6::base_putp6_spheroid<CalculationType, Parameters>
-    {
-        inline putp6_spheroid(const Parameters& par) : detail::putp6::base_putp6_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::putp6::setup_putp6(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Putnins P6 projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_putp6.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct putp6_spheroid : public detail::putp6::base_putp6_spheroid<CalculationType, Parameters>
+{
+	inline putp6_spheroid(const Parameters& par) : detail::putp6::base_putp6_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::putp6::setup_putp6(this->m_par, this->m_proj_parm);
+	}
+};
 
-    /*!
-        \brief Putnins P6' projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_putp6p.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct putp6p_spheroid : public detail::putp6::base_putp6_spheroid<CalculationType, Parameters>
-    {
-        inline putp6p_spheroid(const Parameters& par) : detail::putp6::base_putp6_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::putp6::setup_putp6p(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Putnins P6' projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_putp6p.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct putp6p_spheroid : public detail::putp6::base_putp6_spheroid<CalculationType, Parameters>
+{
+	inline putp6p_spheroid(const Parameters& par) : detail::putp6::base_putp6_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::putp6::setup_putp6p(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::putp6, putp6_spheroid, putp6_spheroid)
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::putp6p, putp6p_spheroid, putp6p_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::putp6, putp6_spheroid, putp6_spheroid)
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::putp6p, putp6p_spheroid, putp6p_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class putp6_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<putp6_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class putp6_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<putp6_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        class putp6p_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<putp6p_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+template <typename CalculationType, typename Parameters>
+class putp6p_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<putp6p_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void putp6_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("putp6", new putp6_entry<CalculationType, Parameters>);
-            factory.add_to_factory("putp6p", new putp6p_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void putp6_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("putp6", new putp6_entry<CalculationType, Parameters>);
+	factory.add_to_factory("putp6p", new putp6p_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_PUTP6_HPP
 

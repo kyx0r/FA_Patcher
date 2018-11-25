@@ -17,8 +17,10 @@
 #include <cstdint>
 #include <type_traits>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** A buffer sequence adapter that shortens the sequence size.
 
@@ -31,95 +33,95 @@ namespace beast {
 template<class BufferSequence>
 class buffers_prefix_view
 {
-    using buffers_type = typename
-        std::decay<BufferSequence>::type;
+	using buffers_type = typename
+	                     std::decay<BufferSequence>::type;
 
-    using iter_type = typename
-        detail::buffer_sequence_iterator<buffers_type>::type;
+	using iter_type = typename
+	                  detail::buffer_sequence_iterator<buffers_type>::type;
 
-    BufferSequence bs_;
-    std::size_t size_;
-    iter_type end_;
+	BufferSequence bs_;
+	std::size_t size_;
+	iter_type end_;
 
-    template<class Deduced>
-    buffers_prefix_view(
-            Deduced&& other, std::size_t dist)
-        : bs_(std::forward<Deduced>(other).bs_)
-        , size_(other.size_)
-        , end_(std::next(bs_.begin(), dist))
-    {
-    }
+	template<class Deduced>
+	buffers_prefix_view(
+	    Deduced&& other, std::size_t dist)
+		: bs_(std::forward<Deduced>(other).bs_)
+		, size_(other.size_)
+		, end_(std::next(bs_.begin(), dist))
+	{
+	}
 
-    void
-    setup(std::size_t size);
+	void
+	setup(std::size_t size);
 
 public:
-    /// The type for each element in the list of buffers.
-    using value_type = typename std::conditional<
-        std::is_convertible<typename
-            std::iterator_traits<iter_type>::value_type,
-                boost::asio::mutable_buffer>::value,
-                    boost::asio::mutable_buffer,
-                        boost::asio::const_buffer>::type;
+	/// The type for each element in the list of buffers.
+	using value_type = typename std::conditional<
+	                   std::is_convertible<typename
+	                   std::iterator_traits<iter_type>::value_type,
+	                   boost::asio::mutable_buffer>::value,
+	                   boost::asio::mutable_buffer,
+	                   boost::asio::const_buffer>::type;
 
 #if BOOST_BEAST_DOXYGEN
-    /// A bidirectional iterator type that may be used to read elements.
-    using const_iterator = implementation_defined;
+	/// A bidirectional iterator type that may be used to read elements.
+	using const_iterator = implementation_defined;
 
 #else
-    class const_iterator;
+	class const_iterator;
 
 #endif
 
-    /// Move constructor.
-    buffers_prefix_view(buffers_prefix_view&&);
+	/// Move constructor.
+	buffers_prefix_view(buffers_prefix_view&&);
 
-    /// Copy constructor.
-    buffers_prefix_view(buffers_prefix_view const&);
+	/// Copy constructor.
+	buffers_prefix_view(buffers_prefix_view const&);
 
-    /// Move assignment.
-    buffers_prefix_view& operator=(buffers_prefix_view&&);
+	/// Move assignment.
+	buffers_prefix_view& operator=(buffers_prefix_view&&);
 
-    /// Copy assignment.
-    buffers_prefix_view& operator=(buffers_prefix_view const&);
+	/// Copy assignment.
+	buffers_prefix_view& operator=(buffers_prefix_view const&);
 
-    /** Construct a buffer sequence prefix.
+	/** Construct a buffer sequence prefix.
 
-        @param size The maximum number of bytes in the prefix.
-        If this is larger than the size of passed, buffers,
-        the resulting sequence will represent the entire
-        input sequence.
+	    @param size The maximum number of bytes in the prefix.
+	    If this is larger than the size of passed, buffers,
+	    the resulting sequence will represent the entire
+	    input sequence.
 
-        @param buffers The buffer sequence to adapt. A copy of
-        the sequence will be made, but ownership of the underlying
-        memory is not transferred.
-    */
-    buffers_prefix_view(
-        std::size_t size,
-        BufferSequence const& buffers);
+	    @param buffers The buffer sequence to adapt. A copy of
+	    the sequence will be made, but ownership of the underlying
+	    memory is not transferred.
+	*/
+	buffers_prefix_view(
+	    std::size_t size,
+	    BufferSequence const& buffers);
 
-    /** Construct a buffer sequence prefix in-place.
+	/** Construct a buffer sequence prefix in-place.
 
-        @param size The maximum number of bytes in the prefix.
-        If this is larger than the size of passed, buffers,
-        the resulting sequence will represent the entire
-        input sequence.
+	    @param size The maximum number of bytes in the prefix.
+	    If this is larger than the size of passed, buffers,
+	    the resulting sequence will represent the entire
+	    input sequence.
 
-        @param args Arguments forwarded to the contained buffers constructor.
-    */
-    template<class... Args>
-    buffers_prefix_view(
-        std::size_t size,
-        boost::in_place_init_t,
-        Args&&... args);
+	    @param args Arguments forwarded to the contained buffers constructor.
+	*/
+	template<class... Args>
+	buffers_prefix_view(
+	    std::size_t size,
+	    boost::in_place_init_t,
+	    Args&&... args);
 
-    /// Get a bidirectional iterator to the first element.
-    const_iterator
-    begin() const;
+	/// Get a bidirectional iterator to the first element.
+	const_iterator
+	begin() const;
 
-    /// Get a bidirectional iterator to one past the last element.
-    const_iterator
-    end() const;
+	/// Get a bidirectional iterator to one past the last element.
+	const_iterator
+	end() const;
 };
 
 /** Returns a prefix of a constant buffer.
@@ -139,10 +141,10 @@ public:
 inline
 boost::asio::const_buffer
 buffers_prefix(std::size_t size,
-    boost::asio::const_buffer buffer)
+               boost::asio::const_buffer buffer)
 {
-    return {buffer.data(),
-        (std::min)(size, buffer.size())};
+	return {buffer.data(),
+	        (std::min)(size, buffer.size())};
 }
 
 /** Returns a prefix of a mutable buffer.
@@ -162,10 +164,10 @@ buffers_prefix(std::size_t size,
 inline
 boost::asio::mutable_buffer
 buffers_prefix(std::size_t size,
-    boost::asio::mutable_buffer buffer)
+               boost::asio::mutable_buffer buffer)
 {
-    return {buffer.data(),
-        (std::min)(size, buffer.size())};
+	return {buffer.data(),
+	        (std::min)(size, buffer.size())};
 }
 
 /** Returns a prefix of a buffer sequence.
@@ -190,19 +192,19 @@ buffers_prefix_view<BufferSequence>
 #else
 inline
 typename std::enable_if<
-    ! std::is_same<BufferSequence,
-        boost::asio::const_buffer>::value &&
-    ! std::is_same<BufferSequence,
-        boost::asio::mutable_buffer>::value,
-    buffers_prefix_view<BufferSequence>>::type
+! std::is_same<BufferSequence,
+boost::asio::const_buffer>::value &&
+! std::is_same<BufferSequence,
+boost::asio::mutable_buffer>::value,
+buffers_prefix_view<BufferSequence>>::type
 #endif
 buffers_prefix(std::size_t size, BufferSequence const& buffers)
 {
-    static_assert(
-        boost::asio::is_const_buffer_sequence<BufferSequence>::value ||
-        boost::asio::is_mutable_buffer_sequence<BufferSequence>::value,
-            "BufferSequence requirements not met");
-    return buffers_prefix_view<BufferSequence>(size, buffers);
+	static_assert(
+	    boost::asio::is_const_buffer_sequence<BufferSequence>::value ||
+	    boost::asio::is_mutable_buffer_sequence<BufferSequence>::value,
+	    "BufferSequence requirements not met");
+	return buffers_prefix_view<BufferSequence>(size, buffers);
 }
 
 /** Returns the first buffer in a buffer sequence
@@ -217,16 +219,16 @@ buffers_prefix(std::size_t size, BufferSequence const& buffers)
 */
 template<class BufferSequence>
 typename std::conditional<
-    boost::asio::is_mutable_buffer_sequence<BufferSequence>::value,
-    boost::asio::mutable_buffer,
-    boost::asio::const_buffer>::type
-buffers_front(BufferSequence const& buffers)
+boost::asio::is_mutable_buffer_sequence<BufferSequence>::value,
+      boost::asio::mutable_buffer,
+      boost::asio::const_buffer>::type
+      buffers_front(BufferSequence const& buffers)
 {
-    auto const first =
-        boost::asio::buffer_sequence_begin(buffers);
-    if(first == boost::asio::buffer_sequence_end(buffers))
-        return {};
-    return *first;
+	auto const first =
+	    boost::asio::buffer_sequence_begin(buffers);
+	if(first == boost::asio::buffer_sequence_end(buffers))
+		return {};
+	return *first;
 }
 
 } // beast

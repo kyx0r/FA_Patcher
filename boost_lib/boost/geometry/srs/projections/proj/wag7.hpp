@@ -46,116 +46,125 @@
 #include <boost/geometry/srs/projections/impl/projects.hpp>
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct wag7 {};
+namespace par4
+{
+struct wag7 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace wag7
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace wag7
+{
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_wag7_spheroid : public base_t_f<base_wag7_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_wag7_spheroid : public base_t_f<base_wag7_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_wag7_spheroid(const Parameters& par)
-                    : base_t_f<base_wag7_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_wag7_spheroid(const Parameters& par)
+		: base_t_f<base_wag7_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  sphere
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType theta, ct, D;
+	// FORWARD(s_forward)  sphere
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType theta, ct, D;
 
-                    theta = asin(xy_y = 0.90630778703664996 * sin(lp_lat));
-                    xy_x = 2.66723 * (ct = cos(theta)) * sin(lp_lon /= 3.);
-                    xy_y *= 1.24104 * (D = 1/(sqrt(0.5 * (1 + ct * cos(lp_lon)))));
-                    xy_x *= D;
-                }
+		theta = asin(xy_y = 0.90630778703664996 * sin(lp_lat));
+		xy_x = 2.66723 * (ct = cos(theta)) * sin(lp_lon /= 3.);
+		xy_y *= 1.24104 * (D = 1/(sqrt(0.5 * (1 + ct * cos(lp_lon)))));
+		xy_x *= D;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "wag7_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "wag7_spheroid";
+	}
 
-            };
+};
 
-            // Wagner VII
-            template <typename Parameters>
-            inline void setup_wag7(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Wagner VII
+template <typename Parameters>
+inline void setup_wag7(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::wag7
-    #endif // doxygen
+}
+} // namespace detail::wag7
+#endif // doxygen
 
-    /*!
-        \brief Wagner VII projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Miscellaneous
-         - Spheroid
-         - no inverse
-        \par Example
-        \image html ex_wag7.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct wag7_spheroid : public detail::wag7::base_wag7_spheroid<CalculationType, Parameters>
-    {
-        inline wag7_spheroid(const Parameters& par) : detail::wag7::base_wag7_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::wag7::setup_wag7(this->m_par);
-        }
-    };
+/*!
+    \brief Wagner VII projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Miscellaneous
+     - Spheroid
+     - no inverse
+    \par Example
+    \image html ex_wag7.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct wag7_spheroid : public detail::wag7::base_wag7_spheroid<CalculationType, Parameters>
+{
+	inline wag7_spheroid(const Parameters& par) : detail::wag7::base_wag7_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::wag7::setup_wag7(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wag7, wag7_spheroid, wag7_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::wag7, wag7_spheroid, wag7_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class wag7_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_f<wag7_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class wag7_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_f<wag7_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void wag7_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("wag7", new wag7_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void wag7_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("wag7", new wag7_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_WAG7_HPP
 

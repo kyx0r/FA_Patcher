@@ -17,8 +17,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function fill
 ///
@@ -28,22 +28,22 @@ namespace boost
 template< class ForwardRange, class Value >
 inline ForwardRange& fill(ForwardRange& rng, const Value& val)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange> ));
-    std::fill(boost::begin(rng), boost::end(rng), val);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<ForwardRange> ));
+	std::fill(boost::begin(rng), boost::end(rng), val);
+	return rng;
 }
 
 /// \overload
 template< class ForwardRange, class Value >
 inline const ForwardRange& fill(const ForwardRange& rng, const Value& val)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
-    std::fill(boost::begin(rng), boost::end(rng), val);
-    return rng;
+	BOOST_RANGE_CONCEPT_ASSERT(( ForwardRangeConcept<const ForwardRange> ));
+	std::fill(boost::begin(rng), boost::end(rng), val);
+	return rng;
 }
 
-    } // namespace range
-    using range::fill;
+} // namespace range
+using range::fill;
 }
 
 #endif // include guard

@@ -13,7 +13,8 @@ or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <boost/type_traits/detected.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
-namespace boost {
+namespace boost
+{
 
 template<class To, template<class...> class Op, class... Args>
 using is_detected_convertible = is_convertible<detected_t<Op, Args...>, To>;
@@ -21,7 +22,7 @@ using is_detected_convertible = is_convertible<detected_t<Op, Args...>, To>;
 #if !defined(BOOST_NO_CXX14_VARIABLE_TEMPLATES)
 template<class To, template<class...> class Op, class... Args>
 constexpr bool is_detected_convertible_v = is_detected_convertible<To, Op,
-    Args...>::value;
+               Args...>::value;
 #endif
 
 } /* boost */

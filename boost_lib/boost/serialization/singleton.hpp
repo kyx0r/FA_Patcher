@@ -32,7 +32,7 @@
 // MS compatible compilers support #pragma once
 #if defined(_MSC_VER)
 # pragma once
-#endif 
+#endif
 
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
@@ -48,8 +48,10 @@
 #  pragma warning(disable : 4511 4512)
 #endif
 
-namespace boost { 
-namespace serialization { 
+namespace boost
+{
+namespace serialization
+{
 
 //////////////////////////////////////////////////////////////////////
 // Provides a dynamically-initialized (singleton) instance of T in a
@@ -88,85 +90,97 @@ namespace serialization {
 // This usage is not related to autolinking.
 
 class BOOST_SYMBOL_VISIBLE singleton_module :
-    public boost::noncopyable
+	public boost::noncopyable
 {
 private:
-    BOOST_DLLEXPORT static bool & get_lock() BOOST_USED {
-        static bool lock = false;
-        return lock;
-    }
+	BOOST_DLLEXPORT static bool & get_lock() BOOST_USED
+	{
+		static bool lock = false;
+		return lock;
+	}
 
 public:
-    BOOST_DLLEXPORT static void lock(){
-        get_lock() = true;
-    }
-    BOOST_DLLEXPORT static void unlock(){
-        get_lock() = false;
-    }
-    BOOST_DLLEXPORT static bool is_locked(){
-        return get_lock();
-    }
+	BOOST_DLLEXPORT static void lock()
+	{
+		get_lock() = true;
+	}
+	BOOST_DLLEXPORT static void unlock()
+	{
+		get_lock() = false;
+	}
+	BOOST_DLLEXPORT static bool is_locked()
+	{
+		return get_lock();
+	}
 };
 
 template <class T>
 class singleton : public singleton_module
 {
 private:
-    static T & m_instance;
-    // include this to provoke instantiation at pre-execution time
-    static void use(T const *) {}
-    static T & get_instance() {
-        // use a wrapper so that types T with protected constructors
-        // can be used
-        class singleton_wrapper : public T {};
+	static T & m_instance;
+	// include this to provoke instantiation at pre-execution time
+	static void use(T const *) {}
+	static T & get_instance()
+	{
+		// use a wrapper so that types T with protected constructors
+		// can be used
+		class singleton_wrapper : public T {};
 
-        // Use a heap-allocated instance to work around static variable
-        // destruction order issues: this inner singleton_wrapper<>
-        // instance may be destructed before the singleton<> instance.
-        // Using a 'dumb' static variable lets us precisely choose the
-        // time destructor is invoked.
-        static singleton_wrapper *t = 0;
+		// Use a heap-allocated instance to work around static variable
+		// destruction order issues: this inner singleton_wrapper<>
+		// instance may be destructed before the singleton<> instance.
+		// Using a 'dumb' static variable lets us precisely choose the
+		// time destructor is invoked.
+		static singleton_wrapper *t = 0;
 
-        // refer to instance, causing it to be instantiated (and
-        // initialized at startup on working compilers)
-        BOOST_ASSERT(! is_destroyed());
+		// refer to instance, causing it to be instantiated (and
+		// initialized at startup on working compilers)
+		BOOST_ASSERT(! is_destroyed());
 
-        // note that the following is absolutely essential.
-        // commenting out this statement will cause compilers to fail to
-        // construct the instance at pre-execution time.  This would prevent
-        // our usage/implementation of "locking" and introduce uncertainty into
-        // the sequence of object initializaition.
-        use(& m_instance);
+		// note that the following is absolutely essential.
+		// commenting out this statement will cause compilers to fail to
+		// construct the instance at pre-execution time.  This would prevent
+		// our usage/implementation of "locking" and introduce uncertainty into
+		// the sequence of object initializaition.
+		use(& m_instance);
 
-        if (!t)
-            t = new singleton_wrapper;
-        return static_cast<T &>(*t);
-    }
-    static bool & get_is_destroyed(){
-        static bool is_destroyed;
-        return is_destroyed;
-    }
+		if (!t)
+			t = new singleton_wrapper;
+		return static_cast<T &>(*t);
+	}
+	static bool & get_is_destroyed()
+	{
+		static bool is_destroyed;
+		return is_destroyed;
+	}
 
 public:
-    BOOST_DLLEXPORT static T & get_mutable_instance(){
-        BOOST_ASSERT(! is_locked());
-        return get_instance();
-    }
-    BOOST_DLLEXPORT static const T & get_const_instance(){
-        return get_instance();
-    }
-    BOOST_DLLEXPORT static bool is_destroyed(){
-        return get_is_destroyed();
-    }
-    BOOST_DLLEXPORT singleton(){
-        get_is_destroyed() = false;
-    }
-    BOOST_DLLEXPORT ~singleton() {
-        if (!get_is_destroyed()) {
-            delete &(get_instance());
-        }
-        get_is_destroyed() = true;
-    }
+	BOOST_DLLEXPORT static T & get_mutable_instance()
+	{
+		BOOST_ASSERT(! is_locked());
+		return get_instance();
+	}
+	BOOST_DLLEXPORT static const T & get_const_instance()
+	{
+		return get_instance();
+	}
+	BOOST_DLLEXPORT static bool is_destroyed()
+	{
+		return get_is_destroyed();
+	}
+	BOOST_DLLEXPORT singleton()
+	{
+		get_is_destroyed() = false;
+	}
+	BOOST_DLLEXPORT ~singleton()
+	{
+		if (!get_is_destroyed())
+		{
+			delete &(get_instance());
+		}
+		get_is_destroyed() = true;
+	}
 };
 
 template<class T>

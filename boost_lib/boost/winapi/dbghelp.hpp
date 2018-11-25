@@ -48,32 +48,34 @@
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
 
-struct API_VERSION;
+	struct API_VERSION;
 
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-UnDecorateSymbolName(
-    boost::winapi::LPCSTR_ DecoratedName,
-    boost::winapi::LPSTR_ UnDecoratedName,
-    boost::winapi::DWORD_ UndecoratedLength,
-    boost::winapi::DWORD_ Flags);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	UnDecorateSymbolName(
+	    boost::winapi::LPCSTR_ DecoratedName,
+	    boost::winapi::LPSTR_ UnDecoratedName,
+	    boost::winapi::DWORD_ UndecoratedLength,
+	    boost::winapi::DWORD_ Flags);
 
 #if defined( BOOST_WINAPI_DETAIL_HAS_UNDECORATESYMBOLNAMEW )
-BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
-UnDecorateSymbolNameW(
-    boost::winapi::LPCWSTR_ DecoratedName,
-    boost::winapi::LPWSTR_ UnDecoratedName,
-    boost::winapi::DWORD_ UndecoratedLength,
-    boost::winapi::DWORD_ Flags);
+	BOOST_SYMBOL_IMPORT boost::winapi::DWORD_ WINAPI
+	UnDecorateSymbolNameW(
+	    boost::winapi::LPCWSTR_ DecoratedName,
+	    boost::winapi::LPWSTR_ UnDecoratedName,
+	    boost::winapi::DWORD_ UndecoratedLength,
+	    boost::winapi::DWORD_ Flags);
 #endif
 
-BOOST_SYMBOL_IMPORT API_VERSION* WINAPI
-ImagehlpApiVersion(BOOST_WINAPI_DETAIL_VOID);
+	BOOST_SYMBOL_IMPORT API_VERSION* WINAPI
+	ImagehlpApiVersion(BOOST_WINAPI_DETAIL_VOID);
 
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if defined( BOOST_USE_WINDOWS_H )
 
@@ -122,16 +124,17 @@ using ::UnDecorateSymbolName;
 using ::UnDecorateSymbolNameW;
 #endif
 
-typedef struct BOOST_MAY_ALIAS API_VERSION {
-    USHORT_  MajorVersion;
-    USHORT_  MinorVersion;
-    USHORT_  Revision;
-    USHORT_  Reserved;
+typedef struct BOOST_MAY_ALIAS API_VERSION
+{
+	USHORT_  MajorVersion;
+	USHORT_  MinorVersion;
+	USHORT_  Revision;
+	USHORT_  Reserved;
 } API_VERSION_, *LPAPI_VERSION_;
 
 BOOST_FORCEINLINE LPAPI_VERSION_ ImagehlpApiVersion()
 {
-    return reinterpret_cast<LPAPI_VERSION_>(::ImagehlpApiVersion());
+	return reinterpret_cast<LPAPI_VERSION_>(::ImagehlpApiVersion());
 }
 
 BOOST_FORCEINLINE DWORD_ undecorate_symbol_name(
@@ -140,11 +143,11 @@ BOOST_FORCEINLINE DWORD_ undecorate_symbol_name(
     DWORD_ UndecoratedLength,
     DWORD_ Flags)
 {
-    return ::UnDecorateSymbolName(
-        DecoratedName,
-        UnDecoratedName,
-        UndecoratedLength,
-        Flags);
+	return ::UnDecorateSymbolName(
+	           DecoratedName,
+	           UnDecoratedName,
+	           UndecoratedLength,
+	           Flags);
 }
 
 #if defined( BOOST_WINAPI_DETAIL_HAS_UNDECORATESYMBOLNAMEW )
@@ -155,11 +158,11 @@ BOOST_FORCEINLINE DWORD_ undecorate_symbol_name(
     DWORD_ UndecoratedLength,
     DWORD_ Flags)
 {
-    return ::UnDecorateSymbolNameW(
-        DecoratedName,
-        UnDecoratedName,
-        UndecoratedLength,
-        Flags);
+	return ::UnDecorateSymbolNameW(
+	           DecoratedName,
+	           UnDecoratedName,
+	           UndecoratedLength,
+	           Flags);
 }
 
 #endif

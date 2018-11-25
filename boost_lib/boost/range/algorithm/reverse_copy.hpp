@@ -18,8 +18,8 @@
 
 namespace boost
 {
-    namespace range
-    {
+namespace range
+{
 
 /// \brief template function reverse_copy
 ///
@@ -29,12 +29,12 @@ namespace boost
 template<class BidirectionalRange, class OutputIterator>
 inline OutputIterator reverse_copy(const BidirectionalRange& rng, OutputIterator out)
 {
-    BOOST_RANGE_CONCEPT_ASSERT(( BidirectionalRangeConcept<const BidirectionalRange> ));
-    return std::reverse_copy(boost::begin(rng), boost::end(rng), out);
+	BOOST_RANGE_CONCEPT_ASSERT(( BidirectionalRangeConcept<const BidirectionalRange> ));
+	return std::reverse_copy(boost::begin(rng), boost::end(rng), out);
 }
 
-    } // namespace range
-    using range::reverse_copy;
+} // namespace range
+using range::reverse_copy;
 } // namespace boost
 
 #endif // include guard

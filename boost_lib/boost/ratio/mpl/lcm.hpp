@@ -13,17 +13,19 @@
 #include <boost/ratio/mpl/numeric_cast.hpp>
 #include <boost/ratio/detail/mpl/lcm.hpp>
 
-namespace boost { 
-namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 template<>
 struct lcm_impl< rational_c_tag,rational_c_tag >
 {
-    template< typename R1, typename R2 > struct apply
-        : ratio_lcm<R1, R2>
-    {
-    };
-};    
+	template< typename R1, typename R2 > struct apply
+		: ratio_lcm<R1, R2>
+	{
+	};
+};
 }
 }
 

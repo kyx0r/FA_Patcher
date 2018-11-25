@@ -12,29 +12,29 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      namespace error
-      {
-        template <int From, int To, int N>
-        struct index_out_of_range
-        {
-          typedef index_out_of_range type;
+namespace metaparse
+{
+namespace v1
+{
+namespace error
+{
+template <int From, int To, int N>
+struct index_out_of_range
+{
+	typedef index_out_of_range type;
 
-          static std::string get_value()
-          {
-            std::ostringstream s;
-            s
-              << "index (" << N << ") out of range ["
-              << From << "-" << To << "]";
-            return s.str();
-          }
-        };
-      }
-    }
-  }
+	static std::string get_value()
+	{
+		std::ostringstream s;
+		s
+		        << "index (" << N << ") out of range ["
+		        << From << "-" << To << "]";
+		return s.str();
+	}
+};
+}
+}
+}
 }
 
 #endif

@@ -50,16 +50,17 @@
 #endif
 #endif // defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
 //! Access modes for different types of locks
 enum lock_access_mode
 {
-    unlocked_access,    //!< A thread that owns this kind of lock doesn't restrict other threads in any way
-    shared_access,      //!< A thread that owns this kind of lock requires that no other thread modify the locked data
-    exclusive_access    //!< A thread that owns this kind of lock requires that no other thread has access to the locked data
+	unlocked_access,    //!< A thread that owns this kind of lock doesn't restrict other threads in any way
+	shared_access,      //!< A thread that owns this kind of lock requires that no other thread modify the locked data
+	exclusive_access    //!< A thread that owns this kind of lock requires that no other thread has access to the locked data
 };
 
 //! The trait allows to select an access mode by the lock type
@@ -110,7 +111,8 @@ struct thread_access_mode_of< boost::log::aux::shared_lock_guard< MutexT > > : m
 
 #endif // !defined(BOOST_LOG_NO_THREADS)
 
-namespace aux {
+namespace aux
+{
 
 //! The metafunction selects the most strict lock type of the two
 template<
@@ -121,15 +123,15 @@ template<
 #else
     bool CondV = mpl::less< thread_access_mode_of< LeftLockT >, thread_access_mode_of< RightLockT > >::value
 #endif
->
-struct strictest_lock_impl
+                  >
+    struct strictest_lock_impl
 {
-    typedef RightLockT type;
+	typedef RightLockT type;
 };
 template< typename LeftLockT, typename RightLockT >
 struct strictest_lock_impl< LeftLockT, RightLockT, false >
 {
-    typedef LeftLockT type;
+	typedef LeftLockT type;
 };
 
 } // namespace aux
@@ -148,7 +150,7 @@ struct strictest_lock_impl< LeftLockT, RightLockT, false >
 template< typename... LocksT >
 struct strictest_lock
 {
-    typedef implementation_defined type;
+	typedef implementation_defined type;
 };
 
 #else // defined(BOOST_LOG_DOXYGEN_PASS)
@@ -161,22 +163,22 @@ struct strictest_lock;
 template< typename LockT >
 struct strictest_lock< LockT >
 {
-    typedef LockT type;
+	typedef LockT type;
 };
 
 template< typename LeftLockT, typename RightLockT >
 struct strictest_lock< LeftLockT, RightLockT >
 {
-    typedef typename aux::strictest_lock_impl< LeftLockT, RightLockT >::type type;
+	typedef typename aux::strictest_lock_impl< LeftLockT, RightLockT >::type type;
 };
 
 template< typename LeftLockT, typename RightLockT, typename... LocksT >
 struct strictest_lock< LeftLockT, RightLockT, LocksT... >
 {
-    typedef typename strictest_lock<
-        typename aux::strictest_lock_impl< LeftLockT, RightLockT >::type,
-        LocksT...
-    >::type type;
+	typedef typename strictest_lock<
+	    typename aux::strictest_lock_impl< LeftLockT, RightLockT >::type,
+	    LocksT...
+	    >::type type;
 };
 
 #else // !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
@@ -186,22 +188,22 @@ struct strictest_lock< LeftLockT, RightLockT, LocksT... >
 template<
     typename T,
     BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_DEC(BOOST_LOG_STRICTEST_LOCK_LIMIT), typename T, void)
->
+    >
 struct strictest_lock
 {
-    typedef typename strictest_lock<
-        typename boost::log::aux::strictest_lock_impl< T, T0 >::type
-        BOOST_PP_ENUM_TRAILING(BOOST_PP_SUB(BOOST_LOG_STRICTEST_LOCK_LIMIT, 2), BOOST_LOG_TYPE_INTERNAL, ~)
-    >::type type;
+	typedef typename strictest_lock<
+	    typename boost::log::aux::strictest_lock_impl< T, T0 >::type
+	    BOOST_PP_ENUM_TRAILING(BOOST_PP_SUB(BOOST_LOG_STRICTEST_LOCK_LIMIT, 2), BOOST_LOG_TYPE_INTERNAL, ~)
+	    >::type type;
 };
 
 template< typename T >
 struct strictest_lock<
     T
     BOOST_PP_ENUM_TRAILING(BOOST_PP_DEC(BOOST_LOG_STRICTEST_LOCK_LIMIT), BOOST_LOG_PP_IDENTITY, void)
->
+    >
 {
-    typedef T type;
+	typedef T type;
 };
 
 #   undef BOOST_LOG_TYPE_INTERNAL

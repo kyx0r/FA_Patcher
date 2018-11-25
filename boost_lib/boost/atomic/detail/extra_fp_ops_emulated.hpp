@@ -25,78 +25,81 @@
 #pragma once
 #endif
 
-namespace boost {
-namespace atomics {
-namespace detail {
+namespace boost
+{
+namespace atomics
+{
+namespace detail
+{
 
 //! Generic implementation of extra floating point operations
 template< typename Base, typename Value, std::size_t Size >
 struct emulated_extra_fp_operations :
-    public Base
+	public Base
 {
-    typedef Base base_type;
-    typedef typename base_type::storage_type storage_type;
-    typedef Value value_type;
+	typedef Base base_type;
+	typedef typename base_type::storage_type storage_type;
+	typedef Value value_type;
 
-    static BOOST_FORCEINLINE value_type fetch_negate(storage_type volatile& storage, memory_order) BOOST_NOEXCEPT
-    {
-        storage_type& s = const_cast< storage_type& >(storage);
-        lockpool::scoped_lock lock(&storage);
-        value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
-        value_type new_val = -old_val;
-        s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
-        return old_val;
-    }
+	static BOOST_FORCEINLINE value_type fetch_negate(storage_type volatile& storage, memory_order) BOOST_NOEXCEPT
+	{
+		storage_type& s = const_cast< storage_type& >(storage);
+		lockpool::scoped_lock lock(&storage);
+		value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
+		value_type new_val = -old_val;
+		s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
+		return old_val;
+	}
 
-    static BOOST_FORCEINLINE value_type negate(storage_type volatile& storage, memory_order) BOOST_NOEXCEPT
-    {
-        storage_type& s = const_cast< storage_type& >(storage);
-        lockpool::scoped_lock lock(&storage);
-        value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
-        value_type new_val = -old_val;
-        s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
-        return new_val;
-    }
+	static BOOST_FORCEINLINE value_type negate(storage_type volatile& storage, memory_order) BOOST_NOEXCEPT
+	{
+		storage_type& s = const_cast< storage_type& >(storage);
+		lockpool::scoped_lock lock(&storage);
+		value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
+		value_type new_val = -old_val;
+		s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
+		return new_val;
+	}
 
-    static BOOST_FORCEINLINE value_type add(storage_type volatile& storage, value_type v, memory_order) BOOST_NOEXCEPT
-    {
-        storage_type& s = const_cast< storage_type& >(storage);
-        lockpool::scoped_lock lock(&storage);
-        value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
-        value_type new_val = old_val + v;
-        s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
-        return new_val;
-    }
+	static BOOST_FORCEINLINE value_type add(storage_type volatile& storage, value_type v, memory_order) BOOST_NOEXCEPT
+	{
+		storage_type& s = const_cast< storage_type& >(storage);
+		lockpool::scoped_lock lock(&storage);
+		value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
+		value_type new_val = old_val + v;
+		s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
+		return new_val;
+	}
 
-    static BOOST_FORCEINLINE value_type sub(storage_type volatile& storage, value_type v, memory_order) BOOST_NOEXCEPT
-    {
-        storage_type& s = const_cast< storage_type& >(storage);
-        lockpool::scoped_lock lock(&storage);
-        value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
-        value_type new_val = old_val - v;
-        s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
-        return new_val;
-    }
+	static BOOST_FORCEINLINE value_type sub(storage_type volatile& storage, value_type v, memory_order) BOOST_NOEXCEPT
+	{
+		storage_type& s = const_cast< storage_type& >(storage);
+		lockpool::scoped_lock lock(&storage);
+		value_type old_val = atomics::detail::bitwise_fp_cast< value_type >(s);
+		value_type new_val = old_val - v;
+		s = atomics::detail::bitwise_fp_cast< storage_type >(new_val);
+		return new_val;
+	}
 
-    static BOOST_FORCEINLINE void opaque_negate(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
-    {
-        fetch_negate(storage, order);
-    }
+	static BOOST_FORCEINLINE void opaque_negate(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
+	{
+		fetch_negate(storage, order);
+	}
 
-    static BOOST_FORCEINLINE void opaque_add(storage_type volatile& storage, value_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        base_type::fetch_add(storage, v, order);
-    }
+	static BOOST_FORCEINLINE void opaque_add(storage_type volatile& storage, value_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		base_type::fetch_add(storage, v, order);
+	}
 
-    static BOOST_FORCEINLINE void opaque_sub(storage_type volatile& storage, value_type v, memory_order order) BOOST_NOEXCEPT
-    {
-        base_type::fetch_sub(storage, v, order);
-    }
+	static BOOST_FORCEINLINE void opaque_sub(storage_type volatile& storage, value_type v, memory_order order) BOOST_NOEXCEPT
+	{
+		base_type::fetch_sub(storage, v, order);
+	}
 };
 
 template< typename Base, typename Value, std::size_t Size >
 struct extra_fp_operations< Base, Value, Size, false > :
-    public emulated_extra_fp_operations< Base, Value, Size >
+	public emulated_extra_fp_operations< Base, Value, Size >
 {
 };
 

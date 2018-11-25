@@ -35,19 +35,22 @@
 #include <cassert>
 
 
-namespace boost {
-namespace container {
-namespace dtl {
+namespace boost
+{
+namespace container
+{
+namespace dtl
+{
 
 template<bool AlignOnly>
 struct select_private_adaptive_node_pool_impl
 {
-   typedef boost::container::dtl::
-         private_adaptive_node_pool_impl
-            < fake_segment_manager
-            , unsigned(AlignOnly)*::boost::container::adaptive_pool_flag::align_only
-            | ::boost::container::adaptive_pool_flag::size_ordered | ::boost::container::adaptive_pool_flag::address_ordered
-            > type;
+	typedef boost::container::dtl::
+	private_adaptive_node_pool_impl
+	< fake_segment_manager
+	, unsigned(AlignOnly)*::boost::container::adaptive_pool_flag::align_only
+	| ::boost::container::adaptive_pool_flag::size_ordered | ::boost::container::adaptive_pool_flag::address_ordered
+	> type;
 };
 
 //!Pooled memory allocator using an smart adaptive pool. Includes
@@ -55,30 +58,30 @@ struct select_private_adaptive_node_pool_impl
 //!responsibility of user classes. Node size (NodeSize) and the number of
 //!nodes allocated per block (NodesPerBlock) are known at compile time.
 template< std::size_t NodeSize
-        , std::size_t NodesPerBlock
-        , std::size_t MaxFreeBlocks
-        , std::size_t OverheadPercent
-        >
+          , std::size_t NodesPerBlock
+          , std::size_t MaxFreeBlocks
+          , std::size_t OverheadPercent
+          >
 class private_adaptive_node_pool
-   :  public select_private_adaptive_node_pool_impl<(OverheadPercent == 0)>::type
+	:  public select_private_adaptive_node_pool_impl<(OverheadPercent == 0)>::type
 {
-   typedef typename select_private_adaptive_node_pool_impl<OverheadPercent == 0>::type base_t;
-   //Non-copyable
-   private_adaptive_node_pool(const private_adaptive_node_pool &);
-   private_adaptive_node_pool &operator=(const private_adaptive_node_pool &);
+	typedef typename select_private_adaptive_node_pool_impl<OverheadPercent == 0>::type base_t;
+	//Non-copyable
+	private_adaptive_node_pool(const private_adaptive_node_pool &);
+	private_adaptive_node_pool &operator=(const private_adaptive_node_pool &);
 
-   public:
-   typedef typename base_t::multiallocation_chain multiallocation_chain;
-   static const std::size_t nodes_per_block = NodesPerBlock;
+public:
+	typedef typename base_t::multiallocation_chain multiallocation_chain;
+	static const std::size_t nodes_per_block = NodesPerBlock;
 
-   //!Constructor. Never throws
-   private_adaptive_node_pool()
-      :  base_t(0
-               , NodeSize
-               , NodesPerBlock
-               , MaxFreeBlocks
-               , (unsigned char)OverheadPercent)
-   {}
+	//!Constructor. Never throws
+	private_adaptive_node_pool()
+		:  base_t(0
+		          , NodeSize
+		          , NodesPerBlock
+		          , MaxFreeBlocks
+		          , (unsigned char)OverheadPercent)
+	{}
 };
 
 //!Pooled memory allocator using adaptive pool. Includes
@@ -86,75 +89,75 @@ class private_adaptive_node_pool
 //!responsibility of user classes. Node size (NodeSize) and the number of
 //!nodes allocated per block (NodesPerBlock) are known at compile time
 template< std::size_t NodeSize
-        , std::size_t NodesPerBlock
-        , std::size_t MaxFreeBlocks
-        , std::size_t OverheadPercent
-        >
+          , std::size_t NodesPerBlock
+          , std::size_t MaxFreeBlocks
+          , std::size_t OverheadPercent
+          >
 class shared_adaptive_node_pool
-   : public private_adaptive_node_pool
-      <NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent>
+	: public private_adaptive_node_pool
+	  <NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent>
 {
- private:
-   typedef private_adaptive_node_pool
-      <NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent> private_node_allocator_t;
- public:
-   typedef typename private_node_allocator_t::multiallocation_chain multiallocation_chain;
+private:
+	typedef private_adaptive_node_pool
+	<NodeSize, NodesPerBlock, MaxFreeBlocks, OverheadPercent> private_node_allocator_t;
+public:
+	typedef typename private_node_allocator_t::multiallocation_chain multiallocation_chain;
 
-   //!Constructor. Never throws
-   shared_adaptive_node_pool()
-   : private_node_allocator_t(){}
+	//!Constructor. Never throws
+	shared_adaptive_node_pool()
+		: private_node_allocator_t() {}
 
-   //!Destructor. Deallocates all allocated blocks. Never throws
-   ~shared_adaptive_node_pool()
-   {}
+	//!Destructor. Deallocates all allocated blocks. Never throws
+	~shared_adaptive_node_pool()
+	{}
 
-   //!Allocates array of count elements. Can throw std::bad_alloc
-   void *allocate_node()
-   {
-      //-----------------------
-      scoped_lock<default_mutex> guard(mutex_);
-      //-----------------------
-      return private_node_allocator_t::allocate_node();
-   }
+	//!Allocates array of count elements. Can throw std::bad_alloc
+	void *allocate_node()
+	{
+		//-----------------------
+		scoped_lock<default_mutex> guard(mutex_);
+		//-----------------------
+		return private_node_allocator_t::allocate_node();
+	}
 
-   //!Deallocates an array pointed by ptr. Never throws
-   void deallocate_node(void *ptr)
-   {
-      //-----------------------
-      scoped_lock<default_mutex> guard(mutex_);
-      //-----------------------
-      private_node_allocator_t::deallocate_node(ptr);
-   }
+	//!Deallocates an array pointed by ptr. Never throws
+	void deallocate_node(void *ptr)
+	{
+		//-----------------------
+		scoped_lock<default_mutex> guard(mutex_);
+		//-----------------------
+		private_node_allocator_t::deallocate_node(ptr);
+	}
 
-   //!Allocates a singly linked list of n nodes ending in null pointer.
-   //!can throw std::bad_alloc
-   void allocate_nodes(const std::size_t n, multiallocation_chain &chain)
-   {
-      //-----------------------
-      scoped_lock<default_mutex> guard(mutex_);
-      //-----------------------
-      return private_node_allocator_t::allocate_nodes(n, chain);
-   }
+	//!Allocates a singly linked list of n nodes ending in null pointer.
+	//!can throw std::bad_alloc
+	void allocate_nodes(const std::size_t n, multiallocation_chain &chain)
+	{
+		//-----------------------
+		scoped_lock<default_mutex> guard(mutex_);
+		//-----------------------
+		return private_node_allocator_t::allocate_nodes(n, chain);
+	}
 
-   void deallocate_nodes(multiallocation_chain &chain)
-   {
-      //-----------------------
-      scoped_lock<default_mutex> guard(mutex_);
-      //-----------------------
-      private_node_allocator_t::deallocate_nodes(chain);
-   }
+	void deallocate_nodes(multiallocation_chain &chain)
+	{
+		//-----------------------
+		scoped_lock<default_mutex> guard(mutex_);
+		//-----------------------
+		private_node_allocator_t::deallocate_nodes(chain);
+	}
 
-   //!Deallocates all the free blocks of memory. Never throws
-   void deallocate_free_blocks()
-   {
-      //-----------------------
-      scoped_lock<default_mutex> guard(mutex_);
-      //-----------------------
-      private_node_allocator_t::deallocate_free_blocks();
-   }
+	//!Deallocates all the free blocks of memory. Never throws
+	void deallocate_free_blocks()
+	{
+		//-----------------------
+		scoped_lock<default_mutex> guard(mutex_);
+		//-----------------------
+		private_node_allocator_t::deallocate_free_blocks();
+	}
 
-   private:
-   default_mutex mutex_;
+private:
+	default_mutex mutex_;
 };
 
 }  //namespace dtl {

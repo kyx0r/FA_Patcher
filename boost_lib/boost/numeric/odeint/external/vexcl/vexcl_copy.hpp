@@ -23,26 +23,29 @@
 
 #include <boost/numeric/odeint/util/copy.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 template< typename T1, typename T2 >
 struct copy_impl< vex::vector<T1>, vex::vector<T2> >
 {
-    static void copy( const vex::vector<T1> &from , vex::vector<T2> &to )
-    {
-        to = from;
-    }
+	static void copy( const vex::vector<T1> &from, vex::vector<T2> &to )
+	{
+		to = from;
+	}
 };
 
 template< typename T1, typename T2, size_t N >
 struct copy_impl< vex::multivector<T1, N>, vex::multivector<T2, N> >
 {
-    static void copy( const vex::multivector<T1, N> &from , vex::multivector<T2, N> &to )
-    {
-        to = from;
-    }
+	static void copy( const vex::multivector<T1, N> &from, vex::multivector<T2, N> &to )
+	{
+		to = from;
+	}
 };
 
 

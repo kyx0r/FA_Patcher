@@ -11,8 +11,10 @@
 #ifndef BOOST_TYPE_ERASURE_PLACEHOLDER_OF_HPP_INCLUDED
 #define BOOST_TYPE_ERASURE_PLACEHOLDER_OF_HPP_INCLUDED
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 #ifndef BOOST_TYPE_ERASURE_DOXYGEN
 
@@ -34,11 +36,11 @@ template<class T>
 struct placeholder_of
 {
 #ifdef BOOST_TYPE_ERASURE_DOXYGEN
-    typedef detail::unspecified type;
+	typedef detail::unspecified type;
 #else
-    typedef typename ::boost::type_erasure::placeholder_of<
-        typename T::_boost_type_erasure_derived_type
-    >::type type;
+	typedef typename ::boost::type_erasure::placeholder_of<
+	typename T::_boost_type_erasure_derived_type
+	>::type type;
 #endif
 };
 
@@ -46,14 +48,14 @@ struct placeholder_of
 template<class Concept, class T>
 struct placeholder_of< ::boost::type_erasure::any<Concept, T> >
 {
-    typedef T type;
+	typedef T type;
 };
 
 /** INTERNAL ONLY */
 template<class Concept, class T>
 struct placeholder_of< ::boost::type_erasure::param<Concept, T> >
 {
-    typedef T type;
+	typedef T type;
 };
 
 #ifndef BOOST_NO_CXX11_TEMPLATE_ALIASES

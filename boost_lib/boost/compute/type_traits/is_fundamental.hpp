@@ -13,8 +13,10 @@
 
 #include <boost/compute/types/fundamental.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// Meta-function returning \c true if \p T is a fundamental (i.e.
 /// built-in) type.

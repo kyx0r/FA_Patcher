@@ -23,7 +23,9 @@
 #include <boost/geometry/util/condition.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -36,15 +38,15 @@ namespace dispatch
 template <typename Point>
 struct is_valid<Point, point_tag>
 {
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(Point const& point, VisitPolicy& visitor, Strategy const&)
-    {
-        boost::ignore_unused(visitor);
-        return ! detail::is_valid::has_invalid_coordinate
-            <
-                Point
-            >::apply(point, visitor);
-    }
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(Point const& point, VisitPolicy& visitor, Strategy const&)
+	{
+		boost::ignore_unused(visitor);
+		return ! detail::is_valid::has_invalid_coordinate
+		       <
+		       Point
+		       >::apply(point, visitor);
+	}
 };
 
 
@@ -56,29 +58,29 @@ struct is_valid<Point, point_tag>
 template <typename MultiPoint, bool AllowEmptyMultiGeometries>
 struct is_valid<MultiPoint, multi_point_tag, AllowEmptyMultiGeometries>
 {
-    template <typename VisitPolicy, typename Strategy>
-    static inline bool apply(MultiPoint const& multipoint,
-                             VisitPolicy& visitor,
-                             Strategy const&)
-    {
-        boost::ignore_unused(multipoint, visitor);
+	template <typename VisitPolicy, typename Strategy>
+	static inline bool apply(MultiPoint const& multipoint,
+	                         VisitPolicy& visitor,
+	                         Strategy const&)
+	{
+		boost::ignore_unused(multipoint, visitor);
 
-        if (BOOST_GEOMETRY_CONDITION(
-                AllowEmptyMultiGeometries || !boost::empty(multipoint)))
-        {
-            // we allow empty multi-geometries, so an empty multipoint
-            // is considered valid
-            return ! detail::is_valid::has_invalid_coordinate
-                <
-                    MultiPoint
-                >::apply(multipoint, visitor);
-        }
-        else
-        {
-            // we do not allow an empty multipoint
-            return visitor.template apply<failure_few_points>();
-        }
-    }
+		if (BOOST_GEOMETRY_CONDITION(
+		            AllowEmptyMultiGeometries || !boost::empty(multipoint)))
+		{
+			// we allow empty multi-geometries, so an empty multipoint
+			// is considered valid
+			return ! detail::is_valid::has_invalid_coordinate
+			       <
+			       MultiPoint
+			       >::apply(multipoint, visitor);
+		}
+		else
+		{
+			// we do not allow an empty multipoint
+			return visitor.template apply<failure_few_points>();
+		}
+	}
 };
 
 
@@ -86,7 +88,8 @@ struct is_valid<MultiPoint, multi_point_tag, AllowEmptyMultiGeometries>
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_IS_VALID_POINTLIKE_HPP

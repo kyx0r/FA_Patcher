@@ -19,26 +19,26 @@
 #endif
 
 namespace
-boost
-    {
-    typedef error_info<struct errinfo_errno_,int> errinfo_errno;
+	boost
+{
+typedef error_info<struct errinfo_errno_,int> errinfo_errno;
 
-    //Usage hint:
-    //if( c_function(....)!=0 )
-    //    BOOST_THROW_EXCEPTION(
-    //        failure() <<
-    //        errinfo_errno(errno) <<
-    //        errinfo_api_function("c_function") );
-    inline
-    std::string
-    to_string( errinfo_errno const & e )
-        {
-        std::ostringstream tmp;
-        int v=e.value();
-        tmp  << '[' << error_info_name(e) << "] = " << v << ", \"" << strerror(v) << "\"\n";
-        return tmp.str();
-        }
-    }
+//Usage hint:
+//if( c_function(....)!=0 )
+//    BOOST_THROW_EXCEPTION(
+//        failure() <<
+//        errinfo_errno(errno) <<
+//        errinfo_api_function("c_function") );
+inline
+std::string
+to_string( errinfo_errno const & e )
+{
+	std::ostringstream tmp;
+	int v=e.value();
+	tmp  << '[' << error_info_name(e) << "] = " << v << ", \"" << strerror(v) << "\"\n";
+	return tmp.str();
+}
+}
 
 #if defined(_MSC_VER) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
 #pragma warning(pop)

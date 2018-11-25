@@ -26,11 +26,17 @@
 #include <boost/geometry/strategies/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace distance { namespace services
+namespace strategy
+{
+namespace distance
+{
+namespace services
 {
 
 
@@ -39,27 +45,27 @@ template <typename Strategy> struct tag {};
 template <typename Strategy, typename P1, typename P2>
 struct return_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_STRATEGY, (types<Strategy, P1, P2>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_STRATEGY, (types<Strategy, P1, P2>)
+	);
 };
 
 
 template <typename Strategy> struct comparable_type
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_STRATEGY, (types<Strategy>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_STRATEGY, (types<Strategy>)
+	);
 };
 
 template <typename Strategy> struct get_comparable
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_STRATEGY, (types<Strategy>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_STRATEGY, (types<Strategy>)
+	);
 };
 
 template <typename Strategy, typename P1, typename P2>
@@ -91,20 +97,23 @@ template
     typename CsTag1 = typename cs_tag<Point1>::type,
     typename CsTag2 = typename cs_tag<Point2>::type,
     typename UnderlyingStrategy = void
->
+    >
 struct default_strategy
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE_COMBINATION
-            , (types<Point1, Point2, CsTag1, CsTag2>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THIS_POINT_TYPE_COMBINATION
+	    , (types<Point1, Point2, CsTag1, CsTag2>)
+	);
 };
 
 
-}}} // namespace strategy::distance::services
+}
+}
+} // namespace strategy::distance::services
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_STRATEGIES_DISTANCE_HPP

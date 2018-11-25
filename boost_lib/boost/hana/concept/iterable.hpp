@@ -22,14 +22,14 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    template <typename It>
-    struct Iterable
-        : hana::integral_constant<bool,
-            !is_default<at_impl<typename tag_of<It>::type>>::value &&
-            !is_default<drop_front_impl<typename tag_of<It>::type>>::value &&
-            !is_default<is_empty_impl<typename tag_of<It>::type>>::value
-        >
-    { };
+template <typename It>
+struct Iterable
+	: hana::integral_constant<bool,
+	  !is_default<at_impl<typename tag_of<It>::type>>::value &&
+	  !is_default<drop_front_impl<typename tag_of<It>::type>>::value &&
+	  !is_default<is_empty_impl<typename tag_of<It>::type>>::value
+	  >
+{ };
 BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_CONCEPT_ITERABLE_HPP

@@ -21,36 +21,46 @@
 #   pragma once
 #endif
 
-namespace boost { namespace dll { namespace detail {
+namespace boost
+{
+namespace dll
+{
+namespace detail
+{
 
-    inline void reset_dlerror() BOOST_NOEXCEPT {
+inline void reset_dlerror() BOOST_NOEXCEPT
+{
 #if !BOOST_OS_WINDOWS
-        const char* const error_txt = dlerror();
-        (void)error_txt;
+	const char* const error_txt = dlerror();
+	(void)error_txt;
 #endif
-    }
+}
 
-    inline void report_error(const boost::system::error_code& ec, const char* message) {
+inline void report_error(const boost::system::error_code& ec, const char* message)
+{
 #if !BOOST_OS_WINDOWS
-        const char* const error_txt = dlerror();
-        if (error_txt) {
-            boost::throw_exception(
-                boost::system::system_error(
-                    ec,
-                    message + std::string(" (dlerror system message: ") + error_txt + std::string(")")
-                )
-            );
-        }
+	const char* const error_txt = dlerror();
+	if (error_txt)
+	{
+		boost::throw_exception(
+		    boost::system::system_error(
+		        ec,
+		        message + std::string(" (dlerror system message: ") + error_txt + std::string(")")
+		    )
+		);
+	}
 #endif
 
-        boost::throw_exception(
-            boost::system::system_error(
-                ec, message
-            )
-        );
-    }
+	boost::throw_exception(
+	    boost::system::system_error(
+	        ec, message
+	    )
+	);
+}
 
-}}} // boost::dll::detail
+}
+}
+} // boost::dll::detail
 
 #endif // BOOST_DLL_SYSTEM_ERROR_HPP
 

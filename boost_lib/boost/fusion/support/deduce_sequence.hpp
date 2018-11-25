@@ -16,39 +16,45 @@
 #include <boost/config.hpp>
 
 
-namespace boost { namespace fusion { namespace traits
+namespace boost
 {
-    template <class Sequence> struct deduce_sequence;
+namespace fusion
+{
+namespace traits
+{
+template <class Sequence> struct deduce_sequence;
 
-    namespace detail
-    {
-        struct deducer
-        {
-            template <typename Sig>
-            struct result;
+namespace detail
+{
+struct deducer
+{
+	template <typename Sig>
+	struct result;
 
-            template <class Self, typename T>
-            struct result< Self(T) >
-                : fusion::traits::deduce<T>
-            { };
+	template <class Self, typename T>
+	struct result< Self(T) >
+: fusion::traits::deduce<T>
+	{ };
 
-            // never called, but needed for decltype-based result_of (C++0x)
+	// never called, but needed for decltype-based result_of (C++0x)
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-            template <typename T>
-            BOOST_FUSION_GPU_ENABLED
-            typename result< deducer(T) >::type
-            operator()(T&&) const;
+	template <typename T>
+	BOOST_FUSION_GPU_ENABLED
+	typename result< deducer(T) >::type
+	operator()(T&&) const;
 #endif
-        };
-    }
+};
+}
 
-    template <class Sequence>
-    struct deduce_sequence
-        : result_of::as_vector<
-            fusion::transform_view<Sequence, detail::deducer> >
-    { };
+template <class Sequence>
+struct deduce_sequence
+	: result_of::as_vector<
+	  fusion::transform_view<Sequence, detail::deducer> >
+{ };
 
-}}}
+}
+}
+}
 
 #endif
 

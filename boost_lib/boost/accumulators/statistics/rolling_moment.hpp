@@ -22,45 +22,47 @@
 #include <boost/accumulators/statistics/moment.hpp>
 #include <boost/accumulators/statistics/rolling_count.hpp>
 
-namespace boost { namespace accumulators
+namespace boost
+{
+namespace accumulators
 {
 namespace impl
 {
-    ///////////////////////////////////////////////////////////////////////////////
-    // rolling_moment_impl
-    template<typename N, typename Sample>
-    struct rolling_moment_impl
-      : accumulator_base
-    {
-        BOOST_MPL_ASSERT_RELATION(N::value, >, 0);
-        // for boost::result_of
-        typedef typename numeric::functional::fdiv<Sample, std::size_t,void,void>::result_type result_type;
+///////////////////////////////////////////////////////////////////////////////
+// rolling_moment_impl
+template<typename N, typename Sample>
+struct rolling_moment_impl
+	: accumulator_base
+{
+	BOOST_MPL_ASSERT_RELATION(N::value, >, 0);
+	// for boost::result_of
+	typedef typename numeric::functional::fdiv<Sample, std::size_t,void,void>::result_type result_type;
 
-        template<typename Args>
-        rolling_moment_impl(Args const &args)
-          : sum_(args[sample | Sample()])
-        {
-        }
+	template<typename Args>
+	rolling_moment_impl(Args const &args)
+		: sum_(args[sample | Sample()])
+	{
+	}
 
-        template<typename Args>
-        void operator ()(Args const &args)
-        {
-            if(is_rolling_window_plus1_full(args))
-            {
-                this->sum_ -= numeric::pow(rolling_window_plus1(args).front(), N());
-            }
-            this->sum_ += numeric::pow(args[sample], N());
-        }
+	template<typename Args>
+	void operator ()(Args const &args)
+	{
+		if(is_rolling_window_plus1_full(args))
+		{
+			this->sum_ -= numeric::pow(rolling_window_plus1(args).front(), N());
+		}
+		this->sum_ += numeric::pow(args[sample], N());
+	}
 
-        template<typename Args>
-        result_type result(Args const &args) const
-        {
-            return numeric::fdiv(this->sum_, rolling_count(args));
-        }
+	template<typename Args>
+	result_type result(Args const &args) const
+	{
+		return numeric::fdiv(this->sum_, rolling_count(args));
+	}
 
-    private:
-        result_type sum_;
-    };
+private:
+	result_type sum_;
+};
 } // namespace impl
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,19 +70,19 @@ namespace impl
 //
 namespace tag
 {
-    template<int N>
-    struct rolling_moment
-      : depends_on< rolling_window_plus1, rolling_count>
-    {
-        /// INTERNAL ONLY
-        ///
-        typedef accumulators::impl::rolling_moment_impl<mpl::int_<N>, mpl::_1> impl;
+template<int N>
+struct rolling_moment
+	: depends_on< rolling_window_plus1, rolling_count>
+{
+	/// INTERNAL ONLY
+	///
+	typedef accumulators::impl::rolling_moment_impl<mpl::int_<N>, mpl::_1> impl;
 
-        #ifdef BOOST_ACCUMULATORS_DOXYGEN_INVOKED
-        /// tag::rolling_window::window_size named parameter
-        static boost::parameter::keyword<tag::rolling_window_size> const window_size;
-        #endif
-    };
+#ifdef BOOST_ACCUMULATORS_DOXYGEN_INVOKED
+	/// tag::rolling_window::window_size named parameter
+	static boost::parameter::keyword<tag::rolling_window_size> const window_size;
+#endif
+};
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,7 +90,7 @@ namespace tag
 //
 namespace extract
 {
-    BOOST_ACCUMULATORS_DEFINE_EXTRACTOR(tag, rolling_moment, (int))
+BOOST_ACCUMULATORS_DEFINE_EXTRACTOR(tag, rolling_moment, (int))
 }
 
 using extract::rolling_moment;
@@ -108,6 +110,7 @@ using extract::rolling_moment;
 //  : feature_of<tag::rolling_moment<N> >
 //{
 //};
-}} // namespace boost::accumulators
+}
+} // namespace boost::accumulators
 
 #endif

@@ -49,183 +49,193 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/pj_mlfn.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct lcca {};
+namespace par4
+{
+struct lcca {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace lcca
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace lcca
+{
 
-            static const int MAX_ITER = 10;
-            static const double DEL_TOL = 1e-12;
+static const int MAX_ITER = 10;
+static const double DEL_TOL = 1e-12;
 
-            template <typename T>
-            struct par_lcca
-            {
-                T    en[EN_SIZE];
-                T    r0, l, M0;
-                T    C;
-            };
+template <typename T>
+struct par_lcca
+{
+	T    en[EN_SIZE];
+	T    r0, l, M0;
+	T    C;
+};
 
-            template <typename T> /* func to compute dr */
-            inline T fS(T const& S, T const& C)
-            {
-                return(S * ( 1. + S * S * C));
-            }
+template <typename T> /* func to compute dr */
+inline T fS(T const& S, T const& C)
+{
+	return(S * ( 1. + S * S * C));
+}
 
-            template <typename T> /* deriv of fs */
-            inline T fSp(T const& S, T const& C)
-            {
-                return(1. + 3.* S * S * C);
-            }
+template <typename T> /* deriv of fs */
+inline T fSp(T const& S, T const& C)
+{
+	return(1. + 3.* S * S * C);
+}
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_lcca_ellipsoid : public base_t_fi<base_lcca_ellipsoid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_lcca_ellipsoid : public base_t_fi<base_lcca_ellipsoid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_lcca<CalculationType> m_proj_parm;
+	par_lcca<CalculationType> m_proj_parm;
 
-                inline base_lcca_ellipsoid(const Parameters& par)
-                    : base_t_fi<base_lcca_ellipsoid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_lcca_ellipsoid(const Parameters& par)
+		: base_t_fi<base_lcca_ellipsoid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(e_forward)  ellipsoid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType S, r, dr;
+	// FORWARD(e_forward)  ellipsoid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType S, r, dr;
 
-                    S = pj_mlfn(lp_lat, sin(lp_lat), cos(lp_lat), this->m_proj_parm.en) - this->m_proj_parm.M0;
-                    dr = fS(S, this->m_proj_parm.C);
-                    r = this->m_proj_parm.r0 - dr;
-                    xy_x = this->m_par.k0 * (r * sin( lp_lon *= this->m_proj_parm.l ) );
-                    xy_y = this->m_par.k0 * (this->m_proj_parm.r0 - r * cos(lp_lon) );
-                }
+		S = pj_mlfn(lp_lat, sin(lp_lat), cos(lp_lat), this->m_proj_parm.en) - this->m_proj_parm.M0;
+		dr = fS(S, this->m_proj_parm.C);
+		r = this->m_proj_parm.r0 - dr;
+		xy_x = this->m_par.k0 * (r * sin( lp_lon *= this->m_proj_parm.l ) );
+		xy_y = this->m_par.k0 * (this->m_proj_parm.r0 - r * cos(lp_lon) );
+	}
 
-                // INVERSE(e_inverse)  ellipsoid & spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType theta, dr, S, dif;
-                    int i;
+	// INVERSE(e_inverse)  ellipsoid & spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType theta, dr, S, dif;
+		int i;
 
-                    xy_x /= this->m_par.k0;
-                    xy_y /= this->m_par.k0;
-                    theta = atan2(xy_x , this->m_proj_parm.r0 - xy_y);
-                    dr = xy_y - xy_x * tan(0.5 * theta);
-                    lp_lon = theta / this->m_proj_parm.l;
-                    S = dr;
-                    for (i = MAX_ITER; i ; --i) {
-                        S -= (dif = (fS(S, this->m_proj_parm.C) - dr) / fSp(S, this->m_proj_parm.C));
-                        if (fabs(dif) < DEL_TOL) break;
-                    }
-                    if (!i)
-                        BOOST_THROW_EXCEPTION( projection_exception(-20) );
-                    lp_lat = pj_inv_mlfn(S + this->m_proj_parm.M0, this->m_par.es, this->m_proj_parm.en);
-                }
+		xy_x /= this->m_par.k0;
+		xy_y /= this->m_par.k0;
+		theta = atan2(xy_x, this->m_proj_parm.r0 - xy_y);
+		dr = xy_y - xy_x * tan(0.5 * theta);
+		lp_lon = theta / this->m_proj_parm.l;
+		S = dr;
+		for (i = MAX_ITER; i ; --i)
+		{
+			S -= (dif = (fS(S, this->m_proj_parm.C) - dr) / fSp(S, this->m_proj_parm.C));
+			if (fabs(dif) < DEL_TOL) break;
+		}
+		if (!i)
+			BOOST_THROW_EXCEPTION( projection_exception(-20) );
+		lp_lat = pj_inv_mlfn(S + this->m_proj_parm.M0, this->m_par.es, this->m_proj_parm.en);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "lcca_ellipsoid";
-                }
+	static inline std::string get_name()
+	{
+		return "lcca_ellipsoid";
+	}
 
-            };
+};
 
-            // Lambert Conformal Conic Alternative
-            template <typename Parameters, typename T>
-            inline void setup_lcca(Parameters& par, par_lcca<T>& proj_parm)
-            {
-                T s2p0, N0, R0, tan0, tan20;
+// Lambert Conformal Conic Alternative
+template <typename Parameters, typename T>
+inline void setup_lcca(Parameters& par, par_lcca<T>& proj_parm)
+{
+	T s2p0, N0, R0, tan0, tan20;
 
-                if (!pj_enfn(par.es, proj_parm.en))
-                    BOOST_THROW_EXCEPTION( projection_exception(0) );
-                if (!pj_param(par.params, "tlat_0").i)
-                    BOOST_THROW_EXCEPTION( projection_exception(50) );
-                if (par.phi0 == 0.)
-                    BOOST_THROW_EXCEPTION( projection_exception(51) );
-                proj_parm.l = sin(par.phi0);
-                proj_parm.M0 = pj_mlfn(par.phi0, proj_parm.l, cos(par.phi0), proj_parm.en);
-                s2p0 = proj_parm.l * proj_parm.l;
-                R0 = 1. / (1. - par.es * s2p0);
-                N0 = sqrt(R0);
-                R0 *= par.one_es * N0;
-                tan0 = tan(par.phi0);
-                tan20 = tan0 * tan0;
-                proj_parm.r0 = N0 / tan0;
-                proj_parm.C = 1. / (6. * R0 * N0);
-                boost::ignore_unused(tan20);
-            }
+	if (!pj_enfn(par.es, proj_parm.en))
+		BOOST_THROW_EXCEPTION( projection_exception(0) );
+	if (!pj_param(par.params, "tlat_0").i)
+		BOOST_THROW_EXCEPTION( projection_exception(50) );
+	if (par.phi0 == 0.)
+		BOOST_THROW_EXCEPTION( projection_exception(51) );
+	proj_parm.l = sin(par.phi0);
+	proj_parm.M0 = pj_mlfn(par.phi0, proj_parm.l, cos(par.phi0), proj_parm.en);
+	s2p0 = proj_parm.l * proj_parm.l;
+	R0 = 1. / (1. - par.es * s2p0);
+	N0 = sqrt(R0);
+	R0 *= par.one_es * N0;
+	tan0 = tan(par.phi0);
+	tan20 = tan0 * tan0;
+	proj_parm.r0 = N0 / tan0;
+	proj_parm.C = 1. / (6. * R0 * N0);
+	boost::ignore_unused(tan20);
+}
 
-    }} // namespace detail::lcca
-    #endif // doxygen
+}
+} // namespace detail::lcca
+#endif // doxygen
 
-    /*!
-        \brief Lambert Conformal Conic Alternative projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Conic
-         - Spheroid
-         - Ellipsoid
-        \par Projection parameters
-         - lat_0: Latitude of origin
-        \par Example
-        \image html ex_lcca.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct lcca_ellipsoid : public detail::lcca::base_lcca_ellipsoid<CalculationType, Parameters>
-    {
-        inline lcca_ellipsoid(const Parameters& par) : detail::lcca::base_lcca_ellipsoid<CalculationType, Parameters>(par)
-        {
-            detail::lcca::setup_lcca(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Lambert Conformal Conic Alternative projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Conic
+     - Spheroid
+     - Ellipsoid
+    \par Projection parameters
+     - lat_0: Latitude of origin
+    \par Example
+    \image html ex_lcca.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct lcca_ellipsoid : public detail::lcca::base_lcca_ellipsoid<CalculationType, Parameters>
+{
+	inline lcca_ellipsoid(const Parameters& par) : detail::lcca::base_lcca_ellipsoid<CalculationType, Parameters>(par)
+	{
+		detail::lcca::setup_lcca(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::lcca, lcca_ellipsoid, lcca_ellipsoid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::lcca, lcca_ellipsoid, lcca_ellipsoid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class lcca_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<lcca_ellipsoid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class lcca_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<lcca_ellipsoid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void lcca_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("lcca", new lcca_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void lcca_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("lcca", new lcca_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_LCCA_HPP
 

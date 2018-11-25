@@ -39,106 +39,113 @@
 #include <boost/geometry/util/math.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 namespace detail
 {
-    static const int MDIST_MAX_ITER = 20;
+static const int MDIST_MAX_ITER = 20;
 
-    template <typename T>
-    struct MDIST
-    {
-        int nb;
-        T es;
-        T E;
-        T b[MDIST_MAX_ITER];
-    };
+template <typename T>
+struct MDIST
+{
+	int nb;
+	T es;
+	T E;
+	T b[MDIST_MAX_ITER];
+};
 
-    template <typename CT>
-    inline bool proj_mdist_ini(CT const& es, MDIST<CT>& b)
-    {
-        CT numf, numfi, twon1, denf, denfi, ens, T, twon;
-        CT den, El, Es;
-        CT E[MDIST_MAX_ITER];
-        int i, j;
+template <typename CT>
+inline bool proj_mdist_ini(CT const& es, MDIST<CT>& b)
+{
+	CT numf, numfi, twon1, denf, denfi, ens, T, twon;
+	CT den, El, Es;
+	CT E[MDIST_MAX_ITER];
+	int i, j;
 
-        /* generate E(e^2) and its terms E[] */
-        ens = es;
-        numf = twon1 = denfi = 1.;
-        denf = 1.;
-        twon = 4.;
-        Es = El = E[0] = 1.;
-        for (i = 1; i < MDIST_MAX_ITER ; ++i)
-        {
-            numf *= (twon1 * twon1);
-            den = twon * denf * denf * twon1;
-            T = numf/den;
-            Es -= (E[i] = T * ens);
-            ens *= es;
-            twon *= 4.;
-            denf *= ++denfi;
-            twon1 += 2.;
-            if (Es == El) /* jump out if no change */
-                break;
-            El = Es;
-        }
-        b.nb = i - 1;
-        b.es = es;
-        b.E = Es;
-        /* generate b_n coefficients--note: collapse with prefix ratios */
-        b.b[0] = Es = 1. - Es;
-        numf = denf = 1.;
-        numfi = 2.;
-        denfi = 3.;
-        for (j = 1; j < i; ++j)
-        {
-            Es -= E[j];
-            numf *= numfi;
-            denf *= denfi;
-            b.b[j] = Es * numf / denf;
-            numfi += 2.;
-            denfi += 2.;
-        }
-        return true;
-    }
+	/* generate E(e^2) and its terms E[] */
+	ens = es;
+	numf = twon1 = denfi = 1.;
+	denf = 1.;
+	twon = 4.;
+	Es = El = E[0] = 1.;
+	for (i = 1; i < MDIST_MAX_ITER ; ++i)
+	{
+		numf *= (twon1 * twon1);
+		den = twon * denf * denf * twon1;
+		T = numf/den;
+		Es -= (E[i] = T * ens);
+		ens *= es;
+		twon *= 4.;
+		denf *= ++denfi;
+		twon1 += 2.;
+		if (Es == El) /* jump out if no change */
+			break;
+		El = Es;
+	}
+	b.nb = i - 1;
+	b.es = es;
+	b.E = Es;
+	/* generate b_n coefficients--note: collapse with prefix ratios */
+	b.b[0] = Es = 1. - Es;
+	numf = denf = 1.;
+	numfi = 2.;
+	denfi = 3.;
+	for (j = 1; j < i; ++j)
+	{
+		Es -= E[j];
+		numf *= numfi;
+		denf *= denfi;
+		b.b[j] = Es * numf / denf;
+		numfi += 2.;
+		denfi += 2.;
+	}
+	return true;
+}
 
-    template <typename T>
-    inline T proj_mdist(T const& phi, T const& sphi, T const& cphi, MDIST<T> const& b)
-    {
-        T sc, sum, sphi2, D;
-        int i;
+template <typename T>
+inline T proj_mdist(T const& phi, T const& sphi, T const& cphi, MDIST<T> const& b)
+{
+	T sc, sum, sphi2, D;
+	int i;
 
-        sc = sphi * cphi;
-        sphi2 = sphi * sphi;
-        D = phi * b.E - b.es * sc / sqrt(1. - b.es * sphi2);
-        sum = b.b[i = b.nb];
-        while (i) sum = b.b[--i] + sphi2 * sum;
-        return(D + sc * sum);
-    }
+	sc = sphi * cphi;
+	sphi2 = sphi * sphi;
+	D = phi * b.E - b.es * sc / sqrt(1. - b.es * sphi2);
+	sum = b.b[i = b.nb];
+	while (i) sum = b.b[--i] + sphi2 * sum;
+	return(D + sc * sum);
+}
 
-    template <typename T>
-    inline T proj_inv_mdist(T const& dist, MDIST<T> const& b)
-    {
-        static const T TOL = 1e-14;
-        T s, t, phi, k;
-        int i;
+template <typename T>
+inline T proj_inv_mdist(T const& dist, MDIST<T> const& b)
+{
+	static const T TOL = 1e-14;
+	T s, t, phi, k;
+	int i;
 
-        k = 1./(1.- b.es);
-        i = MDIST_MAX_ITER;
-        phi = dist;
-        while ( i-- ) {
-            s = sin(phi);
-            t = 1. - b.es * s * s;
-            phi -= t = (proj_mdist(phi, s, cos(phi), b) - dist) *
-                (t * sqrt(t)) * k;
-            if (geometry::math::abs(t) < TOL) /* that is no change */
-                return phi;
-        }
-            /* convergence failed */
-        BOOST_THROW_EXCEPTION( projection_exception(-17) );
-    }
+	k = 1./(1.- b.es);
+	i = MDIST_MAX_ITER;
+	phi = dist;
+	while ( i-- )
+	{
+		s = sin(phi);
+		t = 1. - b.es * s * s;
+		phi -= t = (proj_mdist(phi, s, cos(phi), b) - dist) *
+		           (t * sqrt(t)) * k;
+		if (geometry::math::abs(t) < TOL) /* that is no change */
+			return phi;
+	}
+	/* convergence failed */
+	BOOST_THROW_EXCEPTION( projection_exception(-17) );
+}
 } // namespace detail
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif

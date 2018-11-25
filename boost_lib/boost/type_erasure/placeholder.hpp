@@ -11,8 +11,10 @@
 #ifndef BOOST_TYPE_ERASURE_PLACEHOLDERS_HPP_INCLUDED
 #define BOOST_TYPE_ERASURE_PLACEHOLDERS_HPP_INCLUDED
 
-namespace boost {
-namespace type_erasure {
+namespace boost
+{
+namespace type_erasure
+{
 
 /**
  * Placeholders are used heavily throughout the library.
@@ -45,9 +47,10 @@ namespace type_erasure {
  * explicitly, but the substitution still works the
  * same way.
  */
-struct placeholder {
-    /// INTERNAL ONLY
-    typedef void _boost_type_erasure_is_placeholder;
+struct placeholder
+{
+	/// INTERNAL ONLY
+	typedef void _boost_type_erasure_is_placeholder;
 };
 
 struct _a : placeholder {};

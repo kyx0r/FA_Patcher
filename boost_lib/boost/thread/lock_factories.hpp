@@ -16,58 +16,58 @@
 namespace boost
 {
 
-  template <typename Lockable>
-  unique_lock<Lockable> make_unique_lock(Lockable& mtx)
-  {
-    return unique_lock<Lockable> (mtx);
-  }
+template <typename Lockable>
+unique_lock<Lockable> make_unique_lock(Lockable& mtx)
+{
+	return unique_lock<Lockable> (mtx);
+}
 
-  template <typename Lockable>
-  unique_lock<Lockable> make_unique_lock(Lockable& mtx, adopt_lock_t)
-  {
-    return unique_lock<Lockable> (mtx, adopt_lock);
-  }
+template <typename Lockable>
+unique_lock<Lockable> make_unique_lock(Lockable& mtx, adopt_lock_t)
+{
+	return unique_lock<Lockable> (mtx, adopt_lock);
+}
 
-  template <typename Lockable>
-  unique_lock<Lockable> make_unique_lock(Lockable& mtx, defer_lock_t)
-  {
-    return unique_lock<Lockable> (mtx, defer_lock);
-  }
+template <typename Lockable>
+unique_lock<Lockable> make_unique_lock(Lockable& mtx, defer_lock_t)
+{
+	return unique_lock<Lockable> (mtx, defer_lock);
+}
 
-  template <typename Lockable>
-  unique_lock<Lockable> make_unique_lock(Lockable& mtx, try_to_lock_t)
-  {
-    return unique_lock<Lockable> (mtx, try_to_lock);
-  }
+template <typename Lockable>
+unique_lock<Lockable> make_unique_lock(Lockable& mtx, try_to_lock_t)
+{
+	return unique_lock<Lockable> (mtx, try_to_lock);
+}
 #if ! defined(BOOST_THREAD_NO_MAKE_UNIQUE_LOCKS)
 
 #if ! defined BOOST_NO_CXX11_VARIADIC_TEMPLATES
-  template <typename ...Lockable>
-  std::tuple<unique_lock<Lockable> ...> make_unique_locks(Lockable& ...mtx)
-  {
-    boost::lock(mtx...);
-    return std::tuple<unique_lock<Lockable> ...>(unique_lock<Lockable>(mtx, adopt_lock)...);
-  }
+template <typename ...Lockable>
+std::tuple<unique_lock<Lockable> ...> make_unique_locks(Lockable& ...mtx)
+{
+	boost::lock(mtx...);
+	return std::tuple<unique_lock<Lockable> ...>(unique_lock<Lockable>(mtx, adopt_lock)...);
+}
 #else
-  template <typename L1, typename L2>
-  std::tuple<unique_lock<L1>, unique_lock<L2> > make_unique_locks(L1& m1, L2& m2)
-  {
-    boost::lock(m1, m2);
-    return std::tuple<unique_lock<L1>,unique_lock<L2> >(
-        unique_lock<L1>(m1, adopt_lock),
-        unique_lock<L2>(m2, adopt_lock)
-    );
-  }
-  template <typename L1, typename L2, typename L3>
-  std::tuple<unique_lock<L1>, unique_lock<L2>, unique_lock<L3> > make_unique_locks(L1& m1, L2& m2, L3& m3)
-  {
-    boost::lock(m1, m2, m3);
-    return std::tuple<unique_lock<L1>,unique_lock<L2>,unique_lock<L3> >(
-        unique_lock<L1>(m1, adopt_lock),
-        unique_lock<L2>(m2, adopt_lock),
-        unique_lock<L3>(m3, adopt_lock)
-    );
-  }
+template <typename L1, typename L2>
+std::tuple<unique_lock<L1>, unique_lock<L2> > make_unique_locks(L1& m1, L2& m2)
+{
+	boost::lock(m1, m2);
+	return std::tuple<unique_lock<L1>,unique_lock<L2> >(
+	           unique_lock<L1>(m1, adopt_lock),
+	           unique_lock<L2>(m2, adopt_lock)
+	       );
+}
+template <typename L1, typename L2, typename L3>
+std::tuple<unique_lock<L1>, unique_lock<L2>, unique_lock<L3> > make_unique_locks(L1& m1, L2& m2, L3& m3)
+{
+	boost::lock(m1, m2, m3);
+	return std::tuple<unique_lock<L1>,unique_lock<L2>,unique_lock<L3> >(
+	           unique_lock<L1>(m1, adopt_lock),
+	           unique_lock<L2>(m2, adopt_lock),
+	           unique_lock<L3>(m3, adopt_lock)
+	       );
+}
 
 #endif
 #endif

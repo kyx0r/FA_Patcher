@@ -23,81 +23,86 @@
 
 #include <boost/geometry/util/condition.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace relate {
+namespace detail
+{
+namespace relate
+{
 
 // non-point geometry
 template <typename Point, typename Geometry, bool Transpose = false>
 struct point_geometry
 {
-    // TODO: interrupt only if the topology check is complex
+	// TODO: interrupt only if the topology check is complex
 
-    static const bool interruption_enabled = true;
+	static const bool interruption_enabled = true;
 
-    template <typename Result, typename Strategy>
-    static inline void apply(Point const& point, Geometry const& geometry, Result & result, Strategy const& strategy)
-    {
-        int pig = detail::within::point_in_geometry(point, geometry, strategy);
+	template <typename Result, typename Strategy>
+	static inline void apply(Point const& point, Geometry const& geometry, Result & result, Strategy const& strategy)
+	{
+		int pig = detail::within::point_in_geometry(point, geometry, strategy);
 
-        if ( pig > 0 ) // within
-        {
-            relate::set<interior, interior, '0', Transpose>(result);
-        }
-        else if ( pig == 0 )
-        {
-            relate::set<interior, boundary, '0', Transpose>(result);
-        }
-        else // pig < 0 - not within
-        {
-            relate::set<interior, exterior, '0', Transpose>(result);
-        }
+		if ( pig > 0 ) // within
+		{
+			relate::set<interior, interior, '0', Transpose>(result);
+		}
+		else if ( pig == 0 )
+		{
+			relate::set<interior, boundary, '0', Transpose>(result);
+		}
+		else // pig < 0 - not within
+		{
+			relate::set<interior, exterior, '0', Transpose>(result);
+		}
 
-        relate::set<exterior, exterior, result_dimension<Point>::value, Transpose>(result);
+		relate::set<exterior, exterior, result_dimension<Point>::value, Transpose>(result);
 
-        if ( BOOST_GEOMETRY_CONDITION(result.interrupt) )
-            return;
+		if ( BOOST_GEOMETRY_CONDITION(result.interrupt) )
+			return;
 
-        typedef detail::relate::topology_check<Geometry> tc_t;
-        if ( relate::may_update<exterior, interior, tc_t::interior, Transpose>(result)
-          || relate::may_update<exterior, boundary, tc_t::boundary, Transpose>(result) )
-        {
-            // the point is on the boundary
-            if ( pig == 0 )
-            {
-                // NOTE: even for MLs, if there is at least one boundary point,
-                // somewhere there must be another one
-                relate::set<exterior, interior, tc_t::interior, Transpose>(result);
-                relate::set<exterior, boundary, tc_t::boundary, Transpose>(result);
-            }
-            else
-            {
-                // check if there is a boundary in Geometry
-                tc_t tc(geometry);
-                if ( tc.has_interior() )
-                    relate::set<exterior, interior, tc_t::interior, Transpose>(result);
-                if ( tc.has_boundary() )
-                    relate::set<exterior, boundary, tc_t::boundary, Transpose>(result);
-            }
-        }
-    }
+		typedef detail::relate::topology_check<Geometry> tc_t;
+		if ( relate::may_update<exterior, interior, tc_t::interior, Transpose>(result)
+		        || relate::may_update<exterior, boundary, tc_t::boundary, Transpose>(result) )
+		{
+			// the point is on the boundary
+			if ( pig == 0 )
+			{
+				// NOTE: even for MLs, if there is at least one boundary point,
+				// somewhere there must be another one
+				relate::set<exterior, interior, tc_t::interior, Transpose>(result);
+				relate::set<exterior, boundary, tc_t::boundary, Transpose>(result);
+			}
+			else
+			{
+				// check if there is a boundary in Geometry
+				tc_t tc(geometry);
+				if ( tc.has_interior() )
+					relate::set<exterior, interior, tc_t::interior, Transpose>(result);
+				if ( tc.has_boundary() )
+					relate::set<exterior, boundary, tc_t::boundary, Transpose>(result);
+			}
+		}
+	}
 };
 
 // transposed result of point_geometry
 template <typename Geometry, typename Point>
 struct geometry_point
 {
-    // TODO: interrupt only if the topology check is complex
+	// TODO: interrupt only if the topology check is complex
 
-    static const bool interruption_enabled = true;
+	static const bool interruption_enabled = true;
 
-    template <typename Result, typename Strategy>
-    static inline void apply(Geometry const& geometry, Point const& point, Result & result, Strategy const& strategy)
-    {
-        point_geometry<Point, Geometry, true>::apply(point, geometry, result, strategy);
-    }
+	template <typename Result, typename Strategy>
+	static inline void apply(Geometry const& geometry, Point const& point, Result & result, Strategy const& strategy)
+	{
+		point_geometry<Point, Geometry, true>::apply(point, geometry, result, strategy);
+	}
 };
 
 // TODO: rewrite the folowing:
@@ -167,7 +172,7 @@ struct geometry_point
 //            //}
 //            return result("F0FFFF**T");
 //        }
-//        else 
+//        else
 //        {
 //            /*if ( box_has_interior<Box>::apply(box) )
 //            {
@@ -193,14 +198,16 @@ struct geometry_point
 //            return result("0FTFFTFFT");
 //        else if ( geometry::covered_by(point, box) )
 //            return result("FF*0F*FFT");
-//        else 
+//        else
 //            return result("FF*FFT0FT");
 //    }
 //};
 
-}} // namespace detail::relate
+}
+} // namespace detail::relate
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_RELATE_POINT_GEOMETRY_HPP

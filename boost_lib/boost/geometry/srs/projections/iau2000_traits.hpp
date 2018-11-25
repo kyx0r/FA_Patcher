@@ -18,7 +18,11 @@
 #include <boost/geometry/srs/projections/srid_traits.hpp>
 
 
-namespace boost { namespace geometry { namespace projections
+namespace boost
+{
+namespace geometry
+{
+namespace projections
 {
 
 #ifndef DOXYGEN_NO_DETAIL
@@ -36,9 +40,9 @@ namespace detail
 template <size_t IAU2000>
 struct iau2000_traits
 {
-    // Specializations define:
-    // - type to get projection type
-    // - function par to get parameters
+	// Specializations define:
+	// - type to get projection type
+	// - function par to get parameters
 };
 
 BOOST_GEOMETRY_PROJECTIONS_DETAIL_SRID_TRAITS_S (iau2000, 19900, longlat, 2439700, "+proj=longlat +a=2439700 +b=2439700 +no_defs")
@@ -2425,7 +2429,9 @@ BOOST_GEOMETRY_PROJECTIONS_DETAIL_SRID_TRAITS_S (iau2000, 99973, laea, 1195000, 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 
 #endif

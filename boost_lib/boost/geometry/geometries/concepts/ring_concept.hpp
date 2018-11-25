@@ -27,7 +27,11 @@
 #include <boost/geometry/geometries/concepts/point_concept.hpp>
 
 
-namespace boost { namespace geometry { namespace concepts
+namespace boost
+{
+namespace geometry
+{
+namespace concepts
 {
 
 
@@ -50,21 +54,21 @@ template <typename Geometry>
 class Ring
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename point_type<Geometry>::type point_type;
+	typedef typename point_type<Geometry>::type point_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::Point<point_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::Point<point_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 public :
 
-    BOOST_CONCEPT_USAGE(Ring)
-    {
-        Geometry* ring = 0;
-        traits::clear<Geometry>::apply(*ring);
-        traits::resize<Geometry>::apply(*ring, 0);
-        point_type* point = 0;
-        traits::push_back<Geometry>::apply(*ring, *point);
-    }
+	BOOST_CONCEPT_USAGE(Ring)
+	{
+		Geometry* ring = 0;
+		traits::clear<Geometry>::apply(*ring);
+		traits::resize<Geometry>::apply(*ring, 0);
+		point_type* point = 0;
+		traits::push_back<Geometry>::apply(*ring, *point);
+	}
 #endif
 };
 
@@ -79,21 +83,23 @@ template <typename Geometry>
 class ConstRing
 {
 #ifndef DOXYGEN_NO_CONCEPT_MEMBERS
-    typedef typename point_type<Geometry>::type point_type;
+	typedef typename point_type<Geometry>::type point_type;
 
-    BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<point_type>) );
-    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
+	BOOST_CONCEPT_ASSERT( (concepts::ConstPoint<point_type>) );
+	BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<Geometry>) );
 
 
 public :
 
-    BOOST_CONCEPT_USAGE(ConstRing)
-    {
-    }
+	BOOST_CONCEPT_USAGE(ConstRing)
+	{
+	}
 #endif
 };
 
-}}} // namespace boost::geometry::concepts
+}
+}
+} // namespace boost::geometry::concepts
 
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_CONCEPTS_RING_CONCEPT_HPP

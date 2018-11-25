@@ -43,9 +43,17 @@
 #include <boost/geometry/util/math.hpp>
 
 
-namespace boost { namespace geometry { namespace projections {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
 
-namespace detail { namespace gauss {
+namespace detail
+{
+namespace gauss
+{
 
 
 static const int MAX_ITER = 20;
@@ -53,90 +61,93 @@ static const int MAX_ITER = 20;
 template <typename T>
 struct GAUSS
 {
-    T C;
-    T K;
-    T e;
-    T ratexp;
+	T C;
+	T K;
+	T e;
+	T ratexp;
 };
 
 template <typename T>
 inline T srat(T const& esinp, T const& exp)
 {
-    return (pow((1.0 - esinp) / (1.0 + esinp), exp));
+	return (pow((1.0 - esinp) / (1.0 + esinp), exp));
 }
 
 template <typename T>
 inline GAUSS<T> gauss_ini(T const& e, T const& phi0, T& chi, T& rc)
 {
-    static const T FORTPI = detail::FORTPI<T>();
+	static const T FORTPI = detail::FORTPI<T>();
 
-    using std::asin;
-    using std::cos;
-    using std::sin;
-    using std::sqrt;
-    using std::tan;
+	using std::asin;
+	using std::cos;
+	using std::sin;
+	using std::sqrt;
+	using std::tan;
 
-    T sphi = 0;
-    T cphi = 0;
-    T es = 0;
+	T sphi = 0;
+	T cphi = 0;
+	T es = 0;
 
-    GAUSS<T> en;
-    es = e * e;
-    en.e = e;
-    sphi = sin(phi0);
-    cphi = cos(phi0);
-    cphi *= cphi;
+	GAUSS<T> en;
+	es = e * e;
+	en.e = e;
+	sphi = sin(phi0);
+	cphi = cos(phi0);
+	cphi *= cphi;
 
-    rc = sqrt(1.0 - es) / (1.0 - es * sphi * sphi);
-    en.C = sqrt(1.0 + es * cphi * cphi / (1.0 - es));
-    chi = asin(sphi / en.C);
-    en.ratexp = 0.5 * en.C * e;
-    en.K = tan(0.5 * chi + FORTPI)
-           / (pow(tan(0.5 * phi0 + FORTPI), en.C) * srat(en.e * sphi, en.ratexp));
+	rc = sqrt(1.0 - es) / (1.0 - es * sphi * sphi);
+	en.C = sqrt(1.0 + es * cphi * cphi / (1.0 - es));
+	chi = asin(sphi / en.C);
+	en.ratexp = 0.5 * en.C * e;
+	en.K = tan(0.5 * chi + FORTPI)
+	       / (pow(tan(0.5 * phi0 + FORTPI), en.C) * srat(en.e * sphi, en.ratexp));
 
-    return en;
+	return en;
 }
 
 template <typename T>
 inline void gauss(GAUSS<T> const& en, T& lam, T& phi)
 {
-    static const T FORTPI = detail::FORTPI<T>();
+	static const T FORTPI = detail::FORTPI<T>();
 
-    phi = 2.0 * atan(en.K * pow(tan(0.5 * phi + FORTPI), en.C)
-          * srat(en.e * sin(phi), en.ratexp) ) - geometry::math::half_pi<T>();
+	phi = 2.0 * atan(en.K * pow(tan(0.5 * phi + FORTPI), en.C)
+	                 * srat(en.e * sin(phi), en.ratexp) ) - geometry::math::half_pi<T>();
 
-    lam *= en.C;
+	lam *= en.C;
 }
 
 template <typename T>
 inline void inv_gauss(GAUSS<T> const& en, T& lam, T& phi)
 {
-    static const T FORTPI = detail::FORTPI<T>();
-    static const T DEL_TOL = 1e-14;
+	static const T FORTPI = detail::FORTPI<T>();
+	static const T DEL_TOL = 1e-14;
 
-    lam /= en.C;
-    const T num = pow(tan(0.5 * phi + FORTPI) / en.K, 1.0 / en.C);
+	lam /= en.C;
+	const T num = pow(tan(0.5 * phi + FORTPI) / en.K, 1.0 / en.C);
 
-    int i = 0;
-    for (i = MAX_ITER; i; --i)
-    {
-        const T elp_phi = 2.0 * atan(num * srat(en.e * sin(phi), - 0.5 * en.e)) - geometry::math::half_pi<T>();
+	int i = 0;
+	for (i = MAX_ITER; i; --i)
+	{
+		const T elp_phi = 2.0 * atan(num * srat(en.e * sin(phi), - 0.5 * en.e)) - geometry::math::half_pi<T>();
 
-        if (geometry::math::abs(elp_phi - phi) < DEL_TOL)
-        {
-            break;
-        }
-        phi = elp_phi;
-    }
+		if (geometry::math::abs(elp_phi - phi) < DEL_TOL)
+		{
+			break;
+		}
+		phi = elp_phi;
+	}
 
-    /* convergence failed */
-    if (!i)
-    {
-        BOOST_THROW_EXCEPTION( projection_exception(-17) );
-    }
+	/* convergence failed */
+	if (!i)
+	{
+		BOOST_THROW_EXCEPTION( projection_exception(-17) );
+	}
 }
 
-}} // namespace detail::gauss
-}}} // namespace boost::geometry::projections
+}
+} // namespace detail::gauss
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_PJ_GAUSS_HPP

@@ -14,35 +14,42 @@
 
 #include "isotropy.hpp"
 
-namespace boost {
-namespace polygon {
+namespace boost
+{
+namespace polygon
+{
 
 template <typename Segment>
-struct segment_traits {
-  typedef Segment segment_type;
-  typedef typename segment_type::point_type point_type;
-  typedef typename segment_type::coordinate_type coordinate_type;
+struct segment_traits
+{
+	typedef Segment segment_type;
+	typedef typename segment_type::point_type point_type;
+	typedef typename segment_type::coordinate_type coordinate_type;
 
-  static point_type get(
-      const segment_type& segment, direction_1d dir) {
-    return segment.get(dir);
-  }
+	static point_type get(
+	    const segment_type& segment, direction_1d dir)
+	{
+		return segment.get(dir);
+	}
 };
 
 template <typename Segment>
-struct segment_mutable_traits {
-  typedef Segment segment_type;
-  typedef typename segment_type::point_type point_type;
-  typedef typename segment_type::coordinate_type coordinate_type;
+struct segment_mutable_traits
+{
+	typedef Segment segment_type;
+	typedef typename segment_type::point_type point_type;
+	typedef typename segment_type::coordinate_type coordinate_type;
 
-  static void set(
-      segment_type& segment, direction_1d dir, const point_type& point) {
-    segment.set(dir, point);
-  }
+	static void set(
+	    segment_type& segment, direction_1d dir, const point_type& point)
+	{
+		segment.set(dir, point);
+	}
 
-  static segment_type construct(const point_type& low, const point_type& high) {
-    return segment_type(low, high);
-  }
+	static segment_type construct(const point_type& low, const point_type& high)
+	{
+		return segment_type(low, high);
+	}
 };
 }  // polygon
 }  // boost

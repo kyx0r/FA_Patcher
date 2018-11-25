@@ -22,7 +22,9 @@
 #include <boost/geometry/strategies/comparable_distance_result.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 /*!
@@ -33,11 +35,12 @@ namespace boost { namespace geometry
  */
 template <typename Geometry1, typename Geometry2 = Geometry1>
 struct default_comparable_distance_result
-    : comparable_distance_result<Geometry1, Geometry2, void>
+	: comparable_distance_result<Geometry1, Geometry2, void>
 {};
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_DEFAULT_COMPARABLE_DISTANCE_RESULT_HPP

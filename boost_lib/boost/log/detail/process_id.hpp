@@ -25,20 +25,23 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! The process id descriptor
 struct process
 {
-    typedef unsigned long native_type;
-    typedef boost::log::aux::id< process > id;
+	typedef unsigned long native_type;
+	typedef boost::log::aux::id< process > id;
 };
 
-namespace this_process {
+namespace this_process
+{
 
 //! The function returns current process identifier
 BOOST_LOG_API process::id get_id();

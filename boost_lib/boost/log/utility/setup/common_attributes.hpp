@@ -31,7 +31,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
@@ -50,20 +51,20 @@ BOOST_LOG_OPEN_NAMESPACE
  */
 inline void add_common_attributes()
 {
-    shared_ptr< core > pCore = core::get();
-    pCore->add_global_attribute(
-        aux::default_attribute_names::line_id(),
-        attributes::counter< unsigned int >(1));
-    pCore->add_global_attribute(
-        aux::default_attribute_names::timestamp(),
-        attributes::local_clock());
-    pCore->add_global_attribute(
-        aux::default_attribute_names::process_id(),
-        attributes::current_process_id());
+	shared_ptr< core > pCore = core::get();
+	pCore->add_global_attribute(
+	    aux::default_attribute_names::line_id(),
+	    attributes::counter< unsigned int >(1));
+	pCore->add_global_attribute(
+	    aux::default_attribute_names::timestamp(),
+	    attributes::local_clock());
+	pCore->add_global_attribute(
+	    aux::default_attribute_names::process_id(),
+	    attributes::current_process_id());
 #if !defined(BOOST_LOG_NO_THREADS)
-    pCore->add_global_attribute(
-        aux::default_attribute_names::thread_id(),
-        attributes::current_thread_id());
+	pCore->add_global_attribute(
+	    aux::default_attribute_names::thread_id(),
+	    attributes::current_thread_id());
 #endif
 }
 

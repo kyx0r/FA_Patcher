@@ -10,14 +10,14 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <class K, class... Ps>
-      struct nth_of : nth_of_c<K::type::value, Ps...> {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <class K, class... Ps>
+struct nth_of : nth_of_c<K::type::value, Ps...> {};
+}
+}
 }
 
 #endif

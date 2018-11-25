@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------+    
+/*-----------------------------------------------------------------------------+
 Copyright (c) 2010-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -10,7 +10,9 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/icl/type_traits/is_element_container.hpp>
 
-namespace boost{ namespace icl
+namespace boost
+{
+namespace icl
 {
 
 //==============================================================================
@@ -20,11 +22,12 @@ template<class Type, class Iterator>
 inline typename enable_if<is_element_set<Type>, const typename Type::key_type>::type&
 co_value(Iterator it_)
 {
-    return *it_;
+	return *it_;
 }
 
 
-}} // namespace boost icl
+}
+} // namespace boost icl
 
 #endif
 

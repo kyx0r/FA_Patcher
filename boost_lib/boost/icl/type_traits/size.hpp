@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------+    
+/*-----------------------------------------------------------------------------+
 Copyright (c) 2008-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -8,10 +8,16 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef BOOST_ICL_TYPE_TRAITS_SIZE_HPP_JOFA_080911
 #define BOOST_ICL_TYPE_TRAITS_SIZE_HPP_JOFA_080911
 
-namespace boost{ namespace icl
+namespace boost
 {
-    template <class Type> struct size{ typedef std::size_t type; };
-}} // namespace boost icl
+namespace icl
+{
+template <class Type> struct size
+{
+	typedef std::size_t type;
+};
+}
+} // namespace boost icl
 
 #endif
 

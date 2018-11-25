@@ -15,72 +15,76 @@
 
 #include <boost/spirit/home/support/detail/math/detail/fp_traits.hpp>
 
-namespace boost {
-namespace spirit {
-namespace math {
+namespace boost
+{
+namespace spirit
+{
+namespace math
+{
 
 //------------------------------------------------------------------------------
 
 template<class T> bool (signbit)(T x)
 {
-    typedef BOOST_DEDUCED_TYPENAME detail::fp_traits<T>::type traits;
-    traits::init();
+	typedef BOOST_DEDUCED_TYPENAME detail::fp_traits<T>::type traits;
+	traits::init();
 
-    BOOST_DEDUCED_TYPENAME traits::bits a;
-    traits::get_bits(x,a);
-    a &= traits::sign;
-    return a != 0;
+	BOOST_DEDUCED_TYPENAME traits::bits a;
+	traits::get_bits(x,a);
+	a &= traits::sign;
+	return a != 0;
 }
 
 //------------------------------------------------------------------------------
 
-namespace detail {
+namespace detail
+{
 
-    template<class T> T copysign_impl(T x, T y)
-    {
-        typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::type traits;
-        traits::init();
+template<class T> T copysign_impl(T x, T y)
+{
+	typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::type traits;
+	traits::init();
 
-        BOOST_DEDUCED_TYPENAME traits::bits a;
-        traits::get_bits(x,a);
-        a &= ~traits::sign;
+	BOOST_DEDUCED_TYPENAME traits::bits a;
+	traits::get_bits(x,a);
+	a &= ~traits::sign;
 
-        BOOST_DEDUCED_TYPENAME traits::bits b;
-        traits::get_bits(y,b);
-        b &= traits::sign;
+	BOOST_DEDUCED_TYPENAME traits::bits b;
+	traits::get_bits(y,b);
+	b &= traits::sign;
 
-        traits::set_bits(x,a|b);
-        return x;
-    }
+	traits::set_bits(x,a|b);
+	return x;
+}
 }
 
 inline float (copysign)(float x, float y)      // magnitude of x and sign of y
 {
-    return detail::copysign_impl(x,y);
+	return detail::copysign_impl(x,y);
 }
 
 inline double (copysign)(double x, double y)
 {
-    return detail::copysign_impl(x,y);
+	return detail::copysign_impl(x,y);
 }
 
 inline long double (copysign)(long double x, long double y)
 {
-    return detail::copysign_impl(x,y);
+	return detail::copysign_impl(x,y);
 }
 
 //------------------------------------------------------------------------------
 
 template<class T> T (changesign)(T x)
 {
-    typedef BOOST_DEDUCED_TYPENAME detail::fp_traits<T>::type traits;
-    traits::init();
+	typedef BOOST_DEDUCED_TYPENAME detail::fp_traits<T>::type traits;
+	traits::init();
 
-    BOOST_DEDUCED_TYPENAME traits::bits a;
-    traits::get_bits(x,a);
-    a ^= traits::sign;
-    traits::set_bits(x,a);
-    return x;
+	BOOST_DEDUCED_TYPENAME traits::bits a;
+	traits::get_bits(x,a);
+	a ^= traits::sign;
+	traits::set_bits(x,a);
+	return x;
 }
 
 //------------------------------------------------------------------------------

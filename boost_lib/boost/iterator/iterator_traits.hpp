@@ -9,8 +9,10 @@
 
 #include <iterator>
 
-namespace boost {
-namespace iterators {
+namespace boost
+{
+namespace iterators
+{
 
 // Macro for supporting old compilers, no longer needed but kept
 // for backwards compatibility (it was documented).
@@ -20,32 +22,32 @@ namespace iterators {
 template <class Iterator>
 struct iterator_value
 {
-    typedef typename std::iterator_traits<Iterator>::value_type type;
+	typedef typename std::iterator_traits<Iterator>::value_type type;
 };
 
 template <class Iterator>
 struct iterator_reference
 {
-    typedef typename std::iterator_traits<Iterator>::reference type;
+	typedef typename std::iterator_traits<Iterator>::reference type;
 };
 
 
 template <class Iterator>
 struct iterator_pointer
 {
-    typedef typename std::iterator_traits<Iterator>::pointer type;
+	typedef typename std::iterator_traits<Iterator>::pointer type;
 };
 
 template <class Iterator>
 struct iterator_difference
 {
-    typedef typename std::iterator_traits<Iterator>::difference_type type;
+	typedef typename std::iterator_traits<Iterator>::difference_type type;
 };
 
 template <class Iterator>
 struct iterator_category
 {
-    typedef typename std::iterator_traits<Iterator>::iterator_category type;
+	typedef typename std::iterator_traits<Iterator>::iterator_category type;
 };
 
 } // namespace iterators

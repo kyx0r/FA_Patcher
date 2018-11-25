@@ -49,53 +49,61 @@
 
 /* general forward projection */
 
-namespace boost { namespace geometry { namespace projections {
+namespace boost
+{
+namespace geometry
+{
+namespace projections
+{
 
-namespace detail {
+namespace detail
+{
 
 /* forward projection entry */
 template <typename Prj, typename LL, typename XY, typename P>
 inline void pj_fwd(Prj const& prj, P const& par, LL const& ll, XY& xy)
 {
-    typedef typename P::type calc_t;
-    static const calc_t EPS = 1.0e-12;
+	typedef typename P::type calc_t;
+	static const calc_t EPS = 1.0e-12;
 
-    using namespace detail;
+	using namespace detail;
 
-    calc_t lp_lon = geometry::get_as_radian<0>(ll);
-    calc_t lp_lat = geometry::get_as_radian<1>(ll);
-    calc_t const t = geometry::math::abs(lp_lat) - geometry::math::half_pi<calc_t>();
+	calc_t lp_lon = geometry::get_as_radian<0>(ll);
+	calc_t lp_lat = geometry::get_as_radian<1>(ll);
+	calc_t const t = geometry::math::abs(lp_lat) - geometry::math::half_pi<calc_t>();
 
-    /* check for forward and latitude or longitude overange */
-    if (t > EPS || geometry::math::abs(lp_lon) > 10.)
-    {
-        BOOST_THROW_EXCEPTION( projection_exception(-14) );
-    }
+	/* check for forward and latitude or longitude overange */
+	if (t > EPS || geometry::math::abs(lp_lon) > 10.)
+	{
+		BOOST_THROW_EXCEPTION( projection_exception(-14) );
+	}
 
-    if (geometry::math::abs(t) <= EPS)
-    {
-        lp_lat = lp_lat < 0. ? -geometry::math::half_pi<calc_t>() : geometry::math::half_pi<calc_t>();
-    }
-    else if (par.geoc)
-    {
-        lp_lat = atan(par.rone_es * tan(lp_lat));
-    }
+	if (geometry::math::abs(t) <= EPS)
+	{
+		lp_lat = lp_lat < 0. ? -geometry::math::half_pi<calc_t>() : geometry::math::half_pi<calc_t>();
+	}
+	else if (par.geoc)
+	{
+		lp_lat = atan(par.rone_es * tan(lp_lat));
+	}
 
-    lp_lon -= par.lam0;    /* compute del lp.lam */
-    if (! par.over)
-    {
-        lp_lon = adjlon(lp_lon); /* post_forward del longitude */
-    }
+	lp_lon -= par.lam0;    /* compute del lp.lam */
+	if (! par.over)
+	{
+		lp_lon = adjlon(lp_lon); /* post_forward del longitude */
+	}
 
-    calc_t x = 0;
-    calc_t y = 0;
+	calc_t x = 0;
+	calc_t y = 0;
 
-    prj.fwd(lp_lon, lp_lat, x, y);
-    geometry::set<0>(xy, par.fr_meter * (par.a * x + par.x0));
-    geometry::set<1>(xy, par.fr_meter * (par.a * y + par.y0));
+	prj.fwd(lp_lon, lp_lat, x, y);
+	geometry::set<0>(xy, par.fr_meter * (par.a * x + par.x0));
+	geometry::set<1>(xy, par.fr_meter * (par.a * y + par.y0));
 }
 
 } // namespace detail
-}}} // namespace boost::geometry::projections
+}
+}
+} // namespace boost::geometry::projections
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_IMPL_PJ_FWD_HPP

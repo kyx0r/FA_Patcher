@@ -31,7 +31,8 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 using atomics::atomic;
 

@@ -33,7 +33,9 @@
 #include <boost/geometry/policies/robustness/segment_ratio_type.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -49,53 +51,54 @@ template
     typename IntersectionPoint,
     typename RobustPolicy,
     typename CalculationType = void
->
+    >
 struct intersection_strategies
 {
 private :
-    // for development BOOST_STATIC_ASSERT((! boost::is_same<RobustPolicy, void>::type::value));
+	// for development BOOST_STATIC_ASSERT((! boost::is_same<RobustPolicy, void>::type::value));
 
-    typedef typename geometry::point_type<Geometry1>::type point1_type;
-    typedef typename geometry::point_type<Geometry2>::type point2_type;
-    typedef typename model::referring_segment<point1_type const> segment1_type;
-    typedef typename model::referring_segment<point2_type const> segment2_type;
+	typedef typename geometry::point_type<Geometry1>::type point1_type;
+	typedef typename geometry::point_type<Geometry2>::type point2_type;
+	typedef typename model::referring_segment<point1_type const> segment1_type;
+	typedef typename model::referring_segment<point2_type const> segment2_type;
 
-    typedef segment_intersection_points
-    <
-        IntersectionPoint,
-        typename geometry::segment_ratio_type
-        <
-            IntersectionPoint, RobustPolicy
-        >::type
-    > ip_type;
+	typedef segment_intersection_points
+	<
+	IntersectionPoint,
+	typename geometry::segment_ratio_type
+	<
+	IntersectionPoint, RobustPolicy
+	>::type
+	> ip_type;
 
 public:
-    typedef policies::relate::segments_tupled
-        <
-            policies::relate::segments_intersection_points
-                <
-                    ip_type
-                > ,
-            policies::relate::segments_direction
-        > intersection_policy_type;
+	typedef policies::relate::segments_tupled
+	<
+	policies::relate::segments_intersection_points
+	<
+	ip_type
+	>,
+	policies::relate::segments_direction
+	> intersection_policy_type;
 
-    typedef typename strategy::intersection::services::default_strategy
-            <
-                Tag,
-                CalculationType
-            >::type segment_intersection_strategy_type;
+	typedef typename strategy::intersection::services::default_strategy
+	<
+	Tag,
+	CalculationType
+	>::type segment_intersection_strategy_type;
 
-    typedef typename strategy::side::services::default_strategy
-        <
-            Tag,
-            CalculationType
-        >::type side_strategy_type;
+	typedef typename strategy::side::services::default_strategy
+	<
+	Tag,
+	CalculationType
+	>::type side_strategy_type;
 
-    typedef RobustPolicy rescale_policy_type;
+	typedef RobustPolicy rescale_policy_type;
 };
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_INTERSECTION_HPP

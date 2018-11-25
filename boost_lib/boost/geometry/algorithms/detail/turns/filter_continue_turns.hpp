@@ -14,17 +14,21 @@
 #include <algorithm>
 #include <boost/geometry/algorithms/detail/overlay/turn_info.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace detail { namespace turns
+namespace detail
+{
+namespace turns
 {
 
 
 template <typename Turns, bool Enable>
 struct filter_continue_turns
 {
-    static inline void apply(Turns&) {}
+	static inline void apply(Turns&) {}
 };
 
 
@@ -32,46 +36,48 @@ template <typename Turns>
 class filter_continue_turns<Turns, true>
 {
 private:
-    class IsContinueTurn
-    {
-    private:
-        template <typename Operation>
-        inline bool is_continue_or_opposite(Operation const& operation) const
-        {
-            return operation == detail::overlay::operation_continue
-                || operation == detail::overlay::operation_opposite;
-        }
+	class IsContinueTurn
+	{
+	private:
+		template <typename Operation>
+		inline bool is_continue_or_opposite(Operation const& operation) const
+		{
+			return operation == detail::overlay::operation_continue
+			       || operation == detail::overlay::operation_opposite;
+		}
 
-    public:
-        template <typename Turn>
-        bool operator()(Turn const& turn) const
-        {
-            if ( turn.method != detail::overlay::method_collinear
-                 && turn.method != detail::overlay::method_equal )
-            {
-                return false;
-            }
+	public:
+		template <typename Turn>
+		bool operator()(Turn const& turn) const
+		{
+			if ( turn.method != detail::overlay::method_collinear
+			        && turn.method != detail::overlay::method_equal )
+			{
+				return false;
+			}
 
-            return is_continue_or_opposite(turn.operations[0].operation)
-                && is_continue_or_opposite(turn.operations[1].operation);
-        }
-    };
+			return is_continue_or_opposite(turn.operations[0].operation)
+			       && is_continue_or_opposite(turn.operations[1].operation);
+		}
+	};
 
 
 public:
-    static inline void apply(Turns& turns)
-    {
-        turns.erase( std::remove_if(turns.begin(), turns.end(),
-                                    IsContinueTurn()),
-                     turns.end()
-                     );
-    }
+	static inline void apply(Turns& turns)
+	{
+		turns.erase( std::remove_if(turns.begin(), turns.end(),
+		                            IsContinueTurn()),
+		             turns.end()
+		           );
+	}
 };
 
 
-}} // namespace detail::turns
+}
+} // namespace detail::turns
 
-}} // namespect boost::geometry
+}
+} // namespect boost::geometry
 
 
 

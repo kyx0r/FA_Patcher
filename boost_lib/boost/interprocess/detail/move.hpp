@@ -24,8 +24,10 @@
 
 #include <boost/move/utility_core.hpp>
 
-namespace boost {
-namespace interprocess {
+namespace boost
+{
+namespace interprocess
+{
 
 using ::boost::move;
 using ::boost::forward;

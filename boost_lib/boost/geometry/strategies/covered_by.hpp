@@ -28,11 +28,15 @@
 #include <boost/geometry/core/tag_cast.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
-namespace strategy { namespace covered_by
+namespace strategy
+{
+namespace covered_by
 {
 
 
@@ -56,43 +60,45 @@ template
     typename TagContained = typename tag<GeometryContained>::type,
     typename TagContaining = typename tag<GeometryContaining>::type,
     typename CastedTagContained = typename tag_cast
-                                    <
-                                        typename tag<GeometryContained>::type,
-                                        pointlike_tag, linear_tag, polygonal_tag, areal_tag
-                                    >::type,
+    <
+        typename tag<GeometryContained>::type,
+        pointlike_tag, linear_tag, polygonal_tag, areal_tag
+        >::type,
     typename CastedTagContaining = typename tag_cast
-                                    <
-                                        typename tag<GeometryContaining>::type,
-                                        pointlike_tag, linear_tag, polygonal_tag, areal_tag
-                                    >::type,
+    <
+        typename tag<GeometryContaining>::type,
+        pointlike_tag, linear_tag, polygonal_tag, areal_tag
+        >::type,
     typename CsTagContained = typename tag_cast
-                                <
-                                    typename cs_tag<typename point_type<GeometryContained>::type>::type,
-                                    spherical_tag
-                                >::type,
+    <
+        typename cs_tag<typename point_type<GeometryContained>::type>::type,
+        spherical_tag
+        >::type,
     typename CsTagContaining = typename tag_cast
-                                <
-                                    typename cs_tag<typename point_type<GeometryContaining>::type>::type,
-                                    spherical_tag
-                                >::type
->
+    <
+        typename cs_tag<typename point_type<GeometryContaining>::type>::type,
+        spherical_tag
+        >::type
+    >
 struct default_strategy
 {
-    BOOST_MPL_ASSERT_MSG
-        (
-            false, NOT_IMPLEMENTED_FOR_THESE_TYPES
-            , (types<GeometryContained, GeometryContaining>)
-        );
+	BOOST_MPL_ASSERT_MSG
+	(
+	    false, NOT_IMPLEMENTED_FOR_THESE_TYPES
+	    , (types<GeometryContained, GeometryContaining>)
+	);
 };
 
 
 } // namespace services
 
 
-}} // namespace strategy::covered_by
+}
+} // namespace strategy::covered_by
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_STRATEGIES_COVERED_BY_HPP

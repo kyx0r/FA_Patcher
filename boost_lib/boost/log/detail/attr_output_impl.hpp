@@ -28,26 +28,29 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
-namespace aux {
+namespace aux
+{
 
 template< typename LeftT, typename T, typename FallbackPolicyT, typename TagT >
 struct make_output_expression
 {
-    //! Resulting expression
-    typedef attribute_output_terminal< LeftT, T, FallbackPolicyT, to_log_fun< TagT > > type;
+	//! Resulting expression
+	typedef attribute_output_terminal< LeftT, T, FallbackPolicyT, to_log_fun< TagT > > type;
 
-    //! Creates the output expression
-    template< typename RightT >
-    static BOOST_FORCEINLINE type make(LeftT const& left, RightT const& right)
-    {
-        return type(left, right.get_name(), to_log_fun< TagT >(), right.get_fallback_policy());
-    }
+	//! Creates the output expression
+	template< typename RightT >
+	static BOOST_FORCEINLINE type make(LeftT const& left, RightT const& right)
+	{
+		return type(left, right.get_name(), to_log_fun< TagT >(), right.get_fallback_policy());
+	}
 };
 
 template< typename LeftT, typename RightT, typename ValueT = typename RightT::value_type, bool IsSequenceV = mpl::is_sequence< ValueT >::value >
@@ -56,34 +59,34 @@ struct make_output_actor;
 template< template< typename > class ActorT, typename LeftExprT, typename RightT, typename ValueT >
 struct make_output_actor< ActorT< LeftExprT >, RightT, ValueT, false >
 {
-    typedef make_output_expression<
-        ActorT< LeftExprT >,
-        ValueT,
-        typename RightT::fallback_policy,
-        typename RightT::tag_type
-    > make_expression;
+	typedef make_output_expression<
+	ActorT< LeftExprT >,
+	        ValueT,
+	        typename RightT::fallback_policy,
+	        typename RightT::tag_type
+	        > make_expression;
 
-    typedef ActorT< typename make_expression::type > type;
+	typedef ActorT< typename make_expression::type > type;
 
-    static BOOST_FORCEINLINE type make(ActorT< LeftExprT > const& left, RightT const& right)
-    {
-        type res = {{ make_expression::make(left, right) }};
-        return res;
-    }
+	static BOOST_FORCEINLINE type make(ActorT< LeftExprT > const& left, RightT const& right)
+	{
+		type res = {{ make_expression::make(left, right) }};
+		return res;
+	}
 };
 
 template< template< typename > class ActorT, typename LeftExprT, typename RightT, typename ValueT >
 struct make_output_actor< ActorT< LeftExprT >, RightT, ValueT, true >
 {
-    typedef attribute_output_terminal< ActorT< LeftExprT >, ValueT, typename RightT::fallback_policy, to_log_fun< typename RightT::tag_type > > expression_type;
+	typedef attribute_output_terminal< ActorT< LeftExprT >, ValueT, typename RightT::fallback_policy, to_log_fun< typename RightT::tag_type > > expression_type;
 
-    typedef ActorT< expression_type > type;
+	typedef ActorT< expression_type > type;
 
-    static BOOST_FORCEINLINE type make(ActorT< LeftExprT > const& left, RightT const& right)
-    {
-        type res = {{ expression_type(left, right.get_name(), to_log_fun< typename RightT::tag_type >(), right.get_fallback_policy()) }};
-        return res;
-    }
+	static BOOST_FORCEINLINE type make(ActorT< LeftExprT > const& left, RightT const& right)
+	{
+		type res = {{ expression_type(left, right.get_name(), to_log_fun< typename RightT::tag_type >(), right.get_fallback_policy()) }};
+		return res;
+	}
 };
 
 } // namespace aux

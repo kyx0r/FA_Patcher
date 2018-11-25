@@ -36,42 +36,47 @@
 #include <boost/geometry/algorithms/detail/distance/multipoint_to_geometry.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace distance
+namespace detail
+{
+namespace distance
 {
 
 
 template<typename Point, typename Segment, typename Strategy>
 struct point_to_segment
 {
-    static inline typename strategy::distance::services::return_type
-        <
-            Strategy,
-            Point,
-            typename point_type<Segment>::type
-        >::type
-    apply(Point const& point, Segment const& segment, Strategy const& )
-    {
-        typename detail::distance::default_ps_strategy
-            <
-                Point,
-                typename point_type<Segment>::type,
-                Strategy
-            >::type segment_strategy;
+	static inline typename strategy::distance::services::return_type
+	<
+	Strategy,
+	Point,
+	typename point_type<Segment>::type
+	>::type
+	apply(Point const& point, Segment const& segment, Strategy const& )
+	{
+		typename detail::distance::default_ps_strategy
+		<
+		Point,
+		typename point_type<Segment>::type,
+		Strategy
+		>::type segment_strategy;
 
-        typename point_type<Segment>::type p[2];
-        geometry::detail::assign_point_from_index<0>(segment, p[0]);
-        geometry::detail::assign_point_from_index<1>(segment, p[1]);
-        return segment_strategy.apply(point, p[0], p[1]);
-    }
+		typename point_type<Segment>::type p[2];
+		geometry::detail::assign_point_from_index<0>(segment, p[0]);
+		geometry::detail::assign_point_from_index<1>(segment, p[1]);
+		return segment_strategy.apply(point, p[0], p[1]);
+	}
 };
 
 
-}} // namespace detail::distance
+}
+} // namespace detail::distance
 #endif // DOXYGEN_NO_DETAIL
 
 
@@ -85,115 +90,115 @@ namespace dispatch
 // Point-segment version 1, with point-point strategy
 template <typename Point, typename Segment, typename Strategy>
 struct distance
-<
-    Point, Segment, Strategy,
-    point_tag, segment_tag, strategy_tag_distance_point_point,
-    false
-> : detail::distance::point_to_segment<Point, Segment, Strategy>
+	<
+	Point, Segment, Strategy,
+	point_tag, segment_tag, strategy_tag_distance_point_point,
+	false
+	> : detail::distance::point_to_segment<Point, Segment, Strategy>
 {};
 
 
 // Point-line version 1, where point-point strategy is specified
 template <typename Point, typename Linestring, typename Strategy>
 struct distance
-<
-    Point, Linestring, Strategy,
-    point_tag, linestring_tag, strategy_tag_distance_point_point,
-    false
->
+	<
+	Point, Linestring, Strategy,
+	point_tag, linestring_tag, strategy_tag_distance_point_point,
+	false
+	>
 {
 
-    static inline typename strategy::distance::services::return_type
-        <
-            Strategy, Point, typename point_type<Linestring>::type
-        >::type
-    apply(Point const& point,
-          Linestring const& linestring,
-          Strategy const&)
-    {
-        typedef typename detail::distance::default_ps_strategy
-                    <
-                        Point,
-                        typename point_type<Linestring>::type,
-                        Strategy
-                    >::type ps_strategy_type;
+	static inline typename strategy::distance::services::return_type
+	<
+	Strategy, Point, typename point_type<Linestring>::type
+	>::type
+	apply(Point const& point,
+	      Linestring const& linestring,
+	      Strategy const&)
+	{
+		typedef typename detail::distance::default_ps_strategy
+		<
+		Point,
+		typename point_type<Linestring>::type,
+		Strategy
+		>::type ps_strategy_type;
 
-        return detail::distance::point_to_range
-            <
-                Point, Linestring, closed, ps_strategy_type
-            >::apply(point, linestring, ps_strategy_type());
-    }
+		return detail::distance::point_to_range
+		       <
+		       Point, Linestring, closed, ps_strategy_type
+		       >::apply(point, linestring, ps_strategy_type());
+	}
 };
 
 
 // Point-ring , where point-point strategy is specified
 template <typename Point, typename Ring, typename Strategy>
 struct distance
-<
-    Point, Ring, Strategy,
-    point_tag, ring_tag, strategy_tag_distance_point_point,
-    false
->
+	<
+	Point, Ring, Strategy,
+	point_tag, ring_tag, strategy_tag_distance_point_point,
+	false
+	>
 {
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy, Point, typename point_type<Ring>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy, Point, typename point_type<Ring>::type
+	>::type return_type;
 
-    static inline return_type apply(Point const& point,
-            Ring const& ring,
-            Strategy const&)
-    {
-        typedef typename detail::distance::default_ps_strategy
-            <
-                Point,
-                typename point_type<Ring>::type,
-                Strategy
-            >::type ps_strategy_type;
+	static inline return_type apply(Point const& point,
+	                                Ring const& ring,
+	                                Strategy const&)
+	{
+		typedef typename detail::distance::default_ps_strategy
+		<
+		Point,
+		typename point_type<Ring>::type,
+		Strategy
+		>::type ps_strategy_type;
 
-        return detail::distance::point_to_ring
-            <
-                Point, Ring,
-                geometry::closure<Ring>::value,
-                ps_strategy_type
-            >::apply(point, ring, ps_strategy_type());
-    }
+		return detail::distance::point_to_ring
+		       <
+		       Point, Ring,
+		       geometry::closure<Ring>::value,
+		       ps_strategy_type
+		       >::apply(point, ring, ps_strategy_type());
+	}
 };
 
 
 // Point-polygon , where point-point strategy is specified
 template <typename Point, typename Polygon, typename Strategy>
 struct distance
-<
-    Point, Polygon, Strategy,
-    point_tag, polygon_tag, strategy_tag_distance_point_point,
-    false
->
+	<
+	Point, Polygon, Strategy,
+	point_tag, polygon_tag, strategy_tag_distance_point_point,
+	false
+	>
 {
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy, Point, typename point_type<Polygon>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy, Point, typename point_type<Polygon>::type
+	>::type return_type;
 
-    static inline return_type apply(Point const& point,
-                                    Polygon const& polygon,
-                                    Strategy const&)
-    {
-        typedef typename detail::distance::default_ps_strategy
-            <
-                Point,
-                typename point_type<Polygon>::type,
-                Strategy
-            >::type ps_strategy_type;
+	static inline return_type apply(Point const& point,
+	                                Polygon const& polygon,
+	                                Strategy const&)
+	{
+		typedef typename detail::distance::default_ps_strategy
+		<
+		Point,
+		typename point_type<Polygon>::type,
+		Strategy
+		>::type ps_strategy_type;
 
-        return detail::distance::point_to_polygon
-            <
-                Point,
-                Polygon,
-                geometry::closure<Polygon>::value,
-                ps_strategy_type
-            >::apply(point, polygon, ps_strategy_type());
-    }
+		return detail::distance::point_to_polygon
+		       <
+		       Point,
+		       Polygon,
+		       geometry::closure<Polygon>::value,
+		       ps_strategy_type
+		       >::apply(point, polygon, ps_strategy_type());
+	}
 };
 
 
@@ -205,37 +210,37 @@ template
     typename MultiGeometry,
     typename MultiGeometryTag,
     typename Strategy
->
-struct distance
-    <
-        Point, MultiGeometry, Strategy,
-        point_tag, MultiGeometryTag,
-        strategy_tag_distance_point_point, false
     >
+struct distance
+	<
+	Point, MultiGeometry, Strategy,
+	point_tag, MultiGeometryTag,
+	strategy_tag_distance_point_point, false
+	>
 {
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy, Point, typename point_type<MultiGeometry>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy, Point, typename point_type<MultiGeometry>::type
+	>::type return_type;
 
-    static inline return_type apply(Point const& point,
-                                    MultiGeometry const& multigeometry,
-                                    Strategy const&)
-    {
-        typedef typename detail::distance::default_ps_strategy
-            <
-                Point,
-                typename point_type<MultiGeometry>::type,
-                Strategy
-            >::type ps_strategy_type;
-    
-        return distance
-            <
-                Point, MultiGeometry, ps_strategy_type,
-                point_tag, MultiGeometryTag,
-                strategy_tag_distance_point_segment, false
-            >::apply(point, multigeometry, ps_strategy_type());
-    }
+	static inline return_type apply(Point const& point,
+	                                MultiGeometry const& multigeometry,
+	                                Strategy const&)
+	{
+		typedef typename detail::distance::default_ps_strategy
+		<
+		Point,
+		typename point_type<MultiGeometry>::type,
+		Strategy
+		>::type ps_strategy_type;
+
+		return distance
+		       <
+		       Point, MultiGeometry, ps_strategy_type,
+		       point_tag, MultiGeometryTag,
+		       strategy_tag_distance_point_segment, false
+		       >::apply(point, multigeometry, ps_strategy_type());
+	}
 };
 
 
@@ -245,39 +250,39 @@ template
     typename MultiPoint,
     typename GeometryTag,
     typename Strategy
->
-struct distance
-    <
-        Geometry, MultiPoint, Strategy,
-        GeometryTag, multi_point_tag,
-        strategy_tag_distance_point_point, false
     >
+struct distance
+	<
+	Geometry, MultiPoint, Strategy,
+	GeometryTag, multi_point_tag,
+	strategy_tag_distance_point_point, false
+	>
 {
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy,
-            typename point_type<MultiPoint>::type,
-            typename point_type<Geometry>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy,
+	typename point_type<MultiPoint>::type,
+	typename point_type<Geometry>::type
+	>::type return_type;
 
-    static inline return_type apply(Geometry const& geometry,
-                                    MultiPoint const& multipoint,
-                                    Strategy const&)
-    {
-        typedef typename detail::distance::default_ps_strategy
-            <
-                typename point_type<MultiPoint>::type,
-                typename point_type<Geometry>::type,
-                Strategy
-            >::type ps_strategy_type;
-    
-        return distance
-            <
-                Geometry, MultiPoint, ps_strategy_type,
-                GeometryTag, multi_point_tag,
-                strategy_tag_distance_point_segment, false
-            >::apply(geometry, multipoint, ps_strategy_type());
-    }
+	static inline return_type apply(Geometry const& geometry,
+	                                MultiPoint const& multipoint,
+	                                Strategy const&)
+	{
+		typedef typename detail::distance::default_ps_strategy
+		<
+		typename point_type<MultiPoint>::type,
+		         typename point_type<Geometry>::type,
+		         Strategy
+		         >::type ps_strategy_type;
+
+		return distance
+		       <
+		       Geometry, MultiPoint, ps_strategy_type,
+		       GeometryTag, multi_point_tag,
+		       strategy_tag_distance_point_segment, false
+		       >::apply(geometry, multipoint, ps_strategy_type());
+	}
 };
 
 
@@ -287,39 +292,39 @@ template
     typename MultiGeometry,
     typename MultiGeometryTag,
     typename Strategy
->
-struct distance
-    <
-        MultiPoint, MultiGeometry, Strategy,
-        multi_point_tag, MultiGeometryTag,
-        strategy_tag_distance_point_point, false
     >
+struct distance
+	<
+	MultiPoint, MultiGeometry, Strategy,
+	multi_point_tag, MultiGeometryTag,
+	strategy_tag_distance_point_point, false
+	>
 {
-    typedef typename strategy::distance::services::return_type
-        <
-            Strategy,
-            typename point_type<MultiPoint>::type, 
-            typename point_type<MultiGeometry>::type
-        >::type return_type;
+	typedef typename strategy::distance::services::return_type
+	<
+	Strategy,
+	typename point_type<MultiPoint>::type,
+	typename point_type<MultiGeometry>::type
+	>::type return_type;
 
-    static inline return_type apply(MultiPoint const& multipoint,
-                                    MultiGeometry const& multigeometry,
-                                    Strategy const&)
-    {
-        typedef typename detail::distance::default_ps_strategy
-            <
-                typename point_type<MultiPoint>::type,
-                typename point_type<MultiGeometry>::type,
-                Strategy
-            >::type ps_strategy_type;
-    
-        return distance
-            <
-                MultiPoint, MultiGeometry, ps_strategy_type,
-                multi_point_tag, MultiGeometryTag,
-                strategy_tag_distance_point_segment, false
-            >::apply(multipoint, multigeometry, ps_strategy_type());
-    }
+	static inline return_type apply(MultiPoint const& multipoint,
+	                                MultiGeometry const& multigeometry,
+	                                Strategy const&)
+	{
+		typedef typename detail::distance::default_ps_strategy
+		<
+		typename point_type<MultiPoint>::type,
+		         typename point_type<MultiGeometry>::type,
+		         Strategy
+		         >::type ps_strategy_type;
+
+		return distance
+		       <
+		       MultiPoint, MultiGeometry, ps_strategy_type,
+		       multi_point_tag, MultiGeometryTag,
+		       strategy_tag_distance_point_segment, false
+		       >::apply(multipoint, multigeometry, ps_strategy_type());
+	}
 };
 
 
@@ -327,7 +332,8 @@ struct distance
 #endif // DOXYGEN_NO_DISPATCH
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISTANCE_BACKWARD_COMPATIBILITY_HPP

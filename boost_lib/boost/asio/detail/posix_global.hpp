@@ -24,29 +24,32 @@
 
 #include <boost/asio/detail/push_options.hpp>
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 template <typename T>
 struct posix_global_impl
 {
-  // Helper function to perform initialisation.
-  static void do_init()
-  {
-    instance_.static_ptr_ = instance_.ptr_ = new T;
-  }
+	// Helper function to perform initialisation.
+	static void do_init()
+	{
+		instance_.static_ptr_ = instance_.ptr_ = new T;
+	}
 
-  // Destructor automatically cleans up the global.
-  ~posix_global_impl()
-  {
-    delete static_ptr_;
-  }
+	// Destructor automatically cleans up the global.
+	~posix_global_impl()
+	{
+		delete static_ptr_;
+	}
 
-  static ::pthread_once_t init_once_;
-  static T* static_ptr_;
-  static posix_global_impl instance_;
-  T* ptr_;
+	static ::pthread_once_t init_once_;
+	static T* static_ptr_;
+	static posix_global_impl instance_;
+	T* ptr_;
 };
 
 template <typename T>
@@ -61,14 +64,14 @@ posix_global_impl<T> posix_global_impl<T>::instance_;
 template <typename T>
 T& posix_global()
 {
-  int result = ::pthread_once(
-      &posix_global_impl<T>::init_once_,
-      &posix_global_impl<T>::do_init);
+	int result = ::pthread_once(
+	                 &posix_global_impl<T>::init_once_,
+	                 &posix_global_impl<T>::do_init);
 
-  if (result != 0)
-    std::terminate();
+	if (result != 0)
+		std::terminate();
 
-  return *posix_global_impl<T>::instance_.ptr_;
+	return *posix_global_impl<T>::instance_.ptr_;
 }
 
 } // namespace detail

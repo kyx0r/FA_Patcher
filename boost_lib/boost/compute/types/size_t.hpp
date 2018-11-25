@@ -21,36 +21,41 @@
 #include <boost/compute/type_traits/type_name.hpp>
 #include <boost/compute/detail/meta_kernel.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 template <> struct is_fundamental<size_t>    : boost::true_type {};
 template <> struct is_fundamental<ptrdiff_t> : boost::true_type {};
 
-namespace detail {
+namespace detail
+{
 
 template <> struct type_name_trait<size_t>
-    : type_name_trait<
-        boost::mpl::if_c<sizeof(size_t) == sizeof(cl_uint), cl_uint, cl_ulong>::type
-        >
-{};
+	: type_name_trait<
+  boost::mpl::if_c<sizeof(size_t) == sizeof(cl_uint), cl_uint, cl_ulong>::type
+  >
+  {};
 
 template <> struct type_name_trait<ptrdiff_t>
-    : type_name_trait<
-        boost::mpl::if_c<sizeof(ptrdiff_t) == sizeof(cl_int), cl_int, cl_long>::type
-        >
-{};
+	: type_name_trait<
+  boost::mpl::if_c<sizeof(ptrdiff_t) == sizeof(cl_int), cl_int, cl_long>::type
+  >
+  {};
 
-inline meta_kernel& operator<<(meta_kernel &k, size_t v) {
-    std::ostringstream s;
-    s << v;
-    return k << s.str();
+inline meta_kernel& operator<<(meta_kernel &k, size_t v)
+{
+	std::ostringstream s;
+	s << v;
+	return k << s.str();
 }
 
-inline meta_kernel& operator<<(meta_kernel &k, ptrdiff_t v) {
-    std::ostringstream s;
-    s << v;
-    return k << s.str();
+inline meta_kernel& operator<<(meta_kernel &k, ptrdiff_t v)
+{
+	std::ostringstream s;
+	s << v;
+	return k << s.str();
 }
 
 } // end detail namespace

@@ -14,9 +14,12 @@
 #include <boost/beast/core/string.hpp>
 #include <iosfwd>
 
-namespace boost {
-namespace beast {
-namespace http {
+namespace boost
+{
+namespace beast
+{
+namespace http
+{
 
 /** HTTP request method verbs
 
@@ -25,107 +28,107 @@ namespace http {
 */
 enum class verb
 {
-    /** An unknown method.
+	/** An unknown method.
 
-        This value indicates that the request method string is not
-        one of the recognized verbs. Callers interested in the method
-        should use an interface which returns the original string.
-    */
-    unknown = 0,
+	    This value indicates that the request method string is not
+	    one of the recognized verbs. Callers interested in the method
+	    should use an interface which returns the original string.
+	*/
+	unknown = 0,
 
-    /// The DELETE method deletes the specified resource
-    delete_,
+	/// The DELETE method deletes the specified resource
+	delete_,
 
-    /** The GET method requests a representation of the specified resource.
+	/** The GET method requests a representation of the specified resource.
 
-        Requests using GET should only retrieve data and should have no other effect.
-    */
-    get,
+	    Requests using GET should only retrieve data and should have no other effect.
+	*/
+	get,
 
-    /** The HEAD method asks for a response identical to that of a GET request, but without the response body.
-    
-        This is useful for retrieving meta-information written in response
-        headers, without having to transport the entire content.
-    */
-    head,
+	/** The HEAD method asks for a response identical to that of a GET request, but without the response body.
 
-    /** The POST method requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.
+	    This is useful for retrieving meta-information written in response
+	    headers, without having to transport the entire content.
+	*/
+	head,
 
-        The data POSTed might be, for example, an annotation for existing
-        resources; a message for a bulletin board, newsgroup, mailing list,
-        or comment thread; a block of data that is the result of submitting
-        a web form to a data-handling process; or an item to add to a database
-    */
-    post,
+	/** The POST method requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.
 
-    /** The PUT method requests that the enclosed entity be stored under the supplied URI.
+	    The data POSTed might be, for example, an annotation for existing
+	    resources; a message for a bulletin board, newsgroup, mailing list,
+	    or comment thread; a block of data that is the result of submitting
+	    a web form to a data-handling process; or an item to add to a database
+	*/
+	post,
 
-        If the URI refers to an already existing resource, it is modified;
-        if the URI does not point to an existing resource, then the server
-        can create the resource with that URI.
-    */
-    put,
+	/** The PUT method requests that the enclosed entity be stored under the supplied URI.
 
-    /** The CONNECT method converts the request connection to a transparent TCP/IP tunnel.
+	    If the URI refers to an already existing resource, it is modified;
+	    if the URI does not point to an existing resource, then the server
+	    can create the resource with that URI.
+	*/
+	put,
 
-        This is usually to facilitate SSL-encrypted communication (HTTPS)
-        through an unencrypted HTTP proxy.
-    */
-    connect,
+	/** The CONNECT method converts the request connection to a transparent TCP/IP tunnel.
 
-    /** The OPTIONS method returns the HTTP methods that the server supports for the specified URL.
-    
-        This can be used to check the functionality of a web server by requesting
-        '*' instead of a specific resource.
-    */
-    options,
+	    This is usually to facilitate SSL-encrypted communication (HTTPS)
+	    through an unencrypted HTTP proxy.
+	*/
+	connect,
 
-    /** The TRACE method echoes the received request so that a client can see what (if any) changes or additions have been made by intermediate servers.
-    */
-    trace,
+	/** The OPTIONS method returns the HTTP methods that the server supports for the specified URL.
 
-    // WebDAV
+	    This can be used to check the functionality of a web server by requesting
+	    '*' instead of a specific resource.
+	*/
+	options,
 
-    copy,
-    lock,
-    mkcol,
-    move,
-    propfind,
-    proppatch,
-    search,
-    unlock,
-    bind,
-    rebind,
-    unbind,
-    acl,
+	/** The TRACE method echoes the received request so that a client can see what (if any) changes or additions have been made by intermediate servers.
+	*/
+	trace,
 
-    // subversion
+	// WebDAV
 
-    report,
-    mkactivity,
-    checkout,
-    merge,
+	copy,
+	lock,
+	mkcol,
+	move,
+	propfind,
+	proppatch,
+	search,
+	unlock,
+	bind,
+	rebind,
+	unbind,
+	acl,
 
-    // upnp
+	// subversion
 
-    msearch,
-    notify,
-    subscribe,
-    unsubscribe,
+	report,
+	mkactivity,
+	checkout,
+	merge,
 
-    // RFC-5789
+	// upnp
 
-    patch,
-    purge,
+	msearch,
+	notify,
+	subscribe,
+	unsubscribe,
 
-    // CalDAV
+	// RFC-5789
 
-    mkcalendar,
+	patch,
+	purge,
 
-    // RFC-2068, section 19.6.1.2
+	// CalDAV
 
-    link,
-    unlink
+	mkcalendar,
+
+	// RFC-2068, section 19.6.1.2
+
+	link,
+	unlink
 };
 
 /** Converts a string to the request method verb.
@@ -145,7 +148,7 @@ inline
 std::ostream&
 operator<<(std::ostream& os, verb v)
 {
-    return os << to_string(v);
+	return os << to_string(v);
 }
 
 } // http

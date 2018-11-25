@@ -13,8 +13,10 @@
 
 #include <boost/compute/random/mersenne_twister_engine.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 typedef mt19937 default_random_engine;
 

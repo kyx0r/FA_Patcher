@@ -37,32 +37,34 @@
 #pragma wave option(preserve: 1)
 #endif
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct void_;
+namespace fusion
+{
+struct void_;
 
-    namespace result_of
-    {
-        template <
-            BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-                FUSION_MAX_DEQUE_SIZE, typename T, void_)
-          , typename Extra = void_
-        >
-        struct make_deque;
+namespace result_of
+{
+template <
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+        FUSION_MAX_DEQUE_SIZE, typename T, void_)
+    , typename Extra = void_
+    >
+struct make_deque;
 
-        template <>
-        struct make_deque<>
-        {
-            typedef deque<> type;
-        };
-    }
+template <>
+struct make_deque<>
+{
+	typedef deque<> type;
+};
+}
 
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline deque<>
-    make_deque()
-    {
-        return deque<>();
-    }
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline deque<>
+make_deque()
+{
+	return deque<>();
+}
 
 #define BOOST_FUSION_AS_FUSION_ELEMENT(z, n, data)                               \
     typename detail::as_fusion_element<BOOST_PP_CAT(T, n)>::type
@@ -73,7 +75,8 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_AS_FUSION_ELEMENT
 
-}}
+}
+}
 
 #if defined(__WAVE__) && defined(BOOST_FUSION_CREATE_PREPROCESSED_FILES)
 #pragma wave option(output: null)
@@ -91,25 +94,25 @@ namespace boost { namespace fusion
 
 #define N BOOST_PP_ITERATION()
 
-    namespace result_of
-    {
-        template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-        #define TEXT(z, n, text) , text
-        struct make_deque< BOOST_PP_ENUM_PARAMS(N, T) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_DEQUE_SIZE, TEXT, void_) >
-        #undef TEXT
-        {
-            typedef deque<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)> type;
-        };
-    }
+namespace result_of
+{
+template <BOOST_PP_ENUM_PARAMS(N, typename T)>
+#define TEXT(z, n, text) , text
+struct make_deque< BOOST_PP_ENUM_PARAMS(N, T) BOOST_PP_REPEAT_FROM_TO(BOOST_PP_DEC(N), FUSION_MAX_DEQUE_SIZE, TEXT, void_) >
+#undef TEXT
+{
+	typedef deque<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)> type;
+};
+}
 
-    template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-    BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
-    inline deque<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>
-    make_deque(BOOST_PP_ENUM_BINARY_PARAMS(N, T, const& arg))
-    {
-        return deque<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>(
-            BOOST_PP_ENUM_PARAMS(N, arg));
-    }
+template <BOOST_PP_ENUM_PARAMS(N, typename T)>
+BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
+inline deque<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>
+make_deque(BOOST_PP_ENUM_BINARY_PARAMS(N, T, const& arg))
+{
+	return deque<BOOST_PP_ENUM(N, BOOST_FUSION_AS_FUSION_ELEMENT, _)>(
+	           BOOST_PP_ENUM_PARAMS(N, arg));
+}
 
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)

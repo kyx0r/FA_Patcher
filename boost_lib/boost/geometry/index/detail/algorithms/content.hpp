@@ -11,63 +11,71 @@
 #ifndef BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_CONTENT_HPP
 #define BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_CONTENT_HPP
 
-namespace boost { namespace geometry { namespace index { namespace detail {
+namespace boost
+{
+namespace geometry
+{
+namespace index
+{
+namespace detail
+{
 
 template <typename Indexable>
 struct default_content_result
 {
-    typedef typename select_most_precise<
-        typename coordinate_type<Indexable>::type,
-        long double
-    >::type type;
+	typedef typename select_most_precise<
+	typename coordinate_type<Indexable>::type,
+	         long double
+	         >::type type;
 };
 
-namespace dispatch {
+namespace dispatch
+{
 
 template <typename Box,
           std::size_t CurrentDimension = dimension<Box>::value>
 struct content_box
 {
-    BOOST_STATIC_ASSERT(0 < CurrentDimension);
+	BOOST_STATIC_ASSERT(0 < CurrentDimension);
 
-    static inline typename detail::default_content_result<Box>::type apply(Box const& b)
-    {
-        return content_box<Box, CurrentDimension - 1>::apply(b) *
-            ( get<max_corner, CurrentDimension - 1>(b) - get<min_corner, CurrentDimension - 1>(b) );
-    }
+	static inline typename detail::default_content_result<Box>::type apply(Box const& b)
+	{
+		return content_box<Box, CurrentDimension - 1>::apply(b) *
+		       ( get<max_corner, CurrentDimension - 1>(b) - get<min_corner, CurrentDimension - 1>(b) );
+	}
 };
 
 template <typename Box>
 struct content_box<Box, 1>
 {
-    static inline typename detail::default_content_result<Box>::type apply(Box const& b)
-    {
-        return get<max_corner, 0>(b) - get<min_corner, 0>(b);
-    }
+	static inline typename detail::default_content_result<Box>::type apply(Box const& b)
+	{
+		return get<max_corner, 0>(b) - get<min_corner, 0>(b);
+	}
 };
 
 template <typename Indexable, typename Tag>
 struct content
 {
-    BOOST_MPL_ASSERT_MSG(false, NOT_IMPLEMENTED_FOR_THIS_INDEXABLE_AND_TAG, (Indexable, Tag));
+	BOOST_MPL_ASSERT_MSG(false, NOT_IMPLEMENTED_FOR_THIS_INDEXABLE_AND_TAG, (Indexable, Tag));
 };
 
 template <typename Indexable>
 struct content<Indexable, point_tag>
 {
-    static typename detail::default_content_result<Indexable>::type apply(Indexable const&)
-    {
-        return 0;
-    }
+	static typename detail::default_content_result<Indexable>::type apply(Indexable const&)
+	{
+		return 0;
+	}
 };
 
 template <typename Indexable>
 struct content<Indexable, box_tag>
 {
-    static typename default_content_result<Indexable>::type apply(Indexable const& b)
-    {
-        return dispatch::content_box<Indexable>::apply(b);
-    }
+	static typename default_content_result<Indexable>::type apply(Indexable const& b)
+	{
+		return dispatch::content_box<Indexable>::apply(b);
+	}
 };
 
 } // namespace dispatch
@@ -75,13 +83,16 @@ struct content<Indexable, box_tag>
 template <typename Indexable>
 typename default_content_result<Indexable>::type content(Indexable const& b)
 {
-    return dispatch::content
-            <
-                Indexable,
-                typename tag<Indexable>::type
-            >::apply(b);
+	return dispatch::content
+	       <
+	       Indexable,
+	       typename tag<Indexable>::type
+	       >::apply(b);
 }
 
-}}}} // namespace boost::geometry::index::detail
+}
+}
+}
+} // namespace boost::geometry::index::detail
 
 #endif // BOOST_GEOMETRY_INDEX_DETAIL_ALGORITHMS_CONTENT_HPP

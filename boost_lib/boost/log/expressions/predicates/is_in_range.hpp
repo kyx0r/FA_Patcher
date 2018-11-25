@@ -32,11 +32,13 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace expressions {
+namespace expressions
+{
 
 /*!
  * The predicate checks if the attribute value contains a substring. The attribute value is assumed to be of a string type.
@@ -50,32 +52,32 @@ using attribute_is_in_range = aux::attribute_predicate< T, std::pair< BoundaryT,
 
 template< typename T, typename BoundaryT, typename FallbackPolicyT = fallback_to_none >
 class attribute_is_in_range :
-    public aux::attribute_predicate< T, std::pair< BoundaryT, BoundaryT >, in_range_fun, FallbackPolicyT >
+	public aux::attribute_predicate< T, std::pair< BoundaryT, BoundaryT >, in_range_fun, FallbackPolicyT >
 {
-    typedef aux::attribute_predicate< T, std::pair< BoundaryT, BoundaryT >, in_range_fun, FallbackPolicyT > base_type;
+	typedef aux::attribute_predicate< T, std::pair< BoundaryT, BoundaryT >, in_range_fun, FallbackPolicyT > base_type;
 
 public:
-    /*!
-     * Initializing constructor
-     *
-     * \param name Attribute name
-     * \param boundaries The expected attribute value boundaries
-     */
-    attribute_is_in_range(attribute_name const& name, std::pair< BoundaryT, BoundaryT > const& boundaries) : base_type(name, boundaries)
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \param name Attribute name
+	 * \param boundaries The expected attribute value boundaries
+	 */
+	attribute_is_in_range(attribute_name const& name, std::pair< BoundaryT, BoundaryT > const& boundaries) : base_type(name, boundaries)
+	{
+	}
 
-    /*!
-     * Initializing constructor
-     *
-     * \param name Attribute name
-     * \param boundaries The expected attribute value boundaries
-     * \param arg Additional parameter for the fallback policy
-     */
-    template< typename U >
-    attribute_is_in_range(attribute_name const& name, std::pair< BoundaryT, BoundaryT > const& boundaries, U const& arg) : base_type(name, boundaries, arg)
-    {
-    }
+	/*!
+	 * Initializing constructor
+	 *
+	 * \param name Attribute name
+	 * \param boundaries The expected attribute value boundaries
+	 * \param arg Additional parameter for the fallback policy
+	 */
+	template< typename U >
+	attribute_is_in_range(attribute_name const& name, std::pair< BoundaryT, BoundaryT > const& boundaries, U const& arg) : base_type(name, boundaries, arg)
+	{
+	}
 };
 
 #endif // !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
@@ -88,10 +90,10 @@ template< typename T, typename FallbackPolicyT, typename TagT, template< typenam
 BOOST_FORCEINLINE ActorT< aux::unary_function_terminal< attribute_is_in_range< T, typename boost::log::aux::make_embedded_string_type< BoundaryT >::type, FallbackPolicyT > > >
 is_in_range(attribute_actor< T, FallbackPolicyT, TagT, ActorT > const& attr, BoundaryT const& least, BoundaryT const& most)
 {
-    typedef typename boost::log::aux::make_embedded_string_type< BoundaryT >::type boundary_type;
-    typedef aux::unary_function_terminal< attribute_is_in_range< T, boundary_type, FallbackPolicyT > > terminal_type;
-    ActorT< terminal_type > act = {{ terminal_type(attr.get_name(), std::pair< boundary_type, boundary_type >(least, most), attr.get_fallback_policy()) }};
-    return act;
+	typedef typename boost::log::aux::make_embedded_string_type< BoundaryT >::type boundary_type;
+	typedef aux::unary_function_terminal< attribute_is_in_range< T, boundary_type, FallbackPolicyT > > terminal_type;
+	ActorT< terminal_type > act = {{ terminal_type(attr.get_name(), std::pair< boundary_type, boundary_type >(least, most), attr.get_fallback_policy()) }};
+	return act;
 }
 
 /*!
@@ -102,10 +104,10 @@ template< typename DescriptorT, template< typename > class ActorT, typename Boun
 BOOST_FORCEINLINE ActorT< aux::unary_function_terminal< attribute_is_in_range< typename DescriptorT::value_type, typename boost::log::aux::make_embedded_string_type< BoundaryT >::type > > >
 is_in_range(attribute_keyword< DescriptorT, ActorT > const&, BoundaryT const& least, BoundaryT const& most)
 {
-    typedef typename boost::log::aux::make_embedded_string_type< BoundaryT >::type boundary_type;
-    typedef aux::unary_function_terminal< attribute_is_in_range< typename DescriptorT::value_type, boundary_type > > terminal_type;
-    ActorT< terminal_type > act = {{ terminal_type(DescriptorT::get_name(), std::pair< boundary_type, boundary_type >(least, most)) }};
-    return act;
+	typedef typename boost::log::aux::make_embedded_string_type< BoundaryT >::type boundary_type;
+	typedef aux::unary_function_terminal< attribute_is_in_range< typename DescriptorT::value_type, boundary_type > > terminal_type;
+	ActorT< terminal_type > act = {{ terminal_type(DescriptorT::get_name(), std::pair< boundary_type, boundary_type >(least, most)) }};
+	return act;
 }
 
 /*!
@@ -116,10 +118,10 @@ template< typename T, typename BoundaryT >
 BOOST_FORCEINLINE phoenix::actor< aux::unary_function_terminal< attribute_is_in_range< T, typename boost::log::aux::make_embedded_string_type< BoundaryT >::type > > >
 is_in_range(attribute_name const& name, BoundaryT const& least, BoundaryT const& most)
 {
-    typedef typename boost::log::aux::make_embedded_string_type< BoundaryT >::type boundary_type;
-    typedef aux::unary_function_terminal< attribute_is_in_range< T, boundary_type > > terminal_type;
-    phoenix::actor< terminal_type > act = {{ terminal_type(name, std::pair< boundary_type, boundary_type >(least, most)) }};
-    return act;
+	typedef typename boost::log::aux::make_embedded_string_type< BoundaryT >::type boundary_type;
+	typedef aux::unary_function_terminal< attribute_is_in_range< T, boundary_type > > terminal_type;
+	phoenix::actor< terminal_type > act = {{ terminal_type(name, std::pair< boundary_type, boundary_type >(least, most)) }};
+	return act;
 }
 
 } // namespace expressions

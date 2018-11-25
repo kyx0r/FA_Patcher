@@ -47,147 +47,157 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct putp2 {};
+namespace par4
+{
+struct putp2 {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace putp2
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace putp2
+{
 
-            static const double C_x = 1.89490;
-            static const double C_y = 1.71848;
-            static const double C_p = 0.6141848493043784;
-            static const double EPS = 1e-10;
-            static const int NITER = 10;
-            //static const double PI_DIV_3 = 1.0471975511965977;
+static const double C_x = 1.89490;
+static const double C_y = 1.71848;
+static const double C_p = 0.6141848493043784;
+static const double EPS = 1e-10;
+static const int NITER = 10;
+//static const double PI_DIV_3 = 1.0471975511965977;
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_putp2_spheroid : public base_t_fi<base_putp2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_putp2_spheroid : public base_t_fi<base_putp2_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
 
-                inline base_putp2_spheroid(const Parameters& par)
-                    : base_t_fi<base_putp2_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_putp2_spheroid(const Parameters& par)
+		: base_t_fi<base_putp2_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    static const CalculationType PI_DIV_3 = detail::PI_DIV_3<CalculationType>();
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		static const CalculationType PI_DIV_3 = detail::PI_DIV_3<CalculationType>();
 
-                    CalculationType p, c, s, V;
-                    int i;
+		CalculationType p, c, s, V;
+		int i;
 
-                    p = C_p * sin(lp_lat);
-                    s = lp_lat * lp_lat;
-                    lp_lat *= 0.615709 + s * ( 0.00909953 + s * 0.0046292 );
-                    for (i = NITER; i ; --i) {
-                        c = cos(lp_lat);
-                        s = sin(lp_lat);
-                        lp_lat -= V = (lp_lat + s * (c - 1.) - p) /
-                            (1. + c * (c - 1.) - s * s);
-                        if (fabs(V) < EPS)
-                            break;
-                    }
-                    if (!i)
-                        lp_lat = lp_lat < 0 ? - PI_DIV_3 : PI_DIV_3;
-                    xy_x = C_x * lp_lon * (cos(lp_lat) - 0.5);
-                    xy_y = C_y * sin(lp_lat);
-                }
+		p = C_p * sin(lp_lat);
+		s = lp_lat * lp_lat;
+		lp_lat *= 0.615709 + s * ( 0.00909953 + s * 0.0046292 );
+		for (i = NITER; i ; --i)
+		{
+			c = cos(lp_lat);
+			s = sin(lp_lat);
+			lp_lat -= V = (lp_lat + s * (c - 1.) - p) /
+			              (1. + c * (c - 1.) - s * s);
+			if (fabs(V) < EPS)
+				break;
+		}
+		if (!i)
+			lp_lat = lp_lat < 0 ? - PI_DIV_3 : PI_DIV_3;
+		xy_x = C_x * lp_lon * (cos(lp_lat) - 0.5);
+		xy_y = C_y * sin(lp_lat);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType c;
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType c;
 
-                    lp_lat = aasin(xy_y / C_y);
-                    lp_lon = xy_x / (C_x * ((c = cos(lp_lat)) - 0.5));
-                    lp_lat = aasin((lp_lat + sin(lp_lat) * (c - 1.)) / C_p);
-                }
+		lp_lat = aasin(xy_y / C_y);
+		lp_lon = xy_x / (C_x * ((c = cos(lp_lat)) - 0.5));
+		lp_lat = aasin((lp_lat + sin(lp_lat) * (c - 1.)) / C_p);
+	}
 
-                static inline std::string get_name()
-                {
-                    return "putp2_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "putp2_spheroid";
+	}
 
-            };
+};
 
-            // Putnins P2
-            template <typename Parameters>
-            inline void setup_putp2(Parameters& par)
-            {
-                par.es = 0.;
-            }
+// Putnins P2
+template <typename Parameters>
+inline void setup_putp2(Parameters& par)
+{
+	par.es = 0.;
+}
 
-    }} // namespace detail::putp2
-    #endif // doxygen
+}
+} // namespace detail::putp2
+#endif // doxygen
 
-    /*!
-        \brief Putnins P2 projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Example
-        \image html ex_putp2.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct putp2_spheroid : public detail::putp2::base_putp2_spheroid<CalculationType, Parameters>
-    {
-        inline putp2_spheroid(const Parameters& par) : detail::putp2::base_putp2_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::putp2::setup_putp2(this->m_par);
-        }
-    };
+/*!
+    \brief Putnins P2 projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Example
+    \image html ex_putp2.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct putp2_spheroid : public detail::putp2::base_putp2_spheroid<CalculationType, Parameters>
+{
+	inline putp2_spheroid(const Parameters& par) : detail::putp2::base_putp2_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::putp2::setup_putp2(this->m_par);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::putp2, putp2_spheroid, putp2_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::putp2, putp2_spheroid, putp2_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class putp2_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<putp2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class putp2_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<putp2_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void putp2_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("putp2", new putp2_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void putp2_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("putp2", new putp2_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_PUTP2_HPP
 

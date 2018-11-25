@@ -16,25 +16,34 @@ Distributed under the Boost Software License, Version 1.0.
 #include <utility>
 
 
-BOOST_HANA_NAMESPACE_BEGIN namespace detail { namespace variadic {
-    template <std::size_t n, typename = std::make_index_sequence<n>>
-    struct at_type;
+BOOST_HANA_NAMESPACE_BEGIN namespace detail
+{
+namespace variadic
+{
+template <std::size_t n, typename = std::make_index_sequence<n>>
+struct at_type;
 
-    template <std::size_t n, std::size_t ...ignore>
-    struct at_type<n, std::index_sequence<ignore...>> {
-    private:
-        template <typename Nth>
-        static constexpr auto go(decltype(ignore, (void*)0)..., Nth nth, ...)
-        { return nth; }
+template <std::size_t n, std::size_t ...ignore>
+struct at_type<n, std::index_sequence<ignore...>>
+{
+private:
+	template <typename Nth>
+	static constexpr auto go(decltype(ignore, (void*)0)..., Nth nth, ...)
+	{
+		return nth;
+	}
 
-    public:
-        template <typename ...Xs>
-        constexpr auto operator()(Xs ...xs) const
-        { return *go(&xs...); }
-    };
+public:
+	template <typename ...Xs>
+	constexpr auto operator()(Xs ...xs) const
+	{
+		return *go(&xs...);
+	}
+};
 
-    template <std::size_t n>
-    constexpr at_type<n> at{};
-}} BOOST_HANA_NAMESPACE_END
+template <std::size_t n>
+constexpr at_type<n> at{};
+}
+} BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_VARIADIC_AT_HPP

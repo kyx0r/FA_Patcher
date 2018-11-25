@@ -27,36 +27,43 @@
 
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
 
-namespace boost {
-namespace numeric {
-namespace odeint {
+namespace boost
+{
+namespace numeric
+{
+namespace odeint
+{
 
 // specialization for vexcl vector
 template <typename T>
-struct vector_space_norm_inf< vex::vector<T> > {
-    typedef T result_type;
+struct vector_space_norm_inf< vex::vector<T> >
+{
+	typedef T result_type;
 
-    T operator()( const vex::vector<T> &x ) const {
-        const auto &max = vex::get_reductor<T, vex::MAX>(x.queue_list());
+	T operator()( const vex::vector<T> &x ) const
+	{
+		const auto &max = vex::get_reductor<T, vex::MAX>(x.queue_list());
 
-        return max( fabs(x) );
-    }
+		return max( fabs(x) );
+	}
 };
 
 // specialization for vexcl multivector
 template <typename T, size_t N>
-struct vector_space_norm_inf< vex::multivector<T, N> > {
-    typedef T result_type;
+struct vector_space_norm_inf< vex::multivector<T, N> >
+{
+	typedef T result_type;
 
-    T operator()( const vex::multivector<T, N> &x ) const {
-        const auto &max = vex::get_reductor<T, vex::MAX>(x.queue_list());
+	T operator()( const vex::multivector<T, N> &x ) const
+	{
+		const auto &max = vex::get_reductor<T, vex::MAX>(x.queue_list());
 
-        // Reducing a multivector results in std::array<T, N>:
-        auto m = max( fabs(x) );
+		// Reducing a multivector results in std::array<T, N>:
+		auto m = max( fabs(x) );
 
-        // We will need to reduce it even further:
-        return *std::max_element(m.begin(), m.end());
-    }
+		// We will need to reduce it even further:
+		return *std::max_element(m.begin(), m.end());
+	}
 };
 
 

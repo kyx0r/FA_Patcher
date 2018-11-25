@@ -19,12 +19,16 @@
 #include <boost/geometry/core/assert.hpp>
 #include <boost/geometry/util/range.hpp>
 
-namespace boost { namespace geometry {
+namespace boost
+{
+namespace geometry
+{
 
 #ifndef DOXYGEN_NO_DETAIL
 
 #ifndef DOXYGEN_NO_DISPATCH
-namespace detail_dispatch {
+namespace detail_dispatch
+{
 
 template <typename Geometry,
           typename Tag = typename geometry::tag<Geometry>::type,
@@ -35,74 +39,75 @@ struct sub_range : not_implemented<Tag>
 template <typename Geometry, typename Tag>
 struct sub_range<Geometry, Tag, false>
 {
-    typedef Geometry & return_type;
+	typedef Geometry & return_type;
 
-    template <typename Id> static inline
-    return_type apply(Geometry & geometry, Id const&)
-    {
-        return geometry;
-    }
+	template <typename Id> static inline
+	return_type apply(Geometry & geometry, Id const&)
+	{
+		return geometry;
+	}
 };
 
 template <typename Geometry>
 struct sub_range<Geometry, polygon_tag, false>
 {
-    typedef typename geometry::ring_return_type<Geometry>::type return_type;
+	typedef typename geometry::ring_return_type<Geometry>::type return_type;
 
-    template <typename Id> static inline
-    return_type apply(Geometry & geometry, Id const& id)
-    {
-        if ( id.ring_index < 0 )
-        {
-            return geometry::exterior_ring(geometry);
-        }
-        else
-        {
-            typedef typename boost::range_size
-                <
-                    typename geometry::interior_type<Geometry>::type
-                >::type size_type;
-            size_type const ri = static_cast<size_type>(id.ring_index);
-            return range::at(geometry::interior_rings(geometry), ri);
-        }
-    }
+	template <typename Id> static inline
+	return_type apply(Geometry & geometry, Id const& id)
+	{
+		if ( id.ring_index < 0 )
+		{
+			return geometry::exterior_ring(geometry);
+		}
+		else
+		{
+			typedef typename boost::range_size
+			<
+			typename geometry::interior_type<Geometry>::type
+			>::type size_type;
+			size_type const ri = static_cast<size_type>(id.ring_index);
+			return range::at(geometry::interior_rings(geometry), ri);
+		}
+	}
 };
 
 template <typename Geometry, typename Tag>
 struct sub_range<Geometry, Tag, true>
 {
-    typedef typename boost::range_value<Geometry>::type value_type;
-    typedef typename boost::mpl::if_c
-        <
-            boost::is_const<Geometry>::value,
-            typename boost::add_const<value_type>::type,
-            value_type
-        >::type sub_type;
+	typedef typename boost::range_value<Geometry>::type value_type;
+	typedef typename boost::mpl::if_c
+	<
+	boost::is_const<Geometry>::value,
+	      typename boost::add_const<value_type>::type,
+	      value_type
+	      >::type sub_type;
 
-    typedef detail_dispatch::sub_range<sub_type> sub_sub_range;
+	typedef detail_dispatch::sub_range<sub_type> sub_sub_range;
 
-    // TODO: shouldn't it be return_type?
-    typedef typename sub_sub_range::return_type return_type;
+	// TODO: shouldn't it be return_type?
+	typedef typename sub_sub_range::return_type return_type;
 
-    template <typename Id> static inline
-    return_type apply(Geometry & geometry, Id const& id)
-    {
-        BOOST_GEOMETRY_ASSERT(0 <= id.multi_index);
-        typedef typename boost::range_size<Geometry>::type size_type;
-        size_type const mi = static_cast<size_type>(id.multi_index);
-        return sub_sub_range::apply(range::at(geometry, mi), id);
-    }
+	template <typename Id> static inline
+	return_type apply(Geometry & geometry, Id const& id)
+	{
+		BOOST_GEOMETRY_ASSERT(0 <= id.multi_index);
+		typedef typename boost::range_size<Geometry>::type size_type;
+		size_type const mi = static_cast<size_type>(id.multi_index);
+		return sub_sub_range::apply(range::at(geometry, mi), id);
+	}
 };
 
 } // namespace detail_dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
-namespace detail {
+namespace detail
+{
 
 template <typename Geometry>
 struct sub_range_return_type
 {
-    typedef typename detail_dispatch::sub_range<Geometry>::return_type type;
+	typedef typename detail_dispatch::sub_range<Geometry>::return_type type;
 };
 
 // This function also works for geometry::segment_identifier
@@ -111,19 +116,20 @@ template <typename Geometry, typename Id> inline
 typename sub_range_return_type<Geometry>::type
 sub_range(Geometry & geometry, Id const& id)
 {
-    return detail_dispatch::sub_range<Geometry>::apply(geometry, id);
+	return detail_dispatch::sub_range<Geometry>::apply(geometry, id);
 }
 
 template <typename Geometry, typename Id> inline
 typename sub_range_return_type<Geometry const>::type
 sub_range(Geometry const& geometry, Id const& id)
 {
-    return detail_dispatch::sub_range<Geometry const>::apply(geometry, id);
+	return detail_dispatch::sub_range<Geometry const>::apply(geometry, id);
 }
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_SUB_RANGE_HPP

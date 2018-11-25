@@ -24,54 +24,56 @@
 #pragma once
 #endif
 
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace aux {
+namespace aux
+{
 
 //! A base class for singletons, constructed on-demand
 template< typename DerivedT, typename StorageT = DerivedT >
 class lazy_singleton
 {
 public:
-    BOOST_DEFAULTED_FUNCTION(lazy_singleton(), {})
+	BOOST_DEFAULTED_FUNCTION(lazy_singleton(), {})
 
-    //! Returns the singleton instance
-    static StorageT& get()
-    {
-        BOOST_LOG_ONCE_BLOCK()
-        {
-            DerivedT::init_instance();
-        }
-        return get_instance();
-    }
+	//! Returns the singleton instance
+	static StorageT& get()
+	{
+		BOOST_LOG_ONCE_BLOCK()
+		{
+			DerivedT::init_instance();
+		}
+		return get_instance();
+	}
 
-    //! Initializes the singleton instance
-    static void init_instance()
-    {
-        get_instance();
-    }
+	//! Initializes the singleton instance
+	static void init_instance()
+	{
+		get_instance();
+	}
 
-    BOOST_DELETED_FUNCTION(lazy_singleton(lazy_singleton const&))
-    BOOST_DELETED_FUNCTION(lazy_singleton& operator= (lazy_singleton const&))
+	BOOST_DELETED_FUNCTION(lazy_singleton(lazy_singleton const&))
+	BOOST_DELETED_FUNCTION(lazy_singleton& operator= (lazy_singleton const&))
 
 protected:
-    //! Returns the singleton instance (not thread-safe)
-    static StorageT& get_instance()
-    {
-        static StorageT instance;
-        return instance;
-    }
+	//! Returns the singleton instance (not thread-safe)
+	static StorageT& get_instance()
+	{
+		static StorageT instance;
+		return instance;
+	}
 };
 
 //! A base class for singletons, constructed on namespace scope initialization stage
 template< typename DerivedT, typename StorageT = DerivedT >
 class singleton :
-    public lazy_singleton< DerivedT, StorageT >
+	public lazy_singleton< DerivedT, StorageT >
 {
 public:
-    static StorageT& instance;
+	static StorageT& instance;
 };
 
 template< typename DerivedT, typename StorageT >

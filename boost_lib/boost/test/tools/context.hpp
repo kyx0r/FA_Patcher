@@ -22,23 +22,27 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace test_tools {
-namespace tt_detail {
+namespace boost
+{
+namespace test_tools
+{
+namespace tt_detail
+{
 
 // ************************************************************************** //
 // **************                 context_frame                ************** //
 // ************************************************************************** //
 
-struct BOOST_TEST_DECL context_frame {
-    explicit    context_frame( ::boost::unit_test::lazy_ostream const& context_descr );
-    ~context_frame();
+struct BOOST_TEST_DECL context_frame
+{
+	explicit    context_frame( ::boost::unit_test::lazy_ostream const& context_descr );
+	~context_frame();
 
-    operator    bool();
+	operator    bool();
 
 private:
-    // Data members
-    int         m_frame_id;
+	// Data members
+	int         m_frame_id;
 };
 
 //____________________________________________________________________________//

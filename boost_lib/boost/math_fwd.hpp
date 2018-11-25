@@ -18,7 +18,7 @@ namespace math
 //  From <boost/math/quaternion.hpp>  ----------------------------------------//
 
 template < typename T >
-    class quaternion;
+class quaternion;
 
 // Also has many function templates (including operators)
 
@@ -26,14 +26,14 @@ template < typename T >
 //  From <boost/math/octonion.hpp>  ------------------------------------------//
 
 template < typename T >
-    class octonion;
+class octonion;
 
 template < >
-    class octonion< float >;
+class octonion< float >;
 template < >
-    class octonion< double >;
+class octonion< double >;
 template < >
-    class octonion< long double >;
+class octonion< long double >;
 
 }  // namespace math
 }  // namespace boost

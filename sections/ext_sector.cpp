@@ -21,7 +21,7 @@ GFT Gft;
 register int eax asm("eax");
 
 void print_hello_world()
-{	
+{
 	fd.Logf("Hello World!");
 }
 

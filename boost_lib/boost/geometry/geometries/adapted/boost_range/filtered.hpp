@@ -16,7 +16,9 @@
 #include <boost/geometry/core/tags.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace traits
@@ -29,12 +31,13 @@ struct tag<boost::filtered_range<Filter, Geometry> >
 struct tag<boost::range_detail::filter_range<Filter, Geometry> >
 #endif
 {
-    typedef typename geometry::tag<Geometry>::type type;
+	typedef typename geometry::tag<Geometry>::type type;
 };
 
 }
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_GEOMETRIES_ADAPTED_BOOST_RANGE_FILTERED_HPP
 

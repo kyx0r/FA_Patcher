@@ -17,7 +17,9 @@
 
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 #ifndef DOXYGEN_NO_DISPATCH
@@ -26,27 +28,27 @@ namespace formula_dispatch
 
 template <typename ResultType, typename Geometry, typename Tag = typename tag<Geometry>::type>
 struct eccentricity_sqr
-    : not_implemented<Tag>
+	: not_implemented<Tag>
 {};
 
 template <typename ResultType, typename Geometry>
 struct eccentricity_sqr<ResultType, Geometry, srs_sphere_tag>
 {
-    static inline ResultType apply(Geometry const& /*geometry*/)
-    {
-        return ResultType(0);
-    }
+	static inline ResultType apply(Geometry const& /*geometry*/)
+	{
+		return ResultType(0);
+	}
 };
 
 template <typename ResultType, typename Geometry>
 struct eccentricity_sqr<ResultType, Geometry, srs_spheroid_tag>
 {
-    static inline ResultType apply(Geometry const& geometry)
-    {
-        // 1 - (b / a)^2
-        return ResultType(1) - math::sqr(ResultType(get_radius<2>(geometry))
-                                       / ResultType(get_radius<0>(geometry)));
-    }
+	static inline ResultType apply(Geometry const& geometry)
+	{
+		// 1 - (b / a)^2
+		return ResultType(1) - math::sqr(ResultType(get_radius<2>(geometry))
+		                                 / ResultType(get_radius<0>(geometry)));
+	}
 };
 
 } // namespace formula_dispatch
@@ -59,12 +61,13 @@ namespace formula
 template <typename ResultType, typename Geometry>
 ResultType eccentricity_sqr(Geometry const& geometry)
 {
-    return formula_dispatch::eccentricity_sqr<ResultType, Geometry>::apply(geometry);
+	return formula_dispatch::eccentricity_sqr<ResultType, Geometry>::apply(geometry);
 }
 
 } // namespace formula
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_FORMULAS_ECCENCRICITY_SQR_HPP

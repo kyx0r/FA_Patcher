@@ -18,20 +18,26 @@
 #include <boost/type_traits/add_const.hpp>
 #include <boost/msm/front/detail/common_states.hpp>
 
-namespace boost { namespace msm { namespace front
+namespace boost
+{
+namespace msm
+{
+namespace front
 {
 // default base: non-polymorphic, not visitable
-struct default_base_state 
+struct default_base_state
 {
-    ~default_base_state(){}
+	~default_base_state() {}
 };
 // default polymorphic base state. Derive all states from it to get polymorphic behavior
 struct polymorphic_state
 {
-    virtual ~polymorphic_state() {}
+	virtual ~polymorphic_state() {}
 };
 
-}}}
+}
+}
+}
 
 #endif //BOOST_MSM_FRONT_COMMON_STATES_H
 

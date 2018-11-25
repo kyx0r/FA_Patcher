@@ -11,7 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/icl/detail/boost_config.hpp>
 #include <boost/detail/workaround.hpp>
 
-#ifdef BOOST_MSVC 
+#ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4100) // unreferenced formal parameter
 #pragma warning(disable:4127) // conditional expression is constant
@@ -35,92 +35,99 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/icl/type_traits/difference_type_of.hpp>
 #include <boost/icl/type_traits/size_type_of.hpp>
 
-namespace boost{namespace icl
+namespace boost
 {
-    template<> struct is_discrete<boost::gregorian::date>
-    {
-        typedef is_discrete type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
+namespace icl
+{
+template<> struct is_discrete<boost::gregorian::date>
+{
+	typedef is_discrete type;
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 
-    template<> 
-    inline boost::gregorian::date identity_element<boost::gregorian::date>::value()
-    { 
-        return boost::gregorian::date(boost::gregorian::min_date_time); 
-    }
+template<>
+inline boost::gregorian::date identity_element<boost::gregorian::date>::value()
+{
+	return boost::gregorian::date(boost::gregorian::min_date_time);
+}
 
-    template<> 
-    struct identity_element<boost::gregorian::date_duration>
-    {
-        static boost::gregorian::date_duration value()
-        { 
-            return boost::gregorian::date(boost::gregorian::min_date_time) 
-                 - boost::gregorian::date(boost::gregorian::min_date_time); 
-        }
-    };
+template<>
+struct identity_element<boost::gregorian::date_duration>
+{
+	static boost::gregorian::date_duration value()
+	{
+		return boost::gregorian::date(boost::gregorian::min_date_time)
+		       - boost::gregorian::date(boost::gregorian::min_date_time);
+	}
+};
 
-    template<> 
-    struct has_difference<boost::gregorian::date> 
-    { 
-        typedef has_difference type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };  
+template<>
+struct has_difference<boost::gregorian::date>
+{
+	typedef has_difference type;
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
 
-    template<> 
-    struct difference_type_of<boost::gregorian::date> 
-    { typedef boost::gregorian::date_duration type; };  
+template<>
+struct difference_type_of<boost::gregorian::date>
+{
+	typedef boost::gregorian::date_duration type;
+};
 
-    template<> 
-    struct size_type_of<boost::gregorian::date> 
-    { typedef boost::gregorian::date_duration type; };  
-
-
-
-    // ------------------------------------------------------------------------
-    inline boost::gregorian::date operator ++(boost::gregorian::date& x)
-    {
-        return x += boost::gregorian::date::duration_type::unit();
-    }
-
-    inline boost::gregorian::date operator --(boost::gregorian::date& x)
-    {
-        return x -= boost::gregorian::date::duration_type::unit();
-    }
-
-    // ------------------------------------------------------------------------
-    template<> struct is_discrete<boost::gregorian::date_duration>
-    {
-        typedef is_discrete type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-
-    template<> 
-    struct has_difference<boost::gregorian::date_duration> 
-    { 
-        typedef has_difference type;
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };  
-
-    template<> 
-    struct size_type_of<boost::gregorian::date_duration> 
-    { 
-        typedef boost::gregorian::date_duration type; 
-    };  
-
-    inline boost::gregorian::date_duration operator ++(boost::gregorian::date_duration& x)
-    {
-        return x += boost::gregorian::date::duration_type::unit();
-    }
-
-    inline boost::gregorian::date_duration operator --(boost::gregorian::date_duration& x)
-    {
-        return x -= boost::gregorian::date::duration_type::unit();
-    }
-
-    // ------------------------------------------------------------------------
+template<>
+struct size_type_of<boost::gregorian::date>
+{
+	typedef boost::gregorian::date_duration type;
+};
 
 
-}} // namespace icl boost
+
+// ------------------------------------------------------------------------
+inline boost::gregorian::date operator ++(boost::gregorian::date& x)
+{
+	return x += boost::gregorian::date::duration_type::unit();
+}
+
+inline boost::gregorian::date operator --(boost::gregorian::date& x)
+{
+	return x -= boost::gregorian::date::duration_type::unit();
+}
+
+// ------------------------------------------------------------------------
+template<> struct is_discrete<boost::gregorian::date_duration>
+{
+	typedef is_discrete type;
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
+
+template<>
+struct has_difference<boost::gregorian::date_duration>
+{
+	typedef has_difference type;
+	BOOST_STATIC_CONSTANT(bool, value = true);
+};
+
+template<>
+struct size_type_of<boost::gregorian::date_duration>
+{
+	typedef boost::gregorian::date_duration type;
+};
+
+inline boost::gregorian::date_duration operator ++(boost::gregorian::date_duration& x)
+{
+	return x += boost::gregorian::date::duration_type::unit();
+}
+
+inline boost::gregorian::date_duration operator --(boost::gregorian::date_duration& x)
+{
+	return x -= boost::gregorian::date::duration_type::unit();
+}
+
+// ------------------------------------------------------------------------
+
+
+}
+} // namespace icl boost
 
 #endif
 

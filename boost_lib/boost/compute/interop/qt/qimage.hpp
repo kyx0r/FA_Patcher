@@ -21,46 +21,50 @@
 
 #include <QImage>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 inline image_format qt_qimage_format_to_image_format(const QImage::Format &format)
 {
-    if(format == QImage::Format_RGB32){
-        return image_format(image_format::bgra, image_format::unorm_int8);
-    }
+	if(format == QImage::Format_RGB32)
+	{
+		return image_format(image_format::bgra, image_format::unorm_int8);
+	}
 
-    BOOST_THROW_EXCEPTION(opencl_error(CL_IMAGE_FORMAT_NOT_SUPPORTED));
+	BOOST_THROW_EXCEPTION(opencl_error(CL_IMAGE_FORMAT_NOT_SUPPORTED));
 }
 
 inline QImage::Format qt_image_format_to_qimage_format(const image_format &format)
 {
-    if(format == image_format(image_format::bgra, image_format::unorm_int8)){
-        return QImage::Format_RGB32;
-    }
+	if(format == image_format(image_format::bgra, image_format::unorm_int8))
+	{
+		return QImage::Format_RGB32;
+	}
 
-    return QImage::Format_Invalid;
+	return QImage::Format_Invalid;
 }
 
 inline image_format qt_qimage_get_format(const QImage &image)
 {
-    return qt_qimage_format_to_image_format(image.format());
+	return qt_qimage_format_to_image_format(image.format());
 }
 
 inline void qt_copy_qimage_to_image2d(const QImage &qimage,
                                       image2d &image,
                                       command_queue &queue)
 {
-    queue.enqueue_write_image(image, image.origin(), image.size(), qimage.constBits());
+	queue.enqueue_write_image(image, image.origin(), image.size(), qimage.constBits());
 }
 
 inline void qt_copy_image2d_to_qimage(const image2d &image,
                                       QImage &qimage,
                                       command_queue &queue)
 {
-    queue.enqueue_read_image(
-        image, dim(0, 0), dim(qimage.width(), qimage.height()), qimage.bits()
-    );
+	queue.enqueue_read_image(
+	    image, dim(0, 0), dim(qimage.width(), qimage.height()), qimage.bits()
+	);
 }
 
 } // end compute namespace

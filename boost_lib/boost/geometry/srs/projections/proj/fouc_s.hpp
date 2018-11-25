@@ -49,153 +49,165 @@
 #include <boost/geometry/srs/projections/impl/factory_entry.hpp>
 #include <boost/geometry/srs/projections/impl/aasincos.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
-namespace srs { namespace par4
+namespace srs
 {
-    struct fouc_s {};
+namespace par4
+{
+struct fouc_s {};
 
-}} //namespace srs::par4
+}
+} //namespace srs::par4
 
 namespace projections
 {
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail { namespace fouc_s
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
+namespace fouc_s
+{
 
-            static const int MAX_ITER = 10;
-            static const double LOOP_TOL = 1e-7;
+static const int MAX_ITER = 10;
+static const double LOOP_TOL = 1e-7;
 
-            template <typename T>
-            struct par_fouc_s
-            {
-                T n, n1;
-            };
+template <typename T>
+struct par_fouc_s
+{
+	T n, n1;
+};
 
-            // template class, using CRTP to implement forward/inverse
-            template <typename CalculationType, typename Parameters>
-            struct base_fouc_s_spheroid : public base_t_fi<base_fouc_s_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>
-            {
+// template class, using CRTP to implement forward/inverse
+template <typename CalculationType, typename Parameters>
+struct base_fouc_s_spheroid : public base_t_fi<base_fouc_s_spheroid<CalculationType, Parameters>,
+	CalculationType, Parameters>
+{
 
-                typedef CalculationType geographic_type;
-                typedef CalculationType cartesian_type;
+	typedef CalculationType geographic_type;
+	typedef CalculationType cartesian_type;
 
-                par_fouc_s<CalculationType> m_proj_parm;
+	par_fouc_s<CalculationType> m_proj_parm;
 
-                inline base_fouc_s_spheroid(const Parameters& par)
-                    : base_t_fi<base_fouc_s_spheroid<CalculationType, Parameters>,
-                     CalculationType, Parameters>(*this, par) {}
+	inline base_fouc_s_spheroid(const Parameters& par)
+		: base_t_fi<base_fouc_s_spheroid<CalculationType, Parameters>,
+		  CalculationType, Parameters>(*this, par) {}
 
-                // FORWARD(s_forward)  spheroid
-                // Project coordinates from geographic (lon, lat) to cartesian (x, y)
-                inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
-                {
-                    CalculationType t;
+	// FORWARD(s_forward)  spheroid
+	// Project coordinates from geographic (lon, lat) to cartesian (x, y)
+	inline void fwd(geographic_type& lp_lon, geographic_type& lp_lat, cartesian_type& xy_x, cartesian_type& xy_y) const
+	{
+		CalculationType t;
 
-                    t = cos(lp_lat);
-                    xy_x = lp_lon * t / (this->m_proj_parm.n + this->m_proj_parm.n1 * t);
-                    xy_y = this->m_proj_parm.n * lp_lat + this->m_proj_parm.n1 * sin(lp_lat);
-                }
+		t = cos(lp_lat);
+		xy_x = lp_lon * t / (this->m_proj_parm.n + this->m_proj_parm.n1 * t);
+		xy_y = this->m_proj_parm.n * lp_lat + this->m_proj_parm.n1 * sin(lp_lat);
+	}
 
-                // INVERSE(s_inverse)  spheroid
-                // Project coordinates from cartesian (x, y) to geographic (lon, lat)
-                inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
-                {
-                    CalculationType V;
-                    int i;
+	// INVERSE(s_inverse)  spheroid
+	// Project coordinates from cartesian (x, y) to geographic (lon, lat)
+	inline void inv(cartesian_type& xy_x, cartesian_type& xy_y, geographic_type& lp_lon, geographic_type& lp_lat) const
+	{
+		CalculationType V;
+		int i;
 
-                    if (this->m_proj_parm.n) {
-                        lp_lat = xy_y;
-                        for (i = MAX_ITER; i ; --i) {
-                            lp_lat -= V = (this->m_proj_parm.n * lp_lat + this->m_proj_parm.n1 * sin(lp_lat) - xy_y ) /
-                                (this->m_proj_parm.n + this->m_proj_parm.n1 * cos(lp_lat));
-                            if (fabs(V) < LOOP_TOL)
-                                break;
-                        }
-                        if (!i)
-                            lp_lat = xy_y < 0. ? -geometry::math::half_pi<double>() : geometry::math::half_pi<double>();
-                    } else
-                        lp_lat = aasin(xy_y);
-                    V = cos(lp_lat);
-                    lp_lon = xy_x * (this->m_proj_parm.n + this->m_proj_parm.n1 * V) / V;
-                }
+		if (this->m_proj_parm.n)
+		{
+			lp_lat = xy_y;
+			for (i = MAX_ITER; i ; --i)
+			{
+				lp_lat -= V = (this->m_proj_parm.n * lp_lat + this->m_proj_parm.n1 * sin(lp_lat) - xy_y ) /
+				              (this->m_proj_parm.n + this->m_proj_parm.n1 * cos(lp_lat));
+				if (fabs(V) < LOOP_TOL)
+					break;
+			}
+			if (!i)
+				lp_lat = xy_y < 0. ? -geometry::math::half_pi<double>() : geometry::math::half_pi<double>();
+		}
+		else
+			lp_lat = aasin(xy_y);
+		V = cos(lp_lat);
+		lp_lon = xy_x * (this->m_proj_parm.n + this->m_proj_parm.n1 * V) / V;
+	}
 
-                static inline std::string get_name()
-                {
-                    return "fouc_s_spheroid";
-                }
+	static inline std::string get_name()
+	{
+		return "fouc_s_spheroid";
+	}
 
-            };
+};
 
-            // Foucaut Sinusoidal
-            template <typename Parameters, typename T>
-            inline void setup_fouc_s(Parameters& par, par_fouc_s<T>& proj_parm)
-            {
-                proj_parm.n = pj_param(par.params, "dn").f;
-                if (proj_parm.n < 0. || proj_parm.n > 1.)
-                    BOOST_THROW_EXCEPTION( projection_exception(-99) );
-                proj_parm.n1 = 1. - proj_parm.n;
-                par.es = 0;
-            }
+// Foucaut Sinusoidal
+template <typename Parameters, typename T>
+inline void setup_fouc_s(Parameters& par, par_fouc_s<T>& proj_parm)
+{
+	proj_parm.n = pj_param(par.params, "dn").f;
+	if (proj_parm.n < 0. || proj_parm.n > 1.)
+		BOOST_THROW_EXCEPTION( projection_exception(-99) );
+	proj_parm.n1 = 1. - proj_parm.n;
+	par.es = 0;
+}
 
-    }} // namespace detail::fouc_s
-    #endif // doxygen
+}
+} // namespace detail::fouc_s
+#endif // doxygen
 
-    /*!
-        \brief Foucaut Sinusoidal projection
-        \ingroup projections
-        \tparam Geographic latlong point type
-        \tparam Cartesian xy point type
-        \tparam Parameters parameter type
-        \par Projection characteristics
-         - Pseudocylindrical
-         - Spheroid
-        \par Projection parameters
-         - n (real)
-        \par Example
-        \image html ex_fouc_s.gif
-    */
-    template <typename CalculationType, typename Parameters>
-    struct fouc_s_spheroid : public detail::fouc_s::base_fouc_s_spheroid<CalculationType, Parameters>
-    {
-        inline fouc_s_spheroid(const Parameters& par) : detail::fouc_s::base_fouc_s_spheroid<CalculationType, Parameters>(par)
-        {
-            detail::fouc_s::setup_fouc_s(this->m_par, this->m_proj_parm);
-        }
-    };
+/*!
+    \brief Foucaut Sinusoidal projection
+    \ingroup projections
+    \tparam Geographic latlong point type
+    \tparam Cartesian xy point type
+    \tparam Parameters parameter type
+    \par Projection characteristics
+     - Pseudocylindrical
+     - Spheroid
+    \par Projection parameters
+     - n (real)
+    \par Example
+    \image html ex_fouc_s.gif
+*/
+template <typename CalculationType, typename Parameters>
+struct fouc_s_spheroid : public detail::fouc_s::base_fouc_s_spheroid<CalculationType, Parameters>
+{
+	inline fouc_s_spheroid(const Parameters& par) : detail::fouc_s::base_fouc_s_spheroid<CalculationType, Parameters>(par)
+	{
+		detail::fouc_s::setup_fouc_s(this->m_par, this->m_proj_parm);
+	}
+};
 
-    #ifndef DOXYGEN_NO_DETAIL
-    namespace detail
-    {
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail
+{
 
-        // Static projection
-        BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::fouc_s, fouc_s_spheroid, fouc_s_spheroid)
+// Static projection
+BOOST_GEOMETRY_PROJECTIONS_DETAIL_STATIC_PROJECTION(srs::par4::fouc_s, fouc_s_spheroid, fouc_s_spheroid)
 
-        // Factory entry(s)
-        template <typename CalculationType, typename Parameters>
-        class fouc_s_entry : public detail::factory_entry<CalculationType, Parameters>
-        {
-            public :
-                virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
-                {
-                    return new base_v_fi<fouc_s_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
-                }
-        };
+// Factory entry(s)
+template <typename CalculationType, typename Parameters>
+class fouc_s_entry : public detail::factory_entry<CalculationType, Parameters>
+{
+public :
+	virtual base_v<CalculationType, Parameters>* create_new(const Parameters& par) const
+	{
+		return new base_v_fi<fouc_s_spheroid<CalculationType, Parameters>, CalculationType, Parameters>(par);
+	}
+};
 
-        template <typename CalculationType, typename Parameters>
-        inline void fouc_s_init(detail::base_factory<CalculationType, Parameters>& factory)
-        {
-            factory.add_to_factory("fouc_s", new fouc_s_entry<CalculationType, Parameters>);
-        }
+template <typename CalculationType, typename Parameters>
+inline void fouc_s_init(detail::base_factory<CalculationType, Parameters>& factory)
+{
+	factory.add_to_factory("fouc_s", new fouc_s_entry<CalculationType, Parameters>);
+}
 
-    } // namespace detail
-    #endif // doxygen
+} // namespace detail
+#endif // doxygen
 
 } // namespace projections
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_PROJECTIONS_FOUC_S_HPP
 

@@ -11,9 +11,12 @@
 #ifndef BOOST_ASIO_COROUTINE_HPP
 #define BOOST_ASIO_COROUTINE_HPP
 
-namespace boost {
-namespace asio {
-namespace detail {
+namespace boost
+{
+namespace asio
+{
+namespace detail
+{
 
 class coroutine_ref;
 
@@ -201,7 +204,7 @@ class coroutine_ref;
  * The @c fork pseudo-keyword is used when "forking" a coroutine, i.e. splitting
  * it into two (or more) copies. One use of @c fork is in a server, where a new
  * coroutine is created to handle each client connection:
- * 
+ *
  * @code reenter (this)
  * {
  *   do
@@ -212,9 +215,9 @@ class coroutine_ref;
  *   } while (is_parent());
  *   ... client-specific handling follows ...
  * } @endcode
- * 
+ *
  * The logical steps involved in a @c fork are:
- * 
+ *
  * @li @c fork saves the current state of the coroutine.
  * @li The statement creates a copy of the coroutine and either executes it
  *     immediately or schedules it for later execution.
@@ -242,38 +245,58 @@ class coroutine_ref;
 class coroutine
 {
 public:
-  /// Constructs a coroutine in its initial state.
-  coroutine() : value_(0) {}
+	/// Constructs a coroutine in its initial state.
+	coroutine() : value_(0) {}
 
-  /// Returns true if the coroutine is the child of a fork.
-  bool is_child() const { return value_ < 0; }
+	/// Returns true if the coroutine is the child of a fork.
+	bool is_child() const
+	{
+		return value_ < 0;
+	}
 
-  /// Returns true if the coroutine is the parent of a fork.
-  bool is_parent() const { return !is_child(); }
+	/// Returns true if the coroutine is the parent of a fork.
+	bool is_parent() const
+	{
+		return !is_child();
+	}
 
-  /// Returns true if the coroutine has reached its terminal state.
-  bool is_complete() const { return value_ == -1; }
+	/// Returns true if the coroutine has reached its terminal state.
+	bool is_complete() const
+	{
+		return value_ == -1;
+	}
 
 private:
-  friend class detail::coroutine_ref;
-  int value_;
+	friend class detail::coroutine_ref;
+	int value_;
 };
 
 
-namespace detail {
+namespace detail
+{
 
 class coroutine_ref
 {
 public:
-  coroutine_ref(coroutine& c) : value_(c.value_), modified_(false) {}
-  coroutine_ref(coroutine* c) : value_(c->value_), modified_(false) {}
-  ~coroutine_ref() { if (!modified_) value_ = -1; }
-  operator int() const { return value_; }
-  int& operator=(int v) { modified_ = true; return value_ = v; }
+	coroutine_ref(coroutine& c) : value_(c.value_), modified_(false) {}
+	coroutine_ref(coroutine* c) : value_(c->value_), modified_(false) {}
+	~coroutine_ref()
+	{
+		if (!modified_) value_ = -1;
+	}
+	operator int() const
+	{
+		return value_;
+	}
+	int& operator=(int v)
+	{
+		modified_ = true;
+		return value_ = v;
+	}
 private:
-  void operator=(const coroutine_ref&);
-  int& value_;
-  bool modified_;
+	void operator=(const coroutine_ref&);
+	int& value_;
+	bool modified_;
 };
 
 } // namespace detail

@@ -18,7 +18,9 @@
 #include <boost/mpl/if.hpp>
 
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
@@ -40,17 +42,18 @@ namespace boost { namespace geometry
 template <bool IsConst, typename Type>
 struct add_const_if_c
 {
-    typedef typename boost::mpl::if_c
-        <
-            IsConst,
-            Type const,
-            Type
-        >::type type;
+	typedef typename boost::mpl::if_c
+	<
+	IsConst,
+	Type const,
+	Type
+	>::type type;
 };
 
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_UTIL_ADD_CONST_IF_C_HPP

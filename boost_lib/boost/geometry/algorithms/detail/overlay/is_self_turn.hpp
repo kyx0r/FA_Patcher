@@ -12,57 +12,63 @@
 
 #include <boost/geometry/algorithms/detail/overlay/overlay_type.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace overlay
+namespace detail
+{
+namespace overlay
 {
 
 template <overlay_type OverlayType>
 struct is_self_turn_check
 {
-    template <typename Turn>
-    static inline bool apply(Turn const& turn)
-    {
-        return turn.operations[0].seg_id.source_index
-                == turn.operations[1].seg_id.source_index;
-    }
+	template <typename Turn>
+	static inline bool apply(Turn const& turn)
+	{
+		return turn.operations[0].seg_id.source_index
+		       == turn.operations[1].seg_id.source_index;
+	}
 };
 
 template <>
 struct is_self_turn_check<overlay_buffer>
 {
-    template <typename Turn>
-    static inline bool apply(Turn const& /*turn*/)
-    {
-        return false;
-    }
+	template <typename Turn>
+	static inline bool apply(Turn const& /*turn*/)
+	{
+		return false;
+	}
 };
 
 template <>
 struct is_self_turn_check<overlay_dissolve>
 {
-    template <typename Turn>
-    static inline bool apply(Turn const& /*turn*/)
-    {
-        return false;
-    }
+	template <typename Turn>
+	static inline bool apply(Turn const& /*turn*/)
+	{
+		return false;
+	}
 };
 
 template <overlay_type OverlayType, typename Turn>
 bool is_self_turn(Turn const& turn)
 {
-    return is_self_turn_check<OverlayType>::apply(turn);
+	return is_self_turn_check<OverlayType>::apply(turn);
 }
 
 
-}} // namespace detail::overlay
+}
+} // namespace detail::overlay
 #endif // DOXYGEN_NO_DETAIL
 
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_IS_SELF_TURN_HPP

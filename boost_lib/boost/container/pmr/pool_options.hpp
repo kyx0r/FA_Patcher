@@ -12,14 +12,17 @@
 #define BOOST_CONTAINER_PMR_POOL_OPTIONS_HPP
 
 #if defined (_MSC_VER)
-#  pragma once 
+#  pragma once
 #endif
 
 #include <cstddef>
 
-namespace boost {
-namespace container {
-namespace pmr {
+namespace boost
+{
+namespace container
+{
+namespace pmr
+{
 
 //! The members of pool_options comprise a set of constructor options for pool resources.
 //! The effect of each option on the pool resource behavior is described below:
@@ -38,11 +41,11 @@ namespace pmr {
 //!   choose a pass-through threshold larger than specified in this field.
 struct pool_options
 {
-   pool_options()
-      : max_blocks_per_chunk(0u), largest_required_pool_block(0u)
-   {}
-   std::size_t max_blocks_per_chunk;
-   std::size_t largest_required_pool_block;
+	pool_options()
+		: max_blocks_per_chunk(0u), largest_required_pool_block(0u)
+	{}
+	std::size_t max_blocks_per_chunk;
+	std::size_t largest_required_pool_block;
 };
 
 }  //namespace pmr {

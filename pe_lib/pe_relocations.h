@@ -34,7 +34,7 @@ public: //Setters do not change everything inside image, they are used by PE cla
 	void set_rva(uint16_t rva);
 	//Sets type of relocation
 	void set_type(uint16_t type);
-		
+
 	//Sets relocation item (rrva + type)
 	void set_item(uint16_t item);
 

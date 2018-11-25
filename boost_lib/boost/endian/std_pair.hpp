@@ -17,20 +17,20 @@ namespace boost
 {
 namespace endian
 {
-  template <class ReversibleValueT, class ReversibleValueU>
-  std::pair<ReversibleValueT, ReversibleValueU>
-    reverse_value(std::pair<ReversibleValueT, ReversibleValueU> x)
-  {
-    return std::pair<ReversibleValueT, ReversibleValueU>(reverse_value(x.first),
-      reverse_value(x.second));
-  }
+template <class ReversibleValueT, class ReversibleValueU>
+std::pair<ReversibleValueT, ReversibleValueU>
+reverse_value(std::pair<ReversibleValueT, ReversibleValueU> x)
+{
+	return std::pair<ReversibleValueT, ReversibleValueU>(reverse_value(x.first),
+	        reverse_value(x.second));
+}
 
-  template <class ReversibleT, class ReversibleU>
-  void reverse(std::pair<ReversibleT, ReversibleU>& x)
-  {
-    reverse(x.first);
-    reverse(x.second);
-  }
+template <class ReversibleT, class ReversibleU>
+void reverse(std::pair<ReversibleT, ReversibleU>& x)
+{
+	reverse(x.first);
+	reverse(x.second);
+}
 
 }
 }

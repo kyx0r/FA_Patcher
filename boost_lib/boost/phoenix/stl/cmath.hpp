@@ -14,7 +14,8 @@
 #include <boost/type_traits/declval.hpp>
 #include <boost/phoenix/support/iterate.hpp>
 
-namespace boost {
+namespace boost
+{
 
 #if (defined (BOOST_NO_CXX11_DECLTYPE) || \
      defined (BOOST_INTEL_CXX_VERSION) || \

@@ -23,24 +23,28 @@
 
 //____________________________________________________________________________//
 
-namespace boost {
-namespace unit_test {
-namespace output {
+namespace boost
+{
+namespace unit_test
+{
+namespace output
+{
 
 // ************************************************************************** //
 // **************              xml_report_formatter            ************** //
 // ************************************************************************** //
 
-class xml_report_formatter : public results_reporter::format {
+class xml_report_formatter : public results_reporter::format
+{
 public:
-    // Formatter interface
-    void    results_report_start( std::ostream& ostr );
-    void    results_report_finish( std::ostream& ostr );
+	// Formatter interface
+	void    results_report_start( std::ostream& ostr );
+	void    results_report_finish( std::ostream& ostr );
 
-    void    test_unit_report_start( test_unit const&, std::ostream& ostr );
-    void    test_unit_report_finish( test_unit const&, std::ostream& ostr );
+	void    test_unit_report_start( test_unit const&, std::ostream& ostr );
+	void    test_unit_report_finish( test_unit const&, std::ostream& ostr );
 
-    void    do_confirmation_report( test_unit const&, std::ostream& ostr );
+	void    do_confirmation_report( test_unit const&, std::ostream& ostr );
 };
 
 } // namespace output

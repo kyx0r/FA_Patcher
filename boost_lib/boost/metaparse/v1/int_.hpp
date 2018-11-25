@@ -12,13 +12,13 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      typedef foldl1<digit_val, boost::mpl::int_<0>, impl::next_digit> int_;
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+typedef foldl1<digit_val, boost::mpl::int_<0>, impl::next_digit> int_;
+}
+}
 }
 
 #endif

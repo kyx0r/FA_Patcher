@@ -25,7 +25,9 @@
 #include <boost/geometry/core/coordinate_dimension.hpp>
 #include <boost/geometry/util/math.hpp>
 
-namespace boost { namespace geometry
+namespace boost
+{
+namespace geometry
 {
 
 namespace detail
@@ -34,30 +36,30 @@ namespace detail
 template <typename Geometry, std::size_t Index>
 class indexed_point_view
 {
-    indexed_point_view & operator=(indexed_point_view const&);
+	indexed_point_view & operator=(indexed_point_view const&);
 
 public:
-    typedef typename geometry::point_type<Geometry>::type point_type;
-    typedef typename geometry::coordinate_type<Geometry>::type coordinate_type;
+	typedef typename geometry::point_type<Geometry>::type point_type;
+	typedef typename geometry::coordinate_type<Geometry>::type coordinate_type;
 
-    indexed_point_view(Geometry & geometry)
-        : m_geometry(geometry)
-    {}
+	indexed_point_view(Geometry & geometry)
+		: m_geometry(geometry)
+	{}
 
-    template <std::size_t Dimension>
-    inline coordinate_type get() const
-    {
-        return geometry::get<Index, Dimension>(m_geometry);
-    }
+	template <std::size_t Dimension>
+	inline coordinate_type get() const
+	{
+		return geometry::get<Index, Dimension>(m_geometry);
+	}
 
-    template <std::size_t Dimension>
-    inline void set(coordinate_type const& value)
-    {
-        geometry::set<Index, Dimension>(m_geometry, value);
-    }
+	template <std::size_t Dimension>
+	inline void set(coordinate_type const& value)
+	{
+		geometry::set<Index, Dimension>(m_geometry, value);
+	}
 
 private:
-    Geometry & m_geometry;
+	Geometry & m_geometry;
 };
 
 }
@@ -69,55 +71,56 @@ namespace traits
 template <typename Geometry, std::size_t Index>
 struct tag< geometry::detail::indexed_point_view<Geometry, Index> >
 {
-    typedef point_tag type;
+	typedef point_tag type;
 };
 
 template <typename Geometry, std::size_t Index>
 struct coordinate_type< geometry::detail::indexed_point_view<Geometry, Index> >
 {
-    typedef typename geometry::coordinate_type<Geometry>::type type;
+	typedef typename geometry::coordinate_type<Geometry>::type type;
 };
 
 template <typename Geometry, std::size_t Index>
 struct coordinate_system
-    <
-        geometry::detail::indexed_point_view<Geometry, Index>
-    >
+	<
+	geometry::detail::indexed_point_view<Geometry, Index>
+	>
 {
-    typedef typename geometry::coordinate_system<Geometry>::type type;
+	typedef typename geometry::coordinate_system<Geometry>::type type;
 };
 
 template <typename Geometry, std::size_t Index>
 struct dimension< geometry::detail::indexed_point_view<Geometry, Index> >
-    : geometry::dimension<Geometry>
+	: geometry::dimension<Geometry>
 {};
 
 template<typename Geometry, std::size_t Index, std::size_t Dimension>
 struct access
-    <
-       geometry::detail::indexed_point_view<Geometry, Index>, Dimension
-    >
+	<
+	geometry::detail::indexed_point_view<Geometry, Index>, Dimension
+	>
 {
-    typedef typename geometry::coordinate_type<Geometry>::type coordinate_type;
+	typedef typename geometry::coordinate_type<Geometry>::type coordinate_type;
 
-    static inline coordinate_type get(
-        geometry::detail::indexed_point_view<Geometry, Index> const& p)
-    {
-        return p.template get<Dimension>();
-    }
+	static inline coordinate_type get(
+	    geometry::detail::indexed_point_view<Geometry, Index> const& p)
+	{
+		return p.template get<Dimension>();
+	}
 
-    static inline void set(
-        geometry::detail::indexed_point_view<Geometry, Index> & p,
-        coordinate_type const& value)
-    {
-        p.template set<Dimension>(value);
-    }
+	static inline void set(
+	    geometry::detail::indexed_point_view<Geometry, Index> & p,
+	    coordinate_type const& value)
+	{
+		p.template set<Dimension>(value);
+	}
 };
 
 } // namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 
 #endif // BOOST_GEOMETRY_VIEWS_DETAIL_INDEXED_POINT_VIEW_HPP

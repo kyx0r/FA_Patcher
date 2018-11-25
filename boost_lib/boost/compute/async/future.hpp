@@ -13,8 +13,10 @@
 
 #include <boost/compute/event.hpp>
 
-namespace boost {
-namespace compute {
+namespace boost
+{
+namespace compute
+{
 
 /// \class future
 /// \brief Holds the result of an asynchronous computation.
@@ -24,67 +26,68 @@ template<class T>
 class future
 {
 public:
-    future()
-        : m_event(0)
-    {
-    }
+	future()
+		: m_event(0)
+	{
+	}
 
-    future(const T &result, const event &event)
-        : m_result(result),
-          m_event(event)
-    {
-    }
+	future(const T &result, const event &event)
+		: m_result(result),
+		  m_event(event)
+	{
+	}
 
-    future(const future<T> &other)
-        : m_result(other.m_result),
-          m_event(other.m_event)
-    {
-    }
+	future(const future<T> &other)
+		: m_result(other.m_result),
+		  m_event(other.m_event)
+	{
+	}
 
-    future& operator=(const future<T> &other)
-    {
-        if(this != &other){
-            m_result = other.m_result;
-            m_event = other.m_event;
-        }
+	future& operator=(const future<T> &other)
+	{
+		if(this != &other)
+		{
+			m_result = other.m_result;
+			m_event = other.m_event;
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~future()
-    {
-    }
+	~future()
+	{
+	}
 
-    /// Returns the result of the computation. This will block until
-    /// the result is ready.
-    T get()
-    {
-        wait();
+	/// Returns the result of the computation. This will block until
+	/// the result is ready.
+	T get()
+	{
+		wait();
 
-        return m_result;
-    }
+		return m_result;
+	}
 
-    /// Returns \c true if the future is valid.
-    bool valid() const
-    {
-        return m_event != 0;
-    }
+	/// Returns \c true if the future is valid.
+	bool valid() const
+	{
+		return m_event != 0;
+	}
 
-    /// Blocks until the computation is complete.
-    void wait() const
-    {
-        m_event.wait();
-    }
+	/// Blocks until the computation is complete.
+	void wait() const
+	{
+		m_event.wait();
+	}
 
-    /// Returns the underlying event object.
-    event get_event() const
-    {
-        return m_event;
-    }
+	/// Returns the underlying event object.
+	event get_event() const
+	{
+		return m_event;
+	}
 
 private:
-    T m_result;
-    event m_event;
+	T m_result;
+	event m_event;
 };
 
 /// \internal_
@@ -92,72 +95,73 @@ template<>
 class future<void>
 {
 public:
-    future()
-        : m_event(0)
-    {
-    }
+	future()
+		: m_event(0)
+	{
+	}
 
-    template<class T>
-    future(const future<T> &other)
-        : m_event(other.get_event())
-    {
-    }
+	template<class T>
+	future(const future<T> &other)
+		: m_event(other.get_event())
+	{
+	}
 
-    explicit future(const event &event)
-        : m_event(event)
-    {
-    }
+	explicit future(const event &event)
+		: m_event(event)
+	{
+	}
 
-    template<class T>
-    future<void> &operator=(const future<T> &other)
-    {
-        m_event = other.get_event();
+	template<class T>
+	future<void> &operator=(const future<T> &other)
+	{
+		m_event = other.get_event();
 
-        return *this;
-    }
+		return *this;
+	}
 
-    future<void> &operator=(const future<void> &other)
-    {
-        if(this != &other){
-            m_event = other.m_event;
-        }
+	future<void> &operator=(const future<void> &other)
+	{
+		if(this != &other)
+		{
+			m_event = other.m_event;
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~future()
-    {
-    }
+	~future()
+	{
+	}
 
-    void get()
-    {
-        wait();
-    }
+	void get()
+	{
+		wait();
+	}
 
-    bool valid() const
-    {
-        return m_event != 0;
-    }
+	bool valid() const
+	{
+		return m_event != 0;
+	}
 
-    void wait() const
-    {
-        m_event.wait();
-    }
+	void wait() const
+	{
+		m_event.wait();
+	}
 
-    event get_event() const
-    {
-        return m_event;
-    }
+	event get_event() const
+	{
+		return m_event;
+	}
 
 private:
-    event m_event;
+	event m_event;
 };
 
 /// \internal_
 template<class Result>
 inline future<Result> make_future(const Result &result, const event &event)
 {
-    return future<Result>(result, event);
+	return future<Result>(result, event);
 }
 
 } // end compute namespace

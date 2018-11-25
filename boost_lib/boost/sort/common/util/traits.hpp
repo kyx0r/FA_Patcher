@@ -60,7 +60,7 @@ using compare_iter =  std::less< value_iter< iter_t > >;
 //---------------------------------------------------------------------------
 template<class T>
 using enable_if_not_integral =
-      typename std::enable_if< !std::is_integral< T >::value >::type;
+    typename std::enable_if< !std::is_integral< T >::value >::type;
 //
 //---------------------------------------------------------------------------
 /// @class enable_if_integral
@@ -71,7 +71,7 @@ using enable_if_not_integral =
 //---------------------------------------------------------------------------
 template<class T>
 using enable_if_integral =
-      typename std::enable_if< std::is_integral< T >::value >::type;
+    typename std::enable_if< std::is_integral< T >::value >::type;
 
 //
 //---------------------------------------------------------------------------
@@ -83,7 +83,7 @@ using enable_if_integral =
 //---------------------------------------------------------------------------
 template<class T>
 using enable_if_string =
-      typename std::enable_if< std::is_same< T, std::string >::value >::type;
+    typename std::enable_if< std::is_same< T, std::string >::value >::type;
 
 //
 //---------------------------------------------------------------------------
@@ -95,7 +95,7 @@ using enable_if_string =
 //---------------------------------------------------------------------------
 template<class T>
 using enable_if_not_string =
-      typename std::enable_if<! std::is_same< T, std::string >::value >::type;
+    typename std::enable_if<! std::is_same< T, std::string >::value >::type;
 
 //
 //---------------------------------------------------------------------------
@@ -107,11 +107,11 @@ using enable_if_not_string =
 template<class T>
 struct constructor
 {
-    template<class ... Args>
-    void operator()(Args && ... args)
-    {
-        T(std::forward<Args> (args) ...);
-    };
+	template<class ... Args>
+	void operator()(Args && ... args)
+	{
+		T(std::forward<Args> (args) ...);
+	};
 };
 //
 //****************************************************************************

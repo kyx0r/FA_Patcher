@@ -23,93 +23,166 @@ namespace boost
 namespace concurrent
 {
 
-  template <typename Queue>
-  class queue_back_view
-  {
-   Queue* queue;
-  public:
-    typedef typename Queue::value_type value_type;
-    typedef typename Queue::size_type size_type;
+template <typename Queue>
+class queue_back_view
+{
+	Queue* queue;
+public:
+	typedef typename Queue::value_type value_type;
+	typedef typename Queue::size_type size_type;
 
-    // Constructors/Assignment/Destructors
-    queue_back_view(Queue& q) BOOST_NOEXCEPT : queue(&q) {}
+	// Constructors/Assignment/Destructors
+queue_back_view(Queue& q) BOOST_NOEXCEPT :
+	queue(&q) {}
 
-    // Observers
-    bool empty() const  { return queue->empty(); }
-    bool full() const { return queue->full(); }
-    size_type size() const { return queue->size(); }
-    bool closed() const { return queue->closed(); }
+	// Observers
+	bool empty() const
+	{
+		return queue->empty();
+	}
+	bool full() const
+	{
+		return queue->full();
+	}
+	size_type size() const
+	{
+		return queue->size();
+	}
+	bool closed() const
+	{
+		return queue->closed();
+	}
 
-    // Modifiers
-    void close() { queue->close(); }
+	// Modifiers
+	void close()
+	{
+		queue->close();
+	}
 
-    void push(const value_type& x) { queue->push(x); }
+	void push(const value_type& x)
+	{
+		queue->push(x);
+	}
 
-    queue_op_status try_push(const value_type& x) { return queue->try_push(x); }
+	queue_op_status try_push(const value_type& x)
+	{
+		return queue->try_push(x);
+	}
 
-    queue_op_status nonblocking_push(const value_type& x) { return queue->nonblocking_push(x); }
-    queue_op_status wait_push(const value_type& x) { return queue->wait_push(x); }
+	queue_op_status nonblocking_push(const value_type& x)
+	{
+		return queue->nonblocking_push(x);
+	}
+	queue_op_status wait_push(const value_type& x)
+	{
+		return queue->wait_push(x);
+	}
 
-    void push(BOOST_THREAD_RV_REF(value_type) x) { queue->push(boost::move(x)); }
-    queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->try_push(boost::move(x)); }
-    queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->nonblocking_push(boost::move(x)); }
-    queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->wait_push(boost::move(x)); }
-  };
+	void push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		queue->push(boost::move(x));
+	}
+	queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue->try_push(boost::move(x));
+	}
+	queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue->nonblocking_push(boost::move(x));
+	}
+	queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x)
+	{
+		return queue->wait_push(boost::move(x));
+	}
+};
 
-  template <typename Queue>
-  class queue_front_view
-  {
-   Queue* queue;
-  public:
-    typedef typename Queue::value_type value_type;
-    typedef typename Queue::size_type size_type;
+template <typename Queue>
+class queue_front_view
+{
+	Queue* queue;
+public:
+	typedef typename Queue::value_type value_type;
+	typedef typename Queue::size_type size_type;
 
-    // Constructors/Assignment/Destructors
-    queue_front_view(Queue& q) BOOST_NOEXCEPT : queue(&q) {}
+	// Constructors/Assignment/Destructors
+queue_front_view(Queue& q) BOOST_NOEXCEPT :
+	queue(&q) {}
 
-    // Observers
-    bool empty() const  { return queue->empty(); }
-    bool full() const { return queue->full(); }
-    size_type size() const { return queue->size(); }
-    bool closed() const { return queue->closed(); }
+	// Observers
+	bool empty() const
+	{
+		return queue->empty();
+	}
+	bool full() const
+	{
+		return queue->full();
+	}
+	size_type size() const
+	{
+		return queue->size();
+	}
+	bool closed() const
+	{
+		return queue->closed();
+	}
 
-    // Modifiers
-    void close() { queue->close(); }
+	// Modifiers
+	void close()
+	{
+		queue->close();
+	}
 
-    void pull(value_type& x) { queue->pull(x); };
-    // enable_if is_nothrow_copy_movable<value_type>
-    value_type pull()  { return queue->pull(); }
+	void pull(value_type& x)
+	{
+		queue->pull(x);
+	};
+	// enable_if is_nothrow_copy_movable<value_type>
+	value_type pull()
+	{
+		return queue->pull();
+	}
 
-    queue_op_status try_pull(value_type& x) { return queue->try_pull(x); }
+	queue_op_status try_pull(value_type& x)
+	{
+		return queue->try_pull(x);
+	}
 
-    queue_op_status nonblocking_pull(value_type& x) { return queue->nonblocking_pull(x); }
+	queue_op_status nonblocking_pull(value_type& x)
+	{
+		return queue->nonblocking_pull(x);
+	}
 
-    queue_op_status wait_pull(value_type& x) { return queue->wait_pull(x); }
+	queue_op_status wait_pull(value_type& x)
+	{
+		return queue->wait_pull(x);
+	}
 
-  };
+};
 
 #if ! defined BOOST_NO_CXX11_TEMPLATE_ALIASES
 
-  template <class T>
-  using queue_back = queue_back_view<queue_base<T> > ;
-  template <class T>
-  using queue_front = queue_front_view<queue_base<T> > ;
+template <class T>
+using queue_back = queue_back_view<queue_base<T> > ;
+template <class T>
+using queue_front = queue_front_view<queue_base<T> > ;
 
 #else
 
-  template <class T>
-  struct queue_back : queue_back_view<queue_base<T> >
-  {
-    typedef queue_back_view<queue_base<T> > base_type;
-    queue_back(queue_base<T>& q) BOOST_NOEXCEPT : base_type(q) {}
-  };
-  template <class T>
-  struct queue_front : queue_front_view<queue_base<T> >
-  {
-    typedef queue_front_view<queue_base<T> > base_type;
-    queue_front(queue_base<T>& q) BOOST_NOEXCEPT : base_type(q) {}
+template <class T>
+struct queue_back : queue_back_view<queue_base<T> >
+{
+	typedef queue_back_view<queue_base<T> > base_type;
+queue_back(queue_base<T>& q) BOOST_NOEXCEPT :
+	base_type(q) {}
+};
+template <class T>
+struct queue_front : queue_front_view<queue_base<T> >
+{
+	typedef queue_front_view<queue_base<T> > base_type;
+queue_front(queue_base<T>& q) BOOST_NOEXCEPT :
+	base_type(q) {}
 
-  };
+};
 
 #endif
 

@@ -21,53 +21,61 @@
 #include <boost/geometry/core/tag.hpp>
 #include <boost/geometry/util/range.hpp>
 
-namespace boost { namespace geometry {
+namespace boost
+{
+namespace geometry
+{
 
 #ifndef DOXYGEN_NO_DISPATCH
-namespace detail_dispatch {
+namespace detail_dispatch
+{
 
 // Returns single geometry by Id
 // for single geometries returns the geometry itself
 template <typename Geometry,
           bool IsMulti = boost::is_base_of
-                            <
-                                multi_tag,
-                                typename geometry::tag<Geometry>::type
-                            >::value
->
+          <
+              multi_tag,
+              typename geometry::tag<Geometry>::type
+              >::value
+          >
 struct single_geometry
 {
-    typedef Geometry & return_type;
+	typedef Geometry & return_type;
 
-    template <typename Id>
-    static inline return_type apply(Geometry & g, Id const& ) { return g; }
+	template <typename Id>
+	static inline return_type apply(Geometry & g, Id const& )
+	{
+		return g;
+	}
 };
 
 // for multi geometries returns one of the stored single geometries
 template <typename Geometry>
 struct single_geometry<Geometry, true>
 {
-    typedef typename boost::range_reference<Geometry>::type return_type;
+	typedef typename boost::range_reference<Geometry>::type return_type;
 
-    template <typename Id>
-    static inline return_type apply(Geometry & g, Id const& id)
-    {
-        BOOST_GEOMETRY_ASSERT(id.multi_index >= 0);
-        typedef typename boost::range_size<Geometry>::type size_type;
-        return range::at(g, static_cast<size_type>(id.multi_index));
-    }
+	template <typename Id>
+	static inline return_type apply(Geometry & g, Id const& id)
+	{
+		BOOST_GEOMETRY_ASSERT(id.multi_index >= 0);
+		typedef typename boost::range_size<Geometry>::type size_type;
+		return range::at(g, static_cast<size_type>(id.multi_index));
+	}
 };
 
 } // namespace detail_dispatch
 #endif // DOXYGEN_NO_DISPATCH
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail {
+namespace detail
+{
 
 template <typename Geometry>
 struct single_geometry_return_type
 {
-    typedef typename detail_dispatch::single_geometry<Geometry>::return_type type;
+	typedef typename detail_dispatch::single_geometry<Geometry>::return_type type;
 };
 
 template <typename Geometry, typename Id>
@@ -75,7 +83,7 @@ inline
 typename single_geometry_return_type<Geometry>::type
 single_geometry(Geometry & geometry, Id const& id)
 {
-    return detail_dispatch::single_geometry<Geometry>::apply(geometry, id);
+	return detail_dispatch::single_geometry<Geometry>::apply(geometry, id);
 }
 
 template <typename Geometry, typename Id>
@@ -83,12 +91,13 @@ inline
 typename single_geometry_return_type<Geometry const>::type
 single_geometry(Geometry const& geometry, Id const& id)
 {
-    return detail_dispatch::single_geometry<Geometry const>::apply(geometry, id);
+	return detail_dispatch::single_geometry<Geometry const>::apply(geometry, id);
 }
 
 } // namespace detail
 #endif // DOXYGEN_NO_DETAIL
 
-}} // namespace boost::geometry
+}
+} // namespace boost::geometry
 
 #endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_SINGLE_GEOMETRY_HPP

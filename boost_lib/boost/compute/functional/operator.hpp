@@ -13,42 +13,45 @@
 
 #include <string>
 
-namespace boost {
-namespace compute {
-namespace detail {
+namespace boost
+{
+namespace compute
+{
+namespace detail
+{
 
 template<class Expr1, class Expr2, class Result>
 struct invoked_binary_operator
 {
-    typedef Result result_type;
+	typedef Result result_type;
 
-    invoked_binary_operator(const std::string &op,
-                            const Expr1 &arg1,
-                            const Expr2 &arg2)
-        : m_op(op),
-          m_expr1(arg1),
-          m_expr2(arg2)
-    {
-    }
+	invoked_binary_operator(const std::string &op,
+	                        const Expr1 &arg1,
+	                        const Expr2 &arg2)
+		: m_op(op),
+		  m_expr1(arg1),
+		  m_expr2(arg2)
+	{
+	}
 
-    std::string op() const
-    {
-        return m_op;
-    }
+	std::string op() const
+	{
+		return m_op;
+	}
 
-    Expr1 arg1() const
-    {
-        return m_expr1;
-    }
+	Expr1 arg1() const
+	{
+		return m_expr1;
+	}
 
-    Expr2 arg2() const
-    {
-        return m_expr2;
-    }
+	Expr2 arg2() const
+	{
+		return m_expr2;
+	}
 
-    std::string m_op;
-    Expr1 m_expr1;
-    Expr2 m_expr2;
+	std::string m_op;
+	Expr1 m_expr1;
+	Expr2 m_expr2;
 };
 
 } // end detail namespace

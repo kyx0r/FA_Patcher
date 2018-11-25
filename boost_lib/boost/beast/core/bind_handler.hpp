@@ -16,8 +16,10 @@
 #include <type_traits>
 #include <utility>
 
-namespace boost {
-namespace beast {
+namespace boost
+{
+namespace beast
+{
 
 /** Bind parameters to a completion handler, creating a new handler.
 
@@ -57,19 +59,19 @@ template<class Handler, class... Args>
 implementation_defined
 #else
 detail::bound_handler<
-    typename std::decay<Handler>::type, Args...>
+typename std::decay<Handler>::type, Args...>
 #endif
 bind_handler(Handler&& handler, Args&&... args)
 {
 #if 0
-    // Can't do this because of placeholders
-    static_assert(is_completion_handler<
-        Handler, void(Args...)>::value,
-            "Handler requirements not met");
+	// Can't do this because of placeholders
+	static_assert(is_completion_handler<
+	              Handler, void(Args...)>::value,
+	              "Handler requirements not met");
 #endif
-    return detail::bound_handler<typename std::decay<
-        Handler>::type, Args...>(std::forward<
-            Handler>(handler), std::forward<Args>(args)...);
+	return detail::bound_handler<typename std::decay<
+	       Handler>::type, Args...>(std::forward<
+	                                Handler>(handler), std::forward<Args>(args)...);
 }
 
 } // beast

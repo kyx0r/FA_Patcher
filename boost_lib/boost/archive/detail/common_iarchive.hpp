@@ -9,7 +9,7 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // common_iarchive.hpp
 
-// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
+// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com .
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -27,54 +27,64 @@
 #  pragma warning(disable : 4511 4512)
 #endif
 
-namespace boost {
-namespace archive {
-namespace detail {
+namespace boost
+{
+namespace archive
+{
+namespace detail
+{
 
 class extended_type_info;
 
 // note: referred to as Curiously Recurring Template Patter (CRTP)
 template<class Archive>
 class BOOST_SYMBOL_VISIBLE common_iarchive :
-    public basic_iarchive,
-    public interface_iarchive<Archive>
+	public basic_iarchive,
+	public interface_iarchive<Archive>
 {
-    friend class interface_iarchive<Archive>;
-    friend class basic_iarchive;
+	friend class interface_iarchive<Archive>;
+	friend class basic_iarchive;
 private:
-    virtual void vload(version_type & t){
-        * this->This() >> t; 
-    }
-    virtual void vload(object_id_type & t){
-        * this->This() >> t;
-    }
-    virtual void vload(class_id_type & t){
-        * this->This() >> t;
-    }
-    virtual void vload(class_id_optional_type & t){
-        * this->This() >> t;
-    }
-    virtual void vload(tracking_type & t){
-        * this->This() >> t;
-    }
-    virtual void vload(class_name_type &s){
-        * this->This() >> s;
-    }
+	virtual void vload(version_type & t)
+	{
+		* this->This() >> t;
+	}
+	virtual void vload(object_id_type & t)
+	{
+		* this->This() >> t;
+	}
+	virtual void vload(class_id_type & t)
+	{
+		* this->This() >> t;
+	}
+	virtual void vload(class_id_optional_type & t)
+	{
+		* this->This() >> t;
+	}
+	virtual void vload(tracking_type & t)
+	{
+		* this->This() >> t;
+	}
+	virtual void vload(class_name_type &s)
+	{
+		* this->This() >> s;
+	}
 protected:
-    // default processing - invoke serialization library
-    template<class T>
-    void load_override(T & t){
-        archive::load(* this->This(), t);
-    }
-    // default implementations of functions which emit start/end tags for
-    // archive types that require them.
-    void load_start(const char * /*name*/){}
-    void load_end(const char * /*name*/){}
-    // default archive initialization
-    common_iarchive(unsigned int flags = 0) : 
-        basic_iarchive(flags),
-        interface_iarchive<Archive>()
-    {}
+	// default processing - invoke serialization library
+	template<class T>
+	void load_override(T & t)
+	{
+		archive::load(* this->This(), t);
+	}
+	// default implementations of functions which emit start/end tags for
+	// archive types that require them.
+	void load_start(const char * /*name*/) {}
+	void load_end(const char * /*name*/) {}
+	// default archive initialization
+	common_iarchive(unsigned int flags = 0) :
+		basic_iarchive(flags),
+		interface_iarchive<Archive>()
+	{}
 };
 
 } // namespace detail

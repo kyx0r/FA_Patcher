@@ -14,20 +14,20 @@
 
 namespace boost
 {
-  namespace metaparse
-  {
-    namespace v1
-    {
-      template <char C>
-      struct lit_c :
-        accept_when<
-          change_error_message<one_char, error::literal_expected<C> >,
-          impl::is_char_c<C>,
-          error::literal_expected<C>
-        >
-      {};
-    }
-  }
+namespace metaparse
+{
+namespace v1
+{
+template <char C>
+struct lit_c :
+	accept_when<
+	change_error_message<one_char, error::literal_expected<C> >,
+	impl::is_char_c<C>,
+	error::literal_expected<C>
+	>
+{};
+}
+}
 }
 
 #endif

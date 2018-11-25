@@ -41,15 +41,15 @@
 
 namespace boost
 {
-    namespace range_detail
-    {
+namespace range_detail
+{
 
 template<typename F, typename T, int SIZE>
 struct combined_result_impl;
 
 template<typename F, typename T>
 struct combined_result
-    : combined_result_impl<F, T, tuples::length<T>::value>
+	: combined_result_impl<F, T, tuples::length<T>::value>
 {
 };
 
@@ -106,9 +106,9 @@ namespace range
                                BOOST_RANGE_MAX_COMBINE_ARGS)
 #include BOOST_PP_LOCAL_ITERATE()
 
-    } // namespace range
+} // namespace range
 
-    using boost::range::combine;
+using boost::range::combine;
 
 } // namespace boost
 

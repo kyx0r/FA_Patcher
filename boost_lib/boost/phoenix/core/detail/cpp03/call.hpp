@@ -39,7 +39,7 @@
 #define M1(Z, N ,D) \
     BOOST_PP_COMMA_IF(N) proto::child_c<N>(e)
 /**/
-    
+
 
 #define BOOST_PHOENIX_ITERATION_PARAMS                                          \
     (3, (1, BOOST_PHOENIX_LIMIT,                                                \
@@ -56,36 +56,36 @@
 #endif
 
 #else
-        
-        template <typename Fun, typename Expr, typename State, typename Data>
-        struct call_impl<Fun, Expr, State, Data, BOOST_PHOENIX_ITERATION>
-            : proto::transform_impl<Expr, State, Data>
-        {
-            typedef
-                typename boost::phoenix::result_of::context<State, Data>::type
-                context_type;
 
-            BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M0, _)
+template <typename Fun, typename Expr, typename State, typename Data>
+struct call_impl<Fun, Expr, State, Data, BOOST_PHOENIX_ITERATION>
+	: proto::transform_impl<Expr, State, Data>
+{
+	typedef
+	typename boost::phoenix::result_of::context<State, Data>::type
+	context_type;
 
-            typedef
-                typename boost::result_of<
-                    Fun(BOOST_PHOENIX_A, context_type)
-                >::type
-                result_type;
+	BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M0, _)
 
-            result_type operator()(
-                typename call_impl::expr_param e
-              , typename call_impl::state_param s
-              , typename call_impl::data_param d
-            ) const
-            {
-                return
-                    Fun()(
-                        BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M1, _)
-                      , boost::phoenix::context(s, d)
-                    );
-            }
-        };
+	typedef
+	typename boost::result_of<
+	Fun(BOOST_PHOENIX_A, context_type)
+	>::type
+	result_type;
+
+	result_type operator()(
+	    typename call_impl::expr_param e
+	    , typename call_impl::state_param s
+	    , typename call_impl::data_param d
+	) const
+	{
+		return
+		    Fun()(
+		        BOOST_PP_REPEAT(BOOST_PHOENIX_ITERATION, M1, _)
+		        , boost::phoenix::context(s, d)
+		    );
+	}
+};
 
 #endif
 

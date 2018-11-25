@@ -20,9 +20,9 @@ namespace boost
 namespace math
 {
 
-   using boost::integer::static_gcd;
-   using boost::integer::static_lcm;
-   using boost::integer::static_gcd_type;
+using boost::integer::static_gcd;
+using boost::integer::static_lcm;
+using boost::integer::static_gcd_type;
 
 }  // namespace math
 }  // namespace boost

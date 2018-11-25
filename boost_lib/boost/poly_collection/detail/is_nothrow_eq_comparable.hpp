@@ -17,25 +17,28 @@
 #include <type_traits>
 #include <utility>
 
-namespace boost{
+namespace boost
+{
 
-namespace poly_collection{
+namespace poly_collection
+{
 
-namespace detail{
+namespace detail
+{
 
 template<typename T,typename=void>
-struct is_nothrow_equality_comparable:std::false_type{};
+struct is_nothrow_equality_comparable:std::false_type {};
 
 template<typename T>
 struct is_nothrow_equality_comparable<
-  T,
-  typename std::enable_if<
-    is_equality_comparable<T>::value
-  >::type
->:std::integral_constant<
-  bool,
-  noexcept(std::declval<T>()==std::declval<T>())
->{};
+	T,
+	typename std::enable_if<
+	is_equality_comparable<T>::value
+	>::type
+	>:std::integral_constant<
+	bool,
+noexcept(std::declval<T>()==std::declval<T>())
+> {};
 
 } /* namespace poly_collection::detail */
 

@@ -15,33 +15,35 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 BOOST_HANA_NAMESPACE_BEGIN
-    //! Returns the last element of a non-empty and finite iterable.
-    //! @ingroup group-Iterable
-    //!
-    //! Given a non-empty and finite iterable `xs` with a linearization of
-    //! `[x1, ..., xN]`, `back(xs)` is equal to `xN`. Equivalently, `back(xs)`
-    //! must be equivalent to `at_c<N-1>(xs)`, and that regardless of the
-    //! value category of `xs` (`back` must respect the reference semantics
-    //! of `at`).
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/back.cpp
+//! Returns the last element of a non-empty and finite iterable.
+//! @ingroup group-Iterable
+//!
+//! Given a non-empty and finite iterable `xs` with a linearization of
+//! `[x1, ..., xN]`, `back(xs)` is equal to `xN`. Equivalently, `back(xs)`
+//! must be equivalent to `at_c<N-1>(xs)`, and that regardless of the
+//! value category of `xs` (`back` must respect the reference semantics
+//! of `at`).
+//!
+//!
+//! Example
+//! -------
+//! @include example/back.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto back = [](auto&& xs) -> decltype(auto) {
-        return tag-dispatched;
-    };
+constexpr auto back = [](auto&& xs) -> decltype(auto)
+{
+	return tag-dispatched;
+};
 #else
-    template <typename It, typename = void>
-    struct back_impl : back_impl<It, when<true>> { };
+template <typename It, typename = void>
+struct back_impl : back_impl<It, when<true>> { };
 
-    struct back_t {
-        template <typename Xs>
-        constexpr decltype(auto) operator()(Xs&& xs) const;
-    };
+struct back_t
+{
+	template <typename Xs>
+	constexpr decltype(auto) operator()(Xs&& xs) const;
+};
 
-    constexpr back_t back{};
+constexpr back_t back{};
 #endif
 BOOST_HANA_NAMESPACE_END
 

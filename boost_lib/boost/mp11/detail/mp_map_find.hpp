@@ -23,14 +23,14 @@ template<class M, class K> struct mp_map_find_impl;
 
 template<template<class...> class M, class... T, class K> struct mp_map_find_impl<M<T...>, K>
 {
-    using U = mp_inherit<mp_identity<T>...>;
+	using U = mp_inherit<mp_identity<T>...>;
 
-    template<template<class...> class L, class... U> static mp_identity<L<K, U...>> f( mp_identity<L<K, U...>>* );
-    static mp_identity<void> f( ... );
+	template<template<class...> class L, class... U> static mp_identity<L<K, U...>> f( mp_identity<L<K, U...>>* );
+	static mp_identity<void> f( ... );
 
-    using V = decltype( f((U*)0) );
+	using V = decltype( f((U*)0) );
 
-    using type = typename V::type;
+	using type = typename V::type;
 };
 
 } // namespace detail

@@ -46,24 +46,24 @@
 
 #else
 
-        template <
-            typename Try
-            BOOST_PP_COMMA_IF(BOOST_PHOENIX_ITERATION)
-            BOOST_PHOENIX_typename_A
-        >
-        struct try_catch<
-            Try
-            BOOST_PP_COMMA_IF(BOOST_PHOENIX_ITERATION)
-            BOOST_PHOENIX_A
-        >
-            : expr_ext<
-                try_catch_actor
-              , tag::try_catch
-              , Try
-              BOOST_PP_COMMA_IF(BOOST_PHOENIX_ITERATION) BOOST_PHOENIX_A
-            >
-        {};
-    /**/
+template <
+    typename Try
+    BOOST_PP_COMMA_IF(BOOST_PHOENIX_ITERATION)
+    BOOST_PHOENIX_typename_A
+    >
+struct try_catch<
+	Try
+BOOST_PP_COMMA_IF(BOOST_PHOENIX_ITERATION)
+BOOST_PHOENIX_A
+>
+: expr_ext<
+try_catch_actor
+, tag::try_catch
+, Try
+BOOST_PP_COMMA_IF(BOOST_PHOENIX_ITERATION) BOOST_PHOENIX_A
+>
+{};
+/**/
 
 #endif
 

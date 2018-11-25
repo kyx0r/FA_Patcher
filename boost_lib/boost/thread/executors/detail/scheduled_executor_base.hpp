@@ -24,38 +24,38 @@ namespace executors
 {
 namespace detail
 {
-  template <class Clock=chrono::steady_clock>
-  class scheduled_executor_base : public priority_executor_base<concurrent::sync_timed_queue<executors::work_pq, Clock  > >
-  {
-  public:
-    typedef executors::work_pq work;
-    typedef Clock clock;
-    typedef typename clock::duration duration;
-    typedef typename clock::time_point time_point;
-  protected:
+template <class Clock=chrono::steady_clock>
+class scheduled_executor_base : public priority_executor_base<concurrent::sync_timed_queue<executors::work_pq, Clock  > >
+{
+public:
+	typedef executors::work_pq work;
+	typedef Clock clock;
+	typedef typename clock::duration duration;
+	typedef typename clock::time_point time_point;
+protected:
 
-    scheduled_executor_base() {}
-  public:
+	scheduled_executor_base() {}
+public:
 
-    ~scheduled_executor_base()
-    {
-      if(! this->closed())
-      {
-        this->close();
-      }
-    }
+	~scheduled_executor_base()
+	{
+		if(! this->closed())
+		{
+			this->close();
+		}
+	}
 
-    void submit_at(work w, const time_point& tp)
-    {
-      this->_workq.push(boost::move(w), tp);
-    }
+	void submit_at(work w, const time_point& tp)
+	{
+		this->_workq.push(boost::move(w), tp);
+	}
 
-    void submit_after(work w, const duration& dura)
-    {
-      this->_workq.push(boost::move(w), dura+clock::now());
-    }
+	void submit_after(work w, const duration& dura)
+	{
+		this->_workq.push(boost::move(w), dura+clock::now());
+	}
 
-  }; //end class
+}; //end class
 
 } //end detail namespace
 } //end executors namespace

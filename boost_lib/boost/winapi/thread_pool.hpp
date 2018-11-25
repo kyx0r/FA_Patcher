@@ -21,18 +21,18 @@
 #if !defined( BOOST_USE_WINDOWS_H )
 extern "C" {
 #if BOOST_WINAPI_PARTITION_DESKTOP
-typedef boost::winapi::VOID_ (NTAPI *WAITORTIMERCALLBACKFUNC)
-    (boost::winapi::PVOID_, boost::winapi::BOOLEAN_);
-typedef WAITORTIMERCALLBACKFUNC WAITORTIMERCALLBACK;
+	typedef boost::winapi::VOID_ (NTAPI *WAITORTIMERCALLBACKFUNC)
+	(boost::winapi::PVOID_, boost::winapi::BOOLEAN_);
+	typedef WAITORTIMERCALLBACKFUNC WAITORTIMERCALLBACK;
 
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-RegisterWaitForSingleObject(
-    boost::winapi::PHANDLE_ phNewWaitObject,
-    boost::winapi::HANDLE_ hObject,
-    WAITORTIMERCALLBACK Callback,
-    boost::winapi::PVOID_ Context,
-    boost::winapi::ULONG_ dwMilliseconds,
-    boost::winapi::ULONG_ dwFlags);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	RegisterWaitForSingleObject(
+	    boost::winapi::PHANDLE_ phNewWaitObject,
+	    boost::winapi::HANDLE_ hObject,
+	    WAITORTIMERCALLBACK Callback,
+	    boost::winapi::PVOID_ Context,
+	    boost::winapi::ULONG_ dwMilliseconds,
+	    boost::winapi::ULONG_ dwFlags);
 #endif
 } // extern "C"
 #endif
@@ -41,21 +41,23 @@ RegisterWaitForSingleObject(
 #if !defined( BOOST_USE_WINDOWS_H ) || (defined(BOOST_WINAPI_IS_MINGW) && BOOST_USE_WINAPI_VERSION < BOOST_WINAPI_VERSION_WINXP)
 extern "C" {
 #if BOOST_WINAPI_PARTITION_DESKTOP
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-UnregisterWait(boost::winapi::HANDLE_ WaitHandle);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	UnregisterWait(boost::winapi::HANDLE_ WaitHandle);
 #endif
 
 #if BOOST_WINAPI_PARTITION_DESKTOP || BOOST_WINAPI_PARTITION_SYSTEM
-BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
-UnregisterWaitEx(
-    boost::winapi::HANDLE_ WaitHandle,
-    boost::winapi::HANDLE_ CompletionEvent);
+	BOOST_SYMBOL_IMPORT boost::winapi::BOOL_ WINAPI
+	UnregisterWaitEx(
+	    boost::winapi::HANDLE_ WaitHandle,
+	    boost::winapi::HANDLE_ CompletionEvent);
 #endif
 } // extern "C"
 #endif
 
-namespace boost {
-namespace winapi {
+namespace boost
+{
+namespace winapi
+{
 
 #if BOOST_WINAPI_PARTITION_DESKTOP
 typedef ::WAITORTIMERCALLBACKFUNC WAITORTIMERCALLBACKFUNC_;
@@ -106,9 +108,9 @@ const ULONG_ WT_TRANSFER_IMPERSONATION_ = 0x00000100;
 
 BOOST_FORCEINLINE BOOST_CONSTEXPR ULONG_ wt_set_max_threadpool_threads(ULONG_ flags, ULONG_ limit) BOOST_NOEXCEPT
 {
-    // Note: We don't use WT_SET_MAX_THREADPOOL_THREADS here because the way it's defined
-    //       the function no longer meets C++11 constexpr requirements.
-    return flags | (limit << 16);
+	// Note: We don't use WT_SET_MAX_THREADPOOL_THREADS here because the way it's defined
+	//       the function no longer meets C++11 constexpr requirements.
+	return flags | (limit << 16);
 }
 
 const ULONG_ wt_execute_default = WT_EXECUTEDEFAULT_;

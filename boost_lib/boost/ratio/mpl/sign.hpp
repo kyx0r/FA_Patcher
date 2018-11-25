@@ -13,17 +13,19 @@
 #include <boost/ratio/mpl/numeric_cast.hpp>
 #include <boost/ratio/detail/mpl/sign.hpp>
 
-namespace boost { 
-namespace mpl {
+namespace boost
+{
+namespace mpl
+{
 
 template<>
 struct sign_impl< rational_c_tag >
 {
-    template< typename R > struct apply
-        : ratio_sign<R>
-    {
-    };
-};    
+	template< typename R > struct apply
+		: ratio_sign<R>
+	{
+	};
+};
 }
 }
 

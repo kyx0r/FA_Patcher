@@ -12,16 +12,16 @@
 
 namespace boost
 {
-  namespace chrono
-  {
+namespace chrono
+{
 
-    template<class CharT, class Clock>
-    struct basic_clock_default_formatter
-    {
-      typedef basic_elapsed_formatter<milli, CharT> type;
-    };
+template<class CharT, class Clock>
+struct basic_clock_default_formatter
+{
+	typedef basic_elapsed_formatter<milli, CharT> type;
+};
 
-  } // namespace chrono
+} // namespace chrono
 } // namespace boost
 
 

@@ -14,6 +14,7 @@ public:
 	int get_file_size();
 	vector<char> fReadBinaryFile();
 	unsigned fWriteBinaryFile(vector<char> HexValue, int offset, int Bytes_to_write);
+	unsigned fWriteString(const string &HexValue, int offset);
 	int get_bytes(bool errorRet = true);
 	string rem_extension(string str);
 	int get_line_count();

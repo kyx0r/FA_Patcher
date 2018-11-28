@@ -1,7 +1,7 @@
 #include "jitHooks.hpp"
 
 vector<char*> encoded_instr;
-char* filename = "./hooks/hook.h";
+string buffer_from_file_only;
 
 bool hexToU64(uint64_t& out, const char* src, size_t len)
 {
@@ -32,13 +32,13 @@ void dumpCode(CodeBuffer buffer)
 	{
 		printf("%02X", buffer.getData()[i]);
 	}
+	printf(&buffer_from_file_only[0]);
 }
 
 void saveCode(CodeBuffer buffer, char* filename)
 {
-	FILE *pFile = fopen (filename, "wb");
+	FILE *pFile = fopen (filename, "w");
 	size_t _size = encoded_instr.size();
-	char* tok;
 	if(!pFile)
 	{
 		printf("\nCan't open \"%s\".\n",filename);
@@ -51,6 +51,7 @@ void saveCode(CodeBuffer buffer, char* filename)
 		fwrite(encoded_instr[i], sizeof(char), ::strlen(encoded_instr[i]), pFile);
 	}
 	fwrite("BYTES:", sizeof(char), 6, pFile);
+	fwrite(&buffer_from_file_only[0], sizeof(char), buffer_from_file_only.length(), pFile);
 	_size = buffer.getLength();
 	for (size_t i = 0; i < _size; i++)
 	{
@@ -75,7 +76,33 @@ bool isCommand(const char* str, const char* cmd)
 	return sLen == cLen && ::memcmp(str, cmd, sLen) == 0;
 }
 
-int enter_asmjit_hook(int argc, char* argv[])
+string load_file(const string&f)
+{
+	FileIO file(f);
+	string line;
+	string new_str;
+	size_t pos;
+	bool are_bytes_found = false;
+	while(getline(file._file,line))
+	{
+		pos = line.find(":");
+		if(pos!=string::npos)
+		{
+			are_bytes_found = true;
+			new_str = line.substr(pos+1);
+			break;
+		}
+	}
+	if(new_str.empty() || !are_bytes_found)
+	{
+		cout<<"Error in function "<<__func__<<endl;
+		cout<<"Could not find a string of bytes. \n";
+		debug_pause();
+	}
+	return new_str;
+}
+
+int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 {
 
 	CmdLine cmd(argc, argv);
@@ -84,6 +111,16 @@ int enter_asmjit_hook(int argc, char* argv[])
 
 	uint32_t archType = ArchInfo::kTypeX64;
 	uint64_t baseAddress = Globals::kNoBaseAddress;
+	string filename = "./hooks/jithook.jh";
+	char* log;
+	char* temp;
+
+#ifdef DEBUG
+	cout<<"Cmd args are: \n";
+	cout<<"Counter = "<<argc<<endl;
+	for(int i = 0; i < argc; ++i)
+		cout << argv[i] <<i<< '\n';
+#endif
 
 	if (archArg)
 	{
@@ -114,24 +151,27 @@ int enter_asmjit_hook(int argc, char* argv[])
 		if (!len || len > maxLen || !hexToU64(baseAddress, baseArg, len))
 		{
 			printf("Invalid --base parameter\n");
-			return 1;
+			debug_pause();
 		}
 	}
 
-	printf("===============================================================\n");
-	printf("Remote Assembler:\n"                      );
-	printf("  - A simple command-line based instruction encoder\n"            );
+	cout<<"===============================================================\n"
+	    <<"Remote Assembler:\n"
+	    <<"  - A simple command-line based instruction encoder\n";
 	printf("  - Architecture=%s [select by --arch=x86|x64]\n", archArg        );
 	printf("  - Base-Address=%s [select by --base=hex]\n", baseArg            );
-	printf("---------------------------------------------------------------\n");
-	printf("Input:\n"                                                         );
-	printf("  - Enter instruction and its operands to be encoded.\n"          );
-	printf("  - Enter '.clear' to clear everything.\n"                        );
-	printf("  - Enter '.print' to print the current code.\n"                  );
-	printf("  - Enter '.save' to save the current code.\n"                  );
-	printf("  - Enter '.undo' to revoke last encoded instruction.\n"          );
-	printf("  - Enter '.file' to change filename.\n"          );
-	printf("===============================================================\n");
+	cout<<"---------------------------------------------------------------\n"
+	    <<"Input:\n"
+	    <<"  - Enter instruction and its operands to be encoded.\n"
+	    <<"  - Enter '.clear' to clear everything.\n"
+	    <<"  - Enter '.print' to print the current code.\n"
+	    <<"  - Enter '.org' to set base address and architecture.\n"
+	    <<"  - Enter '.save' to save the current code.\n"
+	    <<"  - Enter '.undo' to revoke last encoded instruction.\n"
+	    <<"  - Enter '.file' to change filename. Current: "+filename+"\n"
+	    <<"  - Enter '.load' to load saved hook from file.\n"
+	    <<"  - Enter '.write' to apply the given hook.\n"
+	    <<"===============================================================\n";
 
 	StringLogger logger;
 	logger.addOptions(Logger::kOptionBinaryForm);
@@ -148,6 +188,7 @@ int enter_asmjit_hook(int argc, char* argv[])
 	char input[4096];
 	for (;;)
 	{
+		CodeBuffer buffer;
 		fgets(input, 4095, stdin);
 		if (input[0] == 0) break;
 
@@ -157,27 +198,65 @@ int enter_asmjit_hook(int argc, char* argv[])
 			code.init(ci);
 			code.setLogger(&logger);
 			code.attach(&a);
+			buffer_from_file_only.clear();
 			continue;
 		}
 
 		if (isCommand(input, ".print"))
 		{
 			code.sync(); // First sync with the assembler.
-
 			// 0 is the section number, this case .text
-			CodeBuffer& buffer = code.getSectionEntry(0)->getBuffer();
+			buffer = code.getSectionEntry(0)->getBuffer();
 			dumpCode(buffer);
+			continue;
+		}
+
+		if (isCommand(input, ".org"))
+		{
+			printf("Enter as --base=hex ... example: `--base=123` \n");
+			fflush(stdin);
+			fgets(input, 4095, stdin);
+
+			//FIX the cmd parser expects a non null terminated string
+			//This is a hack around that.
+			size_t len = strlen(input)-1;
+			char* new_base_address = (char *)malloc(len);
+			memcpy(new_base_address, input, len);
+
+			printf("Enter as --arch=x86|x64 \n");
+			fflush(stdin);
+			fgets(input, 4095, stdin);
+			len = strlen(input)-1;
+			char* new_arch = (char *)malloc(len);
+			memcpy(new_arch, input, len);
+
+			char* tmp[2] = {new_arch,new_base_address};
+			enter_asmjit_hook(2,tmp,patchfile);
+		}
+
+		if (isCommand(input, ".write"))
+		{
+			if(!buffer_from_file_only.empty())
+			{
+				FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
+				file_out.fWriteString(buffer_from_file_only,baseAddress);
+				printf("Written to: %s \n",&patchfile[0]);
+			}
+			else
+			{
+				printf("Save the buffer, then load it, then write it. \n");
+				printf("No buffer from file is loaded. \n");
+			}
 			continue;
 		}
 
 		if (isCommand(input, ".save"))
 		{
 			code.sync();
-			CodeBuffer& buffer = code.getSectionEntry(0)->getBuffer();
+			buffer = code.getSectionEntry(0)->getBuffer();
 			if(buffer.hasData())
 			{
-				//printf("%.*s",filename);
-				saveCode(buffer,filename);
+				saveCode(buffer,&filename[0]);
 			}
 			continue;
 		}
@@ -185,23 +264,39 @@ int enter_asmjit_hook(int argc, char* argv[])
 		if (isCommand(input, ".file"))
 		{
 			printf("Set new filename...\n");
-			fgets(input, 4095, stdin);
-			filename = input;
-			enter_asmjit_hook(argc,argv);
+			fflush(stdin);
+			cin>>filename;
+			continue;
+		}
+
+		if (isCommand(input, ".load"))
+		{
+			printf("Filename to load ...\n");
+			fflush(stdin);
+			string tmp_filename;
+			cin>>tmp_filename;
+			if(tmp_filename.compare(filename)==0)
+			{
+				printf("Warning! Loading the same file might lead to unexpected results! \n");
+			}
+			buffer_from_file_only = load_file(tmp_filename);
+			printf("File loaded ...\n");
+			continue;
 		}
 
 		if (isCommand(input, ".undo"))
 		{
-			code.sync();
-			if(!encoded_instr.empty())
-			{
-				encoded_instr.pop_back();
-			}
-			CodeBuffer& buffer = code.getSectionEntry(0)->getBuffer();
-			if(buffer.hasData())
-			{
-				//to do
-			}
+			printf("Feature not supported yet. \n");
+			/* 			code.sync();
+						if(!encoded_instr.empty())
+						{
+							encoded_instr.pop_back();
+						}
+						buffer = code.getSectionEntry(0)->getBuffer();
+						if(buffer.hasData())
+						{
+							//to do
+						} */
 			continue;
 		}
 
@@ -210,9 +305,9 @@ int enter_asmjit_hook(int argc, char* argv[])
 
 		if (err == kErrorOk)
 		{
-			char* log = logger.getString();
-			size_t i;
+			log = logger.getString();
 			size_t len = logger.getLength();
+			size_t i;
 
 			// Skip the instruction part, and keep only the comment part.
 			for (i = 0; i < len; i++)
@@ -226,7 +321,9 @@ int enter_asmjit_hook(int argc, char* argv[])
 
 			if (i < len)
 			{
-				encoded_instr.push_back(log);
+				temp = new char[len];
+				strncpy(temp,log,len);
+				encoded_instr.push_back(temp);
 				printf("%.*s", (int)(len - i), log + i);
 			}
 		}
@@ -236,6 +333,6 @@ int enter_asmjit_hook(int argc, char* argv[])
 			fprintf(stdout, "ERROR: 0x%08X: %s\n", err, DebugUtils::errorAsString(err));
 		}
 	}
-
+	delete temp;
 	return 0;
 }

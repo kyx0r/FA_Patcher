@@ -44,6 +44,14 @@ unsigned FileIO::fWriteBinaryFile(vector<char> HexValue, int offset, int Bytes_t
 	return 1;
 }
 
+unsigned FileIO::fWriteString(const string &HexValue, int offset)
+{
+	_file.seekg(offset);
+	size_t _size = HexValue.length();
+	_file.write(&HexValue[0], _size);
+	return 1;
+}
+
 int FileIO::parse_binary_end(bool errorRet, int count_bytes, int null_count)
 {
 	_file.seekg(ios::beg);

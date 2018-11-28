@@ -99,7 +99,7 @@ typename property_traits<ComponentMap>::value_type
 strong_components_impl
 (const Graph& g,    // Input
  ComponentMap comp, // Output
- // Internal record keeping
+// Internal record keeping
  RootMap root,
  DiscoverTime discover_time,
  const bgl_named_params<P, T, R>& params)

@@ -27,8 +27,9 @@ using namespace pe_bliss;
 using namespace rang;
 
 extern string make;
+extern bool patcher_error;
 //Is debugging enabled?
-//#define DEBUG
+#define DEBUG
 
 int debug_pause();
 
@@ -41,6 +42,7 @@ public:
 private:
 	bool check_system();
 	bool check_make();
+	bool check_gcc();
 
 
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "patcher.hpp"
+#include "fileIO.hpp"
 #include <asmjit_lib/asmjit.h>
 #include <asmjit_lib/x86.h>
 #include <asmjit_lib/asmtk/asmtk.h>
@@ -7,12 +8,14 @@
 using namespace asmjit;
 using namespace asmtk;
 
+extern vector<char*> encoded_instr;
+
 bool hexToU64(uint64_t& out, const char* src, size_t len);
 void dumpCode(CodeBuffer buffer);
 void saveCode(CodeBuffer buffer, char* filename = "./hooks/hook.h");
 bool isSpace(const char c);
 bool isCommand(const char* str, const char* cmd);
-int enter_asmjit_hook(int argc, char* argv[]);
+int enter_asmjit_hook(int argc, char* argv[], string patchfile = "");
 
 class CmdLine
 {
@@ -34,11 +37,11 @@ public:
 		size_t keyLen = ::strlen(key);
 		size_t argLen = 0;
 
-		const char* arg = NULL;
+		const char* arg = nullptr;
 		for (int i = 0; i <= argc; i++)
 		{
 			if (i == argc)
-				return NULL;
+				return nullptr;
 
 			arg = argv[i];
 			argLen = ::strlen(arg);

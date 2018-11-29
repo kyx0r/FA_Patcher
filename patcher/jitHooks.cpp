@@ -2,6 +2,10 @@
 
 vector<char*> encoded_instr;
 string buffer_from_file_only;
+string filename = "./hooks/jithook.jh";
+
+char* archArg;
+char* baseArg;
 
 bool hexToU64(uint64_t& out, const char* src, size_t len)
 {
@@ -35,17 +39,19 @@ void dumpCode(CodeBuffer buffer)
 	printf(&buffer_from_file_only[0]);
 }
 
-void saveCode(CodeBuffer buffer, char* filename)
+void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, char* archArg)
 {
-	FILE *pFile = fopen (filename, "w");
+	FILE *pFile = fopen (_filename, "w");
 	size_t _size = encoded_instr.size();
 	if(!pFile)
 	{
-		printf("\nCan't open \"%s\".\n",filename);
+		printf("\nCan't open \"%s\".\n",_filename);
 		printf( "Error code opening file: %d\n", errno );
 		printf( "Error opening file: %s\n", strerror( errno ) );
 		debug_pause();
 	}
+	fprintf(pFile, "--base=%04X \n", baseAddress);
+	fprintf(pFile, "--arch=%s \n", archArg);
 	for(size_t i = 0; i < _size; i++)
 	{
 		fwrite(encoded_instr[i], sizeof(char), ::strlen(encoded_instr[i]), pFile);
@@ -83,8 +89,28 @@ string load_file(const string&f)
 	string new_str;
 	size_t pos;
 	bool are_bytes_found = false;
-	while(getline(file._file,line))
+	size_t len;
+	char* tmp;
+	for(int i = 0; getline(file._file,line); i++)
 	{
+		//the hook header must contain this info!
+		if(i==0)
+		{
+			len = strlen(&line[0])-1;
+			tmp = new char[len];
+			strcpy(tmp, line.c_str());
+			baseArg = new char[len];
+			memcpy(baseArg, tmp, len);
+		}
+		if(i==1)
+		{
+			len = strlen(&line[0])-1;
+			tmp = new char[len];
+			strcpy(tmp, line.c_str());
+			archArg = new char[len];
+			memcpy(archArg, tmp, len);
+		}
+
 		pos = line.find(":");
 		if(pos!=string::npos)
 		{
@@ -99,19 +125,18 @@ string load_file(const string&f)
 		cout<<"Could not find a string of bytes. \n";
 		debug_pause();
 	}
+	delete tmp;
 	return new_str;
 }
 
 int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 {
-
 	CmdLine cmd(argc, argv);
-	const char* archArg = cmd.getKey("--arch");
-	const char* baseArg = cmd.getKey("--base");
+	archArg = cmd.getKey("--arch");
+	baseArg = cmd.getKey("--base");
 
 	uint32_t archType = ArchInfo::kTypeX64;
 	uint64_t baseAddress = Globals::kNoBaseAddress;
-	string filename = "./hooks/jithook.jh";
 	char* log;
 	char* temp;
 
@@ -230,8 +255,8 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			char* new_arch = (char *)malloc(len);
 			memcpy(new_arch, input, len);
 
-			char* tmp[2] = {new_arch,new_base_address};
-			enter_asmjit_hook(2,tmp,patchfile);
+			char* head_info[2] = {new_arch,new_base_address};
+			enter_asmjit_hook(2,head_info,patchfile);
 		}
 
 		if (isCommand(input, ".write"))
@@ -256,7 +281,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			buffer = code.getSectionEntry(0)->getBuffer();
 			if(buffer.hasData())
 			{
-				saveCode(buffer,&filename[0]);
+				saveCode(buffer,&filename[0],baseAddress,archArg);
 			}
 			continue;
 		}
@@ -281,7 +306,8 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			}
 			buffer_from_file_only = load_file(tmp_filename);
 			printf("File loaded ...\n");
-			continue;
+			char* head_info[2] = {archArg,baseArg};
+			enter_asmjit_hook(2,head_info,patchfile);
 		}
 
 		if (isCommand(input, ".undo"))

@@ -12,7 +12,7 @@ extern vector<char*> encoded_instr;
 
 bool hexToU64(uint64_t& out, const char* src, size_t len);
 void dumpCode(CodeBuffer buffer);
-void saveCode(CodeBuffer buffer, char* filename = "./hooks/hook.h");
+void saveCode(CodeBuffer buffer, char* filename, uint64_t baseAddress, char* archArg);
 bool isSpace(const char c);
 bool isCommand(const char* str, const char* cmd);
 int enter_asmjit_hook(int argc, char* argv[], string patchfile = "");
@@ -50,9 +50,13 @@ public:
 		}
 
 		if (argLen > keyLen && arg[keyLen] == '=')
+		{
 			return arg + keyLen + 1;
+		}
 		else
+		{
 			return arg + keyLen;
+		}
 	}
 
 	int argc;

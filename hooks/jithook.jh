@@ -1,0 +1,5 @@
+--base=7323 
+--arch=x64 
+mov edi, 623                            ; BF6F020000
+add esp, 32454                          ; 81C4C67E0000
+BYTES:BE2A090000BF6F02000081C4C67E0000

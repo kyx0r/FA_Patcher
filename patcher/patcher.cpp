@@ -32,7 +32,7 @@ Patcher::Patcher(const string& filename_in, const string& filename_out)
 		cout<<fg::red<<"No make present. Exiting patcher. \n";
 		patcher_error = 1;
 	}
-	
+
 	if(!check_gcc())
 	{
 		cout<<fg::red<<"No g++/gcc present. Exiting patcher. \n";
@@ -75,7 +75,7 @@ bool Patcher::check_gcc()
 		cout << " " "\n";
 #endif
 		return true;
-	}	
+	}
 	else
 	{
 		return false;

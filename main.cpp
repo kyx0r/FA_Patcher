@@ -26,17 +26,17 @@ int main (int argc, char* argv[])
 	string target_out = "ForgedAlliance_exxt.exe";
 
 	Patcher patch(target_in, target_out);
-	
-	cout<<fg::magenta
-		<<"Basic functions: \n"
+
+	cout<<fg::cyan
+	    <<"Basic functions: \n"
 	    <<"1 - use jithook. \n"
 	    <<"2 - convert x64dbg disassembly to gcc inline. \n"
 	    <<"Note: Features below require g++ and make present. \n"
 	    <<"3 - full patch. \n"
 	    <<"4 - patch ignoring hooks. \n"
 	    <<"5 - only hooks. \n"
-		<<fg::reset<<endl;	
-		
+	    <<fg::reset<<endl;
+
 	cin >> reply;
 	if(reply.at(0)=='1')
 	{
@@ -58,7 +58,7 @@ int main (int argc, char* argv[])
 		x64dbg_parser_struct parser_struct = util.x64dbg_to_gcc_inline(reply);
 		util.write_gcc_asm(reply, parser_struct);
 	}
-	
+
 	if(patcher_error!=true)
 	{
 
@@ -89,7 +89,7 @@ int main (int argc, char* argv[])
 			binPatcher::Hooks hook(false, target_out);
 			hook.parse_hooks();
 		}
-	
+
 	}
 	else
 	{

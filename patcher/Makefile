@@ -17,7 +17,7 @@ lib$(LIBNAME).a: $(OBJS)
 	ar -cvr lib$(LIBNAME).a $(OBJS)
 	ranlib lib$(LIBNAME).a
 
-$(LIBPATH):
+.PHONY $(LIBPATH):
 	mkdir -p ../lib
 
 $(LIBPATH)/lib$(LIBNAME).a: lib$(LIBNAME).a $(LIBPATH)

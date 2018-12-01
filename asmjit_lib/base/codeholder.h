@@ -683,6 +683,9 @@ struct RelocEntry
 //! NOTE: CodeHolder has ability to attach an \ref ErrorHandler, however, this
 //! error handler is not triggered by CodeHolder itself, it's only used by the
 //! attached code generators.
+
+static Error CodeHolder_reserveInternal(CodeHolder* self, CodeBuffer* cb, size_t n) noexcept;
+
 class CodeHolder
 {
 public:
@@ -860,6 +863,7 @@ public:
 	}
 
 	ASMJIT_API Error growBuffer(CodeBuffer* cb, size_t n) noexcept;
+	ASMJIT_API Error resizeBuffer(CodeBuffer* cb, size_t n, int i) noexcept;
 	ASMJIT_API Error reserveBuffer(CodeBuffer* cb, size_t n) noexcept;
 
 	// --------------------------------------------------------------------------

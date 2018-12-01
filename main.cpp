@@ -1,15 +1,6 @@
 
 #include "patcher/rang.hpp"
-
 #include <iostream>
-#include <cstring>
-#include <limits>
-#include <time.h>
-#include <stdio.h>
-#include <vector>
-
-#include <assert.h>
-#include <fstream>
 #include "patcher/binPatcher.hpp"
 
 using namespace std;

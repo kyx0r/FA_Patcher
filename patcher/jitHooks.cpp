@@ -3,7 +3,7 @@
 vector<char*> encoded_instr;
 string buffer_from_file_only;
 string filename = "./hooks/jithook.jh";
-
+unsigned int address_inc = 3;
 char* archArg;
 char* baseArg;
 
@@ -28,9 +28,8 @@ bool hexToU64(uint64_t& out, const char* src, size_t len)
 	return true;
 }
 
-void dumpCode(CodeBuffer buffer)
+void dumpCode(CodeBuffer buffer, size_t _size)
 {
-	size_t _size = buffer.getLength();
 	printf("%s","Current hook buffer is:\n");
 	for (size_t i = 0; i < _size; i++)
 	{
@@ -129,6 +128,30 @@ string load_file(const string&f)
 	return new_str;
 }
 
+void print_jit_asm_info()
+{
+	cout<<"===============================================================\n"
+	    <<"Remote Assembler:\n"
+	    <<"  - A simple command-line based instruction encoder\n";
+	printf("  - Architecture=%s [select by --arch=x86|x64]\n", archArg        );
+	printf("  - Base-Address=%s [select by --base=hex]\n", baseArg            );
+	cout<<"---------------------------------------------------------------\n"
+	    <<"Input:\n"
+	    <<"  - Enter instruction and its operands to be encoded.\n"
+	    <<"  - Available commands: \n"
+	    <<"  - Enter '.info' to update the info. \n"
+	    <<"  - Enter '.clear' to clear everything.\n"
+	    <<"  - Enter '.print' to print the current code.\n"
+	    <<"  - Enter '.org' to set base address and architecture.\n"
+	    <<"  - Enter '.inc' value by which increment baseAddress Curr:"<<(address_inc)<<"\n"
+	    <<"  - Enter '.save' to save the current code.\n"
+	    <<"  - Enter '.undo' to revoke last encoded instruction.\n"
+	    <<"  - Enter '.file' to change filename. Current: "+filename+"\n"
+	    <<"  - Enter '.load' to load saved hook from file.\n"
+	    <<"  - Enter '.write' to apply the given hook.\n"
+	    <<"===============================================================\n";
+}
+
 int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 {
 	CmdLine cmd(argc, argv);
@@ -139,13 +162,13 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	uint64_t baseAddress = Globals::kNoBaseAddress;
 	char* log;
 	char* temp;
+	size_t len;
+	size_t _size = 0;
 
-#ifdef DEBUG
-	cout<<"Cmd args are: \n";
-	cout<<"Counter = "<<argc<<endl;
-	for(int i = 0; i < argc; ++i)
-		cout << argv[i] <<i<< '\n';
-#endif
+	/* 	cout<<"Cmd args are: \n";
+		cout<<"Counter = "<<argc<<endl;
+		for(int i = 0; i < argc; ++i)
+			cout << argv[i] <<i<< '\n'; */
 
 	if (archArg)
 	{
@@ -180,23 +203,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		}
 	}
 
-	cout<<"===============================================================\n"
-	    <<"Remote Assembler:\n"
-	    <<"  - A simple command-line based instruction encoder\n";
-	printf("  - Architecture=%s [select by --arch=x86|x64]\n", archArg        );
-	printf("  - Base-Address=%s [select by --base=hex]\n", baseArg            );
-	cout<<"---------------------------------------------------------------\n"
-	    <<"Input:\n"
-	    <<"  - Enter instruction and its operands to be encoded.\n"
-	    <<"  - Enter '.clear' to clear everything.\n"
-	    <<"  - Enter '.print' to print the current code.\n"
-	    <<"  - Enter '.org' to set base address and architecture.\n"
-	    <<"  - Enter '.save' to save the current code.\n"
-	    <<"  - Enter '.undo' to revoke last encoded instruction.\n"
-	    <<"  - Enter '.file' to change filename. Current: "+filename+"\n"
-	    <<"  - Enter '.load' to load saved hook from file.\n"
-	    <<"  - Enter '.write' to apply the given hook.\n"
-	    <<"===============================================================\n";
+	print_jit_asm_info();
 
 	StringLogger logger;
 	logger.addOptions(Logger::kOptionBinaryForm);
@@ -209,14 +216,18 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 	X86Assembler a(&code);
 	AsmParser p(&a);
+	CodeBuffer buffer;
 
 	char input[4096];
 	for (;;)
 	{
-		CodeBuffer buffer;
+		// 0 is the section number, this case .text
+		buffer = code.getSectionEntry(0)->getBuffer();
+		_size = buffer.getLength();
+		
 		fgets(input, 4095, stdin);
 		if (input[0] == 0) break;
-
+	
 		if (isCommand(input, ".clear"))
 		{
 			code.reset(false);  // Detaches everything.
@@ -229,10 +240,21 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 		if (isCommand(input, ".print"))
 		{
-			code.sync(); // First sync with the assembler.
-			// 0 is the section number, this case .text
-			buffer = code.getSectionEntry(0)->getBuffer();
-			dumpCode(buffer);
+			dumpCode(buffer,_size);
+			continue;
+		}
+
+		if (isCommand(input, ".info"))
+		{
+			print_jit_asm_info();
+			continue;
+		}
+
+		if (isCommand(input, ".inc"))
+		{
+			printf("Enter an integer. \n");
+			fgets(input, 4095, stdin);
+			address_inc = atoi(input);
 			continue;
 		}
 
@@ -277,8 +299,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 		if (isCommand(input, ".save"))
 		{
-			code.sync();
-			buffer = code.getSectionEntry(0)->getBuffer();
 			if(buffer.hasData())
 			{
 				saveCode(buffer,&filename[0],baseAddress,archArg);
@@ -300,10 +320,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			fflush(stdin);
 			string tmp_filename;
 			cin>>tmp_filename;
-			if(tmp_filename.compare(filename)==0)
-			{
-				printf("Warning! Loading the same file might lead to unexpected results! \n");
-			}
 			buffer_from_file_only = load_file(tmp_filename);
 			printf("File loaded ...\n");
 			char* head_info[2] = {archArg,baseArg};
@@ -312,27 +328,25 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 		if (isCommand(input, ".undo"))
 		{
-			printf("Feature not supported yet. \n");
-			/* 			code.sync();
-						if(!encoded_instr.empty())
-						{
-							encoded_instr.pop_back();
-						}
-						buffer = code.getSectionEntry(0)->getBuffer();
-						if(buffer.hasData())
-						{
-							//to do
-						} */
+			if(!encoded_instr.empty())
+			{
+				encoded_instr.pop_back();
+			}
+			if(buffer.hasData())
+			{
+				//@@2 how many bytes to keep in buffer? 0 = complete wipe.
+				code.resizeBuffer(&buffer,0,0);
+			}
 			continue;
 		}
-
+		
 		logger.clearString();
 		Error err = p.parse(input);
 
 		if (err == kErrorOk)
 		{
 			log = logger.getString();
-			size_t len = logger.getLength();
+			len = logger.getLength();
 			size_t i;
 
 			// Skip the instruction part, and keep only the comment part.
@@ -351,6 +365,9 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 				strncpy(temp,log,len);
 				encoded_instr.push_back(temp);
 				printf("%.*s", (int)(len - i), log + i);
+				ci._baseAddress = baseAddress + address_inc;
+				code.init(ci);
+				code.sync();
 			}
 		}
 		else

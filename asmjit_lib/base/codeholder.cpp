@@ -372,6 +372,43 @@ Error CodeHolder::growBuffer(CodeBuffer* cb, size_t n) noexcept
 	return CodeHolder_reserveInternal(this, cb, capacity - Globals::kAllocOverhead);
 }
 
+Error CodeHolder::resizeBuffer(CodeBuffer* cb, size_t n, int i) noexcept
+{
+	
+	uint8_t* oldData = cb->_data;
+	uint8_t* newData;
+	size_t new_n = n*2;
+	if(n==0)
+	{
+		new_n = 1;
+	}
+
+	if (oldData && !cb->isExternal())
+	{
+		newData = static_cast<uint8_t*>(Internal::reallocMemory(oldData, new_n));
+	}
+	else
+	{
+		newData = static_cast<uint8_t*>(Internal::allocMemory(n));
+	}
+	if (ASMJIT_UNLIKELY(!newData))
+		return DebugUtils::errored(kErrorNoHeapMemory);
+
+	SectionEntry* section = this->_sections[i];		
+	section->_buffer._data = newData;
+	section->_buffer._length = n;
+	section->_buffer._capacity = new_n;
+	
+	Assembler* a = this->_cgAsm;
+	size_t offset = a->getOffset();
+	a->_bufferData = newData;
+	a->_bufferEnd  = newData + n;
+	a->_bufferPtr  = newData + n;
+		
+	
+	return kErrorOk;
+}
+
 Error CodeHolder::reserveBuffer(CodeBuffer* cb, size_t n) noexcept
 {
 	size_t capacity = cb->getCapacity();

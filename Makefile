@@ -27,7 +27,8 @@ ifeq ($(detected_OS),Windows)
 endif
 
 OBJS = ./*cpp
-#HEADS = ./patcher/*.hpp
+HEADS = ./patcher/binPatcher.hpp
+PREP = -include $(HEADS)
 CC = g++
 
 ASTYLE = aStyle
@@ -113,10 +114,13 @@ hook_gpp_link:
 	
 rip_out_binary:
 	objcopy --strip-all -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
+	
+pre_comp_h:
+	$(CC) -w $(INCLUDE_PATHS) $(HEADS)
 
 #This is the target that compiles our executable 
 all : peLib boostLib asmjitLib patcherLib
-	$(CC) $(OBJS) $(HEADS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) $(WINAPI) -o $(OBJ_NAME)
+	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) $(WINAPI) -o $(OBJ_NAME)
 	@echo ./FaPatcher built successfully.
 	
 format:
@@ -124,4 +128,7 @@ format:
 	
 clean_f:
 	find . -type f -name '*.orig' -delete
+	
+clean_g:
+	find . -type f -name '*.gch' -delete	
 	

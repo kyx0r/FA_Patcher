@@ -18,6 +18,8 @@ int main (int argc, char* argv[])
 
 	Patcher patch(target_in, target_out);
 
+ret:
+
 	cout<<fg::cyan
 	    <<"Basic functions: \n"
 	    <<"1 - use jithook. \n"
@@ -32,6 +34,7 @@ int main (int argc, char* argv[])
 	if(reply.at(0)=='1')
 	{
 		enter_asmjit_hook(argc,argv,target_out);
+		goto ret;
 	}
 
 	binPatcher::BinSection section;

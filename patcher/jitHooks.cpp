@@ -88,28 +88,8 @@ string load_file(const string&f)
 	string new_str;
 	size_t pos;
 	bool are_bytes_found = false;
-	size_t len;
-	char* tmp;
-	for(int i = 0; getline(file._file,line); i++)
+	while(getline(file._file,line))
 	{
-		//the hook header must contain this info!
-		if(i==0)
-		{
-			len = strlen(&line[0])-1;
-			tmp = new char[len];
-			strcpy(tmp, line.c_str());
-			baseArg = new char[len];
-			memcpy(baseArg, tmp, len);
-		}
-		if(i==1)
-		{
-			len = strlen(&line[0])-1;
-			tmp = new char[len];
-			strcpy(tmp, line.c_str());
-			archArg = new char[len];
-			memcpy(archArg, tmp, len);
-		}
-
 		pos = line.find(":");
 		if(pos!=string::npos)
 		{
@@ -124,8 +104,74 @@ string load_file(const string&f)
 		cout<<"Could not find a string of bytes. \n";
 		debug_pause();
 	}
-	delete tmp;
 	return new_str;
+}
+
+int getposition(const char *array, size_t size, char c)
+{
+	for (size_t i = 0; i < size; i++)
+	{
+		if (array[i] == c)
+			return (int)i;
+	}
+	return -1;
+}
+
+void read_header(const char* f, bool rawinfo)
+{
+	FILE* pFile;
+	if (!(pFile = fopen(f,"rw+")))
+	{
+		printf("\nCan't open \"%s\".\n",f);
+		printf( "Error code opening file: %d\n", errno );
+		printf( "Error opening file: %s\n", strerror( errno ) );
+		debug_pause();
+	}
+
+	const size_t line_size = 300;
+	char* line = malloc(line_size);
+	size_t len;
+	int pch;
+	baseArg = new char[50];
+	archArg = new char[50];
+	while(fgets(line, line_size, pFile) != nullptr)
+	{
+		//the hook header must contain this info!
+		if(strncmp(line,"--b",3)==0)
+		{
+			if(rawinfo)
+			{
+				len = strlen(line);
+				pch = getposition(line, len, '=');
+				sprintf(baseArg, "%s", (line+pch+1));
+			}
+			else if(!rawinfo)
+			{
+				len = strlen(line)-2;
+				memcpy(baseArg, line, len);
+			}
+		}
+
+		if(strncmp(line,"--a",3)==0)
+		{
+			if(rawinfo)
+			{
+				len = strlen(line);
+				pch = getposition(line, len, '=');
+				sprintf(archArg, "%s", (line+pch+1));
+				break;
+			}
+			else if(!rawinfo)
+			{
+				len = strlen(line)-2;
+				memcpy(archArg, line, len);
+				break;
+			}
+		}
+	}
+
+	free(line);
+	fclose(pFile);
 }
 
 void print_jit_asm_info()
@@ -149,7 +195,52 @@ void print_jit_asm_info()
 	    <<"  - Enter '.file' to change filename. Current: "+filename+"\n"
 	    <<"  - Enter '.load' to load saved hook from file.\n"
 	    <<"  - Enter '.write' to apply the given hook.\n"
+	    <<"  - Enter '.wall' to apply all hooks. (files have to end with .jh) \n"
+	    <<"  - Enter '.ret' return to main menu. \n"
 	    <<"===============================================================\n";
+}
+
+void write_all_jithooks(string path, string patchfile)
+{
+	boost::filesystem::path p(path);
+	boost::filesystem::directory_iterator end_itr;
+	string current_file;
+	uint64_t baseAddress = Globals::kNoBaseAddress;
+
+	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
+	{
+		if (boost::filesystem::is_regular_file(itr->path()))
+		{
+			current_file = itr->path().string();
+			if (boost::filesystem::extension(current_file).compare(".jh")==0)
+			{
+				buffer_from_file_only = load_file(current_file);
+				read_header(&current_file[0], true);
+				if(!buffer_from_file_only.empty())
+				{
+					size_t len = strlen(baseArg)-2;
+					char* new_base = (char *)malloc(len);
+					memcpy(new_base, baseArg, len);
+					if(!hexToU64(baseAddress, new_base, len))
+					{
+						cout<<fg::red<<"Failed to calculate baseAddress !"<<"In file: "<<current_file<<fg::reset<<endl;
+						cout<<"Input: "<<new_base<<"Len = "<<len<<endl;
+						debug_pause();
+					}
+					FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
+					file_out.fWriteString(buffer_from_file_only,baseAddress);
+					printf("Written to: %s Offset=%s\n",&patchfile[0],baseArg);
+					free(new_base);
+				}
+				else
+				{
+					printf("No buffer from file is loaded. \n");
+					break;
+				}
+			}
+		}
+	}
+	return;
 }
 
 int enter_asmjit_hook(int argc, char* argv[], string patchfile)
@@ -162,8 +253,11 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	uint64_t baseAddress = Globals::kNoBaseAddress;
 	char* log;
 	char* temp;
+	char* new_base_address;
+	char* new_arch;
 	size_t len;
 	size_t _size = 0;
+	string tmp_filename;
 
 	/* 	cout<<"Cmd args are: \n";
 		cout<<"Counter = "<<argc<<endl;
@@ -224,10 +318,10 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		// 0 is the section number, this case .text
 		buffer = code.getSectionEntry(0)->getBuffer();
 		_size = buffer.getLength();
-		
+
 		fgets(input, 4095, stdin);
 		if (input[0] == 0) break;
-	
+
 		if (isCommand(input, ".clear"))
 		{
 			code.reset(false);  // Detaches everything.
@@ -267,18 +361,25 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			//FIX the cmd parser expects a non null terminated string
 			//This is a hack around that.
 			size_t len = strlen(input)-1;
-			char* new_base_address = (char *)malloc(len);
+			new_base_address = (char *)malloc(len);
 			memcpy(new_base_address, input, len);
 
 			printf("Enter as --arch=x86|x64 \n");
 			fflush(stdin);
 			fgets(input, 4095, stdin);
 			len = strlen(input)-1;
-			char* new_arch = (char *)malloc(len);
+			new_arch = (char *)malloc(len);
 			memcpy(new_arch, input, len);
 
 			char* head_info[2] = {new_arch,new_base_address};
 			enter_asmjit_hook(2,head_info,patchfile);
+		}
+
+		if (isCommand(input, ".ret"))
+		{
+			code.reset(true);
+			buffer_from_file_only.clear(); //this does not clean up completely, yet.
+			return 0;
 		}
 
 		if (isCommand(input, ".write"))
@@ -294,6 +395,14 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 				printf("Save the buffer, then load it, then write it. \n");
 				printf("No buffer from file is loaded. \n");
 			}
+			continue;
+		}
+
+		if(isCommand(input, ".wall"))
+		{
+			printf("Folder where to loop ...\n");
+			cin>>tmp_filename;
+			write_all_jithooks(tmp_filename, patchfile);
 			continue;
 		}
 
@@ -318,9 +427,9 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		{
 			printf("Filename to load ...\n");
 			fflush(stdin);
-			string tmp_filename;
 			cin>>tmp_filename;
 			buffer_from_file_only = load_file(tmp_filename);
+			read_header(&tmp_filename[0]);
 			printf("File loaded ...\n");
 			char* head_info[2] = {archArg,baseArg};
 			enter_asmjit_hook(2,head_info,patchfile);
@@ -339,7 +448,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			}
 			continue;
 		}
-		
+
 		logger.clearString();
 		Error err = p.parse(input);
 

@@ -374,7 +374,7 @@ Error CodeHolder::growBuffer(CodeBuffer* cb, size_t n) noexcept
 
 Error CodeHolder::resizeBuffer(CodeBuffer* cb, size_t n, int i) noexcept
 {
-	
+
 	uint8_t* oldData = cb->_data;
 	uint8_t* newData;
 	size_t new_n = n*2;
@@ -394,18 +394,18 @@ Error CodeHolder::resizeBuffer(CodeBuffer* cb, size_t n, int i) noexcept
 	if (ASMJIT_UNLIKELY(!newData))
 		return DebugUtils::errored(kErrorNoHeapMemory);
 
-	SectionEntry* section = this->_sections[i];		
+	SectionEntry* section = this->_sections[i];
 	section->_buffer._data = newData;
 	section->_buffer._length = n;
 	section->_buffer._capacity = new_n;
-	
+
 	Assembler* a = this->_cgAsm;
 	size_t offset = a->getOffset();
 	a->_bufferData = newData;
 	a->_bufferEnd  = newData + n;
 	a->_bufferPtr  = newData + n;
-		
-	
+
+
 	return kErrorOk;
 }
 

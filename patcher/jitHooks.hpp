@@ -16,6 +16,8 @@ void saveCode(CodeBuffer buffer, char* filename, uint64_t baseAddress, char* arc
 bool isSpace(const char c);
 bool isCommand(const char* str, const char* cmd);
 int enter_asmjit_hook(int argc, char* argv[], string patchfile = "");
+string load_file(const string&f);
+void read_header(const char* f, bool rawinfo = false);
 
 class CmdLine
 {

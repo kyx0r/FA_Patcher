@@ -219,7 +219,7 @@ void write_all_jithooks(string path, string patchfile)
 				if(!buffer_from_file_only.empty())
 				{
 					size_t len = strlen(baseArg)-2;
-					char* new_base = (char *)malloc(len);
+					char* new_base = (char *)_alloca(len);
 					memcpy(new_base, baseArg, len);
 					if(!hexToU64(baseAddress, new_base, len))
 					{
@@ -230,7 +230,6 @@ void write_all_jithooks(string path, string patchfile)
 					FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
 					file_out.fWriteString(buffer_from_file_only,baseAddress);
 					printf("Written to: %s Offset=%s\n",&patchfile[0],baseArg);
-					free(new_base);
 				}
 				else
 				{
@@ -253,8 +252,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	uint64_t baseAddress = Globals::kNoBaseAddress;
 	char* log;
 	char* temp;
-	char* new_base_address;
-	char* new_arch;
 	size_t len;
 	size_t _size = 0;
 	string tmp_filename;
@@ -282,7 +279,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	}
 	else
 	{
-		archArg = "x64";
+		archArg = "x86";
 	}
 
 	if (baseArg)
@@ -361,14 +358,14 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			//FIX the cmd parser expects a non null terminated string
 			//This is a hack around that.
 			size_t len = strlen(input)-1;
-			new_base_address = (char *)malloc(len);
+			char* new_base_address = (char *)malloc(len);
 			memcpy(new_base_address, input, len);
 
 			printf("Enter as --arch=x86|x64 \n");
 			fflush(stdin);
 			fgets(input, 4095, stdin);
 			len = strlen(input)-1;
-			new_arch = (char *)malloc(len);
+			char* new_arch = (char *)malloc(len);
 			memcpy(new_arch, input, len);
 
 			char* head_info[2] = {new_arch,new_base_address};

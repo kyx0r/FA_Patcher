@@ -219,7 +219,11 @@ void write_all_jithooks(string path, string patchfile)
 				if(!buffer_from_file_only.empty())
 				{
 					size_t len = strlen(baseArg)-2;
+#ifdef defined(WIN32) || defined(_WIN32) || defined(_WIN64)
 					char* new_base = (char *)_alloca(len);
+#else
+					char* new_base = (char *)alloca(len);
+#endif
 					memcpy(new_base, baseArg, len);
 					if(!hexToU64(baseAddress, new_base, len))
 					{

@@ -19,7 +19,7 @@
 # define ASMTK_STRTOD_XLOCALE
 # include <locale.h>
 # include <stdlib.h>
-# include <xlocale.h>
+//# include <xlocale.h>
 #endif
 
 namespace asmtk

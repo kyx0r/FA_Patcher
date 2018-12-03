@@ -18,6 +18,8 @@ CC = g++
 #LIBRARY_PATHS specifies the additional library paths we'll need 
 #LIBRARY_PATHS = -L ./lib
 
+LINKER_FLAGS = -I. -m32 -O0 -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables -c -w -Wextra -masm=intel -ffunction-sections -fdata-sections -Wl,--gc-sections
+
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
 # -Wl,-subsystem,windows gets rid of the console window 
@@ -29,8 +31,6 @@ endif
 #-ffunction-sections -fdata-sections
 
 #-ffreestanding = freestanding enviroment
-
-LINKER_FLAGS = -I. -m32 -O0 -ffreestanding -fpermissive -fno-exceptions -fno-asynchronous-unwind-tables -c -w -Wextra -masm=intel -ffunction-sections -fdata-sections -Wl,--gc-sections
 
 #-nostartfiles similar to -c but has linker enabled
 

@@ -43,10 +43,9 @@ Tested on 64 bit linux machine, patcher compiles well.
 
 (for every distro has its own install procedure, if not installed by default) 
 
-# Notes
+If you are using a 64 bit compiler line me, then it might not have multilib support installed.
 
-Mingw linker has some flags that I use and they are not present in linker on linux.
+To get it read this: https://www.geeksforgeeks.org/compile-32-bit-program-64-bit-gcc-c-c/
 
-So hooks need to be retargeted with different build flags, and object files formats. 
+(This is required for regular hooks and patches.) 
 
-Some day I will implement full linux support. As of now, only the patcher can compile.

@@ -27,6 +27,9 @@ LIBRARY_PATHS = -L ../lib
 # -Wl,-subsystem,windows gets rid of the console window 
 ifeq ($(detected_OS),Windows)
 COMPILER_FLAGS = -fleading-underscore
+LD_FLAGS = --image-base 0x128D000
+else
+LD_FLAGS = -Ttext-segment 0x128D000 -m elf_i386
 endif
 
 #LINKER_FLAGS specifies the libraries we're linking against 
@@ -52,4 +55,4 @@ all :
 	
 # --image-base. only windows ld supports this. It marks the starting virtual address of the file built. 	
 link:
-	ld --image-base 0x128D000 -Map ../build/mapfile.map -o ../build/exxt_sector.o $(LINK_OBJS)
+	ld $(LD_FLAGS) -Map ../build/mapfile.map -o ../build/exxt_sector.o $(LINK_OBJS)

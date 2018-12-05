@@ -571,8 +571,8 @@ inline void setControlMode(const control value) noexcept
 
 }  // namespace rang
 
-#undef OS_LINUX
-#undef OS_WIN
-#undef OS_MAC
+//#undef OS_LINUX
+//#undef OS_WIN
+//#undef OS_MAC
 
 #endif /* ifndef RANG_DOT_HPP */

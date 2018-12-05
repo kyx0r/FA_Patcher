@@ -6,13 +6,28 @@ string filename = "./hooks/jithook.jh";
 unsigned int address_inc = 3;
 char* archArg;
 char* baseArg;
+uint32_t archType;
+uint64_t baseAddress;
 
 bool hexToU64(uint64_t& out, const char* src, size_t len)
 {
+	char* tmp;
 	uint64_t val = 0;
+	int null_count = 0;
+	
+	for(int i=0; i<=len; i++)
+	{
+		if(src[i]=='\0' || src[i]==' ')
+		{
+			null_count++;
+		}
+	}
+	len = len-null_count;
+	tmp = (char*) alloca(len);
+	memcpy(tmp, src, len);
 	for (size_t i = 0; i < len; i++)
 	{
-		uint32_t c = src[i];
+		uint32_t c = tmp[i];
 		if (c >= '0' && c <= '9')
 			c = c - '0';
 		else if (c >= 'a' && c <= 'f')
@@ -132,38 +147,36 @@ void read_header(const char* f, bool rawinfo)
 	char* line = malloc(line_size);
 	size_t len;
 	int pch;
-	baseArg = new char[50];
-	archArg = new char[50];
 	while(fgets(line, line_size, pFile) != nullptr)
 	{
 		//the hook header must contain this info!
 		if(strncmp(line,"--b",3)==0)
 		{
+			len = strlen(line);
+			baseArg = new char[len];
 			if(rawinfo)
 			{
-				len = strlen(line);
 				pch = getposition(line, len, '=');
 				sprintf(baseArg, "%s", (line+pch+1));
 			}
 			else if(!rawinfo)
 			{
-				len = strlen(line)-2;
 				memcpy(baseArg, line, len);
 			}
 		}
 
 		if(strncmp(line,"--a",3)==0)
 		{
+			len = strlen(line);
+			archArg = new char[len];
 			if(rawinfo)
 			{
-				len = strlen(line);
 				pch = getposition(line, len, '=');
 				sprintf(archArg, "%s", (line+pch+1));
 				break;
 			}
 			else if(!rawinfo)
 			{
-				len = strlen(line)-2;
 				memcpy(archArg, line, len);
 				break;
 			}
@@ -174,13 +187,15 @@ void read_header(const char* f, bool rawinfo)
 	fclose(pFile);
 }
 
-void print_jit_asm_info()
+void print_jit_asm_info(CodeInfo *ptr = nullptr)
 {
 	cout<<"===============================================================\n"
 	    <<"Remote Assembler:\n"
 	    <<"  - A simple command-line based instruction encoder\n";
 	printf("  - Architecture=%s [select by --arch=x86|x64]\n", archArg        );
-	printf("  - Base-Address=%s [select by --base=hex]\n", baseArg            );
+	printf("  - Base-Address=%04X [select by --base=hex]\n", baseAddress      );
+	if(ptr!=nullptr)
+	{printf("  - Current-Base-Address=%04X \n", ptr->_baseAddress             );}
 	cout<<"---------------------------------------------------------------\n"
 	    <<"Input:\n"
 	    <<"  - Enter instruction and its operands to be encoded.\n"
@@ -218,17 +233,11 @@ void write_all_jithooks(string path, string patchfile)
 				read_header(&current_file[0], true);
 				if(!buffer_from_file_only.empty())
 				{
-					size_t len = strlen(baseArg)-2;
-#ifdef defined(WIN32) || defined(_WIN32) || defined(_WIN64)
-					char* new_base = (char *)_alloca(len);
-#else
-					char* new_base = (char *)alloca(len);
-#endif
-					memcpy(new_base, baseArg, len);
-					if(!hexToU64(baseAddress, new_base, len))
+					size_t len = strlen(baseArg);
+					if(!hexToU64(baseAddress, baseArg, len))
 					{
 						cout<<fg::red<<"Failed to calculate baseAddress !"<<"In file: "<<current_file<<fg::reset<<endl;
-						cout<<"Input: "<<new_base<<"Len = "<<len<<endl;
+						cout<<"Input: "<<baseArg<<"Len = "<<len<<endl;
 						debug_pause();
 					}
 					FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
@@ -248,32 +257,48 @@ void write_all_jithooks(string path, string patchfile)
 
 int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 {
-	CmdLine cmd(argc, argv);
-	archArg = cmd.getKey("--arch");
-	baseArg = cmd.getKey("--base");
-
-	uint32_t archType = ArchInfo::kTypeX64;
-	uint64_t baseAddress = Globals::kNoBaseAddress;
 	char* log;
 	char* temp;
 	size_t len;
 	size_t _size = 0;
 	string tmp_filename;
+	
+	if(argv!=nullptr)
+	{
+		CmdLine cmd(argc, argv);
+		archArg = cmd.getKey("--arch");
+		baseArg = cmd.getKey("--base");
+	
 
-	/* 	cout<<"Cmd args are: \n";
-		cout<<"Counter = "<<argc<<endl;
-		for(int i = 0; i < argc; ++i)
-			cout << argv[i] <<i<< '\n'; */
+		archType = ArchInfo::kTypeX64;
+		baseAddress = Globals::kNoBaseAddress;
 
+		/* 	cout<<"Cmd args are: \n";
+			cout<<"Counter = "<<argc<<endl;
+			for(int i = 0; i < argc; ++i)
+				cout << argv[i] <<i<< '\n'; */
+			
+		if (baseArg)
+		{
+			size_t maxLen = archType == ArchInfo::kTypeX64 ? 16 : 8;
+			if (!len || len > maxLen || !hexToU64(baseAddress, baseArg, strlen(baseArg)))
+			{
+				cout<<"Invalid --base parameter "<<baseArg<<endl;
+				debug_pause();
+			}
+		}
+	
+	}
+	
 	if (archArg)
 	{
-		if (::strcmp(archArg, "x86") == 0)
+		if (strncmp(archArg,"x86",3) == 0)
 		{
 			archType = ArchInfo::kTypeX86;
 		}
-		else if (::strcmp(archArg, "x64") == 0)
+		else if (strncmp(archArg,"x64",3) == 0)
 		{
-			archType = ArchInfo::kTypeX64;
+				archType = ArchInfo::kTypeX64;
 		}
 		else
 		{
@@ -284,19 +309,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	else
 	{
 		archArg = "x86";
-	}
-
-	if (baseArg)
-	{
-		size_t len = ::strlen(baseArg);
-		size_t maxLen = archType == ArchInfo::kTypeX64 ? 16 : 8;
-
-		if (!len || len > maxLen || !hexToU64(baseAddress, baseArg, len))
-		{
-			printf("Invalid --base parameter\n");
-			debug_pause();
-		}
-	}
+	}	
 
 	print_jit_asm_info();
 
@@ -341,8 +354,23 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 		if (isCommand(input, ".info"))
 		{
-			print_jit_asm_info();
+			print_jit_asm_info(&ci);
 			continue;
+		}
+		
+		if(isCommand(input, "g"))
+		{
+			test:
+			fgets(input, 4095, stdin);
+			int l = strlen(input);
+			cout<<l<<endl;
+			if(!hexToU64(baseAddress, input, l))
+			{
+				cout<<"fail\n";
+			}
+			cout<<baseAddress<<endl;
+			goto test;
+			
 		}
 
 		if (isCommand(input, ".inc"))
@@ -355,25 +383,19 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 		if (isCommand(input, ".org"))
 		{
-			printf("Enter as --base=hex ... example: `--base=123` \n");
-			fflush(stdin);
+			printf("Enter as hex ... example: `123` \n");
 			fgets(input, 4095, stdin);
-
-			//FIX the cmd parser expects a non null terminated string
-			//This is a hack around that.
-			size_t len = strlen(input)-1;
-			char* new_base_address = (char *)malloc(len);
-			memcpy(new_base_address, input, len);
-
-			printf("Enter as --arch=x86|x64 \n");
-			fflush(stdin);
+			if(!hexToU64(baseAddress, input, strlen(input)))
+			{
+				cout<<"Invalid --base parameter "<<input<<endl;
+				baseAddress = Globals::kNoBaseAddress;
+			}
+			printf("Enter as x86|x64 \n");
 			fgets(input, 4095, stdin);
-			len = strlen(input)-1;
-			char* new_arch = (char *)malloc(len);
-			memcpy(new_arch, input, len);
-
-			char* head_info[2] = {new_arch,new_base_address};
-			enter_asmjit_hook(2,head_info,patchfile);
+			len = strlen(input);
+			archArg = new char[len];
+			strncpy(archArg, input, len);
+			enter_asmjit_hook(0,nullptr,patchfile);
 		}
 
 		if (isCommand(input, ".ret"))
@@ -430,10 +452,14 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			fflush(stdin);
 			cin>>tmp_filename;
 			buffer_from_file_only = load_file(tmp_filename);
-			read_header(&tmp_filename[0]);
+			read_header(&tmp_filename[0],true);
+			if(!hexToU64(baseAddress, baseArg, strlen(baseArg)))
+			{
+				cout<<"Invalid --base parameter "<<baseArg<<endl;
+				baseAddress = Globals::kNoBaseAddress;
+			}			
 			printf("File loaded ...\n");
-			char* head_info[2] = {archArg,baseArg};
-			enter_asmjit_hook(2,head_info,patchfile);
+			enter_asmjit_hook(0,nullptr,patchfile);
 		}
 
 		if (isCommand(input, ".undo"))
@@ -471,14 +497,14 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 			if (i < len)
 			{
+				printf("%.*s", (int)(len - i), log + i);
 				temp = new char[len];
 				strncpy(temp,log,len);
 				encoded_instr.push_back(temp);
-				printf("%.*s", (int)(len - i), log + i);
 				ci._baseAddress = baseAddress + address_inc;
 				code.init(ci);
-				code.sync();
-			}
+				code.sync();				
+			}			
 		}
 		else
 		{

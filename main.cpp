@@ -100,7 +100,7 @@ ret:
 	//boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 
 	cout<<"Done."<<endl;
-	debug_pause();
+	goto ret;
 
 	return 0;
 }

@@ -6,8 +6,10 @@ string filename = "./hooks/jithook.jh";
 unsigned int address_inc = 3;
 char* archArg;
 char* baseArg;
+char* offsArg;
 uint32_t archType;
 uint64_t baseAddress;
+uint64_t baseOffset;
 
 bool hexToU64(uint64_t& out, const char* src, size_t len)
 {
@@ -64,7 +66,8 @@ void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, char* ar
 		printf( "Error opening file: %s\n", strerror( errno ) );
 		debug_pause();
 	}
-	fprintf(pFile, "--base=%04X \n", baseAddress);
+	fprintf(pFile, "--baseVA=%04X \n", baseAddress);
+	fprintf(pFile, "--offs=%04X \n", baseOffset);
 	fprintf(pFile, "--arch=%s \n", archArg);
 	for(size_t i = 0; i < _size; i++)
 	{
@@ -164,6 +167,21 @@ void read_header(const char* f, bool rawinfo)
 				memcpy(baseArg, line, len);
 			}
 		}
+		
+		if(strncmp(line,"--o",3)==0)
+		{
+			len = strlen(line);
+			offsArg = new char[len];
+			if(rawinfo)
+			{
+				pch = getposition(line, len, '=');
+				sprintf(offsArg, "%s", (line+pch+1));
+			}
+			else if(!rawinfo)
+			{
+				memcpy(offsArg, line, len);
+			}
+		}		
 
 		if(strncmp(line,"--a",3)==0)
 		{
@@ -192,8 +210,9 @@ void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	cout<<"===============================================================\n"
 	    <<"Remote Assembler:\n"
 	    <<"  - A simple command-line based instruction encoder\n";
-	printf("  - Architecture=%s [select by --arch=x86|x64]\n", archArg        );
-	printf("  - Base-Address=%04X [select by --base=hex]\n", baseAddress      );
+	printf("  - Architecture=%s   [select by --arch=x86|x64]\n", archArg      );
+	printf("  - Base-Address=%04X [select by --baseVA=hex]\n", baseAddress    );
+	printf("  - Base-Offset=%04X  [select by --offs=hex]\n",baseOffset        );
 	if(ptr!=nullptr)
 	{printf("  - Current-Base-Address=%04X \n", ptr->_baseAddress             );}
 	cout<<"---------------------------------------------------------------\n"
@@ -215,12 +234,25 @@ void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	    <<"===============================================================\n";
 }
 
+void release_Vect()
+{
+	size_t _size = encoded_instr.size();
+	for(size_t i = 0; i < _size; i++)
+	{
+		if(encoded_instr[i]!=nullptr)
+		{
+			delete encoded_instr[i];
+			encoded_instr[i] = nullptr;
+		}
+	}
+}
+
 void write_all_jithooks(string path, string patchfile)
 {
 	boost::filesystem::path p(path);
 	boost::filesystem::directory_iterator end_itr;
 	string current_file;
-	uint64_t baseAddress = Globals::kNoBaseAddress;
+	uint64_t baseOffset = 0;
 
 	for (boost::filesystem::directory_iterator itr(p); itr != end_itr; ++itr)
 	{
@@ -233,16 +265,16 @@ void write_all_jithooks(string path, string patchfile)
 				read_header(&current_file[0], true);
 				if(!buffer_from_file_only.empty())
 				{
-					size_t len = strlen(baseArg);
-					if(!hexToU64(baseAddress, baseArg, len))
+					size_t len = strlen(offsArg);
+					if(!hexToU64(baseOffset, offsArg, len))
 					{
-						cout<<fg::red<<"Failed to calculate baseAddress !"<<"In file: "<<current_file<<fg::reset<<endl;
-						cout<<"Input: "<<baseArg<<"Len = "<<len<<endl;
+						cout<<fg::red<<"Failed to calculate baseOffset !"<<"In file: "<<current_file<<fg::reset<<endl;
+						cout<<"Input: "<<offsArg<<"Len = "<<len<<endl;
 						debug_pause();
 					}
 					FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
-					file_out.fWriteString(buffer_from_file_only,baseAddress);
-					printf("Written to: %s Offset=%s\n",&patchfile[0],baseArg);
+					file_out.fWriteString(buffer_from_file_only,baseOffset);
+					printf("Written to: %s Offset=%s\n",&patchfile[0],offsArg);
 				}
 				else
 				{
@@ -256,39 +288,13 @@ void write_all_jithooks(string path, string patchfile)
 }
 
 int enter_asmjit_hook(int argc, char* argv[], string patchfile)
-{
+{	
 	char* log;
 	char* temp;
 	size_t len;
 	size_t _size = 0;
 	string tmp_filename;
-	
-	if(argv!=nullptr)
-	{
-		CmdLine cmd(argc, argv);
-		archArg = cmd.getKey("--arch");
-		baseArg = cmd.getKey("--base");
-	
-
-		archType = ArchInfo::kTypeX64;
-		baseAddress = Globals::kNoBaseAddress;
-
-		/* 	cout<<"Cmd args are: \n";
-			cout<<"Counter = "<<argc<<endl;
-			for(int i = 0; i < argc; ++i)
-				cout << argv[i] <<i<< '\n'; */
-			
-		if (baseArg)
-		{
-			size_t maxLen = archType == ArchInfo::kTypeX64 ? 16 : 8;
-			if (!len || len > maxLen || !hexToU64(baseAddress, baseArg, strlen(baseArg)))
-			{
-				cout<<"Invalid --base parameter "<<baseArg<<endl;
-				debug_pause();
-			}
-		}
-	
-	}
+	const char input[4095];
 	
 	if (archArg)
 	{
@@ -309,8 +315,45 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	else
 	{
 		archArg = "x86";
-	}	
+	}		
+	
+	if(argv!=nullptr)
+	{
+		CmdLine cmd(argc, argv);
+		archArg = cmd.getKey("--arch");
+		baseArg = cmd.getKey("--baseVA");
+		offsArg = cmd.getKey("--offs");
 
+		archType = ArchInfo::kTypeX64;
+		baseAddress = Globals::kNoBaseAddress;
+
+		/* 	cout<<"Cmd args are: \n";
+			cout<<"Counter = "<<argc<<endl;
+			for(int i = 0; i < argc; ++i)
+				cout << argv[i] <<i<< '\n'; */
+			
+		size_t maxLen = archType == ArchInfo::kTypeX64 ? 16 : 8;	
+		if (baseArg)
+		{
+			len = strlen(baseArg);
+			if (!len || len > maxLen || !hexToU64(baseAddress, baseArg, len))
+			{
+				cout<<"Invalid --baseVA parameter "<<baseArg<<endl;
+				debug_pause();
+			}
+		}
+		
+		if (offsArg)
+		{
+			len = strlen(offsArg);
+			if (!len || len > maxLen || !hexToU64(baseOffset, offsArg, len))
+			{
+				cout<<"Invalid --offs parameter "<<offsArg<<endl;
+				debug_pause();
+			}
+		}
+	}
+	
 	print_jit_asm_info();
 
 	StringLogger logger;
@@ -326,7 +369,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	AsmParser p(&a);
 	CodeBuffer buffer;
 
-	char input[4096];
 	for (;;)
 	{
 		// 0 is the section number, this case .text
@@ -342,6 +384,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			code.init(ci);
 			code.setLogger(&logger);
 			code.attach(&a);
+			release_Vect();
 			buffer_from_file_only.clear();
 			continue;
 		}
@@ -358,21 +401,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			continue;
 		}
 		
-		if(isCommand(input, "g"))
-		{
-			test:
-			fgets(input, 4095, stdin);
-			int l = strlen(input);
-			cout<<l<<endl;
-			if(!hexToU64(baseAddress, input, l))
-			{
-				cout<<"fail\n";
-			}
-			cout<<baseAddress<<endl;
-			goto test;
-			
-		}
-
 		if (isCommand(input, ".inc"))
 		{
 			printf("Enter an integer. \n");
@@ -383,25 +411,32 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 		if (isCommand(input, ".org"))
 		{
-			printf("Enter as hex ... example: `123` \n");
+			printf("Enter baseAddress as hex ... example: `123` \n");
 			fgets(input, 4095, stdin);
 			if(!hexToU64(baseAddress, input, strlen(input)))
 			{
-				cout<<"Invalid --base parameter "<<input<<endl;
+				cout<<"Invalid --baseVA parameter "<<input<<endl;
 				baseAddress = Globals::kNoBaseAddress;
 			}
-			printf("Enter as x86|x64 \n");
+			printf("Enter baseOffset as hex ... example: `123` \n");
+			fgets(input, 4095, stdin);
+			if(!hexToU64(baseOffset, input, strlen(input)))
+			{
+				cout<<"Invalid --offs parameter "<<input<<endl;
+				baseOffset = 0;
+			}			
+			printf("Enter arch as x86|x64 \n");
 			fgets(input, 4095, stdin);
 			len = strlen(input);
-			archArg = new char[len];
-			strncpy(archArg, input, len);
+			archArg = input;
 			enter_asmjit_hook(0,nullptr,patchfile);
 		}
 
 		if (isCommand(input, ".ret"))
 		{
 			code.reset(true);
-			buffer_from_file_only.clear(); //this does not clean up completely, yet.
+			release_Vect();
+			buffer_from_file_only.clear();			
 			return 0;
 		}
 
@@ -410,7 +445,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			if(!buffer_from_file_only.empty())
 			{
 				FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
-				file_out.fWriteString(buffer_from_file_only,baseAddress);
+				file_out.fWriteString(buffer_from_file_only,baseOffset);
 				printf("Written to: %s \n",&patchfile[0]);
 			}
 			else
@@ -455,9 +490,14 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			read_header(&tmp_filename[0],true);
 			if(!hexToU64(baseAddress, baseArg, strlen(baseArg)))
 			{
-				cout<<"Invalid --base parameter "<<baseArg<<endl;
+				cout<<"Invalid --baseVA parameter "<<baseArg<<endl;
 				baseAddress = Globals::kNoBaseAddress;
-			}			
+			}	
+			if(!hexToU64(baseOffset, offsArg, strlen(offsArg)))
+			{
+				cout<<"Invalid --offs parameter "<<offsArg<<endl;
+				baseOffset = 0;
+			}				
 			printf("File loaded ...\n");
 			enter_asmjit_hook(0,nullptr,patchfile);
 		}
@@ -512,6 +552,5 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			fprintf(stdout, "ERROR: 0x%08X: %s\n", err, DebugUtils::errorAsString(err));
 		}
 	}
-	delete temp;
 	return 0;
 }

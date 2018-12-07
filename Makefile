@@ -19,8 +19,8 @@ else
 endif
 
 ifeq ($(detected_OS),Windows)
-#WINAPI = -lmingw32 -lkernel32 -lm -ldxguid -ldxerr8 -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lgdi32 -lcomdlg32 -lwinspool 
-#WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion 
+WINAPI = -lmingw32 -lkernel32 -lm -ldxguid -ldxerr8 -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lgdi32 -lcomdlg32 -lwinspool 
+WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion 
 #-lwinpthread 
 #-ldbghelp 
 #-lpthread
@@ -125,8 +125,12 @@ pre_comp_h:
 
 #This is the target that compiles our executable 
 all : peLib boostLib asmjitLib patcherLib
-	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) $(WINAPI) -o $(OBJ_NAME)
+	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) -o $(OBJ_NAME)
 	@echo ./FaPatcher built successfully.
+	
+allwin : peLib boostLib asmjitLib patcherLib
+	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) $(WINAPI) -o $(OBJ_NAME)
+	@echo ./FaPatcher built successfully.	
 	
 format:
 	$(ASTYLE) --style=allman --indent=tab --recursive ./*.cpp, *.h, *.hpp

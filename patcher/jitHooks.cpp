@@ -16,7 +16,7 @@ bool hexToU64(uint64_t& out, const char* src, size_t len)
 	char* tmp;
 	uint64_t val = 0;
 	int null_count = 0;
-	
+
 	for(int i=0; i<=len; i++)
 	{
 		if(src[i]=='\0' || src[i]==' ')
@@ -167,7 +167,7 @@ void read_header(const char* f, bool rawinfo)
 				memcpy(baseArg, line, len);
 			}
 		}
-		
+
 		if(strncmp(line,"--o",3)==0)
 		{
 			len = strlen(line);
@@ -181,7 +181,7 @@ void read_header(const char* f, bool rawinfo)
 			{
 				memcpy(offsArg, line, len);
 			}
-		}		
+		}
 
 		if(strncmp(line,"--a",3)==0)
 		{
@@ -214,7 +214,9 @@ void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	printf("  - Base-Address=%04X [select by --baseVA=hex]\n", baseAddress    );
 	printf("  - Base-Offset=%04X  [select by --offs=hex]\n",baseOffset        );
 	if(ptr!=nullptr)
-	{printf("  - Current-Base-Address=%04X \n", ptr->_baseAddress             );}
+	{
+		printf("  - Current-Base-Address=%04X \n", ptr->_baseAddress             );
+	}
 	cout<<"---------------------------------------------------------------\n"
 	    <<"Input:\n"
 	    <<"  - Enter instruction and its operands to be encoded.\n"
@@ -222,7 +224,7 @@ void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	    <<"  - Enter '.info' to update the info. \n"
 	    <<"  - Enter '.clear' to clear everything.\n"
 	    <<"  - Enter '.print' to print the current code.\n"
-	    <<"  - Enter '.org' to set base address and architecture.\n"
+	    <<"  - Enter '.org' to set base address, roffset and architecture.\n"
 	    <<"  - Enter '.inc' value by which increment baseAddress Curr:"<<(address_inc)<<"\n"
 	    <<"  - Enter '.save' to save the current code.\n"
 	    <<"  - Enter '.undo' to revoke last encoded instruction.\n"
@@ -245,6 +247,20 @@ void release_Vect()
 			encoded_instr[i] = nullptr;
 		}
 	}
+}
+
+vector<char> HexToBytes(const string& hex)
+{
+	vector<char> bytes;
+
+	for (unsigned int i = 0; i < hex.length(); i += 2)
+	{
+		string byteString = hex.substr(i, 2);
+		char byte = (char) strtol(byteString.c_str(), nullptr, 16);
+		bytes.push_back(byte);
+	}
+
+	return bytes;
 }
 
 void write_all_jithooks(string path, string patchfile)
@@ -273,7 +289,7 @@ void write_all_jithooks(string path, string patchfile)
 						debug_pause();
 					}
 					FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
-					file_out.fWriteString(buffer_from_file_only,baseOffset);
+					file_out.fWriteBinaryFile(HexToBytes(buffer_from_file_only),baseOffset,buffer_from_file_only.length()/2);
 					printf("Written to: %s Offset=%s\n",&patchfile[0],offsArg);
 				}
 				else
@@ -288,14 +304,15 @@ void write_all_jithooks(string path, string patchfile)
 }
 
 int enter_asmjit_hook(int argc, char* argv[], string patchfile)
-{	
+{
 	char* log;
 	char* temp;
 	size_t len;
 	size_t _size = 0;
 	string tmp_filename;
+	char* single_step_bytes;
 	const char input[4095];
-	
+
 	if (archArg)
 	{
 		if (strncmp(archArg,"x86",3) == 0)
@@ -304,7 +321,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		}
 		else if (strncmp(archArg,"x64",3) == 0)
 		{
-				archType = ArchInfo::kTypeX64;
+			archType = ArchInfo::kTypeX64;
 		}
 		else
 		{
@@ -315,8 +332,8 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	else
 	{
 		archArg = "x86";
-	}		
-	
+	}
+
 	if(argv!=nullptr)
 	{
 		CmdLine cmd(argc, argv);
@@ -331,8 +348,8 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			cout<<"Counter = "<<argc<<endl;
 			for(int i = 0; i < argc; ++i)
 				cout << argv[i] <<i<< '\n'; */
-			
-		size_t maxLen = archType == ArchInfo::kTypeX64 ? 16 : 8;	
+
+		size_t maxLen = archType == ArchInfo::kTypeX64 ? 16 : 8;
 		if (baseArg)
 		{
 			len = strlen(baseArg);
@@ -342,7 +359,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 				debug_pause();
 			}
 		}
-		
+
 		if (offsArg)
 		{
 			len = strlen(offsArg);
@@ -353,7 +370,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			}
 		}
 	}
-	
+
 	print_jit_asm_info();
 
 	StringLogger logger;
@@ -400,7 +417,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			print_jit_asm_info(&ci);
 			continue;
 		}
-		
+
 		if (isCommand(input, ".inc"))
 		{
 			printf("Enter an integer. \n");
@@ -424,10 +441,9 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			{
 				cout<<"Invalid --offs parameter "<<input<<endl;
 				baseOffset = 0;
-			}			
+			}
 			printf("Enter arch as x86|x64 \n");
 			fgets(input, 4095, stdin);
-			len = strlen(input);
 			archArg = input;
 			enter_asmjit_hook(0,nullptr,patchfile);
 		}
@@ -436,7 +452,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		{
 			code.reset(true);
 			release_Vect();
-			buffer_from_file_only.clear();			
+			buffer_from_file_only.clear();
 			return 0;
 		}
 
@@ -445,7 +461,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			if(!buffer_from_file_only.empty())
 			{
 				FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
-				file_out.fWriteString(buffer_from_file_only,baseOffset);
+				file_out.fWriteBinaryFile(HexToBytes(buffer_from_file_only),baseOffset,buffer_from_file_only.length()/2);
 				printf("Written to: %s \n",&patchfile[0]);
 			}
 			else
@@ -492,12 +508,12 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			{
 				cout<<"Invalid --baseVA parameter "<<baseArg<<endl;
 				baseAddress = Globals::kNoBaseAddress;
-			}	
+			}
 			if(!hexToU64(baseOffset, offsArg, strlen(offsArg)))
 			{
 				cout<<"Invalid --offs parameter "<<offsArg<<endl;
 				baseOffset = 0;
-			}				
+			}
 			printf("File loaded ...\n");
 			enter_asmjit_hook(0,nullptr,patchfile);
 		}
@@ -511,7 +527,8 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			if(buffer.hasData())
 			{
 				//@@2 how many bytes to keep in buffer? 0 = complete wipe.
-				code.resizeBuffer(&buffer,0,0);
+				size_t b = _size-((strlen(single_step_bytes)-1)/2);
+				code.resizeBuffer(&buffer,b,0);
 			}
 			continue;
 		}
@@ -537,14 +554,16 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 			if (i < len)
 			{
-				printf("%.*s", (int)(len - i), log + i);
+				single_step_bytes = new char[len-i];
+				sprintf(single_step_bytes, "%.*s", (int)(len - i), log + i);
+				printf("%s",single_step_bytes);
 				temp = new char[len];
 				strncpy(temp,log,len);
 				encoded_instr.push_back(temp);
 				ci._baseAddress = baseAddress + address_inc;
 				code.init(ci);
-				code.sync();				
-			}			
+				code.sync();
+			}
 		}
 		else
 		{

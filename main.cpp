@@ -67,8 +67,8 @@ ret:
 			util.write_def_table(table);
 #else
 			cout<<fg::yellow<<"Loading a c++ section is not suppored due to different binary format. "
-			<<"It still needs a new alignment parser, and a custom linker file probably. "
-			"You can still use the allocated section memory for something."<<fg::reset<<endl;
+			    <<"It still needs a new alignment parser, and a custom linker file probably. "
+			    "You can still use the allocated section memory for something."<<fg::reset<<endl;
 #endif
 			binPatcher::Hooks hook(false, target_out);
 			hook.parse_hooks();

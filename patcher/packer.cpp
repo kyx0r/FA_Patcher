@@ -13,7 +13,7 @@ const size_t len = (size_t)&_binary_data_txt_size;
 
 const char* getPackDataFile()
 {
- 
+
 }
 
 void packDataFiles( const char* fileName, const char* execName )

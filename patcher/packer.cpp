@@ -16,7 +16,25 @@ const char* getPackDataFile()
 
 }
 
-void packDataFiles( const char* fileName, const char* execName )
+void packDataFiles( const char* fileName, string execName )
 {
-
+	cout<<"packing...\n";
+	
+	boost::filesystem::copy_file(execName, "FaPatcherPac.exe", boost::filesystem::copy_option::overwrite_if_exists);
+	
+	FileIO file("FaPatcherPac.exe", ios::out | ios::in | ios::binary);
+	FileIO orig(execName);
+	
+	file.fWriteString("\nPACKERMAGIC", orig.get_file_size());
+	
+	FileIO out(fileName);
+	
+	string line;
+	while(getline(out._file,line))
+	{	
+		file.fWriteString("\n", file.get_file_size());
+		file.fWriteString(line, file.get_file_size());
+		//file.fWriteString("\n", file.get_file_size());
+	}
+	
 }

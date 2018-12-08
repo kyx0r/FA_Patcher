@@ -5,3 +5,4 @@
 #include "hooks.hpp"
 #include "utils.hpp"
 #include "jitHooks.hpp"
+#include "packer.hpp"

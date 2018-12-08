@@ -24,6 +24,7 @@ FileIO::~FileIO()
 
 int FileIO::get_file_size()
 {
+	_file.seekg(0, _file.end);
 	return _file.tellg();
 }
 

@@ -25,7 +25,7 @@ bool hexToU64(uint64_t& out, const char* src, size_t len)
 		}
 	}
 	len = len-null_count;
-	tmp = (char*) alloca(len);
+	tmp = (char*) malloc(len);
 	memcpy(tmp, src, len);
 	for (size_t i = 0; i < len; i++)
 	{

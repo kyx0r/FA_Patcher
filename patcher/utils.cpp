@@ -147,10 +147,10 @@ function_table Utils::linker_map_parser(string filename)
 						{
 							offset = boost::lexical_cast<HexTo<int>>(word);
 						}
-						catch(bad_cast &bc)
+						catch(const bad_cast &bc)
 						{
-							cout<<fg::red<<"error: bad_cast"<<fg::reset<<endl;
-							debug_pause();
+							cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;
+							debug_pause();						
 						}
 						table.FunctionVirtualAddress.push_back(offset-table.section_alignment);
 					}
@@ -230,7 +230,14 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 				line.insert(0,"0x");
 				if(word.compare("call")==0 || word.find_first_of("j") != string::npos)
 				{
-					offset = boost::lexical_cast<HexTo<int>>(line);
+					try
+					{
+						offset = boost::lexical_cast<HexTo<int>>(line);
+					}
+					catch(const bad_cast &bc)
+					{
+						cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;					
+					}
 					line = to_string(offset+align_calls);
 					if(word.compare("call")==0)
 					{

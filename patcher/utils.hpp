@@ -53,6 +53,7 @@ private:
 	string _word;
 	int offset;
 	size_t pos;
+	size_t tmp_pos;
 	char *tok;
 	bool text_sec_found;
 };

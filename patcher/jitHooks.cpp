@@ -40,7 +40,7 @@ bool hexToU64(uint64_t& out, const char* src, size_t len)
 			return false;
 		val = (val << 4) | c;
 	}
-
+	free(tmp);
 	out = val;
 	return true;
 }

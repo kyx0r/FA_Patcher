@@ -23,7 +23,7 @@ ret:
 	cout<<fg::cyan
 	    <<"Basic functions: \n"
 	    <<"1 - use jithook. \n"
-	    <<"2 - convert x64dbg disassembly to gcc inline. \n"
+	    <<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
 		<<"3 - packfiles... \n"
 		<<"4 - unpack files ... \n"
 	    <<"Note: Features below require g++ and make present. \n"

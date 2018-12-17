@@ -200,6 +200,7 @@ void Utils::write_gcc_asm(string dbg_inline_file, x64dbg_parser_struct &table)
 	outfile.close();
 }
 
+//hmmm, this wants to be a template function!
 size_t Utils::inc_search(string target, string searched, size_t pos)
 {
 	return target.find_first_of(searched, pos);
@@ -215,19 +216,41 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 		debug_pause();
 	}
 
+	bool right_to_left_instr;
 	x64dbg_parser_struct parser_struct;
 	line.clear();
 	FileIO dbg_inline_file_obj(dbg_inline_file, ios::in);
 	for(int i=0; getline(dbg_inline_file_obj._file,line); i++)
 	{
+		right_to_left_instr = false;
 		const auto orig_size = line.size();
 		word = cut_on_first_null(line);
 		try
 		{
-			line.erase(0,line.find(".")+1);
+			pos = line.find(",");
+			tmp_pos = line.find(".");
+			if(pos!=string::npos && tmp_pos!=string::npos)
+			{
+				if(pos>tmp_pos)
+				{
+					line.erase(0,tmp_pos+1);
+				}
+				else
+				{
+					line.erase(pos+1,tmp_pos-pos);
+					right_to_left_instr = true;
+				}
+			}
+			else
+			{
+				line.erase(0,tmp_pos+1);
+			}
 			if (line.size() != orig_size)
 			{
-				line.insert(0,"0x");
+				if(!right_to_left_instr)
+				{
+					line.insert(0,"0x");
+				}
 				if(word.compare("call")==0 || word.find_first_of("j") != string::npos)
 				{
 					try
@@ -245,8 +268,15 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 						parser_struct.GccInstruction.push_back("__asm__ (");
 					}
 				}
-				word.append(" ");
-				word.append(line);
+				if(!right_to_left_instr)
+				{
+					word+=" ";					
+					word+=line;
+				}
+				else
+				{
+					goto needs_more_processing;
+				}
 				parser_struct.GccInstruction.push_back("	"+add_quotations(word));
 				continue;
 			}
@@ -255,7 +285,8 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 		{
 			cout<<fg::yellow<<__func__<< "Skipping, no named hex address "<<line<<fg::reset<<endl;
 		}
-
+		
+		needs_more_processing:
 		pos = line.find_first_of("0123456789ABCDEF");
 		for(int i=0; pos<=line.length(); i++)
 		{
@@ -267,11 +298,33 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 				_word = _word.back();
 				if(string::npos == _word.find_first_of("abcdefghijklmnopqrstuvwxyz"))
 				{
+					size_t mem_x_pos = pos;
 					line.insert(pos,"0x");
+					pos = inc_search(line,"h",pos);
+					if(pos!=string::npos)
+					{
+						try
+						{
+							_word = line.substr(pos+1,orig_size);
+						}
+						catch(const out_of_range &e)
+						{
+							_word = line.substr(pos+1,line.length());
+						}
+						line.erase(pos); //erase urinary "h" at the end of hex value.
+						line+=_word;
+					}
+					pos = line.find(",");
+					if(pos!=string::npos && mem_x_pos<pos)
+					{
+						continue;
+					}
 					break;
 				}
 			}
+			else{break;}
 		}
+		_word.clear();
 		pos = line.find_first_of("[");
 		if (string::npos != pos)
 		{
@@ -279,9 +332,33 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 			{
 				line.insert(pos+1, line.substr(pos-3,3));
 			}
-			line.erase(pos-3,3);
+			if(line.at(pos-4) == ' ') //this is only for x64dbg disassembly
+			{
+				line.erase(pos-3,3);
+			}
 		}
-
+			
+		// ; symbol is usually a comment in asm, so move it out of real code.
+		pos = line.find(";");
+		if (string::npos != pos)
+		{		
+			_word = line;
+			_word.erase(0,pos);
+			try
+			{
+				line.erase(pos,orig_size);
+			}
+			catch(const out_of_range &e)
+			{
+				line.erase(pos,line.length()); //recalculate length only if required.
+			}
+			line = add_quotations(line);
+			line.append("//!");
+			line.append(_word);
+			parser_struct.GccInstruction.push_back("	"+line);
+			continue;
+		}
+		
 		parser_struct.GccInstruction.push_back("	"+add_quotations(line));
 	}
 

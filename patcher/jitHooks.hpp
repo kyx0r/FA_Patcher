@@ -11,13 +11,11 @@ using namespace asmtk;
 extern vector<char*> encoded_instr;
 
 bool hexToU64(uint64_t& out, const char* src, size_t len);
-void dumpCode(CodeBuffer buffer, size_t _size);
-void saveCode(CodeBuffer buffer, char* filename, uint64_t baseAddress, char* archArg);
 bool isSpace(const char c);
 bool isCommand(const char* str, const char* cmd);
+int getposition(const char *array, size_t size, char c);
 int enter_asmjit_hook(int argc, char* argv[], string patchfile = "");
-string load_file(const string&f);
-void read_header(const char* f, bool rawinfo = false);
+vector<char> HexToBytes(const string& hex);
 
 class CmdLine
 {

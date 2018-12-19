@@ -1,0 +1,5 @@
+--baseVA=FFFFFFFF 
+--offs=0000 
+--arch=(null) 
+mov eax, 4                              ; B804000000
+BYTES:B804000000

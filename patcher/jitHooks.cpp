@@ -1,16 +1,5 @@
 #include "jitHooks.hpp"
 
-vector<char*> encoded_instr;
-string buffer_from_file_only;
-string filename = "./hooks/jithook.jh";
-unsigned int address_inc = 3;
-char* archArg;
-char* baseArg;
-char* offsArg;
-uint32_t archType;
-uint64_t baseAddress;
-uint64_t baseOffset;
-
 bool hexToU64(uint64_t& out, const char* src, size_t len)
 {
 	char* tmp;
@@ -45,7 +34,60 @@ bool hexToU64(uint64_t& out, const char* src, size_t len)
 	return true;
 }
 
-void dumpCode(CodeBuffer buffer, size_t _size)
+int getposition(const char *array, size_t size, char c)
+{
+	for (size_t i = 0; i < size; i++)
+	{
+		if (array[i] == c)
+			return (int)i;
+	}
+	return -1;
+}
+
+bool isSpace(const char c)
+{
+	return c == ' ' || c == '\r' || c == '\n' || c == '\t';
+}
+
+bool isCommand(const char* str, const char* cmd)
+{
+	while (str[0] && isSpace(str[0])) str++;
+
+	size_t sLen = ::strlen(str);
+	while (sLen && isSpace(str[sLen - 1])) sLen--;
+
+	size_t cLen = ::strlen(cmd);
+	return sLen == cLen && ::memcmp(str, cmd, sLen) == 0;
+}
+
+vector<char> HexToBytes(const string& hex)
+{
+	vector<char> bytes;
+
+	for (unsigned int i = 0; i < hex.length(); i += 2)
+	{
+		string byteString = hex.substr(i, 2);
+		char byte = (char) strtol(byteString.c_str(), nullptr, 16);
+		bytes.push_back(byte);
+	}
+
+	return bytes;
+}
+
+//Non reusable functions: Aimed for one task...
+
+vector<char*> encoded_instr;
+string buffer_from_file_only;
+string filename = "./hooks/jithook.jh";
+unsigned int address_inc = 3;
+char* archArg;
+char* baseArg;
+char* offsArg;
+uint32_t archType;
+uint64_t baseAddress;
+uint64_t baseOffset;
+
+static void dumpCode(CodeBuffer buffer, size_t _size)
 {
 	printf("%s","Current hook buffer is:\n");
 	for (size_t i = 0; i < _size; i++)
@@ -55,7 +97,7 @@ void dumpCode(CodeBuffer buffer, size_t _size)
 	printf(&buffer_from_file_only[0]);
 }
 
-void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, char* archArg)
+static void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, char* archArg)
 {
 	FILE *pFile = fopen (_filename, "w");
 	size_t _size = encoded_instr.size();
@@ -83,23 +125,7 @@ void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, char* ar
 	fclose (pFile);
 }
 
-bool isSpace(const char c)
-{
-	return c == ' ' || c == '\r' || c == '\n' || c == '\t';
-}
-
-bool isCommand(const char* str, const char* cmd)
-{
-	while (str[0] && isSpace(str[0])) str++;
-
-	size_t sLen = ::strlen(str);
-	while (sLen && isSpace(str[sLen - 1])) sLen--;
-
-	size_t cLen = ::strlen(cmd);
-	return sLen == cLen && ::memcmp(str, cmd, sLen) == 0;
-}
-
-string load_file(const string&f)
+static string load_file(const string&f)
 {
 	FileIO file(f);
 	string line;
@@ -125,17 +151,7 @@ string load_file(const string&f)
 	return new_str;
 }
 
-int getposition(const char *array, size_t size, char c)
-{
-	for (size_t i = 0; i < size; i++)
-	{
-		if (array[i] == c)
-			return (int)i;
-	}
-	return -1;
-}
-
-void read_header(const char* f, bool rawinfo)
+static void read_header(const char* f, bool rawinfo)
 {
 	FILE* pFile;
 	if (!(pFile = fopen(f,"rw+")))
@@ -205,7 +221,7 @@ void read_header(const char* f, bool rawinfo)
 	fclose(pFile);
 }
 
-void print_jit_asm_info(CodeInfo *ptr = nullptr)
+static void print_jit_asm_info(CodeInfo *ptr = nullptr)
 {
 	cout<<"===============================================================\n"
 	    <<"Remote Assembler:\n"
@@ -236,7 +252,7 @@ void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	    <<"===============================================================\n";
 }
 
-void release_Vect()
+static void release_Vect()
 {
 	size_t _size = encoded_instr.size();
 	for(size_t i = 0; i < _size; i++)
@@ -249,21 +265,7 @@ void release_Vect()
 	}
 }
 
-vector<char> HexToBytes(const string& hex)
-{
-	vector<char> bytes;
-
-	for (unsigned int i = 0; i < hex.length(); i += 2)
-	{
-		string byteString = hex.substr(i, 2);
-		char byte = (char) strtol(byteString.c_str(), nullptr, 16);
-		bytes.push_back(byte);
-	}
-
-	return bytes;
-}
-
-void write_all_jithooks(string path, string patchfile)
+static void write_all_jithooks(string path, string patchfile)
 {
 	boost::filesystem::path p(path);
 	boost::filesystem::directory_iterator end_itr;
@@ -402,6 +404,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			code.setLogger(&logger);
 			code.attach(&a);
 			release_Vect();
+			encoded_instr.clear();
 			buffer_from_file_only.clear();
 			continue;
 		}
@@ -452,7 +455,15 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		{
 			code.reset(true);
 			release_Vect();
+			encoded_instr.clear();
 			buffer_from_file_only.clear();
+			delete archArg;
+			delete baseArg;
+			delete offsArg;
+			archArg = nullptr;
+			baseArg = nullptr;
+			offsArg = nullptr;
+			baseOffset = 0;
 			return 0;
 		}
 
@@ -557,8 +568,9 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 				single_step_bytes = new char[len-i];
 				sprintf(single_step_bytes, "%.*s", (int)(len - i), log + i);
 				printf("%s",single_step_bytes);
-				temp = new char[len];
-				strncpy(temp,log,len);
+				temp = new char[len+1];
+				strncpy(temp,log,len+1);
+				temp[len+1] = '\0';
 				encoded_instr.push_back(temp);
 				ci._baseAddress = baseAddress + address_inc;
 				code.init(ci);

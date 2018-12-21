@@ -28,6 +28,7 @@ using namespace rang;
 
 extern string make;
 extern bool patcher_error;
+extern string uname;
 //Is debugging enabled?
 #define DEBUG
 
@@ -38,6 +39,7 @@ class Patcher
 public:
 
 	Patcher(const string& filename_in, const string& filename_out);
+	void load_uname();
 
 private:
 	bool check_system();

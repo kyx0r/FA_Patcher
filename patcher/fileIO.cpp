@@ -28,11 +28,11 @@ int FileIO::get_file_size()
 	return _file.tellg();
 }
 
-vector<char> FileIO::fReadBinaryFile()
+vector<char> FileIO::fReadBinaryFile(int offset)
 {
 	size = _file.tellg();
 	vector<char> memblock(size);
-	_file.seekg(0, ios::beg);
+	_file.seekg(offset, ios::beg);
 	_file.read(memblock.data(), size);
 	return memblock;
 }

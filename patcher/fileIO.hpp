@@ -12,7 +12,7 @@ public:
 	~FileIO();
 
 	int get_file_size();
-	vector<char> fReadBinaryFile();
+	vector<char> fReadBinaryFile(int offset = 0);
 	unsigned fWriteBinaryFile(vector<char> HexValue, int offset, int Bytes_to_write);
 	unsigned fWriteString(const string &HexValue, int offset);
 	int get_bytes(bool errorRet = true);

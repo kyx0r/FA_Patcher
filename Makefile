@@ -44,19 +44,19 @@ align_rdata = 0x1000
 align_bss = 0x1000
 align_idata = 0x1000
 
+#OBJ_NAME specifies the name of our exectuable 
+OBJ_NAME = FaPatcher.exe 
+
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
 # -Wl,-subsystem,windows gets rid of the console window 
-COMPILER_FLAGS = -static -w -Dalign_size -O3 -s
+COMPILER_FLAGS = -static -w -DOBJ_NAME='"$(OBJ_NAME)"' -O3 -s
 
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++
 
 LOCAL_LIBS = -lpatcher -lfilesystem -lsystem -lpebliss -lasmjit
  
-#OBJ_NAME specifies the name of our exectuable 
-OBJ_NAME = FaPatcher.exe 
-
 #-oformat -Ttext=0x006B8FB9
 #echo align_size = $(align_size)';' > Env.ld
 
@@ -71,7 +71,7 @@ boostLib:
 	$(MAKE) all -C ./boost_lib/system
 	
 patcherLib:
-	$(MAKE) all -C ./patcher
+	$(MAKE) all OBJ_NAME=$(OBJ_NAME) -C ./patcher
 
 asmjitLib:
 	$(MAKE) all -C ./asmjit_lib

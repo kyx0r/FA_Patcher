@@ -5,7 +5,9 @@ OBJS=$(SRCS:.cpp=.o)
 
 LIBNAME = patcher
 LIBPATH = ../lib
-CXXFLAGS = -O3 -w -fpermissive -fPIC -DPIC -I ../boost_lib -I ..
+OBJ_NAME = FaPatcher.exe
+
+CXXFLAGS = -O3 -w -fpermissive -fPIC -DPIC -I ../boost_lib -I .. -DOBJ_NAME='"$(OBJ_NAME)"'
 
 all: $(LIBPATH)/lib$(LIBNAME).a
 

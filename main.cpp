@@ -24,12 +24,13 @@ ret:
 	    <<"Basic functions: \n"
 	    <<"1 - use jithook. \n"
 	    <<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
-		<<"3 - packfiles... \n"
-		<<"4 - unpack files ... \n"
+		<<"3 - packfile... \n"
+		<<"4 - packdir... \n"
+		<<"5 - unpack files ... \n"
 	    <<"Note: Features below require g++ and make present. \n"
-	    <<"5 - full patch. \n"
-	    <<"6 - patch ignoring hooks. \n"
-	    <<"7 - only hooks. \n"
+	    <<"6 - full patch. \n"
+	    <<"7 - patch ignoring hooks. \n"
+	    <<"8 - only hooks. \n"
 	    <<fg::reset<<endl;
 
 	cin >> reply;
@@ -41,7 +42,26 @@ ret:
 	
 	if(reply.at(0)=='3')
 	{
-		packDataFiles("C_lib.txt","./FaPatcher.exe");
+		cout<<"Enter Path to file... \n";
+		Packer pack;
+		cin >> reply;
+		pack.packDataFile(reply);
+		pack.writeSize();
+		goto ret;
+	}
+	
+	if(reply.at(0)=='4')
+	{
+		//packDataFiles("C_lib.txt","./FaPatcher.exe");
+	}
+	
+	if(reply.at(0)=='5')
+	{
+		cout<<"Enter file to search... \n";
+		Packer unpack("FaPatcherpac.exe");
+		cin >> reply;
+		unpack.unpackDataFile(reply);
+		goto ret;		
 	}
 
 	binPatcher::BinSection section;
@@ -63,7 +83,7 @@ ret:
 	if(patcher_error!=true)
 	{
 
-		if(reply.at(0)=='5')
+		if(reply.at(0)=='6')
 		{
 			FileIO file_in(target_in, ios::in | ios::binary);
 			section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
@@ -81,7 +101,7 @@ ret:
 			hook.parse_hooks();
 		}
 
-		if(reply.at(0)=='6')
+		if(reply.at(0)=='7')
 		{
 			FileIO file_in(target_in, ios::in | ios::binary);
 			section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
@@ -91,7 +111,7 @@ ret:
 			util.write_def_table(table);
 		}
 
-		if(reply.at(0)=='7')
+		if(reply.at(0)=='8')
 		{
 			binPatcher::Hooks hook(false, target_out);
 			hook.parse_hooks();

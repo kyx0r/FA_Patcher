@@ -14,19 +14,22 @@ class Packer : public Utils
 	
 	Packer(const string &execName);
 	
-	void packDataFile( const string &fileName);
-	void unpackDataFile(const string &fileName);
-	size_t readSize(FileIO &out);
+	void packDataFile( const string &fileName, string dir = "");
+	void unpackDataFiles(string fileName = "");
+	void packDirectory(const string &pth);
+	size_t readSize();
 	void writeSize();
 	
 	private:
 	bool PACKERMAGIC = false;
 	bool PACSTART = false;
 	bool PACEND = false;
+	bool EXPLICIT_FILE = false;
 	string line;
 	string outexec;
 	FileIO orig;
 	FileIO pac_file;
+	ofstream outfile;
 	size_t _size;
 	size_t pos;
 

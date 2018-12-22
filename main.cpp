@@ -15,7 +15,7 @@ int main (int argc, char* argv[])
 	string reply;
 	string target_in = "ForgedAlliance_base.exe";
 	string target_out = "ForgedAlliance_exxt.exe";
-
+	int len;
 	Patcher patch(target_in, target_out);
 
 ret:
@@ -42,25 +42,39 @@ ret:
 	
 	if(reply.at(0)=='3')
 	{
-		cout<<"Enter Path to file... \n";
+		cout<<"How many files to pack? \n";
 		Packer pack;
-		cin >> reply;
-		pack.packDataFile(reply);
+		cin>>len;
+		for (int z = 0; z < len; z++) 
+		{		
+			cout<<"Enter Path to file... Ex: ./main.cpp \n";
+			cin >> reply;
+			pack.packDataFile(reply);
+		}
 		pack.writeSize();
 		goto ret;
 	}
 	
 	if(reply.at(0)=='4')
 	{
-		//packDataFiles("C_lib.txt","./FaPatcher.exe");
+		cout<<"How many dirs to pack? \n";
+		Packer pack;
+		cin >> len;
+		for (int z = 0; z < len; z++) 
+		{		
+			cout<<"Enter Path to... Ex: ./hooks \n";
+			cin >> reply;
+			pack.packDirectory(reply);
+		}
+		pack.writeSize();
+		goto ret;		
 	}
 	
 	if(reply.at(0)=='5')
 	{
 		cout<<"Enter file to search... \n";
 		Packer unpack("FaPatcherpac.exe");
-		cin >> reply;
-		unpack.unpackDataFile(reply);
+		unpack.unpackDataFiles();
 		goto ret;		
 	}
 

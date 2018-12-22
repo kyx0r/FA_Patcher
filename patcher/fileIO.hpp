@@ -18,10 +18,9 @@ public:
 	int get_bytes(bool errorRet = true);
 	string rem_extension(string str);
 	int get_line_count();
-
-private:
 	int parse_binary_end(bool errorRet, int count_bytes = 0, int null_count = 0);
-
+	
+private:
 	streampos size;
 	char ch;
 	size_t pos;

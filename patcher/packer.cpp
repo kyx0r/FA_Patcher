@@ -5,7 +5,10 @@ Packer::Packer()
 {
 	outexec = orig.rem_extension(uname);
 	outexec+="pac.exe";
-	boost::filesystem::copy_file(uname, outexec, boost::filesystem::copy_option::overwrite_if_exists);
+	if (!boost::filesystem::exists(outexec))
+	{
+		boost::filesystem::copy_file(uname, outexec, boost::filesystem::copy_option::overwrite_if_exists);
+	}
 	new(&pac_file) FileIO(outexec, ios::out | ios::in | ios::binary);
 }
 
@@ -13,7 +16,10 @@ Packer::Packer(const string &execName)
 	:orig(execName)
 {
 	outexec = uname;
-	boost::filesystem::copy_file(execName, outexec, boost::filesystem::copy_option::overwrite_if_exists);
+	if (!boost::filesystem::exists(outexec))
+	{
+		boost::filesystem::copy_file(execName, outexec, boost::filesystem::copy_option::overwrite_if_exists);
+	}
 	new(&pac_file) FileIO(outexec, ios::out | ios::in | ios::binary);
 }
 

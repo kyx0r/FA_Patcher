@@ -44,12 +44,12 @@ Patcher::Patcher(const string& filename_in, const string& filename_out)
 
 void Patcher::load_uname()
 {
-	#ifdef OBJ_NAME
+#ifdef OBJ_NAME
 	uname = OBJ_NAME;
-	#else
-	cout<<fg::yellow<<"Assuming the uname to be default..."<<fg::reset<<endl;	
-    uname = "FaPatcher.exe";	
-	#endif
+#else
+	cout<<fg::yellow<<"Assuming the uname to be default..."<<fg::reset<<endl;
+	uname = "FaPatcher.exe";
+#endif
 }
 
 bool Patcher::check_system()

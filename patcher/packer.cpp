@@ -1,7 +1,7 @@
 #include "packer.hpp"
 
 Packer::Packer()
-:orig(uname)
+	:orig(uname)
 {
 	outexec = orig.rem_extension(uname);
 	outexec+="pac.exe";
@@ -10,7 +10,7 @@ Packer::Packer()
 }
 
 Packer::Packer(const string &execName)
-:orig(execName)
+	:orig(execName)
 {
 	outexec = uname;
 	boost::filesystem::copy_file(execName, outexec, boost::filesystem::copy_option::overwrite_if_exists);
@@ -20,23 +20,23 @@ Packer::Packer(const string &execName)
 void Packer::unpackDataFiles(string fileName)
 {
 	_size = readSize();
-	orig._file.seekg(_size+1); 
+	orig._file.seekg(_size+1);
 	//+1 because stream will encounter binary data with wrong encoding and just silently terminate.
 	if(!fileName.empty())
 	{
 		new(&outfile) ofstream(fileName);
 		EXPLICIT_FILE = true;
 	}
-	
+
 	while(getline(orig._file,line))
-	{	
+	{
 		//cout<<line<<endl;
 		if(line.compare("PACKERMAGIC")==0)
 		{
 			cout<<fg::green<<"Packer entry found... "<<fg::reset<<endl;
 			PACKERMAGIC = true;
 		}
-		
+
 		if(line.find("PACDIR-")!=string::npos)
 		{
 			string pth = line;
@@ -46,16 +46,16 @@ void Packer::unpackDataFiles(string fileName)
 			{
 				if (boost::filesystem::create_directory(dir))
 				{
-					cout<<fg::green<<"Directory created: "<<pth<<fg::reset<<endl;	
+					cout<<fg::green<<"Directory created: "<<pth<<fg::reset<<endl;
 				}
 				else
 				{
 					cout<<fg::yellow<<"Failed to create directory: "<<pth<<fg::reset<<endl;
 					cout<<fg::yellow<<"Check permissions!"<<fg::reset<<endl;
-				}			
+				}
 			}
 		}
-		
+
 		if(line.find("PACSTART-")!=string::npos)
 		{
 			if(!EXPLICIT_FILE)
@@ -85,7 +85,7 @@ void Packer::unpackDataFiles(string fileName)
 			}
 		}
 	}
-	
+
 	if(!PACKERMAGIC)
 	{
 		cout<<fg::red<<"Failed to find the data!... "<<fg::reset<<endl;
@@ -95,23 +95,23 @@ void Packer::unpackDataFiles(string fileName)
 void Packer::packDataFile( const string &fileName, string dir)
 {
 	cout<<"packing...\n";
-	
+
 	pac_file.fWriteString("\nPACKERMAGIC", orig.get_file_size());
 	if(!dir.empty())
 	{
 		pac_file.fWriteString("\nPACDIR-"+dir, pac_file.get_file_size());
 	}
 	pac_file.fWriteString("\nPACSTART-"+fileName, pac_file.get_file_size());
-	
+
 	FileIO out(fileName);
-	
+
 	while(getline(out._file,line))
-	{	
+	{
 		pac_file.fWriteString("\n", pac_file.get_file_size());
 		pac_file.fWriteString(line, pac_file.get_file_size());
 	}
 	pac_file.fWriteString("\nPACEND-"+fileName, pac_file.get_file_size());
-	
+
 	cout<<fg::green<<"File "<<fileName<<" packed!"<<fg::reset<<endl;
 }
 
@@ -128,7 +128,7 @@ void Packer::packDirectory(const string &pth)
 			packDataFile(current_file,pth);
 			pth.clear();
 		}
-	}	
+	}
 }
 
 size_t Packer::readSize()
@@ -137,14 +137,14 @@ size_t Packer::readSize()
 	size_t save_size = _size;
 	size_t ret = 0;
 	unsigned int offset = 50;
-	start:
+start:
 	_size = _size - offset;
 	//-50 should be pretty good range where we start from end
 	//we only assume to find something here.
-	pac_file._file.seekg(_size);	
+	pac_file._file.seekg(_size);
 	while(getline(pac_file._file,line))
 	{
-		try 
+		try
 		{
 			ret = boost::lexical_cast<size_t>(line);
 		}
@@ -173,5 +173,5 @@ size_t Packer::readSize()
 void Packer::writeSize()
 {
 	_size = orig.get_file_size();
-	pac_file.fWriteString("\n"+to_string(_size),pac_file.get_file_size());	
+	pac_file.fWriteString("\n"+to_string(_size),pac_file.get_file_size());
 }

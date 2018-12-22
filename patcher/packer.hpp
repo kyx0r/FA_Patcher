@@ -8,19 +8,19 @@ class FileIO;
 
 class Packer : public Utils
 {
-	public:
-	
+public:
+
 	Packer();
-	
+
 	Packer(const string &execName);
-	
+
 	void packDataFile( const string &fileName, string dir = "");
 	void unpackDataFiles(string fileName = "");
 	void packDirectory(const string &pth);
 	size_t readSize();
 	void writeSize();
-	
-	private:
+
+private:
 	bool PACKERMAGIC = false;
 	bool PACSTART = false;
 	bool PACEND = false;

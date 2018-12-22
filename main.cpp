@@ -24,9 +24,9 @@ ret:
 	    <<"Basic functions: \n"
 	    <<"1 - use jithook. \n"
 	    <<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
-		<<"3 - packfile... \n"
-		<<"4 - packdir... \n"
-		<<"5 - unpack files ... \n"
+	    <<"3 - packfile... \n"
+	    <<"4 - packdir... \n"
+	    <<"5 - unpack files ... \n"
 	    <<"Note: Features below require g++ and make present. \n"
 	    <<"6 - full patch. \n"
 	    <<"7 - patch ignoring hooks. \n"
@@ -39,14 +39,14 @@ ret:
 		enter_asmjit_hook(argc,argv,target_out);
 		goto ret;
 	}
-	
+
 	if(reply.at(0)=='3')
 	{
 		cout<<"How many files to pack? \n";
 		Packer pack;
 		cin>>len;
-		for (int z = 0; z < len; z++) 
-		{		
+		for (int z = 0; z < len; z++)
+		{
 			cout<<"Enter Path to file... Ex: ./main.cpp \n";
 			cin >> reply;
 			pack.packDataFile(reply);
@@ -54,28 +54,28 @@ ret:
 		pack.writeSize();
 		goto ret;
 	}
-	
+
 	if(reply.at(0)=='4')
 	{
 		cout<<"How many dirs to pack? \n";
 		Packer pack;
 		cin >> len;
-		for (int z = 0; z < len; z++) 
-		{		
+		for (int z = 0; z < len; z++)
+		{
 			cout<<"Enter Path to... Ex: ./hooks \n";
 			cin >> reply;
 			pack.packDirectory(reply);
 		}
 		pack.writeSize();
-		goto ret;		
+		goto ret;
 	}
-	
+
 	if(reply.at(0)=='5')
 	{
 		cout<<"Enter file to search... \n";
 		Packer unpack("FaPatcherpac.exe");
 		unpack.unpackDataFiles();
-		goto ret;		
+		goto ret;
 	}
 
 	binPatcher::BinSection section;

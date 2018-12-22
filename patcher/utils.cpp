@@ -150,7 +150,7 @@ function_table Utils::linker_map_parser(string filename)
 						catch(const bad_cast &bc)
 						{
 							cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;
-							debug_pause();						
+							debug_pause();
 						}
 						table.FunctionVirtualAddress.push_back(offset-table.section_alignment);
 					}
@@ -259,7 +259,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 					}
 					catch(const bad_cast &bc)
 					{
-						cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;					
+						cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;
 					}
 					line = to_string(offset+align_calls);
 					if(word.compare("call")==0)
@@ -270,7 +270,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 				}
 				if(!right_to_left_instr)
 				{
-					word+=" ";					
+					word+=" ";
 					word+=line;
 				}
 				else
@@ -285,8 +285,8 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 		{
 			cout<<fg::yellow<<__func__<< "Skipping, no named hex address "<<line<<fg::reset<<endl;
 		}
-		
-		needs_more_processing:
+
+needs_more_processing:
 		pos = line.find_first_of("0123456789ABCDEF");
 		for(int i=0; pos<=line.length(); i++)
 		{
@@ -322,7 +322,10 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 					break;
 				}
 			}
-			else{break;}
+			else
+			{
+				break;
+			}
 		}
 		_word.clear();
 		pos = line.find_first_of("[");
@@ -337,11 +340,11 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 				line.erase(pos-3,3);
 			}
 		}
-			
+
 		// ; symbol is usually a comment in asm, so move it out of real code.
 		pos = line.find(";");
 		if (string::npos != pos)
-		{		
+		{
 			_word = line;
 			_word.erase(0,pos);
 			try
@@ -358,7 +361,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 			parser_struct.GccInstruction.push_back("	"+line);
 			continue;
 		}
-		
+
 		parser_struct.GccInstruction.push_back("	"+add_quotations(line));
 	}
 

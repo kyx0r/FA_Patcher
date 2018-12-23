@@ -80,9 +80,9 @@ vector<char*> encoded_instr;
 string buffer_from_file_only;
 string filename = "./hooks/jithook.jh";
 unsigned int address_inc = 3;
-char* archArg;
-char* baseArg;
-char* offsArg;
+char* archArg = nullptr;
+char* baseArg = nullptr;
+char* offsArg = nullptr;
 uint32_t archType;
 uint64_t baseAddress;
 uint64_t baseOffset;
@@ -252,19 +252,6 @@ static void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	    <<"===============================================================\n";
 }
 
-static void release_Vect()
-{
-	size_t _size = encoded_instr.size();
-	for(size_t i = 0; i < _size; i++)
-	{
-		if(encoded_instr[i]!=nullptr)
-		{
-			delete encoded_instr[i];
-			encoded_instr[i] = nullptr;
-		}
-	}
-}
-
 static void write_all_jithooks(string path, string patchfile)
 {
 	boost::filesystem::path p(path);
@@ -403,7 +390,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			code.init(ci);
 			code.setLogger(&logger);
 			code.attach(&a);
-			release_Vect();
 			encoded_instr.clear();
 			buffer_from_file_only.clear();
 			continue;
@@ -454,12 +440,16 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		if (isCommand(input, ".ret"))
 		{
 			code.reset(true);
-			release_Vect();
 			encoded_instr.clear();
 			buffer_from_file_only.clear();
+			
+			if(archArg!=nullptr)
 			delete archArg;
+			if(baseArg!=nullptr)
 			delete baseArg;
-			delete offsArg;
+			if(offsArg!=nullptr)
+			delete offsArg;	
+		
 			archArg = nullptr;
 			baseArg = nullptr;
 			offsArg = nullptr;

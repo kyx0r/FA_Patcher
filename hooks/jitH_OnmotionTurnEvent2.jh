@@ -1,0 +1,6 @@
+--baseVA=6B953F 
+--offs=2B953F 
+--arch=x86
+ 
+short jmp 7050599                       ; EB26
+BYTES:EB26

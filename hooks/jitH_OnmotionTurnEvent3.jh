@@ -1,0 +1,6 @@
+--baseVA=6BFF2C 
+--offs=2BFF2C 
+--arch=x86
+ 
+short jmp 7077717                       ; EB27
+BYTES:EB27

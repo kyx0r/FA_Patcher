@@ -23,6 +23,10 @@ Packer::Packer(const string &execName)
 	new(&pac_file) FileIO(outexec, ios::out | ios::in | ios::binary);
 }
 
+Packer::~Packer()
+{
+}
+
 void Packer::unpackDataFiles(string fileName)
 {
 	_size = readSize();
@@ -141,7 +145,6 @@ size_t Packer::readSize()
 {
 	_size = pac_file.get_file_size();
 	size_t save_size = _size;
-	size_t ret = 0;
 	unsigned int offset = 50;
 start:
 	_size = _size - offset;
@@ -180,4 +183,11 @@ void Packer::writeSize()
 {
 	_size = orig.get_file_size();
 	pac_file.fWriteString("\n"+to_string(_size),pac_file.get_file_size());
+}
+
+void Packer::cleanUp(const string &file)
+{
+	//make sure the file is not used "by other process"
+	pac_file.~FileIO();
+	boost::filesystem::resize_file(file, ret);
 }

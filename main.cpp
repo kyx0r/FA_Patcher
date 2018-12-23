@@ -75,6 +75,7 @@ ret:
 		cout<<"Enter file to search... \n";
 		Packer unpack("FaPatcherpac.exe");
 		unpack.unpackDataFiles();
+		unpack.cleanUp(uname);
 		goto ret;
 	}
 

@@ -11,6 +11,8 @@ class Packer : public Utils
 public:
 
 	Packer();
+	
+	~Packer();
 
 	Packer(const string &execName);
 
@@ -19,6 +21,7 @@ public:
 	void packDirectory(const string &pth);
 	size_t readSize();
 	void writeSize();
+	void cleanUp(const string &file);
 
 private:
 	bool PACKERMAGIC = false;
@@ -32,5 +35,6 @@ private:
 	ofstream outfile;
 	size_t _size;
 	size_t pos;
+	size_t ret = 0;
 
 };

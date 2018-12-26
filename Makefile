@@ -20,10 +20,7 @@ endif
 
 ifeq ($(detected_OS),Windows)
 WINAPI = -lmingw32 -lkernel32 -lm -ldxguid -ldxerr8 -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lgdi32 -lcomdlg32 -lwinspool 
-WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion 
-#-lwinpthread 
-#-ldbghelp 
-#-lpthread
+WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion -lwinpthread -ldbghelp -lpthread
 endif
 
 OBJS = ./*cpp

@@ -377,11 +377,12 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 	for (;;)
 	{
+		fgets(input, 4095, stdin);
+		
 		// 0 is the section number, this case .text
 		buffer = code.getSectionEntry(0)->getBuffer();
 		_size = buffer.getLength();
 
-		fgets(input, 4095, stdin);
 		if (input[0] == 0) break;
 
 		if (isCommand(input, ".clear"))
@@ -560,7 +561,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 				printf("%s",single_step_bytes);
 				temp = new char[len+1];
 				strncpy(temp,log,len+1);
-				temp[len+1] = '\0';
+				temp[len] = '\0';
 				encoded_instr.push_back(temp);
 				ci._baseAddress = baseAddress + address_inc;
 				code.init(ci);

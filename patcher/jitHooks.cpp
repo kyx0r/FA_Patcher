@@ -377,11 +377,10 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 	for (;;)
 	{
-		fgets(input, 4095, stdin);
-		
 		// 0 is the section number, this case .text
 		buffer = code.getSectionEntry(0)->getBuffer();
 		_size = buffer.getLength();
+		fgets(input, 4095, stdin);
 
 		if (input[0] == 0) break;
 

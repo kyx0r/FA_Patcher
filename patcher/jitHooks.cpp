@@ -2,7 +2,6 @@
 
 bool hexToU64(uint64_t& out, const char* src, size_t len)
 {
-	char* tmp;
 	uint64_t val = 0;
 	int null_count = 0;
 
@@ -14,11 +13,9 @@ bool hexToU64(uint64_t& out, const char* src, size_t len)
 		}
 	}
 	len = len-null_count;
-	tmp = (char*) malloc(len);
-	memcpy(tmp, src, len);
 	for (size_t i = 0; i < len; i++)
 	{
-		uint32_t c = tmp[i];
+		uint32_t c = src[i];
 		if (c >= '0' && c <= '9')
 			c = c - '0';
 		else if (c >= 'a' && c <= 'f')
@@ -29,7 +26,6 @@ bool hexToU64(uint64_t& out, const char* src, size_t len)
 			return false;
 		val = (val << 4) | c;
 	}
-	free(tmp);
 	out = val;
 	return true;
 }
@@ -231,7 +227,7 @@ static void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	printf("  - Base-Offset=%04X  [select by --offs=hex]\n",baseOffset        );
 	if(ptr!=nullptr)
 	{
-		printf("  - Current-Base-Address=%04X \n", ptr->_baseAddress             );
+		printf("  - Current-Base-Address=%04X \n", ptr->_baseAddress          );
 	}
 	cout<<"---------------------------------------------------------------\n"
 	    <<"Input:\n"
@@ -390,6 +386,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			code.init(ci);
 			code.setLogger(&logger);
 			code.attach(&a);
+			ci._baseAddress = ci._baseAddress - (address_inc * encoded_instr.size());
 			encoded_instr.clear();
 			buffer_from_file_only.clear();
 			continue;
@@ -493,7 +490,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		if (isCommand(input, ".file"))
 		{
 			printf("Set new filename...\n");
-			fflush(stdin);
 			cin>>filename;
 			continue;
 		}
@@ -501,7 +497,6 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		if (isCommand(input, ".load"))
 		{
 			printf("Filename to load ...\n");
-			fflush(stdin);
 			cin>>tmp_filename;
 			buffer_from_file_only = load_file(tmp_filename);
 			read_header(&tmp_filename[0],true);
@@ -558,11 +553,13 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 				single_step_bytes = new char[len-i];
 				sprintf(single_step_bytes, "%.*s", (int)(len - i), log + i);
 				printf("%s",single_step_bytes);
+				
 				temp = new char[len+1];
 				strncpy(temp,log,len+1);
 				temp[len] = '\0';
 				encoded_instr.push_back(temp);
-				ci._baseAddress = baseAddress + address_inc;
+				
+				ci._baseAddress = ci._baseAddress + address_inc;
 				code.init(ci);
 				code.sync();
 			}

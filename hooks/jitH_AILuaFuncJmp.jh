@@ -1,5 +1,0 @@
---base=6CBC46 
---offs=2CBC46 
---arch=x86 
-jmp 12629232                            ; E9A5F85300
-BYTES:E9A5F85300

@@ -1,6 +1,0 @@
---baseVA=6B8FB9 
---offs=2B8FB9 
---arch=x86
- 
-short jmp 7049184                       ; EB25
-BYTES:EB25

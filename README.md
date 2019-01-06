@@ -52,3 +52,7 @@ To get it read this: https://www.geeksforgeeks.org/compile-32-bit-program-64-bit
 
 (This is required for regular hooks and patches.) 
 
+# Patches for FA can be found at: 
+
+https://github.com/FAETHER/FA-Binary-Patches
+

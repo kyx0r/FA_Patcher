@@ -217,13 +217,29 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 	}
 
 	bool right_to_left_instr;
+	bool not_hex_instr;
 	x64dbg_parser_struct parser_struct;
 	line.clear();
 	FileIO dbg_inline_file_obj(dbg_inline_file, ios::in);
 	for(int i=0; getline(dbg_inline_file_obj._file,line); i++)
 	{
 		right_to_left_instr = false;
-		const auto orig_size = line.size();
+		not_hex_instr = false;
+		size_t orig_size = line.size();
+		for(pos = 0; pos<orig_size; pos++)
+		{
+			if(line.at(pos) == ' ')
+			{
+				continue;
+			}
+			break;
+		}
+		if(pos == orig_size || line.at(pos) == ';')
+		{
+			continue;
+		}
+		line = line.substr(pos);
+		orig_size = orig_size - pos;
 		word = cut_on_first_null(line);
 		try
 		{
@@ -287,6 +303,68 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 		}
 
 needs_more_processing:
+		tmp_pos = line.find("var");
+		if(tmp_pos != string::npos)
+		{
+			tmp_pos = line.find("dword ptr");
+			if(tmp_pos != string::npos)
+			{
+				not_hex_instr = true;
+				line.erase(tmp_pos, 9);
+				line.insert(tmp_pos+2,"0x");
+				goto skip_arg_check;
+			}
+			tmp_pos = line.find("byte ptr");
+			if(tmp_pos != string::npos)
+			{
+				not_hex_instr = true;
+				line.erase(tmp_pos, 8);
+				line.insert(tmp_pos+2,"0x");
+				goto skip_arg_check;
+			}			
+		}
+		tmp_pos = line.find("arg");
+		if(tmp_pos != string::npos)
+		{
+			tmp_pos = line.find("dword ptr");
+			if(tmp_pos != string::npos)
+			{
+				not_hex_instr = true;
+				line.erase(tmp_pos, 9);
+				line.insert(tmp_pos+2,"0x");
+				goto skip_arg_check;
+			}
+			tmp_pos = line.find("byte ptr");
+			if(tmp_pos != string::npos)
+			{
+				not_hex_instr = true;
+				line.erase(tmp_pos, 8);
+				line.insert(tmp_pos+2,"0x");
+				goto skip_arg_check;
+			}				
+		}
+		tmp_pos = line.find("st");
+		if(tmp_pos != string::npos)
+		{
+			pos = word.length();
+			if(tmp_pos > pos)
+			{
+				not_hex_instr = true;
+				goto skip_arg_check;
+			}
+			else
+			{
+				if(line.find("dword ptr") == string::npos)
+				{
+					if(line.find("test") == string::npos)
+					{
+						line.insert(pos, " dword ptr ");
+						goto skip_arg_check;
+					}
+				}				
+			}
+		}	
+skip_arg_check:
 		pos = line.find_first_of("0123456789ABCDEF");
 		for(int i=0; pos<=line.length(); i++)
 		{
@@ -299,7 +377,10 @@ needs_more_processing:
 				if(string::npos == _word.find_first_of("abcdefghijklmnopqrstuvwxyz"))
 				{
 					size_t mem_x_pos = pos;
-					line.insert(pos,"0x");
+					if(!not_hex_instr)
+					{
+						line.insert(pos,"0x");
+					}
 					pos = inc_search(line,"h",pos);
 					if(pos!=string::npos)
 					{

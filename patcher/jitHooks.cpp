@@ -1,11 +1,18 @@
 #include "jitHooks.hpp"
 
+inline size_t fstrlen (const char* s) 
+{
+	register const char* i;
+	for(i=s; *i; ++i);
+	return (i-s);
+}
+
 bool hexToU64(uint64_t& out, const char* src, size_t len)
 {
 	uint64_t val = 0;
 	int null_count = 0;
 
-	for(int i=0; i<=len; i++)
+	for(size_t i=0; i<=len; i++)
 	{
 		if(src[i]=='\0' || src[i]==' ')
 		{
@@ -49,10 +56,10 @@ bool isCommand(const char* str, const char* cmd)
 {
 	while (str[0] && isSpace(str[0])) str++;
 
-	size_t sLen = ::strlen(str);
+	size_t sLen = fstrlen(str);
 	while (sLen && isSpace(str[sLen - 1])) sLen--;
 
-	size_t cLen = ::strlen(cmd);
+	size_t cLen = fstrlen(cmd);
 	return sLen == cLen && ::memcmp(str, cmd, sLen) == 0;
 }
 
@@ -72,6 +79,8 @@ vector<char> HexToBytes(const string& hex)
 
 //Non reusable functions: Aimed for one task...
 
+#define MAX_MEMORY_SIZE 4095
+
 vector<char*> encoded_instr;
 string buffer_from_file_only;
 string filename = "./hooks/jithook.jh";
@@ -79,9 +88,26 @@ unsigned int address_inc = 3;
 char* archArg = nullptr;
 char* baseArg = nullptr;
 char* offsArg = nullptr;
+char* arg_memblock = nullptr;
+char* instr_memblock = nullptr;
+bool dispatch = true;
+int instr_memblock_offset = 0;
+size_t layer = 0;
 uint32_t archType;
 uint64_t baseAddress;
 uint64_t baseOffset;
+
+typedef struct asmjit_objs
+{
+	StringLogger *logger;
+	CodeInfo *ci;
+	CodeHolder *code;
+	X86Assembler *a;
+	AsmParser *p;
+	CodeBuffer *buffer;
+}ptr;
+
+static ptr *asmjit_state;
 
 static void dumpCode(CodeBuffer buffer, size_t _size)
 {
@@ -93,7 +119,7 @@ static void dumpCode(CodeBuffer buffer, size_t _size)
 	printf(&buffer_from_file_only[0]);
 }
 
-static void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, char* archArg)
+static void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress)
 {
 	FILE *pFile = fopen (_filename, "w");
 	size_t _size = encoded_instr.size();
@@ -107,10 +133,12 @@ static void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, c
 	fprintf(pFile, "--baseVA=%04X \n", baseAddress);
 	fprintf(pFile, "--offs=%04X \n", baseOffset);
 	fprintf(pFile, "--arch=%s \n", archArg);
+	fprintf(pFile, "; Start\n");
 	for(size_t i = 0; i < _size; i++)
 	{
-		fwrite(encoded_instr[i], sizeof(char), ::strlen(encoded_instr[i]), pFile);
+		fwrite(encoded_instr[i], sizeof(char), fstrlen(encoded_instr[i]), pFile);
 	}
+	fprintf(pFile, "; Finish\n");
 	fwrite("BYTES:", sizeof(char), 6, pFile);
 	fwrite(&buffer_from_file_only[0], sizeof(char), buffer_from_file_only.length(), pFile);
 	_size = buffer.getLength();
@@ -121,99 +149,233 @@ static void saveCode(CodeBuffer buffer, char* _filename, uint64_t baseAddress, c
 	fclose (pFile);
 }
 
-static string load_file(const string&f)
+inline void reset_globals(void)
 {
-	FileIO file(f);
-	string line;
-	string new_str;
-	size_t pos;
-	bool are_bytes_found = false;
-	while(getline(file._file,line))
-	{
-		pos = line.find(":");
-		if(pos!=string::npos)
-		{
-			are_bytes_found = true;
-			new_str = line.substr(pos+1);
-			break;
-		}
-	}
-	if(new_str.empty() || !are_bytes_found)
-	{
-		cout<<"Error in function "<<__func__<<endl;
-		cout<<"Could not find a string of bytes. \n";
-		debug_pause();
-	}
-	return new_str;
+	encoded_instr.clear();
+	buffer_from_file_only.clear();		
+	archArg = nullptr;
+	baseArg = nullptr;
+	offsArg = nullptr;
+	arg_memblock = nullptr;
+	baseOffset = 0;	
 }
 
-static void read_header(const char* f, bool rawinfo)
+inline void mark_mem(int offset)
 {
-	FILE* pFile;
-	if (!(pFile = fopen(f,"rw+")))
+	instr_memblock_offset += offset;
+	if(instr_memblock_offset >= MAX_MEMORY_SIZE)
 	{
-		printf("\nCan't open \"%s\".\n",f);
-		printf( "Error code opening file: %d\n", errno );
-		printf( "Error opening file: %s\n", strerror( errno ) );
-		debug_pause();
-	}
+		instr_memblock = realloc(instr_memblock, instr_memblock_offset * 2);
+	}	
+}
 
-	const size_t line_size = 300;
-	char* line = malloc(line_size);
-	size_t len;
-	int pch;
-	while(fgets(line, line_size, pFile) != nullptr)
-	{
-		//the hook header must contain this info!
-		if(strncmp(line,"--b",3)==0)
-		{
-			len = strlen(line);
-			baseArg = new char[len];
-			if(rawinfo)
-			{
-				pch = getposition(line, len, '=');
-				sprintf(baseArg, "%s", (line+pch+1));
-			}
-			else if(!rawinfo)
-			{
-				memcpy(baseArg, line, len);
-			}
-		}
+char* interpret_instr(char* instr, int align_calls=0x1000)
+{
+	return instr;
+}
 
-		if(strncmp(line,"--o",3)==0)
+static void compile_asm(FILE* pFile)
+{
+	const int line_size = 4096;
+	bool start = false;
+	char line[line_size];
+	char* pos;
+	int len;
+	
+	try_parse:
+		
+	while(fgets(&line[0], line_size, pFile) != nullptr)
+	{	
+		if(start||strncmp(&line[0],"; Start",7)==0)
 		{
-			len = strlen(line);
-			offsArg = new char[len];
-			if(rawinfo)
+			len = fstrlen(&line[0]);
+			if(!start)
 			{
-				pch = getposition(line, len, '=');
-				sprintf(offsArg, "%s", (line+pch+1));
+				start = true;
+				continue;
 			}
-			else if(!rawinfo)
-			{
-				memcpy(offsArg, line, len);
-			}
-		}
-
-		if(strncmp(line,"--a",3)==0)
-		{
-			len = strlen(line);
-			archArg = new char[len];
-			if(rawinfo)
-			{
-				pch = getposition(line, len, '=');
-				sprintf(archArg, "%s", (line+pch+1));
+			if(strncmp(&line[0],"; Finish",8)==0)
+			{			
 				break;
 			}
-			else if(!rawinfo)
+			pos = strstr(&line[0], ";");
+			if(pos != 0)
 			{
-				memcpy(archArg, line, len);
-				break;
+				//remove the comments
+				memset(pos, 0, pos-&line[0]+len);
+				pos = '\0';
 			}
+			
+			asmjit_state->buffer = &asmjit_state->code->getSectionEntry(0)->getBuffer();
+			asmjit_state->logger->clearString();
+			Error err = asmjit_state->p->parse(line);
+
+			if (err == kErrorOk)
+			{
+				char* log = asmjit_state->logger->getString();
+				int length = asmjit_state->logger->getLength();
+				int i;
+
+				// Skip the instruction part, and keep only the comment part.
+				for (i = 0; i < length; i++)
+				{
+					if (log[i] == ';')
+					{
+						i += 2;
+						break;
+					}
+				}
+
+				if (i < length)
+				{
+					int step_bytes_length = length - i;
+					char temp1[step_bytes_length];
+					sprintf(&temp1[0], "%.*s", (int)(step_bytes_length), log + i);
+					printf("%s", &temp1[0]);
+					
+					mark_mem(length * sizeof(char*));
+					strncpy(instr_memblock+instr_memblock_offset, log, length+1);
+					instr_memblock[(instr_memblock_offset/sizeof(char*))+length] = '\0';
+					encoded_instr.push_back(instr_memblock+instr_memblock_offset);
+					
+					asmjit_state->ci->_baseAddress = asmjit_state->ci->_baseAddress + address_inc;
+					asmjit_state->code->init(*asmjit_state->ci);
+					asmjit_state->code->sync();
+				}
+			}
+			else
+			{
+				asmjit_state->a->resetLastError();
+				fprintf(stdout, "ERROR: 0x%08X: %s In line: %s\n", err, DebugUtils::errorAsString(err), &line[0]);
+			}			
 		}
 	}
+	
+	if(!start)
+	{
+		cout<<fg::yellow<<"Error : did not find a '; Start' mark \n";
+		cout<<"Assuming the starting position right after" <<fg::reset<<endl;
+		start = true;
+		rewind(pFile);
+		goto try_parse;		
+	}
+}
 
-	free(line);
+static void interpret_file(const char* f, bool rawinfo, bool cmp_asm)
+{
+	static FILE* pFile;	
+	static bool are_bytes_found;
+	
+	if(arg_memblock == nullptr)
+	{		
+
+		if (!(pFile = fopen(f,"rw+")))
+		{
+			printf("\nCan't open \"%s\".\n",f);
+			printf( "Error code opening file: %d\n", errno );
+			printf( "Error opening file: %s\n", strerror( errno ) );
+			debug_pause();
+		}
+
+		const int line_size = 4096;
+		char line[line_size];
+		size_t len;
+		int pch;
+		are_bytes_found = false;
+		dispatch = true;
+		
+		arg_memblock = &instr_memblock[instr_memblock_offset / sizeof(char*)];
+		
+		while(fgets(&line[0], line_size, pFile) != nullptr)
+		{
+			//the hook header must contain this info!
+			if(baseArg == nullptr)
+			{
+				if(strncmp(&line[0],"--b",3)==0)
+				{
+					len = fstrlen(&line[0]);
+					mark_mem(len * sizeof(char*));
+					pch = getposition(&line[0], len, '=');
+					baseArg = (&instr_memblock[instr_memblock_offset / sizeof(char*)] - arg_memblock)+len+arg_memblock;
+					sprintf(baseArg, "%s", (&line[0]+pch+1));
+				}
+			}
+			
+			if(offsArg == nullptr)
+			{
+				if(strncmp(&line[0],"--o",3)==0)
+				{
+					len = fstrlen(&line[0]);
+					mark_mem(len * sizeof(char*));
+					pch = getposition(&line[0], len, '=');
+					offsArg = (&instr_memblock[instr_memblock_offset / sizeof(char*)] - arg_memblock)+len+arg_memblock;
+					sprintf(offsArg, "%s", (&line[0]+pch+1));
+				}
+			}
+			
+			if(archArg == nullptr)
+			{
+				if(strncmp(&line[0],"--a",3)==0)
+				{
+					len = fstrlen(&line[0]);
+					pch = getposition(&line[0], len, '=');
+					mark_mem(len * sizeof(char*));
+					archArg = (&instr_memblock[instr_memblock_offset / sizeof(char*)] - arg_memblock)+len+arg_memblock;
+					sprintf(archArg, "%s", (&line[0]+pch+1));	
+				}
+			}
+			
+			char* pos = strstr(&line[0], "BYTES:");
+			if(pos!=nullptr)
+			{
+				are_bytes_found = true;
+				buffer_from_file_only = string(line);
+				buffer_from_file_only = buffer_from_file_only.substr(pos-&line[0]+6);
+				break;			
+			}
+		}
+	
+		if(!hexToU64(baseAddress, baseArg, fstrlen(baseArg)))
+		{
+			cout<<"Invalid --baseVA parameter "<<baseArg<<endl;
+			baseAddress = Globals::kNoBaseAddress;
+		}
+		if(!hexToU64(baseOffset, offsArg, fstrlen(offsArg)))
+		{
+			cout<<"Invalid --offs parameter "<<offsArg<<endl;
+			baseOffset = 0;
+		}	
+		
+	}
+	
+	if(!are_bytes_found || cmp_asm)
+	{
+		cout<<fg::yellow;
+		cout<<"Trying to compile assembly... In file  "<<f<<"\n";		
+		if(are_bytes_found)
+		{
+			cout<<"Warning! You are compiling a compiled file ! Trashing prev result. \n";
+			buffer_from_file_only.clear();
+		}
+		else
+		{
+			cout<<"Note! Could not find a string of bytes . \n";
+		}
+		cout<<fg::reset;
+		
+		if(dispatch)
+		{
+			layer++;
+			enter_asmjit_hook(0, nullptr, filename, ".comp");
+			return;
+		}
+		else
+		{
+			rewind(pFile);
+			compile_asm(pFile);
+		}
+	}
+	
 	fclose(pFile);
 }
 
@@ -244,6 +406,8 @@ static void print_jit_asm_info(CodeInfo *ptr = nullptr)
 	    <<"  - Enter '.load' to load saved hook from file.\n"
 	    <<"  - Enter '.write' to apply the given hook.\n"
 	    <<"  - Enter '.wall' to apply all hooks. (files have to end with .jh) \n"
+		<<"  - Enter '.comp' to compile the current file \n"
+		<<"  - Enter '.up' to move one layer up in patcher memory. Curr: "<<layer<<"\n"
 	    <<"  - Enter '.ret' return to main menu. \n"
 	    <<"===============================================================\n";
 }
@@ -262,41 +426,34 @@ static void write_all_jithooks(string path, string patchfile)
 			current_file = itr->path().string();
 			if (boost::filesystem::extension(current_file).compare(".jh")==0)
 			{
-				buffer_from_file_only = load_file(current_file);
-				read_header(&current_file[0], true);
-				if(!buffer_from_file_only.empty())
+				reset_globals();
+				filename = current_file;
+				interpret_file(&current_file[0], true, false);
+				size_t len = fstrlen(offsArg);
+				if(!hexToU64(baseOffset, offsArg, len))
 				{
-					size_t len = strlen(offsArg);
-					if(!hexToU64(baseOffset, offsArg, len))
-					{
-						cout<<fg::red<<"Failed to calculate baseOffset !"<<"In file: "<<current_file<<fg::reset<<endl;
-						cout<<"Input: "<<offsArg<<"Len = "<<len<<endl;
-						debug_pause();
-					}
-					FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
-					file_out.fWriteBinaryFile(HexToBytes(buffer_from_file_only),baseOffset,buffer_from_file_only.length()/2);
-					printf("Written to: %s Offset=%s\n",&patchfile[0],offsArg);
+					cout<<fg::red<<"Failed to calculate baseOffset !"<<"In file: "<<current_file<<fg::reset<<endl;
+					cout<<"Input: "<<offsArg<<"Len = "<<len<<endl;
+					debug_pause();
 				}
-				else
-				{
-					printf("No buffer from file is loaded. \n");
-					break;
-				}
+				FileIO file_out(patchfile, ios::out |ios::in |ios::binary);
+				file_out.fWriteBinaryFile(HexToBytes(buffer_from_file_only),baseOffset,buffer_from_file_only.length()/2);
+				printf("Written to: %s Offset=%s\n",&patchfile[0],offsArg);
 			}
 		}
 	}
 	return;
 }
 
-int enter_asmjit_hook(int argc, char* argv[], string patchfile)
+int enter_asmjit_hook(int argc, char* argv[], string patchfile, char* command)
 {
+	static bool Next = false;
 	char* log;
-	char* temp;
 	size_t len;
 	size_t _size = 0;
 	string tmp_filename;
-	char* single_step_bytes;
-	const char input[4095];
+	int step_bytes_length;
+	char input[4095];
 
 	if (archArg)
 	{
@@ -329,15 +486,10 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		archType = ArchInfo::kTypeX64;
 		baseAddress = Globals::kNoBaseAddress;
 
-		/* 	cout<<"Cmd args are: \n";
-			cout<<"Counter = "<<argc<<endl;
-			for(int i = 0; i < argc; ++i)
-				cout << argv[i] <<i<< '\n'; */
-
 		size_t maxLen = archType == ArchInfo::kTypeX64 ? 16 : 8;
 		if (baseArg)
 		{
-			len = strlen(baseArg);
+			len = fstrlen(baseArg);
 			if (!len || len > maxLen || !hexToU64(baseAddress, baseArg, len))
 			{
 				cout<<"Invalid --baseVA parameter "<<baseArg<<endl;
@@ -347,7 +499,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 		if (offsArg)
 		{
-			len = strlen(offsArg);
+			len = fstrlen(offsArg);
 			if (!len || len > maxLen || !hexToU64(baseOffset, offsArg, len))
 			{
 				cout<<"Invalid --offs parameter "<<offsArg<<endl;
@@ -370,16 +522,54 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 	X86Assembler a(&code);
 	AsmParser p(&a);
 	CodeBuffer buffer;
+	
+	if(instr_memblock == nullptr)
+	{
+		instr_memblock = new char[MAX_MEMORY_SIZE];
+	}
 
+	asmjit_state = new ptr();
+	asmjit_state->logger = &logger;
+	asmjit_state->ci = &ci;
+	asmjit_state->code = &code;
+	asmjit_state->a = &a;
+	asmjit_state->p = &p;
+	asmjit_state->buffer = &buffer;
+		
 	for (;;)
 	{
 		// 0 is the section number, this case .text
 		buffer = code.getSectionEntry(0)->getBuffer();
 		_size = buffer.getLength();
-		fgets(input, 4095, stdin);
+		if(Next)
+		{
+			goto up;
+		}
+			
+		if(command)
+		{
+			memcpy(input, command, fstrlen(command));
+			dispatch = false;
+			command = nullptr;
+		}
+		else
+		{
+			fgets(input, 4095, stdin);
+			dispatch = true;
+		}
 
 		if (input[0] == 0) break;
 
+		if (isCommand(input, ".comp"))
+		{
+			if(dispatch)
+			{
+				reset_globals();
+			}			
+			interpret_file(&filename[0],true, true);
+			continue; // stay on this layer.
+		}
+		
 		if (isCommand(input, ".clear"))
 		{
 			code.reset(false);  // Detaches everything.
@@ -396,8 +586,8 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		{
 			dumpCode(buffer,_size);
 			continue;
-		}
-
+		}		
+		
 		if (isCommand(input, ".info"))
 		{
 			print_jit_asm_info(&ci);
@@ -416,14 +606,14 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		{
 			printf("Enter baseAddress as hex ... example: `123` \n");
 			fgets(input, 4095, stdin);
-			if(!hexToU64(baseAddress, input, strlen(input)))
+			if(!hexToU64(baseAddress, input, fstrlen(input)))
 			{
 				cout<<"Invalid --baseVA parameter "<<input<<endl;
 				baseAddress = Globals::kNoBaseAddress;
 			}
 			printf("Enter baseOffset as hex ... example: `123` \n");
 			fgets(input, 4095, stdin);
-			if(!hexToU64(baseOffset, input, strlen(input)))
+			if(!hexToU64(baseOffset, input, fstrlen(input)))
 			{
 				cout<<"Invalid --offs parameter "<<input<<endl;
 				baseOffset = 0;
@@ -431,26 +621,34 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			printf("Enter arch as x86|x64 \n");
 			fgets(input, 4095, stdin);
 			archArg = input;
-			enter_asmjit_hook(0,nullptr,patchfile);
+			enter_asmjit_hook(0,nullptr,patchfile, ".clear");
+			goto up;
 		}
+		
+		if (isCommand(input, ".up"))
+		{
+			up:
+			code.reset(true);
+			if(instr_memblock != nullptr && layer == 1)
+			{
+				reset_globals();
+				delete instr_memblock;
+				instr_memblock = nullptr;
+				instr_memblock_offset = 0;
+				Next = false;
+				layer = 0;
+				return 0;
+			}
+			if(layer != 0)
+			{
+				layer--;
+			}
+			return 0;
+		}		
 
 		if (isCommand(input, ".ret"))
 		{
-			code.reset(true);
-			encoded_instr.clear();
-			buffer_from_file_only.clear();
-			
-			if(archArg!=nullptr)
-			delete archArg;
-			if(baseArg!=nullptr)
-			delete baseArg;
-			if(offsArg!=nullptr)
-			delete offsArg;	
-		
-			archArg = nullptr;
-			baseArg = nullptr;
-			offsArg = nullptr;
-			baseOffset = 0;
+			Next = true;			
 			return 0;
 		}
 
@@ -482,7 +680,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		{
 			if(buffer.hasData())
 			{
-				saveCode(buffer,&filename[0],baseAddress,archArg);
+				saveCode(buffer,&filename[0],baseAddress);
 			}
 			continue;
 		}
@@ -497,21 +695,12 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 		if (isCommand(input, ".load"))
 		{
 			printf("Filename to load ...\n");
+			reset_globals();
 			cin>>tmp_filename;
-			buffer_from_file_only = load_file(tmp_filename);
-			read_header(&tmp_filename[0],true);
-			if(!hexToU64(baseAddress, baseArg, strlen(baseArg)))
-			{
-				cout<<"Invalid --baseVA parameter "<<baseArg<<endl;
-				baseAddress = Globals::kNoBaseAddress;
-			}
-			if(!hexToU64(baseOffset, offsArg, strlen(offsArg)))
-			{
-				cout<<"Invalid --offs parameter "<<offsArg<<endl;
-				baseOffset = 0;
-			}
+			interpret_file(&tmp_filename[0],true, false);
 			printf("File loaded ...\n");
 			enter_asmjit_hook(0,nullptr,patchfile);
+			goto up;
 		}
 
 		if (isCommand(input, ".undo"))
@@ -523,7 +712,7 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 			if(buffer.hasData())
 			{
 				//@@2 how many bytes to keep in buffer? 0 = complete wipe.
-				size_t b = _size-((strlen(single_step_bytes)-1)/2);
+				size_t b = _size-((step_bytes_length-1)/2);
 				code.resizeBuffer(&buffer,b,0);
 			}
 			continue;
@@ -550,14 +739,15 @@ int enter_asmjit_hook(int argc, char* argv[], string patchfile)
 
 			if (i < len)
 			{
-				single_step_bytes = new char[len-i];
-				sprintf(single_step_bytes, "%.*s", (int)(len - i), log + i);
-				printf("%s",single_step_bytes);
+				step_bytes_length = len - i;
+				char temp1[step_bytes_length];
+				sprintf(&temp1[0], "%.*s", (int)(step_bytes_length), log + i);
+				printf("%s", &temp1[0]);
 				
-				temp = new char[len+1];
-				strncpy(temp,log,len+1);
-				temp[len] = '\0';
-				encoded_instr.push_back(temp);
+				mark_mem(len * sizeof(char*));
+				strncpy(instr_memblock+instr_memblock_offset, log, len+1);
+				instr_memblock[(instr_memblock_offset / sizeof(char*))+len] = '\0';
+				encoded_instr.push_back(instr_memblock+instr_memblock_offset);
 				
 				ci._baseAddress = ci._baseAddress + address_inc;
 				code.init(ci);

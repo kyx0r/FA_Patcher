@@ -5,7 +5,7 @@ string make;
 string uname;
 bool patcher_error;
 
-Patcher::Patcher(const string& filename_in, const string& filename_out)
+Patcher::Patcher(string filename_in, string filename_out)
 {
 	if (!boost::filesystem::exists(filename_in))
 	{

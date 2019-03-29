@@ -7,7 +7,7 @@ LIBNAME = patcher
 LIBPATH = ../lib
 OBJ_NAME = FaPatcher.exe
 
-CXXFLAGS = -O3 -w -fpermissive -fPIC -DPIC -I ../boost_lib -I .. -DOBJ_NAME='"$(OBJ_NAME)"'
+CXXFLAGS = -O3 -w -fpermissive -fPIC -Wextra -masm=intel -I ../boost_lib -I .. -DOBJ_NAME='"$(OBJ_NAME)"'
 
 all: $(LIBPATH)/lib$(LIBNAME).a
 

@@ -38,7 +38,7 @@ class Patcher
 {
 public:
 
-	Patcher(const string& filename_in, const string& filename_out);
+	Patcher(string filename_in = "", string filename_out = "");
 	void load_uname();
 
 private:

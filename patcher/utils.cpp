@@ -218,6 +218,8 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 
 	bool right_to_left_instr;
 	bool not_hex_instr;
+	bool comment;
+	size_t comment_pos = 0;
 	x64dbg_parser_struct parser_struct;
 	line.clear();
 	FileIO dbg_inline_file_obj(dbg_inline_file, ios::in);
@@ -225,6 +227,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 	{
 		right_to_left_instr = false;
 		not_hex_instr = false;
+		comment = false;
 		size_t orig_size = line.size();
 		for(pos = 0; pos<orig_size; pos++)
 		{
@@ -234,17 +237,37 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 			}
 			break;
 		}
-		if(pos == orig_size || line.at(pos) == ';')
+		if(pos == orig_size)
 		{
 			continue;
 		}
 		line = line.substr(pos);
 		orig_size = orig_size - pos;
+		
+		// ; symbol is usually a comment in asm, so move it out of real code.
+		pos = line.find(";");
+		if (string::npos != pos)
+		{
+			comment = true;
+			comment_pos = pos;
+		}
+		
 		word = cut_on_first_null(line);
 		try
 		{
 			pos = line.find(",");
 			tmp_pos = line.find(".");
+			
+			if(pos > comment_pos && comment == true)
+			{
+				goto needs_more_processing;
+			}		
+
+			if(tmp_pos > comment_pos && comment == true)
+			{
+				goto needs_more_processing;
+			}			
+			
 			if(pos!=string::npos && tmp_pos!=string::npos)
 			{
 				if(pos>tmp_pos)
@@ -261,6 +284,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 			{
 				line.erase(0,tmp_pos+1);
 			}
+							
 			if (line.size() != orig_size)
 			{
 				if(!right_to_left_instr)
@@ -346,15 +370,45 @@ needs_more_processing:
 		tmp_pos = line.find("st");
 		if(tmp_pos != string::npos)
 		{
-			pos = word.length();
-			if(tmp_pos > pos)
+			pos = line.find("st(0x0),");
+			if(pos!=string::npos)
 			{
-				not_hex_instr = true;
-				goto skip_arg_check;
+				line.erase(pos, 8);	
 			}
 			else
 			{
-				if(line.find("dword ptr") == string::npos)
+				pos = line.find("st(0),");
+				if(pos!=string::npos)
+				{
+					line.erase(pos, 6);	
+				}
+			}				
+			pos = word.length();
+			if(tmp_pos > pos)
+			{			
+				if(line.find("ptr") == string::npos)
+				{
+					not_hex_instr = true;
+					goto skip_arg_check;
+				}			
+			}
+			else
+			{
+				tmp_pos = line.find(",st(0x0)");
+				if(tmp_pos!=string::npos)
+				{
+					line.erase(tmp_pos, 8);	
+				}
+				else
+				{
+					tmp_pos = line.find(",st(0)");
+					if(tmp_pos!=string::npos)
+					{
+						line.erase(tmp_pos, 6);	
+					}
+				}		
+				
+				if(line.find("ptr") == string::npos)
 				{
 					if(line.find("test") == string::npos)
 					{
@@ -377,10 +431,23 @@ skip_arg_check:
 				if(string::npos == _word.find_first_of("abcdefghijklmnopqrstuvwxyz"))
 				{
 					size_t mem_x_pos = pos;
+					if(line.at(pos) == '0')
+					{
+						try
+						{
+							if(line.at(pos+1) == 'x')
+							{
+								goto _0x_not_needed;
+							}
+						}
+						catch(const out_of_range &e)
+						{}
+					}
 					if(!not_hex_instr)
 					{
 						line.insert(pos,"0x");
 					}
+					_0x_not_needed:
 					pos = inc_search(line,"h",pos);
 					if(pos!=string::npos)
 					{
@@ -421,28 +488,82 @@ skip_arg_check:
 				line.erase(pos-3,3);
 			}
 		}
-
-		// ; symbol is usually a comment in asm, so move it out of real code.
-		pos = line.find(";");
-		if (string::npos != pos)
+		
+		pos = line.find(": ; 0x");
+		if(pos != string::npos)
 		{
-			_word = line;
-			_word.erase(0,pos);
+			tmp_pos = line.length();
+			_word = line.substr(pos+6, tmp_pos);
+			line.erase(pos, 3);
+			line.insert(pos," = ");
 			try
 			{
-				line.erase(pos,orig_size);
+				offset = boost::lexical_cast<HexTo<int>>(_word);
 			}
-			catch(const out_of_range &e)
+			catch(const bad_cast &bc)
 			{
-				line.erase(pos,line.length()); //recalculate length only if required.
-			}
-			line = add_quotations(line);
-			line.append("//!");
-			line.append(_word);
-			parser_struct.GccInstruction.push_back("	"+line);
-			continue;
+				cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;
+			}	
+			_word = to_string(offset+align_calls);
+			line.replace(pos+6, tmp_pos-pos-6, _word);
+			line.erase(pos+4, 2);
+			parser_struct.GccInstruction.push_back("	"+add_quotations(line));
+			continue;			
 		}
-
+		
+		if(comment)
+		{
+			tmp_pos = line.length();
+			signed int i = orig_size - tmp_pos;
+			if(i == 0)
+			{
+				_word = line;
+				_word.erase(0,comment_pos);
+				line.erase(comment_pos, tmp_pos); 
+				line = add_quotations(line);
+				line.append("//!");
+				line.append(_word);
+				parser_struct.GccInstruction.push_back("	"+line);
+				continue;				
+			}
+			else if(i < 0)
+			{
+				i = abs(i);
+				_word = line;
+				_word.erase(0,comment_pos+i);
+				if(line.at(comment_pos) == ';')
+				{
+					line.erase(comment_pos, tmp_pos);
+				}
+				else
+				{
+					line.erase(comment_pos+i, tmp_pos);
+				}			
+				line = add_quotations(line);
+				line.append("//!");
+				line.append(_word);
+				parser_struct.GccInstruction.push_back("	"+line);
+				continue;					
+			}
+			else 
+			{
+				_word = line;
+				_word.erase(0,comment_pos-i);
+				if(line.at(comment_pos) == ';')
+				{
+					line.erase(comment_pos, tmp_pos);
+				}
+				else
+				{
+					line.erase(comment_pos-i, tmp_pos);
+				}					
+				line = add_quotations(line);
+				line.append("//!");
+				line.append(_word);
+				parser_struct.GccInstruction.push_back("	"+line);
+				continue;				
+			}			
+		}
 		parser_struct.GccInstruction.push_back("	"+add_quotations(line));
 	}
 

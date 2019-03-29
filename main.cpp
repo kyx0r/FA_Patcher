@@ -13,15 +13,16 @@ int main (int argc, char* argv[])
 {
 
 	string reply;
-	string target_in = "ForgedAlliance_base.exe";
-	string target_out = "ForgedAlliance_exxt.exe";
+	string target_in;
+	string target_out;
 	int len;
-	Patcher patch(target_in, target_out);
+	Patcher patch;
 
 ret:
 
 	cout<<fg::cyan
 	    <<"Basic functions: \n"
+		<<"0 - choose file to patch \n"
 	    <<"1 - use jithook. \n"
 	    <<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
 	    <<"3 - packfile... \n"
@@ -34,6 +35,16 @@ ret:
 	    <<fg::reset<<endl;
 
 	cin >> reply;
+	
+	if(reply.at(0)=='0')
+	{
+		cin>>target_in;
+		cout<<"Enter output name : \n";
+		cin>>target_out;
+		Patcher patch(target_in, target_out);
+		goto ret;
+	}	
+	
 	if(reply.at(0)=='1')
 	{
 		enter_asmjit_hook(argc,argv,target_out);
@@ -91,7 +102,10 @@ ret:
 		{
 			reply="preprocessor/x64dbg.asm";
 		}
-		x64dbg_parser_struct parser_struct = util.x64dbg_to_gcc_inline(reply);
+		int alignment;
+		cout<<"Enter number by which to alighn jmp and call instructions [*ext = 4096]\n";
+		cin>>alignment;
+		x64dbg_parser_struct parser_struct = util.x64dbg_to_gcc_inline(reply, alignment);
 		util.write_gcc_asm(reply, parser_struct);
 	}
 
@@ -101,7 +115,7 @@ ret:
 		if(reply.at(0)=='6')
 		{
 			FileIO file_in(target_in, ios::in | ios::binary);
-			section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
+			section.create_Section(file_in._file, target_out, ".exxt", 524288,0x50000);
 			FileIO file_out(target_out, ios::out |ios::in |ios::binary);
 #ifdef OS_WIN
 			section.apply_Ext(0xBDF000,file_out);
@@ -139,7 +153,7 @@ ret:
 	}
 
 	//tests only.
-	//boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
+	boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 
 	cout<<"Done."<<endl;
 	goto ret;

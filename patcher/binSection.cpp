@@ -92,8 +92,15 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 		cin.get();
 		exit(1);
 	}
+	
+	/*
+		This manual re-alignment is no longer needed due to computing the correct alignment at compile time.
+		By default when gcc links object files, it tries to build it as PE executable on Windows, even though we specify correct
+		virtual address at compile, it still aligns it by 0x1000, due to insertion of PE header. But if we specify starting address - 0x1000
+		at compile, then there would be no need to realign at link time.
+	*/
 
-	image_section_header header = populate_image_section_header("build/exxt_sector.o");
+/* 	image_section_header header = populate_image_section_header("build/exxt_sector.o");
 
 	//There might be a better way of doing this, but for now all I got.
 	//This should be very realiable still, cause locations will be the same as original binary.
@@ -120,7 +127,7 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 			align_idata = header.VirtualAddress[i]-align_bss;
 			make_ext_gpp_link.append(" align_idata=" + to_string(align_idata));
 		}
-	}
+	} */
 
 #ifdef DEBUG
 	cout<<__func__<<": "<<make_ext_gpp_link<<endl;

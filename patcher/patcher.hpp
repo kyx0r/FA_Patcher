@@ -30,7 +30,7 @@ extern string make;
 extern bool patcher_error;
 extern string uname;
 //Is debugging enabled?
-#define DEBUG
+//#define DEBUG
 
 int debug_pause();
 

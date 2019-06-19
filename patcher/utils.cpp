@@ -1,5 +1,6 @@
 
 #include "utils.hpp"
+#include "jitHooks.hpp"
 
 namespace binPatcher
 {
@@ -93,7 +94,7 @@ void Utils::write_def_table(function_table &table)
 	outfile.close();
 }
 
-function_table Utils::linker_map_parser(string filename)
+function_table Utils::linker_map_parser(string filename, int align_mod)
 {
 	function_table table;
 	line.clear();
@@ -152,7 +153,7 @@ function_table Utils::linker_map_parser(string filename)
 							cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;
 							debug_pause();
 						}
-						table.FunctionVirtualAddress.push_back(offset-table.section_alignment);
+						table.FunctionVirtualAddress.push_back(offset-table.section_alignment+align_mod);
 					}
 
 					else
@@ -569,6 +570,156 @@ skip_arg_check:
 
 	parser_struct.GccInstruction.push_back(");");
 	return parser_struct;
+}
+
+//0x64 0xa1
+
+unsigned int reverseBits(unsigned int num) 
+{ 
+    unsigned int  NO_OF_BITS = sizeof(num) * 8; 
+    unsigned int reverse_num = 0, i, temp; 
+  
+    for (i = 0; i < NO_OF_BITS; i++) 
+    { 
+        temp = (num & (1 << i)); 
+        if(temp) 
+            reverse_num |= (1 << ((NO_OF_BITS - 1) - i)); 
+    } 
+   
+    return reverse_num; 
+} 
+
+void Utils::FindAndRemoveBytePattern(string target, vector<string> pattern, string delim)
+{
+	FILE* file = fopen(&target[0], "rb");
+	assert(file);
+
+	fseek(file, 0, SEEK_END);
+	uint64_t length = ftell(file);
+	assert(length >= 0);
+	fseek(file, 0, SEEK_SET);
+
+	char* buffer = new char[sizeof(char) * length];
+	assert(buffer);
+
+	cout<<"goto \n";
+	size_t rc = fread(buffer, sizeof(char), length, file);
+	assert(rc == size_t(length));
+	fclose(file);	
+	file = fopen("log.txt", "w");
+	
+	for(int l = 0; l<pattern.size(); ++l)
+	{
+			
+		vector<char> input_bytes = HexToBytes(pattern[l]);
+		vector<char> delim_bytes = HexToBytes(delim);
+		uint64_t len = input_bytes.size();
+		uint8_t crop = 0;
+		if(len >= sizeof(uint32_t))
+		{
+			crop = len - sizeof(uint32_t);
+		}
+		else
+		{
+			cout<<"Error: pattern must be 4 bytes or bigger \n";
+			goto err;		
+		}
+		
+		char* p = input_bytes.data();
+		char* d = delim_bytes.data();
+		char* end_ptr = nullptr;
+		char* ret = nullptr;
+		for(uint64_t i = 0; i<length; i++)
+		{
+			if(*((uint32_t*)&buffer[i]) == *((uint32_t*)p))
+			{
+				fprintf(file, "Pattern at: %p offs: %04X\n", &buffer[i], i);
+				
+				if(len == 6)
+				{
+					unsigned char _jmp[len] = {0xEB,0x04,0x90,0x90,0x90,0x90};
+					memcpy(&buffer[i], _jmp, len);
+				} else
+				{
+					unsigned char _jmp[len] = {0xEB,0x05,0x90,0x90,0x90,0x90,0x90};
+					memcpy(&buffer[i], _jmp, len);					
+				}
+			
+				
+				if(l == -1)
+				{
+				if(crop)
+				{
+					end_ptr = (&buffer[i+sizeof(uint32_t)] + sizeof(uint32_t)) - 1 ;//- crop;
+				}
+				else 
+				{
+					end_ptr = (&buffer[i+sizeof(uint32_t)] + sizeof(uint32_t));
+				}
+				for(uint64_t z = i; z<length; z++)
+				{
+					char* ptr = &buffer[z];
+					
+					if(*((uint32_t*)ptr) == *((uint32_t*)d))
+					{
+						here:
+						break;
+					}
+					else if(*((uint32_t*)&ptr) == *((uint32_t*)p) && z != i)
+					{
+						fprintf(file, "Error: dublicate pattern before delimiter reached. \n");
+						break;
+					}
+					else if(*((uint8_t*)(ptr + sizeof(uint32_t))) == 0xc3)
+					{
+						if(*((uint8_t*)(ptr + 5)) == 0xCC)
+						{					
+							for(char* q = &buffer[i]; q!=ptr; q++)
+							{		
+								if(*((uint8_t*)(q + sizeof(uint32_t))) == 0xE8)
+								{
+									uint32_t val = *((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t)));
+									val += len;
+									*((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t))) = val;
+								}							
+							}	
+							fprintf(file, "Delim at: %p offs: %04X\n", ptr, z);
+							memcpy(&buffer[i], end_ptr, (ptr + 5) - end_ptr);
+							break;
+						} else {break;};
+					}
+					else if(*((uint8_t*)(ptr + sizeof(uint32_t))) == 0xc2)
+					{
+						if(*((uint8_t*)(ptr + 6)) == 0 && *((uint8_t*)(ptr + 5)) < 0x15)
+						{
+							for(char* q = &buffer[i]; q!=ptr; q++)
+							{		
+								if(*((uint8_t*)(q + sizeof(uint32_t))) == 0xE8)
+								{
+									uint32_t val = *((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t)));
+									val += len;
+									*((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t))) = val;
+								}							
+							}								
+							fprintf(file, "Delim at: %p offs: %04X\n", ptr, z);
+							memcpy(&buffer[i], end_ptr, (ptr + 7) - end_ptr);
+							break;
+						} else {break;};
+					}				
+				}
+				}
+			}
+		}	
+	}
+	fclose(file);
+	err:
+	target.append(".test");
+	file = fopen (&target[0], "wb");
+	fwrite(buffer , sizeof(char), length, file);
+	fclose(file);
+	free(buffer);
+	boost::filesystem::copy_file("ForgedAlliance_base.exe.test", "C:/ProgramData/FAForever/bin/ForgedAlliance_base.exe.test",boost::filesystem::copy_option::overwrite_if_exists);
+	return;
 }
 
 } //namespace binPatcher

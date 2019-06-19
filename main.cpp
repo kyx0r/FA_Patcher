@@ -13,10 +13,10 @@ int main (int argc, char* argv[])
 {
 
 	string reply;
-	string target_in;
-	string target_out;
+	string target_in = "ForgedAlliance_base.exe";
+	string target_out = "ForgedAlliance_exxt.exe";
 	int len;
-	Patcher patch;
+	Patcher _patch(target_in, target_out);
 
 ret:
 
@@ -32,12 +32,14 @@ ret:
 	    <<"6 - full patch. \n"
 	    <<"7 - patch ignoring hooks. \n"
 	    <<"8 - only hooks. \n"
+		<<"9 - remove a byte pattern from binary file. (in dev, do not use if unknown) \n"
 	    <<fg::reset<<endl;
 
 	cin >> reply;
 	
 	if(reply.at(0)=='0')
 	{
+		cout<<"Enter input name : \n";
 		cin>>target_in;
 		cout<<"Enter output name : \n";
 		cin>>target_out;
@@ -103,7 +105,7 @@ ret:
 			reply="preprocessor/x64dbg.asm";
 		}
 		int alignment;
-		cout<<"Enter number by which to alighn jmp and call instructions [*ext = 4096]\n";
+		cout<<"Enter number by which to alighn jmp and call instructions [*ext = 0x0]\n";
 		cin>>alignment;
 		x64dbg_parser_struct parser_struct = util.x64dbg_to_gcc_inline(reply, alignment);
 		util.write_gcc_asm(reply, parser_struct);
@@ -119,7 +121,7 @@ ret:
 			FileIO file_out(target_out, ios::out |ios::in |ios::binary);
 #ifdef OS_WIN
 			section.apply_Ext(0xBDF000,file_out);
-			function_table table = util.linker_map_parser("build/mapfile.map");
+			function_table table = util.linker_map_parser("build/mapfile.map", 0x1000);
 			util.write_def_table(table);
 #else
 			cout<<fg::yellow<<"Loading a c++ section is not suppored due to different binary format. "
@@ -136,7 +138,7 @@ ret:
 			section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
 			FileIO file_out(target_out, ios::out |ios::in |ios::binary);
 			section.apply_Ext(0xBDF000,file_out);
-			function_table table = util.linker_map_parser("build/mapfile.map");
+			function_table table = util.linker_map_parser("build/mapfile.map", 0x1000);
 			util.write_def_table(table);
 		}
 
@@ -145,15 +147,23 @@ ret:
 			binPatcher::Hooks hook(false, target_out);
 			hook.parse_hooks();
 		}
+		
+		if(reply.at(0)=='9')
+		{
+			reply.empty();
+			cout<<"Enter byte pattern to remove \n";
+			cin>>reply;
+			util.FindAndRemoveBytePattern(target_in,{"64890D00000000", "64a100000000", "64a300000000", "64892500000000"}, "CCCCCCC3");
+		}		
 
 	}
 	else
 	{
-		cout<<"One or more errors follow. \n";
+		cout<<"One or more errors follow. (if stuck restart the pacther) \n";
 	}
 
 	//tests only.
-	boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
+	//boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 
 	cout<<"Done."<<endl;
 	goto ret;

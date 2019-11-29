@@ -89,8 +89,7 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 	{
 		cout<<fg::red<<"Error when calling ext_sector "<<endl;
 		cout<<"In function "<<__func__<<endl;
-		cin.get();
-		exit(1);
+		debug_pause();
 	}
 	
 	/*

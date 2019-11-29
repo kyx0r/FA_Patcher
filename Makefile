@@ -42,7 +42,7 @@ align_bss = 0x1000
 align_idata = 0x1000
 
 #OBJ_NAME specifies the name of our exectuable 
-OBJ_NAME = FaPatcher.exe 
+OBJ_NAME = FaP.exe 
 
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 

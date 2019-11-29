@@ -48,7 +48,7 @@ void Patcher::load_uname()
 	uname = OBJ_NAME;
 #else
 	cout<<fg::yellow<<"Assuming the uname to be default..."<<fg::reset<<endl;
-	uname = "FaPatcher.exe";
+	uname = "FaP.exe";
 #endif
 }
 

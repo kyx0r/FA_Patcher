@@ -85,8 +85,12 @@ ret:
 
 	if(reply.at(0)=='5')
 	{
-		cout<<"Enter file to search... \n";
-		Packer unpack("FaPatcherpac.exe");
+		string copy = uname;
+		FileIO dummy;
+		copy = dummy.rem_extension(copy);
+		copy+="pac.exe";
+		
+		Packer unpack(copy);
 		unpack.unpackDataFiles();
 		unpack.cleanUp(uname);
 		goto ret;

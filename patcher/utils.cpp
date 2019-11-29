@@ -101,12 +101,24 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 	offset = 0;
 	pos = 0;
 
-	text_sec_found = false;
+	text_sec_found = 0;
+	data_sec_found = 0;
+	bss_sec_found = 0;
+	int unrec = 0;
 	FileIO map_file(filename);
 	table.section_alignment = parse_offset(map_file, "__section_alignment__ = ");
 	while(getline(map_file._file,line))
 	{
 		if(line.find("*(.text.*)")!=string::npos)
+		{
+			text_sec_found = 2;
+		}
+		if(line.find("*(.data2)")!=string::npos)
+		{
+			data_sec_found = 2;
+		}
+		
+		if(line.find("*(COMMON)")!=string::npos)
 		{
 			break;
 		}
@@ -114,13 +126,23 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 		{
 			continue;
 		}
-		if(line.find(".text")!=string::npos)
+		if(line.find(".text")!=string::npos && text_sec_found != 2)
 		{
-			text_sec_found = true;
+			text_sec_found = 1;
+			continue;
+		}		
+		if(line.find(".data")!=string::npos && line.find("../build/")!=string::npos)
+		{
+			data_sec_found = 1;
+			continue;
+		}
+		if(line.find(".bss")!=string::npos && line.find("../build/")!=string::npos)
+		{
+			bss_sec_found = 1;
 			continue;
 		}
 
-		if(text_sec_found == true)
+		if(text_sec_found == 1)
 		{
 			if(line.find("../build/")==string::npos)
 			{
@@ -155,7 +177,6 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 						}
 						table.FunctionVirtualAddress.push_back(offset-table.section_alignment+align_mod);
 					}
-
 					else
 					{
 						table.Name.push_back(word);
@@ -163,6 +184,48 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 				}
 			}
 		}
+		
+		if(data_sec_found == 1 || bss_sec_found == 1)
+		{
+			if(line.find("../build/")==string::npos)
+			{
+				stringstream ss(line);
+				bool done = false;
+				while(ss>>word)
+				{
+					pos = word.find("0x");
+					if(pos!=string::npos)
+					{
+						if(done)
+						{
+							break;
+						}
+						try
+						{
+							offset = boost::lexical_cast<HexTo<int>>(word);
+						}
+						catch(const bad_cast &bc)
+						{
+							cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;
+							debug_pause();
+						}
+						table.FunctionVirtualAddress.push_back(offset-table.section_alignment+align_mod);
+						done = true;
+					}
+					else
+					{
+						if(word.find("*") != string::npos)
+						{
+							unrec++;
+							word = "unrecognized";
+							word += boost::lexical_cast<std::string>(unrec);
+						}
+						table.Name.push_back(word);
+					}
+				}
+			}
+		}		
+		
 	}
 	return table;
 }

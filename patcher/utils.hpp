@@ -56,7 +56,9 @@ private:
 	size_t pos;
 	size_t tmp_pos;
 	char *tok;
-	bool text_sec_found;
+	uint8_t text_sec_found;
+	uint8_t data_sec_found;
+	uint8_t bss_sec_found;
 };
 
 } //namespace binPatcher

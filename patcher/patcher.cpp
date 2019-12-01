@@ -3,6 +3,7 @@
 
 string make;
 string uname;
+jmp_buf jump_buffer;
 bool patcher_error;
 
 Patcher::Patcher(string filename_in, string filename_out)
@@ -69,13 +70,13 @@ bool Patcher::check_system()
 	}
 }
 
-int debug_pause()
+[[noreturn]] void debug_pause()
 {
 	cout<<"Press any key to continue..."<<endl;
 	cin.clear();
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cin.get();
-	exit(1);
+	longjmp(jump_buffer, 1);
 }
 
 bool Patcher::check_gcc()

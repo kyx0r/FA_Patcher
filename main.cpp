@@ -18,6 +18,8 @@ int main (int argc, char* argv[])
 	int len;
 	Patcher _patch(target_in, target_out);
 
+	setjmp(jump_buffer);
+
 ret:
 
 	cout<<fg::cyan

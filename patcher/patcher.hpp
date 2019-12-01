@@ -14,6 +14,7 @@
 
 #include <assert.h>
 #include <fstream>
+#include <csetjmp>
 
 //#include <boost/thread/thread.hpp>
 #include <boost/filesystem.hpp>
@@ -29,10 +30,11 @@ using namespace rang;
 extern string make;
 extern bool patcher_error;
 extern string uname;
+extern jmp_buf jump_buffer;
 //Is debugging enabled?
 //#define DEBUG
 
-int debug_pause();
+[[noreturn]] void debug_pause();
 
 class Patcher
 {

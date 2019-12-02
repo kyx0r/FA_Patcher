@@ -346,7 +346,7 @@ tar:    tcc-doc.html
 	rm -rf $(TCC-VERSION)
 	git reset
 
-config.mak:
+config.mak: configure
 	$(if $(wildcard $@),,@echo "Please run ./configure." && exit 1)
 
 # run all tests

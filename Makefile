@@ -74,7 +74,6 @@ asmjitLib:
 	$(MAKE) all -C ./asmjit_lib
 	
 tcc:
-	$(MAKE) configure -C ./tinycc
 	$(MAKE) libtcc.a -C ./tinycc
 
 cleanall:

@@ -52,7 +52,7 @@ COMPILER_FLAGS = -static -w -DOBJ_NAME='"$(OBJ_NAME)"' -O3 -s
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++
 
-LOCAL_LIBS = -lpatcher -lfilesystem -lsystem -lpebliss -lasmjit
+LOCAL_LIBS = -lpatcher -lfilesystem -lsystem -lpebliss -lasmjit -ltcc
  
 #-oformat -Ttext=0x006B8FB9
 #echo align_size = $(align_size)';' > Env.ld
@@ -72,6 +72,10 @@ patcherLib:
 
 asmjitLib:
 	$(MAKE) all -C ./asmjit_lib
+	
+tcc:
+	$(MAKE) configure -C ./tinycc
+	$(MAKE) libtcc.a -C ./tinycc
 
 cleanall:
 	$(MAKE) clean -C ./boost_lib/filesystem
@@ -79,6 +83,7 @@ cleanall:
 	$(MAKE) clean -C ./pe_lib
 	$(MAKE) clean -C ./asmjit_lib
 	$(MAKE) clean -C ./patcher
+	$(MAKE) clean -C ./tinycc
 	rm -Rf ./build
 
 cleanbuild:
@@ -121,7 +126,7 @@ pre_comp_h:
 	$(CC) -w $(INCLUDE_PATHS) $(HEADS)
 
 #This is the target that compiles our executable 
-all : peLib boostLib asmjitLib patcherLib
+all : peLib boostLib asmjitLib patcherLib tcc
 	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) -o $(OBJ_NAME)
 	@echo ./FaPatcher built successfully.
 	

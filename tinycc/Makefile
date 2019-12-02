@@ -416,6 +416,6 @@ endif # ($(INCLUDED),no)
 
 _clean:
 	rm -f config.mak config.texi tcc.1 tcc-doc.info tcc-doc.html
-	
+
 configure: _clean
-	./configure
+	sh ./configure

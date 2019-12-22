@@ -19,6 +19,7 @@
  */
 
 #include "tcc.h"
+#include "wrap.h"
 #ifdef CONFIG_TCC_ASM
 
 ST_FUNC int asm_get_local_label_name(TCCState *s1, unsigned int n)
@@ -910,6 +911,8 @@ static int tcc_assemble_internal(TCCState *s1, int do_preprocess, int global)
         parse_flags |= PARSE_FLAG_PREPROCESS;
     for(;;) {
         next();
+//printf("%d\n", tok);
+    //printf("token = %s\n", get_tok_str(tok, &tokc));
         if (tok == TOK_EOF)
             break;
         /* generate line number info */
@@ -948,6 +951,9 @@ static int tcc_assemble_internal(TCCState *s1, int do_preprocess, int global)
 		set_symbol(s1, opcode);
                 goto redo;
             } else {
+
+		   // printf("token = %s\n", get_tok_str(tok, &tokc));
+		//jit_assemble(s1);
                 asm_opcode(s1, opcode);
             }
         }
@@ -986,11 +992,27 @@ static void tcc_assemble_inline(TCCState *s1, char *str, int len, int global)
 {
     const int *saved_macro_ptr = macro_ptr;
     int dotid = set_idnum('.', IS_ID);
+    unsigned char* code;
+    unsigned long ind1; 
 
+   // printf("%s\n", str);
     tcc_open_bf(s1, ":asm:", len);
     memcpy(file->buffer, str, len);
     macro_ptr = NULL;
-    tcc_assemble_internal(s1, 0, global);
+    //tcc_assemble_internal(s1, 0, global);
+
+    code = jit_assemble(s1, str);
+    ind1 = ind + blentotal;
+    if (ind1 > cur_text_section->data_allocated)
+    {
+	    section_realloc(cur_text_section, ind1);
+    }
+    //memset(&cur_text_section->data[0], 0x90, 30);
+    //cur_text_section->data[ind] = 0x90;
+    memcpy(&cur_text_section->data[ind], code, blentotal);
+    ind = ind1;
+
+    wrap_free(code);
     tcc_close();
 
     set_idnum('.', dotid);

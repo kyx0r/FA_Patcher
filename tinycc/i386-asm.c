@@ -639,7 +639,7 @@ static void asm_rex(int width64, Operand *ops, int nb_ops, int *op_type,
 
 static void maybe_print_stats (void)
 {
-  static int already = 1;
+  static int already = 0;
   if (!already)
     /* print stats about opcodes */
     {
@@ -678,6 +678,7 @@ static void maybe_print_stats (void)
 
 ST_FUNC void asm_opcode(TCCState *s1, int opcode)
 {
+//    printf("%d\n", opcode);
     const ASMInstr *pa;
     int i, modrm_index, modreg_index, reg, v, op1, seg_prefix, pc;
     int nb_ops, s;
@@ -690,7 +691,7 @@ ST_FUNC void asm_opcode(TCCState *s1, int opcode)
     int rex64;
 #endif
 
-    maybe_print_stats();
+    //maybe_print_stats();
     /* force synthetic ';' after prefix instruction, so we can handle */
     /* one-line things like "rep stosb" instead of only "rep\nstosb" */
     if (opcode >= TOK_ASM_wait && opcode <= TOK_ASM_repnz)
@@ -837,7 +838,8 @@ again:
     if (pa->sym == 0) {
         if (opcode >= TOK_ASM_first && opcode <= TOK_ASM_last) {
             int b;
-            b = op0_codes[opcode - TOK_ASM_first];
+            b = op0_codes[opcode - TOK_ASM_first];\
+printf("%d\n", b);
             if (b & 0xff00) 
                 g(b >> 8);
             g(b);

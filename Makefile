@@ -18,11 +18,6 @@ else
 	echo = echo "$(1)"	
 endif
 
-ifeq ($(detected_OS),Windows)
-WINAPI = -lmingw32 -lkernel32 -lm -ldxguid -ldxerr8 -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lgdi32 -lcomdlg32 -lwinspool 
-WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion -lwinpthread -ldbghelp -lpthread
-endif
-
 OBJS = ./*cpp
 HEADS = ./patcher/binPatcher.hpp
 PREP = -include $(HEADS)
@@ -47,33 +42,46 @@ OBJ_NAME = FaP.exe
 #COMPILER_FLAGS specifies the additional compilation options we're using 
 # -w suppresses all warnings 
 # -Wl,-subsystem,windows gets rid of the console window 
-COMPILER_FLAGS = -static -w -DOBJ_NAME='"$(OBJ_NAME)"' -O3 -s
+COMPILER_FLAGS = -w -DOBJ_NAME='"$(OBJ_NAME)"' -O3 
+ifeq ($(detected_OS),Windows)
+WINAPI = -lmingw32 -lkernel32 -lm -ldxguid -ldxerr8 -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lgdi32 -lcomdlg32 -lwinspool 
+WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion -lwinpthread -ldbghelp -lpthread
+COMPILER_FLAGS += -static
+endif
+
+SHARED_FLAGS = -I ..
+export SHARED_FLAGS
 
 #LINKER_FLAGS specifies the libraries we're linking against 
 LINKER_FLAGS = -static-libgcc -static-libstdc++
 
 LOCAL_LIBS = -lpatcher -lfilesystem -lsystem -lpebliss -lasmjit -ltcc
- 
+ifeq ($(detected_OS),Linux)
+LOCAL_LIBS += -ldl
+endif
 #-oformat -Ttext=0x006B8FB9
 #echo align_size = $(align_size)';' > Env.ld
 
 align:
 	echo align_size = $(align_size)';' > Env.ld
-	
+
 peLib:
 	$(MAKE) all -C ./pe_lib
-	
+
 boostLib:
 	$(MAKE) all -C ./boost_lib/filesystem
 	$(MAKE) all -C ./boost_lib/system
-	
+
 patcherLib:
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME) -C ./patcher
 
 asmjitLib:
 	$(MAKE) all -C ./asmjit_lib
-	
-tcc:
+
+./tinycc/wrap.o:  ./tinycc/wrap.cpp  
+	$(CC) ./tinycc/wrap.cpp -c -o ./tinycc/wrap.o -I .
+
+tcc: ./tinycc/wrap.o 
 	$(MAKE) libtcc.a -C ./tinycc
 
 cleanall:
@@ -87,7 +95,7 @@ cleanall:
 
 cleanbuild:
 	rm -Rf ./build
-	
+
 directories:
 	$(call mkdir, /build)
 	$(call mkdir, /preprocessor)
@@ -95,13 +103,13 @@ directories:
 ext_sector:
 	$(MAKE) all_individual -C ./sections
 	$(MAKE) link -C ./sections
-	
+
 _hooks:
 	$(MAKE) all OBJ_NAME=$(OBJ_NAME_) OBJS=$(OBJS) -C ./hooks
-	
+
 _fast_hooks:
 	$(MAKE) fast_compile -C ./hooks
-	
+
 ext_gpp_link:
 	$(call echo, align_data = $(align_data)';' > Env.ld)
 	$(call echo, align_rdata = $(align_rdata)';' >> Env.ld)
@@ -117,10 +125,10 @@ hook_gpp_link:
 	$(call echo, align_size = $(align_size)';' > Env.ld)
 	echo align_size = $(align_size)';' > Env.ld
 	ld -T ./linker/hookLinker.ld -static -m  $(obj_type) $(PRIME_NAME) -o $(TMP_NAME)
-	
+
 rip_out_binary:
 	objcopy --strip-all -O binary -R .eh_fram $(TMP_NAME) $(PRIME_NAME)
-	
+
 pre_comp_h:
 	$(CC) -w $(INCLUDE_PATHS) $(HEADS)
 
@@ -128,17 +136,17 @@ pre_comp_h:
 all : peLib boostLib asmjitLib patcherLib tcc
 	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) -o $(OBJ_NAME)
 	@echo ./FaPatcher built successfully.
-	
+
 allwin : peLib boostLib asmjitLib patcherLib
 	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) $(LOCAL_LIBS) $(WINAPI) -o $(OBJ_NAME)
 	@echo ./FaPatcher built successfully.	
-	
+
 format:
 	$(ASTYLE) --style=allman --indent=tab --recursive ./*.cpp, *.h, *.hpp
-	
+
 clean_f:
 	find . -type f -name '*.orig' -delete
-	
+
 clean_g:
 	find . -type f -name '*.gch' -delete	
-	
+

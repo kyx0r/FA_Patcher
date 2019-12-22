@@ -6454,7 +6454,7 @@ static void block(int *bsym, Sym *bcl, int *csym, Sym *ccl, int is_expr)
         }
         skip(';');
     } else if (tok == TOK_ASM1 || tok == TOK_ASM2 || tok == TOK_ASM3) {
-        asm_instr();
+      asm_instr();
     } else {
         b = is_label();
         if (b) {

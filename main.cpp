@@ -2,6 +2,7 @@
 #include "patcher/rang.hpp"
 #include <iostream>
 #include "patcher/binPatcher.hpp"
+#include "./tinycc/libtcc.h"
 
 using namespace std;
 
@@ -17,25 +18,25 @@ int main (int argc, char* argv[])
 	string target_out = "ForgedAlliance_exxt.exe";
 	int len;
 	Patcher _patch(target_in, target_out);
-
 	setjmp(jump_buffer);
 
 ret:
 
 	cout<<fg::cyan
-	    <<"Basic functions: \n"
+		<<"Basic functions: \n"
 		<<"0 - choose file to patch \n"
-	    <<"1 - use jithook. \n"
-	    <<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
-	    <<"3 - packfile... \n"
-	    <<"4 - packdir... \n"
-	    <<"5 - unpack files ... \n"
-	    <<"Note: Features below require g++ and make present. \n"
-	    <<"6 - full patch. \n"
-	    <<"7 - patch ignoring hooks. \n"
-	    <<"8 - only hooks. \n"
+		<<"1 - use jithook. \n"
+		<<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
+		<<"3 - packfile... \n"
+		<<"4 - packdir... \n"
+		<<"5 - unpack files ... \n"
+		<<"Note: Features below require g++ and make present. \n"
+		<<"6 - full patch. \n"
+		<<"7 - patch ignoring hooks. \n"
+		<<"8 - only hooks. \n"
 		<<"9 - remove a byte pattern from binary file. (in dev, do not use if unknown) \n"
-	    <<fg::reset<<endl;
+		<<"a - test/compile a file using tcc \n"
+		<<fg::reset<<endl;
 
 	cin >> reply;
 	
@@ -116,6 +117,13 @@ ret:
 		x64dbg_parser_struct parser_struct = util.x64dbg_to_gcc_inline(reply, alignment);
 		util.write_gcc_asm(reply, parser_struct);
 	}
+	if(reply.at(0)=='a')
+	{	TCCState* stcc = tcc_new();
+		tcc_set_options(stcc, "-c -m32");
+		tcc_add_file(stcc, "./test.c");
+		tcc_output_file(stcc, "./test.o");
+	}
+
 
 	if(patcher_error!=true)
 	{
@@ -161,7 +169,6 @@ ret:
 			cin>>reply;
 			util.FindAndRemoveBytePattern(target_in,{"64890D00000000", "64a100000000", "64a300000000", "64892500000000"}, "CCCCCCC3");
 		}		
-
 	}
 	else
 	{

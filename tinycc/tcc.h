@@ -559,7 +559,7 @@ typedef struct BufferedFile {
     int ifndef_macro_saved; /* saved ifndef_macro */
     int *ifdef_stack_ptr; /* ifdef_stack value at the start of the file */
     int include_next_index; /* next search path */
-    char filename[1024];    /* filename */
+    char filename[128];    /* filename */
     char *true_filename; /* filename not modified by # line directive */
     unsigned char unget[4];
     unsigned char buffer[1]; /* extra size for CH_EOB char */
@@ -1084,6 +1084,8 @@ enum tcc_token {
 #define TOK_UIDENT TOK_DEFINE
 
 /* ------------ libtcc.c ------------ */
+
+int TCC_ENTRY(int argc0, char **argv0);
 
 /* use GNU C extensions */
 ST_DATA int gnu_ext;

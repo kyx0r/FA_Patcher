@@ -188,16 +188,18 @@ TCC_FILES = $(X)tcc.o $(LIBTCC_OBJ)
 $(TCC_FILES) : DEFINES += -DONE_SOURCE=0
 endif
 
+LIBTCC_OBJ += wrap.o
+
 # target specific object rule
 $(X)%.o : %.c $(LIBTCC_INC)
-	$(CC) -o $@ -c $< $(DEFINES) $(CFLAGS)
+	$(CC) -o $@ -c $< $(DEFINES) $(CFLAGS) $(SHARED_FLAGS)
 
 # additional dependencies
 $(X)tcc.o : tcctools.c
 
 # Host Tiny C Compiler
 tcc$(EXESUF): tcc.o $(LIBTCC)
-	$(CC) -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_LIBTCC)
+	$(CC) -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_LIBTCC) $(SHARED_FLAGS)
 
 # Cross Tiny C Compilers
 %-tcc$(EXESUF): FORCE
@@ -208,7 +210,7 @@ $(CROSS_TARGET)-tcc$(EXESUF): $(TCC_FILES)
 
 # profiling version
 tcc_p$(EXESUF): $($T_FILES)
-	$(CC) -o $@ $< $(DEFINES) $(CFLAGS_P) $(LIBS_P) $(LDFLAGS_P)
+	$(CC) -o $@ $< $(DEFINES) $(CFLAGS_P) $(LIBS_P) $(LDFLAGS_P) $(SHARED_FLAGS)
 
 # static libtcc library
 libtcc.a: $(LIBTCC_OBJ)

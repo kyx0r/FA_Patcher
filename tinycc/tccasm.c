@@ -952,7 +952,7 @@ static int tcc_assemble_internal(TCCState *s1, int do_preprocess, int global)
                 goto redo;
             } else {
 
-		   // printf("token = %s\n", get_tok_str(tok, &tokc));
+		printf("token = %s\n", get_tok_str(opcode, &tokc));
 		//jit_assemble(s1);
                 asm_opcode(s1, opcode);
             }
@@ -999,20 +999,20 @@ static void tcc_assemble_inline(TCCState *s1, char *str, int len, int global)
     tcc_open_bf(s1, ":asm:", len);
     memcpy(file->buffer, str, len);
     macro_ptr = NULL;
-    //tcc_assemble_internal(s1, 0, global);
+    tcc_assemble_internal(s1, 0, global);
 
-    code = jit_assemble(s1, str);
-    ind1 = ind + blentotal;
-    if (ind1 > cur_text_section->data_allocated)
+    //code = jit_assemble(s1, str);
+    //ind1 = ind + blentotal;
+    //if (ind1 > cur_text_section->data_allocated)
     {
-	    section_realloc(cur_text_section, ind1);
+//	    section_realloc(cur_text_section, ind1);
     }
     //memset(&cur_text_section->data[0], 0x90, 30);
     //cur_text_section->data[ind] = 0x90;
-    memcpy(&cur_text_section->data[ind], code, blentotal);
-    ind = ind1;
+    //memcpy(&cur_text_section->data[ind], code, blentotal);
+    //ind = ind1;
 
-    wrap_free(code);
+    //wrap_free(code);
     tcc_close();
 
     set_idnum('.', dotid);

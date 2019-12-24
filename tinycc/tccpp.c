@@ -2961,9 +2961,9 @@ maybe_newline:
     tok_flags = 0;
 keep_tok_flags:
     file->buf_ptr = p;
-#if defined(PARSE_DEBUG)
-    printf("token = %d %s\n", tok, get_tok_str(tok, &tokc));
-#endif
+//#if defined(PARSE_DEBUG)
+    printf("macro token = %d %s\n", tok, get_tok_str(tok, &tokc));
+//#endif
 }
 
 /* return next token without macro substitution. Can read input from
@@ -3563,6 +3563,8 @@ ST_FUNC void next(void)
         if (parse_flags & PARSE_FLAG_TOK_STR)
             parse_string((char *)tokc.str.data, tokc.str.size - 1);
     }
+
+    //printf("token = %s\n", get_tok_str(tok, &tokc));
 }
 
 /* push back current token and set current token to 'last_tok'. Only

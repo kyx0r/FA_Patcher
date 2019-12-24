@@ -1,10 +1,10 @@
 
 #include "libtcc.h"
-#include "patcher/jitHooks.hpp"
+//#include "patcher/jitHooks.hpp"
 //#include "wrap.h"
 //#include "tcc.h"
-//#include <asmjit_lib/asmjit.h>
-//#include <asmjit_lib/asmtk/asmtk.h>
+#include <asmjit_lib/asmjit.h>
+#include <asmjit_lib/asmtk/asmtk.h>
 //#include <iostream>
 
 using namespace asmjit;
@@ -12,7 +12,7 @@ using namespace asmtk;
 
 size_t blentotal;
 
-size_t sstrlen (const char* s) 
+extern "C" size_t sstrlen (const char* s) 
 {
 	register const char* i;
 	for(i=s; *i != '\n'; ++i);
@@ -120,7 +120,7 @@ extern "C" unsigned char* jit_assemble(TCCState *s1, char* input)
 				int step_bytes_length = sstrlen(log+i)/2;
 				char temp1[step_bytes_length];
 				sprintf(&temp1[0], "%.*s", (int)(step_bytes_length*2), log + i);
-				//printf("%s\n", &temp1[0]);
+				printf("%s\n", &temp1[0]);
 				//printf("%d\n", step_bytes_length);
 				tallymarker_hextobin(temp1, bytecode+blentotal, step_bytes_length);
 				blentotal+=step_bytes_length;

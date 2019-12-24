@@ -20,7 +20,7 @@
  */
 
 #include "tcc.h"
-
+#include "wrap.h"
 #define MAX_OPERANDS 3
 
 #define TOK_ASM_first TOK_ASM_clc
@@ -830,35 +830,59 @@ again:
             if ((ops[i].type & v) == 0)
                 goto next;
 	    alltypes |= ops[i].type;
-        }
-        /* all is matching ! */
-        break;
-    next: ;
+	}
+	/* all is matching ! */
+	break;
+next: ;
     }
     if (pa->sym == 0) {
-        if (opcode >= TOK_ASM_first && opcode <= TOK_ASM_last) {
-            int b;
-            b = op0_codes[opcode - TOK_ASM_first];\
-printf("%d\n", b);
-            if (b & 0xff00) 
-                g(b >> 8);
-            g(b);
-            return;
-        } else if (opcode <= TOK_ASM_alllast) {
-            tcc_error("bad operand with opcode '%s'",
-                  get_tok_str(opcode, NULL));
-        } else {
-	    /* Special case for cmovcc, we accept size suffixes but ignore
-	       them, but we don't want them to blow up our tables.  */
-	    TokenSym *ts = table_ident[opcode - TOK_IDENT];
-	    if (ts->len >= 6
-		&& strchr("wlq", ts->str[ts->len-1])
-		&& !memcmp(ts->str, "cmov", 4)) {
-		opcode = tok_alloc(ts->str, ts->len-1)->tok;
-		goto again;
+	    if (opcode >= TOK_ASM_first && opcode <= TOK_ASM_last) {
+		    int b;
+		    b = op0_codes[opcode - TOK_ASM_first];
+		    if (b & 0xff00) 
+			    g(b >> 8);
+		    g(b);
+		    return;
+	    } else if (opcode <= TOK_ASM_alllast) {
+		    printf("bad operand with opcode '%s'\n",
+				    get_tok_str(opcode, NULL));
+		   // printf("%d\n", file->line_num);
+//		    printf("%s\n", file->buf_end);
+		    unsigned char* code;
+		    unsigned long ind1; 
+		    int len=0;
+		    int last_len = 0;
+		    for(int i = 0; i<file->line_num-1; i++)
+		    {
+			    last_len = sstrlen(file->buffer+len)+1;
+			    len += last_len;
+		    }
+		    char end = file->buffer[len];
+		    file->buffer[len] = '\0';
+		    code = jit_assemble(s1, &file->buffer[len-last_len]);
+		    ind1 = ind + blentotal;
+		    if (ind1 > cur_text_section->data_allocated)
+		    {
+			    section_realloc(cur_text_section, ind1);
+		    }
+		    memcpy(&cur_text_section->data[ind], code, blentotal);
+		    ind = ind1;
+		    file->buffer[len] = end;
+
+		    wrap_free(code);
+		    return; 
+	    } else {
+		    /* Special case for cmovcc, we accept size suffixes but ignore
+		       them, but we don't want them to blow up our tables.  */
+		    TokenSym *ts = table_ident[opcode - TOK_IDENT];
+		    if (ts->len >= 6
+				    && strchr("wlq", ts->str[ts->len-1])
+				    && !memcmp(ts->str, "cmov", 4)) {
+			    opcode = tok_alloc(ts->str, ts->len-1)->tok;
+			    goto again;
+		    }
+		    tcc_error("unknown opcode '%s'", ts->str);
 	    }
-            tcc_error("unknown opcode '%s'", ts->str);
-        }
     }
     /* if the size is unknown, then evaluate it (OPC_B or OPC_WL case) */
     autosize = NBWLX-1;

@@ -63,7 +63,7 @@ uint8_t tallymarker_hextobin(const char * str, uint8_t * bytes, size_t blen)
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  // ........
 	};
 
-	bzero(bytes, blen);
+	memset(bytes, 0, blen);
 	for (pos = 0; ((pos < (blen*2)) && (pos < strlen(str))); pos += 2)
 	{
 		idx0 = (uint8_t)str[pos+0];

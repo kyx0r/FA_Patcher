@@ -14,8 +14,7 @@ int main (int argc, char* argv[])
 {
 
 	string reply;
-	string target_in = "ForgedAlliance_base.exe";
-	string target_out = "ForgedAlliance_exxt.exe";
+	ParseSettings("settings.ini");
 	int len;
 	Patcher _patch(target_in, target_out);
 	setjmp(jump_buffer);
@@ -123,20 +122,19 @@ ret:
 		tcc_add_file(stcc, "./test.c");
 		tcc_output_file(stcc, "./test.o");
 	}
-
-
+	
 	if(patcher_error!=true)
 	{
 
 		if(reply.at(0)=='6')
 		{
 			FileIO file_in(target_in, ios::in | ios::binary);
-			section.create_Section(file_in._file, target_out, ".exxt", 524288,0x50000);
+			section.create_Section(file_in._file, target_out, sectionName, sectionSize, sectionVSize);
 			FileIO file_out(target_out, ios::out |ios::in |ios::binary);
-#ifdef OS_WIN
-			section.apply_Ext(0xBDF000,file_out);
-			function_table table = util.linker_map_parser("build/mapfile.map", 0x1000);
-			util.write_def_table(table);
+#ifdef OS_WIN			
+			section.apply_Ext(sectionRoffset, file_out);
+			function_table table = util.linker_map_parser(linkmapfile, 0x1000);
+			util.write_def_table(table);			
 #else
 			cout<<fg::yellow<<"Loading a c++ section is not suppored due to different binary format. "
 			    <<"It still needs a new alignment parser, and a custom linker file probably. "
@@ -149,10 +147,10 @@ ret:
 		if(reply.at(0)=='7')
 		{
 			FileIO file_in(target_in, ios::in | ios::binary);
-			section.create_Section(file_in._file, target_out, ".exxt", 5242880,0x500000);
+			section.create_Section(file_in._file, target_out, sectionName, sectionSize, sectionVSize);
 			FileIO file_out(target_out, ios::out |ios::in |ios::binary);
-			section.apply_Ext(0xBDF000,file_out);
-			function_table table = util.linker_map_parser("build/mapfile.map", 0x1000);
+			section.apply_Ext(sectionRoffset, file_out);
+			function_table table = util.linker_map_parser(linkmapfile, 0x1000);
 			util.write_def_table(table);
 		}
 
@@ -178,6 +176,17 @@ ret:
 	//tests only.
 	//boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 
+    if(strcmp(&copytodir[0], "null") != 0)
+	{
+		boost::filesystem::copy_file(target_out, copytodir, boost::filesystem::copy_option::overwrite_if_exists);
+	}
+	
+	if(delbuild)
+	{
+		boost::filesystem::remove_all(buildDir);
+		boost::filesystem::create_directory(buildDir);
+	}
+	
 	cout<<"Done."<<endl;
 	goto ret;
 

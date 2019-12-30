@@ -7,6 +7,8 @@ namespace binPatcher
 
 int Utils::parse_offset(FileIO& file, string expr)
 {
+	file._file.clear();
+    file._file.seekg(0,std::ios::beg);
 	line.clear();
 	offset = 0;
 	pos = 0;
@@ -21,6 +23,33 @@ int Utils::parse_offset(FileIO& file, string expr)
 			line.insert(0,"0");
 			offset = boost::lexical_cast<HexTo<int>>(line);
 			return offset;
+		}
+	}
+	cout<<fg::red<<"Could not find : "<<expr<<" in the file : "<<file.filename<<endl;
+	debug_pause();
+}
+
+string Utils::parse_string(FileIO& file, string expr)
+{
+	file._file.clear();
+    file._file.seekg(0,std::ios::beg);
+	line.clear();
+	offset = 0;
+	pos = 0;
+	while(getline(file._file,line))
+	{
+		pos = line.find(expr);
+		if(pos!=string::npos)
+		{
+			pos = line.find("=");
+			if(pos==string::npos)
+			{
+				cout<<fg::red<<"Could not find : ` = ` in the file : "<<file.filename<<endl;
+				cout<<"Line: "<<line<<endl;
+				debug_pause();
+			}
+			line = line.substr(pos+1);
+			return line;
 		}
 	}
 	cout<<fg::red<<"Could not find : "<<expr<<" in the file : "<<file.filename<<endl;

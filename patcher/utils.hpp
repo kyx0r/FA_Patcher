@@ -22,6 +22,7 @@ class Utils : public FileIO
 {
 public:
 	int parse_offset(FileIO& file, string expr = "0x");
+	string parse_string(FileIO& file, string expr);
 	bool gpp_link(string filename, string command);
 	function_table linker_map_parser(string filename, int align_mod);
 	void write_def_table(function_table &table);

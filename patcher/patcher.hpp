@@ -34,6 +34,21 @@ extern jmp_buf jump_buffer;
 //Is debugging enabled?
 //#define DEBUG
 
+
+// [Settings]
+extern string target_in;
+extern string target_out;
+extern string sectionName;
+extern string linkmapfile;
+extern string copytodir;
+extern string buildDir;
+extern int sectionRoffset;
+extern int sectionSize;
+extern int sectionVSize;
+extern int delbuild;
+
+
+void ParseSettings(string filename);
 [[noreturn]] void debug_pause();
 
 class Patcher

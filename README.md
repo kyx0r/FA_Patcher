@@ -15,13 +15,16 @@ https://github.com/agauniyal/rang
 Asmjit Library (Modified)
 https://github.com/asmjit/asmjit
 
+Custom embeded build of TCC compiler
+https://github.com/TinyCC/tinycc
+
 Thanks for those, so I don't have to reinvent the wheel. Though it kinda is what this project is altogether. 
 
 Source code is kept here to be able to modify and adjust the libraries. 
 
 # How To Build
 
-- Cd into project directory and target make all
+- Cd into project directory and target make all or mingw32-make all
 
 # Current External Dependencies
 
@@ -37,6 +40,9 @@ is contained here on the repository.
 One thing you need is minGw package. 
 Follow instuctions, after should be good to go.
 https://sourceforge.net/projects/mingw/?source=directory
+
+Note: cmd build is no longer supported, so I reccomend to use
+git bash shell https://gitforwindows.org/
 
 # Dependencies for Unix-based systems
 

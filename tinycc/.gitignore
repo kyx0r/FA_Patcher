@@ -22,7 +22,6 @@ libtcc*.def
 config*.h
 config*.mak
 config.texi
-conftest*
 tags
 TAGS
 tcc.1

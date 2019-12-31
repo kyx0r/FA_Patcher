@@ -19,6 +19,12 @@ extern "C" size_t sstrlen (const char* s)
 	return (i-s);
 }
 
+extern "C" size_t spstrlen (const char* s) 
+{
+	register const char* i;
+	for(i=s; *i != ' '; ++i);
+	return (i-s);
+}
 
 uint8_t tallymarker_hextobin(const char * str, uint8_t * bytes, size_t blen)
 {
@@ -100,7 +106,7 @@ extern "C" unsigned char* jit_assemble(TCCState *s1, char* input)
 	Error err = p.parse(input);
 
 	unsigned char* bytecode = nullptr;
-
+	blentotal = 0;
 	if (err == kErrorOk)
 	{
 		const char* log = logger.getString();

@@ -700,6 +700,7 @@ ST_FUNC void asm_opcode(TCCState *s1, int opcode)
     int last_len = 0;
     static int prev = -1;
     char end;
+    const char* str; 
 //}
 
     //maybe_print_stats();
@@ -858,21 +859,25 @@ next: ;
 	    else if (opcode <= TOK_ASM_alllast)
 	    {
 		    int i;
-		    printf("bad operand with opcode '%s'\n", get_tok_str(opcode, NULL));
+asmjit:;
+		    str = get_tok_str(opcode, NULL);
+		    printf("bad operand with opcode '%s'\n", str);
 		    if(prev == file->line_num)
 		    {
 			    blentotal = 1;
 			    return;
 		    }
+		    prev = file->line_num;
 		    if(tok == 10)
 		    {
+
 			    i = 1;
+			    prev++;
 		    }
 		    else
 		    {
 			    i = 0;
 		    }
-		    prev = file->line_num;
 		    //printf("%s\n", file->buffer);
 		    //printf("carap %d\n", sstrlen(file->buffer));
 		    //printf("%d\n", file->line_num);
@@ -880,6 +885,21 @@ next: ;
 		    {
 			    last_len = sstrlen(file->buffer+len)+1;
 			    len += last_len;
+		    }
+
+		    if(file->buffer[len-last_len] == ' ')
+		    {
+			    len++;
+		    }
+		    //printf("%s cmp %s %d\n", str, &file->buffer[len-last_len], strlen(str));
+		    if(strncmp(str, &file->buffer[len-last_len], strlen(str)))
+		    {
+			    return;
+		    }
+
+		    if(file->buffer[(len-1)-last_len] == ' ')
+		    {
+			    len--;
 		    }
 		    end = file->buffer[len];
 		    file->buffer[len] = '\0';
@@ -907,7 +927,10 @@ next: ;
 			    opcode = tok_alloc(ts->str, ts->len-1)->tok;
 			    goto again;
 		    }
-		    tcc_error("unknown opcode '%s'", ts->str);
+
+		    printf("unknown opcode '%s'\n", ts->str);
+		    goto asmjit;
+		    //tcc_error("unknown opcode '%s'", ts->str);
 	    }
     }
     /* if the size is unknown, then evaluate it (OPC_B or OPC_WL case) */

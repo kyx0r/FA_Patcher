@@ -961,7 +961,10 @@ static int tcc_assemble_internal(TCCState *s1, int do_preprocess, int global)
 	{
 		expect("end of line");
 	}
-	blentotal = 0;
+	if(tok == 10)
+	{
+		blentotal = 0;
+	}
         parse_flags &= ~PARSE_FLAG_LINEFEED; /* XXX: suppress that hack */
     }
 

@@ -691,6 +691,17 @@ ST_FUNC void asm_opcode(TCCState *s1, int opcode)
     int rex64;
 #endif
 
+
+//asmjit fallback vars
+//{
+    unsigned char* code = NULL;
+    unsigned long ind1; 
+    int len=0;
+    int last_len = 0;
+    static int prev = -1;
+    char end;
+//}
+
     //maybe_print_stats();
     /* force synthetic ';' after prefix instruction, so we can handle */
     /* one-line things like "rep stosb" instead of only "rep\nstosb" */
@@ -843,22 +854,37 @@ next: ;
 			    g(b >> 8);
 		    g(b);
 		    return;
-	    } else if (opcode <= TOK_ASM_alllast) {
-		    printf("bad operand with opcode '%s'\n",
-				    get_tok_str(opcode, NULL));
-		   // printf("%d\n", file->line_num);
-//		    printf("%s\n", file->buf_end);
-		    unsigned char* code;
-		    unsigned long ind1; 
-		    int len=0;
-		    int last_len = 0;
-		    for(int i = 0; i<file->line_num-1; i++)
+	    } 
+	    else if (opcode <= TOK_ASM_alllast)
+	    {
+		    int i;
+		    printf("bad operand with opcode '%s'\n", get_tok_str(opcode, NULL));
+		    if(prev == file->line_num)
+		    {
+			    blentotal = 1;
+			    return;
+		    }
+		    if(tok == 10)
+		    {
+			    i = 1;
+		    }
+		    else
+		    {
+			    i = 0;
+		    }
+		    prev = file->line_num;
+		    //printf("%s\n", file->buffer);
+		    //printf("carap %d\n", sstrlen(file->buffer));
+		    //printf("%d\n", file->line_num);
+		    for(; i<file->line_num; i++)
 		    {
 			    last_len = sstrlen(file->buffer+len)+1;
 			    len += last_len;
 		    }
-		    char end = file->buffer[len];
+		    end = file->buffer[len];
 		    file->buffer[len] = '\0';
+
+		    //printf("%d\n", len);
 		    code = jit_assemble(s1, &file->buffer[len-last_len]);
 		    ind1 = ind + blentotal;
 		    if (ind1 > cur_text_section->data_allocated)

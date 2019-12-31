@@ -101,7 +101,6 @@ extern "C" unsigned char* jit_assemble(TCCState *s1, char* input)
 
 	unsigned char* bytecode = nullptr;
 
-	blentotal = 0;
 	if (err == kErrorOk)
 	{
 		const char* log = logger.getString();

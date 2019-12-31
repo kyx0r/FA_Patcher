@@ -2567,6 +2567,7 @@ static inline void next_nomacro1(void)
     p = file->buf_ptr;
  redo_no_start:
     c = *p;
+printf("char %c\n", c);
     switch(c) {
     case ' ':
     case '\t':
@@ -2636,6 +2637,7 @@ static inline void next_nomacro1(void)
 
     case '\n':
         file->line_num++;
+	printf("INC\n");
         tok_flags |= TOK_FLAG_BOL;
         p++;
 maybe_newline:

@@ -952,14 +952,16 @@ static int tcc_assemble_internal(TCCState *s1, int do_preprocess, int global)
                 goto redo;
             } else {
 
-		printf("token = %s\n", get_tok_str(opcode, &tokc));
-		//jit_assemble(s1);
                 asm_opcode(s1, opcode);
+		printf("token = %s\n", get_tok_str(opcode, &tokc));
             }
         }
         /* end of line */
-        if (tok != ';' && tok != TOK_LINEFEED)
-            expect("end of line");
+	if (tok != ';' && tok != TOK_LINEFEED && !blentotal)
+	{
+		expect("end of line");
+	}
+	blentotal = 0;
         parse_flags &= ~PARSE_FLAG_LINEFEED; /* XXX: suppress that hack */
     }
 
@@ -992,8 +994,6 @@ static void tcc_assemble_inline(TCCState *s1, char *str, int len, int global)
 {
     const int *saved_macro_ptr = macro_ptr;
     int dotid = set_idnum('.', IS_ID);
-    unsigned char* code;
-    unsigned long ind1; 
 
    // printf("%s\n", str);
     tcc_open_bf(s1, ":asm:", len);

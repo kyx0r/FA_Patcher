@@ -1258,7 +1258,7 @@ ST_FUNC void tccpp_new(TCCState *s);
 ST_FUNC void tccpp_delete(TCCState *s);
 ST_FUNC int tcc_preprocess(TCCState *s1);
 ST_FUNC void skip(int c);
-ST_FUNC NORETURN void expect(const char *msg);
+ST_FUNC void expect(const char *msg);
 
 /* space excluding newline */
 static inline int is_space(int ch) {

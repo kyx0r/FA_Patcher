@@ -872,7 +872,7 @@ asmjit:;
 		    {
 
 			    i = 1;
-			    prev++;
+			    prev = -1;
 		    }
 		    else
 		    {

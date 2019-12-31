@@ -19,6 +19,7 @@
  */
 
 #include "tcc.h"
+#include "wrap.h"
 
 /********************************************************/
 /* global variables */
@@ -98,14 +99,17 @@ static void next_nomacro_spc(void);
 
 ST_FUNC void skip(int c)
 {
-    if (tok != c)
-        tcc_error("'%c' expected (got \"%s\")", c, get_tok_str(tok, &tokc));
-    next();
+	if (tok != c && !blentotal)
+		tcc_error("'%c' expected (got \"%s\")", c, get_tok_str(tok, &tokc));
+	next();
 }
 
 ST_FUNC void expect(const char *msg)
 {
-    tcc_error("%s expected", msg);
+	if(!blentotal)
+	{
+		tcc_error("%s expected", msg);
+	}
 }
 
 /* ------------------------------------------------------------------------- */

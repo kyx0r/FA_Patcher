@@ -49,39 +49,40 @@ int _CRT_glob = 0;
 
 int main(int argc, char *argv[])
 {
-    switch(argc == 2 ? argv[1][0] : 0) {
-        case 'b':
-        {
-            volatile unsigned foo = 0x01234567;
-            puts(*(unsigned char*)&foo == 0x67 ? "no" : "yes");
-            break;
-        }
+	switch(argc == 2 ? argv[1][0] : 0)
+	{
+	case 'b':
+	{
+		volatile unsigned foo = 0x01234567;
+		puts(*(unsigned char*)&foo == 0x67 ? "no" : "yes");
+		break;
+	}
 #ifdef __GNUC__
-        case 'm':
-            printf("%d\n", __GNUC_MINOR__);
-            break;
-        case 'v':
-            printf("%d\n", __GNUC__);
-            break;
+	case 'm':
+		printf("%d\n", __GNUC_MINOR__);
+		break;
+	case 'v':
+		printf("%d\n", __GNUC__);
+		break;
 #elif defined __TINYC__
-        case 'v':
-            puts("0");
-            break;
-        case 'm':
-            printf("%d\n", __TINYC__);
-            break;
+	case 'v':
+		puts("0");
+		break;
+	case 'm':
+		printf("%d\n", __TINYC__);
+		break;
 #else
-        case 'm':
-        case 'v':
-            puts("0");
-            break;
+	case 'm':
+	case 'v':
+		puts("0");
+		break;
 #endif
-        case 't':
-            puts(TRIPLET);
-            break;
+	case 't':
+		puts(TRIPLET);
+		break;
 
-        default:
-            break;
-    }
-    return 0;
+	default:
+		break;
+	}
+	return 0;
 }

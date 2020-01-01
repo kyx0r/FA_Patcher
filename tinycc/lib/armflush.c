@@ -20,7 +20,7 @@ __asm__(
     ".int 0xe1a02003\n"  // mov     r2, r3
     ".int 0xef000000\n"  // svc     0x00000000
     ".int 0xe8bd8080\n"  // pop     {r7, pc}
-    );
+);
 
 /* from unistd.h: */
 #if defined(__thumb__) || defined(__ARM_EABI__)
@@ -43,16 +43,16 @@ __asm__(
 /* Flushing for tccrun */
 void __clear_cache(void *beginning, void *end)
 {
-/* __ARM_NR_cacheflush is kernel private and should not be used in user space.
- * However, there is no ARM asm parser in tcc so we use it for now */
+	/* __ARM_NR_cacheflush is kernel private and should not be used in user space.
+	 * However, there is no ARM asm parser in tcc so we use it for now */
 #if 1
-    syscall(__ARM_NR_cacheflush, beginning, end, 0);
+	syscall(__ARM_NR_cacheflush, beginning, end, 0);
 #else
-    __asm__ ("push {r7}\n\t"
-             "mov r7, #0xf0002\n\t"
-             "mov r2, #0\n\t"
-             "swi 0\n\t"
-             "pop {r7}\n\t"
-             "ret");
+	__asm__ ("push {r7}\n\t"
+	         "mov r7, #0xf0002\n\t"
+	         "mov r2, #0\n\t"
+	         "swi 0\n\t"
+	         "pop {r7}\n\t"
+	         "ret");
 #endif
 }

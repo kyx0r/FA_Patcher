@@ -23,7 +23,7 @@ HEADS = ./patcher/binPatcher.hpp
 PREP = -include $(HEADS)
 CC = g++
 
-ASTYLE = aStyle
+ASTYLE = astyle
 
 #LIBRARY_PATHS specifies the additional library paths we'll need 
 LIBRARY_PATHS = -L ./lib
@@ -142,7 +142,7 @@ allwin : peLib boostLib asmjitLib patcherLib
 	@echo ./FaPatcher built successfully.	
 
 format:
-	$(ASTYLE) --style=allman --indent=tab --recursive ./*.cpp, *.h, *.hpp
+	$(ASTYLE) --style=allman --indent=tab --recursive *.c, *.cpp, *.h, *.hpp
 
 clean_f:
 	find . -type f -name '*.orig' -delete

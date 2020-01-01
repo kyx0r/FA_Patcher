@@ -22,23 +22,23 @@ int main (int argc, char* argv[])
 ret:
 
 	cout<<fg::cyan
-		<<"Basic functions: \n"
-		<<"0 - choose file to patch \n"
-		<<"1 - use jithook. \n"
-		<<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
-		<<"3 - packfile... \n"
-		<<"4 - packdir... \n"
-		<<"5 - unpack files ... \n"
-		<<"Note: Features below require g++ and make present. \n"
-		<<"6 - full patch. \n"
-		<<"7 - patch ignoring hooks. \n"
-		<<"8 - only hooks. \n"
-		<<"9 - remove a byte pattern from binary file. (in dev, do not use if unknown) \n"
-		<<"a - test/compile a file using tcc \n"
-		<<fg::reset<<endl;
+	    <<"Basic functions: \n"
+	    <<"0 - choose file to patch \n"
+	    <<"1 - use jithook. \n"
+	    <<"2 - convert x64dbg disassembly or masm assembly style to gcc inline. \n"
+	    <<"3 - packfile... \n"
+	    <<"4 - packdir... \n"
+	    <<"5 - unpack files ... \n"
+	    <<"Note: Features below require g++ and make present. \n"
+	    <<"6 - full patch. \n"
+	    <<"7 - patch ignoring hooks. \n"
+	    <<"8 - only hooks. \n"
+	    <<"9 - remove a byte pattern from binary file. (in dev, do not use if unknown) \n"
+	    <<"a - test/compile a file using tcc \n"
+	    <<fg::reset<<endl;
 
 	cin >> reply;
-	
+
 	if(reply.at(0)=='0')
 	{
 		cout<<"Enter input name : \n";
@@ -47,8 +47,8 @@ ret:
 		cin>>target_out;
 		Patcher patch(target_in, target_out);
 		goto ret;
-	}	
-	
+	}
+
 	if(reply.at(0)=='1')
 	{
 		enter_asmjit_hook(argc,argv,target_out);
@@ -91,7 +91,7 @@ ret:
 		FileIO dummy;
 		copy = dummy.rem_extension(copy);
 		copy+="pac.exe";
-		
+
 		Packer unpack(copy);
 		unpack.unpackDataFiles();
 		unpack.cleanUp(uname);
@@ -118,12 +118,13 @@ ret:
 	}
 
 	if(reply.at(0)=='a')
-	{	TCCState* stcc = tcc_new();
+	{
+		TCCState* stcc = tcc_new();
 		tcc_set_options(stcc, &tccargs[0]);
 		tcc_add_file(stcc, &tccinput[0]);
 		tcc_output_file(stcc, &tccoutput[0]);
 	}
-	
+
 	if(patcher_error!=true)
 	{
 
@@ -132,10 +133,10 @@ ret:
 			FileIO file_in(target_in, ios::in | ios::binary);
 			section.create_Section(file_in._file, target_out, sectionName, sectionSize, sectionVSize);
 			FileIO file_out(target_out, ios::out |ios::in |ios::binary);
-#ifdef OS_WIN			
+#ifdef OS_WIN
 			section.apply_Ext(sectionRoffset, file_out);
 			function_table table = util.linker_map_parser(linkmapfile, 0x1000);
-			util.write_def_table(table);			
+			util.write_def_table(table);
 #else
 			cout<<fg::yellow<<"Loading a c++ section is not suppored due to different binary format. "
 			    <<"It still needs a new alignment parser, and a custom linker file probably. "
@@ -160,14 +161,14 @@ ret:
 			binPatcher::Hooks hook(false, target_out);
 			hook.parse_hooks();
 		}
-		
+
 		if(reply.at(0)=='9')
 		{
 			reply.empty();
 			cout<<"Enter byte pattern to remove \n";
 			cin>>reply;
-			util.FindAndRemoveBytePattern(target_in,{"64890D00000000", "64a100000000", "64a300000000", "64892500000000"}, "CCCCCCC3");
-		}		
+			util.FindAndRemoveBytePattern(target_in, {"64890D00000000", "64a100000000", "64a300000000", "64892500000000"}, "CCCCCCC3");
+		}
 	}
 	else
 	{
@@ -177,17 +178,17 @@ ret:
 	//tests only.
 	//boost::filesystem::copy_file("ForgedAlliance_exxt.exe", "C:/ProgramData/FAForever/bin/ForgedAlliance_exxt.exe",boost::filesystem::copy_option::overwrite_if_exists);
 
-    if(strcmp(&copytodir[0], "null") != 0)
+	if(strcmp(&copytodir[0], "null") != 0)
 	{
 		boost::filesystem::copy_file(target_out, copytodir, boost::filesystem::copy_option::overwrite_if_exists);
 	}
-	
+
 	if(delbuild)
 	{
 		boost::filesystem::remove_all(buildDir);
 		boost::filesystem::create_directory(buildDir);
 	}
-	
+
 	cout<<"Done."<<endl;
 	goto ret;
 

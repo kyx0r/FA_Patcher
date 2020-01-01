@@ -38,7 +38,7 @@ void ParseSettings(string filename)
 		f << "sectionRoffset=0xBDF000"<<endl;
 		f << "sectionSize=0x80000"<<endl;
 		f << "sectionVSize=0x50000"<<endl;
-		f << "delbuild=0x0" <<endl;	
+		f << "delbuild=0x0" <<endl;
 		f << "tccinput=./test.c" <<endl;
 		f << "tccoutput=./test.o" <<endl;
 		f << "tccargs=-c -m32"<<endl;

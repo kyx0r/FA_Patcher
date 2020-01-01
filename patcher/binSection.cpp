@@ -91,7 +91,7 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 		cout<<"In function "<<__func__<<endl;
 		debug_pause();
 	}
-	
+
 	/*
 		This manual re-alignment is no longer needed due to computing the correct alignment at compile time.
 		By default when gcc links object files, it tries to build it as PE executable on Windows, even though we specify correct
@@ -99,34 +99,34 @@ void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 		at compile, then there would be no need to realign at link time.
 	*/
 
-/* 	image_section_header header = populate_image_section_header("build/exxt_sector.o");
+	/* 	image_section_header header = populate_image_section_header("build/exxt_sector.o");
 
-	//There might be a better way of doing this, but for now all I got.
-	//This should be very realiable still, cause locations will be the same as original binary.
-	size_t _size = header.Name.size();
-	for(unsigned int i=0; i<_size; i++)
-	{
-		if(header.Name[i].compare(".data") == 0)
+		//There might be a better way of doing this, but for now all I got.
+		//This should be very realiable still, cause locations will be the same as original binary.
+		size_t _size = header.Name.size();
+		for(unsigned int i=0; i<_size; i++)
 		{
-			align_data = header.VirtualAddress[i];
-			make_ext_gpp_link.append(" align_data=" + to_string(align_data));
-		}
-		if(header.Name[i].compare(".rdata") == 0)
-		{
-			align_rdata = header.VirtualAddress[i]-align_data;
-			make_ext_gpp_link.append(" align_rdata=" + to_string(align_rdata));
-		}
-		if(header.Name[i].compare(".bss") == 0)
-		{
-			align_bss = header.VirtualAddress[i]-align_rdata;
-			make_ext_gpp_link.append(" align_bss=" + to_string(align_bss));
-		}
-		if(header.Name[i].compare(".idata") == 0)
-		{
-			align_idata = header.VirtualAddress[i]-align_bss;
-			make_ext_gpp_link.append(" align_idata=" + to_string(align_idata));
-		}
-	} */
+			if(header.Name[i].compare(".data") == 0)
+			{
+				align_data = header.VirtualAddress[i];
+				make_ext_gpp_link.append(" align_data=" + to_string(align_data));
+			}
+			if(header.Name[i].compare(".rdata") == 0)
+			{
+				align_rdata = header.VirtualAddress[i]-align_data;
+				make_ext_gpp_link.append(" align_rdata=" + to_string(align_rdata));
+			}
+			if(header.Name[i].compare(".bss") == 0)
+			{
+				align_bss = header.VirtualAddress[i]-align_rdata;
+				make_ext_gpp_link.append(" align_bss=" + to_string(align_bss));
+			}
+			if(header.Name[i].compare(".idata") == 0)
+			{
+				align_idata = header.VirtualAddress[i]-align_bss;
+				make_ext_gpp_link.append(" align_idata=" + to_string(align_idata));
+			}
+		} */
 
 #ifdef DEBUG
 	cout<<__func__<<": "<<make_ext_gpp_link<<endl;

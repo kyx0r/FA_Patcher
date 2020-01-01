@@ -13,14 +13,14 @@ using namespace asmtk;
 
 size_t blentotal;
 
-extern "C" size_t sstrlen (const char* s) 
+extern "C" size_t sstrlen (const char* s)
 {
 	register const char* i;
 	for(i=s; *i != '\n'; ++i);
 	return (i-s);
 }
 
-extern "C" size_t spstrlen (const char* s) 
+extern "C" size_t spstrlen (const char* s)
 {
 	register const char* i;
 	for(i=s; *i != ' '; ++i);

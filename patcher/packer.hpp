@@ -11,7 +11,7 @@ class Packer : public Utils
 public:
 
 	Packer();
-	
+
 	~Packer();
 
 	Packer(const string &execName);

@@ -36,14 +36,16 @@ THE SOFTWARE.*/
 /* We rely on the little endianness and EABI calling convention for this to
    work */
 
-typedef struct double_unsigned_struct {
-    unsigned low;
-    unsigned high;
+typedef struct double_unsigned_struct
+{
+	unsigned low;
+	unsigned high;
 } double_unsigned_struct;
 
-typedef struct unsigned_int_struct {
-    unsigned low;
-    int high;
+typedef struct unsigned_int_struct
+{
+	unsigned low;
+	int high;
 } unsigned_int_struct;
 
 #define REGS_RETURN(name, type) \
@@ -417,25 +419,27 @@ __AEABI_XDIVMOD(ldivmod, long long, uldivmod, lldiv_t, ulldiv_t, LLONG)
 
 void __aeabi_uldivmod(unsigned long long num, unsigned long long den)
 {
-    ulldiv_t_return(aeabi_uldivmod(num, den));
+	ulldiv_t_return(aeabi_uldivmod(num, den));
 }
 
 void __aeabi_llsl(double_unsigned_struct val, int shift)
 {
-    double_unsigned_struct ret;
+	double_unsigned_struct ret;
 
-    if (shift >= 32) {
-        val.high = val.low;
-        val.low = 0;
-        shift -= 32;
-    }
-    if (shift > 0) {
-        ret.low = val.low << shift;
-        ret.high = (val.high << shift) | (val.low >> (32 - shift));
-        double_unsigned_struct_return(ret);
-	return;
-    }
-    double_unsigned_struct_return(val);
+	if (shift >= 32)
+	{
+		val.high = val.low;
+		val.low = 0;
+		shift -= 32;
+	}
+	if (shift > 0)
+	{
+		ret.low = val.low << shift;
+		ret.high = (val.high << shift) | (val.low >> (32 - shift));
+		double_unsigned_struct_return(ret);
+		return;
+	}
+	double_unsigned_struct_return(val);
 }
 
 #define aeabi_lsr(val, shift, fill, type)                          \
@@ -456,12 +460,12 @@ void __aeabi_llsl(double_unsigned_struct val, int shift)
 
 void __aeabi_llsr(double_unsigned_struct val, int shift)
 {
-    aeabi_lsr(val, shift, 0, double_unsigned);
+	aeabi_lsr(val, shift, 0, double_unsigned);
 }
 
 void __aeabi_lasr(unsigned_int_struct val, int shift)
 {
-    aeabi_lsr(val, shift, val.high >> 31, unsigned_int);
+	aeabi_lsr(val, shift, val.high >> 31, unsigned_int);
 }
 
 
@@ -471,31 +475,31 @@ AEABI_UXDIVMOD(uidivmod, unsigned, uidiv_t, UINT)
 
 int __aeabi_idiv(int numerator, int denominator)
 {
-    unsigned num, den;
-    uidiv_t ret;
+	unsigned num, den;
+	uidiv_t ret;
 
-    if (numerator >= 0)
-        num = numerator;
-    else
-        num = 0 - numerator;
-    if (denominator >= 0)
-        den = denominator;
-    else
-        den = 0 - denominator;
-    ret = aeabi_uidivmod(num, den);
-    if ((numerator & INT_MIN) != (denominator & INT_MIN)) /* signs differ */
-        ret.quot *= -1;
-    return ret.quot;
+	if (numerator >= 0)
+		num = numerator;
+	else
+		num = 0 - numerator;
+	if (denominator >= 0)
+		den = denominator;
+	else
+		den = 0 - denominator;
+	ret = aeabi_uidivmod(num, den);
+	if ((numerator & INT_MIN) != (denominator & INT_MIN)) /* signs differ */
+		ret.quot *= -1;
+	return ret.quot;
 }
 
 unsigned __aeabi_uidiv(unsigned num, unsigned den)
 {
-    return aeabi_uidivmod(num, den).quot;
+	return aeabi_uidivmod(num, den).quot;
 }
 
 __AEABI_XDIVMOD(idivmod, int, uidivmod, idiv_t, uidiv_t, INT)
 
 void __aeabi_uidivmod(unsigned num, unsigned den)
 {
-    uidiv_t_return(aeabi_uidivmod(num, den));
+	uidiv_t_return(aeabi_uidivmod(num, den));
 }

@@ -32,7 +32,7 @@ int Utils::parse_offset(FileIO& file, string expr)
 string Utils::parse_string(FileIO& file, string expr)
 {
 	file._file.clear();
-    file._file.seekg(0,std::ios::beg);
+	file._file.seekg(0,std::ios::beg);
 	line.clear();
 	offset = 0;
 	pos = 0;
@@ -146,7 +146,7 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 		{
 			data_sec_found = 2;
 		}
-		
+
 		if(line.find("*(COMMON)")!=string::npos)
 		{
 			break;
@@ -159,7 +159,7 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 		{
 			text_sec_found = 1;
 			continue;
-		}		
+		}
 		if(line.find(".data")!=string::npos && line.find("../build/")!=string::npos)
 		{
 			data_sec_found = 1;
@@ -213,7 +213,7 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 				}
 			}
 		}
-		
+
 		if(data_sec_found == 1 || bss_sec_found == 1)
 		{
 			if(line.find("../build/")==string::npos)
@@ -253,8 +253,8 @@ function_table Utils::linker_map_parser(string filename, int align_mod)
 					}
 				}
 			}
-		}		
-		
+		}
+
 	}
 	return table;
 }
@@ -336,7 +336,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 		}
 		line = line.substr(pos);
 		orig_size = orig_size - pos;
-		
+
 		// ; symbol is usually a comment in asm, so move it out of real code.
 		pos = line.find(";");
 		if (string::npos != pos)
@@ -344,23 +344,23 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 			comment = true;
 			comment_pos = pos;
 		}
-		
+
 		word = cut_on_first_null(line);
 		try
 		{
 			pos = line.find(",");
 			tmp_pos = line.find(".");
-			
+
 			if(pos > comment_pos && comment == true)
 			{
 				goto needs_more_processing;
-			}		
+			}
 
 			if(tmp_pos > comment_pos && comment == true)
 			{
 				goto needs_more_processing;
-			}			
-			
+			}
+
 			if(pos!=string::npos && tmp_pos!=string::npos)
 			{
 				if(pos>tmp_pos)
@@ -377,7 +377,7 @@ x64dbg_parser_struct Utils::x64dbg_to_gcc_inline(string dbg_inline_file, int ali
 			{
 				line.erase(0,tmp_pos+1);
 			}
-							
+
 			if (line.size() != orig_size)
 			{
 				if(!right_to_left_instr)
@@ -438,7 +438,7 @@ needs_more_processing:
 				line.erase(tmp_pos, 8);
 				line.insert(tmp_pos+2,"0x");
 				goto skip_arg_check;
-			}			
+			}
 		}
 		tmp_pos = line.find("arg");
 		if(tmp_pos != string::npos)
@@ -458,7 +458,7 @@ needs_more_processing:
 				line.erase(tmp_pos, 8);
 				line.insert(tmp_pos+2,"0x");
 				goto skip_arg_check;
-			}				
+			}
 		}
 		tmp_pos = line.find("st");
 		if(tmp_pos != string::npos)
@@ -466,41 +466,41 @@ needs_more_processing:
 			pos = line.find("st(0x0),");
 			if(pos!=string::npos)
 			{
-				line.erase(pos, 8);	
+				line.erase(pos, 8);
 			}
 			else
 			{
 				pos = line.find("st(0),");
 				if(pos!=string::npos)
 				{
-					line.erase(pos, 6);	
+					line.erase(pos, 6);
 				}
-			}				
+			}
 			pos = word.length();
 			if(tmp_pos > pos)
-			{			
+			{
 				if(line.find("ptr") == string::npos)
 				{
 					not_hex_instr = true;
 					goto skip_arg_check;
-				}			
+				}
 			}
 			else
 			{
 				tmp_pos = line.find(",st(0x0)");
 				if(tmp_pos!=string::npos)
 				{
-					line.erase(tmp_pos, 8);	
+					line.erase(tmp_pos, 8);
 				}
 				else
 				{
 					tmp_pos = line.find(",st(0)");
 					if(tmp_pos!=string::npos)
 					{
-						line.erase(tmp_pos, 6);	
+						line.erase(tmp_pos, 6);
 					}
-				}		
-				
+				}
+
 				if(line.find("ptr") == string::npos)
 				{
 					if(line.find("test") == string::npos)
@@ -508,9 +508,9 @@ needs_more_processing:
 						line.insert(pos, " dword ptr ");
 						goto skip_arg_check;
 					}
-				}				
+				}
 			}
-		}	
+		}
 skip_arg_check:
 		pos = line.find_first_of("0123456789ABCDEF");
 		for(int i=0; pos<=line.length(); i++)
@@ -540,7 +540,7 @@ skip_arg_check:
 					{
 						line.insert(pos,"0x");
 					}
-					_0x_not_needed:
+_0x_not_needed:
 					pos = inc_search(line,"h",pos);
 					if(pos!=string::npos)
 					{
@@ -581,7 +581,7 @@ skip_arg_check:
 				line.erase(pos-3,3);
 			}
 		}
-		
+
 		pos = line.find(": ; 0x");
 		if(pos != string::npos)
 		{
@@ -596,14 +596,14 @@ skip_arg_check:
 			catch(const bad_cast &bc)
 			{
 				cout<<fg::red<<"error: bad_cast "<<bc.what()<<fg::reset<<endl;
-			}	
+			}
 			_word = to_string(offset+align_calls);
 			line.replace(pos+6, tmp_pos-pos-6, _word);
 			line.erase(pos+4, 2);
 			parser_struct.GccInstruction.push_back("	"+add_quotations(line));
-			continue;			
+			continue;
 		}
-		
+
 		if(comment)
 		{
 			tmp_pos = line.length();
@@ -612,12 +612,12 @@ skip_arg_check:
 			{
 				_word = line;
 				_word.erase(0,comment_pos);
-				line.erase(comment_pos, tmp_pos); 
+				line.erase(comment_pos, tmp_pos);
 				line = add_quotations(line);
 				line.append("//!");
 				line.append(_word);
 				parser_struct.GccInstruction.push_back("	"+line);
-				continue;				
+				continue;
 			}
 			else if(i < 0)
 			{
@@ -631,14 +631,14 @@ skip_arg_check:
 				else
 				{
 					line.erase(comment_pos+i, tmp_pos);
-				}			
+				}
 				line = add_quotations(line);
 				line.append("//!");
 				line.append(_word);
 				parser_struct.GccInstruction.push_back("	"+line);
-				continue;					
+				continue;
 			}
-			else 
+			else
 			{
 				_word = line;
 				_word.erase(0,comment_pos-i);
@@ -649,13 +649,13 @@ skip_arg_check:
 				else
 				{
 					line.erase(comment_pos-i, tmp_pos);
-				}					
+				}
 				line = add_quotations(line);
 				line.append("//!");
 				line.append(_word);
 				parser_struct.GccInstruction.push_back("	"+line);
-				continue;				
-			}			
+				continue;
+			}
 		}
 		parser_struct.GccInstruction.push_back("	"+add_quotations(line));
 	}
@@ -666,20 +666,20 @@ skip_arg_check:
 
 //0x64 0xa1
 
-unsigned int reverseBits(unsigned int num) 
-{ 
-    unsigned int  NO_OF_BITS = sizeof(num) * 8; 
-    unsigned int reverse_num = 0, i, temp; 
-  
-    for (i = 0; i < NO_OF_BITS; i++) 
-    { 
-        temp = (num & (1 << i)); 
-        if(temp) 
-            reverse_num |= (1 << ((NO_OF_BITS - 1) - i)); 
-    } 
-   
-    return reverse_num; 
-} 
+unsigned int reverseBits(unsigned int num)
+{
+	unsigned int  NO_OF_BITS = sizeof(num) * 8;
+	unsigned int reverse_num = 0, i, temp;
+
+	for (i = 0; i < NO_OF_BITS; i++)
+	{
+		temp = (num & (1 << i));
+		if(temp)
+			reverse_num |= (1 << ((NO_OF_BITS - 1) - i));
+	}
+
+	return reverse_num;
+}
 
 void Utils::FindAndRemoveBytePattern(string target, vector<string> pattern, string delim)
 {
@@ -697,12 +697,12 @@ void Utils::FindAndRemoveBytePattern(string target, vector<string> pattern, stri
 	cout<<"goto \n";
 	size_t rc = fread(buffer, sizeof(char), length, file);
 	assert(rc == size_t(length));
-	fclose(file);	
+	fclose(file);
 	file = fopen("log.txt", "w");
-	
+
 	for(int l = 0; l<pattern.size(); ++l)
 	{
-			
+
 		vector<char> input_bytes = HexToBytes(pattern[l]);
 		vector<char> delim_bytes = HexToBytes(delim);
 		uint64_t len = input_bytes.size();
@@ -714,9 +714,9 @@ void Utils::FindAndRemoveBytePattern(string target, vector<string> pattern, stri
 		else
 		{
 			cout<<"Error: pattern must be 4 bytes or bigger \n";
-			goto err;		
+			goto err;
 		}
-		
+
 		char* p = input_bytes.data();
 		char* d = delim_bytes.data();
 		char* end_ptr = nullptr;
@@ -726,88 +726,97 @@ void Utils::FindAndRemoveBytePattern(string target, vector<string> pattern, stri
 			if(*((uint32_t*)&buffer[i]) == *((uint32_t*)p))
 			{
 				fprintf(file, "Pattern at: %p offs: %04X\n", &buffer[i], i);
-				
+
 				if(len == 6)
 				{
 					unsigned char _jmp[len] = {0xEB,0x04,0x90,0x90,0x90,0x90};
 					memcpy(&buffer[i], _jmp, len);
-				} else
+				}
+				else
 				{
 					unsigned char _jmp[len] = {0xEB,0x05,0x90,0x90,0x90,0x90,0x90};
-					memcpy(&buffer[i], _jmp, len);					
+					memcpy(&buffer[i], _jmp, len);
 				}
-			
-				
+
+
 				if(l == -1)
 				{
-				if(crop)
-				{
-					end_ptr = (&buffer[i+sizeof(uint32_t)] + sizeof(uint32_t)) - 1 ;//- crop;
-				}
-				else 
-				{
-					end_ptr = (&buffer[i+sizeof(uint32_t)] + sizeof(uint32_t));
-				}
-				for(uint64_t z = i; z<length; z++)
-				{
-					char* ptr = &buffer[z];
-					
-					if(*((uint32_t*)ptr) == *((uint32_t*)d))
+					if(crop)
 					{
-						here:
-						break;
+						end_ptr = (&buffer[i+sizeof(uint32_t)] + sizeof(uint32_t)) - 1 ;//- crop;
 					}
-					else if(*((uint32_t*)&ptr) == *((uint32_t*)p) && z != i)
+					else
 					{
-						fprintf(file, "Error: dublicate pattern before delimiter reached. \n");
-						break;
+						end_ptr = (&buffer[i+sizeof(uint32_t)] + sizeof(uint32_t));
 					}
-					else if(*((uint8_t*)(ptr + sizeof(uint32_t))) == 0xc3)
+					for(uint64_t z = i; z<length; z++)
 					{
-						if(*((uint8_t*)(ptr + 5)) == 0xCC)
-						{					
-							for(char* q = &buffer[i]; q!=ptr; q++)
-							{		
-								if(*((uint8_t*)(q + sizeof(uint32_t))) == 0xE8)
-								{
-									uint32_t val = *((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t)));
-									val += len;
-									*((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t))) = val;
-								}							
-							}	
-							fprintf(file, "Delim at: %p offs: %04X\n", ptr, z);
-							memcpy(&buffer[i], end_ptr, (ptr + 5) - end_ptr);
-							break;
-						} else {break;};
-					}
-					else if(*((uint8_t*)(ptr + sizeof(uint32_t))) == 0xc2)
-					{
-						if(*((uint8_t*)(ptr + 6)) == 0 && *((uint8_t*)(ptr + 5)) < 0x15)
+						char* ptr = &buffer[z];
+
+						if(*((uint32_t*)ptr) == *((uint32_t*)d))
 						{
-							for(char* q = &buffer[i]; q!=ptr; q++)
-							{		
-								if(*((uint8_t*)(q + sizeof(uint32_t))) == 0xE8)
-								{
-									uint32_t val = *((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t)));
-									val += len;
-									*((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t))) = val;
-								}							
-							}								
-							fprintf(file, "Delim at: %p offs: %04X\n", ptr, z);
-							memcpy(&buffer[i], end_ptr, (ptr + 7) - end_ptr);
+here:
 							break;
-						} else {break;};
-					}				
-				}
+						}
+						else if(*((uint32_t*)&ptr) == *((uint32_t*)p) && z != i)
+						{
+							fprintf(file, "Error: dublicate pattern before delimiter reached. \n");
+							break;
+						}
+						else if(*((uint8_t*)(ptr + sizeof(uint32_t))) == 0xc3)
+						{
+							if(*((uint8_t*)(ptr + 5)) == 0xCC)
+							{
+								for(char* q = &buffer[i]; q!=ptr; q++)
+								{
+									if(*((uint8_t*)(q + sizeof(uint32_t))) == 0xE8)
+									{
+										uint32_t val = *((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t)));
+										val += len;
+										*((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t))) = val;
+									}
+								}
+								fprintf(file, "Delim at: %p offs: %04X\n", ptr, z);
+								memcpy(&buffer[i], end_ptr, (ptr + 5) - end_ptr);
+								break;
+							}
+							else
+							{
+								break;
+							};
+						}
+						else if(*((uint8_t*)(ptr + sizeof(uint32_t))) == 0xc2)
+						{
+							if(*((uint8_t*)(ptr + 6)) == 0 && *((uint8_t*)(ptr + 5)) < 0x15)
+							{
+								for(char* q = &buffer[i]; q!=ptr; q++)
+								{
+									if(*((uint8_t*)(q + sizeof(uint32_t))) == 0xE8)
+									{
+										uint32_t val = *((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t)));
+										val += len;
+										*((uint32_t*)(q + sizeof(uint32_t) + sizeof(uint8_t))) = val;
+									}
+								}
+								fprintf(file, "Delim at: %p offs: %04X\n", ptr, z);
+								memcpy(&buffer[i], end_ptr, (ptr + 7) - end_ptr);
+								break;
+							}
+							else
+							{
+								break;
+							};
+						}
+					}
 				}
 			}
-		}	
+		}
 	}
 	fclose(file);
-	err:
+err:
 	target.append(".test");
 	file = fopen (&target[0], "wb");
-	fwrite(buffer , sizeof(char), length, file);
+	fwrite(buffer, sizeof(char), length, file);
 	fclose(file);
 	free(buffer);
 	boost::filesystem::copy_file("ForgedAlliance_base.exe.test", "C:/ProgramData/FAForever/bin/ForgedAlliance_base.exe.test",boost::filesystem::copy_option::overwrite_if_exists);

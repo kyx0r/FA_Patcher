@@ -116,11 +116,12 @@ ret:
 		x64dbg_parser_struct parser_struct = util.x64dbg_to_gcc_inline(reply, alignment);
 		util.write_gcc_asm(reply, parser_struct);
 	}
+
 	if(reply.at(0)=='a')
 	{	TCCState* stcc = tcc_new();
-		tcc_set_options(stcc, "-c -m32");
-		tcc_add_file(stcc, "./test.c");
-		tcc_output_file(stcc, "./test.o");
+		tcc_set_options(stcc, &tccargs[0]);
+		tcc_add_file(stcc, &tccinput[0]);
+		tcc_output_file(stcc, &tccoutput[0]);
 	}
 	
 	if(patcher_error!=true)

@@ -46,7 +46,10 @@ extern int sectionRoffset;
 extern int sectionSize;
 extern int sectionVSize;
 extern int delbuild;
-
+extern string tccinput;
+extern string tccoutput;
+extern string tccargs;
+extern string arch;
 
 void ParseSettings(string filename);
 [[noreturn]] void debug_pause();

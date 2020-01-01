@@ -5,6 +5,7 @@
 //#include "tcc.h"
 #include <asmjit_lib/asmjit.h>
 #include <asmjit_lib/asmtk/asmtk.h>
+#include "../patcher/patcher.hpp"
 //#include <iostream>
 
 using namespace asmjit;
@@ -93,7 +94,21 @@ extern "C" unsigned char* jit_assemble(TCCState *s1, char* input)
 	StringLogger logger;
 	logger.addOptions(Logger::kOptionBinaryForm);
 
-	CodeInfo ci(ArchInfo::kTypeX86, 0, Globals::kNoBaseAddress);
+	uint32_t archType;
+	if (strncmp(&arch[0],"x86",3) == 0)
+	{
+		archType = ArchInfo::kTypeX86;
+	}
+	else if (strncmp(&arch[0],"x64",3) == 0)
+	{
+		archType = ArchInfo::kTypeX64;
+	}
+	else
+	{
+		printf("Invalid --arch parameter\n");
+		return NULL;
+	}
+	CodeInfo ci(archType, 0, Globals::kNoBaseAddress);
 	CodeHolder code;
 
 	code.init(ci);
@@ -151,13 +166,4 @@ extern "C" void wrap_free(unsigned char* p)
 {
 	free(p);
 }
-
-
-
-
-
-
-
-
-
 

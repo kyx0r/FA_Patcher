@@ -14,6 +14,10 @@ string sectionName;
 string linkmapfile;
 string copytodir;
 string buildDir;
+string tccinput;
+string tccoutput;
+string tccargs;
+string arch;
 int sectionRoffset;
 int sectionSize;
 int sectionVSize;
@@ -35,6 +39,10 @@ void ParseSettings(string filename)
 		f << "sectionSize=0x80000"<<endl;
 		f << "sectionVSize=0x50000"<<endl;
 		f << "delbuild=0x0" <<endl;	
+		f << "tccinput=./test.c" <<endl;
+		f << "tccoutput=./test.o" <<endl;
+		f << "tccargs=-c -m32"<<endl;
+		f << "arch=x86" <<endl;
 	}
 	//not the most optimal performance, but hey, at least position in file does not matter.
 	FileIO file(filename);
@@ -49,9 +57,13 @@ void ParseSettings(string filename)
 	linkmapfile = util.parse_string(file, "linkmapfile=");
 	buildDir = util.parse_string(file, "buildDir=");
 	copytodir = util.parse_string(file, "copytodir=");
+	tccinput = util.parse_string(file, "tccinput=");
+	tccoutput = util.parse_string(file, "tccoutput=");
+	tccargs = util.parse_string(file, "tccargs=");
+	arch = util.parse_string(file, "arch=");
 	cout<<fg::green<<"Configuration : \n";
 	file._file.clear();
-    file._file.seekg(0,std::ios::beg);
+	file._file.seekg(0,std::ios::beg);
 	string line;
 	while(getline(file._file,line))
 	{

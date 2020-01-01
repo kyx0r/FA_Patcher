@@ -8,7 +8,7 @@ namespace binPatcher
 int Utils::parse_offset(FileIO& file, string expr)
 {
 	file._file.clear();
-    file._file.seekg(0,std::ios::beg);
+	file._file.seekg(0,std::ios::beg);
 	line.clear();
 	offset = 0;
 	pos = 0;

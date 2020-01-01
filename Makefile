@@ -49,7 +49,7 @@ WINAPI+= -lcomctl32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lshlwapi -lversion -lw
 COMPILER_FLAGS += -static
 endif
 
-SHARED_FLAGS = -I ..
+SHARED_FLAGS = -I .. 
 export SHARED_FLAGS
 
 #LINKER_FLAGS specifies the libraries we're linking against 
@@ -79,7 +79,7 @@ asmjitLib:
 	$(MAKE) all -C ./asmjit_lib
 
 ./tinycc/wrap.o:  ./tinycc/wrap.cpp  
-	$(CC) ./tinycc/wrap.cpp -c -o ./tinycc/wrap.o -I .
+	$(CC) ./tinycc/wrap.cpp -c -w -o ./tinycc/wrap.o -I . -I ./boost_lib
 
 tcc: ./tinycc/wrap.o 
 	$(MAKE) libtcc.a -C ./tinycc

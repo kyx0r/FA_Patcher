@@ -18,6 +18,8 @@ class BinSection : public Utils
 {
 public:
 	bool create_Section(istream& pe_file, string out_file_name, const string& section_name, int raw_size = 1, int virtual_size = 0x1000);
+	bool extend_Section(istream& pe_file, string out_file_name, const string& section_name, int raw_size, int virtual_size);
+	bool remove_last_Section(istream& pe_file, string out_file_name);
 	void apply_Ext(const int verisign_offset, FileIO& fa);
 
 private:

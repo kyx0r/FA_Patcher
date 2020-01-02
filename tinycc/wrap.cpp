@@ -1,11 +1,11 @@
 
+#include "../patcher/patcher.hpp"
 #include "libtcc.h"
 //#include "patcher/jitHooks.hpp"
 //#include "wrap.h"
 //#include "tcc.h"
 #include <asmjit_lib/asmjit.h>
 #include <asmjit_lib/asmtk/asmtk.h>
-#include "../patcher/patcher.hpp"
 //#include <iostream>
 
 using namespace asmjit;

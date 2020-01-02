@@ -35,7 +35,7 @@ void ParseSettings(string filename)
 		f << "buildDir=./build"<<endl;
 		f << "copytodir=null" <<endl;
 		f << "sectionName=.exxt"<<endl;
-		f << "sectionRoffset=0xBDF000"<<endl;
+		f << "sectionRoffset=0xBDD000"<<endl;
 		f << "sectionSize=0x80000"<<endl;
 		f << "sectionVSize=0x50000"<<endl;
 		f << "delbuild=0x0" <<endl;

@@ -76,6 +76,83 @@ bool BinSection::create_Section(istream& pe_file, string out_file_name, const st
 	return true;
 }
 
+bool BinSection::extend_Section(istream& pe_file, string out_file_name, const string& section_name, int raw_size, int virtual_size)
+{
+	pe_base image(pe_factory::create_pe(pe_file));
+	section s;
+	try
+	{
+		s = image.get_image_sections().back();
+		
+		cout<<s.get_name()<<endl;
+		
+		if(strcmp(&s.get_name()[0], &section_name[0]) != 0)
+		{
+			cout<<"Last section name does not match, renaming ..."<<endl;
+			s.set_name(section_name);
+		}
+		
+		image.expand_section(s, s.get_virtual_address(), raw_size, pe_base::expand_section_raw); //does not work?
+		image.expand_section(s, s.get_virtual_address(), virtual_size, pe_base::expand_section_virtual);
+	}
+	catch(const pe_exception& e)
+	{
+		std::cout <<fg::red<< "Error: " << e.what() << std::endl;
+		cout<<"In function "<<__func__<<endl;
+		debug_pause();
+	}
+
+	string::size_type slash_pos;
+	if((slash_pos = out_file_name.find_last_of("/\\")) != string::npos)
+	{
+		out_file_name = out_file_name.substr(slash_pos + 1);
+	}
+
+	ofstream new_pe_file(out_file_name.c_str(), ios::out | ios::binary | ios::trunc);
+	if(!new_pe_file)
+	{
+		cout <<fg::red<< "Cannot create " << out_file_name <<endl;
+		cout<<"In function "<<__func__<<endl;
+		debug_pause();
+	}
+	//image.get_image_sections().pop_back();
+	rebuild_pe(image, new_pe_file, false, true, true);
+
+#ifdef DEBUG
+	cout <<fg::green<<"PE was rebuilt and saved to " << out_file_name <<fg::reset<<endl;
+#endif	
+
+	cout<<"Does not work. Fix me."<<endl;
+	debug_pause();
+	
+}
+
+bool BinSection::remove_last_Section(istream& pe_file, string out_file_name)
+{
+	pe_base image(pe_factory::create_pe(pe_file));
+	string::size_type slash_pos;
+	if((slash_pos = out_file_name.find_last_of("/\\")) != string::npos)
+	{
+		out_file_name = out_file_name.substr(slash_pos + 1);
+	}
+
+	ofstream new_pe_file(out_file_name.c_str(), ios::out | ios::binary | ios::trunc);
+	if(!new_pe_file)
+	{
+		cout <<fg::red<< "Cannot create " << out_file_name <<endl;
+		cout<<"In function "<<__func__<<endl;
+		debug_pause();
+	}
+	image.get_image_sections().pop_back();
+	image.realign_all_sections();
+	rebuild_pe(image, new_pe_file, false, true, true);
+
+#ifdef DEBUG
+	cout <<fg::green<<"PE was rebuilt and saved to " << out_file_name <<fg::reset<<endl;
+#endif	
+    return true;
+}
+
 void BinSection::apply_Ext(const int verisign_offset, FileIO& fa)
 {
 	//	const int verisign_offset = 0xBDD000; //.ext

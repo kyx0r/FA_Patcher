@@ -35,6 +35,7 @@ ret:
 	    <<"8 - only hooks. \n"
 	    <<"9 - remove a byte pattern from binary file. (in dev, do not use if unknown) \n"
 	    <<"a - test/compile a file using tcc \n"
+		<<"b - remove last section from PE file \n"
 	    <<fg::reset<<endl;
 
 	cin >> reply;
@@ -169,6 +170,13 @@ ret:
 			cin>>reply;
 			util.FindAndRemoveBytePattern(target_in, {"64890D00000000", "64a100000000", "64a300000000", "64892500000000"}, "CCCCCCC3");
 		}
+		
+		if(reply.at(0)=='b')
+		{
+			FileIO file_in(target_in, ios::in | ios::binary);
+			section.remove_last_Section(file_in._file, target_out);
+		}
+		
 	}
 	else
 	{
